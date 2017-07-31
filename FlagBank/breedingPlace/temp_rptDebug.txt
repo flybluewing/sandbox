@@ -1,0 +1,49 @@
+=====================================================================
+[2017-07-09 15:24:00] ptnObgGrp loading start from E:/ZoidWork/DataStore/ptnObjGrp/save/Obj_ptnObjGrp007.save
+=====================================================================
+[2017-07-09 15:27:36] ptnObgGrp loading start from C:/zproject/ISLR/FlagBank/breedingPlace/save/ptnObjGrp/Obj_ptnObjGrp007.save
+          message : none 
+CpNum of rawPtn
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+      1       1       1       1       1       1 
+ [1] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+CpNum of overlap from pred
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  2.000   2.000   2.000   3.654   3.000 496.000 
+ [1] 496 324 303 300 300 299 295 265 258 252 240 219 215 204 202 200 198 197 187 175
+   70 pred pattern are chosen
+overlap$matchLst[[   21]] scan area :   109, cpNum :   300
+overlap$matchLst[[   21]] clue overlap size : 28163    chosen : 3
+                                     max cover : 109 of 300
+overlap$matchLst[[   21]] scan area :   109, cpNum :   300
+overlap$matchLst[[   21]] clue overlap size : 28163    chosen : 3
+                                     max cover : 109 of 300
+                                     max hit rate by clue : 53%(from 248 haunts)
+overlap$matchLst[[   27]] scan area :   109, cpNum :   496
+overlap$matchLst[[   27]] clue overlap size : 103993    chosen : 1
+                                     max cover : 128 of 496
+                                     max hit rate by clue : 74%(from 519 haunts)
+overlap$matchLst[[  284]] scan area :   109, cpNum :   324
+overlap$matchLst[[  284]] clue overlap size : 34975    chosen : 1
+                                     max cover : 70 of 324
+                                     max hit rate by clue : 50%(from 519 haunts)
+overlap$matchLst[[  195]] scan area :   109, cpNum :   303
+overlap$matchLst[[  195]] clue overlap size : 23266    chosen : 2
+                                     max cover : 110 of 303
+                                     max hit rate by clue : 51%(from 387 haunts)
+overlap$matchLst[[   21]] scan area :   109, cpNum :   300
+overlap$matchLst[[   21]] clue overlap size : 28163    chosen : 3
+                                     max cover : 109 of 300
+                                     max hit rate by clue : 53%(from 248 haunts)
+overlap$matchLst[[ 1128]] scan area :   109, cpNum :   300
+overlap$matchLst[[ 1128]] clue overlap size : 29486    chosen : 3
+                                     max cover : 99 of 300
+                                     max hit rate by clue : 47%(from 248 haunts)
+overlap$matchLst[[   34]] scan area :   109, cpNum :   299
+overlap$matchLst[[   34]] clue overlap size : 26250    chosen : 3
+                                     max cover : 113 of 299
+                                     max hit rate by clue : 53%(from 245 haunts)
+overlap$matchLst[[  209]] scan area :   109, cpNum :   295
+overlap$matchLst[[  209]] clue overlap size : 23818    chosen : 4
+                                     max cover : 123 of 295
+                                     max hit rate by clue : 74%(from 519 haunts)

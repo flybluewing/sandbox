@@ -1,0 +1,52 @@
+rpt.opgRawPtn( )
+    < return Obj >
+        overlap : pred에 대한 overlap
+        cpNum   : pred overlap에 대한 cp 수(rawPtn$matchLst 수)
+        chosen  : 선택된 pred (overlap$matchLst 인덱스)
+                    즉 pred Ptn
+        chosen.cpV: pred의 matchLst가 갖는 rawPtn$matchLst들(인덱스)
+        invLst  : 하나의 pred ptn에 대해 발생가능 clue ptn들
+                    chosen들 중에서 clue 검색결과 나름 성과가 있었던 것들만 추려내었음.
+                    ( 성과기준 : ~$invLst[]$ol.chosen 이 존재 )
+        ~$invLst
+            chosen  : invLst[]의 id(~$chosen내에서의 자기 번호)
+            ol      : clue에 대한 overlap. findOverlap.within(rawPtn)
+            ol.cpNum: clue overlap의 cp 수
+            ol.chosen : 선택된 clue (overlap match 인덱스)
+            hitRate : 선택된 clue와 pred의 실제 명중률(rawPtn 기반)
+            hauntNum: 선택된 clue의 실제 발생 수.
+    < report >
+        "overlap$matchLst[[%5d]] scan area : %5d, cpNum : %5d"
+            scan area : clue 검색을 위한 idx 범위
+        "overlap$matchLst[[%5d]] clue overlap size : %d    chosen : %d"
+        "                                     max cover : %d of %d"
+            선택된 pred ptn이 차지하는 rawPtn$match 수 와,
+            clue ptn이 최대로 차지하는 rawPtn$match 수.
+            즉 max clue cover number on pred haunt number
+            (pred 입장에서 clue 를 바라본 결과)
+        "                                     max hit rate by clue : %d%%(from %d haunts)"
+            zh 전체에서 clue 발생한 지점 중, pred가 일치했던 비율.
+            (clue 입장에서 pred 를 바라본 결과)
+
+getM.rpt.opgRawPtn( )
+    <설명>
+        rpt.opgRawPtn() 에서의 결과들을 걸러내기 위한 함수.
+        assessClue( ) 함수로 평가하기 위함이다.
+    <sample> ---------------------------------------------
+        saveDir <- "./save"
+        fNames <- dir(saveDir)
+        fNames <- fNames[ grep("[[:digit:]]\\.save$",fNames) ]
+        rptSaveFile <- paste(saveDir,gsub("\\.save$",".rpt.save",fNames),sep="/")
+
+        mLst <- list()
+        for( rsFile in rptSaveFile ){
+            k.FLogStr( rsFile ) # "./save/Obj_ptnObjGrp007.rpt.save"
+            mObj <- getM.rpt.opgRawPtn( rsFile )
+            mLst[[(1+length(mLst))]] <- mObj
+        }
+
+    
+    
+    
+    
+    ------------------------------------------------------
