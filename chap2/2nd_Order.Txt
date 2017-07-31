@@ -1,0 +1,61 @@
+# YY00 <- 0.5*X1^2 + 0.7*X1
+# e1 <- sample( seq(-1,1,by=0.01), length(YY0), replace=T )
+# e2 <- 2*sample( seq(-1,1,by=0.01), length(YY0), replace=T )
+#
+# YY11 <- 0.5*(X1^2+e1) + 0.7*(X1+e1)
+# lm.YY11_1 <- lm( YY11~X1 )
+# lm.YY11_2 <- lm( YY11~I(X1^2)+X1 )
+#
+# YY22 <- 0.5*(X1^2+e2) + 0.7*(X1+e2)
+# lm.YY2_2 <- lm( YY22~I(X1^2)+X1 )
+
+
+> summary( lm.YY11_1 )
+
+Call:    lm(formula = YY11 ~ X1)
+    Residuals:
+            Min      1Q  Median      3Q     Max 
+        -17.453 -12.651  -4.324  11.495  29.310 
+    Coefficients:
+                    Estimate Std. Error t value Pr(>|t|)    
+        (Intercept)  -38.190      7.319  -5.218 5.80e-05 ***
+        X1            11.148      0.611  18.247 4.67e-13 ***
+        ---
+        Signif. codes:  0 ¡®***¡¯ 0.001 ¡®**¡¯ 0.01 ¡®*¡¯ 0.05 ¡®.¡¯ 0.1 ¡® ¡¯ 1
+    Residual standard error: 15.76 on 18 degrees of freedom
+    Multiple R-squared:  0.9487,    Adjusted R-squared:  0.9459 
+    F-statistic: 332.9 on 1 and 18 DF,  p-value: 4.666e-13
+
+
+Call:    lm(formula = YY11 ~ I(X1^2) + X1)
+    Residuals:
+             Min       1Q   Median       3Q      Max 
+        -0.98968 -0.57509 -0.02949  0.48406  1.17125 
+    Coefficients:
+                    Estimate Std. Error t value Pr(>|t|)    
+        (Intercept)  0.61604    0.54114   1.138 0.270736    
+        I(X1^2)      0.50397    0.00549  91.806  < 2e-16 ***
+        X1           0.56444    0.11868   4.756 0.000183 ***
+        ---
+        Signif. codes:  0 ¡®***¡¯ 0.001 ¡®**¡¯ 0.01 ¡®*¡¯ 0.05 ¡®.¡¯ 0.1 ¡® ¡¯ 1
+    Residual standard error: 0.7274 on 17 degrees of freedom
+    Multiple R-squared:  0.9999,    Adjusted R-squared:  0.9999 
+    F-statistic: 8.232e+04 on 2 and 17 DF,  p-value: < 2.2e-16
+
+
+Call:    lm(formula = YY22 ~ I(X1^2) + X1)
+    Residuals:
+            Min      1Q  Median      3Q     Max 
+        -2.5009 -1.0851  0.3226  1.0627  2.2814 
+    Coefficients:
+                    Estimate Std. Error t value Pr(>|t|)    
+        (Intercept) -0.63455    1.15845  -0.548  0.59098    
+        I(X1^2)      0.48608    0.01175  41.362  < 2e-16 ***
+        X1           0.94398    0.25407   3.715  0.00172 ** 
+        ---
+        Signif. codes:  0 ¡®***¡¯ 0.001 ¡®**¡¯ 0.01 ¡®*¡¯ 0.05 ¡®.¡¯ 0.1 ¡® ¡¯ 1
+    Residual standard error: 1.557 on 17 degrees of freedom
+    Multiple R-squared:  0.9995,    Adjusted R-squared:  0.9995 
+    F-statistic: 1.791e+04 on 2 and 17 DF,  p-value: < 2.2e-16
+
+

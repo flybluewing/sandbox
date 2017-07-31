@@ -1,0 +1,89 @@
+dim(hitTable)
+summary(hitTable)
+mean(hitDistrib)
+
+
+# =[실험결과(가중치 부여)]===========================================================
+# > dim(hitTable)	# [1] 555   7
+# > summary(hitTable)
+#			0             	1               	2             		3
+#	 Min.   :319		Min.   :373.0	Min.   :106		Min.   : 8.00
+#	 1st Qu.:386		1st Qu.:413.0	1st Qu.:140		1st Qu.:19.00
+#	 Median :401		Median :425.0	Median :150		Median :22.00   
+#	 Mean   :401		Mean   :424.2	Mean   :151		Mean   :22.36
+#	 3rd Qu.:417		3rd Qu.:435.0	3rd Qu.:161		3rd Qu.:25.00
+#	 Max.   :474		Max.   :472.0	Max.   :206		Max.   :43.00
+#			4			5					6    
+# 	Min.   :0.000	Min.   :0.00000		Min.   :0  
+#	1st Qu.:0.000	1st Qu.:0.00000		1st Qu.:0  
+#	Median :1.000	Median :0.00000		Median :0  
+#	Mean   :1.398	Mean   :0.02162		Mean   :0  
+#	3rd Qu.:2.000	3rd Qu.:0.00000		3rd Qu.:0  
+#	Max.   :7.000	Max.   :2.00000		Max.   :0  
+#
+# > mean(hitDistrib)	#	[1] 0.7974649
+# ====================================================================================
+
+> dim(hitTable)		# [1] 555   7
+> summary(hitTable)
+		   0             1               2               3        
+	 Min.   :324   Min.   :370.0   Min.   :101.0   Min.   : 6.00  
+	 1st Qu.:386   1st Qu.:413.0   1st Qu.:142.0   1st Qu.:19.00  
+	 Median :402   Median :424.0   Median :151.0   Median :23.00  
+	 Mean   :401   Mean   :423.9   Mean   :151.1   Mean   :22.63  
+	 3rd Qu.:417   3rd Qu.:434.5   3rd Qu.:162.0   3rd Qu.:26.00  
+	 Max.   :482   Max.   :480.0   Max.   :191.0   Max.   :39.00  
+		   4               5                 6    
+	 Min.   :0.000   Min.   :0.00000   Min.   :0  
+	 1st Qu.:0.000   1st Qu.:0.00000   1st Qu.:0  
+	 Median :1.000   Median :0.00000   Median :0  
+	 Mean   :1.321   Mean   :0.01802   Mean   :0  
+	 3rd Qu.:2.000   3rd Qu.:0.00000   3rd Qu.:0  
+	 Max.   :5.000   Max.   :1.00000   Max.   :0  
+> mean(hitDistrib)
+	[1] 0.7979477
+# =====================================================================================	
+
+
+# =====================================================================================	
+# =[실험결과(가중치 없음)]===========================================================
+> dim(hitTable)
+[1] 555   7
+> summary(hitTable)
+       0               1               2               3        
+ Min.   :352.0   Min.   :383.0   Min.   :116.0   Min.   : 8.00  
+ 1st Qu.:391.0   1st Qu.:413.0   1st Qu.:144.0   1st Qu.:19.00  
+ Median :401.0   Median :423.0   Median :152.0   Median :22.00  
+ Mean   :400.5   Mean   :423.9   Mean   :151.7   Mean   :22.51  
+ 3rd Qu.:410.0   3rd Qu.:434.5   3rd Qu.:159.0   3rd Qu.:26.00  
+ Max.   :461.0   Max.   :480.0   Max.   :188.0   Max.   :38.00  
+       4               5                 6    
+ Min.   :0.000   Min.   :0.00000   Min.   :0  
+ 1st Qu.:0.000   1st Qu.:0.00000   1st Qu.:0  
+ Median :1.000   Median :0.00000   Median :0  
+ Mean   :1.339   Mean   :0.01622   Mean   :0  
+ 3rd Qu.:2.000   3rd Qu.:0.00000   3rd Qu.:0  
+ Max.   :6.000   Max.   :1.00000   Max.   :0  
+> mean(hitDistrib)
+[1] 0.7988901
+# =====================================================================================	
+> dim(hitTable)
+[1] 555   7
+> summary(hitTable)
+       0             1               2               3        
+ Min.   :356   Min.   :377.0   Min.   :117.0   Min.   : 9.00  
+ 1st Qu.:390   1st Qu.:412.0   1st Qu.:144.0   1st Qu.:19.00  
+ Median :400   Median :423.0   Median :152.0   Median :23.00  
+ Mean   :401   Mean   :422.9   Mean   :152.1   Mean   :22.65  
+ 3rd Qu.:412   3rd Qu.:433.0   3rd Qu.:161.0   3rd Qu.:26.00  
+ Max.   :456   Max.   :481.0   Max.   :184.0   Max.   :40.00  
+       4               5                 6    
+ Min.   :0.000   Min.   :0.00000   Min.   :0  
+ 1st Qu.:1.000   1st Qu.:0.00000   1st Qu.:0  
+ Median :1.000   Median :0.00000   Median :0  
+ Mean   :1.386   Mean   :0.01802   Mean   :0  
+ 3rd Qu.:2.000   3rd Qu.:0.00000   3rd Qu.:0  
+ Max.   :5.000   Max.   :1.00000   Max.   :0  
+> mean(hitDistrib)
+[1] 0.7991748
+

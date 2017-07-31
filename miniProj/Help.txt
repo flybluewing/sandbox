@@ -1,0 +1,74 @@
+
+[ZH_FilterTest]
+
+[ZH_FilterTest.simul]
+	* List 반환
+		- attributes : Filter 별 probMtx 테이블
+		- probMtx 테이블 : col=filter values, row=test history
+				각 History 시점에서 각각의 values들이 연속발생할 확률
+
+
+[ZH_FilterTest.LoadData]
+	* function( pFileName, pMakeLog=F )
+	* fileName
+	* metaInfo (단일객체)
+			- type
+			- filtMatrixNames
+			- zoidPoolSize
+			- testHistory
+	* dataLst[[n]] : history 별 측정결과
+			- type : 항상 "data"
+			- historyIndex
+			- zoidScores : pool내 Zoid들의 명중률.
+			- filtMatrix : pool내 Zoid들의 필터링 결과
+					col : filter 별(filter이름)
+					row : pool내 zoid 별 필터링 결과(T/F)
+
+[ZH_Filter.100.d.Obj]
+	* analyze(), filt() 함수사용 참고.
+	* $filtName
+	* $recurMtx
+	* $recurNum
+	* $analyze( pZoid, lastIdx )
+	* $filt( anaObj )
+
+[seqDistribute]
+	* 목적 : recurMtx 참고.
+	* function( pVec )
+	* $vals	: pVec 값 목록
+	* $recurMtx : vals값 별(col) 연속발생 횟수(row)
+			A	B
+		1	2	2	# 바로 이전 한번 발생
+		2	2	2	# 바로 이전까지 두번 연속 발생
+		3	0	1
+					# 연속발생 0번은 뺐음. 의미없으므로..
+
+[seqDistClass]
+	* 목적 : prob() 함수사용 참고.
+	* function( pVals, pRecurMtx )
+			- pVals : 기존 발생되었던 값들의 목록
+			- pRecurMtx : 연속발생 통계
+					col : length(pVals)
+					row : 연속발생기록 최대값+1 (0번 발생도 기록되어야 하므로.)
+	* $vals : 기존 발생된 값들의 목록
+	* $recurProbMtx
+			: 값 별, 연속발생 횟수 별 확률(0.0~1.0)
+				0, 1, 1, 1, 1, 0 에서 1의 연속발생 확률은
+				0번 연속 1번, 1번 연속 3번, 2번 연속 2번, 3번 연속 1번이며,
+				이는 1/7, 3/7, 2/7, 1/7 확률로 변환된다.
+				(7 = 1+3+2+1)
+	* $maxSeqCnt
+			: 기존 통계에서의 연속발생 최대치.
+				이 값보다 크면 연속발생확률 0.0으로 가정한다.
+	* $prob( pVal, pSeq )
+			: 현재 값이 pVal이고, 이 값이 이전에 pSeq만큼 연속 발생한 상태일 때
+				pVal값이 맞을 확률(0.0~1.0)
+				- 현재값 1이며 이전 값 2이면 pVal=1, pSeq=0
+				- 현재값 1이며 이전 값 1,1,1 이면 pVal=1, pSeq=3 (발생 수가 아닌 연속 수 이므로)
+				- pSeq가 0인 경우 바로 이전 값이 연속되지 못할 확률을, 이전 값들의 발생빈도로 나누어 적용한다.
+					예를 들어 발생발견된 값이 0, 1, 2 이고 발생빈도 비율이 0.5, 0.3, 0.2였다면
+					그리고 현재값 0이고 이전 값 1,1,1인 상태에서 1의 pSeq값이 0.1이었다면
+					확률은 (1.0-0.1)*( 0.5/(0.5+0.3) )
+					
+					
+	

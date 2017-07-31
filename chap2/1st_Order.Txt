@@ -1,0 +1,43 @@
+Call:    lm(formula = Y0 ~ X1)
+    Residuals:
+               Min         1Q     Median         3Q        Max 
+        -3.104e-15  4.210e-18  1.763e-16  3.037e-16  1.019e-15 
+    Coefficients:
+                      Estimate Std. Error    t value Pr(>|t|)    
+        (Intercept) -2.383e-15  3.848e-16 -6.193e+00  7.6e-06 ***
+        X1           5.000e-01  3.212e-17  1.557e+16  < 2e-16 ***
+        ---
+        Signif. codes:  0 ¡®***¡¯ 0.001 ¡®**¡¯ 0.01 ¡®*¡¯ 0.05 ¡®.¡¯ 0.1 ¡® ¡¯ 1
+    Residual standard error: 8.284e-16 on 18 degrees of freedom
+    Multiple R-squared:      1,     Adjusted R-squared:      1 
+    F-statistic: 2.423e+32 on 1 and 18 DF,  p-value: < 2.2e-16
+
+Call:    lm(formula = Y1 ~ X1)
+    Residuals:
+             Min       1Q   Median       3Q      Max 
+        -0.82785 -0.46948  0.09424  0.36064  0.78285 
+    Coefficients:
+                    Estimate Std. Error t value Pr(>|t|)    
+        (Intercept)  -0.3117     0.2443  -1.276    0.218    
+        X1            0.5233     0.0204  25.654 1.26e-15 ***
+        ---
+        Signif. codes:  0 ¡®***¡¯ 0.001 ¡®**¡¯ 0.01 ¡®*¡¯ 0.05 ¡®.¡¯ 0.1 ¡® ¡¯ 1
+    Residual standard error: 0.526 on 18 degrees of freedom
+    Multiple R-squared:  0.9734,    Adjusted R-squared:  0.9719 
+    F-statistic: 658.1 on 1 and 18 DF,  p-value: 1.261e-15
+
+Call:    lm(formula = Y2 ~ X1)
+    Residuals:
+             Min       1Q   Median       3Q      Max 
+        -1.89580 -0.47883 -0.01233  0.81383  1.45953 
+    Coefficients:
+                    Estimate Std. Error t value Pr(>|t|)    
+        (Intercept)  0.07021    0.46014   0.153     0.88    
+        X1           0.48093    0.03841  12.521 2.54e-10 ***
+        ---
+        Signif. codes:  0 ¡®***¡¯ 0.001 ¡®**¡¯ 0.01 ¡®*¡¯ 0.05 ¡®.¡¯ 0.1 ¡® ¡¯ 1
+    Residual standard error: 0.9905 on 18 degrees of freedom
+    Multiple R-squared:  0.897,     Adjusted R-squared:  0.8913 
+    F-statistic: 156.8 on 1 and 18 DF,  p-value: 2.54e-10
+
+

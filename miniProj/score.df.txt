@@ -1,0 +1,31 @@
+library(MASS)
+
+# Qualitative Predictor
+score.lm <- lm( hit~fdepth, data=score.df )
+score.pred <- predict( score.lm, data.frame(fdepth=score.df$fdepth), interval="confidence" )
+contrasts( score.df$fdepth )
+plot( score.df$fdepth, jitter(score.df$hit), pch="+")
+
+# Classifier
+score.lda <- lda( fhit~element+depth, data=score.df )
+score.pred <- predict( score.lda, type="response" )
+table( score.df$fhit, score.pred$class )
+mean( score.df$fhit==score.pred$class )	# 0.460961
+
+score.qda <- qda( fhit~element+depth, data=score.df )
+score.pred <- predict( score.qda, type="response" )
+table( score.df$fhit, score.pred$class )
+mean( score.df$fhit==score.pred$class )	# 0.4380631
+
+#KNN
+library(class)
+trainIdx <- sample( 1:nrow(score.df), nrow(score.df)/10 )
+score.train	<- cbind(score.df$element, score.df$depth)[-trainIdx,]
+score.test	<- cbind(score.df$element, score.df$depth)[trainIdx,]
+colnames( score.train )	<- c("element","depth")
+colnames( score.test  )	<- c("element","depth")
+
+score.knn <- knn( score.train, score.test, score.df$fhit[-trainIdx], k=3 )
+table( score.knn, score.df$fhit[trainIdx] )
+mean( score.knn==score.df$fhit[trainIdx] )	#  0.4379699
+

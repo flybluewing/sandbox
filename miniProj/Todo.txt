@@ -1,0 +1,9 @@
+[2016-10-02]
+<t04_mlpFit.t04Flag>
+    rObj$rate <- apply( scoreMtx ,1 ,function(p){ifelse(p["tot"]==0,0.5,p["hit"]/p["tot"])} )
+
+    데이터가 없는 것은 0.5가 아닌 NA로 처리 필요.
+    나중에 명중률들에 대한 평균값 계산 시
+    NA 상태인 hIdx들의 총 데이터수를 달리 처리하기 위함.
+
+

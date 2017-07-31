@@ -1,0 +1,32 @@
+g.size <- 30
+
+x1 <- sort(rnorm( g.size, mean=0.5, sd=0.7 ))
+x2 <- sort(rnorm( g.size, mean=2.5, sd=0.7 ))
+
+p.xlim <- c(-2,5);	p.ylim <- c(0,3)
+plot(	x1, rep(1,g.size), col="green",	
+	xlim=p.xlim, ylim=p.ylim, xlab="dist", ylab="class" )
+points( x2, rep(2,g.size), col="blue" )
+
+d.class1 <-data.frame( rep("c1",g.size), x1 )
+names(d.class1) <- c("cl","cord")
+d.class2 <-data.frame( rep("c2",g.size), x2 )
+names(d.class2) <- c("cl","cord")
+d.class <- rbind( d.class1, d.class2 )
+
+lda.fit <- lda( d.class$cl~d.class$cord )
+lda.fit
+    Call:    lda(d.class$cl ~ d.class$cord)
+
+        Prior probabilities of groups:
+             c1  c2 
+            0.5 0.5 
+        Group means:
+               d.class$cord
+            c1    0.5215539
+            c2    2.5426446
+        Coefficients of linear discriminants:
+                              LD1
+            d.class$cord 1.439824
+
+lda.pred <- predict( lda.fit )

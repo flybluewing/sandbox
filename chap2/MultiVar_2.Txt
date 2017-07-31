@@ -1,0 +1,57 @@
+X1 <- 1:20
+X2 <- X1^2
+
+e1 <- sample( seq(-1,1,by=0.2), length(X1), replace=T )
+e2 <- sample( seq(-1,1,by=0.2), length(X1), replace=T )*2
+
+Y00 <- 0.5*X1 + 0.7*X2
+lm.Y0_ <- lm( Y00~X1 )
+lm.Y00 <- lm( Y00~X1+X2 )
+
+Y12 <- 0.5*(X1+e1) + 0.7*(X2+e2)
+lm.Y12 <- lm(Y12~X1+X2)
+--------------------------------------------------
+
+Call:    lm(formula = Y00 ~ X1)
+    Residuals:
+           Min     1Q Median     3Q    Max 
+         -23.1  -18.9   -5.6   16.1   39.9 
+    Coefficients:
+                    Estimate Std. Error t value Pr(>|t|)    
+        (Intercept) -53.9000    10.1552  -5.308 4.79e-05 ***
+        X1           15.2000     0.8477  17.930 6.29e-13 ***
+        ---
+        Signif. codes:  0 ¡®***¡¯ 0.001 ¡®**¡¯ 0.01 ¡®*¡¯ 0.05 ¡®.¡¯ 0.1 ¡® ¡¯ 1
+    Residual standard error: 21.86 on 18 degrees of freedom
+    Multiple R-squared:  0.947,     Adjusted R-squared:  0.944 
+    F-statistic: 321.5 on 1 and 18 DF,  p-value: 6.295e-13
+
+Call:    lm(formula = Y00 ~ X1 + X2)
+    Residuals:
+               Min         1Q     Median         3Q        Max 
+        -3.197e-14 -4.579e-15  7.430e-16  5.876e-15  2.521e-14 
+    Coefficients:
+                     Estimate Std. Error   t value Pr(>|t|)    
+        (Intercept) 3.972e-14  9.097e-15 4.366e+00 0.000421 ***
+        X1          5.000e-01  1.995e-15 2.506e+14  < 2e-16 ***
+        X2          7.000e-01  9.228e-17 7.585e+15  < 2e-16 ***
+        ---
+        Signif. codes:  0 ¡®***¡¯ 0.001 ¡®**¡¯ 0.01 ¡®*¡¯ 0.05 ¡®.¡¯ 0.1 ¡® ¡¯ 1
+    Residual standard error: 1.223e-14 on 17 degrees of freedom
+    Multiple R-squared:      1,     Adjusted R-squared:      1 
+    F-statistic: 5.426e+32 on 2 and 17 DF,  p-value: < 2.2e-16
+
+Call:    lm(formula = Y12 ~ X1 + X2)
+    Residuals:
+             Min       1Q   Median       3Q      Max 
+        -1.15549 -0.60970  0.02463  0.65390  1.32203 
+    Coefficients:
+                    Estimate Std. Error t value Pr(>|t|)    
+        (Intercept) 0.005860   0.593196   0.010 0.992234    
+        X1          0.536350   0.130097   4.123 0.000711 ***
+        X2          0.697453   0.006018 115.902  < 2e-16 ***
+        ---
+        Signif. codes:  0 ¡®***¡¯ 0.001 ¡®**¡¯ 0.01 ¡®*¡¯ 0.05 ¡®.¡¯ 0.1 ¡® ¡¯ 1
+    Residual standard error: 0.7973 on 17 degrees of freedom
+    Multiple R-squared:  0.9999,    Adjusted R-squared:  0.9999 
+    F-statistic: 1.273e+05 on 2 and 17 DF,  p-value: < 2.2e-16

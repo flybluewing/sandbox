@@ -1,0 +1,122 @@
+library( MASS );	library( ISLR )
+summary( Smarket )
+unique( Smarket$Direction )
+	[1] Up   Down
+	Levels: Down Up
+
+m.cor <- cor( Smarket[,-9] )
+par( mfrow=c(2,2) )
+persp( m.cor, theta=30, phi=30 )
+persp( m.cor, theta=120, phi=30 )
+image( m.cor )
+plot( Smarket$Volume )
+
+attach( Smarket )
+
+# -----------------------------------------------------------------------------
+# [Logistic Regression]--------------------------------------------------------
+# 	Basic Assess --------------------------------------------------------------
+glm.fit <- glm(Direction~Lag1+Lag2+Lag3+Lag4+Lag5+Volume, family=binomial )
+coef( glm.fit )
+
+glm.probs <- predict( glm.fit, type="response" )	# x값이 없으면 각 train데이터의 Direction 확률반환.
+plot( glm.probs )
+contrasts( Direction )	# Direction 분류 클래스에 대한 출력값 배정확인.
+		 Up
+	Down  0
+	Up    1
+glm.pred <- rep("Down",1250)
+glm.pred[glm.probs>.5] <- "Up"
+table( glm.pred, Direction )
+			Direction
+	glm.pred Down  Up
+		Down  145 141
+		Up    457 507
+mean( glm.pred == Direction )	# (145+507)/2
+
+# 	Training Data --------------------------------------------------------------
+train <- (Year<2005)
+Smarket.2005 <- Smarket[!train,]
+Direction.2005 <- Direction[!train]
+glm.fit <- glm( Direction~Lag1+Lag2+Lag3+Lag4+Lag5+Volume, family=binomial ,subset=train )
+
+glm.prob <- predict( glm.fit, Smarket.2005, type="response" )
+glm.pred <- rep( "Down", length(train[!train]) )
+glm.pred[glm.prob>0.5] <- "Up"
+table( glm.pred, Direction.2005 )
+	   Direction.2005
+	glm.pred Down Up
+		Down   77 97
+		Up     34 44
+
+predict( glm.fit, newdata=data.frame(Lag1=c(1.2,1.5),Lag2=c(1.1,-0.8)), type="response" )
+
+# -----------------------------------------------------------------------------
+# [Linear Discriminant Analysis]-----------------------------------------------
+#
+lda.fit <- lda( Direction~Lag1+Lag2, subset=train )
+lda.fit
+	Call:	lda(Direction ~ Lag1 + Lag2, subset = train)
+		Prior probabilities of groups:
+				Down       Up 
+			0.491984 0.508016 
+		Group means:
+						Lag1        Lag2
+			Down  0.04279022  0.03389409
+			Up   -0.03954635 -0.03132544
+		Coefficients of linear discriminants:
+						LD1
+			Lag1 -0.6420190
+			Lag2 -0.5135293
+
+lda.pred <- predict( lda.fit, Smarket.2005 )
+	# class, posterior(Down,Up), x
+	# class는 threshold 0.5를 기준으로 하고 있으므로,
+	# 조정 필요 시, posterior 값으로 판단해주면 된다.
+
+table( lda.pred$class, Direction.2005 )	
+
+# -----------------------------------------------------------------------------
+# [Quadratic Discriminant Analysis]--------------------------------------------
+#		함수 사용자체로는 lda( )가 아닌 qda( )가 사용된 것 만이 차이.
+qda.fit <- qda( Direction~Lag1+Lag2, subset=train )
+qda.pred.class <- predict( qda.fit, newdata=Smarket[!train,] )$class
+table( qda.pred.class, Direction.2005 )
+mean( qda.pred.class==Direction.2005 )
+
+# -----------------------------------------------------------------------------
+# [K-Nearest Neibors]--------------------------------------------
+#
+library( class )
+train.x <- cbind(Lag1,Lag2)[train,]
+test.x <- cbind(Lag1,Lag2)[!train,]
+train.Direction <- Direction[train]
+
+set.seed(1)		#	KNN의 랜덤하게 처리되는 부분을 감추기 묶어놓기 위해.
+train.x <- cbind(Lag1,Lag2)[train,]
+test.x <- cbind(Lag1,Lag2)[!train,]
+train.Direction <- Direction[train]
+knn.pred <- knn( train.x, test.x, Direction[train], k=3 )
+table( knn.pred, Direction.2005 )
+
+# [Standardize for KNN ]--------------------------------------------
+attach( Caravan )
+standardized.x <- scale(Caravan[,-86])
+var(standardized.x[,1])     # 1
+mean(standardized.x[,1])    # 0
+
+test <- 1:1000
+train.x <- standardized.x[-test,]
+test.x  <- standardized.x[test,]
+train.y <- Purchase[-test]
+test.y  <- Purchase[test]
+
+set.seed(1)
+knn.pred <- knn(train.x, test.x, train.y, k=3 )
+table( knn.pred, test.y )
+			test.y
+	knn.pred  No Yes
+		 No  921  54
+		 Yes  20   5
+
+
