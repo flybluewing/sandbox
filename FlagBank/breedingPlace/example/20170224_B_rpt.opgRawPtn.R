@@ -1,4 +1,8 @@
 # rpt.opgRawPtn() 함수 실행 및 결과물에 대한 Review 예제.
+source("20170224_B_H.R")
+source("20170224_B_auxH.R")
+source("20170224_B_Run_H.R")
+
 
 # =======================================================================================================
 ptnObjDir.save	<- "./save/ptnObjGrp"
@@ -21,6 +25,8 @@ rptObjFile <- dir( ptnObjDir.rpt ,pattern="[[:digit:]]rpt\\.save$")
 for( fIdx in rptObjFile ){
 	rptMObj <- getM.rpt.opgRawPtn( paste(ptnObjDir.rpt,fIdx,sep="/") )
 	saveFile <- paste(ptnObjDir.rpt,gsub("rpt\\.save$","rptM.save",fIdx),sep="/")
+	save( rptMObj ,file=saveFile )
+	k.FLogStr(sprintf("  saved in %s",saveFile))
 }
 
 # =======================================================================================================
