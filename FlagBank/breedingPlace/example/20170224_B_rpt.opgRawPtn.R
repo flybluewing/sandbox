@@ -42,18 +42,28 @@ fb722Obj <- buildField( pFieldMtx=as.matrix(FB722$zh) )
 winDef4Vld <- getWindow( pField=fb722Obj$vFieldMtx	,pFilm=fb722Obj$filmMtx
 						,pHeight=3 ,pInitPos=1 ,pIdStr="validateWD"
 					)
-					
+
+# =======================================================================================================
 rptSummary.dir <- "./report/rptObjSummary"
 rptMObjFile <- dir( ptnObjDir.rpt ,pattern="[[:digit:]]rptM.save" )
 # rptMObjFile <- rptMObjFile[1]
+selMtxLst <- list()
 for( fIdx in rptMObjFile ){
-	rptMObjSummary( pSaveFile=paste(fIdx,ptnObjDir.rpt,sep="/") ,pRptFile=paste(rptSummary.dir,"rpt",sep="/") ,pWindDef=winDef4Vld ,pRptAppend=F )
+	rptFile <- gsub(".save","",fIdx)
+	selMtx <- rptMObjSummary( pSaveFile=paste(ptnObjDir.rpt,fIdx,sep="/") ,pRptFile=paste(rptSummary.dir,rptFile,sep="/") ,pWinDef=winDef4Vld ,pRptAppend=F )
+	if( !is.null(selMtxLst) ){
+		selMtxLst[[fIdx]] <- selMtx
+	}
 }
+save( selMtxLst ,file="Obj_selMtxLst.save" )
+mtx <- do.call( rbind, selMtxLst )
+hitDiff <- mtx[,"pred.hauntRate"] - mtx[,"base.hitRate"]
 
-# pSaveFile=	;pRptFile=	;pWinDef=winDef4Vld	;pRptMsg="none" ;pRptAppend=T
+# pSaveFile=paste(ptnObjDir.rpt,fIdx,sep="/")	;pRptFile=paste(rptSummary.dir,rptFile,sep="/")
+#	pWinDef=winDef4Vld	;pRptMsg="none" ;pRptAppend=T
 # QQE:working
 rptMObjSummary <- function( pSaveFile ,pRptFile="./report/rptMObjSummary" ,pWinDef ,pRptMsg="none" ,pRptAppend=T ){
-		
+
 		log.txt <- sprintf("%s.txt",pRptFile)
 		log.png <- sprintf("%s.png",pRptFile)
 		FLog <- function( pObj ,pTime=F ,pAppend=T ,pConsole=F ){
@@ -91,7 +101,7 @@ rptMObjSummary <- function( pSaveFile ,pRptFile="./report/rptMObjSummary" ,pWinD
 				assLst[[(1+length(assLst))]] <- ass
 			} # for(cIdx)
 		} # for(pIdx)
-		
+
 		hauntNum<- rep(0,length(assLst)) # haunt number in validation area
 		hitNum	<- rep(0,length(assLst)) # hit number within validation area
 		rateDiff<- rep(0,length(assLst)) # hit rate change
@@ -106,11 +116,16 @@ rptMObjSummary <- function( pSaveFile ,pRptFile="./report/rptMObjSummary" ,pWinD
 		idxNum			<- sapply(assLst,function(p){sum(!is.na(p$matMtx))})
 		pred.hauntRate	<- sapply(assLst,function(p){p$predHauntRate})
 
+		if( 0==length(base.hitRate) ){
+			FLogStr("  No result in assLst ")
+			return( NULL )
+		}
+
 		png( log.png )
 		par( mfrow=c(2,3) )
 		# pred의 자연적인 발생 확률보다 base.hitRate가 월등히 높아야 쓸모가 있는데..
 		#	Validation 대상에 대한 hitRate 상승/하강 여부도 색으로써 표현해주자.
-		plot( jitter(base.hitRate),jitter(pred.hauntRate) ,xlim=c(45,105) ,ylim=c(45,105) )
+		plot( jitter(base.hitRate),jitter(pred.hauntRate) ,xlim=c(45,105) ,ylim=c(-5,105) )
 		lines( c(45,100) ,c(45,100) )
 
 		plot(base.hitRate,base.hauntNum)	# 1) haunt number와 hit rate 의 plot
@@ -120,6 +135,8 @@ rptMObjSummary <- function( pSaveFile ,pRptFile="./report/rptMObjSummary" ,pWinD
 
 		plot( base.hitRate ,(hitNum*100)/hauntNum )
 		dev.off()
+		
+		return( cbind( base.hitRate ,pred.hauntRate ,idxNum ) )
 
 	} # rptMSummary
 

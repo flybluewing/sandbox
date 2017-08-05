@@ -73,8 +73,10 @@ report.invMAna <- function( pInvM.ana ,pRptFile="./report/invMAna" ,pRptMsg="non
 	}
 
 # rpt.opgRawPtn() : Search clue start from pred overlap
-#	pSaveFile=	;pRptFile="./report/report.ogpRawPtn" ;pRptMsg="none" ;pRptAppend=T	;pPredCpNum=100 ;pClueCvrRate=0.2 ;pGetResult=T
-rpt.opgRawPtn <- function( pSaveFile ,pRptFile="./report/report.ogpRawPtn" ,pRptMsg="none" ,pGetResult=T ,pPredCpNum=100 ,pClueCvrRate=0.2 ,pRptAppend=T ){
+#		- pNoPredCol : remove clue columns when predict has same column & same value.
+#	pSaveFile=	;
+#	pRptFile="./report/report.ogpRawPtn" ;pRptMsg="none" ;pRptAppend=T	;pPredCpNum=100 ;pClueCvrRate=0.2 ;pGetResult=T	;pNoPredCol=F
+rpt.opgRawPtn <- function( pSaveFile ,pRptFile="./report/report.ogpRawPtn" ,pRptMsg="none" ,pGetResult=T ,pPredCpNum=100 ,pClueCvrRate=0.2 ,pNoPredCol=F ,pRptAppend=T ){
 
 		log.txt <- sprintf("%s.txt",pRptFile)
 		log.pdf <- sprintf("%s.pdf",pRptFile)
