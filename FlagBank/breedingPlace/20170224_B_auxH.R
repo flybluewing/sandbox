@@ -117,6 +117,15 @@ rpt.opgRawPtn <- function( pSaveFile ,pRptFile="./report/report.ogpRawPtn" ,pRpt
 		matMtx.pred <- matrix( F ,nrow=ptnObjGrp$winDef$height ,ncol=ptnObjGrp$winDef$width )
 
 		# << clue search >>
+		if( pNoPredCol ){
+			primeWindow <- ptnObjGrp$winDef$field[ ptnObjGrp$winDef$initPos:(ptnObjGrp$winDef$initPos+ptnObjGrp$winDef$height-1) , ]
+			sColMaskMtx <- matrix( F ,nrow=ptnObjGrp$winDef$height ,ncol=ptnObjGrp$winDef$width )
+				# flag matrix for same value column ( check if each column value is match the last row's column value )
+			for(rIdx in seq_len(ptnObjGrp$winDef$height-1) ){
+				sColMaskMtx[rIdx,] <- primeWindow[rIdx,] == primeWindow[ptnObjGrp$winDef$height,]
+			}
+			sColMaskMtx[is.na(sColMaskMtx)] <- F
+		}
 		invLst <- list()
 		for( choiceIdx in seq_along(chosen) ){ # choiceIdx <- 3
 
@@ -129,7 +138,21 @@ rpt.opgRawPtn <- function( pSaveFile ,pRptFile="./report/report.ogpRawPtn" ,pRpt
 					# accum <- as.vector(accObj$accumMtx)	;accum <- accum[accum>1]	;hist(accum)
 
 			# << clue overlap >>
-			thld <- as.vector(accObj$accumMtx) # threshold
+			thldAccumMtx <- accObj$accumMtx
+			if( pNoPredCol ){
+				# Remove clue columns what has same values in that columns in pred.
+				#	to avoid same value frequency in one column
+				cSColMaskMtx <- sColMaskMtx	# sColMaskMtx for current chosen index.
+				noUseColFlag <- is.na(overlap$matchLst[[chosen[choiceIdx]]]$matMtx[nrow(cSColMaskMtx),])
+				cSColMaskMtx[,noUseColFlag] <- F
+					# cSColMaskMtx means which idx should be excepted to avoid an value frequency whithin same column.
+				
+				thldAccumMtx[cSColMaskMtx] <- 0
+			}
+			if( 0==sum(thldAccumMtx) )
+				next
+
+			thld <- as.vector(thldAccumMtx) # threshold
 			thld <- thld[thld>0]
 			thld <- quantile(thld[thld>0])["75%"]
 			excFilm <- accObj$accumMtx < thld

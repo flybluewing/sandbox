@@ -12,10 +12,13 @@ ptnObjFile <- dir( ptnObjDir.save ,pattern="\\.save")
 # ptnObjFile <- ptnObjFile[1]	# 모든 거 돌리면 너무 오래걸릴 수 있으니깐.
 rptObjFileLst <- list()
 for( fIdx in ptnObjFile ){
-	rptObj <- rpt.opgRawPtn( paste(ptnObjDir.save,fIdx,sep="/") ,pRptFile=paste(ptnObjDir.rpt,fIdx,sep="/") ,pRptAppend=F ,pGetResult=T  )
+	rptObj <- rpt.opgRawPtn( paste(ptnObjDir.save,fIdx,sep="/") ,pRptFile=paste(ptnObjDir.rpt,fIdx,sep="/") 
+								,pRptAppend=F ,pNoPredCol=F ,pGetResult=T  
+							)
 	saveFile <- paste(ptnObjDir.rpt,gsub("\\.save$","rpt.save",fIdx),sep="/")
 	save( rptObj ,file=saveFile )
 	rptObjFileLst[[(length(saveFile)+1)]] <- saveFile
+	k.FLogStr(sprintf(" finish fIdx report.",fIdx))
 }
 
 

@@ -1069,13 +1069,13 @@ scanMatchLst <- function( pMatchLst ,pExcFilm=NULL ,pSearchArea=NULL ,pExpandMod
 				}
 			}
 
-			idxStr	<- paste( apply(idxMtx,1,function(p){paste(p[1:2],collapse=".")}) ,collapse="/" )
-			idxStrV	<- paste( apply(idxMtx,1,function(p){paste(p[1:3],collapse=".")}) ,collapse="/" )
+			idxStr	<- paste( apply(idxMtx,1,function(p){paste(p[1:2],collapse=".")}) ,collapse="/" )	# just use row&col idx
+			idxStrV	<- paste( apply(idxMtx,1,function(p){paste(p[1:3],collapse=".")}) ,collapse="/" )	# include value
 			flag <- sapply( ptnLst ,function(p){return(p$idxStr==idxStr)} ) # flag is 0 length list() when ptnLst's length is 0
 
 			if( 0==length(flag) || 0==sum(flag) ) { # need new ptn object
 
-				vPtn <- list( idxStr=idxStrV );		vPtn$idxLst <- list( idx )
+				vPtn <- list( idxStr=idxStrV );		vPtn$idxLst <- list( idx )	# should be (pSearchArea[idx]) ?
 				ptn <- list( idxStr=idxStr )
 				ptn$excFilm = is.na(pMatchLst[[(pSearchArea[idx])]]$matMtx)
 				ptn$vPtnLst <- list()
@@ -1084,7 +1084,7 @@ scanMatchLst <- function( pMatchLst ,pExcFilm=NULL ,pSearchArea=NULL ,pExpandMod
 
 			} else {
 				# in most case, vPtnLst is just one.
-				# cause matchLst is produced based fixed map of which position defined as one wIdx
+				# cause matchLst is produced based on fixed map of which position defined as one wIdx
 				idx.ptnLst <- which(flag)[1]
 				ptnLst[[idx.ptnLst]]$excFilm[ !is.na(pMatchLst[[(pSearchArea[idx])]]$matMtx) ] <- F
 				flag.v <- sapply( ptnLst[[idx.ptnLst]]$vPtnLst ,function(p){p$idxStr==idxStrV} )
