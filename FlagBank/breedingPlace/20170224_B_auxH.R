@@ -21,7 +21,6 @@ report.invMAna <- function( pInvM.ana ,pRptFile="./report/invMAna" ,pRptMsg="non
 			FLogStr(sprintf("  Error message : %s",pInvM.ana$errMsg))
 		}
 
-		#	clueµéÀÇ °¡´É¼º °Ë»ö.
 		FLogStr(sprintf("Search by clue(%d candidates)",length(pInvM.ana$fnlCand)))
 		flag <- scanGoodRow.cvrRateMtx( pInvM.ana$cvrMtx.clue ,pInvM.ana$cvrMtx.hu )
 		if( any(flag) ){
@@ -39,7 +38,6 @@ report.invMAna <- function( pInvM.ana ,pRptFile="./report/invMAna" ,pRptMsg="non
 		}
 
 		if( !is.null(pInvM.ana$cmbMtx) && !is.null(pInvM.ana$cmbCvrLst) ){
-			#	combination ¿¡ µû¸¥ °¡´É¼º ÀÖ´Â Á¶ÇÕ °Ë»ö.
 			cvr <- ana.invM.getCvrMtx( pInvM.ana$huCompPair ,pInvM.ana$cmbCvrLst )
 			mtxName <- attributes(cvr$cvrRateMtxLst.clue)$name
 			FLogStr(sprintf("Search by clue combinations(%d matrixes)",length(mtxName)))
@@ -52,7 +50,6 @@ report.invMAna <- function( pInvM.ana ,pRptFile="./report/invMAna" ,pRptMsg="non
 				if( any(flag) ){
 					valuableRowNum <- valuableRowNum+sum(flag)
 					mtx <- cvr$cvrRateMtxLst.clue[[idx]]
-					# ½ÇÁ¦ Row ÀÌ¸§Àº cvr$typNameLst[[idx]] Âü°í.
 					rowFmtStr <- sprintf("%%%dd",ceiling(log10(nrow(mtx))))
 					rName = sprintf(rowFmtStr,1:nrow(mtx))
 					FLogStr("  ---<RateMtx>---")
@@ -88,6 +85,32 @@ rpt.opgRawPtn <- function( pSaveFile ,pRptFile="./report/report.ogpRawPtn" ,pRpt
 				if( !is.null(pRptFile) )
 					k.FLogStr( pMsg ,pFile=log.txt ,pTime=pTime ,pAppend=pAppend ,pConsole=pConsole )
 			}
+
+		# pRawPtn=ptnObjGrp$rawPtn	;pChosen=chosen.cpV[[choiceIdx]]
+		# pThldAccumMtx=thldAccumMtx;pAccumMtx=accObj$accumMtx ;pCCR=pClueCvrRate ;pThldStep=c(0.75,0.90,0.95,0.99)
+		miningchosen <- function( pRawPtn ,pThldAccumMtx ,pAccumMtx ,pCCR=pClueCvrRate 
+									,pChosen ,pThldStep=c(0.75,0.90,0.95,0.99) 
+							)
+				{
+
+					thld <- as.vector( pThldAccumMtx )
+					thld <- thld[thld>0]
+					thld <- quantile( thld ,probs=pThldStep )
+
+					chosenObj <- NULL
+					for( tIdx in thld ){
+						excFilm <- pAccumMtx < tIdx
+						ol <- findOverlap.within( pRawPtn ,pIndices=pChosen ,pExcFilm=excFilm ,pDebug=T )
+						ol.cpNum <- sapply(ol$matchLst,function(p){cpV<-unique(as.vector(p$compPair));return(length(cpV))})
+						ol.chosen <- which(ol.cpNum>round(cpNum[chosen[choiceIdx]]*pCCR)) # actually, hope more than 0.8
+						if( 0 < length(ol.chosen) ){
+							chosenObj <- list( ol=ol ,ol.cpNum=ol.cpNum ,ol.chosen=ol.chosen )
+							chosenObj$thld <- tIdx
+							break
+						}
+					} # for
+					return( chosenObj )
+				}
 
 		FLogStr("=====================================================================",pAppend=pRptAppend)
 		FLogStr(sprintf("ptnObgGrp loading start from %s",pSaveFile),pTime=T)
@@ -152,30 +175,29 @@ rpt.opgRawPtn <- function( pSaveFile ,pRptFile="./report/report.ogpRawPtn" ,pRpt
 			if( 0==sum(thldAccumMtx) )
 				next
 
-			thld <- as.vector(thldAccumMtx) # threshold
-			thld <- thld[thld>0]
-			thld <- quantile(thld[thld>0])["75%"]
-			excFilm <- accObj$accumMtx < thld
+			# pRawPtn=ptnObjGrp$rawPtn	;pChosen=chosen.cpV[[choiceIdx]]
+			# pThldAccumMtx=thldAccumMtx;pAccumMtx=accObj$accumMtx ;pCCR=pClueCvrRate ;pThldStep=c(0.50,0.75,0.90,0.95,0.99)
+			chosenObj <- miningchosen( pRawPtn=ptnObjGrp$rawPtn ,pThldAccumMtx=thldAccumMtx ,pAccumMtx=accObj$accumMtx 
+										,pCCR=pClueCvrRate  ,pChosen=chosen.cpV[[choiceIdx]]
+									)
 
-			ol <- findOverlap.within( ptnObjGrp$rawPtn ,pIndices=chosen.cpV[[choiceIdx]] ,pExcFilm=excFilm ,pDebug=T )
-			ol.cpNum <- sapply(ol$matchLst,function(p){cpV<-unique(as.vector(p$compPair));return(length(cpV))})
-			ol.chosen <- which(ol.cpNum>round(cpNum[chosen[choiceIdx]]*pClueCvrRate)) # actually, hope more than 0.8
-				# QQE: add report for ol.cpNum and cover rage of clue
+			if( 0==is.null(chosenObj) )
+				next
 
-			ol.chosen <- ol.chosen[order(ol.cpNum[ol.chosen],decreasing=T)]
+			ol <- chosenObj$ol
+			ol.cpNum	<- chosenObj$ol.cpNum
+			ol.chosen	<- chosenObj$ol.chosen[order(ol.cpNum[chosenObj$ol.chosen],decreasing=T)]
 			ol.chosen.cpV <- lapply(ol$matchLst[ol.chosen],function(p){ unique(as.vector(p$compPair)) })
 
-			if( 0==length(ol.chosen) )
-				next
 			FLogStr(sprintf("overlap$matchLst[[%5d]] scan area : %5d, cpNum : %5d  ( %d of %d )"
 						,chosen[choiceIdx],sum(!ptnLst[[1]]$excFilm),cpNum[chosen[choiceIdx]] ,choiceIdx ,length(chosen) ))
 			FLogStr(sprintf("overlap$matchLst[[%5d]] clue overlap size : %d    chosen : %d",chosen[choiceIdx],length(ol$matchLst),length(ol.chosen) ))
 			FLogStr(sprintf("                                     max cover : %d of %d",max(ol.cpNum),cpNum[chosen[choiceIdx]] ))
 
 			# << clue assessment >>
-			hitRateLst <- list()
-			predHntRateLst <- list() # pred haunt rate in zoid history.
-			hauntNum <- list()
+			hitRateLst		<- list()
+			predHntRateLst	<- list() # pred haunt rate in zoid history.
+			hauntNum		<- list()
 			for( ocpIdx in seq_along(ol.chosen) ){ #  ocpIdx <- 1 # ocpIdx:idx for ol.chosen ptn
 				matMtx[,] <- ol$matchLst[[ol.chosen[ocpIdx]]]$matMtx # clue
 				matMtx.pred[,] <- !is.na(overlap$matchLst[[chosen[choiceIdx]]]$matMtx) # Position Flag for predict
@@ -267,7 +289,7 @@ getM.rpt.opgRawPtn <- function( pRptSaveFile ,pHitRate=NULL ){
 
 
 
-# scanRawPattern() ÇÔ¼ö °á°ú¹°¿¡ ´ëÇÑ ·¹Æ÷ÆÃ.
+# scanRawPattern() ï¿½Ô¼ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿? ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½.
 #		pRP=winRstObj$winRstLst[[1]];	pRptFile=NULL
 rpt.scanRawPattern <- function( pRP ,pRptFile="./report/scanRawPattern" ){
 
