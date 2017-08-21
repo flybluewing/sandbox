@@ -106,6 +106,7 @@ rpt.opgRawPtn <- function( pSaveFile ,pRptFile="./report/report.ogpRawPtn" ,pRpt
 						if( 0 < length(ol.chosen) ){
 							chosenObj <- list( ol=ol ,ol.cpNum=ol.cpNum ,ol.chosen=ol.chosen )
 							chosenObj$thld <- tIdx
+							chosenObj$thld.step <- pThldStep[ which(tIdx==thld) ]
 							break
 						}
 					} # for
@@ -181,7 +182,7 @@ rpt.opgRawPtn <- function( pSaveFile ,pRptFile="./report/report.ogpRawPtn" ,pRpt
 										,pCCR=pClueCvrRate  ,pChosen=chosen.cpV[[choiceIdx]]
 									)
 
-			if( 0==is.null(chosenObj) )
+			if( is.null(chosenObj) )
 				next
 
 			ol <- chosenObj$ol
@@ -221,8 +222,8 @@ rpt.opgRawPtn <- function( pSaveFile ,pRptFile="./report/report.ogpRawPtn" ,pRpt
 					invObj <- list( chosen=chosen[choiceIdx]
 										,ol=ol ,ol.cpNum=ol.cpNum ,ol.chosen=ol.chosen
 										,hitRate=hitRate ,hauntNum=do.call(c,hauntNum) 
-										,predHntRate=do.call(c,predHntRateLst) 
-										,threshold = thld
+										,predHntRate=do.call(c,predHntRateLst)
+										,threshold = chosenObj$thld.step
 									)
 					invLst[[(1+length(invLst))]] <- invObj
 				}
@@ -244,6 +245,7 @@ rpt.opgRawPtn <- function( pSaveFile ,pRptFile="./report/report.ogpRawPtn" ,pRpt
 		}
 
 	} # rpt.opgRawPtn( )
+
 
 getM.rpt.opgRawPtn <- function( pRptSaveFile ,pHitRate=NULL ){
 
