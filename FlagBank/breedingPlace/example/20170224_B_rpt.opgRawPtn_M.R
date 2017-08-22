@@ -5,9 +5,9 @@ source("20170224_B_Run_H.R")
 
 
 sfInit( parallel=T ,cpus=1 )
-sfExport("k.FLogStr");			sfExport("k.FLogOpt")
-sfExport("scanRawPattern");		sfExport("scanRawPattern.filtF")
-sfExport("filtF.lastRowMiss");	sfExport("findOverlap")
+sfExport("k.FLogStr")			;sfExport("k.FLogOpt")		;sfExport("k.FLog")
+sfExport("scanRawPattern")		;sfExport("scanRawPattern.filtF")
+sfExport("filtF.lastRowMiss")	;sfExport("findOverlap")	;sfExport("findOverlap.within")
 
 
 ptnObjDir.save	<- "./save/ptnObjGrp"
@@ -15,15 +15,13 @@ ptnObjDir.rpt	<- "./report/rptObj"
 ptnObjFile <- dir( ptnObjDir.save ,pattern="\\.save")
 
 sfExport("ptnObjDir.save")		;sfExport("ptnObjDir.rpt")
-sfExport("rpt.opgRawPtn");
-
+sfExport("rpt.opgRawPtn")		;sfExport("scanMatchLst")	;sfExport("getMatMtxAccum")	;sfExport("assessClue")
 rptObjFileLst <- sfLapply( as.list(ptnObjFile) ,function(fName){
 						rptObj <- rpt.opgRawPtn( paste(ptnObjDir.save,fName,sep="/") ,pRptFile=paste(ptnObjDir.rpt,fName,sep="/") 
 													,pRptAppend=F ,pPredCpNum=50 ,pNoPredCol=F ,pGetResult=T  
 												)
 						saveFile <- paste(ptnObjDir.rpt,gsub("\\.save$","rpt.save",fName),sep="/")
 						save( rptObj ,file=saveFile )
-						rptObjFileLst[[(length(saveFile)+1)]] <- saveFile
 						k.FLogStr(sprintf(" finish report. (%s)",fName))
 					})	# sfLapply
 
