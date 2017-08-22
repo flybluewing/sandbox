@@ -43,7 +43,7 @@ fb722Obj <- buildField( pFieldMtx=as.matrix(FB722$zh) )
 	# dim( fb722Obj$vFieldMtx )
 
 winDef4Vld <- getWindow( pField=fb722Obj$vFieldMtx	,pFilm=fb722Obj$filmMtx
-						,pHeight=3 ,pInitPos=1 ,pIdStr="validateWD"
+						,pHeight=7 ,pInitPos=1 ,pIdStr="validateWD"
 					)
 
 # =======================================================================================================
