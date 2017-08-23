@@ -72,7 +72,7 @@ report.invMAna <- function( pInvM.ana ,pRptFile="./report/invMAna" ,pRptMsg="non
 # rpt.opgRawPtn() : Search clue start from pred overlap
 #		- pNoPredCol : remove clue columns when predict has same column & same value.
 #	pSaveFile=	;
-#	pRptFile="./report/report.ogpRawPtn" ;pRptMsg="none" ;pRptAppend=T	;pPredCpNum=100 ;pClueCvrRate=0.2 ;pGetResult=T	;pNoPredCol=F
+#	pRptFile="./report/report.ogpRawPtn" ;pRptMsg="none" ;pRptAppend=T	;pPredCpNum=100 ;pClueCvrRate=0.2 ;pGetResult=T	;pNoPredCol=T
 rpt.opgRawPtn <- function( pSaveFile ,pRptFile="./report/report.ogpRawPtn" ,pRptMsg="none" ,pGetResult=T ,pPredCpNum=100 ,pClueCvrRate=0.2 ,pNoPredCol=F ,pRptAppend=T ){
 
 		log.txt <- sprintf("%s.txt",pRptFile)
@@ -87,8 +87,8 @@ rpt.opgRawPtn <- function( pSaveFile ,pRptFile="./report/report.ogpRawPtn" ,pRpt
 			}
 
 		# pRawPtn=ptnObjGrp$rawPtn	;pChosen=chosen.cpV[[choiceIdx]]
-		# pThldAccumMtx=thldAccumMtx;pAccumMtx=accObj$accumMtx ;pCCR=pClueCvrRate ;pThldStep=c(0.75,0.90,0.95,0.99)
-		miningchosen <- function( pRawPtn ,pThldAccumMtx ,pAccumMtx ,pCCR=pClueCvrRate 
+		# pThldAccumMtx=thldAccumMtx;pCCR=pClueCvrRate ;pThldStep=c(0.75,0.90,0.95,0.99)
+		miningchosen <- function( pRawPtn ,pThldAccumMtx ,pCCR=pClueCvrRate 
 									,pChosen ,pThldStep=c(0.75,0.90,0.95,0.99) 
 							)
 				{
@@ -99,7 +99,7 @@ rpt.opgRawPtn <- function( pSaveFile ,pRptFile="./report/report.ogpRawPtn" ,pRpt
 
 					chosenObj <- NULL
 					for( tIdx in thld ){
-						excFilm <- pAccumMtx < tIdx
+						excFilm <- pThldAccumMtx < tIdx
 						ol <- findOverlap.within( pRawPtn ,pIndices=pChosen ,pExcFilm=excFilm ,pDebug=T )
 						ol.cpNum <- sapply(ol$matchLst,function(p){cpV<-unique(as.vector(p$compPair));return(length(cpV))})
 						ol.chosen <- which(ol.cpNum>round(cpNum[chosen[choiceIdx]]*pCCR)) # actually, hope more than 0.8
@@ -177,8 +177,8 @@ rpt.opgRawPtn <- function( pSaveFile ,pRptFile="./report/report.ogpRawPtn" ,pRpt
 				next
 
 			# pRawPtn=ptnObjGrp$rawPtn	;pChosen=chosen.cpV[[choiceIdx]]
-			# pThldAccumMtx=thldAccumMtx;pAccumMtx=accObj$accumMtx ;pCCR=pClueCvrRate ;pThldStep=c(0.50,0.75,0.90,0.95,0.99)
-			chosenObj <- miningchosen( pRawPtn=ptnObjGrp$rawPtn ,pThldAccumMtx=thldAccumMtx ,pAccumMtx=accObj$accumMtx 
+			# pThldAccumMtx=thldAccumMtx;pCCR=pClueCvrRate ;pThldStep=c(0.75,0.90,0.95,0.99)
+			chosenObj <- miningchosen( pRawPtn=ptnObjGrp$rawPtn ,pThldAccumMtx=thldAccumMtx 
 										,pCCR=pClueCvrRate  ,pChosen=chosen.cpV[[choiceIdx]]
 									)
 

@@ -14,32 +14,18 @@ ptnObjDir.save	<- "./save/ptnObjGrp"
 ptnObjDir.rpt	<- "./report/rptObj"
 ptnObjFile <- dir( ptnObjDir.save ,pattern="\\.save")
 
+# =======================================================================================================
+# ptnObjFile <- ptnObjFile[1]	# 모든 거 돌리면 너무 오래걸릴 수 있으니깐.
 sfExport("ptnObjDir.save")		;sfExport("ptnObjDir.rpt")
 sfExport("rpt.opgRawPtn")		;sfExport("scanMatchLst")	;sfExport("getMatMtxAccum")	;sfExport("assessClue")
 rptObjFileLst <- sfLapply( as.list(ptnObjFile) ,function(fName){
 						rptObj <- rpt.opgRawPtn( paste(ptnObjDir.save,fName,sep="/") ,pRptFile=paste(ptnObjDir.rpt,fName,sep="/") 
-													,pRptAppend=F ,pPredCpNum=50 ,pNoPredCol=F ,pGetResult=T  
+													,pRptAppend=F ,pPredCpNum=50 ,pNoPredCol=T ,pGetResult=T  
 												)
 						saveFile <- paste(ptnObjDir.rpt,gsub("\\.save$","rpt.save",fName),sep="/")
 						save( rptObj ,file=saveFile )
 						k.FLogStr(sprintf(" finish report. (%s)",fName))
 					})	# sfLapply
-
-# =======================================================================================================
-# ptnObjFile <- ptnObjFile[1]	# 모든 거 돌리면 너무 오래걸릴 수 있으니깐.
-
-
-rptObjFileLst <- list()
-for( fIdx in ptnObjFile ){
-	rptObj <- rpt.opgRawPtn( paste(ptnObjDir.save,fIdx,sep="/") ,pRptFile=paste(ptnObjDir.rpt,fIdx,sep="/") 
-								,pRptAppend=F ,pPredCpNum=50 ,pNoPredCol=F ,pGetResult=T  
-							)
-	saveFile <- paste(ptnObjDir.rpt,gsub("\\.save$","rpt.save",fIdx),sep="/")
-	save( rptObj ,file=saveFile )
-	rptObjFileLst[[(length(saveFile)+1)]] <- saveFile
-	k.FLogStr(sprintf(" finish fIdx report.",fIdx))
-}
-
 
 # =======================================================================================================
 rptObjFile <- dir( ptnObjDir.rpt ,pattern="[[:digit:]]rpt\\.save$")
@@ -62,7 +48,7 @@ fb722Obj <- buildField( pFieldMtx=as.matrix(FB722$zh) )
 	# dim( fb722Obj$vFieldMtx )
 
 winDef4Vld <- getWindow( pField=fb722Obj$vFieldMtx	,pFilm=fb722Obj$filmMtx
-						,pHeight=3 ,pInitPos=1 ,pIdStr="validateWD"
+						,pHeight=7 ,pInitPos=1 ,pIdStr="validateWD"
 					)
 
 # =======================================================================================================
@@ -120,6 +106,14 @@ rptMObjSummary <- function( pSaveFile ,pRptFile="./report/rptMObjSummary" ,pWinD
 				ass$matchFlag <- sapply( ass$clueFindLst ,function(p){all(p$matchFlag)} )
 				ass$base.hauntNum <- rptMObj$ptnLst[[pIdx]]$clueLst[[cIdx]]$hauntNum
 				ass$base.hitRate <- rptMObj$ptnLst[[pIdx]]$clueLst[[cIdx]]$hitRate
+
+				# revAss : Reverse Assessment Object. 
+				#	use for searching pred haunt
+				clueFlagMtx <- !is.na(matMtx)
+				clueFlagMtx[nrow(matMtx),] <- F
+				revAss <- assessClue( pWinDef=pWinDef ,pMatMtx=matMtx ,pPredFlagMtx= )
+				ass$hauntIdx.pred <- sapply( revAss$clueFindLst ,function(p){p$hIdx} )
+
 				assLst[[(1+length(assLst))]] <- ass
 			} # for(cIdx)
 		} # for(pIdx)
@@ -144,7 +138,7 @@ rptMObjSummary <- function( pSaveFile ,pRptFile="./report/rptMObjSummary" ,pWinD
 		}
 
 		png( log.png )
-		par( mfrow=c(2,3) )
+		par( mfrow=c(3,2) )
 		# pred의 자연적인 발생 확률보다 base.hitRate가 월등히 높아야 쓸모가 있는데..
 		#	Validation 대상에 대한 hitRate 상승/하강 여부도 색으로써 표현해주자.
 		plot( jitter(base.hitRate),jitter(pred.hauntRate) ,xlim=c(45,105) ,ylim=c(-5,105) )

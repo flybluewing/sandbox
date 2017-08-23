@@ -13,7 +13,7 @@ ptnObjFile <- dir( ptnObjDir.save ,pattern="\\.save")
 rptObjFileLst <- list()
 for( fIdx in ptnObjFile ){
 	rptObj <- rpt.opgRawPtn( paste(ptnObjDir.save,fIdx,sep="/") ,pRptFile=paste(ptnObjDir.rpt,fIdx,sep="/") 
-								,pRptAppend=F ,pPredCpNum=50 ,pNoPredCol=F ,pGetResult=T  
+								,pRptAppend=F ,pPredCpNum=50 ,pNoPredCol=T ,pGetResult=T  
 							)
 	saveFile <- paste(ptnObjDir.rpt,gsub("\\.save$","rpt.save",fIdx),sep="/")
 	save( rptObj ,file=saveFile )
