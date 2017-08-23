@@ -137,19 +137,19 @@ rptMObjSummary <- function( pSaveFile ,pRptFile="./report/rptMObjSummary" ,pWinD
 			return( NULL )
 		}
 
-		png( log.png )
-		par( mfrow=c(3,2) )
+		png( log.png ,height=479*2 ,width=479 )
+		par( mfrow=c(3,2) ,mar=c(5.1, 5.1, 4.1, 2.1) )
 		# pred의 자연적인 발생 확률보다 base.hitRate가 월등히 높아야 쓸모가 있는데..
 		#	Validation 대상에 대한 hitRate 상승/하강 여부도 색으로써 표현해주자.
-		plot( jitter(base.hitRate),jitter(pred.hauntRate) ,xlim=c(45,105) ,ylim=c(-5,105) )
+		plot( jitter(base.hitRate),jitter(pred.hauntRate) ,xlim=c(45,105) ,ylim=c(-5,105) ,cex.lab=1.5 ,cex.axis=1.5 )
 		lines( c(45,100) ,c(45,100) )
 
-		plot(base.hitRate,base.hauntNum)	# 1) haunt number와 hit rate 의 plot
-		plot(base.hitRate,idxNum)			# 2) idx 수와 haunt number의 plot
-		hist(base.hitRate)
-		plot(base.hauntNum,idxNum)
+		plot(base.hitRate,base.hauntNum ,xlim=c(40,100) ,cex.lab=1.5 ,cex.axis=1.5 )	# 1) haunt number와 hit rate 의 plot
+		plot(base.hitRate,idxNum ,xlim=c(40,100) ,cex.lab=1.5 ,cex.axis=1.5 )			# 2) idx 수와 haunt number의 plot
+		hist(base.hitRate ,xlim=c(40,100) ,cex.lab=1.5 ,cex.axis=1.5 )
+		plot(base.hauntNum,idxNum ,cex.lab=1.5 ,cex.axis=1.5 )
 
-		plot( base.hitRate ,(hitNum*100)/hauntNum )
+		plot( base.hitRate ,(hitNum*100)/hauntNum ,xlim=c(40,100) ,cex.lab=1.5 ,cex.axis=1.5 )
 		dev.off()
 		
 		return( cbind( base.hitRate ,pred.hauntRate ,idxNum ) )
