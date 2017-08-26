@@ -71,9 +71,15 @@ report.invMAna <- function( pInvM.ana ,pRptFile="./report/invMAna" ,pRptMsg="non
 
 # rpt.opgRawPtn() : Search clue start from pred overlap
 #		- pNoPredCol : remove clue columns when predict has same column & same value.
-#	pSaveFile=	;
-#	pRptFile="./report/report.ogpRawPtn" ;pRptMsg="none" ;pRptAppend=T	;pPredCpNum=100 ;pClueCvrRate=0.2 ;pGetResult=T	;pNoPredCol=T
-rpt.opgRawPtn <- function( pSaveFile ,pRptFile="./report/report.ogpRawPtn" ,pRptMsg="none" ,pGetResult=T ,pPredCpNum=100 ,pClueCvrRate=0.2 ,pNoPredCol=F ,pRptAppend=T ){
+#	pSaveFile=	paste(ptnObjDir.save,ptnObjFile[1],sep="/");
+#	pRptFile="./report/report.ogpRawPtn" ;pRptMsg="none" ;pRptAppend=T	;pPredCpNum=100 ;pClueCvrRate=0.2 
+#	pGetResult=T	;pNoPredCol=T	;pColRV=colRV 
+rpt.opgRawPtn <- function( pSaveFile ,pRptFile="./report/report.ogpRawPtn" ,pRptMsg="none" 
+							,pGetResult=T ,pPredCpNum=100 ,pClueCvrRate=0.2 ,pNoPredCol=F 
+							,pColRV=NULL
+							,pRptAppend=T 
+						)
+	{
 
 		log.txt <- sprintf("%s.txt",pRptFile)
 		log.pdf <- sprintf("%s.pdf",pRptFile)
@@ -141,8 +147,8 @@ rpt.opgRawPtn <- function( pSaveFile ,pRptFile="./report/report.ogpRawPtn" ,pRpt
 		matMtx.pred <- matrix( F ,nrow=ptnObjGrp$winDef$height ,ncol=ptnObjGrp$winDef$width )
 
 		# << clue search >>
+		primeWindow <- ptnObjGrp$winDef$field[ ptnObjGrp$winDef$initPos:(ptnObjGrp$winDef$initPos+ptnObjGrp$winDef$height-1) , ]
 		if( pNoPredCol ){
-			primeWindow <- ptnObjGrp$winDef$field[ ptnObjGrp$winDef$initPos:(ptnObjGrp$winDef$initPos+ptnObjGrp$winDef$height-1) , ]
 			sColMaskMtx <- matrix( F ,nrow=ptnObjGrp$winDef$height ,ncol=ptnObjGrp$winDef$width )
 				# flag matrix for same value column ( check if each column value is match the last row's column value )
 			for(rIdx in seq_len(ptnObjGrp$winDef$height-1) ){
@@ -150,8 +156,20 @@ rpt.opgRawPtn <- function( pSaveFile ,pRptFile="./report/report.ogpRawPtn" ,pRpt
 			}
 			sColMaskMtx[is.na(sColMaskMtx)] <- F
 		}
+
+		colRVMtx <- NULL	# 
+		if( !is.null(pColRV) ){
+			colRVMtx <- is.na(primeWindow)
+			for( cIdx in 1:ncol(colRVMtx) ){ # cIdx <- 31
+				if( is.na(pColRV[cIdx]) )
+					next
+				colRVMtx[primeWindow[,cIdx] == pColRV[cIdx],cIdx] <- TRUE
+					# remember to protect TRUE value resulted from is.na(primeWindow)
+			}
+		} # if
+
 		invLst <- list()
-		for( choiceIdx in seq_along(chosen) ){ # choiceIdx <- 3
+		for( choiceIdx in seq_along(chosen) ){ # choiceIdx <- 1
 
 			ptnLst <- scanMatchLst( ptnObjGrp$rawPtn$matchLst[ chosen.cpV[[choiceIdx]] ]
 										,pExcFilm = is.na(overlap$matchLst[[chosen[choiceIdx]]]$matMtx) )
@@ -172,6 +190,10 @@ rpt.opgRawPtn <- function( pSaveFile ,pRptFile="./report/report.ogpRawPtn" ,pRpt
 					# cSColMaskMtx means which idx should be excepted to avoid an value frequency whithin same column.
 				
 				thldAccumMtx[cSColMaskMtx] <- 0
+			}
+			if( !is.null(pColRV) ){
+				# pColRV
+				thldAccumMtx[colRVMtx] <- 0
 			}
 			if( 0==sum(thldAccumMtx) )
 				next

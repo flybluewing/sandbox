@@ -1,4 +1,4 @@
-# rpt.opgRawPtn() í•¨ìˆ˜ ì‹¤í–‰ ë° ê²°ê³¼ë¬¼ì— ëŒ€í•œ Review ì˜ˆì œ.
+# rpt.opgRawPtn() ÇÔ¼ö ½ÇÇà ¹× °á°ú¹°¿¡ ´ëÇÑ Review ¿¹Á¦.
 source("20170224_B_H.R")
 source("20170224_B_auxH.R")
 source("20170224_B_Run_H.R")
@@ -10,17 +10,35 @@ sfExport("scanRawPattern")		;sfExport("scanRawPattern.filtF")
 sfExport("filtF.lastRowMiss")	;sfExport("findOverlap")	;sfExport("findOverlap.within")
 
 
-ptnObjDir.save	<- "./save/ptnObjGrp"
+ptnObjDir.save	<- "./save/rawPtnObjGrp"
 ptnObjDir.rpt	<- "./report/rptObj"
 ptnObjFile <- dir( ptnObjDir.save ,pattern="\\.save")
 
+colRV <- NULL	# Column Remove Value, values that should be removed for too much haunt
+if( 0<length(ptnObjFile) ){
+	myObj <- load( paste(ptnObjDir.save,ptnObjFile[1],sep="/") ) # ptnObjGrp
+	field <- ptnObjGrp$winDef$field
+	colRV <- rep(NA,ncol(ptnObjGrp$winDef$field))
+
+	for( cIdx in 1:ncol(field) ){ # cIdx <- 31
+		tblR <- table( field[,cIdx] )
+		tblR <- tblR / sum(tblR)
+		if( 0.66 < max(tblR) ){	# 2/3 ÀÌ»ó °ú¹İÇÏ´Â °ªÀº Á¦¿ÜÇÏÀÚ.
+			colRV[cIdx] <- as.integer(names(which.max(tblR)))
+		} # if
+	} # for
+	ptnObjGrp <- NULL   ;field <- NULL
+}
+
+
 # =======================================================================================================
-# ptnObjFile <- ptnObjFile[1]	# ëª¨ë“  ê±° ëŒë¦¬ë©´ ë„ˆë¬´ ì˜¤ë˜ê±¸ë¦´ ìˆ˜ ìˆìœ¼ë‹ˆê¹.
+# ptnObjFile <- ptnObjFile[1]	# ¸ğµç °Å µ¹¸®¸é ³Ê¹« ¿À·¡°É¸± ¼ö ÀÖÀ¸´Ï±ñ.
 sfExport("ptnObjDir.save")		;sfExport("ptnObjDir.rpt")
 sfExport("rpt.opgRawPtn")		;sfExport("scanMatchLst")	;sfExport("getMatMtxAccum")	;sfExport("assessClue")
 rptObjFileLst <- sfLapply( as.list(ptnObjFile) ,function(fName){
 						rptObj <- rpt.opgRawPtn( paste(ptnObjDir.save,fName,sep="/") ,pRptFile=paste(ptnObjDir.rpt,fName,sep="/") 
-													,pRptAppend=F ,pPredCpNum=50 ,pNoPredCol=T ,pGetResult=T  
+													,pRptAppend=F ,pPredCpNum=50 ,pNoPredCol=T
+													,pColRV=colRV
 												)
 						saveFile <- paste(ptnObjDir.rpt,gsub("\\.save$","rpt.save",fName),sep="/")
 						save( rptObj ,file=saveFile )
@@ -55,15 +73,18 @@ winDef4Vld <- getWindow( pField=fb722Obj$vFieldMtx	,pFilm=fb722Obj$filmMtx
 rptSummary.dir <- "./report/rptObjSummary"
 rptMObjFile <- dir( ptnObjDir.rpt ,pattern="[[:digit:]]rptM.save" )
 # rptMObjFile <- rptMObjFile[1]
-selMtxLst <- list()
+assRptLst <- list()
 for( fIdx in rptMObjFile ){
 	rptFile <- gsub(".save","",fIdx)
-	selMtx <- rptMObjSummary( pSaveFile=paste(ptnObjDir.rpt,fIdx,sep="/") ,pRptFile=paste(rptSummary.dir,rptFile,sep="/") ,pWinDef=winDef4Vld ,pRptAppend=F )
-	if( !is.null(selMtxLst) ){
-		selMtxLst[[fIdx]] <- selMtx
+	selMtx <- rptMObjSummary( pSaveFile=paste(ptnObjDir.rpt,fIdx,sep="/") 
+									# ,pRptFile=paste(rptSummary.dir,rptFile,sep="/") 
+									,pWinDef=winDef4Vld ,pRptAppend=T
+							)
+	if( !is.null(assRptLst) ){
+		assRptLst[[fIdx]] <- selMtx
 	}
 }
-save( selMtxLst ,file="Obj_selMtxLst.save" )
+save( assRptLst ,file="Obj_assRptLst.save" )
 mtx <- do.call( rbind, selMtxLst )
 hitDiff <- mtx[,"pred.hauntRate"] - mtx[,"base.hitRate"]
 
@@ -98,7 +119,7 @@ rptMObjSummary <- function( pSaveFile ,pRptFile="./report/rptMObjSummary" ,pWinD
 				maskMtx[,]	<- !is.na(rptMObj$ptnLst[[pIdx]]$clueLst[[cIdx]]$matMtx)
 				matMtx[maskMtx] <- rptMObj$ptnLst[[pIdx]]$clueLst[[cIdx]]$matMtx[maskMtx]
 				ass <- assessClue( pWinDef=pWinDef ,pMatMtx=matMtx )
-				# save íŒŒì¼ì— ëŒ€í•œ ê¸°ë¡ì •ë³´ë„ í•„ìš”í•  ë“¯
+				# save ÆÄÀÏ¿¡ ´ëÇÑ ±â·ÏÁ¤º¸µµ ÇÊ¿äÇÒ µí
 				ass$predIdx <- rptMObj$ptnLst[[pIdx]]$predPtnIdx
 				ass$clueIdx <- rptMObj$ptnLst[[pIdx]]$clueLst[[cIdx]]$cluePtnIdx
 				ass$matMtx <- matMtx
@@ -137,22 +158,31 @@ rptMObjSummary <- function( pSaveFile ,pRptFile="./report/rptMObjSummary" ,pWinD
 			return( NULL )
 		}
 
+
+		for( cIdx in which(base.hitRate>75) ){ # cIdx <- 4
+			FLogStr(sprintf("%dth assLst hit %d%% ",cIdx,assLst[[cIdx]]$base.hitRate ))
+			FLog( getIdxMtx( assLst[[cIdx]]$matMtx ) )
+		}
+
 		png( log.png ,height=479*2 ,width=479 )
 		par( mfrow=c(3,2) ,mar=c(5.1, 5.1, 4.1, 2.1) )
-		# predì˜ ìì—°ì ì¸ ë°œìƒ í™•ë¥ ë³´ë‹¤ base.hitRateê°€ ì›”ë“±íˆ ë†’ì•„ì•¼ ì“¸ëª¨ê°€ ìˆëŠ”ë°..
-		#	Validation ëŒ€ìƒì— ëŒ€í•œ hitRate ìƒìŠ¹/í•˜ê°• ì—¬ë¶€ë„ ìƒ‰ìœ¼ë¡œì¨ í‘œí˜„í•´ì£¼ì.
+		# predÀÇ ÀÚ¿¬ÀûÀÎ ¹ß»ı È®·üº¸´Ù base.hitRate°¡ ¿ùµîÈ÷ ³ô¾Æ¾ß ¾µ¸ğ°¡ ÀÖ´Âµ¥..
+		#	Validation ´ë»ó¿¡ ´ëÇÑ hitRate »ó½Â/ÇÏ°­ ¿©ºÎµµ »öÀ¸·Î½á Ç¥ÇöÇØÁÖÀÚ.
 		plot( jitter(base.hitRate),jitter(pred.hauntRate) ,xlim=c(45,105) ,ylim=c(-5,105) ,cex.lab=1.5 ,cex.axis=1.5 )
 		lines( c(45,100) ,c(45,100) )
 
-		plot(base.hitRate,base.hauntNum ,xlim=c(40,100) ,cex.lab=1.5 ,cex.axis=1.5 )	# 1) haunt numberì™€ hit rate ì˜ plot
-		plot(base.hitRate,idxNum ,xlim=c(40,100) ,cex.lab=1.5 ,cex.axis=1.5 )			# 2) idx ìˆ˜ì™€ haunt numberì˜ plot
+		plot(base.hitRate,base.hauntNum ,xlim=c(40,100) ,cex.lab=1.5 ,cex.axis=1.5 )	# 1) haunt number¿Í hit rate ÀÇ plot
+		plot(base.hitRate,idxNum ,xlim=c(40,100) ,cex.lab=1.5 ,cex.axis=1.5 )			# 2) idx ¼ö¿Í haunt numberÀÇ plot
 		hist(base.hitRate ,xlim=c(40,100) ,cex.lab=1.5 ,cex.axis=1.5 )
 		plot(base.hauntNum,idxNum ,cex.lab=1.5 ,cex.axis=1.5 )
 
 		plot( base.hitRate ,(hitNum*100)/hauntNum ,xlim=c(40,100) ,cex.lab=1.5 ,cex.axis=1.5 )
 		dev.off()
 		
-		return( cbind( base.hitRate ,pred.hauntRate ,idxNum ) )
+		rObj <- list( assLst=assLst ,perfMtx=cbind( base.hitRate ,pred.hauntRate ,idxNum ) )
+		rObj$rptSaveFile <- rptMObj$rptSaveFile
+		rObj$rptMObjFile <- pSaveFile
+		return( rObj )
 
 	} # rptMSummary
 
