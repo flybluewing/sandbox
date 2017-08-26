@@ -33,7 +33,7 @@ if( 0<length(ptnObjFile) ){
 
 # =======================================================================================================
 # ptnObjFile <- ptnObjFile[1]	# 모든 거 돌리면 너무 오래걸릴 수 있으니깐.
-sfExport("ptnObjDir.save")		;sfExport("ptnObjDir.rpt")
+sfExport("ptnObjDir.save")		;sfExport("ptnObjDir.rpt")	;sfExport("colRV")
 sfExport("rpt.opgRawPtn")		;sfExport("scanMatchLst")	;sfExport("getMatMtxAccum")	;sfExport("assessClue")
 rptObjFileLst <- sfLapply( as.list(ptnObjFile) ,function(fName){
 						rptObj <- rpt.opgRawPtn( paste(ptnObjDir.save,fName,sep="/") ,pRptFile=paste(ptnObjDir.rpt,fName,sep="/") 
