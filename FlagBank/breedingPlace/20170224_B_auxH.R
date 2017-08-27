@@ -129,9 +129,18 @@ rpt.opgRawPtn <- function( pSaveFile ,pRptFile="./report/report.ogpRawPtn" ,pRpt
 		FLog( summary(cpNum) ,pTime=F )
 		FLog( head(cpNum[order(cpNum,decreasing=T)],n=20) )
 
+		primeWindow <- ptnObjGrp$winDef$field[ ptnObjGrp$winDef$initPos:(ptnObjGrp$winDef$initPos+ptnObjGrp$winDef$height-1) , ]
+
 		# << pred overlap >>
 		predFilm <- matrix(T ,nrow=ptnObjGrp$winDef$height ,ncol=ptnObjGrp$winDef$width )
 		predFilm[ptnObjGrp$winDef$height,] <- F
+		if( !is.null(pColRV) ){
+			flag <- pColRV == primeWindow[nrow(primeWindow),] 
+			# pColRV의 NA와 primeWindow의 NA의미가 다르다는 게 문제.
+			flag[is.na(pColRV)] <- FALSE
+			flag[is.na(primeWindow[nrow(primeWindow),])] <- TRUE
+			predFilm[nrow(predFilm),flag] <- TRUE
+		}
 		overlap <- findOverlap( ptnObjGrp$rawPtn ,pExcFilm=predFilm ,pDebug=T )
 		cpNum <- sapply(overlap$matchLst ,function(p){cpV<-unique(as.vector(p$compPair));return(length(cpV))})
 		FLogStr("CpNum of overlap from pred")
@@ -147,7 +156,6 @@ rpt.opgRawPtn <- function( pSaveFile ,pRptFile="./report/report.ogpRawPtn" ,pRpt
 		matMtx.pred <- matrix( F ,nrow=ptnObjGrp$winDef$height ,ncol=ptnObjGrp$winDef$width )
 
 		# << clue search >>
-		primeWindow <- ptnObjGrp$winDef$field[ ptnObjGrp$winDef$initPos:(ptnObjGrp$winDef$initPos+ptnObjGrp$winDef$height-1) , ]
 		if( pNoPredCol ){
 			sColMaskMtx <- matrix( F ,nrow=ptnObjGrp$winDef$height ,ncol=ptnObjGrp$winDef$width )
 				# flag matrix for same value column ( check if each column value is match the last row's column value )

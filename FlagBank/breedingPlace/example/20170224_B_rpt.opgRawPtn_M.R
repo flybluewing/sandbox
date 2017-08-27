@@ -23,7 +23,7 @@ if( 0<length(ptnObjFile) ){
 	for( cIdx in 1:ncol(field) ){ # cIdx <- 31
 		tblR <- table( field[,cIdx] )
 		tblR <- tblR / sum(tblR)
-		if( 0.66 < max(tblR) ){	# 2/3 이상 과반하는 값은 제외하자.
+		if( 0.55 < max(tblR) ){	# 2/3 이상 과반하는 값은 제외하자.
 			colRV[cIdx] <- as.integer(names(which.max(tblR)))
 		} # if
 	} # for
@@ -88,7 +88,7 @@ save( assRptLst ,file="Obj_assRptLst.save" )
 mtx <- do.call( rbind, selMtxLst )
 hitDiff <- mtx[,"pred.hauntRate"] - mtx[,"base.hitRate"]
 
-# pSaveFile=paste(ptnObjDir.rpt,fIdx,sep="/")	;pRptFile=paste(rptSummary.dir,rptFile,sep="/")
+# pSaveFile=paste(ptnObjDir.rpt,fIdx,sep="/")	;pRptFile="./report/rptMObjSummary"
 #	pWinDef=winDef4Vld	;pRptMsg="none" ;pRptAppend=T
 # QQE:working
 rptMObjSummary <- function( pSaveFile ,pRptFile="./report/rptMObjSummary" ,pWinDef ,pRptMsg="none" ,pRptAppend=T ){
@@ -160,7 +160,7 @@ rptMObjSummary <- function( pSaveFile ,pRptFile="./report/rptMObjSummary" ,pWinD
 
 
 		for( cIdx in which(base.hitRate>75) ){ # cIdx <- 4
-			FLogStr(sprintf("%dth assLst hit %d%% ",cIdx,assLst[[cIdx]]$base.hitRate ))
+			FLogStr(sprintf("%dth assLst hit %d%% (clue haunt %d)",cIdx,assLst[[cIdx]]$base.hitRate,length(assLst[[cIdx]]$clueFindLst) ))
 			FLog( getIdxMtx( assLst[[cIdx]]$matMtx ) )
 		}
 
