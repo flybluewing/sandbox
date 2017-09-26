@@ -4,7 +4,7 @@
 #	pHSpan <- 100:length(pFlag)
 getFlagStatSample <- function( pFlag ,pHSpan ){
 
-					cName <- c("output","mean","mean.last20","seqHaunt")
+					cName <- c("output","mean","mean.diff","seqHaunt")
 					mtx <- matrix( 0 ,nrow=length(pHSpan) ,ncol=length(cName) )
 					colnames(mtx) <- cName
 
@@ -14,7 +14,7 @@ getFlagStatSample <- function( pFlag ,pHSpan ){
 						curFlag <- pFlag[(cfIdx-1):1] # reversed.
 
 						mtx[idx,"mean"]			<- mean(curFlag)
-						mtx[idx,"mean.last20"]	<- mean(curFlag[1:20])
+						mtx[idx,"mean.diff"]	<- mtx[idx,"mean"] - mean(curFlag[1:20])
 
 						cnt <- 0
 						for( cntIdx in 2:length(curFlag) ){
