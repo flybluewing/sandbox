@@ -15,6 +15,7 @@ glm.out <- createProbReg(FB)
 
 for( colIdx in 1:6 ){
 	for( sMaxIdx in seq(3,50,3) ){
+		# colIdx<-1	;sMaxIdx<-90
 		curDnaH <- FB$zh[,colIdx]
 		curDnaH.range <- range(curDnaH)
 		curDna.code <- curDnaH.range[1]:curDnaH.range[2]
@@ -93,12 +94,13 @@ for( rIdx in 1:nrow(ordHisMtx) ){
 	ordHisMtx.rnk[rIdx,] <- rank( ordHisMtx[rIdx,] )
 }
 
-for( wIdx in length(winnerOrd):1 ){
-	if( wIdx==length(winnerOrd) ){
-		plot(ordHisMtx.rnk[,winnerOrd[wIdx]] 
-			,ylim=c(0,length(winnerOrd)+1) ,type="l" ,col=curDna.codeCol[wIdx] )
+for( idx in length(winnerOrd):1 ){ # length(winnerOrd):1
+	wIdx <- winnerOrd[idx]
+	if( idx==length(winnerOrd) ){
+		plot(ordHisMtx.rnk[,wIdx] 
+			,ylim=c(0,length(curDna.code)+1) ,type="l" ,col=curDna.codeCol[idx] )
 	} else {
-		lines( 1:nrow(ordHisMtx.rnk) ,ordHisMtx.rnk[,wIdx] ,col=curDna.codeCol[wIdx] )
+		lines( 1:nrow(ordHisMtx.rnk) ,ordHisMtx.rnk[,wIdx] ,col=curDna.codeCol[idx] )
 	}
 }
 
