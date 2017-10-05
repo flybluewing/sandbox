@@ -11,53 +11,49 @@ setwd(curWd)
 
 glm.out <- createProbReg(FB)
 
+charactList <- list()
+charactList[[(1+length(charactList))]]	<- charactModu(2)
+charactList[[(1+length(charactList))]]	<- charactModu(5)
+charactList[[(1+length(charactList))]]	<- charactModu(7)
+charactList[[(1+length(charactList))]]	<- charactIntDiv(pBase=3)
+charactList[[(1+length(charactList))]]	<- charactIntDiv(pBase=6)
+
+
 # 발생가능 범위를 생각하고
+for( colIdx in 1:6 ){	# colIdx<-1
+	curDnaH <- FB$zh[,colIdx]
+	curDnaH.range <- range(curDnaH)
+	curDna.code <- curDnaH.range[1]:curDnaH.range[2]
 
-for( colIdx in 1:6 ){
-	for( sMaxIdx in seq(3,50,3) ){
-		# colIdx<-1	;sMaxIdx<-90
-		curDnaH <- FB$zh[,colIdx]
-		curDnaH.range <- range(curDnaH)
-		curDna.code <- curDnaH.range[1]:curDnaH.range[2]
+	freq.tbl <- table(curDnaH)
+	freq.NomiNum <- 7
+	freq.NomiVal <- as.integer( names(freq.tbl)[ order( freq.tbl ,decreasing=T )[1:freq.NomiNum] ] )
+	freq.NomiPos <- mapply(function(p){ which(curDna.code==p) } ,freq.NomiVal)
 
-		charactList <- list()
-		charactList[[(1+length(charactList))]]	<- charactModu(2)
-		charactList[[(1+length(charactList))]]	<- charactModu(5)
-		charactList[[(1+length(charactList))]]	<- charactModu(7)
-		charactList[[(1+length(charactList))]]	<- charactIntDiv(pBase=3)
-		charactList[[(1+length(charactList))]]	<- charactIntDiv(pBase=6)
+	hSpan <- 100:length(curDnaH)
+	nomineeList <- list()
+	hitOrd	<- matrix( 0 ,nrow=length(hSpan) ,ncol=2)
+	for( idx in seq_len(length(hSpan)) ) { # idx <- 1
+		hIdx <- hSpan[idx]
+		nominee <- nominateCode( pCode=curDna.code ,pH=curDnaH[1:(hIdx-1)] 
+							,pCharactList=charactList
+							,pProbFit=glm.out
+							,pSeqHauntMax=200
+						)
+		
+		hitPos <- which(curDnaH[hIdx]==curDna.code[order(nominee$finalProb,decreasing=T)])
+		hitOrd[idx,1] <- hitPos
+		hitOrd[idx,2] <- hitOrd[idx,1]*100 %/% length(curDna.code)
 
-		freq.tbl <- table(curDnaH)
-		freq.NomiNum <- 7
-		freq.NomiVal <- as.integer( names(freq.tbl)[ order( freq.tbl ,decreasing=T )[1:freq.NomiNum] ] )
-		freq.NomiPos <- mapply(function(p){ which(curDna.code==p) } ,freq.NomiVal)
+		nomineeList[[(1+length(nomineeList))]] <- nominee
 
-		hSpan <- 100:length(curDnaH)
-		nomineeList <- list()
-		hitOrd	<- matrix( 0 ,nrow=length(hSpan) ,ncol=2)
-		for( idx in seq_len(length(hSpan)) ) { # idx <- 1
-			hIdx <- hSpan[idx]
-			nominee <- nominateCode( pCode=curDna.code ,pH=curDnaH[1:(hIdx-1)] 
-								,pCharactList=charactList
-								,pProbFit=glm.out
-								,pSeqHauntMax=sMaxIdx
-							)
-			
-			hitPos <- which(curDnaH[hIdx]==curDna.code[order(nominee$finalProb,decreasing=T)])
-			hitOrd[idx,1] <- hitPos
-			hitOrd[idx,2] <- hitOrd[idx,1]*100 %/% length(curDna.code)
+	}
 
-			nomineeList[[(1+length(nomineeList))]] <- nominee
-
-		}
-
-		k.FLogStr(sprintf("colIdx:%d  sMaxIdx:%d",colIdx,sMaxIdx))
-		k.FLogStr(sprintf("    lvl3:%4.2f   lvl4:%4.2f   lvl5:%4.2f   lvl6:%4.2f   lvl7:%4.2f   lvl8:%4.2f"
-						,mean(hitOrd[,1]<4)	,mean(hitOrd[,1]<5)	,mean(hitOrd[,1]<6)
-						,mean(hitOrd[,1]<7)	,mean(hitOrd[,1]<8)	,mean(hitOrd[,1]<9)
-					),pTime=F)
-	
-	}	# for(sMaxIdx)
+	k.FLogStr(sprintf("colIdx:%d  sMaxIdx:%d",colIdx,sMaxIdx))
+	k.FLogStr(sprintf("    lvl3:%4.2f   lvl4:%4.2f   lvl5:%4.2f   lvl6:%4.2f   lvl7:%4.2f   lvl8:%4.2f"
+					,mean(hitOrd[,1]<4)	,mean(hitOrd[,1]<5)	,mean(hitOrd[,1]<6)
+					,mean(hitOrd[,1]<7)	,mean(hitOrd[,1]<8)	,mean(hitOrd[,1]<9)
+				),pTime=F)
 }	# for(colIdx)
 
 
