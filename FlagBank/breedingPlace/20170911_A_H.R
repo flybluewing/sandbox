@@ -1,8 +1,7 @@
 # 한글한글
 
-#	pFlag <- bFlag
-#	pHSpan <- 100:length(pFlag)
-getFlagStatSample <- function( pFlag ,pHSpan ){
+#	pFlag <- bFlag	;pHSpan <- 100:length(pFlag)	;pDiff=10
+getFlagStatSample <- function( pFlag ,pHSpan ,pDiff=10){
 
 					cName <- c("output","mean","mean.diff","seqHaunt")
 					mtx <- matrix( 0 ,nrow=length(pHSpan) ,ncol=length(cName) )
@@ -14,7 +13,7 @@ getFlagStatSample <- function( pFlag ,pHSpan ){
 						curFlag <- pFlag[(cfIdx-1):1] # reversed.
 
 						mtx[idx,"mean"]			<- mean(curFlag)
-						mtx[idx,"mean.diff"]	<- mtx[idx,"mean"] - mean(curFlag[1:20])
+						mtx[idx,"mean.diff"]	<- mtx[idx,"mean"] - mean(curFlag[1:pDiff])
 
 						cnt <- 0
 						for( cntIdx in 2:length(curFlag) ){
@@ -31,7 +30,7 @@ getFlagStatSample <- function( pFlag ,pHSpan ){
 }	# getFlagStatSample
 
 
-getStatCharact <- function( pFlag ,pNextVal ){
+getStatCharact <- function( pFlag ,pNextVal ,pDiff=10 ){
 
 						revFlag <- pFlag[length(pFlag):1]
 						meanVal <- mean(pFlag)
@@ -43,12 +42,12 @@ getStatCharact <- function( pFlag ,pNextVal ){
 							} else {
 								break
 							}
-						}	# QQE : 데이터 생성 확인. 
+						}
 						seqHaunt <- ifelse( revFlag[1] , cnt+1 , -cnt )
 
 						rObj <- data.frame(	output = pNextVal
 								,mean		= meanVal
-								,mean.diff	= meanVal - mean(revFlag[1:20])
+								,mean.diff	= meanVal - mean(revFlag[1:pDiff])
 								,seqHaunt	= seqHaunt
 							)
 						return(rObj)
@@ -57,7 +56,7 @@ getStatCharact <- function( pFlag ,pNextVal ){
 #		- pProbSoften : 예상 확률이 발생빈도를 너무 무시하지 않게...
 #						(발생빈도 낮은 코드들의 장기 미발생 깽판 방지)
 #		- pSeqHauntMax : seqHaunt
-nominateCode <- function( pCode ,pH ,pCharactList ,pProbFit ,pProbSoften=F ,pSeqHauntMax=20 ){
+nominateCode <- function( pCode ,pH ,pCharactList ,pProbFit ,pProbSoften=F ,pSeqHauntMax=20 ,pDiff=10){
 
 					probAdjust <- T
 					probMtx <- matrix(1,nrow=length(pCharactList),ncol=length(pCode))
@@ -70,10 +69,10 @@ nominateCode <- function( pCode ,pH ,pCharactList ,pProbFit ,pProbSoften=F ,pSeq
 						for( cdIdx in pCharactList[[chIdx]]$codeRange ){	# cdIdx <- pCharactList[[chIdx]]$codeRange[2]
 							tFlag <- histCh == cdIdx
 							if( is.null(statCharact) ){
-								statCharact <- getStatCharact( tFlag[1:length(tFlag)] ,TRUE )
+								statCharact <- getStatCharact( tFlag[1:length(tFlag)] ,TRUE ,pDiff=pDiff )
 							} else {
 								statCharact <- rbind( statCharact 
-														,getStatCharact( tFlag[1:length(tFlag)] ,TRUE ) 
+														,getStatCharact( tFlag[1:length(tFlag)] ,TRUE ,pDiff=pDiff )
 													)
 							}
 						}
@@ -89,8 +88,8 @@ nominateCode <- function( pCode ,pH ,pCharactList ,pProbFit ,pProbSoften=F ,pSeq
 							prob <- prob * statCharact$mean
 
 						if( probAdjust ){
-							probMax <- max(prob)
-							prob <- prob / probMax	# 모든 Prob가 0인 경우는 없겠지.
+							prob <- 2*k.standardize( prob ,pPer=F )
+													# 네거티브는 1이하, 포지티브는 1이상으로 만들기 위해 0~2 사이값으로 조절.
 						}
 
 						codeCh <- pCharactList[[chIdx]]$getCharact( pCode )
@@ -114,6 +113,37 @@ nominateCode <- function( pCode ,pH ,pCharactList ,pProbFit ,pProbSoften=F ,pSeq
 }	# nominateCode
 
 
+#	Inspect Charact Performance.
+# pNominee<-nominee		;pStd<-curDnaH[hIdx]  ;pCode<-curDna.code	;pCharactList<-charactList 
+inspCharPerf <- function( pNominee ,pStd ,pCode ,pCharactList ){
+		stdIndex <- which(pCode==pStd)
+		threshold <- length(pCode)/2
+		
+		cName <- c("seqHaunt","success","fail")
+		mtx <- matrix( 0 ,nrow=length(pCharactList) ,ncol=length(cName) )
+		colnames( mtx ) <- cName
+		rownames( mtx ) <- sapply(pCharactList,function(p){p$idStr})
+		for( chIdx in 1:nrow(pNominee$probMtx) ){	# chIdx <- 3 # charactList index & row index
+			mtx[chIdx,"seqHaunt"] <- pNominee$probMtx.seqHaunt[chIdx,stdIndex]	# seqHaunt Value
+			if( rank(pNominee$probMtx[chIdx,])[stdIndex]>threshold ){
+				mtx[chIdx,"success"]<- 1
+			} else {
+				mtx[chIdx,"fail"]	<- 1
+			}
+		} # chIdx
+
+		return( mtx )
+}
+
+charactBasic <- function( pCodeRange ){
+					rObj <- list(idStr="baseStart")
+					rObj$codeRange <- pCodeRange
+					rObj$getCharact <- function( pCode ){
+								return( pCode )
+							}
+					return( rObj )
+}
+
 charactModu <- function( pBase=8 ){	# modulo
 					rObj <- list(idStr=sprintf("charactModu.%02d",pBase))
 					rObj$base <- pBase
@@ -136,7 +166,7 @@ charactIntDiv <- function( pBase=5 ,pMaxCode=10 ){	# Integer Division
 }
 
 
-createProbReg <- function( pFB ){
+createProbReg <- function( pFB ,pDiff=10 ){
 						fLine <- pFB$zh[,1]
 
 						hSpan <- 100:nrow(pFB$zh)
@@ -157,7 +187,7 @@ createProbReg <- function( pFB ){
 
 							for( combIdx in seq_len(nrow(combMtx)) ){
 								bFlag <- flag %in% combMtx[combIdx,]
-								rObj <- getFlagStatSample( bFlag ,hSpan )
+								rObj <- getFlagStatSample( bFlag ,hSpan ,pDiff=10 )
 								k.FLogStr(sprintf("\\n cSize:%d combIdx:%d (mean:%03.f%%)----------------"
 											,cSize ,combIdx ,100*mean(rObj$sampleMtx[,"mean"])
 										)
@@ -171,6 +201,7 @@ createProbReg <- function( pFB ){
 						glm.out <- glm( output~poly(mean,4)+poly(mean.diff,4)+poly(seqHaunt,4) 
 											,data=statDf ,family=binomial
 										)
+						glm.out$diffSize <- pDiff
 
 						if( T ) # 일반적으론 여기서 끝.
 							return( glm.out )

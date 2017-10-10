@@ -437,16 +437,20 @@ getNnOpt <- function( ){
 			return( nnOpt )
 		}
 
-k.standardize <- function( p ){
+k.standardize <- function( p ,pPer=T ){
 		if( 0==sum(p) ){
 			k.FLogStr("Error : k.standardize() - sum(p) is zero")
 		}
 		
-		# % 기준으로 변환
-		p.r <- 100*p/sum(p)
-		
-		# 스케일 평준화.(최대 최소값의 합이 100%가 나오도록)
-		p.r <- p.r * (100/sum(range(p.r)))
+		if(pPer){
+			# % 기준으로 변환
+			p.r <- 100*p/sum(p)
+			# 스케일 평준화.(최대 최소값의 합이 100%가 나오도록)
+			p.r <- p.r * (100/sum(range(p.r)))
+		} else {
+			p.r <- p/sum(p)
+			p.r <- p.r / sum(range(p.r))
+		}
 		
 		return( p.r )
 	}
