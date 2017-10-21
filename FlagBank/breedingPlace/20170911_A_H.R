@@ -30,8 +30,11 @@ getFlagStatSample <- function( pFlag ,pHSpan ,pDiff=10){
 }	# getFlagStatSample
 
 
-getStatCharact <- function( pFlag ,pNextVal ,pDiff=10 ){
+getStatCharact <- function( pFlag ,pNextVal ,pDiff=10 ,pNa.Rm=T ){
 
+						if(pNa.Rm)
+							pFlag <- pFlag[!is.na(pFlag)]
+						
 						revFlag <- pFlag[length(pFlag):1]
 						meanVal <- mean(pFlag)
 
@@ -56,13 +59,12 @@ getStatCharact <- function( pFlag ,pNextVal ,pDiff=10 ){
 #		- pProbSoften : 예상 확률이 발생빈도를 너무 무시하지 않게...
 #						(발생빈도 낮은 코드들의 장기 미발생 깽판 방지)
 #		- pSeqHauntMax : seqHaunt
-nominateCode <- function( pCode ,pH ,pCharactList ,pProbFit ,pProbSoften=F ,pSeqHauntMax=20 ,pDiff=10){
+nominateCode <- function( pCode ,pH ,pCharactList ,pProbFit ,pSeqHauntMax=20 ,pDiff=10 ,pProbSoften=F ,probAdjust=F ){
 
-					probAdjust <- T
 					probMtx <- matrix(1,nrow=length(pCharactList),ncol=length(pCode))
 					probMtx.mean <- probMtx	;probMtx.meanDiff <- probMtx	;probMtx.seqHaunt <- probMtx
 					colnames(probMtx) <- pCode
-					for( chIdx in seq_len(length(pCharactList)) ){ # chIdx <- 4
+					for( chIdx in seq_len(length(pCharactList)) ){ # chIdx <- 8
 
 						statCharact <- NULL
 						histCh <- pCharactList[[chIdx]]$getCharact( pH )
@@ -84,15 +86,20 @@ nominateCode <- function( pCode ,pH ,pCharactList ,pProbFit ,pProbSoften=F ,pSeq
 						}
 
 						prob <- predict( pProbFit ,statCharact[,c("mean","mean.diff","seqHaunt")] ,type="response" )
+						if( "baseStart"==pCharactList[[chIdx]]$idStr ){
+							prob <- statCharact$mean
+						}
+
 						if( pProbSoften )
 							prob <- prob * statCharact$mean
 
 						if( probAdjust ){
+							# 네거티브는 1이하, 포지티브는 1이상으로 만들기 위해 0~2 사이값으로 조절.
 							prob <- 2*k.standardize( prob ,pPer=F )
-													# 네거티브는 1이하, 포지티브는 1이상으로 만들기 위해 0~2 사이값으로 조절.
+							prob[prob<0.01] <- 0.01	# 아예 확률이 없는 것은 현실성이 없으니...
 						}
 
-						codeCh <- pCharactList[[chIdx]]$getCharact( pCode )
+						codeCh <- pCharactList[[chIdx]]$getCharact( pCode ,pH=pH )
 						indices <- mapply(function(p){which(p==pCharactList[[chIdx]]$codeRange)} ,codeCh)
 						probMtx[chIdx,]			<- prob[indices]
 						probMtx.mean[chIdx,]	<- statCharact$mean[indices]
@@ -138,17 +145,53 @@ inspCharPerf <- function( pNominee ,pStd ,pCode ,pCharactList ){
 charactBasic <- function( pCodeRange ){
 					rObj <- list(idStr="baseStart")
 					rObj$codeRange <- pCodeRange
-					rObj$getCharact <- function( pCode ){
+					rObj$getCharact <- function( pCode ,pH=NULL ){
 								return( pCode )
 							}
 					return( rObj )
 }
 
+charactRebound <- function( pCodeRange ){
+					rObj <- list(idStr="rebound")
+					rObj$codeRange <- pCodeRange
+					rObj$getCharact <- function( pCode ,pH=NULL ){
+								return( pCode )
+							}
+					return( rObj )
+}
+
+charactPreDiff <- function( pDiffSize ,pEadge=c(-30,30)){
+					rObj <- list(idStr=sprintf("preDiff%d",pDiffSize))
+					rObj$diffSize <- pDiffSize
+					rObj$codeRange <- pEadge[1]:pEadge[2]
+					rObj$eadge <- pEadge
+
+					rObj$getCharact <- function( pCode ,pH=NULL ){
+								preDiff <- NULL
+								if( is.null(pH) ){
+									cLen <- length(pCode)	# code length
+									preDiff <- rep(NA,length(cLen))
+									preDiff[(rObj$diffSize+1):cLen] <- 
+										pCode[1:(cLen-rObj$diffSize)]-pCode[(1+rObj$diffSize):cLen]
+								} else {
+									preDiff <- pH[(length(pH)-rObj$diffSize+1)] - pCode
+										# QQE 동작확인
+								}
+								
+								preDiff <- ifelse( preDiff<rObj$eadge[1] ,rObj$eadge[1] ,preDiff )
+								preDiff <- ifelse( preDiff>rObj$eadge[2] ,rObj$eadge[2] ,preDiff )
+
+								return( preDiff )
+							}
+					return( rObj )
+}
+
+
 charactModu <- function( pBase=8 ){	# modulo
 					rObj <- list(idStr=sprintf("charactModu.%02d",pBase))
 					rObj$base <- pBase
 					rObj$codeRange <- 0:(pBase-1)
-					rObj$getCharact <- function( pCode ){
+					rObj$getCharact <- function( pCode ,pH=NULL ){
 								return( pCode %% pBase )
 							}
 					return( rObj )
@@ -158,7 +201,7 @@ charactIntDiv <- function( pBase=5 ,pMaxCode=10 ){	# Integer Division
 					rObj <- list(idStr=sprintf("charactIntDiv.%02d.%02d",pBase,pMaxCode))
 					rObj$base <- pBase
 					rObj$codeRange <- 0:pMaxCode
-					rObj$getCharact <- function( pCode ){
+					rObj$getCharact <- function( pCode ,pH=NULL ){
 								intDiv <- pCode %/% pBase
 								return( ifelse(intDiv>pMaxCode,pMaxCode,intDiv) )
 							}

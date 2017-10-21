@@ -1,6 +1,7 @@
 # 
 library(plyr)
 source("20170911_A_H.R")
+source("20170911_A_auxH.R")
 
 # 한글 깨지지는 않겠지?
 
@@ -15,7 +16,7 @@ glm.out <- createProbReg(FB ,pDiff=10)
 # 발생가능 범위를 생각하고
 tStmp <- Sys.time()
 perfLst <- list()
-for( colIdx in 1:6 ){	# colIdx<-3
+for( colIdx in c(1,3,4,6) ){	# colIdx<-3
 
 	curDnaH <- FB$zh[,colIdx]
 	curDnaH.range <- range(curDnaH)
@@ -27,13 +28,21 @@ for( colIdx in 1:6 ){	# colIdx<-3
 	freq.NomiPos <- mapply(function(p){ which(curDna.code==p) } ,freq.NomiVal)
 
 	charactList <- list()
-	charactList[[1]] <- charactBasic( curDna.code )	# 시작점 charact. 자기 자신의 mean, meanDiff, seqHaunt를 물고 시작. idStr baseStart
-	charactList[[(1+length(charactList))]]	<- charactModu(2)
-	charactList[[(1+length(charactList))]]	<- charactModu(5)
-	charactList[[(1+length(charactList))]]	<- charactModu(7)
-	charactList[[(1+length(charactList))]]	<- charactIntDiv(pBase=3)
-	charactList[[(1+length(charactList))]]	<- charactIntDiv(pBase=6)
-	
+	charactList[[1]] <- charactBasic( curDna.code )	# 시작점 charact. idStr baseStart
+	# charactList[[(1+length(charactList))]]	<- charactRebound( curDna.code )
+	charactList[[(1+length(charactList))]]	<- charactModu( 2)
+	charactList[[(1+length(charactList))]]	<- charactModu( 5)
+	charactList[[(1+length(charactList))]]	<- charactModu( 7)
+	charactList[[(1+length(charactList))]]	<- charactModu(11)
+	charactList[[(1+length(charactList))]]	<- charactIntDiv(pBase= 3)
+	charactList[[(1+length(charactList))]]	<- charactIntDiv(pBase= 6)
+	charactList[[(1+length(charactList))]]	<- charactIntDiv(pBase= 9)
+	charactList[[(1+length(charactList))]]	<- charactIntDiv(pBase=12)
+	charactList[[(1+length(charactList))]]	<- charactPreDiff(pDiffSize= 3)
+	charactList[[(1+length(charactList))]]	<- charactPreDiff(pDiffSize= 5)
+	charactList[[(1+length(charactList))]]	<- charactPreDiff(pDiffSize= 7)
+	charactList[[(1+length(charactList))]]	<- charactPreDiff(pDiffSize=11)
+
 	hSpan <- 100:length(curDnaH)
 	nomineeList <- list()
 	hitOrd	<- matrix( 0 ,nrow=length(hSpan) ,ncol=2)
@@ -47,6 +56,8 @@ for( colIdx in 1:6 ){	# colIdx<-3
 						)
 
 		nominee$perfMtx <- inspCharPerf( pNominee=nominee ,pStd=curDnaH[hIdx] ,pCode<-curDna.code ,pCharactList<-charactList )
+		nominee$stdVal <- curDnaH[hIdx]
+		nominee$hisIdx <- hIdx
 
 		hitPos <- which(curDnaH[hIdx]==curDna.code[order(nominee$finalProb,decreasing=T)])
 		hitOrd[idx,1] <- hitPos
@@ -99,14 +110,15 @@ for( colIdx in 1:6 ){	# colIdx<-3
 
 tCost <- Sys.time()-tStmp
 cat(sprintf("Time Cost : %.1f %s\n",tCost,units(tCost)))
+save( perfLst ,file="Obj_perfLst1016.save" )
+
+
+insIdx <- 6	# inspect index
 
 
 
 
-
-pPerfObj=perfLst[[1]]	;pDnaH=FB$zh[,1]	
-pRptFile="./report/perfObj"	;pCharUseThre=0.7	;pCharactList=charactList
-
+# ------------------------------------------------------------------------------------------------------
 
 		log.txt <- sprintf("%s.txt",pRptFile)
 		log.pdf <- sprintf("%s.pdf",pRptFile)
@@ -119,30 +131,46 @@ pRptFile="./report/perfObj"	;pCharUseThre=0.7	;pCharactList=charactList
 					k.FLogStr( pMsg ,pFile=log.txt ,pTime=pTime ,pAppend=pAppend ,pConsole=pConsole )
 			}
 
-		FLogStr(sprintf("Start report"),pAppend=F,pTime=T)
+		FLogStr(sprintf("Start report for colIdx:%2d",pPerfObj$colIdx),pAppend=F,pTime=T)
 		dna.codeCol <- terrain.colors( length(pPerfObj$dna.Code) )
-		
+		charactList <- pPerfObj$charactList
+
 		useCharList <- list()
-		for( idx in seq_len(length(pCharactList)) ){	# idx <- 1
-			charact <- pCharactList[[idx]]
+		for( idx in seq_len(length(charactList)) ){	# idx <- 1
+			charact <- charactList[[idx]]
 			if( "baseStart"==charact$idStr ){
-				useCharList[[(1+length(useCharList))]] <- perfObj$shMtx.range
+				useCharList[[(1+length(useCharList))]] <- pPerfObj$shMtx.range
 			} else {
-				sh <- perfObj$shMtx.range[ pPerfObj$shMtx[idx,]>=pCharUseThre ]
+				sh <- pPerfObj$shMtx.range[ pPerfObj$shMtx[idx,]>=pCharUseThre ]
 				useCharList[[(1+length(useCharList))]] <- sh[!is.na(sh)]
 			}
 		}
 
 		stdRankPer <- rep( 0 ,length(pPerfObj$nomineeList) )
+		stdEarnMtx <- matrix( 0 ,nrow=0 ,ncol=length(charactList) )
+		cName <- c( "val" ,"ord.first" ,"ord.last" ,"ch.pos" ,"ch.neg" )
+		stdMoveMtx <- matrix( 0 ,nrow=length(pPerfObj$nomineeList) ,ncol=length(cName) )
+		colnames( stdMoveMtx ) <- cName
+		
+		range.eadge <- range(pPerfObj$shMtx.range)
 		for( repIdx in seq_len(length(pPerfObj$nomineeList)) ){	# repIdx <- 3	# Report Index
 			nomiObj <- pPerfObj$nomineeList[[repIdx]]
 
-			#	probMtx 로깅
-			# str <- apply( nomiObj$probMtx ,1 ,function(p){ paste(sprintf("%4.1f",p),collapse=" ") } )
-			# str <- paste( "  " ,str ,collapse="\n")
-			# FLogStr( str ,pTime=F )
-
 			ordHisMtx <- nomiObj$probMtx
+			
+			if( T ){	# useCharMtx 적용
+				for( rIdx in 1:nrow(ordHisMtx) ){	# rIdx <- 1
+					# 현 History에서, 현 charact의 seqHaunt는 ?
+					# ordHisMtx
+					seqHaunt <- nomiObj$probMtx.seqHaunt[rIdx,]
+					seqHaunt <- ifelse(seqHaunt<range.eadge[1],range.eadge[1],seqHaunt)
+					seqHaunt <- ifelse(seqHaunt>range.eadge[2],range.eadge[2],seqHaunt)
+
+					useFlag <- seqHaunt %in% useCharList[[rIdx]]
+					ordHisMtx[rIdx,!useFlag] <- 1
+				}
+			}
+
 			for( rIdx in 1:nrow(ordHisMtx) ){
 				probLine <- nomiObj$probMtx[rIdx,]
 				if( rIdx == 1){
@@ -152,14 +180,6 @@ pRptFile="./report/perfObj"	;pCharUseThre=0.7	;pCharactList=charactList
 				}
 			}
 
-			# useCharMtx 적용
-			for( rIdx in 1:nrow(ordHisMtx) ){	# rIdx <- 1
-				# 현 History에서, 현 charact의 seqHaunt는 ?
-				# ordHisMtx
-				useFlag <- nomiObj$probMtx.seqHaunt[rIdx,] %in% useCharList[[rIdx]]
-				ordHisMtx[rIdx,!useFlag] <- 1
-			}
-			
 			ordHisMtx.rnk <- ordHisMtx
 			ordHisMtx.one <- ordHisMtx
 			for( rIdx in 1:nrow(ordHisMtx) ){
@@ -183,9 +203,16 @@ pRptFile="./report/perfObj"	;pCharUseThre=0.7	;pCharactList=charactList
 						)
 				)
 
+			stdEarnMtx <- rbind(stdEarnMtx,ordHisMtx.rnk[,stdIdx])
+			stdMoveMtx[repIdx,"val"]		<- pDnaH[repIdx]
+			stdMoveMtx[repIdx,"ord.first"]	<- ordHisMtx.rnk[1,stdIdx]
+			stdMoveMtx[repIdx,"ord.last"]	<- ordHisMtx.rnk[nrow(ordHisMtx.rnk),stdIdx]
+			stdMoveMtx[repIdx,"ch.pos"]	<- sum( ordHisMtx[2:nrow(ordHisMtx),stdIdx] > 1.001 )
+			stdMoveMtx[repIdx,"ch.neg"]	<- sum( ordHisMtx[2:nrow(ordHisMtx),stdIdx] < 0.999 )
 
 			if( T ) next
-			
+
+			png( sprintf("%s%02d_%04d.png",pRptFile,pPerfObj$colIdx,repIdx) ,height=300 ,width=300 )
 			for( idx in length(winnerOrd):1 ){ # length(winnerOrd):1
 				wIdx <- winnerOrd[idx]
 				if( idx==length(winnerOrd) ){
@@ -202,62 +229,37 @@ pRptFile="./report/perfObj"	;pCharUseThre=0.7	;pCharactList=charactList
 			points( 1:nrow(ordHisMtx.rnk) ,ordHisMtx.rnk[,winnerOrd[1]] ,col="blue" )
 			# stdCode
 			lines( 1:nrow(ordHisMtx.rnk) ,ordHisMtx.rnk[,stdIdx] ,col="red" )
+			dev.off()
 
 		}	# for(repIdx)
 
 		FLogStr(sprintf("    Mean of std rank(as %%) : %4.1f%%",mean(stdRankPer)))
+
+		png( sprintf("%s%02d.png",pRptFile,pPerfObj$colIdx) ,height=500 ,width=500 )
+		par( mfrow=c(2,2) )
 		hist( stdRankPer )
+		
+		for( rIdx in 1:nrow(stdEarnMtx) ){
+			if( rIdx == 1 ){
+				plot( 1:ncol(stdEarnMtx) ,stdEarnMtx[rIdx,] 
+					,ylim=c(0,length(pPerfObj$dna.Code)+1) ,type="l" )
+			} else {
+				lines( 1:ncol(stdEarnMtx) ,jitter(stdEarnMtx[rIdx,])  )
+			}
+		}
+
+		graphLim <- length(pPerfObj$dna.Code)
+		plot( stdMoveMtx[,"ord.first"],stdMoveMtx[,"ord.last"] ,xlim=c(0,graphLim) ,ylim=c(0,graphLim) 
+				,main=sprintf("개선율 : %0.1f%%",100*mean(stdMoveMtx[,"ord.first"] < stdMoveMtx[,"ord.last"])) 
+			)
+		lines( c(0,graphLim) ,c(0,graphLim) ,col="red")
+
+		par( mfrow=c(1,1) )
+
+		dev.off()
 
 
 
-# --[ Report ]----------------------------------
-curDna.codeCol <- terrain.colors( length(curDna.code) )
-stdCode <- curDnaH[hSpan]
-
-repIdx <- 3
-nomiObj <- nomineeList[[repIdx]]
-winnerOrd <- order(nomiObj$finalProb,decreasing=T)
-
-k.FLogStr( sprintf("%d th Report",repIdx ) )
-k.FLogStr( sprintf("  stdCode:%d  winner :%s"
-				,stdCode[repIdx] ,paste(curDna.code[winnerOrd[1:5]],collapse=" ") 
-			) )
-
-str <- apply( nomiObj$probMtx ,1 ,function(p){ paste(sprintf("%4.1f",p),collapse=" ") } )
-str <- paste( "  " ,str ,collapse="\n")
-k.FLogStr( str ,pTime=F )
-
-ordHisMtx <- nomiObj$probMtx
-ordHisMtx.rnk <- ordHisMtx
-ordHisMtx.one <- ordHisMtx
-for( rIdx in 1:nrow(ordHisMtx) ){
-
-	probLine <- nomiObj$probMtx[rIdx,]
-	if( rIdx == 1){
-		ordHisMtx[rIdx,] <- probLine
-	} else {
-		ordHisMtx[rIdx,] <- probLine * ordHisMtx[(rIdx-1),]
-	}
-
-	ordHisMtx.one[rIdx,] <- ordHisMtx[rIdx,] / max(ordHisMtx[rIdx,])
-	ordHisMtx.rnk[rIdx,] <- rank( ordHisMtx[rIdx,] )
-}
-
-for( idx in length(winnerOrd):1 ){ # length(winnerOrd):1
-	wIdx <- winnerOrd[idx]
-	if( idx==length(winnerOrd) ){
-		plot(ordHisMtx.rnk[,wIdx] 
-			,ylim=c(0,length(curDna.code)+1) ,type="l" ,col=curDna.codeCol[idx] )
-	} else {
-		lines( 1:nrow(ordHisMtx.rnk) ,ordHisMtx.rnk[,wIdx] ,col=curDna.codeCol[idx] )
-	}
-}
-
-# winner
-points( 1:nrow(ordHisMtx.rnk) ,ordHisMtx.rnk[,winnerOrd[1]] ,col="blue" )
-# stdCode
-stdIdx <- which(curDna.code == stdCode[repIdx])
-lines( 1:nrow(ordHisMtx.rnk) ,ordHisMtx.rnk[,stdIdx] ,col="red" )
 
 
 
