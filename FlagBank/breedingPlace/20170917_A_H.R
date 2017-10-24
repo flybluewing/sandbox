@@ -13,8 +13,99 @@ getPredictor <- function( pSampleDf ,pIdStr="glm" ,pPoly.mean=3 ,pPoly.seq=3 ){
 					return( rObj )
 } # getPredicter()
 
+
+# pFlag=sample( c(1:3,NA) ,20 ,replace=T ,prob=c(2,1,1,1) )
+k.seqNum <- function( pFlag ){
+
+	codeVal <- sort(unique(pFlag),na.last=T)
+	codeVal.naIdx <- which( is.na(codeVal) )
+
+	seqP.cntMtx <- matrix( 0 ,ncol=length(codeVal) ,nrow=length(pFlag) )
+	colnames( seqP.cntMtx ) <- sprintf("%s",codeVal)
+	seqP.hIdxMtx <- seqP.cntMtx
+	seqP.rowIdx	<- rep(0,length(codeVal)) # current row index for seqP.*Mtx
+	names(seqP.rowIdx) <- colnames( seqP.cntMtx )
+	
+	seqN.cntMtx <- seqP.cntMtx
+	seqN.hIdxMtx <- seqP.hIdxMtx
+	seqN.rowIdx <- seqP.rowIdx
+
+	valLast <- NULL	;valLastIdx <- NULL
+	for( hIdx in 1:length(pFlag) ){
+
+		if( 1== hIdx ){
+			valLast <- pFlag[hIdx]
+			valLastIdx <- ifelse( is.na(valLast) ,codeVal.naIdx ,which(codeVal==valLast) )
+			seqP.rowIdx[ valLastIdx] <- 1
+			seqP.cntMtx[ seqP.rowIdx[valLastIdx] ,valLastIdx ] <- 1
+			seqP.hIdxMtx[ seqP.rowIdx[valLastIdx] ,valLastIdx ] <- hIdx
+
+			seqN.rowIdx[-valLastIdx] <- 1
+			uColIdx	<- (1:ncol(seqN.cntMtx))[-valLastIdx]	# update column index
+			for( cIdx in uColIdx ){
+				seqN.cntMtx[  seqN.rowIdx[cIdx],cIdx] <- 1
+				seqN.hIdxMtx[ seqN.rowIdx[cIdx],cIdx] <- hIdx
+			}
+			next
+		}
+
+		valCur <- pFlag[hIdx]	# current value
+		valCurIdx <- ifelse( is.na(valCur) ,codeVal.naIdx ,which(codeVal==valCur) )
+		if( valLastIdx != valCurIdx ){ # pFlag 내 NA 존재 가능성 때문에 valCur 대신 valCurIdx로 비교
+			seqP.rowIdx[valCurIdx] <- 1 + seqP.rowIdx[valCurIdx]
+			seqP.hIdxMtx[ seqP.rowIdx[valCurIdx] ,valCurIdx ] <- hIdx
+			
+			seqN.rowIdx[valLastIdx] <- 1 + seqN.rowIdx[valLastIdx]
+			uColIdx <- (1:ncol(seqN.hIdxMtx))[-valLastIdx] # update column index
+			for( cIdx in uColIdx ){
+				seqN.hIdxMtx[ seqN.rowIdx[cIdx],cIdx ] <- hIdx
+			}
+		} # if(valLastIdx==valCurIdx)
+		seqP.cntMtx[seqP.rowIdx[valCurIdx],valCurIdx] <-
+				1 + seqP.cntMtx[seqP.rowIdx[valCurIdx],valCurIdx]
+		uColIdx <- (1:ncol(seqN.cntMtx))[-valCurIdx]	# update column index
+		for( cIdx in uColIdx ){
+			seqN.cntMtx[ seqN.rowIdx[cIdx] ,cIdx ] <- 
+					1 + seqN.cntMtx[ seqN.rowIdx[cIdx], cIdx ]
+			seqN.hIdxMtx[seqN.rowIdx[cIdx] ,cIdx ] <- hIdx
+		}
+
+		valLast <- valCur	;valLastIdx <- valCurIdx
+
+		if( T ){
+			k.FLogStr(sprintf("hIdx:%d",hIdx))
+			k.FLog( seqP.cntMtx[1:10,] )
+		}
+	} # for( hIdx )
+
+	rObj <- list( codeVal=codeVal )
+
+	azIndex <- which(apply(seqP.cntMtx,1,function(p){all(p==0)}))	# all zero index
+	if( 0==length(azIndex) ){
+		rObj$seqP.cntMtx <- seqP.cntMtx
+	} else {
+		rObj$seqP.cntMtx <- seqP.cntMtx[ 1:azIndex[1] , ]
+		# 일부러 azIndex[1] 사용.
+		# 모든 컬럼을 대상으로 연속발생 수의 맨 마지막은 0이 되는 게 일관성 있으니까.
+	}
+
+	azIndex <- which(apply(seqN.cntMtx,1,function(p){all(p==0)}))	# all zero index
+	if( 0==length(azIndex) ){
+		rObj$seqN.cntMtx <- seqN.cntMtx
+	} else {
+		rObj$seqN.cntMtx <- seqN.cntMtx[ 1:azIndex[1] , ]
+		# 일부러 azIndex[1] 사용.
+		# 모든 컬럼을 대상으로 연속발생 수의 맨 마지막은 0이 되는 게 일관성 있으니까.
+	}
+
+	return( rObj )
+
+} # k.seqNum( )
+
+
+
 #	pTestNum=1000 ;pSeqLogMax <- 300
-getStdSeqProbMapObj <- function( pTestNum=1000 ,pSampleNum=1000 ,pSeqLogMax=300 ,pShowGraph=T ){
+getStdSeqProbMapObj <- function( pTestNum=1000 ,pSampleNum=1000 ,pSeqLogMax=300 ){
 
 	tStmp <- Sys.time()
 	fProb <- c(1,5,10,15,20,25,30,35,40,45,50)
@@ -101,8 +192,18 @@ getStdSeqProbMapObj <- function( pTestNum=1000 ,pSampleNum=1000 ,pSeqLogMax=300 
 	rObj <- list( probPMap=probPMap ,probNMap=probNMap ,probPLst=probPLst ,probNLst=probNLst )
 	rObj$mNames <- mNames[mNames.ord]
 	rObj$seqLogMax <- pSeqLogMax
+	rObj$showProbMap <- function( pProbMap=NULL ,pXLim=c(1,20) ,pYLim=c(0,0.5) ){
+							if( is.null(pProbMap) )
+								pProbMap <- rObj$probPMap
+								
+							prob.col <- terrain.colors( ncol(pProbMap) )
+							plot( NULL ,xlim=pXLim ,ylim=pYLim ,xlab="seq" ,ylab="prob" )
+							for( cIdx in 1:ncol(pProbMap) ){
+								lines( 1:nrow(pProbMap) ,pProbMap[,cIdx] ,col=prob.col[cIdx] )
+							}
+						}
 
-	if( pShowGraph ){
+	if( F ){
 		# 차후 디버깅용.
 		plot( NULL ,xlim=c(1,10) ,ylim=c(0,0.5) ,xlab="seq" ,ylab="prob" )
 		prob.col <- terrain.colors( ncol(probPMap) )
