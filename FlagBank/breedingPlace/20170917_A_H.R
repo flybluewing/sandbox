@@ -13,14 +13,63 @@ getPredictor <- function( pSampleDf ,pIdStr="glm" ,pPoly.mean=3 ,pPoly.seq=3 ){
 					return( rObj )
 } # getPredicter()
 
+#	pStdSeqObj <- stdSeqObj	;pIdStr="testPredictor"
+getSeqProbPredictor <- function( pStdSeqObj ,pIdStr="testPredictor" ){
+	rObj <- list( idStr=pIdStr )
+	rObj$probPMap <- pStdSeqObj$probPMap[1:(pStdSeqObj$seqLogMax-1),]
+	rObj$probNMap <- pStdSeqObj$probNMap[1:(pStdSeqObj$seqLogMax-1),]
+	rObj$mapMax <- nrow(rObj$probPMap)
+	rObj$prob <- sapply(pStdSeqObj$probPLst ,function(p){p$mean})
+
+	rObj$predict <- function( pSeqNumObj ){ # k.seqNum()
+			rPObj <- list( lastVal=pSeqNumObj$lastVal ,lastVal.idx=pSeqNumObj$lastVal.idx )
+			cName <- sprintf("%s",pSeqNumObj$codeVal)
+			rName <- c("mean","mean.last","seqNum","prob","isChanging")
+			probMtx <- matrix( 0 ,nrow=length(rName) ,ncol=length(cName) )
+			colnames(probMtx) <- cName	;rownames(probMtx) <- rName
+			for( cIdx in 1:length(pSeqNumObj$codeVal) ){ # code index
+				mean.all <- pSeqNumObj$meanMtx[1,cIdx]
+				mean.last<- pSeqNumObj$meanMtx[2,cIdx]
+				# mean.last <- mean.all + (mean.all-mean.last) # 최근 변동을 반영하는 예.
+				mean.last <- mean.all
+				mean.idx <- which.min(abs(rObj$prob - mean.last))
+				seqNum <- NULL
+				prob <- NULL
+				if( pSeqNumObj$lastVal.idx == cIdx ){
+					seqNum	<- pSeqNumObj$lastSeqMtx["pos",cIdx]
+					seqNum	<- ifelse( rObj$mapMax<seqNum ,rObj$mapMax ,seqNum )
+					prob	<- rObj$probPMap[seqNum,mean.idx]
+				} else {
+					seqNum	<- pSeqNumObj$lastSeqMtx["neg",cIdx]
+					seqNum	<- ifelse( rObj$mapMax<seqNum ,rObj$mapMax ,seqNum )
+					prob	<- rObj$probNMap[seqNum,mean.idx]
+				}
+				probMtx["mean"		,cIdx]	<- mean.all
+				probMtx["mean.last" ,cIdx]	<- mean.last
+				probMtx["seqNum"	,cIdx]	<- ifelse( pSeqNumObj$lastVal.idx == cIdx ,seqNum ,-seqNum )
+				probMtx["prob"		,cIdx]	<- prob
+				probMtx["isChanging",cIdx]	<- ifelse( pSeqNumObj$lastVal.idx == cIdx 
+																,abs(mean.last-prob) > (mean.last)/10
+																,abs((1-mean.last)-prob) > (1-mean.last)/10
+														)
+			} # for(cIdx)
+			return( rPObj )
+		} # rObj$predict()
+
+	return( rObj )
+} # getSeqProbPredictor( )
+
+
 
 # pFlag=sample( c(1:3,NA) ,20 ,replace=T ,prob=c(2,1,1,1) )
-k.seqNum <- function( pFlag ){
+#	pLMeanArea : 최근 평균치를 계산할 최근 영역 범위
+k.seqNum <- function( pFlag ,pLMeanArea=10 ){
 
 	codeVal <- sort(unique(pFlag),na.last=T)
 	codeVal.naIdx <- which( is.na(codeVal) )
+	flagLen <- length(pFlag)
 
-	seqP.cntMtx <- matrix( 0 ,ncol=length(codeVal) ,nrow=length(pFlag) )
+	seqP.cntMtx <- matrix( 0 ,ncol=length(codeVal) ,nrow=flagLen )
 	colnames( seqP.cntMtx ) <- sprintf("%s",codeVal)
 	seqP.hIdxMtx <- seqP.cntMtx
 	seqP.rowIdx	<- rep(0,length(codeVal)) # current row index for seqP.*Mtx
@@ -31,7 +80,7 @@ k.seqNum <- function( pFlag ){
 	seqN.rowIdx <- seqP.rowIdx
 
 	valLast <- NULL	;valLastIdx <- NULL
-	for( hIdx in 1:length(pFlag) ){
+	for( hIdx in 1:flagLen ){
 
 		if( 1== hIdx ){
 			valLast <- pFlag[hIdx]
@@ -80,11 +129,14 @@ k.seqNum <- function( pFlag ){
 
 	rObj <- list( codeVal=codeVal )
 
+	# --[seqP.cntMtx ,seqN.cntMtx]---------------------------------------------------
 	azIndex <- which(apply(seqP.cntMtx,1,function(p){all(p==0)}))	# all zero index
 	if( 0==length(azIndex) ){
 		rObj$seqP.cntMtx <- seqP.cntMtx
+		rObj$seqP.hIdxMtx <- seqP.hIdxMtx
 	} else {
 		rObj$seqP.cntMtx <- seqP.cntMtx[ 1:azIndex[1] , ]
+		rObj$seqP.hIdxMtx <- seqP.hIdxMtx[ 1:azIndex[1] , ]
 		# 일부러 azIndex[1] 사용.
 		# 모든 컬럼을 대상으로 연속발생 수의 맨 마지막은 0이 되는 게 일관성 있으니까.
 	}
@@ -92,11 +144,53 @@ k.seqNum <- function( pFlag ){
 	azIndex <- which(apply(seqN.cntMtx,1,function(p){all(p==0)}))	# all zero index
 	if( 0==length(azIndex) ){
 		rObj$seqN.cntMtx <- seqN.cntMtx
+		rObj$seqN.hIdxMtx <- seqN.hIdxMtx
 	} else {
 		rObj$seqN.cntMtx <- seqN.cntMtx[ 1:azIndex[1] , ]
+		rObj$seqN.hIdxMtx <- seqN.hIdxMtx[ 1:azIndex[1] , ]
 		# 일부러 azIndex[1] 사용.
 		# 모든 컬럼을 대상으로 연속발생 수의 맨 마지막은 0이 되는 게 일관성 있으니까.
 	}
+
+	# --[lastSeqMtx]-----------------------------------------------------
+	cName <- sprintf("%s",codeVal)	;rName <- c("pos","neg")
+	lastSeqMtx <- matrix( 0 ,ncol=length(cName) ,nrow=length(rName) )
+	colnames(lastSeqMtx) <- cName	;rownames(lastSeqMtx) <- rName
+	lastSeqMtx[1,] <- apply( rObj$seqP.cntMtx ,2 ,function(p){
+								endPoint <- which(p==0)[1]-1
+								return( p[endPoint] )
+							})
+	lastSeqMtx[2,] <- apply( rObj$seqN.cntMtx ,2 ,function(p){
+								endPoint <- which(p==0)[1]-1
+								return( p[endPoint] )
+							})
+	rObj$lastSeqMtx <- lastSeqMtx
+
+	# --[meanMtx]-----------------------------------------------------
+	cName <- sprintf("%s",codeVal)
+	rName <- c("all",sprintf("last%d",pLMeanArea))
+	meanMtx <- matrix(0,nrow=length(rName),ncol=length(cName))
+	colnames(meanMtx) <- cName	;rownames(meanMtx) <- rName
+
+	naCount <- sum(is.na(pFlag)) # NA is not counted by table()
+	if(0<naCount)
+		meanMtx["all","NA"] <- naCount
+	tbl <- table( pFlag )
+	meanMtx["all",names(tbl)] <- tbl
+	meanMtx["all",] <- meanMtx["all",] / flagLen
+
+	latestFlag <- pFlag[(flagLen-pLMeanArea+1):flagLen]
+	naCount <- sum(is.na(latestFlag)) # NA is not counted by table()
+	if(0<naCount)
+		meanMtx[2,"NA"] <- naCount
+	tbl <- table( latestFlag )
+	meanMtx[2,names(tbl)] <- tbl
+	meanMtx[2,] <- meanMtx[2,] / pLMeanArea
+
+	rObj$meanMtx <- meanMtx
+
+	rObj$lastVal <- pFlag[flagLen]
+	rObj$lastVal.idx <- which( colnames(rObj$meanMtx) == sprintf("%s",rObj$lastVal) )
 
 	return( rObj )
 
