@@ -23,6 +23,8 @@ getSeqProbPredictor <- function( pStdSeqObj ,pIdStr="testPredictor" ){
 
 	rObj$predict <- function( pSeqNumObj ){ # k.seqNum()
 			rPObj <- list( lastVal=pSeqNumObj$lastVal ,lastVal.idx=pSeqNumObj$lastVal.idx )
+
+			# --[probMtx]-----------------------------------------------
 			cName <- sprintf("%s",pSeqNumObj$codeVal)
 			rName <- c("mean","mean.last","seqNum","prob","isChanging")
 			probMtx <- matrix( 0 ,nrow=length(rName) ,ncol=length(cName) )
@@ -53,6 +55,8 @@ getSeqProbPredictor <- function( pStdSeqObj ,pIdStr="testPredictor" ){
 																,abs((1-mean.last)-prob) > (1-mean.last)/10
 														)
 			} # for(cIdx)
+
+			rPObj$probMtx <- probMtx
 			return( rPObj )
 		} # rObj$predict()
 
@@ -63,9 +67,11 @@ getSeqProbPredictor <- function( pStdSeqObj ,pIdStr="testPredictor" ){
 
 # pFlag=sample( c(1:3,NA) ,20 ,replace=T ,prob=c(2,1,1,1) )
 #	pLMeanArea : 최근 평균치를 계산할 최근 영역 범위
-k.seqNum <- function( pFlag ,pLMeanArea=10 ){
+k.seqNum <- function( pFlag ,pCodeVal=NULL ,pLMeanArea=10 ){
 
-	codeVal <- sort(unique(pFlag),na.last=T)
+	codeVal <- pCodeVal
+	if( is.null(codeVal) )
+		codeVal <- sort(unique(pFlag),na.last=T)
 	codeVal.naIdx <- which( is.na(codeVal) )
 	flagLen <- length(pFlag)
 
@@ -121,7 +127,7 @@ k.seqNum <- function( pFlag ,pLMeanArea=10 ){
 
 		valLast <- valCur	;valLastIdx <- valCurIdx
 
-		if( T ){
+		if( F ){
 			k.FLogStr(sprintf("hIdx:%d",hIdx))
 			k.FLog( seqP.cntMtx[1:10,] )
 		}
