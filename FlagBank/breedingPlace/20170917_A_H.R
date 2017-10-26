@@ -164,11 +164,11 @@ k.seqNum <- function( pFlag ,pCodeVal=NULL ,pLMeanArea=10 ){
 	colnames(lastSeqMtx) <- cName	;rownames(lastSeqMtx) <- rName
 	lastSeqMtx[1,] <- apply( rObj$seqP.cntMtx ,2 ,function(p){
 								endPoint <- which(p==0)[1]-1
-								return( p[endPoint] )
+								return( ifelse( endPoint<1 ,NA ,p[endPoint] ) )
 							})
 	lastSeqMtx[2,] <- apply( rObj$seqN.cntMtx ,2 ,function(p){
 								endPoint <- which(p==0)[1]-1
-								return( p[endPoint] )
+								return( ifelse( endPoint<1 ,NA ,p[endPoint] ) )
 							})
 	rObj$lastSeqMtx <- lastSeqMtx
 
