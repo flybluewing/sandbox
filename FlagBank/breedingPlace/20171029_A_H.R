@@ -2,7 +2,7 @@
 
 
 source("20171029_A_H_createFun.R")
-# source("20171029_A_H_seqAnaFun.R")
+source("20171029_A_H_seqAnaFun.R")
 
 getNewElementSet <- function( pCreateFunSet ,pZh=NULL ){
 	
@@ -53,3 +53,5 @@ getCreateFunSet <- function( pZh ){
 	
 	return( rLst )
 }
+
+
