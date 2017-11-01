@@ -81,6 +81,15 @@ getCreateFunSet <- function( pZh ){
 	gName <- "7th" # 제너레이션이 더 추가된다면...
 
 	return( rLst )
-}
+} # getCreateFunSet()
+
+getSeqAnaFunSet <- function ( pEleSet ,pProbPredObj=NULL ){
+
+	probPredObj <- pProbPredObj
+	if( is.null(pProbPredObj) {
+		myObj <- load("Obj_stdSeqObj.save") # loading stdSeqObj
+		seqProbPredictor <- getSeqProbPredictor(stdSeqObj)
+	}
 
 
+} # getSeqAnaFunSet()
