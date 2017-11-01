@@ -94,7 +94,7 @@ get1stCreateFunSet <- function( pZh ){
 #	2 세대 elementSet을 만들기 위한 함수들
 #		1세대 Set에 대한 2차 가공결과이며, 역시 Column간 의존관계는 없어야 한다.
 #		1,2세대 Set을 가지고 Raw Column에서의 Code 별 성적을 계산할 수 있어야 한다.
-get2ndCreateFunSet <- function( pZh ,pFunIdLst ){
+get2ndCreateFunSet <- function( pZh ,pFunIdLst ,pFunGIdLst ){
 
 	eleGenNum <- 2
 	zEALst <- list()
@@ -117,10 +117,10 @@ get2ndCreateFunSet <- function( pZh ,pFunIdLst ){
 	}
 
 	return( funLst )
-} # get1stCreateFunSet( )
+} # get2ndCreateFunSet( )
 
 #	3 세대 : 1,2세대에 대한 Column간 관계.(가공없이 측정값만 도출)
-get3rdCreateFunSet <- function( pZh ,pFunIdLst ){
+get3rdCreateFunSet <- function( pZh ,pFunIdLst ,pFunGIdLst ){
 
 	generationNumber <- 3
 	zEALst <- list()
@@ -183,10 +183,10 @@ get3rdCreateFunSet <- function( pZh ,pFunIdLst ){
 	}
 	
 	return( funLst )
-} # get1stCreateFunSet( )
+} # get3rdCreateFunSet( )
 
 #	4 세대 : 3세대에 대한 1차 연산
-get4thCreateFunSet <- function( pZh ,pFunIdLst ){
+get4thCreateFunSet <- function( pZh ,pFunIdLst ,pFunGIdLst ){
 
 	generationNumber <- 4
 	zEALst <- list()
@@ -209,10 +209,10 @@ get4thCreateFunSet <- function( pZh ,pFunIdLst ){
 
 	return( funLst )
 
-} # get1stCreateFunSet( )
+} # get4thCreateFunSet( )
 
 #	5 세대 : 1~4 세대에 대한 컬럼간 연산
-get5thCreateFunSet <- function( pZh ,pFunIdLst ){
+get5thCreateFunSet <- function( pZh ,pFunIdLst ,pFunGIdLst ){
 
 	generationNumber <- 5
 	zEALst <- list()
@@ -235,10 +235,10 @@ get5thCreateFunSet <- function( pZh ,pFunIdLst ){
 
 	return( funLst )
 
-} # get1stCreateFunSet( )
+} # get5thCreateFunSet( )
 
 #	6 세대 : 5세대에 대한 1차 연산
-get6thCreateFunSet <- function( pZh ,pFunIdLst ){
+get6thCreateFunSet <- function( pZh ,pFunIdLst ,pFunGIdLst ){
 
 	generationNumber <- 6
 	zEALst <- list()
@@ -261,15 +261,15 @@ get6thCreateFunSet <- function( pZh ,pFunIdLst ){
 
 	return( funLst )
 
-} # get1stCreateFunSet( )
+} # get6thCreateFunSet( )
 
 # =========================================================================================
 # 한정하기 어려워 규모가 큰 CodeVal을 정의
 #	메모리 절약을 위해 참조형태가 되도록 하기 위해서임.
-codeVal.DnaMinMax <- -max(FB$dnaType):max(FB$dnaType)
-codeVal.accumMax <- 1000
-codeVal.accumRng0 <- 0:codeVal.accumMax
-codeVal.accumRng1 <- 1:codeVal.accumMax
+codeVal.DnaMinMax	<- -max(FB$dnaType):max(FB$dnaType)
+codeVal.accumMax	<- 1000
+codeVal.accumRng0	<- 0:codeVal.accumMax
+codeVal.accumRng1	<- 1:codeVal.accumMax
 
 
 # =========================================================================================
@@ -281,11 +281,12 @@ codeVal.accumRng1 <- 1:codeVal.accumMax
 #	pMode : NULL(가공없음) ,"ltgt"(크면 1, 작으면0) ,"abs"(차이값의 절대값)
 cF.pastColDiff <- function( pIoAddr ,pHSize=1 ,pFGIdStr="" ,pCodeVal=NULL ,pMode=NULL ){
 	rObj <- list( idStr=sprintf("cF.pastColDiff_H%dM%s",pHSize,ifelse(is.null(pMode),"",pMode) )
-					,ioAddr=pIoAddr	,fGIdStgr=pFGIdStr
+					,ioAddr=pIoAddr	,fGIdStr=pFGIdStr
 				)
 	rObj$inAddr <- rObj$ioAddr$inLst[[1]]
 	rObj$zEA	<- rObj$ioAddr$zEALst[[1]]
 	rObj$hSize	<- pHSize # hSize가 0이면 자기 자신, 즉 bornEleLst 내에서 차이 계산.
+	rObj$initNA <- rObj$hSize # seqAnaFun() 들에게 불용구간 정보를 전달하기 위한 변수.
 	
 	rObj$codeValNA	<- NA
 	if( is.null(pCodeVal) ){
@@ -352,11 +353,13 @@ cF.pastColDiff <- function( pIoAddr ,pHSize=1 ,pFGIdStr="" ,pCodeVal=NULL ,pMode
 # 2세대 이상의 ElementSet 에서 사용.
 cF.seqAccum <- function( pIoAddr ,pMaxAccum=codeVal.accumMax ,pFGIdStr="" ,pCodeVal=NULL ){
 	rObj <- list( idStr=sprintf("cF.seqAccum")
-					,ioAddr=pIoAddr	,fGIdStgr=pFGIdStr
+					,ioAddr=pIoAddr	,fGIdStr=pFGIdStr
 				)
 	rObj$inAddr <- rObj$ioAddr$inLst[[1]] # 어차피 얘는 input이 하나 뿐인지라.
 	rObj$codeValNA	<- -1
 	rObj$maxAccum <- pMaxAccum
+	rObj$initNA <- NULL # seqAnaFun() 들에게 불용구간 정보를 전달하기 위한 변수.
+
 	if( is.null(pCodeVal) ){
 		rObj$codeVal<- c( codeVal.accumRng1 ,rObj$codeValNA)
 			# 현재 자기 자신부터 카운트 하기로 한다.
@@ -403,11 +406,12 @@ cF.seqAccum <- function( pIoAddr ,pMaxAccum=codeVal.accumMax ,pFGIdStr="" ,pCode
 #	pMode : NULL(가공없음) ,"ltgt"(크면 1, 작으면0) ,"abs"(차이값의 절대값)
 cF.pastDiff <- function( pIoAddr ,pHSize=1 ,pFGIdStr="" ,pCodeVal=NULL ,pMode=NULL ){
 	rObj <- list( idStr=sprintf("cF.pastDiff_H%dM%s",pHSize,ifelse(is.null(pMode),"",pMode) )
-					,ioAddr=pIoAddr	,fGIdStgr=pFGIdStr
+					,ioAddr=pIoAddr	,fGIdStr=pFGIdStr
 				)
 	rObj$inAddr <- rObj$ioAddr$inLst[[1]] # 어차피 얘는 input이 하나 뿐인지라.
 	rObj$zDC	<- rObj$ioAddr$zDC
 	rObj$hSize	<- pHSize
+	rObj$initNA <- rObj$hSize # seqAnaFun() 들에게 불용구간 정보를 전달하기 위한 변수.
 
 	rObj$codeValNA	<- NA
 	if( is.null(pCodeVal) ){
@@ -461,11 +465,12 @@ cF.pastDiff <- function( pIoAddr ,pHSize=1 ,pFGIdStr="" ,pCodeVal=NULL ,pMode=NU
 
 cF.remainder <- function( pIoAddr ,pBase ,pFGIdStr="" ,pCodeVal=NULL ){
 	rObj <- list( idStr=sprintf("cF.remainder_B%d",pBase) 
-					,ioAddr=pIoAddr	,fGIdStgr=pFGIdStr
+					,ioAddr=pIoAddr	,fGIdStr=pFGIdStr
 				)
 	rObj$inAddr <- rObj$ioAddr$inLst[[1]] # 어차피 얘는 input이 하나 뿐인지라.
 	rObj$zDC	<- rObj$ioAddr$zDC
 	rObj$base	<- pBase
+	rObj$initNA <- NULL # seqAnaFun() 들에게 불용구간 정보를 전달하기 위한 변수.
 	
 	rObj$codeValNA	<- -1
 	if( is.null(pCodeVal) ){
@@ -488,11 +493,12 @@ cF.remainder <- function( pIoAddr ,pBase ,pFGIdStr="" ,pCodeVal=NULL ){
 
 cF.quotient <- function( pIoAddr ,pBase ,pFGIdStr="" ,pCodeVal=NULL ){
 	rObj <- list( idStr=sprintf("cF.quotient_B%d",pBase)
-					,ioAddr=pIoAddr	,fGIdStgr=pFGIdStr
+					,ioAddr=pIoAddr	,fGIdStr=pFGIdStr
 				)
 	rObj$inAddr <- rObj$ioAddr$inLst[[1]] # 어차피 얘는 input이 하나 뿐인지라.
 	rObj$zDC	<- rObj$ioAddr$zDC
 	rObj$base	<- pBase
+	rObj$initNA <- NULL # seqAnaFun() 들에게 불용구간 정보를 전달하기 위한 변수.
 	
 	rObj$codeValNA	<- -1
 	if( is.null(pCodeVal) ){
@@ -519,10 +525,11 @@ cF.quotient <- function( pIoAddr ,pBase ,pFGIdStr="" ,pCodeVal=NULL ){
 #			names(ioAddr) = c("inEle","inCol","outEle","outCol")
 cF.rawDummy <- function( pIoAddr ,pFGIdStr="" ,pCodeVal=NULL ){
 	rObj <- list( idStr=sprintf("cF.rawDummy") 
-					,ioAddr=pIoAddr	,fGIdStgr=pFGIdStr
+					,ioAddr=pIoAddr	,fGIdStr=pFGIdStr
 				)
 	rObj$inAddr <- rObj$ioAddr$inLst[[1]] # 어차피 얘는 input이 하나 뿐인지라.
 	rObj$zDC	<- rObj$ioAddr$zDC
+	rObj$initNA <- NULL # seqAnaFun() 들에게 불용구간 정보를 전달하기 위한 변수.
 	
 	rObj$codeValNA	<- -1
 	if( is.null(pCodeVal) ){

@@ -1,18 +1,15 @@
-# 한글한글
+# 기초 데이터 로딩
+curWd <- getwd()	;setwd("..")
+FB <- getFlagBank()	;setwd(curWd)
+# 헤더 파일
 source("20170917_A_H.R")
 source("20171029_A_H.R")
-
-curWd <- getwd()
-setwd("..")
-FB <- getFlagBank()
-setwd(curWd)
-
 
 pZh <- as.matrix(FB$zh)
 
 makeSpan <- 1:5
 creFunSet <- getCreateFunSet( pZh )
-eleSet <- getNewElementSet( creFunSet ,pZh[makeSpan,] )
+eleSet <- getNewElementSet( creFunSet ,pZh=pZh[makeSpan,] )
 
 for( msIdx in makeSpan ){
 
@@ -38,15 +35,10 @@ for( msIdx in makeSpan ){
 } # for(msIdx)
 
 
-creFunSet[[3]]
 
-> inColIdx
-[1] 31 32 33 34 35 36
-> eleSet$eleLst[[1]]$mtx[,c(31 ,32 ,33 ,34 ,35 ,36)]
-     [,1] [,2] [,3] [,4] [,5] [,6]
-[1,]    0    3    4    3    2    0
-[2,]    4    3    1    0    2    2
-[3,]    1    1    4    1    2    1
-[4,]    4    2    0    1    0    2
-[5,]    1    4    4    0    1    2
+
+
+
+
+
 
