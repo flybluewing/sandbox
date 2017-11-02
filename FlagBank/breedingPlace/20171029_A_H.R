@@ -23,8 +23,12 @@ getNewElementSet <- function( pCreateFunSet ,pTrainBase=100 ,pZh=NULL ){
 		eleLst[[(1+length(eleLst))]] <- eleObj
 		funIdLst[[(1+length(funIdLst))]]			<- sapply(pCreateFunSet[[eIdx]],function(p){p$idStr})
 		funGIdLst[[(1+length(funGIdLst))]]			<- sapply(pCreateFunSet[[eIdx]],function(p){p$fGIdStr})
-		funInitNALst[[(1+length(funInitNALst))]]	<- sapply(pCreateFunSet[[eIdx]],function(p){p$initNA})
-		funCodeValLst[[(1+length(funCodeValLst))]]	<- sapply(pCreateFunSet[[eIdx]],function(p){p$codeVal})
+		
+		funInitNA	<- sapply(pCreateFunSet[[eIdx]],function(p){p$initNA})
+		funInitNALst[[(1+length(funInitNALst))]] <- if( 0==length(funInitNA) ) integer(0) else funInitNA
+					# 타입을 맞추느라... sapply()는 값이 없으면 빈 list를 반환하거든.
+
+		funCodeValLst[[(1+length(funCodeValLst))]]	<- lapply(pCreateFunSet[[eIdx]],function(p){p$codeVal})
 	}
 
 	rObj <- list( eleLst=eleLst ,trainBase=pTrainBase )
@@ -83,13 +87,37 @@ getCreateFunSet <- function( pZh ){
 	return( rLst )
 } # getCreateFunSet()
 
-getSeqAnaFunSet <- function ( pEleSet ,pProbPredObj=NULL ){
+analyzeSeq <- function ( pEleSet ,pProbPredObj=NULL ,pDebug=F ){
 
 	probPredObj <- pProbPredObj
-	if( is.null(pProbPredObj) {
+	if( is.null(pProbPredObj) ){
 		myObj <- load("Obj_stdSeqObj.save") # loading stdSeqObj
-		seqProbPredictor <- getSeqProbPredictor(stdSeqObj)
+		pProbPredObj <- getSeqProbPredictor(stdSeqObj)
 	}
 
+	testSpan <- (pEleSet$trainBase+1):nrow(pEleSet$eleLst[[1]]$mtx)
+	hAnaSet <- list()
+	for( tIdx in testSpan ){	# tIdx <- testSpan[1] # 테스트 history index
+		if( pDebug )
+			k.FLogStr(sprintf("analyzeSeq() current history :%4d",tIdx))
 
-} # getSeqAnaFunSet()
+		seqAnaSet <- list( stdH=tIdx ,anaLst=list() )
+		for( eIdx in seq_len(length(pEleSet$eleLst)) ){ # eIdx <- 1
+			seqAnaLst <- list()
+			curEle <- pEleSet$eleLst[[eIdx]]
+			for( cIdx in seq_len(ncol(curEle$mtx)) ){
+				# 해당 h 이전 과거 자료를 가지고 h 시점의 zoid ele 예측치를 구하려는 것이므로.
+				# seqAnaFun.default <- function( pFlag ,pPredObj ,pInitNA ,pCodeVal ){
+				# qqe <- curEle$mtx[1:(tIdx-1),cIdx]
+				anaObj <- seqAnaFun.default( curEle$mtx[1:(tIdx-1),cIdx] ,pProbPredObj 
+												,pInitNA = pEleSet$funInitNALst[[eIdx]][cIdx]
+												,pCodeVal= pEleSet$funCodeValLst[[eIdx]][[cIdx]]
+											)
+				seqAnaLst[[(1+length(seqAnaLst))]] <- anaObj
+			} # for(cIdx)
+			seqAnaSet$anaLst[[(1+length(seqAnaSet$anaLst))]] <- seqAnaLst
+		} # eIdx
+		hAnaSet[[(1+length(hAnaSet))]] <- seqAnaSet
+	}
+
+} # analyzeSeq()

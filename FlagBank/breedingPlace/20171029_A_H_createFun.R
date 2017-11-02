@@ -286,7 +286,7 @@ cF.pastColDiff <- function( pIoAddr ,pHSize=1 ,pFGIdStr="" ,pCodeVal=NULL ,pMode
 	rObj$inAddr <- rObj$ioAddr$inLst[[1]]
 	rObj$zEA	<- rObj$ioAddr$zEALst[[1]]
 	rObj$hSize	<- pHSize # hSize가 0이면 자기 자신, 즉 bornEleLst 내에서 차이 계산.
-	rObj$initNA <- rObj$hSize # seqAnaFun() 들에게 불용구간 정보를 전달하기 위한 변수.
+	rObj$initNA <- ifelse( is.null(rObj$hSize) ,NA ,rObj$hSize ) # seqAnaFun() 들에게 불용구간 정보를 전달하기 위한 변수.
 	
 	rObj$codeValNA	<- NA
 	if( is.null(pCodeVal) ){
@@ -358,7 +358,7 @@ cF.seqAccum <- function( pIoAddr ,pMaxAccum=codeVal.accumMax ,pFGIdStr="" ,pCode
 	rObj$inAddr <- rObj$ioAddr$inLst[[1]] # 어차피 얘는 input이 하나 뿐인지라.
 	rObj$codeValNA	<- -1
 	rObj$maxAccum <- pMaxAccum
-	rObj$initNA <- NULL # seqAnaFun() 들에게 불용구간 정보를 전달하기 위한 변수.
+	rObj$initNA <- NA # seqAnaFun() 들에게 불용구간 정보를 전달하기 위한 변수.
 
 	if( is.null(pCodeVal) ){
 		rObj$codeVal<- c( codeVal.accumRng1 ,rObj$codeValNA)
@@ -411,7 +411,7 @@ cF.pastDiff <- function( pIoAddr ,pHSize=1 ,pFGIdStr="" ,pCodeVal=NULL ,pMode=NU
 	rObj$inAddr <- rObj$ioAddr$inLst[[1]] # 어차피 얘는 input이 하나 뿐인지라.
 	rObj$zDC	<- rObj$ioAddr$zDC
 	rObj$hSize	<- pHSize
-	rObj$initNA <- rObj$hSize # seqAnaFun() 들에게 불용구간 정보를 전달하기 위한 변수.
+	rObj$initNA <- ifelse( is.null(rObj$hSize) ,NA ,rObj$hSize ) # seqAnaFun() 들에게 불용구간 정보를 전달하기 위한 변수.
 
 	rObj$codeValNA	<- NA
 	if( is.null(pCodeVal) ){
@@ -470,7 +470,7 @@ cF.remainder <- function( pIoAddr ,pBase ,pFGIdStr="" ,pCodeVal=NULL ){
 	rObj$inAddr <- rObj$ioAddr$inLst[[1]] # 어차피 얘는 input이 하나 뿐인지라.
 	rObj$zDC	<- rObj$ioAddr$zDC
 	rObj$base	<- pBase
-	rObj$initNA <- NULL # seqAnaFun() 들에게 불용구간 정보를 전달하기 위한 변수.
+	rObj$initNA <- NA # seqAnaFun() 들에게 불용구간 정보를 전달하기 위한 변수.
 	
 	rObj$codeValNA	<- -1
 	if( is.null(pCodeVal) ){
@@ -498,7 +498,7 @@ cF.quotient <- function( pIoAddr ,pBase ,pFGIdStr="" ,pCodeVal=NULL ){
 	rObj$inAddr <- rObj$ioAddr$inLst[[1]] # 어차피 얘는 input이 하나 뿐인지라.
 	rObj$zDC	<- rObj$ioAddr$zDC
 	rObj$base	<- pBase
-	rObj$initNA <- NULL # seqAnaFun() 들에게 불용구간 정보를 전달하기 위한 변수.
+	rObj$initNA <- NA # seqAnaFun() 들에게 불용구간 정보를 전달하기 위한 변수.
 	
 	rObj$codeValNA	<- -1
 	if( is.null(pCodeVal) ){
@@ -529,7 +529,7 @@ cF.rawDummy <- function( pIoAddr ,pFGIdStr="" ,pCodeVal=NULL ){
 				)
 	rObj$inAddr <- rObj$ioAddr$inLst[[1]] # 어차피 얘는 input이 하나 뿐인지라.
 	rObj$zDC	<- rObj$ioAddr$zDC
-	rObj$initNA <- NULL # seqAnaFun() 들에게 불용구간 정보를 전달하기 위한 변수.
+	rObj$initNA <- NA # seqAnaFun() 들에게 불용구간 정보를 전달하기 위한 변수.
 	
 	rObj$codeValNA	<- -1
 	if( is.null(pCodeVal) ){

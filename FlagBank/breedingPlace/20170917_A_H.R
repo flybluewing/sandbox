@@ -22,6 +22,8 @@ getSeqProbPredictor <- function( pStdSeqObj ,pIdStr="testPredictor" ){
 	rObj$prob <- sapply(pStdSeqObj$probPLst ,function(p){p$mean})
 
 	rObj$predict <- function( pSeqNumObj ){ # k.seqNum()
+			# rObj$probMtx에 각 codeVal 별 확률 계산결과를 넣어 반환해준다.
+
 			rPObj <- list( lastVal=pSeqNumObj$lastVal ,lastVal.idx=pSeqNumObj$lastVal.idx )
 
 			# --[probMtx]-----------------------------------------------

@@ -7,10 +7,11 @@ source("20171029_A_H.R")
 
 pZh <- as.matrix(FB$zh)
 
-makeSpan <- 1:5
+makeSpan <- 1:nrow(pZh)
 creFunSet <- getCreateFunSet( pZh )
 eleSet <- getNewElementSet( creFunSet ,pZh=pZh[makeSpan,] )
 
+tStamp <- Sys.time()
 for( msIdx in makeSpan ){
 
 	bornEleLst <- list()
@@ -34,8 +35,12 @@ for( msIdx in makeSpan ){
 
 } # for(msIdx)
 
+stmpDiff <- Sys.time() - tStamp
+k.FLogStr(sprintf("eleSet is made. cost:%.1f%s",stmpDiff,units(stmpDiff)),pConsole=T)
 
-
+hAnaSet <- analyzeSeq( eleSet )
+stmpDiff <- Sys.time() - tStamp
+k.FLogStr(sprintf("eleSet is made. cost:%.1f%s",stmpDiff,units(stmpDiff)),pConsole=T)
 
 
 
