@@ -5,7 +5,11 @@ FB <- getFlagBank()	;setwd(curWd)
 source("20170917_A_H.R")
 source("20171029_A_H.R")
 
+devMode <- TRUE
+
 pZh <- as.matrix(FB$zh)
+if( devMode )
+	pZh <- pZh[1:300,]
 
 makeSpan <- 1:nrow(pZh)
 creFunSet <- getCreateFunSet( pZh )
@@ -38,11 +42,13 @@ for( msIdx in makeSpan ){
 stmpDiff <- Sys.time() - tStamp
 k.FLogStr(sprintf("eleSet is made. cost:%.1f%s",stmpDiff,units(stmpDiff)),pConsole=T)
 
-hAnaSet <- analyzeSeq( eleSet )
+hAnaSet <- analyzeSeq( eleSet ,pDebug=T )
 stmpDiff <- Sys.time() - tStamp
 k.FLogStr(sprintf("eleSet is made. cost:%.1f%s",stmpDiff,units(stmpDiff)),pConsole=T)
 
-
+save( hAnaSet ,file="Obj_hAnaSetDev.save" )
+save( eleSet  ,file="Obj_eleSetDev.save")
+save( creFunSet ,file="Obj_creFunSetDev.save" )
 
 
 

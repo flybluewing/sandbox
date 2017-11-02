@@ -49,6 +49,27 @@ get1stCreateFunSet <- function( pZh ){
 		ioAddr$inLst[[1]]["col"] <- chIdx
 		ioAddr$outLst[[1]]["col"]<- (outIdxAccum+chIdx)
 		ioAddr$zDC <- chIdx
+		funLst[[ ioAddr$outLst[[1]]["col"] ]] <- cF.quotient( ioAddr ,pBase=5 )
+	}
+
+	outIdxAccum <- outIdxAccum + chunk
+	chunk <- 6
+	for( chIdx in 1:chunk ){
+		ioAddr$inLst[[1]]["col"] <- chIdx
+		ioAddr$outLst[[1]]["col"]<- (outIdxAccum+chIdx)
+		ioAddr$zDC <- chIdx
+		funLst[[ ioAddr$outLst[[1]]["col"] ]] <- cF.remainder( ioAddr ,pBase=5 )
+	}
+
+	if( TRUE)
+		return( funLst )
+
+	outIdxAccum <- outIdxAccum + chunk
+	chunk <- 6
+	for( chIdx in 1:chunk ){
+		ioAddr$inLst[[1]]["col"] <- chIdx
+		ioAddr$outLst[[1]]["col"]<- (outIdxAccum+chIdx)
+		ioAddr$zDC <- chIdx
 		funLst[[ ioAddr$outLst[[1]]["col"] ]] <- cF.pastDiff( ioAddr ,pHSize=1 ,pMode="ltgt" )
 	}
 
@@ -68,24 +89,6 @@ get1stCreateFunSet <- function( pZh ){
 		ioAddr$outLst[[1]]["col"]<- (outIdxAccum+chIdx)
 		ioAddr$zDC <- chIdx
 		funLst[[ ioAddr$outLst[[1]]["col"] ]] <- cF.pastDiff( ioAddr ,pHSize=1 )
-	}
-	
-	outIdxAccum <- outIdxAccum + chunk
-	chunk <- 6
-	for( chIdx in 1:chunk ){
-		ioAddr$inLst[[1]]["col"] <- chIdx
-		ioAddr$outLst[[1]]["col"]<- (outIdxAccum+chIdx)
-		ioAddr$zDC <- chIdx
-		funLst[[ ioAddr$outLst[[1]]["col"] ]] <- cF.quotient( ioAddr ,pBase=5 )
-	}
-
-	outIdxAccum <- outIdxAccum + chunk
-	chunk <- 6
-	for( chIdx in 1:chunk ){
-		ioAddr$inLst[[1]]["col"] <- chIdx
-		ioAddr$outLst[[1]]["col"]<- (outIdxAccum+chIdx)
-		ioAddr$zDC <- chIdx
-		funLst[[ ioAddr$outLst[[1]]["col"] ]] <- cF.remainder( ioAddr ,pBase=5 )
 	}
 
 	return( funLst )
@@ -108,7 +111,7 @@ get2ndCreateFunSet <- function( pZh ,pFunIdLst ,pFunGIdLst ){
 
 	outIdxAccum <- outIdxAccum + chunk
 	inEleIdx <- 1   # input element index
-	inColIdx <- which(pFunIdLst[[inEleIdx]]=="cF.pastDiff_H1Mltgt") # input Column Idx
+	inColIdx <- which(pFunIdLst[[inEleIdx]]=="cF.remainder_B5") # input Column Idx
 	chunk <- length(inColIdx)
 	for( chIdx in seq_len(chunk) ){
 		ioAddr$inLst[[1]]["col"] <- inColIdx[chIdx]
@@ -148,7 +151,7 @@ get3rdCreateFunSet <- function( pZh ,pFunIdLst ,pFunGIdLst ){
 			ioAddr$outLst[[1]]["col"]<- (outIdxAccum+chIdx)
 			funLst[[ ioAddr$outLst[[1]]["col"] ]] <- cF.pastColDiff( ioAddr ,pHSize=0 ,pMode=NULL ,pFGIdStr=baseIdx )
 		}
-	}	
+	}
 
 	outIdxAccum <- outIdxAccum + chunk
 	inEleIdx <- 1   # input element index

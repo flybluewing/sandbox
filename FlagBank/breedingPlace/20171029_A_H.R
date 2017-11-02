@@ -120,4 +120,6 @@ analyzeSeq <- function ( pEleSet ,pProbPredObj=NULL ,pDebug=F ){
 		hAnaSet[[(1+length(hAnaSet))]] <- seqAnaSet
 	}
 
+	return( hAnaSet )
+
 } # analyzeSeq()
