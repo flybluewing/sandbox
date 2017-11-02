@@ -28,7 +28,7 @@ getIoAddr <- function( pIn ,pOut ,pZDC=NULL	,pZEALst=NULL ){
 #		Raw DNA Code Column 하나를 대상으로 파생되는 Set로서,
 #		하나의 Column에 대한 1차 가공 결과만을 가지며,
 #		Raw DNA 말고는 서로간의 의존관계가 없어야 한다.
-get1stCreateFunSet <- function( pZh ){
+get1stCreateFunSet <- function( pZh ,pDev=F ){
 	
 	generationNumber <- 1
 	ioAddr <- getIoAddr( c(generationNumber,0) ,c(generationNumber,0) ,NULL ,NULL )
@@ -61,7 +61,7 @@ get1stCreateFunSet <- function( pZh ){
 		funLst[[ ioAddr$outLst[[1]]["col"] ]] <- cF.remainder( ioAddr ,pBase=5 )
 	}
 
-	if( TRUE)
+	if( pDev )
 		return( funLst )
 
 	outIdxAccum <- outIdxAccum + chunk
@@ -97,7 +97,7 @@ get1stCreateFunSet <- function( pZh ){
 #	2 세대 elementSet을 만들기 위한 함수들
 #		1세대 Set에 대한 2차 가공결과이며, 역시 Column간 의존관계는 없어야 한다.
 #		1,2세대 Set을 가지고 Raw Column에서의 Code 별 성적을 계산할 수 있어야 한다.
-get2ndCreateFunSet <- function( pZh ,pFunIdLst ,pFunGIdLst ){
+get2ndCreateFunSet <- function( pZh ,pFunIdLst ,pFunGIdLst ,pDev=F ){
 
 	eleGenNum <- 2
 	zEALst <- list()
@@ -119,11 +119,14 @@ get2ndCreateFunSet <- function( pZh ,pFunIdLst ,pFunGIdLst ){
 		funLst[[ ioAddr$outLst[[1]]["col"] ]] <- cF.seqAccum( ioAddr )
 	}
 
+	if( pDev )
+		return( funLst )
+
 	return( funLst )
 } # get2ndCreateFunSet( )
 
 #	3 세대 : 1,2세대에 대한 Column간 관계.(가공없이 측정값만 도출)
-get3rdCreateFunSet <- function( pZh ,pFunIdLst ,pFunGIdLst ){
+get3rdCreateFunSet <- function( pZh ,pFunIdLst ,pFunGIdLst ,pDev=F ){
 
 	generationNumber <- 3
 	zEALst <- list()
@@ -184,12 +187,15 @@ get3rdCreateFunSet <- function( pZh ,pFunIdLst ,pFunGIdLst ){
 			funLst[[ ioAddr$outLst[[1]]["col"] ]] <- cF.pastColDiff( ioAddr ,pHSize=0 ,pMode=NULL ,pFGIdStr=baseIdx )
 		}
 	}
-	
+
+	if( pDev )
+		return( funLst )
+
 	return( funLst )
 } # get3rdCreateFunSet( )
 
 #	4 세대 : 3세대에 대한 1차 연산
-get4thCreateFunSet <- function( pZh ,pFunIdLst ,pFunGIdLst ){
+get4thCreateFunSet <- function( pZh ,pFunIdLst ,pFunGIdLst ,pDev=F ){
 
 	generationNumber <- 4
 	zEALst <- list()
@@ -210,12 +216,15 @@ get4thCreateFunSet <- function( pZh ,pFunIdLst ,pFunGIdLst ){
 		# funLst[[ ioAddr$outLst[[1]]["col"] ]] <- cF.rawDummy( ioAddr )
 	}
 
+	if( pDev )
+		return( funLst )
+
 	return( funLst )
 
 } # get4thCreateFunSet( )
 
 #	5 세대 : 1~4 세대에 대한 컬럼간 연산
-get5thCreateFunSet <- function( pZh ,pFunIdLst ,pFunGIdLst ){
+get5thCreateFunSet <- function( pZh ,pFunIdLst ,pFunGIdLst ,pDev=F ){
 
 	generationNumber <- 5
 	zEALst <- list()
@@ -236,12 +245,15 @@ get5thCreateFunSet <- function( pZh ,pFunIdLst ,pFunGIdLst ){
 		# funLst[[ ioAddr$outLst[[1]]["col"] ]] <- cF.rawDummy( ioAddr )
 	}
 
+	if( pDev )
+		return( funLst )
+
 	return( funLst )
 
 } # get5thCreateFunSet( )
 
 #	6 세대 : 5세대에 대한 1차 연산
-get6thCreateFunSet <- function( pZh ,pFunIdLst ,pFunGIdLst ){
+get6thCreateFunSet <- function( pZh ,pFunIdLst ,pFunGIdLst ,pDev=F ){
 
 	generationNumber <- 6
 	zEALst <- list()
@@ -261,6 +273,9 @@ get6thCreateFunSet <- function( pZh ,pFunIdLst ,pFunGIdLst ){
 		# ioAddr$zDC <- chIdx
 		# funLst[[ ioAddr$outLst[[1]]["col"] ]] <- cF.rawDummy( ioAddr )
 	}
+
+	if( pDev )
+		return( funLst )
 
 	return( funLst )
 

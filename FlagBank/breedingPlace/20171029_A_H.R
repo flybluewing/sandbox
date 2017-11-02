@@ -45,7 +45,7 @@ getNewElementSet <- function( pCreateFunSet ,pTrainBase=100 ,pZh=NULL ){
 } # getNewElementSet()
 
 
-getCreateFunSet <- function( pZh ){
+getCreateFunSet <- function( pZh ,pDev=F ){
 
 	funIdLst	<- list()
 	funGIdLst	<- list()
@@ -53,32 +53,32 @@ getCreateFunSet <- function( pZh ){
 	rLst <- list()
 
 	gName <- "1st" # generation name
-	rLst[[gName]]	<- get1stCreateFunSet( pZh )
+	rLst[[gName]]	<- get1stCreateFunSet( pZh ,pDev )
 	funIdLst[[gName]]		<- sapply(rLst[[gName]],function(p){p$idStr})
 	funGIdLst[[gName]]		<- sapply(rLst[[gName]],function(p){p$fGIdStr})
 
 	gName <- "2nd"
-	rLst[[gName]] <- get2ndCreateFunSet( pZh ,funIdLst ,funGIdLst )
+	rLst[[gName]] <- get2ndCreateFunSet( pZh ,funIdLst ,funGIdLst ,pDev )
 	funIdLst[[gName]]		<- sapply(rLst[[gName]],function(p){p$idStr})
 	funGIdLst[[gName]]		<- sapply(rLst[[gName]],function(p){p$fGIdStr})
 
 	gName <- "3rd"
-	rLst[[gName]] <- get3rdCreateFunSet( pZh ,funIdLst ,funGIdLst )
+	rLst[[gName]] <- get3rdCreateFunSet( pZh ,funIdLst ,funGIdLst ,pDev )
 	funIdLst[[gName]]		<- sapply(rLst[[gName]],function(p){p$idStr})
 	funGIdLst[[gName]]		<- sapply(rLst[[gName]],function(p){p$fGIdStr})
 
 	gName <- "4th"
-	rLst[[gName]] <- get4thCreateFunSet( pZh ,funIdLst ,funGIdLst )
+	rLst[[gName]] <- get4thCreateFunSet( pZh ,funIdLst ,funGIdLst ,pDev )
 	funIdLst[[gName]]		<- sapply(rLst[[gName]],function(p){p$idStr})
 	funGIdLst[[gName]]		<- sapply(rLst[[gName]],function(p){p$fGIdStr})
 
 	gName <- "5th"
-	rLst[[gName]] <- get5thCreateFunSet( pZh ,funIdLst ,funGIdLst )
+	rLst[[gName]] <- get5thCreateFunSet( pZh ,funIdLst ,funGIdLst ,pDev )
 	funIdLst[[gName]]		<- sapply(rLst[[gName]],function(p){p$idStr})
 	funGIdLst[[gName]]		<- sapply(rLst[[gName]],function(p){p$fGIdStr})
 
 	gName <- "6th"
-	rLst[[gName]] <- get6thCreateFunSet( pZh ,funIdLst ,funGIdLst )
+	rLst[[gName]] <- get6thCreateFunSet( pZh ,funIdLst ,funGIdLst ,pDev )
 	funIdLst[[gName]]		<- sapply(rLst[[gName]],function(p){p$idStr})
 	funGIdLst[[gName]]		<- sapply(rLst[[gName]],function(p){p$fGIdStr})
 

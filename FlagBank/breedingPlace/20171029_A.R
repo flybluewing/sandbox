@@ -12,7 +12,7 @@ if( devMode )
 	pZh <- pZh[1:300,]
 
 makeSpan <- 1:nrow(pZh)
-creFunSet <- getCreateFunSet( pZh )
+creFunSet <- getCreateFunSet( pZh ,devMode )
 eleSet <- getNewElementSet( creFunSet ,pZh=pZh[makeSpan,] )
 
 tStamp <- Sys.time()
