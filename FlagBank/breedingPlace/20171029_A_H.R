@@ -15,6 +15,7 @@ getNewElementSet <- function( pCreateFunSet ,pTrainBase=100 ,pZh=NULL ){
 	funGIdLst		<- list()
 	funInitNALst	<- list()
 	funCodeValLst	<- list()
+	funCodeValNAidxLst <- list()
 	for( eIdx in 1:length(pCreateFunSet) ){
 		eleObj <- list()
 		eleObj$mtx <- matrix( 0 ,nrow= ifelse( is.null(pZh) ,0 ,nrow(pZh) )
@@ -24,6 +25,15 @@ getNewElementSet <- function( pCreateFunSet ,pTrainBase=100 ,pZh=NULL ){
 		funIdLst[[(1+length(funIdLst))]]			<- sapply(pCreateFunSet[[eIdx]],function(p){p$idStr})
 		funGIdLst[[(1+length(funGIdLst))]]			<- sapply(pCreateFunSet[[eIdx]],function(p){p$fGIdStr})
 		
+		codeValNAidx<- sapply(pCreateFunSet[[eIdx]],function(p){	if( is.null(p$codeValNA.idx) || (0==length(p$codeValNA.idx)) ) {
+																		return( NA )
+																	} else {
+																		return( p$codeValNA.idx )
+																	}
+																})
+
+		funCodeValNAidxLst[[(1+length(funCodeValNAidxLst))]] <- if( 0==length(codeValNAidx) ) integer(0) else codeValNAidx
+
 		funInitNA	<- sapply(pCreateFunSet[[eIdx]],function(p){p$initNA})
 		funInitNALst[[(1+length(funInitNALst))]] <- if( 0==length(funInitNA) ) integer(0) else funInitNA
 					# 타입을 맞추느라... sapply()는 값이 없으면 빈 list를 반환하거든.
@@ -39,6 +49,7 @@ getNewElementSet <- function( pCreateFunSet ,pTrainBase=100 ,pZh=NULL ){
 	rObj$funGIdLst		<- funGIdLst
 	rObj$funInitNALst	<- funInitNALst
 	rObj$funCodeValLst	<- funCodeValLst
+	rObj$funCodeValNAidxLst <- funCodeValNAidxLst
 
 	return(rObj)
 

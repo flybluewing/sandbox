@@ -52,4 +52,11 @@ save( creFunSet ,file="Obj_creFunSetDev.save" )
 
 
 
+# -------------------------------------------------------
+
+
+
+hIdx <- 1	;eIdx <- 1	;cIdx<-1
+pAnaObj <- hAnaSet[[hIdx]]$anaLst[[eIdx]][[cIdx]]
+pCodeValNAidx <- eleSet$funCodeValNAidx[[eIdx]][cIdx]
 

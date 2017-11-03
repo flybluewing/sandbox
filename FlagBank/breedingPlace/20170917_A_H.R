@@ -39,23 +39,24 @@ getSeqProbPredictor <- function( pStdSeqObj ,pIdStr="testPredictor" ){
 				mean.idx <- which.min(abs(rObj$prob - mean.last))
 				seqNum <- NULL
 				prob <- NULL
+				isChanging <- NULL
 				if( pSeqNumObj$lastVal.idx == cIdx ){
 					seqNum	<- pSeqNumObj$lastSeqMtx["pos",cIdx]
 					seqNum	<- ifelse( rObj$mapMax<seqNum ,rObj$mapMax ,seqNum )
 					prob	<- rObj$probPMap[seqNum,mean.idx]
+					isChanging <- ifelse( prob <= rObj$prob[mean.idx]*0.9 ,-1 ,0 ) # 감소한다는 의미에서 -1
 				} else {
 					seqNum	<- pSeqNumObj$lastSeqMtx["neg",cIdx]
 					seqNum	<- ifelse( rObj$mapMax<seqNum ,rObj$mapMax ,seqNum )
-					prob	<- rObj$probNMap[seqNum,mean.idx]
+					prob	<- rObj$probNMap[seqNum,mean.idx] # 계속 안나올 확률.
+					isChanging <- ifelse( prob <= (1-rObj$prob[mean.idx])*0.9 ,1 ,0 ) # 증가했다는 의미에서 1
+					prob	<- 1 - prob # 계속 안나올 확률로 표현하면 해석하기 불편하므로 나올 확률
 				}
 				probMtx["mean"		,cIdx]	<- mean.all
 				probMtx["mean.last" ,cIdx]	<- mean.last
 				probMtx["seqNum"	,cIdx]	<- ifelse( pSeqNumObj$lastVal.idx == cIdx ,seqNum ,-seqNum )
 				probMtx["prob"		,cIdx]	<- prob
-				probMtx["isChanging",cIdx]	<- ifelse( pSeqNumObj$lastVal.idx == cIdx 
-																,abs(mean.last-prob) > (mean.last)/10
-																,abs((1-mean.last)-prob) > (1-mean.last)/10
-														)
+				probMtx["isChanging",cIdx]	<- isChanging
 			} # for(cIdx)
 
 			rPObj$probMtx <- probMtx
