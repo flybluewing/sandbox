@@ -208,10 +208,13 @@ k.seqNum <- function( pFlag ,pCodeVal=NULL ,pLMeanArea=10 ){
 
 
 #	pTestNum=1000 ;pSeqLogMax <- 300
-getStdSeqProbMapObj <- function( pTestNum=1000 ,pSampleNum=1000 ,pSeqLogMax=300 ){
+getStdSeqProbMapObj <- function( pFProb=c(1,5,10,15,20,25,30,35,40,45,50) ,pTestNum=1000 ,pSampleNum=1000 ,pSeqLogMax=300 ){
+
+	# stdSeqPrbMapObj <- getStdSeqProbMapObj( c(1,seq(2,50,2)) ,pTestNum=10000 ,pSampleNum=20000 ,pSeqLogMax=300 )
+	# 
 
 	tStmp <- Sys.time()
-	fProb <- c(1,5,10,15,20,25,30,35,40,45,50)
+	fProb <- pFProb
 	fPLst <- list()	;fNLst <- list()
 	for( sIdx in 1:pTestNum ){ # sample index
 		for( idx in 1:length(fProb) ){
@@ -226,7 +229,7 @@ getStdSeqProbMapObj <- function( pTestNum=1000 ,pSampleNum=1000 ,pSeqLogMax=300 
 		} # idx
 
 		tCost <- Sys.time() - tStmp
-		k.FLogStr(sprintf("%3dth sample (%4.1f %s)"
+		k.FLogStr(sprintf("%3dth test (%4.1f %s)"
 						,sIdx ,tCost ,units(tCost)
 					))
 	} # sIdx

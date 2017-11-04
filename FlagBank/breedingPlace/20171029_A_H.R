@@ -118,8 +118,6 @@ analyzeSeq <- function ( pEleSet ,pProbPredObj=NULL ,pDebug=F ){
 			curEle <- pEleSet$eleLst[[eIdx]]
 			for( cIdx in seq_len(ncol(curEle$mtx)) ){
 				# 해당 h 이전 과거 자료를 가지고 h 시점의 zoid ele 예측치를 구하려는 것이므로.
-				# seqAnaFun.default <- function( pFlag ,pPredObj ,pInitNA ,pCodeVal ){
-				# qqe <- curEle$mtx[1:(tIdx-1),cIdx]
 				anaObj <- seqAnaFun.default( curEle$mtx[1:(tIdx-1),cIdx] ,pProbPredObj 
 												,pInitNA = pEleSet$funInitNALst[[eIdx]][cIdx]
 												,pCodeVal= pEleSet$funCodeValLst[[eIdx]][[cIdx]]

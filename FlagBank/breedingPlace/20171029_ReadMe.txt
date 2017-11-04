@@ -1,0 +1,8 @@
+
+[확률 계산 구조]
+    stdSeqObj <- getStdSeqProbMapObj()
+    pProbPredObj <- getSeqProbPredictor(stdSeqObj)
+    probAnaObj <- pProbPredObj$predict()
+    trObj <- getAnaTranslators( pEleCord=c(eIdx,cIdx) )
+    trRst <- trObj$translate( eleSet ,pProbAnaObj )
+

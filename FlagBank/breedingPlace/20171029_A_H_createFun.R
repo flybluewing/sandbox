@@ -365,7 +365,7 @@ cF.pastColDiff <- function( pIoAddr ,pHSize=1 ,pFGIdStr="" ,pCodeVal=NULL ,pMode
 		}
 
 	return( rObj )
-}
+} # cF.pastColDiff()
 
 # 동일 컬럼 내 연속 누적 수.
 # 2세대 이상의 ElementSet 에서 사용.
