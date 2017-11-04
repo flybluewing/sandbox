@@ -51,6 +51,8 @@ getNewElementSet <- function( pCreateFunSet ,pTrainBase=100 ,pZh=NULL ){
 	rObj$funCodeValLst	<- funCodeValLst
 	rObj$funCodeValNAidxLst <- funCodeValNAidxLst
 
+	rObj$createTime <- NULL	# 버전관리용 단서
+
 	return(rObj)
 
 } # getNewElementSet()
@@ -107,7 +109,7 @@ analyzeSeq <- function ( pEleSet ,pProbPredObj=NULL ,pDebug=F ){
 	}
 
 	testSpan <- (pEleSet$trainBase+1):nrow(pEleSet$eleLst[[1]]$mtx)
-	hAnaSet <- list()
+	hLst <- list()
 	for( tIdx in testSpan ){	# tIdx <- testSpan[1] # 테스트 history index
 		if( pDebug )
 			k.FLogStr(sprintf("analyzeSeq() current history :%4d",tIdx))
@@ -126,8 +128,11 @@ analyzeSeq <- function ( pEleSet ,pProbPredObj=NULL ,pDebug=F ){
 			} # for(cIdx)
 			seqAnaSet$anaLst[[(1+length(seqAnaSet$anaLst))]] <- seqAnaLst
 		} # eIdx
-		hAnaSet[[(1+length(hAnaSet))]] <- seqAnaSet
+		hLst[[(1+length(hLst))]] <- seqAnaSet
 	}
+
+	hAnaSet <- list( hLst=hLst ,workTimes=list() )
+	hAnaSet$workTimes[[1]] <- Sys.time()
 
 	return( hAnaSet )
 
