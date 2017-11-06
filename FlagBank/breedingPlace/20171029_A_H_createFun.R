@@ -91,6 +91,42 @@ get1stCreateFunSet <- function( pZh ,pDev=F ){
 		funLst[[ ioAddr$outLst[[1]]["col"] ]] <- cF.pastDiff( ioAddr ,pHSize=1 )
 	}
 
+	outIdxAccum <- outIdxAccum + chunk
+	chunk <- 6
+	for( chIdx in 1:chunk ){
+		ioAddr$inLst[[1]]["col"] <- chIdx
+		ioAddr$outLst[[1]]["col"]<- (outIdxAccum+chIdx)
+		ioAddr$zDC <- chIdx
+		funLst[[ ioAddr$outLst[[1]]["col"] ]] <- cF.remainder( ioAddr ,pBase=2 )
+	}
+
+	outIdxAccum <- outIdxAccum + chunk
+	chunk <- 6
+	for( chIdx in 1:chunk ){
+		ioAddr$inLst[[1]]["col"] <- chIdx
+		ioAddr$outLst[[1]]["col"]<- (outIdxAccum+chIdx)
+		ioAddr$zDC <- chIdx
+		funLst[[ ioAddr$outLst[[1]]["col"] ]] <- cF.pastDiff( ioAddr ,pHSize=3 ,pMode="abs" )
+	}
+
+	outIdxAccum <- outIdxAccum + chunk
+	chunk <- 6
+	for( chIdx in 1:chunk ){
+		ioAddr$inLst[[1]]["col"] <- chIdx
+		ioAddr$outLst[[1]]["col"]<- (outIdxAccum+chIdx)
+		ioAddr$zDC <- chIdx
+		funLst[[ ioAddr$outLst[[1]]["col"] ]] <- cF.pastDiff( ioAddr ,pHSize=5 ,pMode="abs" )
+	}
+
+	outIdxAccum <- outIdxAccum + chunk
+	chunk <- 6
+	for( chIdx in 1:chunk ){
+		ioAddr$inLst[[1]]["col"] <- chIdx
+		ioAddr$outLst[[1]]["col"]<- (outIdxAccum+chIdx)
+		ioAddr$zDC <- chIdx
+		funLst[[ ioAddr$outLst[[1]]["col"] ]] <- cF.pastDiff( ioAddr ,pHSize=7 ,pMode="abs" )
+	}
+
 	return( funLst )
 } # get1stCreateFunSet( )
 
@@ -121,6 +157,7 @@ get2ndCreateFunSet <- function( pZh ,pFunIdLst ,pFunGIdLst ,pDev=F ){
 
 	if( pDev )
 		return( funLst )
+
 
 	return( funLst )
 } # get2ndCreateFunSet( )

@@ -4,12 +4,14 @@ FB <- getFlagBank()	;setwd(curWd)
 # 헤더 파일
 source("20170917_A_H.R")
 source("20171029_A_H.R")
+CPU.NUM <- 2
+sfInit( parallel=T, cpus=CPU.NUM )
 
 devMode <- TRUE
 
 pZh <- as.matrix(FB$zh)
 if( devMode )
-	pZh <- pZh[1:300,]
+	pZh <- pZh[1:300,] # h 10개당 2분 정도.
 
 makeSpan <- 1:nrow(pZh)
 creFunSet <- getCreateFunSet( pZh ,devMode )
@@ -52,7 +54,7 @@ k.FLogStr(sprintf("eleSet is made. cost:%.1f%s",stmpDiff,units(stmpDiff)),pConso
 # -------------------------------------------------------------------------------
 hAnaSet <- analyzeSeq( eleSet ,pDebug=T )
 stmpDiff <- Sys.time() - tStamp
-k.FLogStr(sprintf("eleSet is made. cost:%.1f%s",stmpDiff,units(stmpDiff)),pConsole=T)
+k.FLogStr(sprintf("hAnaSet is made. cost:%.1f%s",stmpDiff,units(stmpDiff)),pConsole=T)
 
 
 # -------------------------------------------------------------------------------

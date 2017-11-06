@@ -100,6 +100,7 @@ getCreateFunSet <- function( pZh ,pDev=F ){
 	return( rLst )
 } # getCreateFunSet()
 
+# pEleSet=eleSet  ;pProbPredObj=NULL  ;pDebug=T
 analyzeSeq <- function ( pEleSet ,pProbPredObj=NULL ,pDebug=F ){
 
 	probPredObj <- pProbPredObj
