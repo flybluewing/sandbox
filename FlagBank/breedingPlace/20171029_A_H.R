@@ -57,6 +57,61 @@ getNewElementSet <- function( pCreateFunSet ,pTrainBase=100 ,pZh=NULL ){
 
 } # getNewElementSet()
 
+# -------------------------------------------------------------------------------
+#	ElementSet, column analyze filter utilities
+eleCafUtil.getNew <- function( pEleSet ,pIdStr=NULL ,pSetAs=F ){
+
+	cafObj <- list( idStr=pIdStr )
+	eleLst <- list()
+	for( eIdx in seq_len(length(pEleSet$eleLst)) ){
+		eleLst[[ 1+length(eleLst) ]] <- rep( pSetAs ,ncol(pEleSet$eleLst[[eIdx]]$mtx) )
+	} # for(eIdx)
+	cafObj$eleLst <- eleLst
+
+	return(cafObj)
+
+} # eleCafUtil.getNew( )
+
+
+# - pMode : "overwrite" 이전 내용들을 지우고, 해당 컬럼들은 T로 설정
+#			"t4f"	F 였던 컬럼들만 T로 설정. T였던 컬럼은 F 가 된다.(이미 진행된 분석은 피하도록.)
+#			"f"		선택된 컬럼들을 F로 설정.
+eleCafUtil.remainder <- function( pCaf ,pRemainder=c(0,1) ,pBase=3 ,pMode="overwrite" ){
+
+	for( eIdx in seq_len(length(pCaf$eleLst)) ){
+		colLen <- length(pCaf$eleLst[[eIdx]])
+		indices <- seq_len( colLen )
+		setFlag <- rep( F ,colLen )
+		setFlag[ (indices%%pBase)%in%pRemainder ] <- T
+		
+		if( "t4f"==pMode ) {
+			setFlag[ pCaf$eleLst[[eIdx]] ] <- F
+			pCaf$eleLst[[eIdx]] <- setFlag
+		} else if( "f"==pMode ){
+			pCaf$eleLst[[eIdx]][setFlag] <- F
+		} else { # if( "overwrite" == pMode )
+			pCaf$eleLst[[eIdx]] <- setFlag
+		}
+	}
+	return( pCaf )
+} # eleCafUtil.remainder()
+
+#	- pHAnaSet : analyzeSeq() 의 결과물.
+#	- pEleSet  : ElementSet. rCaf의 전체 크기가 확인될 수 있기위해 필요하다.
+#				anaLst에서 맨 마지막 컬럼이 미분석 상태(NULL)일 수 있으므로.
+eleCafUtil.undone <- function( pEleSet ,pHAnaSet ,pHIdx=1 ){
+
+	anaLst <- pHAnaSet$hLst[[ pHIdx ]]$anaLst
+
+	rCaf <- eleCafUtil.getNew( pEleSet ,pSetAs=T )	# 모든 컬럼을 T로 설정.
+	for( eIdx in seq_len(length(anaLst)) ){
+		# 맨 마지막 컬럼이 미분석 상태일 경우를 대비.
+		flag <- sapply( anaLst[[eIdx]] ,function(p){ "seqAnaObj"==class(p) } )
+		rCaf$eleLst[[ eIdx ]][ seq_len(length(flag)) ] <- !flag
+	} # for(eIdx)
+
+	return( rCaf )
+}
 
 getCreateFunSet <- function( pZh ,pDev=F ){
 
@@ -100,8 +155,11 @@ getCreateFunSet <- function( pZh ,pDev=F ){
 	return( rLst )
 } # getCreateFunSet()
 
-# pEleSet=eleSet  ;pProbPredObj=NULL  ;pDebug=T
-analyzeSeq <- function ( pEleSet ,pProbPredObj=NULL ,pDebug=F ){
+#	- pCaf : column filtering in analyze. eleCafUtil.getNew() 결과물.
+#						seq ana 시간이 너무 오래 걸리므로 나누기 위해 사용.
+#						element별 분석대상 column이 T/F로 지정되어야 한다.
+#	pEleSet=eleSet  ;pProbPredObj=NULL  ;pCaf=NULL ;pDebug=T
+analyzeSeq <- function ( pEleSet ,pProbPredObj=NULL ,pCaf=NULL ,pDebug=F ){
 
 	probPredObj <- pProbPredObj
 	if( is.null(pProbPredObj) ){
@@ -120,12 +178,20 @@ analyzeSeq <- function ( pEleSet ,pProbPredObj=NULL ,pDebug=F ){
 			seqAnaLst <- list()
 			curEle <- pEleSet$eleLst[[eIdx]]
 			for( cIdx in seq_len(ncol(curEle$mtx)) ){
-				# 해당 h 이전 과거 자료를 가지고 h 시점의 zoid ele 예측치를 구하려는 것이므로.
-				anaObj <- seqAnaFun.default( curEle$mtx[1:(tIdx-1),cIdx] ,pProbPredObj 
-												,pInitNA = pEleSet$funInitNALst[[eIdx]][cIdx]
-												,pCodeVal= pEleSet$funCodeValLst[[eIdx]][[cIdx]]
-											)
-				seqAnaLst[[(1+length(seqAnaLst))]] <- anaObj
+
+				anaObj <- "none"	# 분석이 안 된 상태의 기본값
+				if( !is.null(pCaf) && !pCaf$eleLst[[eIdx]][cIdx] ){
+					seqAnaLst[[(1+length(seqAnaLst))]] <- anaObj
+				} else {
+					# 해당 h 이전 과거 자료를 가지고 h 시점의 zoid ele 예측치를 구하려는 것이므로.
+					anaObj <- seqAnaFun.default( curEle$mtx[1:(tIdx-1),cIdx] ,pProbPredObj 
+													,pInitNA = pEleSet$funInitNALst[[eIdx]][cIdx]
+													,pCodeVal= pEleSet$funCodeValLst[[eIdx]][[cIdx]]
+												)
+					class(anaObj) <- "seqAnaObj"
+					seqAnaLst[[(1+length(seqAnaLst))]] <- anaObj
+				} # if
+
 			} # for(cIdx)
 			seqAnaSet$anaLst[[(1+length(seqAnaSet$anaLst))]] <- seqAnaLst
 		} # eIdx

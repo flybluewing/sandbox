@@ -5,13 +5,13 @@ FB <- getFlagBank()	;setwd(curWd)
 source("20170917_A_H.R")
 source("20171029_A_H.R")
 CPU.NUM <- 2
-sfInit( parallel=T, cpus=CPU.NUM )
+# sfInit( parallel=T, cpus=CPU.NUM )
 
 devMode <- TRUE
 
 pZh <- as.matrix(FB$zh)
 if( devMode )
-	pZh <- pZh[1:300,] # h 10개당 2분 정도.
+	pZh <- pZh[1:130,] # h 10개당 2분 정도.
 
 makeSpan <- 1:nrow(pZh)
 creFunSet <- getCreateFunSet( pZh ,devMode )
