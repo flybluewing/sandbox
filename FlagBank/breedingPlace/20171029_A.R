@@ -52,7 +52,9 @@ k.FLogStr(sprintf("eleSet is made. cost:%.1f%s",stmpDiff,units(stmpDiff)),pConso
 # -------------------------------------------------------------------------------
 #	hAnaSet 생성.
 # -------------------------------------------------------------------------------
-hAnaSet <- analyzeSeq( eleSet ,pDebug=T )
+
+# 실행시간 엄청 오래걸림. 분할실행할 것.
+# hAnaSet <- analyzeSeq( eleSet ,pDebug=T )
 stmpDiff <- Sys.time() - tStamp
 k.FLogStr(sprintf("hAnaSet is made. cost:%.1f%s",stmpDiff,units(stmpDiff)),pConsole=T)
 

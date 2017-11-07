@@ -7,5 +7,7 @@ START R CMD BATCH --no-save --no-restore "--args anaId=%anaId% excId=%excId% " s
 set anaId=1
 START R CMD BATCH --no-save --no-restore "--args anaId=%anaId% excId=%excId% " seqAnaFun.R seqAnaFun_%anaId%.log
 
+set anaId=2
+START R CMD BATCH --no-save --no-restore "--args anaId=%anaId% excId=%excId% " seqAnaFun.R seqAnaFun_%anaId%.log
 
 pause()

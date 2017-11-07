@@ -27,14 +27,14 @@ args=(commandArgs(TRUE))
 for( aIdx in seq_len(length(args)) ){
 	eval(parse(text=args[aIdx]))
 }
-sprintf("excId:%d anaId:%d" ,excId ,anaId)
+sprintf( "excId:%d anaId:%d" ,excId ,anaId )
 
-myObj <- load("Obj_testEleSet.save")	# eleSet
-myObj <- load("Obj_stdSeqObj.save")		# stdSeqObj
+myObj <- load("Obj_eleSet60.save")	# eleSet
+myObj <- load("Obj_stdSeqObj.save")	# stdSeqObj
 
 
 rem.val <- anaId	# remainder value
-rem.base <- 2		# base of remainder
+rem.base <- 3		# base of remainder
 
 caf <- eleCafUtil.getNew( eleSet )
 caf.part <- eleCafUtil.remainder( caf ,pRemainder=rem.val ,pBase=rem.base )
@@ -44,5 +44,6 @@ hAnaSet <- analyzeSeq( eleSet ,pCaf=caf.part ,pDebug=T )
 tDiff <- Sys.time() - tStmp
 sprintf("hAnaSet(remainder:%d/%d) %.1f %s",rem.val,rem.base,tDiff,units(tDiff))
 
+hAnaSet$memo <- sprintf("hAnaSet(remainder:%d/%d) %.1f %s",rem.val,rem.base,tDiff,units(tDiff))
 save( hAnaSet ,file=sprintf("Obj%d_hAnaSet%d.save",excId,rem.val) )
 
