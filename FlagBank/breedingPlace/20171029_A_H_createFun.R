@@ -158,8 +158,85 @@ get2ndCreateFunSet <- function( pZh ,pFunIdLst ,pFunGIdLst ,pDev=F ){
 	if( pDev )
 		return( funLst )
 
+	outIdxAccum <- outIdxAccum + chunk
+	inEleIdx <- 1   # input element index
+	inColIdx <- which(pFunIdLst[[inEleIdx]]=="cF.quotient_B5") # input Column Idx
+	chunk <- length(inColIdx)
+	for( chIdx in seq_len(chunk) ){
+		ioAddr$inLst[[1]]["col"] <- inColIdx[chIdx]
+		ioAddr$outLst[[1]]["col"]<- (outIdxAccum+chIdx)
+		funLst[[ ioAddr$outLst[[1]]["col"] ]] <- cF.seqAccum( ioAddr )
+			# QQE:결과 확인
+	}
+
+	outIdxAccum <- outIdxAccum + chunk
+	inEleIdx <- 1   # input element index
+	inColIdx <- which(pFunIdLst[[inEleIdx]]=="cF.remainder_B2") # input Column Idx
+	chunk <- length(inColIdx)
+	for( chIdx in seq_len(chunk) ){
+		ioAddr$inLst[[1]]["col"] <- inColIdx[chIdx]
+		ioAddr$outLst[[1]]["col"]<- (outIdxAccum+chIdx)
+		funLst[[ ioAddr$outLst[[1]]["col"] ]] <- cF.seqAccum( ioAddr )
+			# QQE:결과 확인
+	}
+
+	outIdxAccum <- outIdxAccum + chunk
+	inEleIdx <- 1   # input element index
+	inColIdx <- which(pFunIdLst[[inEleIdx]]=="cF.pastDiff_H1Mabs") # input Column Idx
+	chunk <- length(inColIdx)
+	for( chIdx in seq_len(chunk) ){
+		ioAddr$inLst[[1]]["col"] <- inColIdx[chIdx]
+		ioAddr$outLst[[1]]["col"]<- (outIdxAccum+chIdx)
+		funLst[[ ioAddr$outLst[[1]]["col"] ]] <- cF.remainder( ioAddr ,pBase=5 ) 
+			# QQE:zDC가 아닌 현재 col 사용토록.
+	}
+
+	outIdxAccum <- outIdxAccum + chunk
+	inEleIdx <- 1   # input element index
+	inColIdx <- which(pFunIdLst[[inEleIdx]]=="cF.remainder_B2") # input Column Idx
+	chunk <- length(inColIdx)
+	for( chIdx in seq_len(chunk) ){
+		ioAddr$inLst[[1]]["col"] <- inColIdx[chIdx]
+		ioAddr$outLst[[1]]["col"]<- (outIdxAccum+chIdx)
+		funLst[[ ioAddr$outLst[[1]]["col"] ]] <- cF.remainder( ioAddr ,pBase=5 ) 
+			# QQE:zDC가 아닌 현재 col 사용토록.
+	}
+
+	outIdxAccum <- outIdxAccum + chunk
+	inEleIdx <- 1   # input element index
+	inColIdx <- which(pFunIdLst[[inEleIdx]]=="cF.pastDiff_H3Mabs") # input Column Idx
+	chunk <- length(inColIdx)
+	for( chIdx in seq_len(chunk) ){
+		ioAddr$inLst[[1]]["col"] <- inColIdx[chIdx]
+		ioAddr$outLst[[1]]["col"]<- (outIdxAccum+chIdx)
+		funLst[[ ioAddr$outLst[[1]]["col"] ]] <- cF.remainder( ioAddr ,pBase=5 ) 
+			# QQE:zDC가 아닌 현재 col 사용토록.
+	}
+
+	outIdxAccum <- outIdxAccum + chunk
+	inEleIdx <- 1   # input element index
+	inColIdx <- which(pFunIdLst[[inEleIdx]]=="cF.pastDiff_H5Mabs") # input Column Idx
+	chunk <- length(inColIdx)
+	for( chIdx in seq_len(chunk) ){
+		ioAddr$inLst[[1]]["col"] <- inColIdx[chIdx]
+		ioAddr$outLst[[1]]["col"]<- (outIdxAccum+chIdx)
+		funLst[[ ioAddr$outLst[[1]]["col"] ]] <- cF.remainder( ioAddr ,pBase=5 ) 
+			# QQE:zDC가 아닌 현재 col 사용토록.
+	}
+
+	outIdxAccum <- outIdxAccum + chunk
+	inEleIdx <- 1   # input element index
+	inColIdx <- which(pFunIdLst[[inEleIdx]]=="cF.pastDiff_H7Mabs") # input Column Idx
+	chunk <- length(inColIdx)
+	for( chIdx in seq_len(chunk) ){
+		ioAddr$inLst[[1]]["col"] <- inColIdx[chIdx]
+		ioAddr$outLst[[1]]["col"]<- (outIdxAccum+chIdx)
+		funLst[[ ioAddr$outLst[[1]]["col"] ]] <- cF.remainder( ioAddr ,pBase=5 ) 
+			# QQE:zDC가 아닌 현재 col 사용토록.
+	}
 
 	return( funLst )
+
 } # get2ndCreateFunSet( )
 
 #	3 세대 : 1,2세대에 대한 Column간 관계.(가공없이 측정값만 도출)
@@ -227,6 +304,19 @@ get3rdCreateFunSet <- function( pZh ,pFunIdLst ,pFunGIdLst ,pDev=F ){
 
 	if( pDev )
 		return( funLst )
+
+	# cF.rawDummy 에 대한 pHSize=0 일때의 순차 스텝
+	# cF.quotient_B5 에 대한 pHSize=0 일때의 순차 스텝
+	# cF.pastDiff_H1Mltgt
+	# ... 모두 해 버리자.
+
+	# 2nd ele cF.seqAccum에 대한 pHSize=0 도 처리.
+
+	# "cF.remainder_B5" 에 대한 cF.pastColDiff() 순차/백스텝
+	#			pHSize <- 1:7
+
+	# 2개 컬럼간의 합. cF.quotient_B5, cF.remainder_B5
+	# 이것도 pHSize 에 따라 변칙적용하자.
 
 	return( funLst )
 } # get3rdCreateFunSet( )

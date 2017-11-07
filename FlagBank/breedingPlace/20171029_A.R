@@ -6,9 +6,9 @@ FB <- getFlagBank()	;setwd(curWd)
 # 헤더 파일
 source("20170917_A_H.R")
 source("20171029_A_H.R")
-source("20170911_A_auxH.R")
+source("20171029_A_auxH.R")
 
-CPU.NUM <- 2
+# CPU.NUM <- 2
 # sfInit( parallel=T, cpus=CPU.NUM )
 
 devMode <- TRUE
@@ -19,6 +19,7 @@ if( devMode )
 
 makeSpan <- 1:nrow(pZh)
 creFunSet <- getCreateFunSet( pZh ,devMode )
+	# saveCreFunSetInfo( creFunSet ,"Xls_creFunSet.xls")
 eleSet <- getNewElementSet( creFunSet ,pZh=pZh[makeSpan,] )
 
 # -------------------------------------------------------------------------------
