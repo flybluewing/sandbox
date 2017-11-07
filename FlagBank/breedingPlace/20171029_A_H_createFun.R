@@ -337,6 +337,7 @@ codeVal.accumRng1	<- 1:codeVal.accumMax
 cF.pastColDiff <- function( pIoAddr ,pHSize=1 ,pFGIdStr="" ,pCodeVal=NULL ,pMode=NULL ){
 	rObj <- list( idStr=sprintf("cF.pastColDiff_H%dM%s",pHSize,ifelse(is.null(pMode),"",pMode) )
 					,ioAddr=pIoAddr	,fGIdStr=pFGIdStr
+					,optStr=sprintf("H:%d Mode:%s",pHSize,ifelse(is.null(pMode),"",pMode))
 				)
 	rObj$inAddr <- rObj$ioAddr$inLst[[1]]
 	rObj$zEA	<- rObj$ioAddr$zEALst[[1]]
@@ -409,6 +410,7 @@ cF.pastColDiff <- function( pIoAddr ,pHSize=1 ,pFGIdStr="" ,pCodeVal=NULL ,pMode
 cF.seqAccum <- function( pIoAddr ,pMaxAccum=codeVal.accumMax ,pFGIdStr="" ,pCodeVal=NULL ){
 	rObj <- list( idStr=sprintf("cF.seqAccum")
 					,ioAddr=pIoAddr	,fGIdStr=pFGIdStr
+					,optStr=""
 				)
 	rObj$inAddr <- rObj$ioAddr$inLst[[1]] # 어차피 얘는 input이 하나 뿐인지라.
 	rObj$codeValNA	<- -1
@@ -462,6 +464,7 @@ cF.seqAccum <- function( pIoAddr ,pMaxAccum=codeVal.accumMax ,pFGIdStr="" ,pCode
 cF.pastDiff <- function( pIoAddr ,pHSize=1 ,pFGIdStr="" ,pCodeVal=NULL ,pMode=NULL ){
 	rObj <- list( idStr=sprintf("cF.pastDiff_H%dM%s",pHSize,ifelse(is.null(pMode),"",pMode) )
 					,ioAddr=pIoAddr	,fGIdStr=pFGIdStr
+					,optStr=sprintf("H:%d Mode:%s",pHSize,ifelse(is.null(pMode),"",pMode))
 				)
 	rObj$inAddr <- rObj$ioAddr$inLst[[1]] # 어차피 얘는 input이 하나 뿐인지라.
 	rObj$zDC	<- rObj$ioAddr$zDC
@@ -521,6 +524,7 @@ cF.pastDiff <- function( pIoAddr ,pHSize=1 ,pFGIdStr="" ,pCodeVal=NULL ,pMode=NU
 cF.remainder <- function( pIoAddr ,pBase ,pFGIdStr="" ,pCodeVal=NULL ){
 	rObj <- list( idStr=sprintf("cF.remainder_B%d",pBase) 
 					,ioAddr=pIoAddr	,fGIdStr=pFGIdStr
+					,optStr=sprintf("Base:%d",pBase)
 				)
 	rObj$inAddr <- rObj$ioAddr$inLst[[1]] # 어차피 얘는 input이 하나 뿐인지라.
 	rObj$zDC	<- rObj$ioAddr$zDC
@@ -549,6 +553,7 @@ cF.remainder <- function( pIoAddr ,pBase ,pFGIdStr="" ,pCodeVal=NULL ){
 cF.quotient <- function( pIoAddr ,pBase ,pFGIdStr="" ,pCodeVal=NULL ){
 	rObj <- list( idStr=sprintf("cF.quotient_B%d",pBase)
 					,ioAddr=pIoAddr	,fGIdStr=pFGIdStr
+					,optStr=sprintf("Base:%d",pBase)
 				)
 	rObj$inAddr <- rObj$ioAddr$inLst[[1]] # 어차피 얘는 input이 하나 뿐인지라.
 	rObj$zDC	<- rObj$ioAddr$zDC
@@ -581,6 +586,7 @@ cF.quotient <- function( pIoAddr ,pBase ,pFGIdStr="" ,pCodeVal=NULL ){
 cF.rawDummy <- function( pIoAddr ,pFGIdStr="" ,pCodeVal=NULL ){
 	rObj <- list( idStr=sprintf("cF.rawDummy") 
 					,ioAddr=pIoAddr	,fGIdStr=pFGIdStr
+					,optStr=""
 				)
 	rObj$inAddr <- rObj$ioAddr$inLst[[1]] # 어차피 얘는 input이 하나 뿐인지라.
 	rObj$zDC	<- rObj$ioAddr$zDC

@@ -1,9 +1,13 @@
+library(RODBC)
+
 # 기초 데이터 로딩
 curWd <- getwd()	;setwd("..")
 FB <- getFlagBank()	;setwd(curWd)
 # 헤더 파일
 source("20170917_A_H.R")
 source("20171029_A_H.R")
+source("20170911_A_auxH.R")
+
 CPU.NUM <- 2
 # sfInit( parallel=T, cpus=CPU.NUM )
 
