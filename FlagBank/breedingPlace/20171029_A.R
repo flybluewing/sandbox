@@ -1,5 +1,4 @@
-library(RODBC)
-
+require("XLConnect")
 # 기초 데이터 로딩
 curWd <- getwd()	;setwd("..")
 FB <- getFlagBank()	;setwd(curWd)
@@ -15,8 +14,9 @@ devMode <- TRUE
 
 pZh <- as.matrix(FB$zh)
 if( devMode )
-	pZh <- pZh[1:130,] # h 10개당 2분 정도.
+	pZh <- pZh[1:120,] # h 10개당 2분 정도.
 
+devMode <- F # creFunSet 테스트용.
 makeSpan <- 1:nrow(pZh)
 creFunSet <- getCreateFunSet( pZh ,devMode )
 	# saveCreFunSetInfo( creFunSet ,"Xls_creFunSet.xls")

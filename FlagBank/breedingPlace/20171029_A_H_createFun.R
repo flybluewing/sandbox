@@ -61,8 +61,6 @@ get1stCreateFunSet <- function( pZh ,pDev=F ){
 		funLst[[ ioAddr$outLst[[1]]["col"] ]] <- cF.remainder( ioAddr ,pBase=5 )
 	}
 
-	if( pDev )
-		return( funLst )
 
 	outIdxAccum <- outIdxAccum + chunk
 	chunk <- 6
@@ -79,17 +77,12 @@ get1stCreateFunSet <- function( pZh ,pDev=F ){
 		ioAddr$inLst[[1]]["col"] <- chIdx
 		ioAddr$outLst[[1]]["col"]<- (outIdxAccum+chIdx)
 		ioAddr$zDC <- chIdx
-		funLst[[ ioAddr$outLst[[1]]["col"] ]] <- cF.pastDiff( ioAddr ,pHSize=1 ,pMode="abs" )
-	}
-
-	outIdxAccum <- outIdxAccum + chunk
-	chunk <- 6
-	for( chIdx in 1:chunk ){
-		ioAddr$inLst[[1]]["col"] <- chIdx
-		ioAddr$outLst[[1]]["col"]<- (outIdxAccum+chIdx)
-		ioAddr$zDC <- chIdx
 		funLst[[ ioAddr$outLst[[1]]["col"] ]] <- cF.pastDiff( ioAddr ,pHSize=1 )
 	}
+
+	if( pDev )
+		return( funLst )
+
 
 	outIdxAccum <- outIdxAccum + chunk
 	chunk <- 6
@@ -100,32 +93,16 @@ get1stCreateFunSet <- function( pZh ,pDev=F ){
 		funLst[[ ioAddr$outLst[[1]]["col"] ]] <- cF.remainder( ioAddr ,pBase=2 )
 	}
 
-	outIdxAccum <- outIdxAccum + chunk
-	chunk <- 6
-	for( chIdx in 1:chunk ){
-		ioAddr$inLst[[1]]["col"] <- chIdx
-		ioAddr$outLst[[1]]["col"]<- (outIdxAccum+chIdx)
-		ioAddr$zDC <- chIdx
-		funLst[[ ioAddr$outLst[[1]]["col"] ]] <- cF.pastDiff( ioAddr ,pHSize=3 ,pMode="abs" )
-	}
-
-	outIdxAccum <- outIdxAccum + chunk
-	chunk <- 6
-	for( chIdx in 1:chunk ){
-		ioAddr$inLst[[1]]["col"] <- chIdx
-		ioAddr$outLst[[1]]["col"]<- (outIdxAccum+chIdx)
-		ioAddr$zDC <- chIdx
-		funLst[[ ioAddr$outLst[[1]]["col"] ]] <- cF.pastDiff( ioAddr ,pHSize=5 ,pMode="abs" )
-	}
-
-	outIdxAccum <- outIdxAccum + chunk
-	chunk <- 6
-	for( chIdx in 1:chunk ){
-		ioAddr$inLst[[1]]["col"] <- chIdx
-		ioAddr$outLst[[1]]["col"]<- (outIdxAccum+chIdx)
-		ioAddr$zDC <- chIdx
-		funLst[[ ioAddr$outLst[[1]]["col"] ]] <- cF.pastDiff( ioAddr ,pHSize=7 ,pMode="abs" )
-	}
+	for( hSize in c(1,3,5,7) ){ # cF.pastDiff()
+		outIdxAccum <- outIdxAccum + chunk
+		chunk <- 6
+		for( chIdx in 1:chunk ){
+			ioAddr$inLst[[1]]["col"] <- chIdx
+			ioAddr$outLst[[1]]["col"]<- (outIdxAccum+chIdx)
+			ioAddr$zDC <- chIdx
+			funLst[[ ioAddr$outLst[[1]]["col"] ]] <- cF.pastDiff( ioAddr ,pHSize=hSize ,pMode="abs" )
+		}	
+	} # for(hSize)
 
 	return( funLst )
 } # get1stCreateFunSet( )
@@ -157,83 +134,38 @@ get2ndCreateFunSet <- function( pZh ,pFunIdLst ,pFunGIdLst ,pDev=F ){
 
 	if( pDev )
 		return( funLst )
+	# - cF.seqAccum() -------------------------------------------------------------------------------
+	tgtFunId <- c( "cF.quotient_B5" ,"cF.remainder_B2" )
+	for( funId in tgtFunId ){
+		outIdxAccum <- outIdxAccum + chunk
+		inEleIdx <- 1   # input element index
+		inColIdx <- which(pFunIdLst[[inEleIdx]]==funId) # input Column Idx
+		chunk <- length(inColIdx)
+		for( chIdx in seq_len(chunk) ){
+			ioAddr$inLst[[1]]["col"] <- inColIdx[chIdx]
+			ioAddr$outLst[[1]]["col"]<- (outIdxAccum+chIdx)
+			funLst[[ ioAddr$outLst[[1]]["col"] ]] <- cF.seqAccum( ioAddr )
+		}
+	} # for( funId )
 
-	outIdxAccum <- outIdxAccum + chunk
-	inEleIdx <- 1   # input element index
-	inColIdx <- which(pFunIdLst[[inEleIdx]]=="cF.quotient_B5") # input Column Idx
-	chunk <- length(inColIdx)
-	for( chIdx in seq_len(chunk) ){
-		ioAddr$inLst[[1]]["col"] <- inColIdx[chIdx]
-		ioAddr$outLst[[1]]["col"]<- (outIdxAccum+chIdx)
-		funLst[[ ioAddr$outLst[[1]]["col"] ]] <- cF.seqAccum( ioAddr )
-			# QQE:결과 확인
-	}
-
-	outIdxAccum <- outIdxAccum + chunk
-	inEleIdx <- 1   # input element index
-	inColIdx <- which(pFunIdLst[[inEleIdx]]=="cF.remainder_B2") # input Column Idx
-	chunk <- length(inColIdx)
-	for( chIdx in seq_len(chunk) ){
-		ioAddr$inLst[[1]]["col"] <- inColIdx[chIdx]
-		ioAddr$outLst[[1]]["col"]<- (outIdxAccum+chIdx)
-		funLst[[ ioAddr$outLst[[1]]["col"] ]] <- cF.seqAccum( ioAddr )
-			# QQE:결과 확인
-	}
-
-	outIdxAccum <- outIdxAccum + chunk
-	inEleIdx <- 1   # input element index
-	inColIdx <- which(pFunIdLst[[inEleIdx]]=="cF.pastDiff_H1Mabs") # input Column Idx
-	chunk <- length(inColIdx)
-	for( chIdx in seq_len(chunk) ){
-		ioAddr$inLst[[1]]["col"] <- inColIdx[chIdx]
-		ioAddr$outLst[[1]]["col"]<- (outIdxAccum+chIdx)
-		funLst[[ ioAddr$outLst[[1]]["col"] ]] <- cF.remainder( ioAddr ,pBase=5 ) 
-			# QQE:zDC가 아닌 현재 col 사용토록.
-	}
-
-	outIdxAccum <- outIdxAccum + chunk
-	inEleIdx <- 1   # input element index
-	inColIdx <- which(pFunIdLst[[inEleIdx]]=="cF.remainder_B2") # input Column Idx
-	chunk <- length(inColIdx)
-	for( chIdx in seq_len(chunk) ){
-		ioAddr$inLst[[1]]["col"] <- inColIdx[chIdx]
-		ioAddr$outLst[[1]]["col"]<- (outIdxAccum+chIdx)
-		funLst[[ ioAddr$outLst[[1]]["col"] ]] <- cF.remainder( ioAddr ,pBase=5 ) 
-			# QQE:zDC가 아닌 현재 col 사용토록.
-	}
-
-	outIdxAccum <- outIdxAccum + chunk
-	inEleIdx <- 1   # input element index
-	inColIdx <- which(pFunIdLst[[inEleIdx]]=="cF.pastDiff_H3Mabs") # input Column Idx
-	chunk <- length(inColIdx)
-	for( chIdx in seq_len(chunk) ){
-		ioAddr$inLst[[1]]["col"] <- inColIdx[chIdx]
-		ioAddr$outLst[[1]]["col"]<- (outIdxAccum+chIdx)
-		funLst[[ ioAddr$outLst[[1]]["col"] ]] <- cF.remainder( ioAddr ,pBase=5 ) 
-			# QQE:zDC가 아닌 현재 col 사용토록.
-	}
-
-	outIdxAccum <- outIdxAccum + chunk
-	inEleIdx <- 1   # input element index
-	inColIdx <- which(pFunIdLst[[inEleIdx]]=="cF.pastDiff_H5Mabs") # input Column Idx
-	chunk <- length(inColIdx)
-	for( chIdx in seq_len(chunk) ){
-		ioAddr$inLst[[1]]["col"] <- inColIdx[chIdx]
-		ioAddr$outLst[[1]]["col"]<- (outIdxAccum+chIdx)
-		funLst[[ ioAddr$outLst[[1]]["col"] ]] <- cF.remainder( ioAddr ,pBase=5 ) 
-			# QQE:zDC가 아닌 현재 col 사용토록.
-	}
-
-	outIdxAccum <- outIdxAccum + chunk
-	inEleIdx <- 1   # input element index
-	inColIdx <- which(pFunIdLst[[inEleIdx]]=="cF.pastDiff_H7Mabs") # input Column Idx
-	chunk <- length(inColIdx)
-	for( chIdx in seq_len(chunk) ){
-		ioAddr$inLst[[1]]["col"] <- inColIdx[chIdx]
-		ioAddr$outLst[[1]]["col"]<- (outIdxAccum+chIdx)
-		funLst[[ ioAddr$outLst[[1]]["col"] ]] <- cF.remainder( ioAddr ,pBase=5 ) 
-			# QQE:zDC가 아닌 현재 col 사용토록.
-	}
+	# - cF.remainder() -------------------------------------------------------------------------------
+	tgtFunId <- c("cF.remainder_B2"
+					,"cF.pastDiff_H1Mabs","cF.pastDiff_H3Mabs","cF.pastDiff_H5Mabs","cF.pastDiff_H7Mabs" 
+				)
+	for( funId in tgtFunId ){
+		outIdxAccum <- outIdxAccum + chunk
+		inEleIdx <- 1   # input element index
+		inColIdx <- which(pFunIdLst[[inEleIdx]]==funId) # input Column Idx
+		chunk <- length(inColIdx)
+		for( chIdx in seq_len(chunk) ){
+			ioAddr$inLst[[1]]["col"] <- inColIdx[chIdx]
+			ioAddr$outLst[[1]]["col"]<- (outIdxAccum+chIdx)
+			ioAddr$zDC <- NULL	# zDC가 아닌 zEALst가 사용된다.
+			ioAddr$zEALst[[1]] <- c( inEleIdx ,inColIdx[chIdx] )
+			names(ioAddr$zEALst[[1]]) <- c("ele","col")
+			funLst[[ ioAddr$outLst[[1]]["col"] ]] <- cF.remainder( ioAddr ,pBase=3 ) 
+		}
+	} # for( funId )
 
 	return( funLst )
 
@@ -253,6 +185,35 @@ get3rdCreateFunSet <- function( pZh ,pFunIdLst ,pFunGIdLst ,pDev=F ){
 	funLst <- list()
 	outIdxAccum <- 0
 	chunk <- 0
+
+	tgtFunId <- c("cF.remainder_B5")
+	for( funId in tgtFunId ){
+		inEleIdx <- 1   # input element index
+		inColIdx <- which(pFunIdLst[[inEleIdx]]==funId) # input Column Idx
+		if( 2>length(inColIdx) )
+			next
+		
+		for( baseIdx in 1:(length(inColIdx)-1) ){
+			outIdxAccum <- outIdxAccum + chunk
+			# inEleIdx <- 1		# for() 문 적용이전 위치.
+			# inColIdx <- which(pFunIdLst[[inEleIdx]]==funId) # for() 문 적용이전 위치.
+			# baseIdx <- 1		# for() 문 적용이전 위치.
+			if( baseIdx < length(inColIdx) ){
+				ioAddr$zEALst[[1]]["ele"] <- inEleIdx
+				ioAddr$zEALst[[1]]["col"] <- inColIdx[baseIdx]
+				tgtInColIdx <- inColIdx[-(1:baseIdx)] # 기준점과 이미 계산된 부분을 제외.
+				chunk <- length(tgtInColIdx)
+				for( chIdx in (1:chunk) ){ 
+					ioAddr$inLst[[1]]["col"] <- tgtInColIdx[chIdx]
+					ioAddr$outLst[[1]]["col"]<- (outIdxAccum+chIdx)
+					funLst[[ ioAddr$outLst[[1]]["col"] ]] <- cF.pastColDiff( ioAddr ,pHSize=0 ,pMode=NULL ,pFGIdStr=baseIdx )
+				}
+			}
+		} # for(baseIdx)
+	} # for( funId )
+
+	if( pDev )
+		return( funLst )
 
 	outIdxAccum <- outIdxAccum + chunk
 	inEleIdx <- 1   # input element index
@@ -302,8 +263,6 @@ get3rdCreateFunSet <- function( pZh ,pFunIdLst ,pFunGIdLst ,pDev=F ){
 		}
 	}
 
-	if( pDev )
-		return( funLst )
 
 	# cF.rawDummy 에 대한 pHSize=0 일때의 순차 스텝
 	# cF.quotient_B5 에 대한 pHSize=0 일때의 순차 스텝
@@ -618,6 +577,12 @@ cF.remainder <- function( pIoAddr ,pBase ,pFGIdStr="" ,pCodeVal=NULL ){
 				)
 	rObj$inAddr <- rObj$ioAddr$inLst[[1]] # 어차피 얘는 input이 하나 뿐인지라.
 	rObj$zDC	<- rObj$ioAddr$zDC
+	rObj$zEA	<- rObj$ioAddr$zEALst[[1]]
+	rObj$optStr	<- 	if( !is.null(rObj$zDC) ){
+						sprintf("%s zDC:%d",rObj$optStr,rObj$zDC)
+					} else {
+						sprintf("%s zEA:(%s)",rObj$optStr,paste(rObj$zEA,collapse=","))
+					}
 	rObj$base	<- pBase
 	rObj$initNA <- NA # seqAnaFun() 들에게 불용구간 정보를 전달하기 위한 변수.
 	
@@ -630,7 +595,12 @@ cF.remainder <- function( pIoAddr ,pBase ,pFGIdStr="" ,pCodeVal=NULL ){
 	rObj$codeValNA.idx <- which(rObj$codeVal==rObj$codeValNA)
 
 	rObj$output <- function( pEleSet ,pZoid ,pBornEleLst=NULL ){
-			outVal <- pZoid[rObj$zDC] %% rObj$base 
+			outVal <- 	if( !is.null(rObj$zDC) ){
+							pZoid[rObj$zDC] %% rObj$base
+						} else { # !is.null( rObj$zEA )
+							pBornEleLst[[ rObj$zEA["ele"] ]][ rObj$zEA["col"] ] %% rObj$base
+						}
+			# outVal <- pZoid[rObj$zDC] %% rObj$base 
 			if( outVal%in%rObj$codeVal )
 				return( outVal )
 			else
