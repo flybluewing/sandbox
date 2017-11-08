@@ -186,13 +186,49 @@ get3rdCreateFunSet <- function( pZh ,pFunIdLst ,pFunGIdLst ,pDev=F ){
 	outIdxAccum <- 0
 	chunk <- 0
 
+	# funId<-"cF.remainder_B5"	;hSize<-1	;eleIdx<-1
+	for( funId in c("cF.remainder_B5","cF.remainder_B3") ){
+		for( hSize in 1 ){
+			for( eleIdx in 1:2 ){
+				# 잘 되기는 하는 거 같은데.. eleIdx 가 서로 다른 경우에 대해서도 적용해보자.
+				inColIdx <- which(pFunIdLst[[eleIdx]]==funId) # input Column Idx
+				if( 2>length(inColIdx) )
+					next
+
+				ioAddr$zEALst[[1]]["ele"] <- eleIdx
+				ioAddr$inLst[[1]]["ele"] <- eleIdx
+				for( baseIdx in seq_len(length(inColIdx)) ){
+					outIdxAccum <- outIdxAccum + chunk # 여기서 chunk는 이전 그룹에서 생성된 것임.
+					ioAddr$zEALst[[1]]["col"] <- inColIdx[baseIdx]
+					cursor <- 0
+					for( chIdx in seq_len(length(inColIdx)) ){
+						if( baseIdx==chIdx )
+							next
+						cursor <- cursor + 1
+						ioAddr$outLst[[1]]["col"]<- (outIdxAccum+cursor)
+						ioAddr$inLst[[1]]["col"] <- inColIdx[chIdx]
+						funLst[[ ioAddr$outLst[[1]]["col"] ]] <- 
+							cF.pastColDiff( ioAddr ,pHSize=hSize ,pMode="abs" ,pFGIdStr=baseIdx )
+					} # for( chIdx )
+					chunk <- length( inColIdx[-baseIdx] )
+				} # for(baseIdx)
+
+			} # for(eleIdx)
+		} # for(hSize)
+	} # for(funId)
+	
+	
+	if( pDev )
+		return( funLst )
+
 	tgtFunId <- c("cF.remainder_B5")
-	for( funId in tgtFunId ){
+	for( funId in tgtFunId ){ # cF.pastColDiff( )
 		inEleIdx <- 1   # input element index
 		inColIdx <- which(pFunIdLst[[inEleIdx]]==funId) # input Column Idx
 		if( 2>length(inColIdx) )
 			next
-		
+
+		ioAddr$inLst[[1]]["ele"] <- inEleIdx
 		for( baseIdx in 1:(length(inColIdx)-1) ){
 			outIdxAccum <- outIdxAccum + chunk
 			# inEleIdx <- 1		# for() 문 적용이전 위치.
@@ -212,9 +248,11 @@ get3rdCreateFunSet <- function( pZh ,pFunIdLst ,pFunGIdLst ,pDev=F ){
 		} # for(baseIdx)
 	} # for( funId )
 
-	if( pDev )
-		return( funLst )
-
+		
+	return( funLst )
+	
+	# - 이하는 그냥 개발 참고용 코드 ----------------------------------------------------
+		
 	outIdxAccum <- outIdxAccum + chunk
 	inEleIdx <- 1   # input element index
 	inColIdx <- which(pFunIdLst[[inEleIdx]]=="cF.remainder_B5") # input Column Idx
