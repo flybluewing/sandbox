@@ -187,8 +187,8 @@ get3rdCreateFunSet <- function( pZh ,pFunIdLst ,pFunGIdLst ,pDev=F ){
 	chunk <- 0
 
 	# funId<-"cF.remainder_B5"	;hSize<-1	;eleIdx<-1
-	for( funId in c("cF.remainder_B5","cF.remainder_B3") ){
-		for( hSize in 1 ){
+	for( funId in c("cF.rawDummy","cF.quotient_B5","cF.remainder_B5","cF.remainder_B3","cF.seqAccum") ){
+		for( hSize in 1:5 ){
 			for( eleIdx in 1:2 ){
 				# 잘 되기는 하는 거 같은데.. eleIdx 가 서로 다른 경우에 대해서도 적용해보자.
 				inColIdx <- which(pFunIdLst[[eleIdx]]==funId) # input Column Idx
@@ -216,8 +216,8 @@ get3rdCreateFunSet <- function( pZh ,pFunIdLst ,pFunGIdLst ,pDev=F ){
 			} # for(eleIdx)
 		} # for(hSize)
 	} # for(funId)
-	
-	
+
+
 	if( pDev )
 		return( funLst )
 
@@ -314,6 +314,7 @@ get3rdCreateFunSet <- function( pZh ,pFunIdLst ,pFunGIdLst ,pDev=F ){
 
 	# 2개 컬럼간의 합. cF.quotient_B5, cF.remainder_B5
 	# 이것도 pHSize 에 따라 변칙적용하자.
+	#	서로 다른 2개 이상의 그룹간의 합/차이 추가.
 
 	return( funLst )
 } # get3rdCreateFunSet( )
@@ -331,14 +332,24 @@ get4thCreateFunSet <- function( pZh ,pFunIdLst ,pFunGIdLst ,pDev=F ){
 	outIdxAccum <- 0
 	chunk <- 0
 
-	outIdxAccum <- 0
-	chunk <- 6
-	for( chIdx in 1:chunk ){
-		# ioAddr$inLst[[1]]["col"] <- chIdx
-		# ioAddr$outLst[[1]]["col"]<- (outIdxAccum+chIdx)
-		# ioAddr$zDC <- chIdx
-		# funLst[[ ioAddr$outLst[[1]]["col"] ]] <- cF.rawDummy( ioAddr )
-	}
+	# funId<-"cF.remainder_B3"	;eleIdx<-2
+	for( funId in c("cF.remainder_B3","cF.pastColDiff_H0M","cF.pastColDiff_H1Mabs") ){
+		for( eleIdx in 2:3 ){
+
+			inColIdx <- which(pFunIdLst[[eleIdx]]==funId) # input Column Idx
+			ioAddr$inLst[[1]]["ele"] <- eleIdx
+
+			outIdxAccum <- outIdxAccum + chunk # 여기서 chunk는 이전 그룹에서 생성된 것임.
+			for( chIdx in seq_len(length(inColIdx)) ){
+				ioAddr$inLst[[1]]["col"]	<- inColIdx[chIdx]
+				ioAddr$outLst[[1]]["col"]	<- (outIdxAccum+chIdx)
+				funLst[[ ioAddr$outLst[[1]]["col"] ]] <- cF.seqAccum( ioAddr )
+			}
+
+			chunk <- length(inColIdx)
+
+		} # for(eleIdx)
+	} # for(funId)
 
 	if( pDev )
 		return( funLst )

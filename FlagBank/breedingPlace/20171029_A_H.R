@@ -75,6 +75,7 @@ eleCafUtil.getNew <- function( pEleSet ,pIdStr=NULL ,pSetAs=F ){
 
 # - pMode : "overwrite" 이전 내용들을 지우고, 해당 컬럼들은 T로 설정
 #			"t4f"	F 였던 컬럼들만 T로 설정. T였던 컬럼은 F 가 된다.(이미 진행된 분석은 피하도록.)
+#			"inT"	T 였던 컬럼 역역들에 대해서만 적용.
 #			"f"		선택된 컬럼들을 F로 설정.
 eleCafUtil.remainder <- function( pCaf ,pRemainder=c(0,1) ,pBase=3 ,pMode="overwrite" ){
 
@@ -87,6 +88,8 @@ eleCafUtil.remainder <- function( pCaf ,pRemainder=c(0,1) ,pBase=3 ,pMode="overw
 		if( "t4f"==pMode ) {
 			setFlag[ pCaf$eleLst[[eIdx]] ] <- F
 			pCaf$eleLst[[eIdx]] <- setFlag
+		} else if( "inT"==pMode ) {
+			pCaf$eleLst[[eIdx]] <- pCaf$eleLst[[eIdx]] & setFlag
 		} else if( "f"==pMode ){
 			pCaf$eleLst[[eIdx]][setFlag] <- F
 		} else { # if( "overwrite" == pMode )
