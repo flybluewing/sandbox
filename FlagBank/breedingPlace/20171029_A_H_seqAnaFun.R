@@ -66,7 +66,8 @@ getTranslateSet <- function( pEleSet ,pProbBase="mean" ,pIsChanging="A" ,pStanda
 
 } # getTranslateSet()
 
-seqAnaFun.default <- function( pFlag ,pPredObj ,pInitNA ,pCodeVal ){
+#	- pCmpSeqNum : k.seqNum() 함수의 컴파일 결과물.(속도 향상을 위해 필요 시 적용)
+seqAnaFun.default <- function( pFlag ,pPredObj ,pInitNA ,pCodeVal ,pCmpSeqNum=NULL ){
 
     flag <- if(is.na(pInitNA)){ pFlag 
                 } else pFlag[-(1:pInitNA)]
@@ -76,7 +77,13 @@ seqAnaFun.default <- function( pFlag ,pPredObj ,pInitNA ,pCodeVal ){
                         } else NULL
             # 즉, codeVal.naIdx 값이 NULL임을 보고 flag 내에 NA가 존재 치 않음을 확인하도록 한다.
 
-    seqNumObj   <- k.seqNum( flag	,pCodeVal=codeVal )
+    # seqNumObj   <- k.seqNum( flag	,pCodeVal=codeVal )
+	seqNumObj <-	if( is.null(pCmpSeqNum) ){
+						k.seqNum( flag	,pCodeVal=codeVal )
+					} else {
+						pCmpSeqNum( flag	,pCodeVal=codeVal )
+					}
+
     probObj     <- pPredObj$predict( seqNumObj )
 
     return( probObj )

@@ -1,5 +1,5 @@
 # 20171029_A_H.R
-
+library(compiler)
 
 source("20171029_A_H_createFun.R")
 source("20171029_A_H_seqAnaFun.R")
@@ -167,6 +167,8 @@ analyzeSeq <- function ( pEleSet ,pProbPredObj=NULL ,pCaf=NULL ,pDebug=F ){
 		pProbPredObj <- getSeqProbPredictor(stdSeqObj)
 	}
 
+	CmpFSeqNum <- cmpfun( k.seqNum ) # compiled k.seqNum()
+
 	testSpan <- (pEleSet$trainBase+1):nrow(pEleSet$eleLst[[1]]$mtx)
 	hLst <- list()
 	for( tIdx in testSpan ){	# tIdx <- testSpan[1] # Å×½ºÆ® history index
@@ -187,6 +189,7 @@ analyzeSeq <- function ( pEleSet ,pProbPredObj=NULL ,pCaf=NULL ,pDebug=F ){
 					anaObj <- seqAnaFun.default( curEle$mtx[1:(tIdx-1),cIdx] ,pProbPredObj 
 													,pInitNA = pEleSet$funInitNALst[[eIdx]][cIdx]
 													,pCodeVal= pEleSet$funCodeValLst[[eIdx]][[cIdx]]
+													,CmpFSeqNum
 												)
 					class(anaObj) <- "seqAnaObj"
 					seqAnaLst[[(1+length(seqAnaLst))]] <- anaObj
