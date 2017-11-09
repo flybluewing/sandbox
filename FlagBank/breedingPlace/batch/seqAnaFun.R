@@ -11,16 +11,7 @@ setwd(curWd)
 setwd("./..")
 source("20170917_A_H.R")
 source("20171029_A_H.R")
-setwd(curWd)
-curWd <- getwd()
-setwd("./../..")
-source("hCommon.R")
-FB <- getFlagBank() # 사실 FB는 필요 없는데.. H 파일 땜시.
-setwd(curWd)
-
-setwd("./..")
-source("20170917_A_H.R")
-source("20171029_A_H.R")
+source("20171029_A_auxH.R")
 setwd(curWd)
 
 args=(commandArgs(TRUE))
@@ -38,6 +29,9 @@ rem.base <- 3		# base of remainder
 
 caf <- eleCafUtil.getNew( eleSet )
 caf.part <- eleCafUtil.remainder( caf ,pRemainder=rem.val ,pBase=rem.base )
+
+tgtSize <- slapply( caf.part ,function(p){sum(p)})
+sprintf( "tgtSize:%d (%s)" ,sum(tgtSize) ,paste(tgtSize,collapse=",") )
 
 tStmp <- Sys.time()
 hAnaSet <- analyzeSeq( eleSet ,pCaf=caf.part ,pDebug=T )

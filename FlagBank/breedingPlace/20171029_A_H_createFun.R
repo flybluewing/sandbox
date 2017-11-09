@@ -429,6 +429,27 @@ codeVal.accumRng1	<- 1:codeVal.accumMax
 #	cF.Funcitons()
 # =========================================================================================
 
+#	QQE:cF
+# 서로 다른 다수 컬럼간의 연산이나, Base 값(zEA)을 기준으로 작업 함.
+#	inAddr과 zEA에 지정된 값들에 대한 연산.(다수 inAddr과 zEA 동시존재 가능)
+#	pMode는 2개 값을 가짐. 첫번째는 inAddr 값들에 관한 것, 
+#	두번째는 inAddr 연산결과에 대한 Base 값의 적용.
+#	- pHSize : 지정된 경우, inAddr에 대하여 적용한다.
+#	- pMode :	"sum", "span", "mean"
+#				"remainder" ,"quotient" (Base 값은 2 이상이어야 겠지.)
+cF.multiValuesBase <- function( ){
+} # cF.multiValuesBase( )
+
+#	QQE:cF
+# 서로 다른 다수 컬럼간의 연산
+#	inAddr과 zEA에 지정된 값들에 대한 연산.(다수 inAddr과 zEA 동시존재 가능)
+#	- pHSize : 지정된 경우, inAddr에 대하여 적용한다.
+#	- pMode :	"sum" 합
+#				"span" 최대~최소값 사이의 거리
+#				"mean" 평균값(가까운 정수)
+cF.multiValues <- function( ){
+} # cF.multiValues( )
+
 # 서로 다른 2개 컬럼간의 차이.(주로 3세대)
 #	pIoAddr : inLst는 2개를 갖는다. pHSize는 inLst[[2]]에 대해 적용.
 #	pMode : NULL(가공없음) ,"ltgt"(크면 1, 작으면0) ,"abs"(차이값의 절대값)
