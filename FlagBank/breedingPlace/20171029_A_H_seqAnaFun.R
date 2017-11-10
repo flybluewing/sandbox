@@ -1,8 +1,26 @@
 # 파일명 : 20171029_A_H_seqAnaFun.R
 #   의존 : 20170917_A_H.R
 
+getTranslateTgt <- function( pEleSet ){
+	fId <- c("","")	;names(fId) <- c("fId","fGId")
+	rLst <- list()
+	for( eIdx in seq_len(length(pEleSet$funIdLst)) ){
+		lst <- list()
+		for( cIdx in seq_len(length(pEleSet$funIdLst[[eIdx]])) ){
+			fId["fId"]	<- pEleSet$funIdLst[[eIdx]][cIdx]
+			fId["fGId"]	<- pEleSet$funGIdLst[[eIdx]][cIdx]
+			lst[[1+length(lst)]] <- fId
+		}
+		rLst[[1+length(rLst)]] <- lst
+	} # for(eIdx)
+	return( rLst )
+}
 
-getTranslateSet <- function( pEleSet ,pProbBase="mean" ,pIsChanging="A" ,pStandardize=F ,pDev=F ){
+# 하드코딩처럼 보일 수 있는데, 하드코딩 맞다. 
+#	필요한 만큼의 하드코딩 되어야 하는 부분을 한 곳으로 몰아놓기 위한 부분이니까.
+#	- pTgtLst : translate 대상이 되는 ele 별 funcId, funGId.
+#				getTranslateTgt() 참조
+getTranslateSet <- function( pEleSet ,pTgtIdLst=NULL ,pProbBase="mean" ,pIsChanging="A" ,pStandardize=F ,pDev=F ){
 	# 의외처럼 생각될 수 있으나, Set을 정의할때는 eleSet만으로 충분하다.
 	#	실제로 실행할 때에 seqAnaObj(hAnaSet)가 필요함.
 
@@ -12,52 +30,49 @@ getTranslateSet <- function( pEleSet ,pProbBase="mean" ,pIsChanging="A" ,pStanda
 	rLst <- list( )
 
 	eIdx <- 1
-	cIndices <- if( eIdx>length(funIdLst) ) integer(0) else which("cF.quotient_B5"==funIdLst[[eIdx]])
-	for( cIdx in cIndices ){
-		rLst[[(1+length(rLst))]] <- getAnaTranslator( pProbBase=pProbBase ,pIsChanging=pIsChanging 
-														,pEleCord  = c( eIdx ,cIdx ) 
-														,pStandardize=F 
-														,pCreFunId = c( funIdLst[[eIdx]][cIdx] ,funGIdLst[[eIdx]][cIdx] )
-													)
-	} # for( cIdx )
-	cIndices <- if( eIdx>length(funIdLst) ) integer(0) else which("cF.remainder_B5"==funIdLst[[eIdx]])
-	for( cIdx in cIndices ){
-		rLst[[(1+length(rLst))]] <- getAnaTranslator( pProbBase=pProbBase ,pIsChanging=pIsChanging 
-														,pEleCord  = c( eIdx ,cIdx ) 
-														,pStandardize=F 
-														,pCreFunId = c( funIdLst[[eIdx]][cIdx] ,funGIdLst[[eIdx]][cIdx] )
-													)
-	} # for( cIdx )
+	fId <- c("cF.quotient_B5","cF.remainder_B5")
+	#	fId <- unique(sapply( funIdLst[[eIdx]] ,function(p){p} ))
+	for( fIdx in fId ){
+		cIndices <- if( eIdx>length(funIdLst) ) integer(0) else which(fIdx==funIdLst[[eIdx]])
+		for( cIdx in cIndices ){
+			rLst[[(1+length(rLst))]] <- 
+						getAnaTranslator( pProbBase=pProbBase ,pIsChanging=pIsChanging 
+											,pEleCord  = c( eIdx ,cIdx ) 
+											,pStandardize=F 
+											,pCreFunId = c( funIdLst[[eIdx]][cIdx] ,funGIdLst[[eIdx]][cIdx] )
+										)
+		} # for( cIdx )
+	} # for( fIdx )
 
 	eIdx <- 2
-	cIndices <- if( eIdx>length(funIdLst) ) integer(0) else which("cF.seqAccum"==funIdLst[[eIdx]])
-	for( cIdx in cIndices ){
-		rLst[[(1+length(rLst))]] <- getAnaTranslator( pProbBase=pProbBase ,pIsChanging=pIsChanging 
-														,pEleCord  = c( eIdx ,cIdx ) 
-														,pStandardize=F 
-														,pCreFunId = c( funIdLst[[eIdx]][cIdx] ,funGIdLst[[eIdx]][cIdx] )
-													)
-	} # for( cIdx )
+	fId <- c("cF.seqAccum")
+	#	fId <- unique(sapply( funIdLst[[eIdx]] ,function(p){p} ))
+	for( fIdx in fId ){
+		cIndices <- if( eIdx>length(funIdLst) ) integer(0) else which(fIdx==funIdLst[[eIdx]])
+		for( cIdx in cIndices ){
+			rLst[[(1+length(rLst))]] <- 
+						getAnaTranslator( pProbBase=pProbBase ,pIsChanging=pIsChanging 
+											,pEleCord  = c( eIdx ,cIdx ) 
+											,pStandardize=F 
+											,pCreFunId = c( funIdLst[[eIdx]][cIdx] ,funGIdLst[[eIdx]][cIdx] )
+										)
+		} # for( cIdx )
+	} # for( fIdx )
 
 	eIdx <- 3
-	cIndices <- if( eIdx>length(funIdLst) ) integer(0) else which("cF.pastColDiff_H0M"==funIdLst[[eIdx]])
-	for( cIdx in cIndices ){
-		rLst[[(1+length(rLst))]] <- getAnaTranslator( pProbBase=pProbBase ,pIsChanging=pIsChanging 
-														,pEleCord  = c( eIdx ,cIdx ) 
-														,pStandardize=F 
-														,pCreFunId = c( funIdLst[[eIdx]][cIdx] ,funGIdLst[[eIdx]][cIdx] )
-													)
-	} # for( cIdx )
-
-	eIdx <- 4
-	cIndices <- if( eIdx>length(funIdLst) ) integer(0) else which("QQE!!"==funIdLst[[eIdx]])
-	for( cIdx in cIndices ){
-		rLst[[(1+length(rLst))]] <- getAnaTranslator( pProbBase=pProbBase ,pIsChanging=pIsChanging 
-														,pEleCord  = c( eIdx ,cIdx ) 
-														,pStandardize=F 
-														,pCreFunId = c( funIdLst[[eIdx]][cIdx] ,funGIdLst[[eIdx]][cIdx] )
-													)
-	} # for( cIdx )
+	fId <- c("cF.pastColDiff_H0M","cF.pastColDiff_H1Mabs")
+	#	fId <- unique(sapply( funIdLst[[eIdx]] ,function(p){p} ))
+	for( fIdx in fId ){
+		cIndices <- if( eIdx>length(funIdLst) ) integer(0) else which(fIdx==funIdLst[[eIdx]])
+		for( cIdx in cIndices ){
+			rLst[[(1+length(rLst))]] <- 
+						getAnaTranslator( pProbBase=pProbBase ,pIsChanging=pIsChanging 
+											,pEleCord  = c( eIdx ,cIdx ) 
+											,pStandardize=F 
+											,pCreFunId = c( funIdLst[[eIdx]][cIdx] ,funGIdLst[[eIdx]][cIdx] )
+										)
+		} # for( cIdx )
+	} # for( fIdx )
 
 	if( pDev )
 		return( rLst )

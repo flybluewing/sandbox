@@ -186,9 +186,15 @@ get3rdCreateFunSet <- function( pZh ,pFunIdLst ,pFunGIdLst ,pDev=F ){
 	outIdxAccum <- 0
 	chunk <- 0
 
+	selFunId <- c("cF.rawDummy","cF.quotient_B5","cF.remainder_B5","cF.remainder_B3","cF.seqAccum")
+	hSizeSpan <- 1:5
+	if( pDev ){
+		selFunId <- c("cF.remainder_B5")
+		hSizeSpan <- 1
+	}
 	# funId<-"cF.remainder_B5"	;hSize<-1	;eleIdx<-1
-	for( funId in c("cF.rawDummy","cF.quotient_B5","cF.remainder_B5","cF.remainder_B3","cF.seqAccum") ){
-		for( hSize in 1:5 ){
+	for( funId in selFunId ){
+		for( hSize in hSizeSpan ){
 			for( eleIdx in 1:2 ){
 				# 잘 되기는 하는 거 같은데.. eleIdx 가 서로 다른 경우에 대해서도 적용해보자.
 				inColIdx <- which(pFunIdLst[[eleIdx]]==funId) # input Column Idx
@@ -332,8 +338,11 @@ get4thCreateFunSet <- function( pZh ,pFunIdLst ,pFunGIdLst ,pDev=F ){
 	outIdxAccum <- 0
 	chunk <- 0
 
+	selFunId <- c("cF.remainder_B3","cF.pastColDiff_H0M","cF.pastColDiff_H1Mabs")
+	if( pDev )
+		selFunId <- c("cF.pastColDiff_H0M")
 	# funId<-"cF.remainder_B3"	;eleIdx<-2
-	for( funId in c("cF.remainder_B3","cF.pastColDiff_H0M","cF.pastColDiff_H1Mabs") ){
+	for( funId in selFunId ){
 		for( eleIdx in 2:3 ){
 
 			inColIdx <- which(pFunIdLst[[eleIdx]]==funId) # input Column Idx
@@ -475,7 +484,10 @@ cF.pastColDiff <- function( pIoAddr ,pHSize=1 ,pFGIdStr="" ,pCodeVal=NULL ,pMode
 	} else {
 		rObj$codeVal<- c(pCodeVal,rObj$codeValNA)
 	}
-	rObj$codeValNA.idx <- which(rObj$codeVal==rObj$codeValNA)
+	rObj$codeValNA.idx <- if( is.na(rObj$codeValNA) ) {
+								which( is.na(rObj$codeVal) )
+							} else { which(rObj$codeVal==rObj$codeValNA) }
+
 
 	if( is.null(pMode) ){
 		rObj$cModify <- function(p){ p }
@@ -543,7 +555,10 @@ cF.seqAccum <- function( pIoAddr ,pMaxAccum=codeVal.accumMax ,pFGIdStr="" ,pCode
 	} else {
 		rObj$codeVal<- c(pCodeVal,rObj$codeValNA)
 	}
-	rObj$codeValNA.idx <- which(rObj$codeVal==rObj$codeValNA)
+	rObj$codeValNA.idx <- if( is.na(rObj$codeValNA) ) {
+								which( is.na(rObj$codeVal) )
+							} else { which(rObj$codeVal==rObj$codeValNA) }
+
 
 	rObj$output <- function( pEleSet ,pZoid ,pBornEleLst ){
 
@@ -602,7 +617,10 @@ cF.pastDiff <- function( pIoAddr ,pHSize=1 ,pFGIdStr="" ,pCodeVal=NULL ,pMode=NU
 	} else {
 		rObj$codeVal<- c(pCodeVal,rObj$codeValNA)
 	}
-	rObj$codeValNA.idx <- which(rObj$codeVal==rObj$codeValNA)
+	rObj$codeValNA.idx <- if( is.na(rObj$codeValNA) ) {
+								which( is.na(rObj$codeVal) )
+							} else { which(rObj$codeVal==rObj$codeValNA) }
+
 
 	if( is.null(pMode) ){
 		rObj$cModify <- function(p){ p }
@@ -662,7 +680,9 @@ cF.remainder <- function( pIoAddr ,pBase ,pFGIdStr="" ,pCodeVal=NULL ){
 	} else {
 		rObj$codeVal<- c(pCodeVal,rObj$codeValNA)
 	}
-	rObj$codeValNA.idx <- which(rObj$codeVal==rObj$codeValNA)
+	rObj$codeValNA.idx <- if( is.na(rObj$codeValNA) ) {
+								which( is.na(rObj$codeVal) )
+							} else { which(rObj$codeVal==rObj$codeValNA) }
 
 	rObj$output <- function( pEleSet ,pZoid ,pBornEleLst=NULL ){
 			outVal <- 	if( !is.null(rObj$zDC) ){
@@ -697,7 +717,10 @@ cF.quotient <- function( pIoAddr ,pBase ,pFGIdStr="" ,pCodeVal=NULL ){
 	} else {
 		rObj$codeVal<- c(pCodeVal,rObj$codeValNA)
 	}
-	rObj$codeValNA.idx <- which(rObj$codeVal==rObj$codeValNA)
+	rObj$codeValNA.idx <- if( is.na(rObj$codeValNA) ) {
+								which( is.na(rObj$codeVal) )
+							} else { which(rObj$codeVal==rObj$codeValNA) }
+
 
 	rObj$output <- function( pEleSet ,pZoid ,pBornEleLst=NULL ){
 			outVal <- pZoid[rObj$zDC] %/% rObj$base 
@@ -721,14 +744,16 @@ cF.rawDummy <- function( pIoAddr ,pFGIdStr="" ,pCodeVal=NULL ){
 	rObj$inAddr <- rObj$ioAddr$inLst[[1]] # 어차피 얘는 input이 하나 뿐인지라.
 	rObj$zDC	<- rObj$ioAddr$zDC
 	rObj$initNA <- NA # seqAnaFun() 들에게 불용구간 정보를 전달하기 위한 변수.
-	
+
 	rObj$codeValNA	<- -1
 	if( is.null(pCodeVal) ){
 		rObj$codeVal<- c(FB$dnaType,rObj$codeValNA)
 	} else {
 		rObj$codeVal<- c(pCodeVal,rObj$codeValNA)
 	}
-	rObj$codeValNA.idx <- which(rObj$codeVal==rObj$codeValNA)
+	rObj$codeValNA.idx <- if( is.na(rObj$codeValNA) ) {
+								which( is.na(rObj$codeVal) )
+							} else { which(rObj$codeVal==rObj$codeValNA) }
 
 	rObj$output <- function( pEleSet ,pZoid ,pBornEleLst=NULL ){
 			outVal <- pZoid[rObj$zDC]

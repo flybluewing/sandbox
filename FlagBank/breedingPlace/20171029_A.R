@@ -16,7 +16,7 @@ pZh <- as.matrix(FB$zh)
 if( devMode )
 	pZh <- pZh[1:120,] # h 10개당 2분 정도.
 
-devMode <- F # creFunSet 테스트용.
+# devMode <- F # creFunSet 테스트용.
 makeSpan <- 1:nrow(pZh)
 creFunSet <- getCreateFunSet( pZh ,devMode )
 	# saveCreFunSetInfo( creFunSet ,"Xls_creFunSet.xls")
@@ -28,6 +28,13 @@ eleSet <- getNewElementSet( creFunSet ,pZh=pZh[makeSpan,] )
 # -------------------------------------------------------------------------------
 tStamp <- Sys.time()
 for( msIdx in makeSpan ){
+
+	if( 1==(msIdx%%50) ){
+		tDiff <- Sys.time()-tStamp
+		k.FLogStr(sprintf("msIdx:%d %.1f %s" ,msIdx ,tDiff ,units(tDiff) )
+					,pConsole=T ,pTime=F
+				)
+	}
 
 	bornEleLst <- list()
 	eleSet$rowSpan <- if( 1==msIdx ) integer(0) else 1:(msIdx-1)
