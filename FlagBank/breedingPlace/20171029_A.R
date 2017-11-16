@@ -6,8 +6,6 @@ FB <- getFlagBank()	;setwd(curWd)
 source("20170917_A_H.R")
 source("20171029_A_H.R")
 source("20171029_A_auxH.R")
-
-# CPU.NUM <- 2
 # sfInit( parallel=T, cpus=CPU.NUM )
 
 devMode <- TRUE
@@ -75,6 +73,7 @@ k.FLogStr(sprintf("hAnaSet is made. cost:%.1f%s",stmpDiff,units(stmpDiff)),pCons
 #	transSet 생성.
 # -------------------------------------------------------------------------------
 transSet <- getTranslateSet( eleSet )
+	# transSet <- transSet[1:18]
 transRstLst <- lapply( hAnaSet$hLst ,function( pH ){
 						rObj <- list( stdH=pH$stdH )
 						rObj$transLst <- lapply( transSet ,function( pT ){ pT$translate( eleSet ,pH$anaLst ) } )
@@ -82,8 +81,94 @@ transRstLst <- lapply( hAnaSet$hLst ,function( pH ){
 					})
 
 
+# -[scoreMtx]--------------------------------------------------------------------
+# 히스토리 전체를 관통하여 개별 trans 의 득실을 검토하자.
+cName <- c("score","prior","isChCnt","isCh.hit","isCh.aid","isCh.kill","isCh.troll")
+	# prior : 정답 앞의 다른 후보들이 몇 이나 있는지.
+	#			상위 %는 의미가 별로 없어서..
+scoreMtx <- matrix( 0 ,nrow=length(transRstLst) ,ncol=length(cName) )
+colnames(scoreMtx) <- cName
+scoreLst <- list()
+for( tIdx in seq_len(length(transSet)) ){
+	scoreMtx[,] <- 0
+	for( rstIdx in seq_len(length(transRstLst)) ){
+		trans <- transRstLst[[rstIdx]]$transLst[[tIdx]]
+		stdVal<- eleSet$eleLst[[ trans$eleCord["ele"] ]]$mtx[ transRstLst[[rstIdx]]$stdH, trans$eleCord["col"] ]
+		stdVal.idx <- if( is.na(stdVal) ){	which( is.na(trans$codeVal) )
+						} else which( trans$codeVal == stdVal )
+
+		scoreMtx[rstIdx	,"score"]		<- trans$prob[stdVal.idx]
+		scoreMtx[rstIdx	,"prior"]		<- sum(trans$prob>=trans$prob[stdVal.idx])
+		scoreMtx[rstIdx	,"isChCnt"]		<- sum(trans$isChanging!=0)
+		if( 0<scoreMtx[rstIdx	,"isChCnt"] ){
+			flag <- which(trans$isChanging>0)==stdVal.idx
+			scoreMtx[rstIdx	,"isCh.hit"]	<- sum( flag)
+			scoreMtx[rstIdx	,"isCh.troll"]	<- sum(!flag)
+
+			flag <- which(trans$isChanging<0)==stdVal.idx
+			scoreMtx[rstIdx	,"isCh.kill"]	<- sum( flag)
+			scoreMtx[rstIdx	,"isCh.aid"]	<- sum(!flag)
+		} # if
+	} # for( rstIdx )
+	scoreLst[[1+length(scoreLst)]] <- scoreMtx
+} # for(tIdx)
 
 
+
+# -[scoreMtx]--------------------------------------------------------------------
+#	히스토리 별 조회임.
+cName <- c("stdH","score","scorePer","isChCnt","isCh.hit","isCh.aid","isCh.kill","isCh.troll")
+scoreMtx <- matrix( 0 ,nrow=length(transRstLst) ,ncol=length(cName) )
+colnames(scoreMtx) <- cName
+transSpan <- seq_len(length(transSet))
+for( rstIdx in seq_len(length(transRstLst) ) ){
+
+	transRst <- transRstLst[[rstIdx]]
+	scoreMtx[rstIdx,"stdH"] <- transRst$stdH
+
+	score <- 0	;scorePer <- 0
+	isChCnt<-0
+	isCh.hit	<-0		;isCh.aid	<-0	# 정답 맞추거나 경쟁자 제거
+	isCh.kill	<-0		;isCh.troll	<-0	# 정답을 없애거나, 방해.
+	for( tIdx in transSpan ){
+		trans <- transRst$transLst[[tIdx]]
+		stdVal<- eleSet$eleLst[[ trans$eleCord["ele"] ]]$mtx[ transRst$stdH, trans$eleCord["col"] ]
+		stdVal.idx <- if( is.na(stdVal) ){	which( is.na(trans$codeVal) )
+						} else which( trans$codeVal == stdVal )
+
+		# 몇 점을 얻었는가?
+		score <- score + trans$prob[stdVal.idx]
+		# 상위 %는?
+		scorePer <- scorePer + rank(-trans$prob)[stdVal.idx] / length(trans$prob)
+		# isChanging이 몇 개나 있었는가?
+		isChCnt <- isChCnt + sum( trans$isChanging!=0 )
+
+		if( any(trans$isChanging!=0) ){
+			flag <- which(trans$isChanging>0)==stdVal.idx
+			isCh.hit	<- isCh.hit		+ sum( flag)
+			isCh.troll	<- isCh.troll	+ sum(!flag)
+			
+			flag <- which(trans$isChanging<0)==stdVal.idx
+			isCh.kill	<- isCh.kill	+ sum( flag)
+			isCh.aid	<- isCh.aid		+ sum(!flag)
+ 		}
+
+	} # for(tIdx)
+
+	scoreMtx[rstIdx	,"score"]		<- score
+	scoreMtx[rstIdx	,"scorePer"]	<- scorePer / length(transSpan)
+	scoreMtx[rstIdx	,"isChCnt"]		<- isChCnt
+	scoreMtx[rstIdx	,"isCh.hit"]	<- isCh.hit
+	scoreMtx[rstIdx	,"isCh.aid"]	<- isCh.aid
+	scoreMtx[rstIdx	,"isCh.kill"]	<- isCh.kill
+	scoreMtx[rstIdx	,"isCh.troll"]	<- isCh.troll
+
+} # for(rstIdx)
+
+
+
+
+#----------------------------------------------------------------
 save( hAnaSet ,file="Obj_hAnaSetDev.save" )
 save( eleSet  ,file="Obj_eleSetDev.save")
 save( creFunSet ,file="Obj_creFunSetDev.save" )
