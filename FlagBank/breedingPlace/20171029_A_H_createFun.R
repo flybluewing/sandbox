@@ -132,8 +132,6 @@ get2ndCreateFunSet <- function( pZh ,pFunIdLst ,pFunGIdLst ,pDev=F ){
 		funLst[[ ioAddr$outLst[[1]]["col"] ]] <- cF.seqAccum( ioAddr )
 	}
 
-	if( pDev )
-		return( funLst )
 	# - cF.seqAccum() -------------------------------------------------------------------------------
 	tgtFunId <- c( "cF.quotient_B5" ,"cF.remainder_B2" )
 	for( funId in tgtFunId ){
@@ -152,6 +150,9 @@ get2ndCreateFunSet <- function( pZh ,pFunIdLst ,pFunGIdLst ,pDev=F ){
 	tgtFunId <- c("cF.remainder_B2"
 					,"cF.pastDiff_H1Mabs","cF.pastDiff_H3Mabs","cF.pastDiff_H5Mabs","cF.pastDiff_H7Mabs" 
 				)
+	if( pDev ){
+		tgtFunId <- c("cF.remainder_B2","cF.pastDiff_H1Mabs","cF.pastDiff_H3Mabs")
+	}
 	for( funId in tgtFunId ){
 		outIdxAccum <- outIdxAccum + chunk
 		inEleIdx <- 1   # input element index
@@ -166,6 +167,9 @@ get2ndCreateFunSet <- function( pZh ,pFunIdLst ,pFunGIdLst ,pDev=F ){
 			funLst[[ ioAddr$outLst[[1]]["col"] ]] <- cF.remainder( ioAddr ,pBase=3 ) 
 		}
 	} # for( funId )
+
+	if( pDev )
+		return( funLst )
 
 	return( funLst )
 
@@ -189,7 +193,6 @@ get3rdCreateFunSet <- function( pZh ,pFunIdLst ,pFunGIdLst ,pDev=F ){
 	selFunId <- c("cF.rawDummy","cF.quotient_B5","cF.remainder_B5","cF.remainder_B3","cF.seqAccum")
 	hSizeSpan <- 1:5
 	if( pDev ){
-		selFunId <- c("cF.remainder_B5")
 		hSizeSpan <- 1
 	}
 	# funId<-"cF.remainder_B5"	;hSize<-1	;eleIdx<-1
@@ -339,8 +342,9 @@ get4thCreateFunSet <- function( pZh ,pFunIdLst ,pFunGIdLst ,pDev=F ){
 	chunk <- 0
 
 	selFunId <- c("cF.remainder_B3","cF.pastColDiff_H0M","cF.pastColDiff_H1Mabs")
-	if( pDev )
-		selFunId <- c("cF.pastColDiff_H0M")
+	if( pDev ){
+		selFunId <- c( "cF.pastColDiff_H1Mabs" )
+	}
 	# funId<-"cF.remainder_B3"	;eleIdx<-2
 	for( funId in selFunId ){
 		for( eleIdx in 2:3 ){

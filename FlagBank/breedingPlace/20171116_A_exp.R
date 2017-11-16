@@ -1,4 +1,11 @@
 
+pZh <- as.matrix(FB$zh)
+pCode <- pZh[20,]
+pArea <- pZh[1:19,]
+pSearchFirst <- F
+
+
+
 
 pZh <- FB$zh
 pStart <- 100
