@@ -4,7 +4,7 @@
 # clp.dumNum$report()
 # baseH <- clp.dumNum$getBaseH( zh[5:15,] )   # 임의생성.
 # zoidMtx <- zh[1:4,]                         # 임의생성.
-# clp.dumNum$byBase( zoidMtx ,baseH )
+# clp.dumNum$byBase( zoidMtx )
 # clp.dumNum$byLate( zoidMtx ,baseH )
 
 
@@ -15,15 +15,27 @@ cliper.dupNum <- function( pBaseZh ,pThld=4 ,pSanc=2 ){
     rObj$getBaseH <- function( pZh ){ return(pZh) }
     rObj$baseH <- rObj$getBaseH(pBaseZh)
     
-    byLate <- function( pZoidMtx ,pBaseH ,pDebugInfo=F ){ 
-        return(rep(F,nrow(pZoidMtx))) 
+    byLate <- function( pZoidMtx ,pBaseH ,pDebugInfo=F ){
+        #   - pDebugInfo가 F이면 clip여부 T/F만, T이면 디버깅 정보 반환.
+        codeMtx <-pZoidMtx
+        scanSpan <- (nrow(pBaseH)-rObj$sanc+1 ):nrow(pBaseH)
+        rst <- apply( codeMtx ,1 ,function(pCode){
+                    for( rIdx in scanSpan ){
+                        flag <- sapply(pCode,function(p){p%in%pBaseH[rIdx,]})
+                        if( rObj$thld<=sum(flag) )
+                            return( rIdx )
+                    } # for(rIdx)
+                    return( NA )
+                })
+        if( pDebugInfo ) {    return( rst )
+        } else {    return( !is.na(rst) ) }
     } # byLate()
-    byBase <- function( pZoidMtx ,pBaseH ,pDebugInfo=F ){
+    byBase <- function( pZoidMtx ,pDebugInfo=F ){
         #   - pDebugInfo가 F이면 clip여부만, T이면 디버깅 정보 반환.
         codeMtx <-pZoidMtx
         rst <- apply( codeMtx ,1 ,function(pCode){
-                    for( rIdx in 1:nrow(pBaseH) ){
-                        flag <- sapply(pCode,function(p){p%in%pBaseH[rIdx,]})
+                    for( rIdx in 1:nrow(rObj$baseH) ){
+                        flag <- sapply(pCode,function(p){p%in%rObj$baseH[rIdx,]})
                         if( rObj$thld<=sum(flag) )
                             return( rIdx )
                     } # for(rIdx)
