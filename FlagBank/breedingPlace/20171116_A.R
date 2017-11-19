@@ -10,7 +10,7 @@ zh	<- as.matrix( FB$zh )
 zhF	<- as.matrix( FB.f$zh )
 testSpan <- (nrow(zh)+1):nrow(zhF)
 
-clpObj <- cliper.rebLen( zh ,pSanc=10 )
+clpObj <- cliper.stepWidth( zh ,pSanc=10 )
 baseRst <- rep( 0 ,length(testSpan) )
 for( idx in seq_len(length(testSpan)) ){
 	tIdx <- testSpan[idx]

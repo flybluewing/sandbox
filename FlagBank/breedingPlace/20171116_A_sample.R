@@ -71,9 +71,7 @@ table(seqObj$seqCntMtx[!zeroFlag,"cnt"])
 # -----------------------------------------------------------------------
 # ì½”ë“œê°? ê°„ê²©
 # -----------------------------------------------------------------------
-#   <?ƒ?„±>
 distMtx <- zh[,2:6]-zh[,1:5]
-#   <ë¶„ì„>
 matchLst <- list()
 for( hIdx in 2:nrow(distMtx) ){
     ml <- getMatchLst.fixed( distMtx[hIdx,] ,distMtx[1:(hIdx-1),,drop=F] )
