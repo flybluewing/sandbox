@@ -1,5 +1,22 @@
 # 20171116_A_H.R
 
+getRebLen <- function( pCodeVal ,pBaseH ){
+	rRebLen <- rep(NA,length(pCodeVal))
+	names(rRebLen) <- sprintf("%s",pCodeVal)
+	leftCode <- pCodeVal
+	for( rIdx in nrow(pBaseH):1 ){
+	# for( rIdx in nrow(pBaseH):685 ){	
+		indices<-which(leftCode %in% pBaseH[rIdx,])
+		if( 0==length(indices) )
+			next
+		rRebLen[leftCode[indices]] <- rIdx
+		leftCode <- leftCode[-indices]
+		if( !any(is.na(rRebLen)) )
+			break
+	}
+	return( nrow(pBaseH)-rRebLen+1 )
+} # getRebLen()
+
 # 일치하는 갯수
 getMatchLst <- function( pCode ,pArea ){
 

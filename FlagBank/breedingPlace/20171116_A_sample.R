@@ -11,7 +11,7 @@ zh <- as.matrix(FB$zh)
 # -----------------------------------------------------------------------
 # remainder
 # -----------------------------------------------------------------------
-#   <생성>
+#   <?��?��>
 remainMtx <- zh %% 5
 #   <분석>
 matchLst <- list()
@@ -38,9 +38,9 @@ table(seqObj$seqCntMtx[!zeroFlag,"cnt"])
     #48  3 
 
 # -----------------------------------------------------------------------
-# 이전 h와의 간격
+# ?��?�� h????�� 간격
 # -----------------------------------------------------------------------
-#   <생성>
+#   <?��?��>
 hDistMtx <- abs(zh[1:(nrow(zh)-1),]-zh[2:nrow(zh),])
 #   <분석>
 matchLst <- list()
@@ -55,7 +55,7 @@ for( hIdx in 2:nrow(hDistMtx) ){
 } # for(hIdx)
 mtx <- do.call(rbind,matchLst)
 sort( mtx[,1]-mtx[,2] )[1:10]
-    # 13까지는 4개 이상 매치가 없다고 봐도 될 듯.
+    # 13까�???�� 4�? ?��?�� 매치�? ?��?���? 봐도 ?�� ?��.
     #  1  4  4 13 25 37 37 38 39 44...
 
 dupIndices <- sort(unique( c(mtx[,1],mtx[,2]) )) # 94
@@ -64,14 +64,14 @@ testFlag[dupIndices] <- 1
 seqObj <- k.seq(testFlag)
 zeroFlag <- seqObj$seqCntMtx[,"val"]==0
 table(seqObj$seqCntMtx[!zeroFlag,"cnt"])
-    # 3 이 최대.
+    # 3 ?�� 최�??.
     # 1  2  3 
     #79  6  1
  
 # -----------------------------------------------------------------------
-# 코드간 간격
+# 코드�? 간격
 # -----------------------------------------------------------------------
-#   <생성>
+#   <?��?��>
 distMtx <- zh[,2:6]-zh[,1:5]
 #   <분석>
 matchLst <- list()
@@ -94,24 +94,23 @@ testFlag[dupIndices] <- 1
 seqObj <- k.seq(testFlag)
 zeroFlag <- seqObj$seqCntMtx[,"val"]==0
 table(seqObj$seqCntMtx[!zeroFlag,"cnt"])
-    # 3 연속이 최대..
+    # 3 ?��?��?�� 최�??..
     #    1  2  3 
     #   45  4  1 
 
 # -----------------------------------------------------------------------
-# 몇 번 만에 재발된 코드들인지?
+# cliper.rebLen()
 # -----------------------------------------------------------------------
-#   <생성>
 rebMtx <- matrix( 0 ,nrow=nrow(zh) ,ncol=ncol(zh) )
-rebMtx[1,] <- NA    # n번째에 나왔음을 의미. 즉 바로 이전에 나왔으면 1
+rebMtx[1,] <- NA    # n번째?�� ?��?��?��?�� ?���?. �? 바로 ?��?��?�� ?��?��?���? 1
 for( hIdx in 2:nrow(zh) ){
     ml <- getReboundLst( zh[hIdx,] ,zh[1:(hIdx-1),,drop=F] ,pSearchFirst=T )
     rebMtx[hIdx,] <- sapply( ml ,function(p){ifelse(0==length(p$fIdx),NA,hIdx-p$fIdx[1])} )
 } # for(hIdx)
 naIndices <- which(apply(rebMtx,1,function(p){any(is.na(p))}))
-    # 27번째까지 NA 발생.
+    # 27번째까�?? NA 발생.
 rebMtx <- rebMtx[(max(naIndices)+1):nrow(rebMtx),]
-#   <분석>
+
 matchLst <- list()
 for( hIdx in 2:nrow(rebMtx) ){
     ml <- getMatchLst.fixed( rebMtx[hIdx,] ,rebMtx[1:(hIdx-1),,drop=F] )
@@ -123,23 +122,21 @@ for( hIdx in 2:nrow(rebMtx) ){
         }
     }
 } # for(hIdx)
-mtx <- do.call(rbind,matchLst)   # 82개 쌍이 4개 이상 매치(위치고정)
+mtx <- do.call(rbind,matchLst)   # 82
 sort(mtx[,1]-mtx[,2])[1:10]
     #  2  2  5  7 26 26 27 27 35 37
 
 dupIndices <- sort(unique( c(mtx[,1],mtx[,2]) )) # 122
-testFlag <- rep( 0 ,nrow(rebMtx) ) # 어차피 잘려진 rebMtx 내에서 측정된 것이므로
+testFlag <- rep( 0 ,nrow(rebMtx) )
 testFlag[dupIndices] <- 1
 seqObj <- k.seq(testFlag)
 zeroFlag <- seqObj$seqCntMtx[,"val"]==0
 table(seqObj$seqCntMtx[!zeroFlag,"cnt"])
-    # 최대 연속 가뭄은 3번
     #    1  2  3 
     #   87 13  3 
 
 # -----------------------------------------------------------------------
-# 동일한 코드 수
-#   - 동일 위치에 대해서도 검토해보았으나, 4개 매치에서 크게 차이나지 않음.
+#   cliper.dumNum()
 # -----------------------------------------------------------------------
 matchLst <- list()
 for( hIdx in 2:nrow(zh) ){
@@ -164,7 +161,6 @@ testFlag[dupIndices] <- 1
 seqObj <- k.seq(testFlag)
 zeroFlag <- seqObj$seqCntMtx[,"val"]==0
 table(seqObj$seqCntMtx[!zeroFlag,"cnt"])
-    # 60% 정도에다가.. 5번 연속 이상의 무시무시한 가뭄도 많네... -_-;
     #    1  2  3  4  5  6  7 11 12 
     #    85 41 22 17 11  2  1  1  1 
 

@@ -7,6 +7,93 @@
 # clp.dumNum$byBase( zoidMtx )
 # clp.dumNum$byLate( zoidMtx ,baseH )
 
+cliper.rebLen <- function( pBaseZh ,pThld=4 ,pSanc=20 ,pCodeVal=NULL ){
+    rObj <- list( idStr="rebLen" ,thld=pThld ,sanc=pSanc )
+    rObj$codeVal <- if( is.null(pCodeVal) ){
+                        rObj$codeVal <- sort(unique(as.vector(pBaseZh)))
+                    } else { pCodeVal }
+    rObj$getBaseH <- function( pZh ){
+        rebMtx <- matrix( 0 ,nrow=nrow(pZh) ,ncol=ncol(pZh) )
+        rebMtx[1,] <- NA
+        for( hIdx in 2:nrow(pZh) ){
+            ml <- getReboundLst( pZh[hIdx,] ,pZh[1:(hIdx-1),,drop=F] ,pSearchFirst=T )
+            rebMtx[hIdx,] <- 
+                sapply( ml ,function(p){ifelse(0==length(p$fIdx),NA,hIdx-p$fIdx[1])} )
+        } # for(hIdx)
+        naIndices <- which(apply(rebMtx,1,function(p){any(is.na(p))}))
+        rebMtx <- rebMtx[(max(naIndices)+1):nrow(rebMtx),]
+        return( rebMtx )
+    } # rObj$getBaseH()
+    rObj$baseH <- rObj$getBaseH( pBaseZh )
+    byLate <- function( pZoidMtx ,pZoidH ,pDebugInfo=F ){
+        #   - pZoidH : zoidH원본을 받는 것으로 변경.(대량 pZoidMtx에 최적화 정책.)
+        #   - pDebugInfo가 F이면 clip여부 T/F만, T이면 디버깅 정보 반환.
+        rebLen <- getRebLen( rObj$codeVal ,pZoidH )
+        codeMtx <- t(apply(pZoidMtx,1,function(p){rebLen[p]}))
+
+        baseH <- rObj$getBaseH( pZoidH ) # 상위 NA 발생영역이 제거됨 유의.
+        idxDiff <- nrow(pZoidH) - nrow(baseH) # 고로, baseH와 pZoidH의 rIdx 보정..
+        scanSpan <- (nrow(baseH)-rObj$sanc+1 ):nrow(baseH)
+        rst <- apply( codeMtx ,1 ,function(pCode){
+                    for( rIdx in scanSpan ){
+                        if( rObj$thld <= sum(pCode==baseH[rIdx,] ,na.rm=T) )
+                            return( rIdx+idxDiff )
+                    } # for(rIdx)
+                    return( NA )
+                })
+
+        if( pDebugInfo ) {    return( rst )
+        } else {    return( !is.na(rst) ) }
+    } # byLate()
+    byBase <- function( pZoidMtx ,pZoidH ,pDebugInfo=F ){
+        #   - pZoidH : 가장 최신 H. codeMax 생성을 위해 필요.
+        rebLen <- getRebLen( rObj$codeVal ,pZoidH )
+        codeMtx <- t(apply(pZoidMtx,1,function(p){rebLen[p]}))
+        rst <- apply( codeMtx ,1 ,function(pCode){
+                    for( rIdx in 1:nrow(rObj$baseH) ){
+                        if( rObj$thld <= sum(pCode==rObj$baseH[rIdx,] ,na.rm=T) )
+                            return( rIdx )
+                    } # for(rIdx)
+                    return( NA )
+                })
+
+        if( pDebugInfo ) {    return( rst )
+        } else {    return( !is.na(rst) ) }
+    } # byBase()
+    rObj$byLate <- byLate
+    rObj$byBase <- byBase
+    rObj$report <- function( pFile="./report/cliperReport.txt" ){
+
+        k.FLogStr(sprintf("cliper id : %s",rObj$idStr) ,pFile=pFile)
+        matchLst <- list()
+        for( hIdx in 2:nrow(rObj$baseH) ){
+            ml <- getMatchLst.fixed( rObj$baseH[hIdx,] ,rObj$baseH[1:(hIdx-1),,drop=F] )
+            for( idx in seq_len(length(ml)) ){
+                matLen <- length(ml[[idx]]$fIdx)
+                if(rObj$thld<=matLen){
+                    matchLst[[1+length(matchLst)]] <- 
+                        c( hIdx ,ml[[idx]]$hIdx ,matLen)
+                }
+            } #for(idx)
+        }
+
+        mtx <- do.call( rbind ,matchLst )    # curIdx, matchIdx, matchNum
+        k.FLog( sort(mtx[,1]-mtx[,2])[1:10] ,pFile=pFile )
+
+        dupIndices <- sort(unique( c(mtx[,1],mtx[,2]) ))    # 398
+        k.FLogStr(sprintf("dupIndices : %d of %d",length(dupIndices),nrow(rObj$baseH))
+                     ,pFile=pFile )
+
+        testFlag <- rep(0,nrow(zh))
+        testFlag[dupIndices] <- 1
+        seqObj <- k.seq(testFlag)
+        zeroFlag <- seqObj$seqCntMtx[,"val"]==0
+        k.FLog( table(seqObj$seqCntMtx[!zeroFlag,"cnt"]) ,pFile=pFile )
+
+    } # rObj$report()
+
+    return( rObj )
+} # cliper.rebLen()
 
 cliper.dupNum <- function( pBaseZh ,pThld=4 ,pSanc=2 ){
     #   - pThld : 이 갯수 이상으로 중복된 것을 절단 대상으로 다룸.
@@ -15,13 +102,13 @@ cliper.dupNum <- function( pBaseZh ,pThld=4 ,pSanc=2 ){
     rObj$getBaseH <- function( pZh ){ return(pZh) }
     rObj$baseH <- rObj$getBaseH(pBaseZh)
     
-    byLate <- function( pZoidMtx ,pBaseH ,pDebugInfo=F ){
+    byLate <- function( pZoidMtx ,pZoidH ,pDebugInfo=F ){
         #   - pDebugInfo가 F이면 clip여부 T/F만, T이면 디버깅 정보 반환.
         codeMtx <-pZoidMtx
-        scanSpan <- (nrow(pBaseH)-rObj$sanc+1 ):nrow(pBaseH)
+        scanSpan <- (nrow(pZoidH)-rObj$sanc+1 ):nrow(pZoidH)
         rst <- apply( codeMtx ,1 ,function(pCode){
                     for( rIdx in scanSpan ){
-                        flag <- sapply(pCode,function(p){p%in%pBaseH[rIdx,]})
+                        flag <- sapply(pCode,function(p){p%in%pZoidH[rIdx,]})
                         if( rObj$thld<=sum(flag) )
                             return( rIdx )
                     } # for(rIdx)
@@ -30,8 +117,9 @@ cliper.dupNum <- function( pBaseZh ,pThld=4 ,pSanc=2 ){
         if( pDebugInfo ) {    return( rst )
         } else {    return( !is.na(rst) ) }
     } # byLate()
-    byBase <- function( pZoidMtx ,pDebugInfo=F ){
+    byBase <- function( pZoidMtx ,pZoidH=NULL ,pDebugInfo=F ){
         #   - pDebugInfo가 F이면 clip여부만, T이면 디버깅 정보 반환.
+        #   - pZoidH : 가장 최신 H. 여기선 사용치 않음.
         codeMtx <-pZoidMtx
         rst <- apply( codeMtx ,1 ,function(pCode){
                     for( rIdx in 1:nrow(rObj$baseH) ){
