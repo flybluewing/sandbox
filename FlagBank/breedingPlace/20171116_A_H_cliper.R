@@ -7,6 +7,134 @@
 # clp.dumNum$byBase( zoidMtx )
 # clp.dumNum$byLate( zoidMtx ,baseH )
 
+cliper.quotient <- function( pBaseZh ,pThld=6 ,pSanc=10 ,pBase=5 ){
+    rObj <- list( idStr="quotient" ,thld=pThld ,sanc=pSanc )
+    rObj$base <- pBase
+    rObj$getBaseH <- function( pZoidH ){ pZoidH %/% rObj$base }
+    rObj$baseH <- rObj$getBaseH( pBaseZh )
+    byLate <- function( pZoidMtx ,pZoidH ,pDebugInfo=F ){
+        codeMtx <- rObj$getBaseH( pZoidMtx )
+        baseH <- rObj$getBaseH( pZoidH ) # 상위 손실 발생영역이 제거됨 유의.
+        scanSpan <- (nrow(baseH)-rObj$sanc+1 ):nrow(baseH)
+        rst <- apply( codeMtx ,1 ,function(pCode){
+                    for( rIdx in scanSpan ){
+                        if( rObj$thld <= sum(pCode==baseH[rIdx,] ,na.rm=T) )
+                            return( rIdx )
+                    } # for(rIdx)
+                    return( NA )
+                })
+        if( pDebugInfo ) {    return( rst )
+        } else {    return( !is.na(rst) ) }
+    } # byLate()
+    byBase <- function( pZoidMtx ,pZoidH ,pDebugInfo=F ){
+        codeMtx <- rObj$getBaseH( pZoidMtx )
+        rst <- apply( codeMtx ,1 ,function(pCode){
+                    for( rIdx in 1:nrow(rObj$baseH) ){
+                        if( rObj$thld <= sum(pCode==rObj$baseH[rIdx,] ,na.rm=T) )
+                            return( rIdx )
+                    } # for(rIdx)
+                    return( NA )
+                })
+        if( pDebugInfo ) {    return( rst )
+        } else {    return( !is.na(rst) ) }
+    } # byBaes()
+    rObj$byLate <- byLate
+    rObj$byBase <- byBase
+    rObj$report <- function( pFile="./report/cliperReport.txt" ){
+        k.FLogStr(sprintf("cliper id : %s",rObj$idStr) ,pFile=pFile)
+        matchLst <- list()
+        for( hIdx in 2:nrow(rObj$baseH) ){
+            ml <- getMatchLst.fixed( rObj$baseH[hIdx,] ,rObj$baseH[1:(hIdx-1),,drop=F] )
+            for( idx in seq_len(length(ml)) ){
+                matLen <- length(ml[[idx]]$fIdx)
+                if(rObj$thld<=matLen){
+                    matchLst[[1+length(matchLst)]] <- 
+                        c( hIdx ,ml[[idx]]$hIdx ,matLen)
+                }
+            } #for(idx)
+        }
+
+        mtx <- do.call( rbind ,matchLst )    # curIdx, matchIdx, matchNum
+        k.FLog( sort(mtx[,1]-mtx[,2])[1:10] ,pFile=pFile )
+
+        dupIndices <- sort(unique( c(mtx[,1],mtx[,2]) ))    # 398
+        k.FLogStr(sprintf("dupIndices : %d of %d",length(dupIndices),nrow(rObj$baseH))
+                     ,pFile=pFile )
+
+        testFlag <- rep(0,nrow(zh))
+        testFlag[dupIndices] <- 1
+        seqObj <- k.seq(testFlag)
+        zeroFlag <- seqObj$seqCntMtx[,"val"]==0
+        k.FLog( table(seqObj$seqCntMtx[!zeroFlag,"cnt"]) ,pFile=pFile )
+
+    } # rObj$report()
+    return( rObj )
+} # cliper.quotient()
+
+cliper.remainder <- function( pBaseZh ,pThld=6 ,pSanc=10 ,pBase=5 ){
+    rObj <- list( idStr="remainder" ,thld=pThld ,sanc=pSanc )
+    rObj$base <- pBase
+    rObj$getBaseH <- function( pZoidH ){ pZoidH %% rObj$base }
+    rObj$baseH <- rObj$getBaseH( pBaseZh )
+    byLate <- function( pZoidMtx ,pZoidH ,pDebugInfo=F ){
+        codeMtx <- rObj$getBaseH( pZoidMtx )
+        baseH <- rObj$getBaseH( pZoidH ) # 상위 손실 발생영역이 제거됨 유의.
+        scanSpan <- (nrow(baseH)-rObj$sanc+1 ):nrow(baseH)
+        rst <- apply( codeMtx ,1 ,function(pCode){
+                    for( rIdx in scanSpan ){
+                        if( rObj$thld <= sum(pCode==baseH[rIdx,] ,na.rm=T) )
+                            return( rIdx )
+                    } # for(rIdx)
+                    return( NA )
+                })
+        if( pDebugInfo ) {    return( rst )
+        } else {    return( !is.na(rst) ) }
+    } # byLate()
+    byBase <- function( pZoidMtx ,pZoidH ,pDebugInfo=F ){
+        codeMtx <- rObj$getBaseH( pZoidMtx )
+        rst <- apply( codeMtx ,1 ,function(pCode){
+                    for( rIdx in 1:nrow(rObj$baseH) ){
+                        if( rObj$thld <= sum(pCode==rObj$baseH[rIdx,] ,na.rm=T) )
+                            return( rIdx )
+                    } # for(rIdx)
+                    return( NA )
+                })
+        if( pDebugInfo ) {    return( rst )
+        } else {    return( !is.na(rst) ) }
+    } # byBaes()
+    rObj$byLate <- byLate
+    rObj$byBase <- byBase
+    rObj$report <- function( pFile="./report/cliperReport.txt" ){
+        k.FLogStr(sprintf("cliper id : %s",rObj$idStr) ,pFile=pFile)
+        matchLst <- list()
+        for( hIdx in 2:nrow(rObj$baseH) ){
+            ml <- getMatchLst.fixed( rObj$baseH[hIdx,] ,rObj$baseH[1:(hIdx-1),,drop=F] )
+            for( idx in seq_len(length(ml)) ){
+                matLen <- length(ml[[idx]]$fIdx)
+                if(rObj$thld<=matLen){
+                    matchLst[[1+length(matchLst)]] <- 
+                        c( hIdx ,ml[[idx]]$hIdx ,matLen)
+                }
+            } #for(idx)
+        }
+
+        mtx <- do.call( rbind ,matchLst )    # curIdx, matchIdx, matchNum
+        k.FLog( sort(mtx[,1]-mtx[,2])[1:10] ,pFile=pFile )
+
+        dupIndices <- sort(unique( c(mtx[,1],mtx[,2]) ))    # 398
+        k.FLogStr(sprintf("dupIndices : %d of %d",length(dupIndices),nrow(rObj$baseH))
+                     ,pFile=pFile )
+
+        testFlag <- rep(0,nrow(zh))
+        testFlag[dupIndices] <- 1
+        seqObj <- k.seq(testFlag)
+        zeroFlag <- seqObj$seqCntMtx[,"val"]==0
+        k.FLog( table(seqObj$seqCntMtx[!zeroFlag,"cnt"]) ,pFile=pFile )
+
+    } # rObj$report()
+    return( rObj )
+} # cliper.remainder()
+
 cliper.backStep <- function( pBaseZh ,pThld=4 ,pSanc=10 ,pBackStep=1 ){
     rObj <- list( idStr="backStep" ,thld=pThld ,sanc=pSanc )
     rObj$backStep <- pBackStep
