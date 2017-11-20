@@ -44,6 +44,21 @@ RZP.addZoid <- function( pZoid ){
 	return( TRUE )
 } # RZP.addZoid()
 
+RZP.haveZoid <- function( pZoid ,pRZP=NULL ){
+	if( is.null(pRZP) )
+		pRZP <- RZP.G
+
+	keyStr <- paste(pZoid[1:3]%%10,collapse="")
+	zLst <- pRZP$zoidLst[[keyStr]]
+	
+	for( idx in seq_len(length(zLst)) ){
+		if( pRZP$same(zLst[[idx]]$dna,pZoid) )
+			return( TRUE )
+	}
+	
+	return( FALSE )
+} # RZP.haveZoid()
+
 RZP.size <- function( pRZP=NULL ){
 	if( is.null(pRZP) )
 		pRZP <- RZP.G
