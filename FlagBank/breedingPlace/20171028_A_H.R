@@ -44,8 +44,10 @@ RZP.addZoid <- function( pZoid ){
 	return( TRUE )
 } # RZP.addZoid()
 
-RZP.size <- function(){
-	return( sum(sapply(RZP.G$zoidLst,length)) )
+RZP.size <- function( pRZP=NULL ){
+	if( is.null(pRZP) )
+		pRZP <- RZP.G
+	return( sum(sapply(pRZP$zoidLst,length)) )
 } # RZP.size()
 
 
