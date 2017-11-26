@@ -71,3 +71,35 @@ getReboundLst <- function( pCode ,pArea ,pSearchFirst=F ){
 	return(reboundLst)
 
 } # getReboundLst()
+
+getAllZoid <- function(){
+
+    pool <- 1:45
+    pool.len <- length(pool)
+    zoidLst <- list()
+    for( idx1 in 1:(pool.len-5) ){
+        for( idx2 in (idx1+1):(pool.len-4) ){
+            for( idx3 in (idx2+1):(pool.len-3) ){
+                for( idx4 in (idx3+1):(pool.len-2) ){
+                    for( idx5 in (idx4+1):(pool.len-1) ){
+                        for( idx6 in (idx5+1):(pool.len-0) ){
+
+                            zoidLst[[1+length(zoidLst)]] <- 
+                                c( pool[idx1] ,pool[idx2] ,pool[idx3] 
+                                    ,pool[idx4] ,pool[idx5] ,pool[idx6] )
+                            if( FALSE && 0==(length(zoidLst)%%100000) ){
+								# 필요할 때만 로깅하자.
+                                k.FLogStr(sprintf( "zoidLst %8d" ,length(zoidLst) ))
+                            }
+
+                        }
+                    }
+                }
+            }
+        }
+    } # for(idx1)
+
+    return( do.call(rbind,zoidLst) )
+
+} # getAllZoid()
+

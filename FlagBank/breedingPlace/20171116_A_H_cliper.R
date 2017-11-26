@@ -90,7 +90,7 @@ cliper.remainder <- function( pBaseZh ,pThld=6 ,pSanc=10 ,pBase=5 ){
         if( pDebugInfo ) {    return( rst )
         } else {    return( !is.na(rst) ) }
     } # byLate()
-    byBase <- function( pZoidMtx ,pZoidH ,pDebugInfo=F ){
+    byBase <- function( pZoidMtx ,pZoidH=NULL ,pDebugInfo=F ){
         codeMtx <- rObj$getBaseH( pZoidMtx )
         rst <- apply( codeMtx ,1 ,function(pCode){
                     for( rIdx in 1:nrow(rObj$baseH) ){
@@ -160,7 +160,6 @@ cliper.backStep <- function( pBaseZh ,pThld=4 ,pSanc=10 ,pBackStep=1 ){
         } else {    return( !is.na(rst) ) }
     } # byLate()
     byBase <- function( pZoidMtx ,pZoidH ,pDebugInfo=F ){
-        #   - pZoidH : 가장 최신 H. 여기선 사용치 않음.
         lateZoid <- pZoidH[(nrow(pZoidH)-rObj$backStep+1),]
         codeMtx <- t(apply( pZoidMtx ,1 ,function(p){abs(p-lateZoid)}))
         rst <- apply( codeMtx ,1 ,function(pCode){
