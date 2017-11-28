@@ -4,53 +4,55 @@ FB.f <- getFlagBank("./zoidHistory/ZH_Final.csv")
 setwd(curWd)
 
 source("20171116_A_H.R")
+source("20171116_A_H_cliper.R")
 
 zh	<- as.matrix( FB$zh )
 zhF	<- as.matrix( FB.f$zh )
+allZoidMtx <- getAllZoid() # 38sec
+
+masterObj <- list()
+masterObj$clipLst <- list()
+
 testSpan <- (nrow(zh)+1):nrow(zhF)
-
-allZoidMtx <- getAllZoid()
-searchArea <- seq_len( nrow(allZoidMtx) )
-batchId <- 0
-searchArea <- which(batchId==searchArea%%3)
-
-#-----------------------------------------------------
-# 기존에 발생한 Zoid와 아예 동일하거나, 
-#   차이의 절대값이 동일한 Zoid는 제외하자.
-#   (781회 동안 단지 3쌍 발생. 그것도 abs 1 차이로.. )
-#   13hr 정도 소요 예상.
-surviveFlag <- rep( T ,nrow(allZoidMtx) )
-tStmp <- Sys.time()
-for( hIdx in searchArea ){
-    for( iIdx in seq_len(nrow(allZoidMtx)) ){
-        dLen <- unique(abs(allZoidMtx[iIdx,]-zhF[hIdx,]))
-        if( length(dLen)==1)
-            surviveFlag[iIdx] <- FALSE
-    }
-    tDiff <- Sys.time() - tStmp
-    k.FLogStr(sprintf("hIdx:%d batchId:%d (%.1f %s)",hIdx,batchId,tDiff,units(tDiff)),pTime=F)
+cName <- c("hIdx","rIdx")
+testMtx <- matrix( 0 ,ncol=length(cName) ,nrow=length(testSpan) )
+colnames(testMtx) <- cName
+for( idx in seq_len(length(testSpan)) ){
+    testMtx[idx,"hIdx"] <- testSpan[idx]
+    fIndices <- apply( allZoidMtx ,1 ,function(p){all(p==zhF[testSpan[idx],])} )
+    testMtx[idx,"rIdx"] <- which(fIndices)
 }
-
-surviveObj <- list(surviveFlag=surviveFlag ,batchId=batchId)
-save( surviveObj ,file=sprintf("Obj_surviveObj%d.save",batchId) )
-
+masterObj$testHMtx <- testMtx
+save( masterObj ,file="Obj_masterObj.save" )
 
 
 
+clipedLst <- list()
+# clipedObj <- list( flag=logical(0) ,idStr="" ,srchInx=integer(0) )
 
-surviveFlag.G <- rep(T,nrow(allZoidMtx))
+#==================================================================================
+# Remove creepy zoid
+#----------------------------------------------------------------------------------
+filtLst <- list()
+
+    tStmp <- Sys.time()
     #-----------------------------------------------------
-    # Code 간의 거리.
+    # Code 간의 거리가 몇 가지나 되는지.
     # stepWidthMtx <- zhF[,2:6] - zhF[,1:5]
     # stepNum <- apply( stepWidthMtx ,1 ,function(p){length(unique(p))} )
     # table(stepNum)
     #   2   3   4   5 # 2까지는 잘라도 될 지도..
     #   6  75 360 340 
     stepWidthMtx <- allZoidMtx[,2:6] - allZoidMtx[,1:5]
-    stepNum <- apply( stepWidthMtx ,1 ,function(p){length(unique(p))} )
-    # sum(stepNum<=1) 은 180개 밖에 안돼는...
-    surviveFlag.G[stepNum<=2] <- FALSE  # 34710
-
+    flagVal <- apply( stepWidthMtx ,1 ,function(p){length(unique(p))} )
+    # sum(flagVal<=1) 은 180개 밖에 안돼는...
+    filtObj <- list( idStr="stepWidthNum more than 2" )
+    filtObj$flag <- flagVal>2   # 34710
+    filtLst[[1+length(filtLst)]] <- filtObj
+    tDiff <- Sys.time() - tStmp
+    k.FLogStr(sprintf("%sth filtObj %.1f %s",length(filtLst)
+            ,tDiff ,units(tDiff)
+        ))
 
     #-----------------------------------------------------
     # remainder
@@ -59,10 +61,16 @@ surviveFlag.G <- rep(T,nrow(allZoidMtx))
     # table(uNum)
     #    2   3   4   5 
     #    21 224 421 115 
-    remMtx <- allZoidMtx %% 5
-    uNum <- apply( remMtx , 1 ,function(p){length(unique(p))})
-    surviveFlag.G[uNum<=1] <- FALSE # 420개... 
-
+    codeMtx <- allZoidMtx %% 5
+    flagVal <- apply( codeMtx , 1 ,function(p){length(unique(p))})
+    filtObj <- list( idStr="remainder num more than 1" )
+    filtObj$flag <- flagVal>1   # 420...
+    filtLst[[1+length(filtLst)]] <- filtObj
+    tDiff <- Sys.time() - tStmp
+    k.FLogStr(sprintf("%sth filtObj %.1f %s",length(filtLst)
+            ,tDiff ,units(tDiff)
+        ))
+    
     #-----------------------------------------------------
     # Quotient
     # valMtx <- zhF %/% 5
@@ -70,9 +78,15 @@ surviveFlag.G <- rep(T,nrow(allZoidMtx))
     # table(fVal)   # 2 이하를 자르자.
     #     2   3   4   5   6 
     #     1  31 239 368 142 
-    valMtx <- allZoidMtx %/% 5
-    fVal <- apply( valMtx , 1 ,function(p){length(unique(p))})
-    surviveFlag.G[fVal<3] <- FALSE # 6560
+    codeMtx <- allZoidMtx %/% 5
+    flagVal <- apply( codeMtx , 1 ,function(p){length(unique(p))})
+    filtObj <- list( idStr="Quotient num more than 2" )
+    filtObj$flag <- flagVal > 2   # 6560
+    filtLst[[1+length(filtLst)]] <- filtObj
+    tDiff <- Sys.time() - tStmp
+    k.FLogStr(sprintf("%sth filtObj %.1f %s",length(filtLst)
+            ,tDiff ,units(tDiff)
+        ))
 
     #-----------------------------------------------------
     # 최대-최소 폭.
@@ -80,21 +94,167 @@ surviveFlag.G <- rep(T,nrow(allZoidMtx))
     # table(fVal) # 15 이하를 자르기로 하자.
     #    10 13 15 16 17 18 19 20
     #     1  3  9  2  5  6  7 10
-    fVal <- allZoidMtx[,6] - allZoidMtx[,1]
-    surviveFlag.G[fVal<15] <- FALSE # 65065개
+    flagVal <- allZoidMtx[,6] - allZoidMtx[,1]
+    filtObj <- list( idStr="width less then 15" )
+    filtObj$flag <- flagVal > 14   # 65065개
+    filtLst[[1+length(filtLst)]] <- filtObj
+    tDiff <- Sys.time() - tStmp
+    k.FLogStr(sprintf("%sth filtObj %.1f %s",length(filtLst)
+            ,tDiff ,units(tDiff)
+        ))
+    
+    #-----------------------------------------------------
+    # 코드 간 거리가 동일반복
+    # distMtx <- zhF[,2:6] - zhF[,1:5]
+    # codeMtx <- distMtx[,1:4]==distMtx[,2:5]
+    # flagVal <- apply( codeMtx ,1 ,function(p){sum(p)})
+    # table(flagVal)
+    #      0   1   2   3
+    #    596 164  21   1
+    distMtx <- allZoidMtx[,2:6] - allZoidMtx[,1:5]
+    # codeMtx <- distMtx[,1:3]==distMtx[,2:4] & distMtx[,1:3]==distMtx[,3:5]
+    codeMtx <- distMtx[,1:4]==distMtx[,2:5]
+        # True이면 2번 이상 동일구간 증가
+    flagVal <- apply( codeMtx ,1 ,function(p){sum(p)})
+    filtObj <- list( idStr="width sequence no more than 2" )
+    filtObj$flag <- flagVal == 0   # 129070
+    filtLst[[1+length(filtLst)]] <- filtObj
+    tDiff <- Sys.time() - tStmp
+    k.FLogStr(sprintf("%sth filtObj %.1f %s",length(filtLst)
+            ,tDiff ,units(tDiff)
+        ))
 
-# ========================================================
-#   cliper 적용.
-#       위에서의 모든 필터링은 surviveObj$surviveFlag에 적용된 상태.
-#           (Obj_surviveObj.F2.save)
-#       맨 마지막 zh가 필요한 cliper$byBase()들은 신중을 기해야..
-source("20171116_A_H_cliper.R")
-#   myObj <- load("Obj_surviveObj.F2.save") # surviveObj
-allZoidMtx <- allZoidMtx[ surviveObj$surviveFlag ,]
-surviveFlag.G <- rep(T,nrow(allZoidMtx))
+    #-----------------------------------------------------
+    # Quotient 하나에 너무 많이 몰린 것.
+    # codeMtx <- zhF %/% 10
+    # flagVal <- apply( codeMtx ,1 ,function(p){ return( max(table(p)) ) })
+    # table(flagVal)
+    #     2   3   4   5 
+    #   451 283  46   2 
+    codeMtx <- allZoidMtx %/% 10
+    flagVal <- apply( codeMtx , 1 ,function(p){ return( max(table(p)) ) })
+    filtObj <- list( idStr="a quotient has dna more than 4" )
+    filtObj$flag <- flagVal < 4   # 497290
+    filtLst[[1+length(filtLst)]] <- filtObj
+    tDiff <- Sys.time() - tStmp
+    k.FLogStr(sprintf("%sth filtObj %.1f %s",length(filtLst)
+            ,tDiff ,units(tDiff)
+        ))
+
+    #-----------------------------------------------------
+    # clipedObj
+    finalFlag <- rep(T,nrow(allZoidMtx))
+    for( idx in seq_len(length(filtLst)) ){
+        finalFlag <- finalFlag & filtLst[[idx]]$flag
+    }
+
+    clipedObj <- list( idStr="Base clipping" 
+                        ,filtLst=filtLst
+                        ,finalFlag=finalFlag 
+                        ,birth=Sys.time()
+                        ,indices=which(finalFlag)
+                    )
+    clipedObj$cost <- "25min"
+    clipedLst[[1]] <- clipedObj
+save( clipedLst ,file="Obj_clipedLst001.0.save" )
+
+#==================================================================================
+# 기존 Zoid와 똑같은 거리로 떨어져 있는 RZoid제외.
+#   unique(abs(allZoidMtx[iIdx,]-zhF[hIdx,]))
+#----------------------------------------------------------------------------------
+myObj <- load("Obj_clipedLst001.0.save")
+allZoidMtx <- getAllZoid() # 38sec
+initIndices <- clipedLst[[1]]$indices
+finalFlag <- rep( T ,nrow(allZoidMtx) )
+finalFlag[-initIndices] <- FALSE  # 001 단계에서 제외된 것들을 적용하자
+allZoidMtx <- allZoidMtx[initIndices,]
+
+k.FLogStr("start")
+tStmp <- Sys.time()
+surFlag <- rep( T ,nrow(allZoidMtx) )
+for( hIdx in 1:nrow(zhF) ){
+    for( iIdx in seq_len(nrow(allZoidMtx)) ){
+        dLen <- unique(abs(allZoidMtx[iIdx,]-zhF[hIdx,]))
+        if( length(dLen)==1)
+            surFlag[iIdx] <- FALSE
+    }
+    tDiff <- Sys.time() - tStmp
+    k.FLogStr(sprintf("hIdx:%d (%.1f %s)",hIdx,tDiff,units(tDiff)),pTime=F)
+}
+k.FLogStr(sprintf("finish (%.1f %s)",tDiff,units(tDiff)),pTime=F)
+
+clipedObj <- list( idStr="unique(abs(allZoidMtx[iIdx,]-zhF[hIdx,]))" ,parent="Base clipping" )
+clipedObj$surFlag <- surFlag
+clipedObj$finalFlag <- finalFlag
+clipedObj$finalFlag[initIndices] <- surFlag
+
+# 테스트 영역은 다시 TRUE로..
+myObj <- load("Obj_masterObj.save")
+clipedObj$finalFlag[ masterObj$testHMtx[,"rIdx"] ] <- TRUE
+clipedObj$indices <- which(clipedObj$finalFlag)
+clipedObj$cost <- "12hr"
+
+clipedLst[[2]] <- clipedObj
+save( clipedLst ,file="Obj_clipedLst002.U.save" ) # 완성되지 못한 버전. 
+
+#==================================================================================
+# clip.dumNum$byBase()
+#   시간이 엄청 오래걸려 분리함.
+#----------------------------------------------------------------------------------
+myObj <- load("Obj_clipedLst001.0.save")
+finalFlag <- rep( T ,nrow(allZoidMtx) )
+initIndices <- clipedLst[[1]]$indices
+allZoidMtx <- getAllZoid() # 38sec
+allZoidMtx <- allZoidMtx[initIndices,]
+
+clpObj <- cliper.dupNum( zh )
+k.FLogStr("start clip.dumNum$byBase()")
+tStmp <- Sys.time()
+surFlag <- clpObj$byBase( allZoidMtx ,zh ,pDebugInfo=T )
+tDiff <- Sys.time() - tStmp # 
+
+
+clipedObj <- list( idStr="clip.dumNum$byBase()" ,parent="Base clipping" )
+clipedObj$surFlag <- surFlag
+clipedObj$finalFlag <- finalFlag # QQE 미친 짓을 했다..
+clipedObj$finalFlag[initIndices] <- surFlag
+# 테스트 영역은 다시 TRUE로..
+# 일단 저장 후 복구하자.
+clipedLst[[3]] <- clipedObj
+save( clipedLst ,file="Obj_clipedLst003.U.save" ) # 완성되지 못한 버전. 
+    # 003.0 버전에서 clipedLst[[2]]와 clipedLst[[3]]이 병합되어야 한다.
+
+#==================================================================================
+# Merge : "Obj_clipedLst002.U.save" ,"Obj_clipedLst003.U.save"
+#   QQE 동작 테스트 필요.
+#----------------------------------------------------------------------------------
+myObj <- load("Obj_clipedLst002.U.save")
+clipedObj <- clipedLst[[2]]
+
+myObj <- load("Obj_clipedLst003.U.save")
+clipedLst[[2]] <- clipedObj
+
+clipedObj <- list( idStr="merge 2,3" ,parent="002.U 003.U" )
+clipedObj$finalFlag <- clipedLst[[2]]$finalFlag & clipedLst[[3]]$finalFlag
+clipedObj$indices <- which( clipedObj$finalFlag )
+
+clipedLst[[4]] <- clipedObj
+save( clipedLst ,file="Obj_clipedLst004.0.save" ) # 완성되지 못한 버전. 
+
+
+#==================================================================================
+# Cliper$byBase()
+#   QQE 동작 검토 요.
+#----------------------------------------------------------------------------------
+allZoidMtx <- getAllZoid() # 38sec
+myObj <- load("Obj_clipedLst004.0.save")
+finalFlag <- clipedLst[[4]]$finalFlag
+initIndices <- clipedLst[[4]]$indices
+allZoidMtx <- allZoidMtx[initIndices,]
 
 
     flagLst <- list()
+
     clpObj <- cliper.quotient( zh )
     tStmp <- Sys.time()
     flag <- clpObj$byBase( allZoidMtx ,zh ,pDebugInfo=T )
@@ -118,94 +278,33 @@ surviveFlag.G <- rep(T,nrow(allZoidMtx))
     k.FLogStr(sprintf("cliper.stepWidth() %.f%s",tDiff,units(tDiff)))
     flagLst[[1+length(flagLst)]] <- flag
 
-    for( idx in seq_len(length(flagLst)) ){
-        surviveFlag.G <- surviveFlag.G & is.na(flagLst[[idx]])
+
+clipedObj <- list( idStr="Cliper$byBase() " ,parent="004.0" )
+clipedObj$flagLst <- flagLst
+
+lastFlag <- NULL
+for( idx in seq_len(length(flagLst)) ){
+    if( idx==1 ){
+        lastFlag <- flagLst[[1]]
+        next
     }
-    
-    indices.F2 <- which(surviveObj$surviveFlag)
-    surviveObj$surviveFlag[indices.F2] <- surviveFlag.G
-    surviveObj$time <- Sys.time()
-    surviveObj$filter[[3]] <- "cliper$byBase() quotient, remainder, stepWidth"
-    surviveObj$indices.F2 <- indices.F2
-    save( surviveObj ,file="Obj_surviveObj.byBaseStep1.save" )
-
-    #-----------------------------------------------------
-    # cliper.dupNum()
-    #       이 녀석은 너무 시간이 오래 걸려서 분리.    
-    clpObj <- cliper.dupNum( zh )
-    tStmp <- Sys.time()
-    flag <- clpObj$byBase( allZoidMtx ,zh ,pDebugInfo=T )
-    tDiff <- Sys.time() - tStmp # 
-    k.FLogStr(sprintf("cliper.dumNum() %.f%s",tDiff,units(tDiff)))
-    myObj <- load("Obj_surviveObj.byBaseStep1.save")
-    indices.F2 <- surviveObj$indices.F2
-    surviveObj$surviveFlag.dupNum <- flag
-    surviveObj$surviveFlag[indices.F2] <- is.na(flag) & surviveObj$surviveFlag[indices.F2]
-    surviveObj$time <- Sys.time()
-    surviveObj$filter[[4]] <- "cliper$byBase() dupNum"
-
-    #-----------------------------------------------------
-    # cliper.backStep()
-
-    #-----------------------------------------------------
-    # cliper.rebLen()
-
-
-
-# clp.dumNum <- cliper.dupNum( zh )
-# clp.dumNum$report()
-# baseH <- clp.dumNum$getBaseH( zh[5:15,] )   # 임의생성.
-# zoidMtx <- zh[1:4,]                         # 임의생성.
-# clp.dumNum$byBase( zoidMtx )
-# clp.dumNum$byLate( zoidMtx ,baseH )
-
-
-
-
-
-
-diffH <- zhF[,6] - zhF[,1]
-pairLst <- list()
-for( aIdx in 1:(length(diffH)-1)){
-    for( bIdx in (aIdx+1):length(diffH) ){
-        if( diffH[aIdx]==diffH[bIdx] )
-            pairLst[[1+length(pairLst)]] <- c( aIdx ,bIdx ,diffH[aIdx] )
-    }
+    lastFlag <- lastFlag & flagLst[[idx]]
 }
-mtx <- do.call( rbind ,pairLst )
-tbl <- table(abs(mtx[,2]-mtx[,1]))
-seqObj <- k.seq(diffH)
+clipedObj$finalFlag <- finalFlag[initIndices] & lastFlag
+clipedObj$indices <- which( clipedObj$finalFlag )
+clipedLst[[5]] <- clipedObj
+save( clipedLst ,file="Obj_clipedLst005.0.save" ) # 완성되지 못한 버전. 
 
 
+#==================================================================================
+# Cliper last stand - byBase() ,byLate()
+#   QQE 동작 검토 요.
+#----------------------------------------------------------------------------------
+myObj <- load("Obj_clipedLst005.0.save")
+finalFlag <- clipedLst[[5]]$finalFlag
+initIndices <- clipedLst[[5]]$indices
+allZoidMtx <- getAllZoid() # 38sec
+allZoidMtx <- allZoidMtx[initIndices,]
 
 
-
-
-
-
-
-
-hDepth <- 2
-spoon <- rep(0,hDepth)
-hSpan <- (hDepth+1):nrow(zhF)
-valLst <- list()
-for( hIdx in hSpan ){
-    for( idx in 1:hDepth ){
-        spoon[idx] <- sum( zhF[(hIdx-idx),] == zhF[hIdx,] )
-    }
-    valLst[[1+length(valLst)]] <- spoon
-}
-spoonMtx <- do.call( rbind ,valLst )
-
-mLst <- list()
-for( rIdx in 1:(nrow(spoonMtx)-1) ){
-    for( rrIdx in (rIdx+1):nrow(spoonMtx) ){
-        flag <- all( spoonMtx[rIdx,]==spoonMtx[rrIdx,] )
-        if( flag )
-            mLst[[1+length(mLst)]] <- c( rIdx, rrIdx )
-    }
-}
-mMtx <- do.call( rbind ,mLst )
-flag <- abs(mMtx[,1]-mMtx[,2]) 
-table(  )
 

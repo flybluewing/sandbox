@@ -9,44 +9,36 @@ source("20171116_A_H_cliper.R")
 zh	<- as.matrix( FB$zh )
 zhF	<- as.matrix( FB.f$zh )
 testSpan <- (nrow(zh)+1):nrow(zhF)
+allZoidMtx <- getAllZoid() # 38sec
 
-clpObj <- cliper.quotient( zh ,pSanc=10 )
-baseRst <- rep( 0 ,length(testSpan) )
+masterObj <- list()
+masterObj$clipLst <- list()
+
+cName <- c("hIdx","rIdx")
+testMtx <- matrix( 0 ,ncol=length(cName) ,nrow=length(testSpan) )
+colnames(testMtx) <- cName
 for( idx in seq_len(length(testSpan)) ){
-	tIdx <- testSpan[idx]
-	baseRst[idx] <- clpObj$byBase( zhF[tIdx,,drop=F] ,zhF[1:(tIdx-1),] ,pDebugInfo=T )
+    testMtx[idx,"hIdx"] <- testSpan[idx]
+    fIndices <- apply( allZoidMtx ,1 ,function(p){all(p==zhF[testSpan[idx],])} )
+    testMtx[idx,"rIdx"] <- which(fIndices)
 }
-    # table(baseRst,useNA="ifany")
+masterObj$testHMtx <- testMtx
+save( masterObj ,file="Obj_masterObj.save" )
 
-lateRst <- rep( 0 ,length(testSpan))
-for( idx in seq_len(length(testSpan)) ){
-    tIdx <- testSpan[idx]
-    lateRst[idx] <- clpObj$byLate( zhF[tIdx,,drop=F]
-                                ,zhF[1:(tIdx-1),] ,pDebugInfo=T 
-                            )
-}
+myObj <- load("Obj_surviveObj.byBaseStep2.save")
+idx1.8m <- which(surviveObj$surviveFlag)
 
+allZoidMtx <- allZoidMtx[idx1.8m,]
 
+zDist <- allZoidMtx[,2:6] - allZoidMtx[,1:5]
+maxDist <- apply( zDist ,1 ,function(p){
+    return( max(table(p)) )
+})
 
-zh	<- as.matrix( FB$zh )
-zhF	<- as.matrix( FB.f$zh )
-testSpan <- (nrow(zh)+1):nrow(zhF)
-
-clpObj <- cliper.dupNum( zh ,pSanc=3 )
-
-baseH <- clpObj$getBaseH( as.matrix(FB.f$zh) )
-testSpan <- (1+nrow(FB$zh)):nrow(baseH)
-clipFlag <- clpObj$byBase( baseH[testSpan,] )
-    # table(clipFlag)
-clipIdx <- rep(0,length(testSpan))
-for( idx in seq_len(length(testSpan)) ){
-    tIdx <- testSpan[idx]
-    curCodeMtx <- baseH[tIdx,,drop=F]
-    clipIdx[idx] <- 
-        clpObj$byLate( curCodeMtx ,baseH[1:(tIdx-1),] ,pDebugInfo=T )
-}
-
-pZoidMtx <- curCodeMtx
-pBaseH <- baseH[1:(tIdx-1),]
+sDist <- zhF[,2:6]-zhF[,1:5]
+k <- apply( sDist ,1 ,function(p){
+    tbl <- table(p)
+    return( max(tbl) )
+})
 
 

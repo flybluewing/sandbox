@@ -72,7 +72,7 @@ getReboundLst <- function( pCode ,pArea ,pSearchFirst=F ){
 
 } # getReboundLst()
 
-getAllZoid <- function(){
+getAllZoid <- function( pDebug=F ){
 
     pool <- 1:45
     pool.len <- length(pool)
@@ -87,7 +87,7 @@ getAllZoid <- function(){
                             zoidLst[[1+length(zoidLst)]] <- 
                                 c( pool[idx1] ,pool[idx2] ,pool[idx3] 
                                     ,pool[idx4] ,pool[idx5] ,pool[idx6] )
-                            if( FALSE && 0==(length(zoidLst)%%100000) ){
+                            if( pDebug && 0==(length(zoidLst)%%100000) ){
 								# 필요할 때만 로깅하자.
                                 k.FLogStr(sprintf( "zoidLst %8d" ,length(zoidLst) ))
                             }
