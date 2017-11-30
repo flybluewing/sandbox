@@ -201,7 +201,16 @@ save( clipedLst ,file="Obj_clipedLst002.U.save" ) # 완성되지 못한 버전.
 # clip.dumNum$byBase()
 #   시간이 엄청 오래걸려 분리함.
 #----------------------------------------------------------------------------------
+
+# 002가 실행된 이후의.. 순차적 진행 시.
+# myObj <- load("Obj_masterObj.save")
+# myObj <- load("Obj_clipedLst002.U.save")
+# parentName <- "Lst002"
+# saveFile <- "Obj_clipedLst003.0.save"
+
 myObj <- load("Obj_clipedLst001.0.save")
+parentName <- "Base clipping"
+saveFile <- "Obj_clipedLst003.U.save"
 finalFlag <- rep( T ,nrow(allZoidMtx) )
 initIndices <- clipedLst[[1]]$indices
 allZoidMtx <- getAllZoid() # 38sec
@@ -211,17 +220,19 @@ clpObj <- cliper.dupNum( zh )
 k.FLogStr("start clip.dumNum$byBase()")
 tStmp <- Sys.time()
 surFlag <- clpObj$byBase( allZoidMtx ,zh ,pDebugInfo=T )
-tDiff <- Sys.time() - tStmp # 
+tDiff <- Sys.time() - tStmp # 1.4 day
+k.FLogStr(sprintf("finish clip.dumNum$byBase() - %.1f%s",tDiff,units(tDiff)),pConsole=T )
 
-
-clipedObj <- list( idStr="clip.dumNum$byBase()" ,parent="Base clipping" )
+clipedObj <- list( idStr="clip.dumNum$byBase()" ,parent=parentName )
 clipedObj$surFlag <- surFlag
-clipedObj$finalFlag <- finalFlag # QQE 미친 짓을 했다..
-clipedObj$finalFlag[initIndices] <- surFlag
+clipedObj$finalFlag <- finalFlag 
+clipedObj$finalFlag[-initIndices] <- FALSE
+clipedObj$finalFlag[initIndices] <- is.na(surFlag)
+clipedObj$cost <- "1.4 day"
 # 테스트 영역은 다시 TRUE로..
 # 일단 저장 후 복구하자.
 clipedLst[[3]] <- clipedObj
-save( clipedLst ,file="Obj_clipedLst003.U.save" ) # 완성되지 못한 버전. 
+save( clipedLst ,file=saveFile ) # 완성되지 못한 버전. 
     # 003.0 버전에서 clipedLst[[2]]와 clipedLst[[3]]이 병합되어야 한다.
 
 #==================================================================================
@@ -239,7 +250,7 @@ clipedObj$finalFlag <- clipedLst[[2]]$finalFlag & clipedLst[[3]]$finalFlag
 clipedObj$indices <- which( clipedObj$finalFlag )
 
 clipedLst[[4]] <- clipedObj
-save( clipedLst ,file="Obj_clipedLst004.0.save" ) # 완성되지 못한 버전. 
+save( clipedLst ,file="Obj_clipedLst004.0.save" )
 
 
 #==================================================================================
@@ -252,13 +263,12 @@ finalFlag <- clipedLst[[4]]$finalFlag
 initIndices <- clipedLst[[4]]$indices
 allZoidMtx <- allZoidMtx[initIndices,]
 
-
     flagLst <- list()
 
     clpObj <- cliper.quotient( zh )
     tStmp <- Sys.time()
     flag <- clpObj$byBase( allZoidMtx ,zh ,pDebugInfo=T )
-    tDiff <- Sys.time() - tStmp # 2min for 100000  전체 2.6 hr 정도 예상.
+    tDiff <- Sys.time() - tStmp # 50 min
     k.FLogStr(sprintf("cliper.quotient() %.f%s",tDiff,units(tDiff)))
     flagLst[[1+length(flagLst)]] <- flag
 
@@ -266,7 +276,7 @@ allZoidMtx <- allZoidMtx[initIndices,]
     clpObj <- cliper.remainder( zh )
     tStmp <- Sys.time()
     flag <- clpObj$byBase( allZoidMtx ,zh ,pDebugInfo=T )
-    tDiff <- Sys.time() - tStmp # 2min for 100000
+    tDiff <- Sys.time() - tStmp # 52 min
     k.FLogStr(sprintf("cliper.remainder() %.f%s",tDiff,units(tDiff)))
     flagLst[[1+length(flagLst)]] <- flag
 
@@ -274,37 +284,106 @@ allZoidMtx <- allZoidMtx[initIndices,]
     clpObj <- cliper.stepWidth( zh )
     tStmp <- Sys.time()
     flag <- clpObj$byBase( allZoidMtx ,zh ,pDebugInfo=T )
-    tDiff <- Sys.time() - tStmp # 2min for 100000
+    tDiff <- Sys.time() - tStmp # 47 min
     k.FLogStr(sprintf("cliper.stepWidth() %.f%s",tDiff,units(tDiff)))
     flagLst[[1+length(flagLst)]] <- flag
-
-
-clipedObj <- list( idStr="Cliper$byBase() " ,parent="004.0" )
-clipedObj$flagLst <- flagLst
 
 lastFlag <- NULL
 for( idx in seq_len(length(flagLst)) ){
     if( idx==1 ){
-        lastFlag <- flagLst[[1]]
+        lastFlag <- is.na(flagLst[[1]])
         next
     }
-    lastFlag <- lastFlag & flagLst[[idx]]
+    lastFlag <- lastFlag & is.na(flagLst[[idx]])
 }
-clipedObj$finalFlag <- finalFlag[initIndices] & lastFlag
+
+
+clipedObj <- list( idStr="Cliper$byBase() " ,parent="004.0" ,cost="3 hr")
+clipedObj$flagLst <- flagLst
+clipedObj$finalFlag <- finalFlag
+clipedObj$finalFlag[initIndices] <- lastFlag
 clipedObj$indices <- which( clipedObj$finalFlag )
 clipedLst[[5]] <- clipedObj
-save( clipedLst ,file="Obj_clipedLst005.0.save" ) # 완성되지 못한 버전. 
+save( clipedLst ,file="Obj_clipedLst005.0.save" ) 
 
 
 #==================================================================================
 # Cliper last stand - byBase() ,byLate()
 #   QQE 동작 검토 요.
 #----------------------------------------------------------------------------------
+myObj <- load("Obj_masterObj.save") # masterObj$testHMtx[,"rIdx"]
 myObj <- load("Obj_clipedLst005.0.save")
 finalFlag <- clipedLst[[5]]$finalFlag
 initIndices <- clipedLst[[5]]$indices
 allZoidMtx <- getAllZoid() # 38sec
 allZoidMtx <- allZoidMtx[initIndices,]
 
+# ---------------------------------------------------------------------------------
+#   임시 테스트용 데이터
+    # myObj <- load("Obj_surviveObj.byBaseStep2.save")
+    # finalFlag <- surviveObj$surviveFlag
+    # finalFlag[ masterObj$testHMtx[,"hIdx"] ] <- TRUE
+    # initIndices <- which( finalFlag )
+    # allZoidMtx <- getAllZoid() # 38sec
+    # allZoidMtx <- allZoidMtx[initIndices,]
+# ---------------------------------------------------------------------------------
 
+flagObjLst <- list()
+for( idx in 1:nrow(masterObj$testHMtx) ){
+    hIdx <- masterObj$testHMtx[idx,"hIdx"]
+    zoidZh <- zhF[1:(hIdx-1),]
+    
+    flagLst <- list()
+    tStmp <- Sys.time()
+    #-----------------------------------------------------
+    # cliper.backStep()
+    clpObj <- cliper.backStep( zh )
+    flag <- clpObj$byBase( allZoidMtx ,zoidZh ,pDebugInfo=T )
+    tDiff <- Sys.time() - tStmp # 2 min for 100000
+    flagLst[[1+length(flagLst)]] <- flag
+    k.FLogStr(sprintf("cliper.backStep() %.f%s",tDiff,units(tDiff)),pConsole=T)
+    #-----------------------------------------------------
+    # cliper.rebLen()
+    clpObj <- cliper.rebLen( zh )
+    flag <- clpObj$byBase( allZoidMtx ,zoidZh ,pDebugInfo=T )
+    tDiff <- Sys.time() - tStmp # 1 min for 100000
+    flagLst[[1+length(flagLst)]] <- flag
+    k.FLogStr(sprintf("cliper.rebLen() %.f%s",tDiff,units(tDiff)),pConsole=T)
+
+    #=====================================================
+    # cliper.byLate()
+    #-----------------------------------------------------
+    clpObj <- cliper.quotient( zh )
+    flag <- clpObj$byLate( allZoidMtx ,zoidZh ,pDebugInfo=T )
+    tDiff <- Sys.time() - tStmp
+    k.FLogStr(sprintf("cliper.quotient() %.f%s",tDiff,units(tDiff)))
+    flagLst[[1+length(flagLst)]] <- flag
+
+    clpObj <- cliper.remainder( zh )
+    flag <- clpObj$byLate( allZoidMtx ,zoidZh ,pDebugInfo=T )
+    tDiff <- Sys.time() - tStmp
+    k.FLogStr(sprintf("cliper.remainder() %.f%s",tDiff,units(tDiff)))
+    flagLst[[1+length(flagLst)]] <- flag
+	
+    clpObj <- cliper.stepWidth( zh )
+    flag <- clpObj$byLate( allZoidMtx ,zoidZh ,pDebugInfo=T )
+    tDiff <- Sys.time() - tStmp
+    k.FLogStr(sprintf("cliper.stepWidth() %.f%s",tDiff,units(tDiff)))
+    flagLst[[1+length(flagLst)]] <- flag
+
+    clpObj <- cliper.dupNum( zh )
+    flag <- clpObj$byLate( allZoidMtx ,zoidZh ,pDebugInfo=T )
+    tDiff <- Sys.time() - tStmp
+    k.FLogStr(sprintf("cliper.dumNum() %.f%s",tDiff,units(tDiff)))
+    flagLst[[1+length(flagLst)]] <- flag
+
+    flag.f <- is.na(flagLst[[1]])
+    for( fIdx in 2:length(flagLst) ){
+        flag.f <- flag.f & is.na(flagLst[[fIdx]])
+    }
+
+    flagObj <- list( hIdx=hIdx ,flag.f=flag.f ,flagLst=flagLst ,cost=tDiff )
+    flagObjLst[[1+length(flagObjLst)]] <- flagObj
+
+} # for(hIdx)
 
