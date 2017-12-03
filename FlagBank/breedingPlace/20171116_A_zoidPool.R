@@ -252,10 +252,16 @@ clipedObj$indices <- which( clipedObj$finalFlag )
 clipedLst[[4]] <- clipedObj
 save( clipedLst ,file="Obj_clipedLst004.0.save" )
 
+# clipedObj <- list( idStr="full suceed" ,parent="003.U" )
+# clipedObj$finalFlag <- clipedLst[[3]]$finalFlag
+# clipedObj$indices <- which( clipedObj$finalFlag )
+
+# clipedLst[[4]] <- clipedObj
+# save( clipedLst ,file="Obj_clipedLst004.F.save" )
+
 
 #==================================================================================
 # Cliper$byBase()
-#   QQE 동작 검토 요.
 #----------------------------------------------------------------------------------
 allZoidMtx <- getAllZoid() # 38sec
 myObj <- load("Obj_clipedLst004.0.save")
@@ -309,7 +315,6 @@ save( clipedLst ,file="Obj_clipedLst005.0.save" )
 
 #==================================================================================
 # Cliper last stand - byBase() ,byLate()
-#   QQE 동작 검토 요.
 #----------------------------------------------------------------------------------
 myObj <- load("Obj_masterObj.save") # masterObj$testHMtx[,"rIdx"]
 myObj <- load("Obj_clipedLst005.0.save")
@@ -317,16 +322,6 @@ finalFlag <- clipedLst[[5]]$finalFlag
 initIndices <- clipedLst[[5]]$indices
 allZoidMtx <- getAllZoid() # 38sec
 allZoidMtx <- allZoidMtx[initIndices,]
-
-# ---------------------------------------------------------------------------------
-#   임시 테스트용 데이터
-    # myObj <- load("Obj_surviveObj.byBaseStep2.save")
-    # finalFlag <- surviveObj$surviveFlag
-    # finalFlag[ masterObj$testHMtx[,"hIdx"] ] <- TRUE
-    # initIndices <- which( finalFlag )
-    # allZoidMtx <- getAllZoid() # 38sec
-    # allZoidMtx <- allZoidMtx[initIndices,]
-# ---------------------------------------------------------------------------------
 
 flagObjLst <- list()
 for( idx in 1:nrow(masterObj$testHMtx) ){
