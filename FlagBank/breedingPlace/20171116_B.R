@@ -85,3 +85,92 @@ for( idx in 1:length(deskObj$testSpan) ){
 
 pZh <- zhF
 
+
+flt.jump <- function( pZh ){
+
+    rObj <- list( idStr="jump" )
+
+    getJumpMtx <- function( pZh ){
+
+        codeMtx <- pZh[2:nrow(pZh),] - pZh[1:(nrow(pZh)-1),]
+        # tLen <- apply( codeMtx ,1 ,function(p){length(unique(p))} )
+        # table(tLen)      3   4   5   6 # 3이하는 제거할까?
+        #                 10  98 332 341 
+
+        sJumpLst <- list() # Same Jump 
+        for( rIdx in 1:nrow(codeMtx) ){
+
+        }
+
+        maxIdx <- apply( codeMtx ,1 ,which.max )
+
+        allStepMtx <- matrix( 0 ,nrow=nrow(codeMtx) ,ncol=3 )
+        for( rIdx in 1:nrow(codeMtx) ){
+            allStepMtx[rIdx,1] <- codeMtx[rIdx ,maxIdx[rIdx] ]
+            allStepMtx[rIdx,2] <- pZh[ rIdx ,maxIdx[rIdx] ]
+            allStepMtx[rIdx,3] <- maxIdx[rIdx]
+        }
+        colnames(allStepMtx) <- c("step","val","col")
+
+        step <- sort(unique(allStepMtx[,"step"]))
+        cName <- c("maxStep","val")
+        stepMtx <- matrix(0,nrow=length(step),ncol=length(cName))
+        colnames( stepMtx ) <- cName
+        stepMtx[,"maxStep"] <- step
+        for( rIdx in 1:nrow(allStepMtx) ){
+            idx <- which( allStepMtx[rIdx,1]==stepMtx[,"maxStep"] )
+            stepMtx[idx,"val"] <- allStepMtx[rIdx,"val"]
+        }
+
+        return( stepMtx )
+    }
+
+    rObj$stepMtx <- getStepMtx( pZh )
+
+    rObj$byLate <- function( pZoidMtx ,pDebugInfo=F ){
+
+        stepMtx <- pZoidMtx[,2:6] - pZoidMtx[,1:5]
+
+        filted <- rep( 0 ,nrow(stepMtx) )
+        for( rIdx in 1:nrow(stepMtx) ){
+            maxCol <- which.max( stepMtx[rIdx,] )
+
+            hrIdx <- which( rObj$stepMtx[,1] == stepMtx[rIdx,maxCol] )            
+            if( 0==length(hrIdx) ){
+                filted[rIdx] <- NA
+                next
+            }
+
+            if( rObj$stepMtx[hrIdx,"val"]==pZoidMtx[rIdx,maxCol] ){
+                filted[rIdx] <- stepMtx[rIdx,maxCol]
+            } else {
+                filted[rIdx] <- NA
+            }
+        }
+
+        if( pDebugInfo ){   return( filted)
+        } else {
+            return( is.na(filted) )
+        }
+    }
+
+    rObj$report <- function( pZh ){
+        codeMtx <- pZh[2:nrow(pZh),] - pZh[1:(nrow(pZh)-1),]
+        # 최대값에 대한 반복여부로 테스트 하는 것도 검토 요.
+        # tLen <- apply( codeMtx ,1 ,function(p){length(unique(p))} )
+        # table(tLen)      3   4   5   6 # 3이하는 제거할까?
+        #                 10  98 332 341 
+
+        sJumpLst <- list() # Same Jump 
+        for( rIdx in 1:nrow(codeMtx) ){
+            
+        }
+
+
+    }
+
+    return( rObj )
+} # flt.jump()
+
+
+
