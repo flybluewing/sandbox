@@ -1,5 +1,87 @@
 # 20171116_B_H.R
 
+flt.seqReb <- function( pZh ){
+	rObj <- list( idStr="seqReb" )
+	rObj$lastZoid <- pZh[nrow(pZh),]
+	rObj$byLate <- function( pZoidMtx ,pDebugInfo=F ){
+		filted <- apply( pZoidMtx ,1 ,function(p){sum(p%in%rObj$lastZoid)})
+        if( pDebugInfo ){   return( filted )
+        } else {
+            return( filted==0 )
+        }
+	}
+	return( rObj )
+} # flt.seqReb()
+
+flt.nextVal <- function( pZh ,pSameCol=T ){
+	rObj <- list( idStr=sprintf("nextVal_%s",ifelse(pSameCol,"col","all") ) )
+
+	getNextVal <- function( pZh ){
+		foundH <- rep(0,ncol(pZh))
+		nextVal <- rep(0,ncol(pZh))
+		lastZoid <- pZh[nrow(pZh),]
+		for( cIdx in 1:ncol(pZh) ){
+			for( bhIdx in (nrow(pZh)-1):1 ){
+				flag <- pZh[bhIdx,]==lastZoid[cIdx]
+				if( any(flag) ){
+					fCol <- which(flag)
+					foundH[cIdx]	<- bhIdx
+					nextVal[cIdx]	<- pZh[(bhIdx+1),fCol]
+					break
+				}
+			}
+		}
+		return( list(nextVal=nextVal,foundH=foundH) )
+	} # getNextVal()
+
+	rObj$nextVal <- getNextVal( pZh )$nextVal
+	rObj$sameCol <- pSameCol
+
+	rObj$byLate <- function( pZoidMtx ,pDebugInfo=F ){
+
+		filted <- rep(NA,nrow(pZoidMtx))
+		if( rObj$sameCol ){
+			filted <- apply(pZoidMtx,1,function(p){sum(rObj$nextVal==p)})
+		} else {
+			filted <- apply(pZoidMtx,1,function(p){sum(rObj$nextVal %in% p)})
+		}
+
+        if( pDebugInfo ){   return( filted )
+        } else {
+            return( 0==filted )
+        }
+	} # rObj$byLate()
+
+	rObj$report <- function( pZh ){
+
+		foundH <- rep(0,ncol(pZh))
+		nextVal <- rep(0,ncol(pZh))
+		resLst <- list()
+		for( hIdx in 300:nrow(pZh) ){
+			lastZoid <- pZh[(hIdx-1),]
+
+			for( cIdx in 1:6 ){
+				for( bhIdx in (hIdx-2):1 ){
+					fCol <- which( pZh[bhIdx,] == lastZoid[cIdx])
+					if( 0<length(fCol) ){
+						foundH[cIdx] <- bhIdx
+						nextVal[cIdx] <- pZh[(bhIdx+1),fCol]
+						break;
+					}
+				}
+			}
+
+			resObj <- list( foundH=foundH ,nextVal=nextVal )
+			resObj$cnt <- sum(pZh[hIdx,]==nextVal)
+			resLst[[1+length(resLst)]] <- resObj
+		}
+
+	} # rObj$report()
+	return( rObj )
+} # flt.nextVal()
+
+
+
 flt.sStepMax <- function( pZh ){
     # side step - max
 

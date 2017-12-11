@@ -18,7 +18,7 @@ tStmp <- Sys.time()
 survLst <- list()
 for( idx in 1:length(deskObj$testSpan) ){
     hIdx <- deskObj$testSpan[idx]
-    fltObj <- flt.sStepMax( zhF[1:(hIdx-1),] )    # 10min, 85개 생존.
+    fltObj <- flt.nextVal( zhF[1:(hIdx-1),] )    # 49min, 85개 생존.
 
     sObj <- list( stdIdx= deskObj$indices.zoidMtx[idx] )
     sObj$flag <- fltObj$byLate( allZoidMtx )
@@ -30,7 +30,19 @@ tDiff <- Sys.time() - tStmp
 
 k <- sapply( survLst ,function(p){p$stdSurvive})
 
+survLst <- list()
+for( idx in 1:length(deskObj$testSpan) ){
+    hIdx <- deskObj$testSpan[idx]
+    fltObj <- flt.sStepMax( zhF[1:(hIdx-1),] )    # 10min, 85개 생존.
 
+    sObj <- list( stdIdx= deskObj$indices.zoidMtx[idx] )
+    sObj$flag <- fltObj$byLate( allZoidMtx )
+    sObj$stdSurvive <- sObj$flag[ sObj$stdIdx ]
+    sObj$rmCnt <- sum(!sObj$flag)
+    survLst[[1+length(survLst)]] <- sObj
+}
+
+survLst <- list()
 for( idx in 1:length(deskObj$testSpan) ){
     hIdx <- deskObj$testSpan[idx]
     fltObj <- flt.rebLen( zhF[1:(hIdx-1),] )    # 21min, 83개 생존.

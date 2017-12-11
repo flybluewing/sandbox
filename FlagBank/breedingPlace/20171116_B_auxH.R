@@ -52,10 +52,6 @@ for( hIdx in 500:length(flag) ){
 
 
 
-codeType <- sort(unique(flag))
-cName <- c("seqLen","nextVal")
-seqInfoMtx <- matrix(0,nrow=length(codeType),ncol=length(cName))	;colnames(seqInfoMtx) <- cName
-for( hIdx in 2:nrow(hSeqCntMtx) ){
-	
-}
+
+
 

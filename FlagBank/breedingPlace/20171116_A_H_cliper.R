@@ -7,6 +7,7 @@
 # clp.dumNum$byBase( zoidMtx )
 # clp.dumNum$byLate( zoidMtx ,baseH )
 
+
 cliper.quotient <- function( pBaseZh ,pThld=6 ,pSanc=10 ,pBase=5 ){
     rObj <- list( idStr="quotient" ,thld=pThld ,sanc=pSanc )
     rObj$base <- pBase
