@@ -97,6 +97,11 @@ for( aIdx in 1:(nrow(codeMtx)-1) ){
 comMtx <- do.call( rbind ,comLst )
 missHLst[["B0030"]] <- sort(unique(comMtx[,2])) + 1
 
+#-[B0030A2]---------------------------------------------------------------------------------------
+# abs(zhF[tIdx,]-zhF[(tIdx-1),]) 에서 동일한 값이 n개 이상 나오는 경우.
+#	- QQE:Todo
+#	- 수행 시간이 오래 걸릴 수 있음.(table함수사용땜시)
+
 #-[B0030D2]----------------------------------------------------------------------------------------
 # abs(zhF[tIdx,]-zhF[(tIdx-2),]) 가 동일한 적은 없었다.
 #	- 5개 동일한 경우는 딱 1번.
@@ -115,18 +120,18 @@ missHLst[["B0030D2"]] <- ( sort(unique(do.call( c ,comLst ))) )+hd
 
 #-[B0040]----------------------------------------------------------------------------------------
 # rebLen
-rebSpan <- 28:nrow(zhF)
-rebMtx <- matrix( 0 ,nrow=length(rebSpan) ,ncol=ncol(zhF) )
-rownames(rebMtx) <- rebSpan
-for( idx in 1:length(rebSpan) ){
-	hIdx <- rebSpan[idx]
-	ml <- getReboundLst( zhF[hIdx,] ,zhF[1:(hIdx-1),,drop=F] ,pSearchFirst=T )
-	rebMtx[idx,] <- 
-		sapply( ml ,function(p){ifelse(0==length(p$fIdx),NA,hIdx-p$fIdx[1])} )
-}
+	rebSpan <- 28:nrow(zhF)
+	rebMtx <- matrix( 0 ,nrow=length(rebSpan) ,ncol=ncol(zhF) )
+	rownames(rebMtx) <- rebSpan
+	for( idx in 1:length(rebSpan) ){
+		hIdx <- rebSpan[idx]
+		ml <- getReboundLst( zhF[hIdx,] ,zhF[1:(hIdx-1),,drop=F] ,pSearchFirst=T )
+		rebMtx[idx,] <- 
+			sapply( ml ,function(p){ifelse(0==length(p$fIdx),NA,hIdx-p$fIdx[1])} )
+	}
 
 #-[B0041]----------------------------------------------------------------------------------------
-#	매치가 5개 이상인 것.
+#	매치가 4개 이상인 것. - 103+@ 개
 compLst <- list()
 for( aIdx in 1:(nrow(rebMtx)-1) ){
 	for( bIdx in (aIdx+1):nrow(rebMtx) ){
@@ -138,11 +143,8 @@ for( aIdx in 1:(nrow(rebMtx)-1) ){
 	}
 }
 matCnt <- sapply( compLst ,function(p){length(p$matchIdx)})
-missHLst[["B0041"]] <- sort( sapply(compLst[matCnt<=5] ,function(p){p$bIdx}) )
+missHLst[["B0041"]] <- sort( sapply(compLst[matCnt>=4] ,function(p){p$bIdx}) )
 
-#-[B0042]----------------------------------------------------------------------------------------
-#	매치가 4개 이상인 것. - 103개
-missHLst[["B0042"]] <- sort( sapply(compLst[matCnt==4] ,function(p){p$bIdx}) )
 
 #=[C0000]========================================================================================
 #	대량 손해 감수 파트.
@@ -159,6 +161,10 @@ codeMtx <- apply( quoMtx ,1 ,function(p){
 			})
 codeMtx <- t(codeMtx)
 
+#QQE : 한 코너에 5개 이상 몰린 거 삭제. 4개 몰린 것도 지우자.
+#   2   3   4   5 
+# 452 283  47   2 
+
 compLst <- list()
 for( aIdx in 1:(nrow(rebMtx)-1) ){
 	for( bIdx in (aIdx+1):nrow(rebMtx) ){
@@ -171,7 +177,7 @@ for( aIdx in 1:(nrow(rebMtx)-1) ){
 }
 idxMtx <- do.call( rbind ,compLst )
 idxDist <- idxMtx[,2] - idxMtx[,1]	# table(idxDist)
-missHLst[["C0010"]] <- sort(idxMtx[idxDist<=10,2])
+missHLst[["C0010"]] <- sort(idxMtx[idxDist<=10,2]) # 최근 10 개
 
 #-[C0011]----------------------------------------------------------------------------------------
 #	remainder
@@ -194,5 +200,4 @@ surFlag <- rep( 0 ,nrow(zhF) )
 for( idx in 1:length(missHLst) ){
 	surFlag[ missHLst[[idx]] ] <- idx
 }
-
 
