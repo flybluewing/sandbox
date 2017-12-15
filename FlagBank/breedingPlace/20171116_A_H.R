@@ -1,5 +1,32 @@
 # 20171116_A_H.R
 
+getPastPtn <- function( pFlag ,pDepth=2 ,pScanAll=F ){
+
+	rDepth <- pDepth-1	# 실제 계산위주..
+	fLen <- length(pFlag)
+	lastPtn <- pFlag[(fLen-rDepth):fLen]
+
+	fLst <- list()
+	for( idx in (fLen-1):(rDepth+1) ){
+		if( all(lastPtn==pFlag[(idx-rDepth):idx]) ){
+			fObj <- list( fIdx=idx ,curVal=pFlag[idx] ,nextVal=pFlag[idx+1] )
+			fLst[[1+length(fLst)]] <- fObj
+			if( !pScanAll )
+				break
+		}
+	}
+
+	if( 0==length(fLst) ) {
+		return( NULL )
+	} else if( pScanAll ){
+		return( fLst )
+	}else {
+		return( fLst[[1]] )
+	}
+
+} # getPastPtn()
+
+
 getRebLen <- function( pCodeVal ,pBaseH ){
 	rRebLen <- rep(NA,length(pCodeVal))
 	names(rRebLen) <- sprintf("%s",pCodeVal)
