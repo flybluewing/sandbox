@@ -53,12 +53,23 @@ allZoidMtx <- allZoidMtx[flag==0,] # 6975973
 
 #-[B0020]----------------------------------------------------------------------------------------
 # abs(zhF[aIdx,]-zhF[bIdx,]) 가 5개 동일한 것
-#	최근 30개 내에서 5개 동일은 10개 발생.
-# 시간이 너무 오래걸려서 일단 보류...
-
-
-# QQE 
-
+flag <- rep( 0 ,nrow(allZoidMtx) )
+tStmp <- Sys.time()
+for( aIdx in 1:nrow(allZoidMtx) ){
+	for( zIdx in (nrow(zhF)-29):nrow(zhF) ){
+		tbl <- table(abs(allZoidMtx[aIdx,]-zhF[zIdx,]))
+		if( 5<=max(tbl) ){
+			flag[aIdx] <- zIdx
+			break
+		}
+	}
+	if( 0==(aIdx%%100000) ){
+		k.FLogStr(sprintf("aIdx:%d",aIdx))
+	}
+}
+tDiff <- Sys.time()-tStmp
+k.FLogStr(sprintf("B0020 cost %.1f%s ",tDiff,units(tDiff)))
+allZoidMtx <- allZoidMtx[flag==0,]
 
 #-[B0030A]---------------------------------------------------------------------------------------
 # abs(zhF[tIdx,]-zhF[(tIdx-1),]) 가 동일한 적은 없었다.(4개 동일한 경우는 70번)
@@ -76,8 +87,8 @@ for( stdIdx in 1:nrow(stdCodeMtx) ){
 			flag[aIdx] <- stdIdx
 	}
 }
-tDiff <- tStmp - Sys.time()
-k.FLogStr(sprintf("[B0030A] cost %.f%s",tDiff,units(tDiff)))
+tDiff <- Sys.time() - tStmp
+k.FLogStr(sprintf("[B0030A] cost %.1f%s",tDiff,units(tDiff)))
 allZoidMtx <- allZoidMtx[flag==0,]
 
 #-[B0030D2]----------------------------------------------------------------------------------------
@@ -97,8 +108,8 @@ for( stdIdx in 1:nrow(stdCodeMtx) ){
 			flag[aIdx] <- stdIdx
 	}
 }
-tDiff <- tStmp - Sys.time()
-k.FLogStr(sprintf("[B0030D2] cost %.f%s",tDiff,units(tDiff)))
+tDiff <- Sys.time() - tStmp
+k.FLogStr(sprintf("[B0030D2] cost %.1f%s",tDiff,units(tDiff)))
 allZoidMtx <- allZoidMtx[flag==0,]
 
 
@@ -127,12 +138,6 @@ for( zIdx in 1:nrow(allZoidMtx) ){
 	}
 }
 allZoidMtx <- allZoidMtx[flag==0,]
-# QQE 동작검사.
-
-deskObj <- list( allZoidMtx=allZoidMtx )
-deskObj$memo <- sprintf("zhF size : %d. finish C0011 and ready for B0030A",nrow(zhF))
-save( deskObj ,file="Obj_deskObj_C01.save" )
-
 
 #=[C0000]========================================================================================
 #-[C0010]----------------------------------------------------------------------------------------
@@ -190,6 +195,31 @@ for( stdIdx in 1:nrow(stdCodeMtx) ){
 }
 tDiff <- Sys.time() - tStmt
 allZoidMtx <- allZoidMtx[flag==0,]
+
+#-[C0012]----------------------------------------------------------------------------------------
+#	rebNum	- 최근 5개 zh에서 마지막 zoid와 동일 코드를 3개이상 가진 zoid.. 91개.
+stdCodeMtx <- zhF[(nrow(zhF)-4):nrow(zhF),]
+allCodeMtx <- allZoidMtx
+flag <- rep( 0 ,nrow(allCodeMtx) )
+tStmt <- Sys.time()
+for( stdIdx in 1:nrow(stdCodeMtx) ){
+	for( aIdx in 1:nrow(allCodeMtx) ){
+		cmn <- intersect( stdCodeMtx[stdIdx,] ,allCodeMtx[aIdx,] )
+		if( 3<=length(cmn) ){
+			flag[aIdx] <- stdIdx
+		}
+	}
+}
+tDiff <- Sys.time() - tStmt
+allZoidMtx <- allZoidMtx[flag==0,]
+
+
+#-[C0013A]---------------------------------------------------------------------------------------
+#	lastPtn	- 과거 패턴의 재발여부.  QQE:Todo
+
+deskObj <- list( allZoidMtx=allZoidMtx )
+deskObj$memo <- sprintf("zhF size : %d. finish B0020 and ready for ...",nrow(zhF))
+save( deskObj ,file="Obj_deskObj_C04.save" )
 
 # QQE goto B0030A
 

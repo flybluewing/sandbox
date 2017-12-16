@@ -195,6 +195,52 @@ for( aIdx in 1:(nrow(rebMtx)-1) ){
 idxMtx <- do.call( rbind ,compLst ) # 전부 합쳐서 118.. 그냥 쓰자.
 missHLst[["C0011"]] <- sort( idxMtx[,2] )
 
+#-[C0012]----------------------------------------------------------------------------------------
+#	rebNum	- 최근 5개 zh에서 마지막 zoid와 동일 코드를 3개이상 가진 zoid.. 91개.
+compLst <- list()
+for( aIdx in nrow(zhF):2 ){
+	for( bIdx in (aIdx-1):1 ){
+		cmn <- intersect( zhF[aIdx,] ,zhF[bIdx,] )
+		if( 3<=length(cmn) ){
+			compLst[[1+length(compLst)]] <- c( aIdx ,bIdx ,length(cmn) )
+			break
+		}
+	}
+}
+idxMtx <- do.call( rbind ,compLst )
+zhDist <- idxMtx[,1] - idxMtx[,2]
+missHLst[["C0012"]] <- sort( idxMtx[zhDist<=5,1] )
+
+
+#-[C0013A]---------------------------------------------------------------------------------------
+#	lastPtn	- 과거 패턴의 재발여부.
+mtx <- zhF %% 10
+scanSpan <- 300:nrow(mtx)
+filtH <- rep( 0 ,ncol(mtx) )
+compLst <- list()
+for( idx in 1:length(scanSpan) ){
+	hIdx <- scanSpan[idx]
+	lastH <- mtx[hIdx,]
+	for( cIdx in 1:6 ){
+		ptn <- getPastPtn( mtx[1:(hIdx-1),cIdx] ,pDepth=3 ,pScanAll=F )
+		if( is.null(ptn) ) {	filtH[cIdx] <- 0
+		} else {	filtH[cIdx] <- (lastH[cIdx]==ptn$nextVal)
+		}
+	}
+	if( 0<sum(filtH) ){
+		compLst[[1+length(compLst)]] <- list( hIdx=hIdx ,filtNum=sum(filtH) )
+	}	
+}
+
+idxMtx <- do.call( rbind ,lapply(compLst,function(p){c(p$hIdx,p$filtNum)}) )
+	# table(idxMtx[,2])	  1   2 
+	# 					108  14 
+missHLst[["C0013A"]] <- sort( idxMtx[,1] )
+
+
+
+
+
 #============================================================================================
 surFlag <- rep( 0 ,nrow(zhF) )
 for( idx in 1:length(missHLst) ){
