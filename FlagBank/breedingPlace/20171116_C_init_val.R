@@ -238,6 +238,30 @@ idxMtx <- do.call( rbind ,lapply(compLst,function(p){c(p$hIdx,p$filtNum)}) )
 missHLst[["C0013A"]] <- sort( idxMtx[,1] )
 
 
+#-[C0014A]---------------------------------------------------------------------------------------
+#	lastHPtn	- H 단위로 과거패턴 재발여부 확인.
+#		- 패턴이 3개 이상 매치하는 것을 제거. (총 81개)
+			# table(k)	 2  3  4  5 
+			# 			98 56 19  6 
+
+mtx <- zhF %% 3
+scanSpan <- 300:nrow(mtx)
+filtH <- rep( 0 ,ncol(mtx) )
+compLst <- list()
+for( idx in 1:length(scanSpan) ){
+	hIdx <- scanSpan[idx]
+	lastH <- mtx[hIdx,]
+	nextObj <- getPastPtn.mtx( mtx[1:(hIdx-1),] )
+	if( !is.null(nextObj) ){
+		cnt <- sum(lastH==nextObj$nextH)
+		if( 3<=cnt ){
+			compLst[[1+length(compLst)]] <- list( hIdx=hIdx ,fIdx=nextObj$fIdx ,cnt=cnt)
+		}
+	} # if( !is.null(nextH) )
+} # for
+
+
+
 
 
 
