@@ -27,15 +27,16 @@ getPastPtn <- function( pFlag ,pDepth=2 ,pScanAll=F ){
 
 } # getPastPtn()
 
-getPastPtn.mtx <- function( pFlagMtx ,pScanAll=F ){
+
+getPastPtn.mtx <- function( pFlagMtx ,pJump=1 ,pScanAll=F ){
 
 	fLen <- nrow(pFlagMtx)
-	lastH <- pFlagMtx[nrow(pFlagMtx),]
+	lastH <- pFlagMtx[nrow(pFlagMtx)-pJump+1,]
 
 	fLst <- list()
-	for( idx in (fLen-1):1 ){
+	for( idx in (fLen-pJump):1 ){
 		if( all(lastH==pFlagMtx[idx,]) ){
-			fObj <- list( fIdx=idx ,curH=lastH ,nextH=pFlagMtx[(idx+1),] )
+			fObj <- list( fIdx=idx ,curH=lastH ,nextH=pFlagMtx[(idx+pJump),] )
 			fLst[[1+length(fLst)]] <- fObj
 			if( !pScanAll )
 				break
@@ -51,6 +52,7 @@ getPastPtn.mtx <- function( pFlagMtx ,pScanAll=F ){
 	}
 
 } # getPastPtn.mtx()
+
 
 getRebLen <- function( pCodeVal ,pBaseH ){
 	rRebLen <- rep(NA,length(pCodeVal))

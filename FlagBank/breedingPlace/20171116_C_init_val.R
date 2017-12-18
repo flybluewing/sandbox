@@ -11,8 +11,7 @@ FB.f <- getFlagBank("./zoidHistory/ZH_Final.csv")
 setwd(curWd)
 zh	<- as.matrix( FB$zh )
 zhF	<- as.matrix( FB.f$zh )
-testSpan <- (nrow(zh)+1):nrow(zhF)
-allZoidMtx <- getAllZoid() # 38sec
+# allZoidMtx <- getAllZoid() # 38sec
 
 #=[missHLst]===============================================================================
 #	이 파일에서의 핵심 데이터.
@@ -243,7 +242,6 @@ missHLst[["C0013A"]] <- sort( idxMtx[,1] )
 #		- 패턴이 3개 이상 매치하는 것을 제거. (총 81개)
 			# table(k)	 2  3  4  5 
 			# 			98 56 19  6 
-
 mtx <- zhF %% 3
 scanSpan <- 300:nrow(mtx)
 filtH <- rep( 0 ,ncol(mtx) )
@@ -260,14 +258,176 @@ for( idx in 1:length(scanSpan) ){
 	} # if( !is.null(nextH) )
 } # for
 
+idxMtx <- do.call( rbind ,lapply(compLst,function(p){c(p$hIdx,p$fIdx,p$cnt)}) )
+missHLst[["C0014A"]] <- sort( idxMtx[,1] )
+#-[C0014AJ1]--------------------------------------------------------------------------------------
+#	lastHPtn	- H 단위로 과거패턴 재발여부 확인. (n단계 jump)
+#		QQE:Todo 
+
+#-[C0014A1]--------------------------------------------------------------------------------------
+#	lastHPtn	- H 단위로 과거패턴 재발여부 확인. (6개 일치 11개 발생.)
+mtx <- zhF %% 2
+scanSpan <- 300:nrow(mtx)
+filtH <- rep( 0 ,ncol(mtx) )
+compLst <- list()
+for( idx in 1:length(scanSpan) ){
+	hIdx <- scanSpan[idx]
+	lastH <- mtx[hIdx,]
+	nextObj <- getPastPtn.mtx( mtx[1:(hIdx-1),] )
+	if( !is.null(nextObj) ){
+		cnt <- sum(lastH==nextObj$nextH)
+		if( 6<=cnt ){
+			compLst[[1+length(compLst)]] <- list( hIdx=hIdx ,fIdx=nextObj$fIdx ,cnt=cnt)
+		}
+	} # if( !is.null(nextH) )
+} # for
+
+idxMtx <- do.call( rbind ,lapply(compLst,function(p){c(p$hIdx,p$fIdx,p$cnt)}) )
+missHLst[["C0014A1"]] <- sort( idxMtx[,1] )
 
 
+#-[C0014B]---------------------------------------------------------------------------------------
+#	lastHPtn	- H 단위로 과거패턴 재발여부 확인.(증가간격)
+#		- 패턴이 3개 이상 매치하는 것을 제거. (총 90개)
+		# table( idxMtx[,3] )    3  4  5 
+		# 						74 14  2
+mtx <- (zhF[,2:6]-zhF[,1:5]) %% 3
+scanSpan <- 300:nrow(mtx)
+filtH <- rep( 0 ,ncol(mtx) )
+compLst <- list()
+for( idx in 1:length(scanSpan) ){
+	hIdx <- scanSpan[idx]
+	lastH <- mtx[hIdx,]
+	nextObj <- getPastPtn.mtx( mtx[1:(hIdx-1),] )
+	if( !is.null(nextObj) ){
+		cnt <- sum(lastH==nextObj$nextH)
+		if( 3<=cnt ){
+			compLst[[1+length(compLst)]] <- list( hIdx=hIdx ,fIdx=nextObj$fIdx ,cnt=cnt)
+		}
+	} # if( !is.null(nextH) )
+}
+idxMtx <- do.call( rbind ,lapply(compLst,function(p){c(p$hIdx,p$fIdx,p$cnt)}) )
+missHLst[["C0014B"]] <- sort( idxMtx[,1] )
+#-[C0014BJ1]---------------------------------------------------------------------------------------
+#	lastHPtn	- H 단위로 과거패턴 재발여부 확인.(증가간격)
+#					n번 과거
+#				QQE:Todo
 
 
+#-[C0014B2]---------------------------------------------------------------------------------------
+#	lastHPtn	- H 단위로 과거패턴 재발여부 확인.(증가간격)
+#		- 패턴이 모두 매치하는 것을 제거. (총 19개)
+mtx <- (zhF[,2:6]-zhF[,1:5]) %% 2
+scanSpan <- 300:nrow(mtx)
+filtH <- rep( 0 ,ncol(mtx) )
+compLst <- list()
+for( idx in 1:length(scanSpan) ){
+	hIdx <- scanSpan[idx]
+	lastH <- mtx[hIdx,]
+	nextObj <- getPastPtn.mtx( mtx[1:(hIdx-1),] )
+	if( !is.null(nextObj) ){
+		cnt <- sum(lastH==nextObj$nextH)
+		if( 5<=cnt ){
+			compLst[[1+length(compLst)]] <- list( hIdx=hIdx ,fIdx=nextObj$fIdx ,cnt=cnt)
+		}
+	} # if( !is.null(nextH) )
+}
+idxMtx <- do.call( rbind ,lapply(compLst,function(p){c(p$hIdx,p$fIdx,p$cnt)}) )
+missHLst[["C0014B2"]] <- sort( idxMtx[,1] )
 
-#============================================================================================
+
+#-[C0014C]---------------------------------------------------------------------------------------
+#	lastHPtn	- H 단위로 과거패턴 재발여부 확인.(다음 H와의 간격)
+#		- 패턴이 3개 이상 매치하는 것을 제거. (총 73개)
+		# table( idxMtx[,3] )    3  4  5 
+		# 						74 14  2
+mtx <- abs(zhF[1:(nrow(zhF)-1),]-zhF[2:nrow(zhF),]) %% 3
+scanSpan <- 300:nrow(mtx)
+filtH <- rep( 0 ,ncol(mtx) )
+compLst <- list()
+for( idx in 1:length(scanSpan) ){
+	hIdx <- scanSpan[idx]
+	lastH <- mtx[hIdx,]
+	nextObj <- getPastPtn.mtx( mtx[1:(hIdx-1),] )
+	if( !is.null(nextObj) ){
+		cnt <- sum(lastH==nextObj$nextH)
+		if( 3<=cnt ){
+			compLst[[1+length(compLst)]] <- list( hIdx=hIdx ,fIdx=nextObj$fIdx ,cnt=cnt)
+		}
+	} # if( !is.null(nextH) )
+}
+idxMtx <- do.call( rbind ,lapply(compLst,function(p){c(p$hIdx,p$fIdx,p$cnt)}) )
+missHLst[["C0014C"]] <- sort( idxMtx[,1] )
+
+#-[C0014C1]--------------------------------------------------------------------------------------
+#	lastHPtn	- H 단위로 과거패턴 재발여부 확인.(다음 H와의 간격)
+#				- 모두 일치 8개.
+mtx <- abs(zhF[1:(nrow(zhF)-1),]-zhF[2:nrow(zhF),]) %% 2
+scanSpan <- 300:nrow(mtx)
+filtH <- rep( 0 ,ncol(mtx) )
+compLst <- list()
+for( idx in 1:length(scanSpan) ){
+	hIdx <- scanSpan[idx]
+	lastH <- mtx[hIdx,]
+	nextObj <- getPastPtn.mtx( mtx[1:(hIdx-1),] )
+	if( !is.null(nextObj) ){
+		cnt <- sum(lastH==nextObj$nextH)
+		if( 6<=cnt ){
+			compLst[[1+length(compLst)]] <- list( hIdx=hIdx ,fIdx=nextObj$fIdx ,cnt=cnt)
+		}
+	} # if( !is.null(nextH) )
+}
+idxMtx <- do.call( rbind ,lapply(compLst,function(p){c(p$hIdx,p$fIdx,p$cnt)}) )
+missHLst[["C0014C1"]] <- sort( idxMtx[,1] )
+
+#===============================================================================================
+#-[D0010]---------------------------------------------------------------------------------------
+#	group 크기가 3 이상인 경우의 다음 연속 가능성.
+#		332개 중 21개 발생.
+quoMtx <- zhF %/% 10
+maxLst <- list()
+for( rIdx in 1:nrow(quoMtx) ){
+	tbl <- table(quoMtx[rIdx,])
+	maxObj <- list( freq=max(tbl) )
+	if( 3<=maxObj$freq ){
+		grpVal <- as.integer(names(tbl))
+		maxObj$grpVal <- grpVal[tbl==maxObj$freq]
+	}
+	maxLst[[1+length(maxLst)]] <- maxObj
+}
+compLst <- list()
+for( hIdx in 2:length(maxLst) ){
+	compObj <- list( hIdx=hIdx ,maxFreq=maxLst[[hIdx]]$freq )
+	if( maxLst[[hIdx]]$freq==maxLst[[hIdx-1]]$freq ){
+		rebFlag <- maxLst[[hIdx]]$grpVal %in% maxLst[[hIdx-1]]$grpVal
+		if( any(rebFlag) ){
+			compObj$rebGrp <- maxLst[[hIdx]]$grpVal[rebFlag]
+			compLst[[1+length(compLst)]] <- compObj
+		}
+	}
+}
+hauntCnt <- sum( sapply(maxLst,function(p){p$freq>=3}) )
+missHLst[["D0010"]] <- sort( sapply(compLst,function(p){p$hIdx}) )
+
+
+#===============================================================================================
+#-[E0010]---------------------------------------------------------------------------------------
+#	QQE:TODO
+#		1. zhF[6]-zhF[1]
+
+#=[Summary]======================================================================================
 surFlag <- rep( 0 ,nrow(zhF) )
 for( idx in 1:length(missHLst) ){
 	surFlag[ missHLst[[idx]] ] <- idx
 }
 
+seqCntMtx <- k.seq(1*(surFlag==0))$seqCntMtx
+seqCntMtx <- seqCntMtx[seqCntMtx[,"hIdx"]>=testSpan[1],]
+table(seqCntMtx[seqCntMtx[,"val"]==0,"cnt"])
+tail(seqCntMtx)
+
+valFlag <- 1 * (surFlag[testSpan]==0)
+seqCntMtx <- k.seq(valFlag)$seqCntMtx
+sprintf("surv %.1f%%"
+		,100*sum(valFlag)/length(valFlag)
+	)
