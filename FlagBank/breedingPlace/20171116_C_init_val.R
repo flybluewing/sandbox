@@ -260,9 +260,31 @@ for( idx in 1:length(scanSpan) ){
 
 idxMtx <- do.call( rbind ,lapply(compLst,function(p){c(p$hIdx,p$fIdx,p$cnt)}) )
 missHLst[["C0014A"]] <- sort( idxMtx[,1] )
-#-[C0014AJ1]--------------------------------------------------------------------------------------
-#	lastHPtn	- H 단위로 과거패턴 재발여부 확인. (n단계 jump)
-#		QQE:Todo 
+
+#-[C0014AJ]--------------------------------------------------------------------------------------
+#	lastHPtn	- H 단위로 과거패턴 재발여부 확인. (n단계 jump.)
+backJump <- 2:20	# 20까지인 경우, 13개 제거됨.
+filtH <- rep( 0 ,ncol(mtx) )
+mtx <- zhF %% 3
+scanSpan <- 300:nrow(mtx)
+idxLst <- list()
+for( bjIdx in backJump ){
+	compLst <- list()
+	for( idx in 1:length(scanSpan) ){
+		hIdx <- scanSpan[idx]
+		lastH <- mtx[hIdx,]
+		nextObj <- getPastPtn.mtx( mtx[1:(hIdx-1),] ,pJump=bjIdx )
+		if( !is.null(nextObj) ){
+			cnt <- sum(lastH==nextObj$nextH)
+			if( 6<=cnt ){
+				compLst[[1+length(compLst)]] <- list( hIdx=hIdx ,fIdx=nextObj$fIdx ,cnt=cnt)
+			}
+		} # if( !is.null(nextH) )
+	}
+	idxMtx <- do.call( rbind ,lapply(compLst,function(p){c(p$hIdx,p$fIdx,p$cnt)}) )
+	idxLst[[1+length(idxLst)]] <- if( 0<length(compLst) ) sort( idxMtx[,1] ) else integer(0)
+} # for(bjIdx)
+missHLst[["C0014AJ"]] <- sort( do.call(c,idxLst) )
 
 #-[C0014A1]--------------------------------------------------------------------------------------
 #	lastHPtn	- H 단위로 과거패턴 재발여부 확인. (6개 일치 11개 발생.)
@@ -308,10 +330,32 @@ for( idx in 1:length(scanSpan) ){
 }
 idxMtx <- do.call( rbind ,lapply(compLst,function(p){c(p$hIdx,p$fIdx,p$cnt)}) )
 missHLst[["C0014B"]] <- sort( idxMtx[,1] )
-#-[C0014BJ1]---------------------------------------------------------------------------------------
+
+#-[C0014BJ]---------------------------------------------------------------------------------------
 #	lastHPtn	- H 단위로 과거패턴 재발여부 확인.(증가간격)
-#					n번 과거
-#				QQE:Todo
+backJump <- 2:20	# 20까지이면 6개 제거됨.
+filtH <- rep( 0 ,ncol(mtx) )
+mtx <- (zhF[,2:6]-zhF[,1:5]) %% 4
+scanSpan <- 300:nrow(mtx)
+idxLst <- list()
+for( bjIdx in backJump ){
+	compLst <- list()
+	for( idx in 1:length(scanSpan) ){
+		hIdx <- scanSpan[idx]
+		lastH <- mtx[hIdx,]
+		nextObj <- getPastPtn.mtx( mtx[1:(hIdx-1),] ,pJump=bjIdx )
+		if( !is.null(nextObj) ){
+			cnt <- sum(lastH==nextObj$nextH)
+			if( 5<=cnt ){
+				compLst[[1+length(compLst)]] <- list( hIdx=hIdx ,fIdx=nextObj$fIdx ,cnt=cnt)
+			}
+		} # if( !is.null(nextH) )
+	}
+	idxMtx <- do.call( rbind ,lapply(compLst,function(p){c(p$hIdx,p$fIdx,p$cnt)}) )
+	idxLst[[1+length(idxLst)]] <- if( 0<length(compLst) ) sort( idxMtx[,1] ) else integer(0)
+} # for(bjIdx)
+missHLst[["C0014BJ"]] <- sort( do.call(c,idxLst) )
+
 
 
 #-[C0014B2]---------------------------------------------------------------------------------------
@@ -380,6 +424,95 @@ for( idx in 1:length(scanSpan) ){
 idxMtx <- do.call( rbind ,lapply(compLst,function(p){c(p$hIdx,p$fIdx,p$cnt)}) )
 missHLst[["C0014C1"]] <- sort( idxMtx[,1] )
 
+#-[C0014CJ]--------------------------------------------------------------------------------------
+backJump <- 2:20	# 20까지인 경우 3개 제거됨.
+filtH <- rep( 0 ,ncol(mtx) )
+mtx <- abs(zhF[1:(nrow(zhF)-1),]-zhF[2:nrow(zhF),]) %% 3
+scanSpan <- 300:nrow(mtx)
+idxLst <- list()
+for( bjIdx in backJump ){
+	compLst <- list()
+	for( idx in 1:length(scanSpan) ){
+		hIdx <- scanSpan[idx]
+		lastH <- mtx[hIdx,]
+		nextObj <- getPastPtn.mtx( mtx[1:(hIdx-1),] ,pJump=bjIdx )
+		if( !is.null(nextObj) ){
+			cnt <- sum(lastH==nextObj$nextH)
+			if( 6<=cnt ){
+				compLst[[1+length(compLst)]] <- list( hIdx=hIdx ,fIdx=nextObj$fIdx ,cnt=cnt)
+			}
+		} # if( !is.null(nextH) )
+	}
+	idxMtx <- do.call( rbind ,lapply(compLst,function(p){c(p$hIdx,p$fIdx,p$cnt)}) )
+	idxLst[[1+length(idxLst)]] <- if( 0<length(compLst) ) sort( idxMtx[,1] ) else integer(0)
+} # for(bjIdx)
+missHLst[["C0014CJ"]] <- sort( do.call(c,idxLst) )
+
+
+#-[C0015C0]--------------------------------------------------------------------------------------
+#	실제 계산이 아닌 준비용.
+rebSpan <- 28:nrow(zhF)
+rebMtx <- matrix( 0 ,nrow=length(rebSpan) ,ncol=ncol(zhF) )
+rownames(rebMtx) <- rebSpan
+for( idx in 1:length(rebSpan) ){
+	hIdx <- rebSpan[idx]
+	ml <- getReboundLst( zhF[hIdx,] ,zhF[1:(hIdx-1),,drop=F] ,pSearchFirst=T )
+	rebMtx[idx,] <- 
+		sapply( ml ,function(p){ifelse(0==length(p$fIdx),NA,hIdx-p$fIdx[1])} )
+}
+
+scanSpan <- 300:nrow(zhF)
+rScanSpan <- sapply( scanSpan ,function(p){ which(rebSpan==p) })
+	# rebSpan 내에서 scanSpan에 해당하는 부분.
+
+#-[C0015C0]--------------------------------------------------------------------------------------
+# 	5개 이상 일치기준에서 59개 중복 발생.
+mtx <- rebMtx %% 2
+filtH <- rep( 0 ,ncol(mtx) )
+compLst <- list()
+for( idx in 1:length(rScanSpan) ){
+	rIdx <- rScanSpan[idx]
+	lastH <- mtx[rIdx,]
+	nextObj <- getPastPtn.mtx( mtx[1:(rIdx-1),] )
+	if( !is.null(nextObj) ){
+		cnt <- sum(lastH==nextObj$nextH)
+		if( 5<=cnt ){
+			compLst[[1+length(compLst)]] <- 
+				list( hIdx=scanSpan[idx] ,rIdx=rIdx,fIdx=nextObj$fIdx ,cnt=cnt )
+		}
+	} # if( !is.null(nextH) )
+}
+idxMtx <- do.call( rbind ,lapply(compLst,function(p){c(p$hIdx,p$rIdx,p$fIdx,p$cnt)}) )
+missHLst[["C0015C0"]] <- sort( idxMtx[,1] )
+
+#-[C0015CJ]--------------------------------------------------------------------------------------
+# 	19개 중복발생 제거됨.
+backJump <- 2:20
+filtH <- rep( 0 ,ncol(mtx) )
+mtx <- rebMtx %% 3
+idxLst <- list()
+for( bjIdx in backJump ){
+	compLst <- list()
+	for( idx in 1:length(rScanSpan) ){
+		rIdx <- rScanSpan[idx]
+		lastH <- mtx[rIdx,]
+		nextObj <- getPastPtn.mtx( mtx[1:(rIdx-1),] ,pJump=bjIdx )
+		if( !is.null(nextObj) ){
+			cnt <- sum(lastH==nextObj$nextH)
+			if( 6<=cnt ){
+				compLst[[1+length(compLst)]] <- 
+					list( hIdx=scanSpan[idx] ,rIdx=rIdx ,fIdx=nextObj$fIdx ,cnt=cnt )
+			}
+		} # if( !is.null(nextH) )
+	}
+	idxMtx <- do.call( rbind ,lapply(compLst,function(p){c(p$hIdx,p$fIdx,p$cnt)}) )
+	idxLst[[1+length(idxLst)]] <- if( 0<length(compLst) ) sort( idxMtx[,1] ) else integer(0)
+} # for(bjIdx)
+missHLst[["C0015CJ"]] <- sort( do.call(c,idxLst) )
+
+
+
+
 #===============================================================================================
 #-[D0010]---------------------------------------------------------------------------------------
 #	group 크기가 3 이상인 경우의 다음 연속 가능성.
@@ -412,8 +545,78 @@ missHLst[["D0010"]] <- sort( sapply(compLst,function(p){p$hIdx}) )
 
 #===============================================================================================
 #-[E0010]---------------------------------------------------------------------------------------
-#	QQE:TODO
 #		1. zhF[6]-zhF[1]
+zWidth <- apply( zhF ,1 ,function(p){p[6]-p[1]})
+compLst <- list()
+for( aIdx in 1:(length(zWidth)-1) ){
+	for( bIdx in (aIdx+1):length(zWidth) ){
+		if( zWidth[aIdx]==zWidth[bIdx] ){
+			compLst[[1+length(compLst)]] <- c( aIdx ,bIdx ,zWidth[aIdx] )
+			break
+		}
+	}
+}
+idxMtx <- do.call( rbind ,compLst )
+reb <- idxMtx[,2]-idxMtx[,1]
+
+scanSpan <- 300:length(zWidth)
+compLst <- list()
+for( hIdx in scanSpan ){
+	compObj <- list( hIdx=hIdx ,curVal=zWidth[hIdx-1] ,nextVal=NULL )
+	compObj$flag <- 0
+
+	for( depIdx in 5:2 ){
+		ptn <- getPastPtn( zWidth[1:(hIdx-1)] ,pDepth=depIdx ,pScanAll=F )
+		if( !is.null(ptn) ){
+			compObj$nextVal <- ptn$nextVal			
+			compObj$depIdx <- depIdx
+			break
+		}
+	}
+
+	if( !is.null(compObj$nextVal) && (zWidth[hIdx]==compObj$nextVal) ){
+		compObj$flag <- compObj$nextVal
+	}
+	if( 0==compObj$flag ){
+		compObj$flag <- ifelse( zWidth[hIdx]!=compObj$curVal ,0 ,compObj$curVal )
+	}
+	compLst[[1+length(compLst)]] <- compObj
+}
+#	31개 발생.(둘 중 하나가 아니라 양쪽 모두로 하는 게 나으려나..)
+flag <- sapply( compLst ,function(p){p$flag} )
+missHLst[["E0010"]] <- sapply(compLst[flag>0],function(p){p$hIdx})
+
+
+#-[E0020]---------------------------------------------------------------------------------------
+#		1. sum(zhF[n,] %% 10)
+#			연속발생은 39개.
+zVal <- apply( zhF ,1 ,function(p){ sum(p%%10) })
+scanSpan <- 300:length(zVal)
+compLst <- list()
+for( hIdx in scanSpan ){
+	compObj <- list( hIdx=hIdx ,curVal=zVal[hIdx-1] ,nextVal=NULL )
+	compObj$flag <- 0
+	for( depIdx in 5:2 ){
+		ptn <- getPastPtn( zVal[1:(hIdx-1)] ,pDepth=depIdx ,pScanAll=F )
+		if( !is.null(ptn) ){
+			compObj$nextVal <- ptn$nextVal
+			compObj$depIdx <- depIdx
+			break
+		}
+	}
+
+	if( !is.null(compObj$nextVal) && (zVal[hIdx]==compObj$nextVal) ){
+		compObj$flag <- compObj$nextVal
+	}
+	if( 0==compObj$flag ){
+		compObj$flag <- ifelse( zVal[hIdx]!=compObj$curVal ,0 ,compObj$curVal )
+	}
+	compLst[[1+length(compLst)]] <- compObj
+}
+#	32개 발생.(둘 중 하나가 아니라 양쪽 모두로 하는 게 나으려나..)
+flag <- sapply( compLst ,function(p){p$flag} )
+missHLst[["E0020"]] <- sapply(compLst[flag>0],function(p){p$hIdx})
+
 
 #=[Summary]======================================================================================
 surFlag <- rep( 0 ,nrow(zhF) )

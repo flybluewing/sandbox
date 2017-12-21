@@ -11,7 +11,6 @@ setwd(curWd)
 zh	<- as.matrix( FB$zh )
 zhF	<- as.matrix( FB.f$zh )
 testSpan <- (nrow(zh)+1):nrow(zhF)
-allZoidMtx <- getAllZoid() # 38sec
 filtLst <- list()
 getFiltHist <- function( pFiltId ,pTStmp ){
 		rObj <- list( filtId=pFiltId ,tCost=(Sys.time()-pTStmp) )
@@ -20,7 +19,7 @@ getFiltHist <- function( pFiltId ,pTStmp ){
 
 # zhF ,allZoidMtx
 testSpan <- 300:nrow(zhF)
-
+allZoidMtx <- getAllZoid() # 38sec
 
 #-[A0010]------------------------------------------------------
 codeMtx <- allZoidMtx[,2:6]-allZoidMtx[,1:5]
@@ -245,7 +244,7 @@ filtLst[[1+length(filtLst)]] <- getFiltHist( "C0013A" ,tStmp )
 allZoidMtx <- allZoidMtx[flag==0,]
 
 
-#-[C0014A]---------------------------------------------------------------------------------------
+#-[C0014A]--------------------------------------------------------------------------------------
 #	lastHPtn	- H 단위로 과거패턴 재발여부 확인.
 stdCodeMtx <- zhF %% 3
 allCodeMtx <- allZoidMtx %% 3
@@ -260,7 +259,7 @@ if( !is.null(nextObj) ){
 } # if( !is.null(nextObj) )
 filtLst[[1+length(filtLst)]] <- getFiltHist( "C0014A" ,tStmp )
 
-#-[C0014A1]---------------------------------------------------------------------------------------
+#-[C0014A1]--------------------------------------------------------------------------------------
 #	lastHPtn	- H 단위로 과거패턴 재발여부 확인.
 stdCodeMtx <- zhF %% 2
 allCodeMtx <- allZoidMtx %% 2
@@ -275,6 +274,26 @@ if( !is.null(nextObj) ){
 } # if( !is.null(nextObj) )
 filtLst[[1+length(filtLst)]] <- getFiltHist( "C0014A1" ,tStmp )
 
+#-[C0014AJ]--------------------------------------------------------------------------------------
+stdCodeMtx <- zhF %% 3
+allCodeMtx <- allZoidMtx %% 3
+backJump <- 2:20
+filtPtnLst <- list()
+for( bjIdx in backJump ){
+	nextObj <- getPastPtn.mtx( stdCodeMtx ,pJump=bjIdx )
+	if( !is.null(nextObj) ){
+		filtPtnLst[[1+length(filtPtnLst)]] <- nextObj$nextH
+	}
+}
+
+tStmp <- Sys.time()
+flag <- rep( 0 ,nrow(allCodeMtx) )
+for( ptnIdx in seq_len(length(filtPtnLst)) ){
+	curFlag <- apply(allCodeMtx ,1 ,function(p){	all(p==filtPtnLst[[ptnIdx]])	})
+	flag[which(curFlag)] <- ptnIdx
+}
+allZoidMtx <- allZoidMtx[flag==0,]
+filtLst[[1+length(filtLst)]] <- getFiltHist( "C0014AJ" ,tStmp )
 
 #-[C0014B]---------------------------------------------------------------------------------------
 #	lastHPtn	- H 단위로 과거패턴 재발여부 확인.(증가간격)
@@ -305,6 +324,29 @@ if( !is.null(nextObj) ){
 	allZoidMtx <- allZoidMtx[flag==0,]
 } # if( !is.null(nextObj) )
 filtLst[[1+length(filtLst)]] <- getFiltHist( "C0014B2" ,tStmp )
+
+#-[C0014BJ]--------------------------------------------------------------------------------------
+stdCodeMtx <- (zhF[,2:6]-zhF[,1:5]) %% 4
+allCodeMtx <- (allZoidMtx[,2:6]-allZoidMtx[,1:5]) %% 4
+backJump <- 2:20
+filtPtnLst <- list()
+for( bjIdx in backJump ){
+	nextObj <- getPastPtn.mtx( stdCodeMtx ,pJump=bjIdx )
+	if( !is.null(nextObj) ){
+		filtPtnLst[[1+length(filtPtnLst)]] <- nextObj$nextH
+	}
+}
+
+tStmp <- Sys.time()
+flag <- rep( 0 ,nrow(allCodeMtx) )
+for( ptnIdx in seq_len(length(filtPtnLst)) ){
+	curFlag <- apply(allCodeMtx ,1 ,function(p){	all(p==filtPtnLst[[ptnIdx]])	})
+	flag[which(curFlag)] <- ptnIdx
+}
+allZoidMtx <- allZoidMtx[flag==0,]
+filtLst[[1+length(filtLst)]] <- getFiltHist( "C0014BJ" ,tStmp )
+
+
 
 #-[C0014C]---------------------------------------------------------------------------------------
 #	lastHPtn	- H 단위로 과거패턴 재발여부 확인.(다음 H와의 간격)
@@ -339,15 +381,153 @@ if( !is.null(nextObj) ){
 } # if( !is.null(nextObj) )
 filtLst[[1+length(filtLst)]] <- getFiltHist( "C0014C1" ,tStmp )
 
+#-[C0014CJ]--------------------------------------------------------------------------------------
+stdCodeMtx <- abs(zhF[1:(nrow(zhF)-1),]-zhF[2:nrow(zhF),]) %% 3
+lastH <- zhF[nrow(zhF),]
+allCodeMtx <- t( apply( allZoidMtx ,1 ,function(p){abs(p-lastH)}) )
+allCodeMtx <- allCodeMtx %% 3
+backJump <- 2:20
+filtPtnLst <- list()
+for( bjIdx in backJump ){
+	nextObj <- getPastPtn.mtx( stdCodeMtx ,pJump=bjIdx )
+	if( !is.null(nextObj) ){
+		filtPtnLst[[1+length(filtPtnLst)]] <- nextObj$nextH
+	}
+}
+
+tStmp <- Sys.time()
+flag <- rep( 0 ,nrow(allCodeMtx) )
+for( ptnIdx in seq_len(length(filtPtnLst)) ){
+	curFlag <- apply(allCodeMtx ,1 ,function(p){	all(p==filtPtnLst[[ptnIdx]])	})
+	flag[which(curFlag)] <- ptnIdx
+}
+allZoidMtx <- allZoidMtx[flag==0,]
+filtLst[[1+length(filtLst)]] <- getFiltHist( "C0014CJ" ,tStmp )
+
+#-[C0015]--------------------------------------------------------------------------------------
+rebSpan <- 28:nrow(zhF)
+rebMtx <- matrix( 0 ,nrow=length(rebSpan) ,ncol=ncol(zhF) )
+rownames(rebMtx) <- rebSpan
+for( idx in 1:length(rebSpan) ){
+	hIdx <- rebSpan[idx]
+	ml <- getReboundLst( zhF[hIdx,] ,zhF[1:(hIdx-1),,drop=F] ,pSearchFirst=T )
+	rebMtx[idx,] <- 
+		sapply( ml ,function(p){ifelse(0==length(p$fIdx),NA,hIdx-p$fIdx[1])} )
+}
+
+rebLen <- getRebLen( 1:45 ,zhF )
+
+#-[C0015C0]--------------------------------------------------------------------------------------
+stdCodeMtx <- rebMtx %% 2
+
+allRebMtx <- allZoidMtx
+for( rIdx in 1:nrow(allZoidMtx) ){
+	allRebMtx[rIdx,] <- rebLen[ allZoidMtx[rIdx,] ]
+}
+allCodeMtx <- allRebMtx %% 2
+
+flag <- rep(0,nrow(allCodeMtx))
+tStmp <- Sys.time()
+nextObj <- getPastPtn.mtx( stdCodeMtx )
+if( !is.null(nextObj) ){
+	flag <- apply(allCodeMtx ,1 ,function(p){
+					cnt <- sum(p==nextObj$nextH)
+					return( ifelse( 6<=cnt ,cnt ,0 ) )
+				})
+	allZoidMtx <- allZoidMtx[flag==0,]
+} # if( !is.null(nextObj) )
+filtLst[[1+length(filtLst)]] <- getFiltHist( "C0015C0" ,tStmp )
+
+#-[C0015CJ]--------------------------------------------------------------------------------------
+stdCodeMtx <- rebMtx %% 3
+
+allRebMtx <- allZoidMtx
+for( rIdx in 1:nrow(allZoidMtx) ){
+	allRebMtx[rIdx,] <- rebLen[ allZoidMtx[rIdx,] ]
+}
+allCodeMtx <- allRebMtx %% 3
+
+backJump <- 2:20
+filtPtnLst <- list()
+for( bjIdx in backJump ){
+	nextObj <- getPastPtn.mtx( stdCodeMtx ,pJump=bjIdx )
+	if( !is.null(nextObj) ){
+		filtPtnLst[[1+length(filtPtnLst)]] <- nextObj$nextH
+	}
+}
+
+tStmp <- Sys.time()
+flag <- rep( 0 ,nrow(allCodeMtx) )
+for( ptnIdx in seq_len(length(filtPtnLst)) ){
+	curFlag <- apply(allCodeMtx ,1 ,function(p){	all(p==filtPtnLst[[ptnIdx]])	})
+	flag[which(curFlag)] <- ptnIdx
+}
+allZoidMtx <- allZoidMtx[flag==0,]
+filtLst[[1+length(filtLst)]] <- getFiltHist( "C0015CJ" ,tStmp )
+
+
+
 #===============================================================================================
 #-[D0010]---------------------------------------------------------------------------------------
 #	group( %%10 ) 크기가 3 이상인 경우의 다음 연속 가능성.
 #		QQE:TODO -> 마지막 Zoid에서 group 크기가 3 이상짜리 나오면 추가하기로 하자.
 
-filtLst[[1+length(filtLst)]] <- getFiltHist( "D0010" ,tStmp )
+# filtLst[[1+length(filtLst)]] <- getFiltHist( "D0010" ,tStmp )
+
+
+#===============================================================================================
+#-[E0010]---------------------------------------------------------------------------------------
+stdCode <- apply(zhF ,1 ,function(p){p[6]-p[1]} )
+allCode <- apply(allZoidMtx ,1 ,function(p){p[6]-p[1]} )
+ptn <- NULL
+for( depIdx in 7:2 ){
+	ptn <- getPastPtn( stdCode ,pDepth=depIdx ,pScanAll=F )
+	if( !is.null(ptn) ){
+		ptn$depIdx <- depIdx
+		break
+	}
+}
+
+tStmp <- Sys.time()
+lastCode <- stdCode[length(stdCode)]
+flag <- sapply( allCode ,function(p){  
+					rst <- ifelse( p!=lastCode ,0 ,lastCode )
+					if( rst==0 && !is.null(ptn) )
+						rst <- ifelse( p!=ptn$nextVal ,0 ,ptn$nextVal )
+					return( rst )
+				})
+allZoidMtx <- allZoidMtx[flag==0,]
+filtLst[[1+length(filtLst)]] <- getFiltHist( "E0010" ,tStmp )
+
+#-[E0020]---------------------------------------------------------------------------------------
+stdCode <- apply( zhF %% 10 ,1 ,sum )
+allCode <- apply( allZoidMtx %% 10 ,1 ,sum )
+ptn <- NULL
+for( depIdx in 7:2 ){
+	ptn <- getPastPtn( stdCode ,pDepth=depIdx ,pScanAll=F )
+	if( !is.null(ptn) ){
+		ptn$depIdx <- depIdx
+		break
+	}
+}
+
+tStmp <- Sys.time()
+lastCode <- stdCode[length(stdCode)]
+flag <- sapply( allCode ,function(p){  
+					rst <- ifelse( p!=lastCode ,0 ,lastCode )
+					if( rst==0 && !is.null(ptn) )
+						rst <- ifelse( p!=ptn$nextVal ,0 ,ptn$nextVal )
+					return( rst )
+				})
+allZoidMtx <- allZoidMtx[flag==0,]
+filtLst[[1+length(filtLst)]] <- getFiltHist( "E0020" ,tStmp )
+
+
+
+
 
 #=[SAVE]========================================================================================
 deskObj <- list( allZoidMtx=allZoidMtx )
 deskObj$memo <- sprintf("zhF size : %d.",nrow(zhF))
 deskObj$filtLst <- filtLst
-save( deskObj ,file="Obj_deskObj01.save" )
+save( deskObj ,file="Obj_deskObj03.save" )
