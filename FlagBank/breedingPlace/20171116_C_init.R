@@ -12,8 +12,8 @@ zh	<- as.matrix( FB$zh )
 zhF	<- as.matrix( FB.f$zh )
 testSpan <- (nrow(zh)+1):nrow(zhF)
 filtLst <- list()
-getFiltHist <- function( pFiltId ,pTStmp ){
-		rObj <- list( filtId=pFiltId ,tCost=(Sys.time()-pTStmp) )
+getFiltHist <- function( pFiltId ,pTStmp ,pFlag=NULL ){
+		rObj <- list( filtId=pFiltId ,tCost=(Sys.time()-pTStmp) ,flag=pFlag )
 		return( rObj )
 	}
 
@@ -475,6 +475,30 @@ filtLst[[1+length(filtLst)]] <- getFiltHist( "C0015CJ" ,tStmp )
 # filtLst[[1+length(filtLst)]] <- getFiltHist( "D0010" ,tStmp )
 
 
+#-[D0020]---------------------------------------------------------------------------------------
+#	간격이 1인 요소가 다음번에도 간격 1로 등장
+backH <- 3
+seqDnaMtx <- matrix( 0 ,ncol=2 ,nrow=0 )
+for( hIdx in (nrow(zhF)-backH+1):nrow(zhF) ){
+	pos <- which( 1 == (zhF[hIdx,2:6]-zhF[hIdx,1:5]) )
+	for( posIdx in seq_len(length(pos)) ) {
+		seqDnaMtx <- rbind( seqDnaMtx ,zhF[hIdx,pos[posIdx]:(pos[posIdx]+1)] )
+	}
+}
+tStmp <- Sys.time()
+flag <- rep( 0 ,nrow(allZoidMtx) )
+for( rIdx in seq_len(nrow(seqDnaMtx)) ){
+	curFlag <- apply( allZoidMtx ,1 ,function(p){ sum(p%in%seqDnaMtx[rIdx,]) } )
+	flag[curFlag==ncol(seqDnaMtx)] <- rIdx
+}
+allZoidMtx <- allZoidMtx[flag==0,]
+filtLst[[1+length(filtLst)]] <- getFiltHist( "D0020" ,tStmp )
+
+#-[D0030]---------------------------------------------------------------------------------------
+#	%%10 그룹에서 2개 발생한 것이 다음에도 동일 발생하는 경우.
+#		QQE:Todo
+
+
 #===============================================================================================
 #-[E0010]---------------------------------------------------------------------------------------
 stdCode <- apply(zhF ,1 ,function(p){p[6]-p[1]} )
@@ -530,4 +554,4 @@ filtLst[[1+length(filtLst)]] <- getFiltHist( "E0020" ,tStmp )
 deskObj <- list( allZoidMtx=allZoidMtx )
 deskObj$memo <- sprintf("zhF size : %d.",nrow(zhF))
 deskObj$filtLst <- filtLst
-save( deskObj ,file="Obj_deskObj03.save" )
+save( deskObj ,file="Obj_deskObj04.save" )

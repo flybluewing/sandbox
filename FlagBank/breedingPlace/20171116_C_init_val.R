@@ -542,6 +542,36 @@ for( hIdx in 2:length(maxLst) ){
 hauntCnt <- sum( sapply(maxLst,function(p){p$freq>=3}) )
 missHLst[["D0010"]] <- sort( sapply(compLst,function(p){p$hIdx}) )
 
+#-[D0020]---------------------------------------------------------------------------------------
+#	간격이 1인 요소가 다음번에도 간격 1로 등장
+pairLst <- list()
+for( hIdx in 1:nrow(zhF) ){
+	stepIdx <- which( 1==(zhF[hIdx,2:6]-zhF[hIdx,1:5]) )
+	pairMtx <- matrix( 0 ,ncol=2 ,nrow=length(stepIdx) )
+	for( rIdx in seq_len(nrow(pairMtx)) ){
+		pairMtx[rIdx,] <- zhF[hIdx,stepIdx[rIdx]:(stepIdx[rIdx]+1)]
+	}
+	pairMtx <- cbind( pairMtx ,rep(hIdx,nrow(pairMtx)) )
+
+	pairObj <- list( hIdx=hIdx ,pairMtx=pairMtx ,stepIdx=stepIdx )
+	pairLst[[1+length(pairLst)]] <- pairObj
+}
+
+fndCnt <- sapply( pairLst ,function(p){length(p$stepIdx)} )
+pMtx <- do.call( rbind , lapply( pairLst[fndCnt>0] ,function(p){p$pairMtx} ) )
+
+compLst <- list()
+for( aIdx in 1:(nrow(pMtx)-1) ){
+	for( bIdx in (aIdx+1):nrow(pMtx) ){
+		if( all(pMtx[aIdx,1:2]==pMtx[bIdx,1:2]) ){
+			compLst[[1+length(compLst)]] <- c( aIdx ,bIdx ,pMtx[aIdx,3] ,pMtx[bIdx,3] )
+			break
+		}
+	}
+}
+compMtx <- do.call( rbind ,compLst )
+indices <- which( 3>=(compMtx[,4]-compMtx[,3]) )	# 3H 이내라면 34번 발생.
+missHLst[["D0020"]] <- sort( unique(indices) )
 
 #===============================================================================================
 #-[E0010]---------------------------------------------------------------------------------------
