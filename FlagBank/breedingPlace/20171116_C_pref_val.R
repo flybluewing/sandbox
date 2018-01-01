@@ -102,7 +102,7 @@ missHLst[["C0014CJ"]] <- sort( do.call(c,idxLst) )
 
 #-[D006XX]---------------------------------------------------------------------------------------
 #	col 별 패턴 재발생 가능성.
-scanSpan <- 700:nrow(zhF)
+scanSpan <- 500:nrow(zhF)
 jumpStepSpan <- 1:100
 compLst <- list()
 flag <- rep( 0 ,nrow(zhF) )
@@ -111,6 +111,7 @@ for( sIdx in scanSpan ){
 	tgtZoid <- zhF[sIdx,]
 	srcHist <- zhF[1:(sIdx-1),]
 	surMtx <- matrix( 0 ,nrow=length(jumpStepSpan) ,ncol=6 )
+	bjMtx  <- matrix( 0 ,nrow=length(jumpStepSpan) ,ncol=6 )
 	for( jumpStep in jumpStepSpan ){
 		ptnLst <- list()
 		remVal <- rep( 0 ,6 )
@@ -120,6 +121,7 @@ for( sIdx in scanSpan ){
 				ptn <- getPastPtn( srcHist[1:(nrow(srcHist)-jumpStep+1),cIdx] ,pDepth=bjIdx ,pScanAll=F )
 				if( !is.null(ptn) ){
 					ptn$bjIdx <- bjIdx
+					bjMtx[ jumpStep,cIdx] <- bjIdx
 					ptnLst[[cIdx]] <- ptn
 					remVal[cIdx] <- srcHist[ptn$fIdx+jumpStep,cIdx]
 					break
@@ -130,25 +132,74 @@ for( sIdx in scanSpan ){
 		surMtx[jumpStep,] <- !(tgtZoid==remVal)
 	}
 	flag[sIdx] <- sum(surFlag)
-	compLst[[ 1+length(compLst) ]] <- surMtx
+	surMtx[bjMtx==0] <- NA
+	missCnt <- apply(surMtx,1,function(p){ sum(p==0,na.rm=T) })
+	ptnCnt <- apply(surMtx,1,function(p){ sum(!is.na(p)) })
+	missReb <- NULL
+	missReb.m <- NULL
+	sameColMiss <- rep( FALSE ,nrow(surMtx) )
+	if( 0<length(compLst) ){
+		lastComp <- compLst[[length(compLst)]]
+		missReb <- (missCnt>0) & (lastComp$missCnt>0)
+		missReb.m <- (missCnt>1) & (lastComp$missCnt>1)
+		for( rIdx in 1:nrow(surMtx) ){
+			curF <- ( surMtx[rIdx,]==0 & !is.na(surMtx[rIdx,]) )
+			lastF <- ( lastComp$surMtx[rIdx,]==0 & !is.na(lastComp$surMtx[rIdx,]) )
+			sameColMiss[rIdx] <- any(curF & lastF)
+		}
+	}
+	compLst[[ 1+length(compLst) ]] <- 
+				list(	surMtx=surMtx		,bjMtx=bjMtx
+						,missCnt=missCnt	,ptnCnt=ptnCnt
+						,missReb=missReb	,missReb.m=missReb.m
+						,sameColMiss=sameColMiss
+					)
 } # for(sIdx)
-# table(flag[scanSpan]) / length(scanSpan)
-
-lst <- lapply( compLst ,function(p){ apply(p,1,sum) })
-cntMin <- sapply( lst ,min )
-table(cntMin)/length(cntMin)
-
-fPos <- sapply( lst ,function(p){ fPos<-which(p<6); return(ifelse(0==length(fPos),0,fPos[1]))   } )
-fPos.idx <- which(fPos<5)
-sur.idx <- which(cntMin>4)
-
-surFlag <- cntMin>4
-surFlag[fPos.idx] <- FALSE
 
 
-for( idx in 2:length(compLst) ){
-
+# missRebNum : 이전에 미스 나온 bj에서 요번에도 미스 나온 경우.
+# missRebNum.m : 이전에 2개 이상의 미스가 나온 곳에서 요번에서도 2개 미스가 나온 경우.
+# sameColMiss : 이전에 미스 나온 컬럼이 요번에도 미스 나온 경우.
+# firstMiss : 처음으로 하나 이상의 미스 나온 곳
+# firstMiss.multi : 처음으로 두개 이상의 미스 나온 곳.
+cName <- c("compIdx","missRebNum","missRebNum.m"
+			,"sameColMiss","missRebNum.1st","missRebNum.m.1st","sameColMiss.1st")
+matMtx <- matrix(0,ncol=length(cName),nrow=length(compLst) )
+colnames(matMtx) <- cName
+for( chkIdx in 2:length(compLst) ){
+	matMtx[chkIdx,"compIdx"] <- chkIdx
+	compObj <- compLst[[chkIdx]]
+	matMtx[chkIdx,"missRebNum"] <- sum(compObj$missReb)
+	if( 0<sum(compObj$missReb) ){
+		matMtx[chkIdx,"missRebNum.1st"] <- which(compObj$missReb)[1]
+	}
+	if( 0<sum(compObj$missReb.m) ){
+		matMtx[chkIdx,"missRebNum.m.1st"] <- which(compObj$missReb.m)[1]
+	}
+	matMtx[chkIdx,"sameColMiss"] <- sum(compObj$sameColMiss)
+	if( 0<sum(compObj$sameColMiss) ){
+		matMtx[chkIdx,"sameColMiss.1st"] <- which(compObj$sameColMiss)[1]
+	}
 }
+
+missRebNum.1st	<- matMtx[,"missRebNum.1st"]
+missRebNum.m.1st	<- matMtx[,"missRebNum.m.1st"]
+sameColMiss.1st	<- matMtx[,"sameColMiss.1st"]
+# 결과가 상당히 비관적인데... 혹시 버그 있는지 결과 점검하자.
+sum(missRebNum.1st>10) 
+sum(missRebNum.m.1st>10) 
+sum(sameColMiss.1st>10)
+
+k <- (missRebNum.1st>15) & (sameColMiss.1st>15)
+
+seqCntMtx[seqCntMtx[,"val"]==0,]
+
+tail(sameColMiss.1st<15)
+
+#-[D007XX]---------------------------------------------------------------------------------------
+#	대각선 연속발생 불가제약 적용.
+
+
 
 #=[Summary]======================================================================================
 surFlag <- rep( 0 ,nrow(zhF) )

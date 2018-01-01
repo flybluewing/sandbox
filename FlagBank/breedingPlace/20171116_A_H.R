@@ -28,6 +28,42 @@ getPastPtn <- function( pFlag ,pDepth=2 ,pScanAll=F ){
 } # getPastPtn()
 
 
+getPastPtn2 <- function( pFlag ,pFwd=1 ,pDepth=2 ){
+
+	rDepth <- pDepth-1	# 실제 계산위주..
+	fLen <- length(pFlag)
+	lastPtn <- pFlag[((fLen-rDepth):fLen)-pFwd]
+	lastVal <- pFlag[fLen]
+	
+	fObj <- list( fwd=pFwd ,depth=pDepth ,crude=TRUE ,lastPtn=lastPtn )
+	fLst <- list()
+	for( idx in (fLen-1-pFwd):(rDepth+1) ){
+		fObj$fIdx = idx
+		fObj$lastVal=pFlag[idx+pFwd]
+		fObj$nextVal=pFlag[idx+pFwd+1]
+		if( all(lastPtn==pFlag[(idx-rDepth):idx]) ){
+			fLst[[1+length(fLst)]] <- fObj
+		}
+	}
+
+	rObj <- NULL
+	for( idx in seq_len(length(fLst)) ){
+		if( lastVal == fLst[[idx]]$lastVal ){
+			rObj <- fLst[[idx]]
+			rObj$crude <- FALSE
+			break
+		}
+	}
+
+	if( is.null(rObj) && (0<length(fLst)) ){
+		rObj <- fLst[[1]]
+	}
+
+	return( rObj )
+
+} # getPastPtn2()
+
+
 getPastPtn.mtx <- function( pFlagMtx ,pJump=1 ,pScanAll=F ){
 
 	fLen <- nrow(pFlagMtx)
