@@ -301,7 +301,8 @@ for( testIdx in testSpan ){
 	flagLst[[1+length(flagLst)]] <- flagObj
 }
 
-# sapply( flagLst ,function(p){ p$filtRst$survive } )
+# k <- sapply( flagLst ,function(p){ p$filtRst[[1]]$survive } )
+#	겨우 3개 나옴. jumpNum 2,3,4도 시도해볼 수 있을 듯.
 
 
 
