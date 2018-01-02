@@ -3,6 +3,7 @@ source("20171116_A_H.R")
 source("20171116_A_H_cliper.R")
 source("20171116_B_H.R")
 source("20171116_C_H.R")
+source("20171116_D_H.R")
 
 curWd <- getwd()	;setwd("..")
 FB <- getFlagBank()
@@ -16,6 +17,10 @@ getFiltHist <- function( pFiltId ,pTStmp ,pFlag=NULL ){
 		rObj <- list( filtId=pFiltId ,tCost=(Sys.time()-pTStmp) ,flag=pFlag )
 		return( rObj )
 	}
+#=[missHLst]===============================================================================
+#	이 파일에서의 핵심 데이터.
+#	사전 필터로 인해 유실되는 실제 Zoid History Index.
+missHLst <- list()
 
 # zhF ,allZoidMtx
 testSpan <- 300:nrow(zhF)
@@ -115,6 +120,173 @@ for( hIdx in (bNum+1):nrow(zhF) ){
 	cnt <- sum( zhF[hIdx,] %in% val )
 	flag[hIdx] <- cnt
 }
+
+#=[패턴재현 제거]==============================================================================
+# ptn <- getPtnReb( chkCodeMtx ,pDepth=3 )
+testSpan <- 500:nrow(zhF)
+#-[E0010.A5]------------------------------------------------------
+#	6개 패턴은 아예 존재하질 않겠지..
+#	따라서 5개 패턴부터 시작.
+tStmp <- Sys.time()
+filtLst <- list()
+for( remCol in 1:ncol(zhF) ){
+	stdCodeMtx <- zhF[,-remCol]
+	flagLst <- list()
+	for( testIdx in testSpan ){
+		flagObj <- list( testIdx=testIdx )
+		ptn <- NULL
+		for( dIdx in 3:1 ){
+			ptn <- getPtnReb( stdCodeMtx[1:(testIdx-1),] ,pDepth=dIdx )
+			if( !is.null(ptn) ){
+				flagObj$ptn <- ptn
+				flagObj$depth <- dIdx
+				flagObj$matchCnt <- sum(flagObj$nextRow==stdCodeMtx[testIdx,])
+				break
+			}
+		}
+		flagLst[[1+length(flagLst)]] <- flagObj
+	}
+
+	filtLst[[1+length(filtLst)]] <- flagLst
+}
+
+# -- report --
+rstLst <- list()
+for( filtIdx in 1:length(filtLst) ){
+	flagLst <- filtLst[[filtIdx]]
+	fndIdx <- which(sapply(flagLst,function(p){ !is.null(p$depth) }))
+	rstObj <- list( hIdx=testSpan[fndIdx] )
+	rstObj$matchCnt <- sapply(flagLst[fndIdx],function(p){p$matchCnt})
+	rstLst[[1+length(rstLst)]] <- rstObj
+}
+
+failH <- do.call( c ,lapply(rstLst ,function(p){ p$hIdx[p$matchCnt>0] }) )
+tDiff <- Sys.time() - tStmp
+k.FLogStr(sprintf("E0010.A5 : %.1f%s",tDiff,units(tDiff)))
+missHLst[["E0010.A5"]] <- sort(unique(failH))
+
+#-[E0010.A4]------------------------------------------------------
+tStmp <- Sys.time()
+chkColMtx <- combinations(ncol(zhF),4)
+filtLst <- list()
+for( chkIdx in 1:ncol(chkColMtx) ){
+	stdCodeMtx <- zhF[,chkColMtx[chkIdx,]]
+	flagLst <- list()
+	for( testIdx in testSpan ){
+		flagObj <- list( testIdx=testIdx )
+		ptn <- NULL
+		for( dIdx in 3:1 ){
+			ptn <- getPtnReb( stdCodeMtx[1:(testIdx-1),] ,pDepth=dIdx )
+			if( !is.null(ptn) ){
+				flagObj$ptn <- ptn
+				flagObj$depth <- dIdx
+				flagObj$matchCnt <- sum(flagObj$nextRow==stdCodeMtx[testIdx,])
+				break
+			}
+		}
+		flagLst[[1+length(flagLst)]] <- flagObj
+	}
+
+	filtLst[[1+length(filtLst)]] <- flagLst
+}
+
+# -- report --
+rstLst <- list()
+for( filtIdx in 1:length(filtLst) ){
+	flagLst <- filtLst[[filtIdx]]
+	fndIdx <- which(sapply(flagLst,function(p){ !is.null(p$depth) }))
+	rstObj <- list( hIdx=testSpan[fndIdx] )
+	rstObj$matchCnt <- sapply(flagLst[fndIdx],function(p){p$matchCnt})
+	rstLst[[1+length(rstLst)]] <- rstObj
+}
+
+failH <- do.call( c ,lapply(rstLst ,function(p){ p$hIdx[p$matchCnt>0] }) )
+tDiff <- Sys.time() - tStmp
+k.FLogStr(sprintf("E0010.A4 : %.1f%s",tDiff,units(tDiff)))
+missHLst[["E0010.A4"]] <- sort(unique(failH))
+
+
+#-[E0010.A3]------------------------------------------------------
+tStmp <- Sys.time()
+chkColMtx <- combinations(ncol(zhF),3)
+filtLst <- list()
+for( chkIdx in 1:ncol(chkColMtx) ){
+	stdCodeMtx <- zhF[,chkColMtx[chkIdx,]]
+	flagLst <- list()
+	for( testIdx in testSpan ){
+		flagObj <- list( testIdx=testIdx )
+		ptn <- NULL
+		for( dIdx in 3:1 ){
+			ptn <- getPtnReb( stdCodeMtx[1:(testIdx-1),] ,pDepth=dIdx )
+			if( !is.null(ptn) ){
+				flagObj$ptn <- ptn
+				flagObj$depth <- dIdx
+				flagObj$matchCnt <- sum(flagObj$nextRow==stdCodeMtx[testIdx,])
+				break
+			}
+		}
+		flagLst[[1+length(flagLst)]] <- flagObj
+	}
+
+	filtLst[[1+length(filtLst)]] <- flagLst
+}
+
+# -- report --
+rstLst <- list()
+for( filtIdx in 1:length(filtLst) ){
+	flagLst <- filtLst[[filtIdx]]
+	fndIdx <- which(sapply(flagLst,function(p){ !is.null(p$depth) }))
+	rstObj <- list( hIdx=testSpan[fndIdx] )
+	rstObj$matchCnt <- sapply(flagLst[fndIdx],function(p){p$matchCnt})
+	rstLst[[1+length(rstLst)]] <- rstObj
+}
+
+failH <- do.call( c ,lapply(rstLst ,function(p){ p$hIdx[p$matchCnt>0] }) )
+tDiff <- Sys.time() - tStmp
+k.FLogStr(sprintf("E0010.A3 : %.1f%s",tDiff,units(tDiff)))
+missHLst[["E0010.A3"]] <- sort(unique(failH))
+
+
+#-[E0010.A2]------------------------------------------------------
+tStmp <- Sys.time()
+chkColMtx <- combinations(ncol(zhF),2)
+filtLst <- list()
+for( chkIdx in 1:ncol(chkColMtx) ){
+	stdCodeMtx <- zhF[,chkColMtx[chkIdx,]]
+	flagLst <- list()
+	for( testIdx in testSpan ){
+		flagObj <- list( testIdx=testIdx )
+		ptn <- NULL
+		for( dIdx in 3:1 ){
+			ptn <- getPtnReb( stdCodeMtx[1:(testIdx-1),] ,pDepth=dIdx )
+			if( !is.null(ptn) ){
+				flagObj$ptn <- ptn
+				flagObj$depth <- dIdx
+				flagObj$matchCnt <- sum(flagObj$nextRow==stdCodeMtx[testIdx,])
+				break
+			}
+		}
+		flagLst[[1+length(flagLst)]] <- flagObj
+	}
+
+	filtLst[[1+length(filtLst)]] <- flagLst
+}
+
+# -- report --
+rstLst <- list()
+for( filtIdx in 1:length(filtLst) ){
+	flagLst <- filtLst[[filtIdx]]
+	fndIdx <- which(sapply(flagLst,function(p){ !is.null(p$depth) }))
+	rstObj <- list( hIdx=testSpan[fndIdx] )
+	rstObj$matchCnt <- sapply(flagLst[fndIdx],function(p){p$matchCnt})
+	rstLst[[1+length(rstLst)]] <- rstObj
+}
+
+failH <- do.call( c ,lapply(rstLst ,function(p){ p$hIdx[p$matchCnt>0] }) )
+tDiff <- Sys.time() - tStmp
+k.FLogStr(sprintf("E0010.A2 : %.1f%s",tDiff,units(tDiff)))
+missHLst[["E0010.A2"]] <- sort(unique(failH))
+
 
 
 #=[SAVE]========================================================================================

@@ -3,6 +3,7 @@ source("20171116_A_H.R")
 source("20171116_A_H_cliper.R")
 source("20171116_B_H.R")
 source("20171116_C_H.R")
+source("20171116_D_H.R")
 
 curWd <- getwd()	;setwd("..")
 FB <- getFlagBank()
@@ -360,6 +361,11 @@ tDiff <- Sys.time() - tStmp
 allZoidMtx <- allZoidMtx[flag>1,]
 filtLst[[1+length(filtLst)]] <- getFiltHist( filtId ,tStmp ,allZoidMtx )
 k.FLogStr(sprintf("%s %d",filtId,nrow(allZoidMtx)))
+
+
+#=[패턴재현 제거]==============================================================================
+#-[E0010.A]------------------------------------------------------
+
 
 #=[       ]====================================================================================
 #-[Z0010.A]------------------------------------------------------
