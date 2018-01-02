@@ -124,6 +124,7 @@ for( hIdx in (bNum+1):nrow(zhF) ){
 #=[패턴재현 제거]==============================================================================
 # ptn <- getPtnReb( chkCodeMtx ,pDepth=3 )
 testSpan <- 500:nrow(zhF)
+
 #-[E0010.A5]------------------------------------------------------
 #	6개 패턴은 아예 존재하질 않겠지..
 #	따라서 5개 패턴부터 시작.
@@ -140,7 +141,7 @@ for( remCol in 1:ncol(zhF) ){
 			if( !is.null(ptn) ){
 				flagObj$ptn <- ptn
 				flagObj$depth <- dIdx
-				flagObj$matchCnt <- sum(flagObj$nextRow==stdCodeMtx[testIdx,])
+				flagObj$matchCnt <- sum(ptn$nextRow==stdCodeMtx[testIdx,])
 				break
 			}
 		}
@@ -165,6 +166,7 @@ tDiff <- Sys.time() - tStmp
 k.FLogStr(sprintf("E0010.A5 : %.1f%s",tDiff,units(tDiff)))
 missHLst[["E0010.A5"]] <- sort(unique(failH))
 
+
 #-[E0010.A4]------------------------------------------------------
 tStmp <- Sys.time()
 chkColMtx <- combinations(ncol(zhF),4)
@@ -180,7 +182,7 @@ for( chkIdx in 1:ncol(chkColMtx) ){
 			if( !is.null(ptn) ){
 				flagObj$ptn <- ptn
 				flagObj$depth <- dIdx
-				flagObj$matchCnt <- sum(flagObj$nextRow==stdCodeMtx[testIdx,])
+				flagObj$matchCnt <- sum(ptn$nextRow==stdCodeMtx[testIdx,])
 				break
 			}
 		}
@@ -221,7 +223,7 @@ for( chkIdx in 1:ncol(chkColMtx) ){
 			if( !is.null(ptn) ){
 				flagObj$ptn <- ptn
 				flagObj$depth <- dIdx
-				flagObj$matchCnt <- sum(flagObj$nextRow==stdCodeMtx[testIdx,])
+				flagObj$matchCnt <- sum(ptn$nextRow==stdCodeMtx[testIdx,])
 				break
 			}
 		}
@@ -262,7 +264,7 @@ for( chkIdx in 1:ncol(chkColMtx) ){
 			if( !is.null(ptn) ){
 				flagObj$ptn <- ptn
 				flagObj$depth <- dIdx
-				flagObj$matchCnt <- sum(flagObj$nextRow==stdCodeMtx[testIdx,])
+				flagObj$matchCnt <- sum(ptn$nextRow==stdCodeMtx[testIdx,])
 				break
 			}
 		}
@@ -286,6 +288,20 @@ failH <- do.call( c ,lapply(rstLst ,function(p){ p$hIdx[p$matchCnt>0] }) )
 tDiff <- Sys.time() - tStmp
 k.FLogStr(sprintf("E0010.A2 : %.1f%s",tDiff,units(tDiff)))
 missHLst[["E0010.A2"]] <- sort(unique(failH))
+
+
+#-[E0010.AX]------------------------------------------------------
+flagLst <- list()
+for( testIdx in testSpan ){
+	lastZoidMtx <- zhF[testIdx,,drop=F]
+	filtGrp <- getPtnRebGrp( zhF[1:(testIdx-1),] ,pNextJump=1 )
+	filtRst <- filtGrp$filt( lastZoidMtx )
+	flagObj <- list( hIdx=testIdx ,filtRst=filtRst )
+	flagObj$filtNum <- sapply(filtGrp$filtGrpLst ,function(p){length(p$filtLst)})
+	flagLst[[1+length(flagLst)]] <- flagObj
+}
+
+# sapply( flagLst ,function(p){ p$filtRst$survive } )
 
 
 
