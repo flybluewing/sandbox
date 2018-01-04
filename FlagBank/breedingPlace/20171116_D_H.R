@@ -1,6 +1,6 @@
 # 20171116_D_H.R ÇÑ±Û
 
-getPtnRegGrp2 <- function( pStdMtx ,pNextJump=1 ,pDepthSpan=5:2 ){
+getPtnRebGrp2 <- function( pStdMtx ,pNextJump=1 ,pDepthSpan=5:2 ){
 	filtLst <- list()
 	histLen <- nrow(pStdMtx)
 	for( cIdx in 1:ncol(pStdMtx) ){
@@ -25,11 +25,6 @@ getPtnRegGrp2 <- function( pStdMtx ,pNextJump=1 ,pDepthSpan=5:2 ){
 		}
 	}
 
-	pAllMtx <- c( 1 ,2 ,3 ,4 ,5 ,6 )
-	pAllMtx <- rbind( pAllMtx ,c(12,13,14,15,23,24) )
-	pAllMtx <- rbind( pAllMtx ,c(10,13,14,15,23,24) )
-	pAllMtx <- rbind( pAllMtx ,c(12,13,14,15,20,24) )
-
 	rObj <- list( remVal=remVal ,nextJump=pNextJump ,depthSpan=pDepthSpan ,filtLst=filtLst )
 	rObj$filt <- function( pAllMtx ,pSurviveLimit=0 ){
 
@@ -37,7 +32,7 @@ getPtnRegGrp2 <- function( pStdMtx ,pNextJump=1 ,pDepthSpan=5:2 ){
 		for( aIdx in 1:nrow(pAllMtx) ){
 			rstObj <- list( aIdx=aIdx )
 			rstObj$matchCnt <- sum(rObj$remVal==pAllMtx[aIdx,],na.rm=T)
-			rstObj$surVive <- rstObj$matchCnt<=pSurviveLimit
+			rstObj$survive <- rstObj$matchCnt<=pSurviveLimit
 			rstLst[[1+length(rstLst)]] <- rstObj
 		} # for( aIdx )
 
@@ -46,7 +41,7 @@ getPtnRegGrp2 <- function( pStdMtx ,pNextJump=1 ,pDepthSpan=5:2 ){
 
 	return( rObj )
 
-} # getPtnRegGrp2()
+} # getPtnRebGrp2()
 
 getPtnRebGrp <- function( pStdMtx ,pNextJump=1 ){
 

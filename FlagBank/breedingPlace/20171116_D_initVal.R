@@ -123,13 +123,15 @@ for( hIdx in (bNum+1):nrow(zhF) ){
 
 #=[패턴재현 제거]==============================================================================
 # ptn <- getPtnReb( chkCodeMtx ,pDepth=3 )
+lostHLst <- list()
 testSpan <- 500:nrow(zhF)
 
 #-[E0010.AX]------------------------------------------------------
 #		nextJump를 10개까지 할 경우 93개중 25개 제외됨.(15개 까지면 37개.)
+filtId <- "E0010.AX"
 tStmp <- Sys.time()
 failedHLst <- list()
-for( nextJump in 1:30 ){
+for( nextJump in 1:40 ){
 	flagLst <- list()
 	for( testIdx in testSpan ){
 		lastZoidMtx <- zhF[testIdx,,drop=F]
@@ -140,12 +142,36 @@ for( nextJump in 1:30 ){
 		flagLst[[1+length(flagLst)]] <- flagObj
 	}
 	surviveF <- sapply( flagLst ,function(p){ p$filtRst[[1]]$survive } )
-	failedHLst[[1+length(failedHLst)]] <- which(!surviveF)
+	failedHLst[[1+length(failedHLst)]] <- sapply(flagLst[!surviveF] ,function(p){p$hIdx} )
 }
 tDiff <- Sys.time() - tStmp
-k.FLogStr(sprintf("E0010.AX : %.1f%s",tDiff,units(tDiff)))
-missHLst[["E0010.AX"]] <- sort(unique(do.call( c ,failedHLst )))
-# lostCnt <- sapply( failedHLst ,length )
+lostHLst[[filtId]] <- failedHLst
+k.FLogStr(sprintf("%s : %.1f%s",filtId,tDiff,units(tDiff)))
+missHLst[[filtId]] <- sort(unique(do.call( c ,failedHLst )))
+
+#-[E0020.AX]------------------------------------------------------
+#		nextJump를 10개까지 할 경우 93개중 25개 제외됨.(15개 까지면 37개.)
+filtId <- "E0020.AX"
+tStmp <- Sys.time()
+failedHLst <- list()
+for( nextJump in 1:5 ){
+	flagLst <- list()
+	for( testIdx in testSpan ){
+		lastZoidMtx <- zhF[testIdx,,drop=F]
+		filtGrp <- getPtnRebGrp2( zhF[1:(testIdx-1),] ,pNextJump=nextJump )
+		filtRst <- filtGrp$filt( lastZoidMtx )
+		flagObj <- list( hIdx=testIdx ,filtRst=filtRst )
+		flagObj$filtNum <- sum(!is.na(filtGrp$remVal))
+		flagLst[[1+length(flagLst)]] <- flagObj		
+	}
+	surviveF <- sapply( flagLst ,function(p){p$filtRst[[1]]$survive} )
+	failedHLst[[1+length(failedHLst)]] <- sapply(flagLst[!surviveF] ,function(p){p$hIdx} )
+}
+tDiff <- Sys.time() - tStmp
+lostHLst[[filtId]] <- failedHLst
+k.FLogStr(sprintf("%s : %.1f%s",filtId,tDiff,units(tDiff)))
+missHLst[[filtId]] <- sort(unique(do.call( c ,failedHLst )))
+
 
 #=[SAVE]========================================================================================
 deskObj <- list( allZoidMtx=allZoidMtx )
