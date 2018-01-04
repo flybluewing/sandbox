@@ -66,10 +66,11 @@ k.FLogStr(sprintf("%s %d",filtId,nrow(allZoidMtx)))
 
 
 #-[B0010.A]------------------------------------------------------
-#	중복발생 나왔으니 다음에도 15가 발생하긴 어렵겠지.
+#	중복발생 숫자가 다음에도 나오지는 않겠지.
 filtId <- "B0010.A"
 tStmp <- Sys.time()
-flag <- apply( allZoidMtx ,1 ,function(p){!any(p==15)})
+rebVal <- intersect( zhF[nrow(zhF),] ,zhF[nrow(zhF)-1,] )
+flag <- apply( allZoidMtx ,1 ,function(p){!any(p %in% rebVal)})
 allZoidMtx <- allZoidMtx[flag,]
 filtLst[[1+length(filtLst)]] <- getFiltHist( filtId ,tStmp ,allZoidMtx )
 k.FLogStr(sprintf("%s %d",filtId,nrow(allZoidMtx)))

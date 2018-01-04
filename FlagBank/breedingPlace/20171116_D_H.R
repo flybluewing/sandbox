@@ -1,5 +1,52 @@
 # 20171116_D_H.R ÇÑ±Û
 
+getPtnRegGrp2 <- function( pStdMtx ,pNextJump=1 ,pDepthSpan=5:2 ){
+	filtLst <- list()
+	histLen <- nrow(pStdMtx)
+	for( cIdx in 1:ncol(pStdMtx) ){
+		filtObj <- list( cIdx=cIdx )
+		ptn <- NULL
+		for( dIdx in pDepthSpan ){
+			ptn <- getPastPtn( pStdMtx[1:(histLen-pNextJump+1),cIdx] ,pDepth=dIdx ,pScanAll=F )
+			if( !is.null(ptn) ){
+				filtObj$ptn <- ptn
+				filtObj$depth <- dIdx
+				filtObj$nextVal <- pStdMtx[ptn$fIdx+pNextJump,cIdx]
+				break
+			}
+		}
+		filtLst[[1+length(filtLst)]] <- filtObj
+	} # for(cIdx)
+
+	remVal=rep(NA,ncol(pStdMtx))
+	for( idx in 1:length(filtLst) ){
+		if( !is.null(filtLst[[idx]]$nextVal) ){
+			remVal[idx] <- filtLst[[idx]]$nextVal
+		}
+	}
+
+	pAllMtx <- c( 1 ,2 ,3 ,4 ,5 ,6 )
+	pAllMtx <- rbind( pAllMtx ,c(12,13,14,15,23,24) )
+	pAllMtx <- rbind( pAllMtx ,c(10,13,14,15,23,24) )
+	pAllMtx <- rbind( pAllMtx ,c(12,13,14,15,20,24) )
+
+	rObj <- list( remVal=remVal ,nextJump=pNextJump ,depthSpan=pDepthSpan ,filtLst=filtLst )
+	rObj$filt <- function( pAllMtx ,pSurviveLimit=0 ){
+
+		rstLst <- list()
+		for( aIdx in 1:nrow(pAllMtx) ){
+			rstObj <- list( aIdx=aIdx )
+			rstObj$matchCnt <- sum(rObj$remVal==pAllMtx[aIdx,],na.rm=T)
+			rstObj$surVive <- rstObj$matchCnt<=pSurviveLimit
+			rstLst[[1+length(rstLst)]] <- rstObj
+		} # for( aIdx )
+
+		return(rstLst)
+	} # rObj$filt()
+
+	return( rObj )
+
+} # getPtnRegGrp2()
 
 getPtnRebGrp <- function( pStdMtx ,pNextJump=1 ){
 
