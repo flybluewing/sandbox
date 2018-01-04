@@ -365,17 +365,51 @@ k.FLogStr(sprintf("%s %d",filtId,nrow(allZoidMtx)))
 
 #=[패턴재현 제거]==============================================================================
 #-[E0010.A]------------------------------------------------------
+filtId <- "E0010.A"
+stdCodeMtx <- zhF
+allCodeMtx <- allZoidMtx
+tStmp <- Sys.time()
+for( nextJump in 1:15 ){
+	filtGrp <- getPtnRebGrp( stdCodeMtx ,pNextJump=nextJump )
+	filtRst <- filtGrp$filt( allCodeMtx )
+	surviveFlag <- sapply(filtRst ,function(p){p$survive})
+	allCodeMtx <- allCodeMtx[surviveFlag,]
+	tDiff <- Sys.time() - tStmp
+	k.FLogStr(sprintf("nextJump:%d  past:%.1f%s left:%d"
+					,nextJump,tDiff,units(tDiff),nrow(allCodeMtx) )
+				,pConsole=T
+			)
+}
+tDiff <- Sys.time() - tStmp
+allZoidMtx <- allCodeMtx
+filtLst[[1+length(filtLst)]] <- getFiltHist( filtId ,tStmp ,allZoidMtx )
+k.FLogStr(sprintf("%s %d",filtId,nrow(allZoidMtx)))
+
+
+
+# sapply( filtGrp$filtGrpLst ,function(p){length(p$filtLst)} )
+
+filtRst <- filtGrp$filt( allZoidMtx )
+tDiff <- Sys.time() - tStmp
+flag <- sapply(filtRst,function(p){p$survive})
+allZoidMtx <- allZoidMtx[flag,]
+filtLst[[1+length(filtLst)]] <- getFiltHist( filtId ,tStmp ,allZoidMtx )
+k.FLogStr(sprintf("%s %d",filtId,nrow(allZoidMtx)))
+
+
+
 
 
 #=[       ]====================================================================================
 #-[Z0010.A]------------------------------------------------------
 
 
+
 #=[SAVE]========================================================================================
 deskObj <- list( allZoidMtx=allZoidMtx )
 deskObj$memo <- sprintf("zhF size : %d.",nrow(zhF))
 deskObj$filtLst <- filtLst
-save( deskObj ,file="Obj_deskObj.D00.save" )
+save( deskObj ,file="Obj_deskObj.DE0.save" )
 
 
 

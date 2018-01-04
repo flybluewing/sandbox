@@ -125,186 +125,27 @@ for( hIdx in (bNum+1):nrow(zhF) ){
 # ptn <- getPtnReb( chkCodeMtx ,pDepth=3 )
 testSpan <- 500:nrow(zhF)
 
-#-[E0010.A5]------------------------------------------------------
-#	6개 패턴은 아예 존재하질 않겠지..
-#	따라서 5개 패턴부터 시작.
-tStmp <- Sys.time()
-filtLst <- list()
-for( remCol in 1:ncol(zhF) ){
-	stdCodeMtx <- zhF[,-remCol]
-	flagLst <- list()
-	for( testIdx in testSpan ){
-		flagObj <- list( testIdx=testIdx )
-		ptn <- NULL
-		for( dIdx in 3:1 ){
-			ptn <- getPtnReb( stdCodeMtx[1:(testIdx-1),] ,pDepth=dIdx )
-			if( !is.null(ptn) ){
-				flagObj$ptn <- ptn
-				flagObj$depth <- dIdx
-				flagObj$matchCnt <- sum(ptn$nextRow==stdCodeMtx[testIdx,])
-				break
-			}
-		}
-		flagLst[[1+length(flagLst)]] <- flagObj
-	}
-
-	filtLst[[1+length(filtLst)]] <- flagLst
-}
-
-# -- report --
-rstLst <- list()
-for( filtIdx in 1:length(filtLst) ){
-	flagLst <- filtLst[[filtIdx]]
-	fndIdx <- which(sapply(flagLst,function(p){ !is.null(p$depth) }))
-	rstObj <- list( hIdx=testSpan[fndIdx] )
-	rstObj$matchCnt <- sapply(flagLst[fndIdx],function(p){p$matchCnt})
-	rstLst[[1+length(rstLst)]] <- rstObj
-}
-
-failH <- do.call( c ,lapply(rstLst ,function(p){ p$hIdx[p$matchCnt>0] }) )
-tDiff <- Sys.time() - tStmp
-k.FLogStr(sprintf("E0010.A5 : %.1f%s",tDiff,units(tDiff)))
-missHLst[["E0010.A5"]] <- sort(unique(failH))
-
-
-#-[E0010.A4]------------------------------------------------------
-tStmp <- Sys.time()
-chkColMtx <- combinations(ncol(zhF),4)
-filtLst <- list()
-for( chkIdx in 1:ncol(chkColMtx) ){
-	stdCodeMtx <- zhF[,chkColMtx[chkIdx,]]
-	flagLst <- list()
-	for( testIdx in testSpan ){
-		flagObj <- list( testIdx=testIdx )
-		ptn <- NULL
-		for( dIdx in 3:1 ){
-			ptn <- getPtnReb( stdCodeMtx[1:(testIdx-1),] ,pDepth=dIdx )
-			if( !is.null(ptn) ){
-				flagObj$ptn <- ptn
-				flagObj$depth <- dIdx
-				flagObj$matchCnt <- sum(ptn$nextRow==stdCodeMtx[testIdx,])
-				break
-			}
-		}
-		flagLst[[1+length(flagLst)]] <- flagObj
-	}
-
-	filtLst[[1+length(filtLst)]] <- flagLst
-}
-
-# -- report --
-rstLst <- list()
-for( filtIdx in 1:length(filtLst) ){
-	flagLst <- filtLst[[filtIdx]]
-	fndIdx <- which(sapply(flagLst,function(p){ !is.null(p$depth) }))
-	rstObj <- list( hIdx=testSpan[fndIdx] )
-	rstObj$matchCnt <- sapply(flagLst[fndIdx],function(p){p$matchCnt})
-	rstLst[[1+length(rstLst)]] <- rstObj
-}
-
-failH <- do.call( c ,lapply(rstLst ,function(p){ p$hIdx[p$matchCnt>0] }) )
-tDiff <- Sys.time() - tStmp
-k.FLogStr(sprintf("E0010.A4 : %.1f%s",tDiff,units(tDiff)))
-missHLst[["E0010.A4"]] <- sort(unique(failH))
-
-
-#-[E0010.A3]------------------------------------------------------
-tStmp <- Sys.time()
-chkColMtx <- combinations(ncol(zhF),3)
-filtLst <- list()
-for( chkIdx in 1:ncol(chkColMtx) ){
-	stdCodeMtx <- zhF[,chkColMtx[chkIdx,]]
-	flagLst <- list()
-	for( testIdx in testSpan ){
-		flagObj <- list( testIdx=testIdx )
-		ptn <- NULL
-		for( dIdx in 3:1 ){
-			ptn <- getPtnReb( stdCodeMtx[1:(testIdx-1),] ,pDepth=dIdx )
-			if( !is.null(ptn) ){
-				flagObj$ptn <- ptn
-				flagObj$depth <- dIdx
-				flagObj$matchCnt <- sum(ptn$nextRow==stdCodeMtx[testIdx,])
-				break
-			}
-		}
-		flagLst[[1+length(flagLst)]] <- flagObj
-	}
-
-	filtLst[[1+length(filtLst)]] <- flagLst
-}
-
-# -- report --
-rstLst <- list()
-for( filtIdx in 1:length(filtLst) ){
-	flagLst <- filtLst[[filtIdx]]
-	fndIdx <- which(sapply(flagLst,function(p){ !is.null(p$depth) }))
-	rstObj <- list( hIdx=testSpan[fndIdx] )
-	rstObj$matchCnt <- sapply(flagLst[fndIdx],function(p){p$matchCnt})
-	rstLst[[1+length(rstLst)]] <- rstObj
-}
-
-failH <- do.call( c ,lapply(rstLst ,function(p){ p$hIdx[p$matchCnt>0] }) )
-tDiff <- Sys.time() - tStmp
-k.FLogStr(sprintf("E0010.A3 : %.1f%s",tDiff,units(tDiff)))
-missHLst[["E0010.A3"]] <- sort(unique(failH))
-
-
-#-[E0010.A2]------------------------------------------------------
-tStmp <- Sys.time()
-chkColMtx <- combinations(ncol(zhF),2)
-filtLst <- list()
-for( chkIdx in 1:ncol(chkColMtx) ){
-	stdCodeMtx <- zhF[,chkColMtx[chkIdx,]]
-	flagLst <- list()
-	for( testIdx in testSpan ){
-		flagObj <- list( testIdx=testIdx )
-		ptn <- NULL
-		for( dIdx in 3:1 ){
-			ptn <- getPtnReb( stdCodeMtx[1:(testIdx-1),] ,pDepth=dIdx )
-			if( !is.null(ptn) ){
-				flagObj$ptn <- ptn
-				flagObj$depth <- dIdx
-				flagObj$matchCnt <- sum(ptn$nextRow==stdCodeMtx[testIdx,])
-				break
-			}
-		}
-		flagLst[[1+length(flagLst)]] <- flagObj
-	}
-
-	filtLst[[1+length(filtLst)]] <- flagLst
-}
-
-# -- report --
-rstLst <- list()
-for( filtIdx in 1:length(filtLst) ){
-	flagLst <- filtLst[[filtIdx]]
-	fndIdx <- which(sapply(flagLst,function(p){ !is.null(p$depth) }))
-	rstObj <- list( hIdx=testSpan[fndIdx] )
-	rstObj$matchCnt <- sapply(flagLst[fndIdx],function(p){p$matchCnt})
-	rstLst[[1+length(rstLst)]] <- rstObj
-}
-
-failH <- do.call( c ,lapply(rstLst ,function(p){ p$hIdx[p$matchCnt>0] }) )
-tDiff <- Sys.time() - tStmp
-k.FLogStr(sprintf("E0010.A2 : %.1f%s",tDiff,units(tDiff)))
-missHLst[["E0010.A2"]] <- sort(unique(failH))
-
-
 #-[E0010.AX]------------------------------------------------------
-flagLst <- list()
-for( testIdx in testSpan ){
-	lastZoidMtx <- zhF[testIdx,,drop=F]
-	filtGrp <- getPtnRebGrp( zhF[1:(testIdx-1),] ,pNextJump=1 )
-	filtRst <- filtGrp$filt( lastZoidMtx )
-	flagObj <- list( hIdx=testIdx ,filtRst=filtRst )
-	flagObj$filtNum <- sapply(filtGrp$filtGrpLst ,function(p){length(p$filtLst)})
-	flagLst[[1+length(flagLst)]] <- flagObj
+#		nextJump를 10개까지 할 경우 93개중 25개 제외됨.(15개 까지면 37개.)
+tStmp <- Sys.time()
+failedHLst <- list()
+for( nextJump in 1:30 ){
+	flagLst <- list()
+	for( testIdx in testSpan ){
+		lastZoidMtx <- zhF[testIdx,,drop=F]
+		filtGrp <- getPtnRebGrp( zhF[1:(testIdx-1),] ,pNextJump=nextJump )
+		filtRst <- filtGrp$filt( lastZoidMtx )
+		flagObj <- list( hIdx=testIdx ,filtRst=filtRst )
+		flagObj$filtNum <- sapply(filtGrp$filtGrpLst ,function(p){length(p$filtLst)})
+		flagLst[[1+length(flagLst)]] <- flagObj
+	}
+	surviveF <- sapply( flagLst ,function(p){ p$filtRst[[1]]$survive } )
+	failedHLst[[1+length(failedHLst)]] <- which(!surviveF)
 }
-
-# k <- sapply( flagLst ,function(p){ p$filtRst[[1]]$survive } )
-#	겨우 3개 나옴. jumpNum 2,3,4도 시도해볼 수 있을 듯.
-
-
+tDiff <- Sys.time() - tStmp
+k.FLogStr(sprintf("E0010.AX : %.1f%s",tDiff,units(tDiff)))
+missHLst[["E0010.AX"]] <- sort(unique(do.call( c ,failedHLst )))
+# lostCnt <- sapply( failedHLst ,length )
 
 #=[SAVE]========================================================================================
 deskObj <- list( allZoidMtx=allZoidMtx )
