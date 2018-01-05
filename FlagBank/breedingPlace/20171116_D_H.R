@@ -1,5 +1,38 @@
 # 20171116_D_H.R ÇÑ±Û
 
+
+scanSameRow <- function( pMtx ,pThld=NULL ){
+
+	thld <- ifelse( is.null(pThld) ,ncol(pMtx) ,pThld )
+
+	nRow.pMtx <- nrow(pMtx)
+	sameRowLst <- list()
+	for( aIdx in 1:(nRow.pMtx-1) ){
+		for( bIdx in (aIdx+1):nRow.pMtx ){
+			cnt = sum(pMtx[aIdx,]==pMtx[bIdx,])
+			if( cnt>=thld ){
+				sameRowObj <- list( aIdx=aIdx ,bIdx=bIdx ,cnt=cnt )
+				sameRowLst[[1+length(sameRowLst)]] <- sameRowObj
+				break
+			}
+		}
+	}
+
+	if( 0==length(sameRowLst) ){
+		rMtx <- matrix( 0 ,ncol=3 ,nrow=0 )
+		colnames( rMtx ) <- c("aIdx","bIdx","cnt")
+		return( rMtx )
+	}
+
+	rMtx <- do.call( rbind 
+				,lapply(sameRowLst,function(p){ c(p$aIdx,p$bIdx,p$cnt) }) 
+			)
+	colnames( rMtx ) <- c("aIdx","bIdx","cnt")
+	return( rMtx )
+} # scanSameRow
+
+
+
 getPtnRebGrp2 <- function( pStdMtx ,pNextJump=1 ,pDepthSpan=5:2 ){
 	filtLst <- list()
 	histLen <- nrow(pStdMtx)

@@ -26,6 +26,23 @@ missHLst <- list()
 testSpan <- 300:nrow(zhF)
 
 
+
+#-[ZZ010.DNA00]-----------------------------------------------------
+#	DNA 거리가 바로 다음에도 똑같을 확률이... 너무 많네.
+	# table(flag) 	0   1   2   3 
+	# 				508 235  42   2  
+filtId <- "B0010.G2"
+tStmp <- Sys.time()
+stdCodeMtx <- zhF[,2:6] - zhF[,1:5]
+flag <- rep( 0 ,nrow(stdCodeMtx) )
+for( hIdx in 2:nrow(stdCodeMtx) ){
+	flag[hIdx] <- sum(stdCodeMtx[hIdx,]==stdCodeMtx[(hIdx-1),])
+}
+k.FLogStr(sprintf("%s : %.1f%s",filtId,tDiff,units(tDiff)))
+missHLst[[filtId]] <- sort(unique(do.call( c ,failedHLst )))
+
+
+
 #-[C0020.A]------------------------------------------------------
 #	zhF[,6]-zhF[,1] 이 20 이하인 경우는 전체 5.6% 정도.. 자르자!!
 stdCodeMtx <- cbind( zhF[,4]-zhF[,1] , zhF[,6]-zhF[,3] ,zhF[,6]-zhF[,1] )
@@ -128,10 +145,11 @@ testSpan <- 500:nrow(zhF)
 
 #-[E0010.AX]------------------------------------------------------
 #		nextJump를 10개까지 할 경우 93개중 25개 제외됨.(15개 까지면 37개.)
+#			1.3hr for nextJump 1:100
 filtId <- "E0010.AX"
 tStmp <- Sys.time()
 failedHLst <- list()
-for( nextJump in 1:40 ){
+for( nextJump in 1:100 ){
 	flagLst <- list()
 	for( testIdx in testSpan ){
 		lastZoidMtx <- zhF[testIdx,,drop=F]
@@ -151,10 +169,11 @@ missHLst[[filtId]] <- sort(unique(do.call( c ,failedHLst )))
 
 #-[E0020.AX]------------------------------------------------------
 #		nextJump를 10개까지 할 경우 93개중 25개 제외됨.(15개 까지면 37개.)
+#			30 sec for nextJump 1:10
 filtId <- "E0020.AX"
 tStmp <- Sys.time()
 failedHLst <- list()
-for( nextJump in 1:5 ){
+for( nextJump in 1:10 ){
 	flagLst <- list()
 	for( testIdx in testSpan ){
 		lastZoidMtx <- zhF[testIdx,,drop=F]
@@ -162,7 +181,7 @@ for( nextJump in 1:5 ){
 		filtRst <- filtGrp$filt( lastZoidMtx )
 		flagObj <- list( hIdx=testIdx ,filtRst=filtRst )
 		flagObj$filtNum <- sum(!is.na(filtGrp$remVal))
-		flagLst[[1+length(flagLst)]] <- flagObj		
+		flagLst[[1+length(flagLst)]] <- flagObj
 	}
 	surviveF <- sapply( flagLst ,function(p){p$filtRst[[1]]$survive} )
 	failedHLst[[1+length(failedHLst)]] <- sapply(flagLst[!surviveF] ,function(p){p$hIdx} )
@@ -171,6 +190,31 @@ tDiff <- Sys.time() - tStmp
 lostHLst[[filtId]] <- failedHLst
 k.FLogStr(sprintf("%s : %.1f%s",filtId,tDiff,units(tDiff)))
 missHLst[[filtId]] <- sort(unique(do.call( c ,failedHLst )))
+
+
+accLst <- list()
+for( aIdx in 1:length(lostHLst[[1]]) ){
+	for( bIdx in 1:length(lostHLst[[2]]) ){
+		aVal <- unique(do.call( c ,lostHLst[[1]][1:aIdx] ))
+		bVal <- unique(do.call( c ,lostHLst[[2]][1:bIdx] ))
+		accObj <- list( aIdx=aIdx ,bIdx=bIdx 
+						,aCnt=length(aVal) ,bCnt=length(bVal)
+						,totCnt=length(unique(c(aVal,bVal)))
+					)
+		accLst[[1+length(accLst)]] <- accObj
+	}
+}
+accMtx <- do.call( rbind 
+				,lapply(accLst,function(p){c(p$aIdx,p$bIdx,p$aCnt,p$bCnt,p$totCnt)}) 
+			)
+
+EnnnnObj <- list( lostHLst=lostHLst ,missHLst=missHLst ,testSpan=testSpan )
+save( EnnnnObj ,file="Obj_EnnnnObj.save" )
+
+#-[E0020.AX]------------------------------------------------------
+# testSpan 크기가 288... 120~130사이의 범위를 찾아보자.
+#	E0010.AX 는 8까지, E0020.AX는 2까지 취합하기로 하자.
+accMtx[(130<accMtx[,5])&(150>accMtx[,5]),]	#    8    2   63   92  135
 
 
 #=[SAVE]========================================================================================

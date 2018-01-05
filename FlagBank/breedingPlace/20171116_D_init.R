@@ -207,6 +207,22 @@ allZoidMtx <- allZoidMtx[flag,]
 filtLst[[1+length(filtLst)]] <- getFiltHist( filtId ,tStmp ,allZoidMtx )
 k.FLogStr(sprintf("%s %d",filtId,nrow(allZoidMtx)))
 
+#-[B0010.G1]-----------------------------------------------------
+#	연속값이 2개 이상 나온 갯수가 2개 이상이.. 다음에도 나타난 적은 7번 밖에..
+filtId <- "B0010.G1"
+tStmp <- Sys.time()
+flag <- apply(allZoidMtx[,2:6]-allZoidMtx[,1:5] ,1 ,function(p){sum(p==1)})
+tDiff <- Sys.time() - tStmp
+allZoidMtx <- allZoidMtx[flag<=1,]
+filtLst[[1+length(filtLst)]] <- getFiltHist( filtId ,tStmp ,allZoidMtx )
+k.FLogStr(sprintf("%s %d",filtId,nrow(allZoidMtx)))
+
+#-[B0010.G2]-----------------------------------------------------
+#	DNA 거리가 바로 다음에도 똑같을 확률이... 
+
+
+
+
 
 #=[손실감수]====================================================================================
 #-[C0010.A]------------------------------------------------------
@@ -317,16 +333,23 @@ allZoidMtx <- allZoidMtx[flag==0,]
 filtLst[[1+length(filtLst)]] <- getFiltHist( filtId ,tStmp ,allZoidMtx )
 k.FLogStr(sprintf("%s %d",filtId,nrow(allZoidMtx)))
 
-#----------------------------------------------------------------
-# QQE todo
-
-
-#-[C0040.B]------------------------------------------------------
-#	Jump 2~10
-#		stdCodeMtx에서 780번째 row이면 zhF에서의 780,783 차이값임.
-#		보류.. 효과 없는 거 같다.
-
 #-[C0050.A]------------------------------------------------------
+#	1,2,3 이란 식으로 1연속이 3개 이상.
+#		과거 15개 발생.
+filtId <- "C0050.A"
+flag <- rep( 0 ,nrow(allZoidMtx) )
+tStmp <- Sys.time()
+flag <- apply( allZoidMtx[,2:6]-allZoidMtx[,1:5] ,1 ,function(p){sum(p==1)})
+tDiff <- Sys.time() - tStmp
+allZoidMtx <- allZoidMtx[flag<=2,]
+filtLst[[1+length(filtLst)]] <- getFiltHist( filtId ,tStmp ,allZoidMtx )
+k.FLogStr(sprintf("%s %d",filtId,nrow(allZoidMtx)))
+
+
+stdCodeMtx <- zhF[,2:6] - zhF[,1:5]
+flag <- apply( stdCodeMtx ,1 ,function(p){ sum(p==1) })
+seqCntMtx <- k.seq(flag)$seqCntMtx
+mtx <- seqCntMtx[seqCntMtx[,"val"]>1,]
 
 #=[       ]====================================================================================
 #-[D0010.A]------------------------------------------------------
@@ -370,8 +393,30 @@ filtId <- "E0010.A"
 stdCodeMtx <- zhF
 allCodeMtx <- allZoidMtx
 tStmp <- Sys.time()
-for( nextJump in 1:15 ){
+for( nextJump in 1:25 ){
 	filtGrp <- getPtnRebGrp( stdCodeMtx ,pNextJump=nextJump )
+	filtRst <- filtGrp$filt( allCodeMtx )
+	surviveFlag <- sapply(filtRst ,function(p){p$survive})
+	allCodeMtx <- allCodeMtx[surviveFlag,]
+	tDiff <- Sys.time() - tStmp
+	k.FLogStr(sprintf("nextJump:%d  past:%.1f%s left:%d"
+					,nextJump,tDiff,units(tDiff),nrow(allCodeMtx) )
+				,pConsole=T
+			)
+}
+tDiff <- Sys.time() - tStmp
+allZoidMtx <- allCodeMtx
+filtLst[[1+length(filtLst)]] <- getFiltHist( filtId ,tStmp ,allZoidMtx )
+k.FLogStr(sprintf("%s %d",filtId,nrow(allZoidMtx)))
+
+
+#-[E0020.A]------------------------------------------------------
+filtId <- "E0020.A"
+stdCodeMtx <- zhF
+allCodeMtx <- allZoidMtx
+tStmp <- Sys.time()
+for( nextJump in 1:4 ){
+	filtGrp <- getPtnRebGrp2( stdCodeMtx ,pNextJump=nextJump )
 	filtRst <- filtGrp$filt( allCodeMtx )
 	surviveFlag <- sapply(filtRst ,function(p){p$survive})
 	allCodeMtx <- allCodeMtx[surviveFlag,]
@@ -389,13 +434,6 @@ k.FLogStr(sprintf("%s %d",filtId,nrow(allZoidMtx)))
 
 
 # sapply( filtGrp$filtGrpLst ,function(p){length(p$filtLst)} )
-
-filtRst <- filtGrp$filt( allZoidMtx )
-tDiff <- Sys.time() - tStmp
-flag <- sapply(filtRst,function(p){p$survive})
-allZoidMtx <- allZoidMtx[flag,]
-filtLst[[1+length(filtLst)]] <- getFiltHist( filtId ,tStmp ,allZoidMtx )
-k.FLogStr(sprintf("%s %d",filtId,nrow(allZoidMtx)))
 
 
 
