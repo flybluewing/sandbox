@@ -137,7 +137,7 @@ k.FLogStr(sprintf("%s %d",filtId,nrow(allZoidMtx)))
 
 #-[AK000.D]------------------------------------------------------
 #	zhF[,6]-zhF[,1]	: 이전과 같은 간격으로 건너뛸 가능성. 55/785
-filtId <- "AK000.C";	tStmp <- Sys.time()
+filtId <- "AK000.D";	tStmp <- Sys.time()
 stdCode <- zhF[,6]-zhF[,1]
 remVal <- c( stdCode[length(stdCode)-1] , 
 				stdCode[length(stdCode)] + 
@@ -199,6 +199,61 @@ allZoidMtx <- allZoidMtx[flag<4,]
 filtLst[[1+length(filtLst)]] <- getFiltHist( filtId ,tStmp ,allZoidMtx )
 k.FLogStr(sprintf("%s %d",filtId,nrow(allZoidMtx)))
 
+#-[AP000.D]------------------------------------------------------
+#	zhF %/% 10 Quoatient.  Quoatient패턴 Next 값.	5/288
+filtId <- "AP000.D";	tStmp <- Sys.time()
+stdCodeMtx <- getTblCnt( zhF %/% 10 )
+allCodeMtx <- getTblCnt( allZoidMtx %/% 10 )
+flag <- rep( 0 ,nrow(allCodeMtx) )
+ptn <- getPtnReb( stdCodeMtx )
+if( !is.null(ptn) ){
+	for( aIdx in 1:nrow(allCodeMtx) ){
+		if( all(allCodeMtx[aIdx,]==ptn$nextRow) ){
+			flag[aIdx] <- 1
+		}
+	}
+}
+allZoidMtx <- allZoidMtx[flag==0,]
+filtLst[[1+length(filtLst)]] <- getFiltHist( filtId ,tStmp ,allZoidMtx )
+k.FLogStr(sprintf("%s %d",filtId,nrow(allZoidMtx)))
+
+
+#-[AP000.E]------------------------------------------------------
+#	zhF %/% 10 Quoatient.  Quoatient그룹이 다음에도 반복.
+filtId <- "AP000.E";	tStmp <- Sys.time()
+stdGrpLst <- apply( zhF ,1 ,function(p){ getQGrp(p,0:4) } )
+for( gIdx in 1:length(stdGrpLst) ){
+	# 1~9, 40번 대역에서 1개 나오는 경우는 너무 흔하니,
+	#	아예 없는 것으로 제외시킴.
+	if( 1==stdGrpLst[[gIdx]]$grpCnt[1] ){
+		stdGrpLst[[gIdx]]$grpCnt[1] <- 0
+		stdGrpLst[[gIdx]]$grpLst[[1]] <- integer(0)
+	}
+	if( 1==stdGrpLst[[gIdx]]$grpCnt[5] ){
+		stdGrpLst[[gIdx]]$grpCnt[5] <- 0
+		stdGrpLst[[gIdx]]$grpLst[[5]] <- integer(0)
+	}
+}
+
+backMtx <- matrix( c(1,2) ,ncol=2 ,nrow=1 ) # grp 크기 ,검색 H 범위
+backMtx <- rbind( backMtx ,c(2,5) )
+backMtx <- rbind( backMtx ,c(3,200) )
+
+allGrpLst <- apply( allZoidMtx ,1 ,function(p){ getQGrp(p,0:4) } )
+
+flag <- rep( TRUE ,length(allGrpLst) )
+for( bIdx in 1:nrow(backMtx) ){	
+	scanSpan <- (length(stdGrpLst)-backMtx[bIdx,2]+1):length(stdGrpLst)
+	for( sIdx in scanSpan ){
+		rstFlag <- stdGrpLst[[sIdx]]$filt( allGrpLst ,pMin=backMtx[bIdx,1] )
+		flag <- (rstFlag==0) & flag
+	}
+}
+allZoidMtx <- allZoidMtx[flag,]
+filtLst[[1+length(filtLst)]] <- getFiltHist( filtId ,tStmp ,allZoidMtx )
+k.FLogStr(sprintf("%s %d",filtId,nrow(allZoidMtx)))
+
+
 #-[AQ000.A]------------------------------------------------------
 #	DNA 코드가 다음 H에서 몇 개나 재발되는지. (3개 이상 20/787)
 filtId <- "AQ000.A";	tStmp <- Sys.time()
@@ -208,9 +263,40 @@ allZoidMtx <- allZoidMtx[flag<3,]
 filtLst[[1+length(filtLst)]] <- getFiltHist( filtId ,tStmp ,allZoidMtx )
 k.FLogStr(sprintf("%s %d",filtId,nrow(allZoidMtx)))
 
-#-[AQ000.B]------------------------------------------------------
+#-[AR000.A]------------------------------------------------------
+#	remainder 근거리 재발. (3H 이내 재발 31/787)
+filtId <- "AR000.A";	tStmp <- Sys.time()
+stdCodeMtx <- zhF[(nrow(zhF)-2):nrow(zhF),] %% 2
+allCodeMtx <- allZoidMtx %% 2
+flag <- rep( 0 ,nrow(allCodeMtx) )
+for( aIdx in 1:nrow(allCodeMtx) ){
+	for( sIdx in 1:nrow(stdCodeMtx) ){
+		if( all(allCodeMtx[aIdx,]==stdCodeMtx[sIdx,]) ){
+			flag[aIdx] <- sIdx
+			break
+		}
+	}
+}
+tDiff <- Sys.time() - tStmp
+allZoidMtx <- allZoidMtx[flag==0,]
+filtLst[[1+length(filtLst)]] <- getFiltHist( filtId ,tStmp ,allZoidMtx )
+k.FLogStr(sprintf("%s %d",filtId,nrow(allZoidMtx)))
+
+#-[AR000.B]------------------------------------------------------
+#	remainder 패턴 재발 (nextVal)	17% 탈락.
+filtId <- "AR000.B";	tStmp <- Sys.time()
+stdCodeMtx <- zhF %% 10
+ptn <- getPtnRebGrp( stdCodeMtx ,pNextJump=1 )
+flag <- sapply( ptn$filt( allZoidMtx %% 10 )
+				,function(p){p$survive} 
+			)
+allZoidMtx <- allZoidMtx[flag,]
+filtLst[[1+length(filtLst)]] <- getFiltHist( filtId ,tStmp ,allZoidMtx )
+k.FLogStr(sprintf("%s %d",filtId,nrow(allZoidMtx)))
+
+#-[AS000.A]------------------------------------------------------
 #	연이은 DNA코드가 다음에도 연이어서 재발 38/787
-filtId <- "AQ000.B";	tStmp <- Sys.time()
+filtId <- "AS000.A";	tStmp <- Sys.time()
 flag <- rep( 0 ,nrow(allZoidMtx) )
 for( aIdx in 1:nrow(allZoidMtx) ){
 	rebIdx.1 <- which( lastZoid %in% allZoidMtx[aIdx,] )
@@ -270,7 +356,10 @@ for( aIdx in 1:nrow(allZoidMtx) ){
 		}
 	}
 }
-
+tDiff <- Sys.time() - tStmp
+allZoidMtx <- allZoidMtx[flag==0,]
+filtLst[[1+length(filtLst)]] <- getFiltHist( filtId ,tStmp ,allZoidMtx )
+k.FLogStr(sprintf("%s %d",filtId,nrow(allZoidMtx)))
 
 
 #=[SAVE]========================================================================================

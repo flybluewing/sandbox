@@ -1,5 +1,73 @@
 # 20171116_D_H.R ÇÑ±Û
 
+#	pZoid <- lastZoid;	pValSpan=0:4;	pBase=10
+getQGrp <- function( pZoid ,pValSpan ,pBase=10 ){
+
+	grpLst <- list()
+	pCode <- pZoid %/% pBase
+	for( vIdx in 1:length(pValSpan) ){
+		idx <- which( pCode %in% pValSpan[vIdx] )
+		grpLst[[1+length(grpLst)]] <- pZoid[idx]
+	}
+	idx <- which( !(pCode%in%pValSpan) )
+	grpLst[[1+length(grpLst)]] <- pZoid[idx]
+
+	grpCnt <- sapply( grpLst ,length )
+	names(grpCnt) <- c( as.character(pValSpan) ,"exid" )
+
+	rObj <- list( grpCnt=grpCnt ,grpLst=grpLst )
+	rObj$filt <- function( pGrpLst ,pMin=1 ){
+			grpCnt <- rObj$grpCnt
+			grpCnt[grpCnt==0] <- NA
+			rFlag <- rep( 0 ,length(pGrpLst) )
+			for( gIdx in 1:length(pGrpLst) ){
+				sLoc <- which(grpCnt==pGrpLst[[gIdx]]$grpCnt)
+				if( 0==length(sLoc) ){
+					next
+				}
+
+				for( sIdx in sLoc ){
+					if( pMin>grpCnt[sIdx] )
+						break
+					if( all(rObj$grpLst[[sIdx]]==pGrpLst[[gIdx]]$grpLst[[sIdx]]) ) {
+						rFlag[gIdx] <- grpCnt[sIdx]
+						break
+					}
+				}
+			} # for(gIdx)
+
+			return( rFlag )
+		} # rObj$filt()
+
+	return( rObj )
+} # getQGrp()
+
+
+
+getTblCnt <- function( pMtx ,pTblVal=NULL ){
+	
+	tblVal <- pTblVal
+	if( is.null(tblVal) ){
+		tblVal <- sort(unique(as.vector(pMtx)))
+	}
+
+	accMtx <- matrix( 0 ,ncol=(length(tblVal)+1) ,nrow=nrow(pMtx) )
+	colnames(accMtx) <- c(as.character(tblVal),"exid")
+	exidCol <- ncol(accMtx)
+	for( rIdx in 1:nrow(pMtx) ){
+		for( cIdx in 1:ncol(pMtx) ){
+			colIdx <- which(tblVal==pMtx[rIdx,cIdx])
+			if( 0==length(colIdx) ){
+				accMtx[rIdx,exidCol] <- accMtx[rIdx,exidCol]+1
+			} else {
+				accMtx[rIdx,colIdx[1]] <- accMtx[rIdx,colIdx[1]]+1
+			}
+		}
+	}
+
+	return( accMtx )
+} # getTblCnt()
+
 
 scanSameRow <- function( pMtx ,pThld=NULL ){
 
@@ -131,7 +199,6 @@ getPtnRebGrp <- function( pStdMtx ,pNextJump=1 ){
 
 	return( rObj )
 } # getPtnRebGrp()
-
 
 
 

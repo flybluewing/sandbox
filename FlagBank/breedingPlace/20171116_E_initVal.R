@@ -11,6 +11,8 @@ FB.f <- getFlagBank("./zoidHistory/ZH_Final.csv")
 setwd(curWd)
 zh	<- as.matrix( FB$zh )
 zhF	<- as.matrix( FB.f$zh )	;rownames(zhF) <- 1:nrow(zhF)
+testSpan <- 500:nrow(zhF)
+lastZoid <- zhF[nrow(zhF),]
 filtLst <- list()
 getFiltHist <- function( pFiltId ,pTStmp ,pFlag=NULL ){
 		rObj <- list( filtId=pFiltId ,tCost=(Sys.time()-pTStmp) ,flag=pFlag )
@@ -20,9 +22,6 @@ getFiltHist <- function( pFiltId ,pTStmp ,pFlag=NULL ){
 #	이 파일에서의 핵심 데이터.
 #	사전 필터로 인해 유실되는 실제 Zoid History Index.
 missHLst <- list()
-
-# zhF ,allZoidMtx
-testSpan <- 500:nrow(zhF)
 
 
 #-[A01NN.A]------------------------------------------------------
@@ -152,6 +151,88 @@ flag <- apply( stdCodeMtx ,1 ,function(p){ max(table(p)) } )
 missHLst[[filtId]] <- which(flag>=4)
 
 
+#-[AP000.D]------------------------------------------------------
+#	zhF %/% 10 Quoatient.  Quoatient패턴 Next 값.	5/288
+filtId <- "AP000.D";	tStmp <- Sys.time()
+stdCodeMtx <- getTblCnt( zhF %/% 10 )
+flag <- rep( 0 ,nrow(zhF) )
+for( hIdx in testSpan ){
+	ptn <- getPtnReb( stdCodeMtx[1:(hIdx-1),] )
+	if( !is.null(ptn) ){
+		flag[hIdx] <- all(ptn$nextRow==stdCodeMtx[hIdx,])
+	}
+}
+missHLst[[filtId]] <- which(flag>0)
+
+
+#-[AP000.E]------------------------------------------------------
+#	zhF %/% 10 Quoatient.  Quoatient그룹이 다음에도 반복.
+filtId <- "AP000.E";	tStmp <- Sys.time()
+grpLst <- apply( zhF ,1 ,function(p){ getQGrp(p,0:4) } )
+for( gIdx in 1:length(grpLst) ){
+	# 1~9, 40번 대역에서 1개 나오는 경우는 너무 흔하니,
+	#	아예 없는 것으로 제외시킴.
+	if( 1==grpLst[[gIdx]]$grpCnt[1] ){
+		grpLst[[gIdx]]$grpCnt[1] <- 0
+		grpLst[[gIdx]]$grpLst[[1]] <- integer(0)
+	}
+	if( 1==grpLst[[gIdx]]$grpCnt[5] ){
+		grpLst[[gIdx]]$grpCnt[5] <- 0
+		grpLst[[gIdx]]$grpLst[[5]] <- integer(0)
+	}
+}
+matMtx <- matrix( 0 ,nrow=0 ,ncol=3 )
+for( aIdx in 1:(length(grpLst)-1) ){
+	scanSpan <- (aIdx+1):length(grpLst)
+	scanRst <- grpLst[[aIdx]]$filt( grpLst[scanSpan] )
+	missH <- scanSpan[scanRst>0]
+	if( 0<length(missH) ){
+		matMtx <- rbind( matMtx ,cbind( aIdx ,missH ,scanRst[scanRst>0] ) )	
+	}
+}
+# 길이 1짜리에 대한 최소거리 - 10~39 영역에서만.
+	matMtx.1 <- matMtx[ matMtx[,3]==1 ,]
+	hDist <- matMtx.1[,2]-matMtx.1[,1]
+	#	matMtx.1[hDist%in%(1:2),]	# 1H는 35개. (2H이면 73)
+# 길이 2짜리에 대한 최소거리
+	matMtx.2 <- matMtx[ matMtx[,3]==2 ,]
+	hDist <- matMtx.2[,2]-matMtx.2[,1]
+	#	matMtx.2[hDist%in%(1:5),]	# 5H 까지 35개 발생.(10H 이면 62개)
+# 길이 3짜리에 대한 최소거리
+	matMtx.3 <- matMtx[ matMtx[,3]==3 ,]
+	hDist <- matMtx.3[,2]-matMtx.3[,1]
+	#	matMtx.3[hDist%in%(1:200),]	# 200H 까지 33개 발생(400H 이면 50개)
+
+backMtx <- matrix( c(1,2) ,ncol=2 ,nrow=1 ) # grp 크기 ,검색 H 범위
+backMtx <- rbind( backMtx ,c(2,5) )
+backMtx <- rbind( backMtx ,c(3,200) )
+
+filtHLst <- list()
+for( bIdx in 1:nrow(backMtx) ){
+	flag <- rep( 0 ,nrow(zhF) )
+	for( hIdx in testSpan ){
+		scanSpan <- (hIdx-backMtx[bIdx,2]):(hIdx-1)
+		stdGrpLst <- grpLst[hIdx]
+		scanRst <- sapply( grpLst[scanSpan] ,function(p){
+							p$filt( stdGrpLst ,pMin=backMtx[bIdx,1] )
+						})
+		if( any(scanRst>0) ){
+			flag[hIdx] <- scanSpan[scanRst>0]
+		}
+	}
+	filtHLst[[1+length(filtHLst)]] <- flag
+}
+
+# 디버깅용
+	# for( fIdx in 1:length(filtHLst) ){
+	# 	filtHLst[[fIdx]][filtHLst[[fIdx]]>0]
+	# 	which( filtHLst[[fIdx]]>0 )	# 30, 10, 10
+	# }
+
+missH <- do.call( c ,lapply( filtHLst ,function(p){which(p>0)}) )
+missHLst[[filtId]] <- sort(unique(missH)) # backMtx 기준 시, 45개 나오네..
+
+
 #-[AQ000.A]------------------------------------------------------
 #	DNA 코드가 다음 H에서 몇 개나 재발되는지. (3개 이상 20/787)
 filtId <- "AQ000.A"
@@ -161,21 +242,32 @@ for( hIdx in 2:nrow(zhF) ){
 }
 missHLst[[filtId]] <- which(flag>=3)
 
-QQE.Todo
+
 #-[AR000.A]------------------------------------------------------
-#	remainder 재발
-filtId <- "AR000.A"
+#	remainder 근거리 재발. (3H 이내 재발 31/787)
+filtId <- "AR000.A";	tStmp <- Sys.time()
 stdCodeMtx <- zhF %% 2
+matMtx <- scanSameRow( stdCodeMtx ,pThld=6 )
+matMtx <- matMtx[3>=(matMtx[,"bIdx"]-matMtx[,"aIdx"]) ,]
+missHLst[[filtId]] <- sort(unique(matMtx[,"bIdx"]))
 
-#-[AR000.A]------------------------------------------------------
-#	remainder 패턴 재발 (nextVal)
+#-[AR000.B]------------------------------------------------------
+#	remainder 패턴 재발 (nextVal)	17% 탈락.
+filtId <- "AR000.B";	tStmp <- Sys.time()
+stdCodeMtx <- zhF %% 10
+flagLst <- list()
+for( hIdx in testSpan ){
+	ptn <- getPtnRebGrp( stdCodeMtx[1:(hIdx-1),] ,pNextJump=1 )
+	flagLst[[1+length(flagLst)]] <- ptn$filt( stdCodeMtx[hIdx,,drop=F] )
+}
+flag <- sapply( flagLst ,function(p){p[[1]]$survive} )
+missHLst[[filtId]] <- testSpan[!flag]
 
-
-#-[AS000.B]------------------------------------------------------
+#-[AS000.A]------------------------------------------------------
 #	연이은 DNA코드가 다음에도 연이어서 재발 52/787
 #	3개 이상은 잘라내므로 2개 연속일때만 체크하면 된다.
 #	수정. 같은 col 간격.
-filtId <- "AS000.B"
+filtId <- "AS000.A"
 flag <- rep(0,nrow(zhF))
 flag <- rep(0,nrow(zhF))
 for( hIdx in 2:nrow(zhF) ){
