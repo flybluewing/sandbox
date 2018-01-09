@@ -37,6 +37,8 @@ allZoidMtx <- allZoidMtx[stepM<=2,]		# 7740330
 filtLst[[1+length(filtLst)]] <- getFiltHist( filtId ,tStmp ,allZoidMtx )
 k.FLogStr(sprintf("%s %d",filtId,nrow(allZoidMtx)))
 
+codeMtx <- NULL # for gc
+
 #-[A0020]------------------------------------------------------
 filtId <- "A0020"
 codeMtx <- allZoidMtx %% 2
@@ -46,6 +48,8 @@ allZoidMtx <- allZoidMtx[(cnt>0)&(cnt<6),]	# 7599240
 filtLst[[1+length(filtLst)]] <- getFiltHist( filtId ,tStmp ,allZoidMtx )
 k.FLogStr(sprintf("%s %d",filtId,nrow(allZoidMtx)))
 
+codeMtx <- NULL # for gc
+
 #-[A0030]------------------------------------------------------
 filtId <- "A0030"
 codeMtx <- allZoidMtx %% 3
@@ -54,6 +58,8 @@ cnt <- apply( codeMtx ,1 ,function(p){sum(p==0)})
 allZoidMtx <- allZoidMtx[(cnt>0),]	# 7041489
 filtLst[[1+length(filtLst)]] <- getFiltHist( filtId ,tStmp ,allZoidMtx )
 k.FLogStr(sprintf("%s %d",filtId,nrow(allZoidMtx)))
+
+codeMtx <- NULL # for gc
 
 #----------------------------------------------------------------
 #  A0100 : lastZoid를 기준으로 잘라낸다.
@@ -78,6 +84,7 @@ allZoidMtx <- allCodeMtx
 filtLst[[1+length(filtLst)]] <- getFiltHist( filtId ,tStmp ,allZoidMtx )
 k.FLogStr(sprintf("%s %d",filtId,nrow(allZoidMtx)))
 
+filtRst <- NULL # for gc
 
 #-[A0110.A]------------------------------------------------------
 filtId <- "A0110.A"
@@ -99,6 +106,8 @@ tDiff <- Sys.time() - tStmp
 allZoidMtx <- allCodeMtx
 filtLst[[1+length(filtLst)]] <- getFiltHist( filtId ,tStmp ,allZoidMtx )
 k.FLogStr(sprintf("%s %d",filtId,nrow(allZoidMtx)))
+
+filtRst <- NULL # for gc
 
 #-[AK000.A]------------------------------------------------------
 #	zhF[,6]-zhF[,1] 이 20 이하인 경우는 전체 5.6% 정도.. 자르자!!

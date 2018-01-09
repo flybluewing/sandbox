@@ -307,6 +307,11 @@ missFlag <- rep(0,nrow(zhF))
 missFlag[allMiss] <- 1
 finalMiss <- missFlag[testSpan]
 
+missFlag <- rep(0,nrow(zhF))
+for( mIdx in 1:length(missHLst) ){
+	missFlag[ missHLst[[mIdx]] ] <- missFlag[ missHLst[[mIdx]] ] + 1
+}
+
 #=[SAVE]=======================================================================================
 valObj <- list( missHLst=missHLst ,lostHLst=lostHLst )
 valObj$memo <- sprintf("zhF size : %d.",nrow(zhF))
