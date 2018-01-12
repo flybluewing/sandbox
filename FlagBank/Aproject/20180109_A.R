@@ -79,6 +79,8 @@ for( hIdx in testSpan ){ # 35분 정도 소요.(388 ZH, 21 Filt)
 
 } # hIdx
 
+# save( fRstLst ,file="Obj_fRstLst.save" )
+
 filtedCnt <- sapply( fRstLst ,length )
 fRstMtx <- do.call( rbind ,fRstLst[filtedCnt==5] )
 rownames(fRstMtx) <- testSpan[which( filtedCnt==5 )]
@@ -96,14 +98,14 @@ rownames(fRstMtx) <- testSpan[which( filtedCnt==5 )]
 		}
 	}
 
+# 
 
-
-
-#		
-# save( fRstLst ,file="Obj_fRstLst.save" )
-
-
-
+#  아예 한번도 안 나온 필터가 있긴 하다...
+stdFiltCnt <- table(as.vector(fRstMtx))
+	# A0010 A0020 A0030 A0100.A A0110.A AK000.A AK000.C AK000.D AL000.A 
+	#     4     2     6      42      40       5       4       5      14 
+	# AP000.A AP000.B AP000.C AP000.D AP000.E AQ000.A AR000.A AR000.B AS000.A C0000.A C1000.A 
+	#      4       4       3       2      29       4       9      18      62      69      19 
 
 
 
@@ -131,6 +133,28 @@ for( fIdx in 1:length(filtFuncLst) ){
 } # fIdx
 
 save( remLst ,file="Obj_remLst.save" )
+
+filtCnt <- rep( 0 ,9000000 )
+for( rIdx in 1:length(remLst) ){
+	filtCnt[remLst[[rIdx]]] <- filtCnt[remLst[[rIdx]]] + 1
+}
+cnt5Idx <- which(filtCnt==5)	# filtCnt==5는 4만개 정도.
+filtName <- attributes(remLst)$name
+
+#========================================================================================
+#------------------------------------------
+#	이제 4만개에서 하나씩 좁혀나가자.
+unUsedIdx <- which( !( filtName %in% names(stdFiltCnt) ) )	# filtName[unUsedIdx]
+filtCnt <- rep( 0 ,9000000 )
+for( rIdx in 1:length(remLst) ){
+	if( rIdx==unUsedIdx ){
+		next
+	}
+	filtCnt[remLst[[rIdx]]] <- filtCnt[remLst[[rIdx]]] + 1
+}
+cnt5Idx <- which(filtCnt==5)	# 3.6만개.
+
+
 
 
 
