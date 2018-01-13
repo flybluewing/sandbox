@@ -1,4 +1,24 @@
 # 20171116_D_H.R ÇÑ±Û
+minFreqCnt <- function( pMtx ,pSize=3 ,pInitVal=0 ){
+
+	minCntMtx <- matrix( pInitVal ,nrow=nrow(pMtx) ,ncol=2*pSize )
+	colnames(minCntMtx) <- c(sprintf("val%d",1:pSize),sprintf("Cnt%d",1:pSize))
+
+	for( rIdx in 1:nrow(pMtx) ){
+		valType <- sort(unique(pMtx[rIdx,]))
+		for( vIdx in 1:length(valType) ){
+			if(vIdx>pSize){
+				break
+			}
+			minCntMtx[rIdx,vIdx] <- valType[vIdx]
+			minCntMtx[rIdx,vIdx+pSize] <- sum(pMtx[rIdx,]==valType[vIdx])
+		}
+	}
+
+	return( minCntMtx )
+
+} # minFreqCnt()
+
 
 #	pZoid <- lastZoid;	pValSpan=0:4;	pBase=10
 getQGrp <- function( pZoid ,pValSpan ,pBase=10 ){

@@ -1,5 +1,6 @@
 # 20180109_A_H.R 마지막 시도가 되길..
 
+
 filt_A0010 <- function( pEnv ){	# 7740330
 	
 	filtId="A0010";	tStmp <- Sys.time()
@@ -96,6 +97,138 @@ filt_A0110.A <- function( pEnv ){	# 7740330
 		)
 
 } # filt_A0110.A()
+
+#-[AJ000.A]------------------------------------------------------
+#	rebLen <- getRebLen( 1:45 ,zhF )
+filt_AJ000.A <- function( pEnv ){	#
+	# 기존 발생과 5개 동일한 것은 딱 두 번 있었다.
+	# 사실 시간만 오래 걸리고 제거가능성은 그리 높지 않을 거 같은데....
+
+	filtId="AJ000.A";	tStmp <- Sys.time()
+	rebLen <- getRebLen( 1:45 ,pEnv$zhF )
+	zhF <- pEnv$zhF
+	allZoidMtx <- pEnv$allZoidMtx
+
+	testSpan <- 100:nrow(zhF)
+	stdCodeMtx <- matrix( NA ,nrow=length(testSpan) ,ncol=ncol(zhF) )
+	for( idx in 1:length(testSpan) ){
+		tIdx <- testSpan[idx]
+		rebLen <- getRebLen( 1:45 ,zhF[1:(tIdx-1),] )
+		stdCodeMtx[idx,] <- rebLen[zhF[tIdx,]]
+	}
+
+	curRebLen <- rep( NA ,ncol(allZoidMtx) )
+	flagIdx <- rep( 0 ,nrow(allZoidMtx) )
+	for( aIdx in 1:nrow(allZoidMtx) ){
+		curRebLen <- rebLen[allZoidMtx[aIdx,]]
+		for( sIdx in 1:nrow(stdCodeMtx) ){
+			cnt <- sum(curRebLen==stdCodeMtx[sIdx,])
+			if( cnt >=5 ){
+				flagIdx[aIdx] <- testSpan[sIdx]
+				break
+			}
+		}
+	}
+	flag <- flagIdx == 0
+
+	pEnv$logStr( sprintf("ID:%s rem:%d",filtId,sum(!flag)) )
+	return( list(filtId=filtId ,flag=flag ,filtCnt=sum(!flag), tCost=(Sys.time()-tStmp)) 
+		)
+
+} # filt_AJ000.A()
+
+#-[AJ000.B]------------------------------------------------------
+#	rebLen <- getRebLen( 1:45 ,zhF )
+#		filt_AJ000.A 에서 5개가 아닌 4개 일치 체크(최근 h개는 비슷한 패턴 없..)
+#			총 689개 내에서 20H이내는 4쌍, 5%는 154H이내.
+#			차리리 AJ000.B를 정식버전으로 하고 filt_AJ000.A를 Hard 버전으로 할까...
+filt_AJ000.B <- function( pEnv ){	#
+
+	filtId="AJ000.B";	tStmp <- Sys.time()
+	rebLen <- getRebLen( 1:45 ,pEnv$zhF )
+	zhF <- pEnv$zhF
+	allZoidMtx <- pEnv$allZoidMtx
+
+	testSpan <- 100:nrow(zhF)
+	stdCodeMtx <- matrix( NA ,nrow=length(testSpan) ,ncol=ncol(zhF) )
+	for( idx in 1:length(testSpan) ){
+		tIdx <- testSpan[idx]
+		rebLen <- getRebLen( 1:45 ,zhF[1:(tIdx-1),] )
+		stdCodeMtx[idx,] <- rebLen[zhF[tIdx,]]
+	}
+
+	testSpan <- testSpan[(nrow(stdCodeMtx)-159):nrow(stdCodeMtx)]
+	stdCodeMtx <- stdCodeMtx[(nrow(stdCodeMtx)-159):nrow(stdCodeMtx),]
+
+	curRebLen <- rep( NA ,ncol(allZoidMtx) )
+	flagIdx <- rep( 0 ,nrow(allZoidMtx) )
+	for( aIdx in 1:nrow(allZoidMtx) ){
+		curRebLen <- rebLen[allZoidMtx[aIdx,]]
+		for( sIdx in 1:nrow(stdCodeMtx) ){
+			cnt <- sum(curRebLen==stdCodeMtx[sIdx,])
+			if( cnt >=4 ){
+				flagIdx[aIdx] <- testSpan[sIdx]
+				break
+			}
+		}
+	}
+	flag <- flagIdx == 0
+
+	pEnv$logStr( sprintf("ID:%s rem:%d",filtId,sum(!flag)) )
+	return( list(filtId=filtId ,flag=flag ,filtCnt=sum(!flag), tCost=(Sys.time()-tStmp)) 
+		)
+
+} # filt_AJ000.B()
+
+#-[AJ000.C]------------------------------------------------------
+#	rebLen <- getRebLen( 1:45 ,zhF )
+#		제일 작은 rebLen 3개의 값과 갯수.
+#			1H 에서 동일매치 6쌍, 7H에서 동일매치 45쌍
+filt_AJ000.C <- function( pEnv ){	#
+
+	filtId="AJ000.C";	tStmp <- Sys.time()
+	rebLen <- getRebLen( 1:45 ,pEnv$zhF )
+	zhF <- pEnv$zhF
+	allZoidMtx <- pEnv$allZoidMtx
+
+	testSpan <- 100:nrow(zhF)
+	stdCodeMtx <- matrix( NA ,nrow=length(testSpan) ,ncol=ncol(zhF) )
+	for( idx in 1:length(testSpan) ){
+		tIdx <- testSpan[idx]
+		rebLen <- getRebLen( 1:45 ,zhF[1:(tIdx-1),] )
+		stdCodeMtx[idx,] <- rebLen[zhF[tIdx,]]
+	}
+	testSpan <- testSpan[ (nrow(stdCodeMtx)-7+1):nrow(stdCodeMtx) ]
+	stdCodeMtx <- stdCodeMtx[(nrow(stdCodeMtx)-7+1):nrow(stdCodeMtx), ]
+	stdCodeMtx <- minFreqCnt( stdCodeMtx ,pSize=3 )
+
+	allCodeMtx <- allZoidMtx
+	for( aIdx in 1:nrow(allCodeMtx) ){
+		allCodeMtx[aIdx,] <- rebLen[ allZoidMtx[aIdx,] ]
+	}
+	allCodeMtx <- minFreqCnt( allCodeMtx ,pSize=3 )
+
+	flagIdx <- rep(0,nrow(allCodeMtx))
+	for( aIdx in 1:nrow(allCodeMtx) ){
+		for( sIdx in 1:nrow(stdCodeMtx) ){
+			cnt <- sum( allCodeMtx[aIdx,]==stdCodeMtx[sIdx,] )
+			if( cnt >= 6 ){
+				flagIdx[aIdx] <- sIdx # testSpan[sIdx] 디버깅이 더 어려워진다...
+				break
+			}
+		}
+	}
+	flag <- flagIdx == 0
+
+	pEnv$logStr( sprintf("ID:%s rem:%d",filtId,sum(!flag)) )
+	return( list(filtId=filtId ,flag=flag ,filtCnt=sum(!flag), tCost=(Sys.time()-tStmp)) 
+		)
+
+} # filt_AJ000.C()
+
+
+
+
 
 #-[AK000.A]------------------------------------------------------
 #	zhF[,6]-zhF[,1] 이 20 이하인 경우는 전체 5.6% 정도.. 자르자!!
