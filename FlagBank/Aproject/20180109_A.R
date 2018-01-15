@@ -34,6 +34,11 @@ filtFuncLst[[1+length(filtFuncLst)]] <- filt_A0030
 
 filtFuncLst[[1+length(filtFuncLst)]] <- filt_A0100.A
 filtFuncLst[[1+length(filtFuncLst)]] <- filt_A0110.A
+
+filtFuncLst[[1+length(filtFuncLst)]] <- filt_AJ000.A
+filtFuncLst[[1+length(filtFuncLst)]] <- filt_AJ000.B
+filtFuncLst[[1+length(filtFuncLst)]] <- filt_AJ000.C
+
 filtFuncLst[[1+length(filtFuncLst)]] <- filt_AK000.A
 filtFuncLst[[1+length(filtFuncLst)]] <- filt_AK000.B
 filtFuncLst[[1+length(filtFuncLst)]] <- filt_AK000.C
@@ -79,7 +84,7 @@ for( hIdx in testSpan ){ # 35분 정도 소요.(388 ZH, 21 Filt)
 
 } # hIdx
 
-# save( fRstLst ,file="Obj_fRstLst.save" )
+save( fRstLst ,file="Obj_fRstLst.save" )
 # load("Obj_fRstLst.save")
 
 # =====================================================================================
@@ -108,10 +113,10 @@ rownames(fRstMtx) <- testSpan[which( filtedCnt==5 )]
 
 #  - 아예 한번도 안 나온 필터가 있긴 하다... taskId.003
 stdFiltCnt <- table(as.vector(fRstMtx))
-	# A0010 A0020 A0030 A0100.A A0110.A AK000.A AK000.C AK000.D AL000.A 
-	#     4     2     6      42      40       5       4       5      14 
-	# AP000.A AP000.B AP000.C AP000.D AP000.E AQ000.A AR000.A AR000.B AS000.A C0000.A C1000.A 
-	#      4       4       3       2      29       4       9      18      62      69      19 
+	# A0010 A0020 A0030 A0100.A A0110.A AK000.A AK000.C AK000.D AL000.A AP000.A 
+	#     4     2     6      42      40       5       4       5      14       4
+	# AP000.B AP000.C AP000.D AP000.E AQ000.A AR000.A AR000.B AS000.A C0000.A C1000.A 
+	#       4       3       2      29       4       9      18      62      69      19 
 
 
 
@@ -137,8 +142,8 @@ for( fIdx in 1:length(filtFuncLst) ){
 		gc()
 	}
 } # fIdx
-
-# save( remLst ,file="Obj_remLst.save" )
+tDiff <- Sys.time() - tStmp
+save( remLst ,file="Obj_remLst.save" )
 # load("Obj_remLst.save")
 
 filtCnt <- rep( 0 ,nrow(gEnv$allZoidMtx) )

@@ -1,7 +1,8 @@
 # 20180109_A_H.R 마지막 시도가 되길..
 
 
-filt_A0010 <- function( pEnv ){	# 7740330
+filt_A0010 <- function( pEnv ){
+	#	42/789 5%
 	
 	filtId="A0010";	tStmp <- Sys.time()
 	allZoidMtx <- pEnv$allZoidMtx;	zhF <- pEnv$zhF
@@ -15,6 +16,43 @@ filt_A0010 <- function( pEnv ){	# 7740330
 		)
 
 } # filt_A0010()
+
+filt_A0010.hard <- function( pEnv ) {
+	#	동일간격 4개 이상이거나 3개가 연달아 놓이는 경우.
+	#	15/789 2%
+	
+	filtId="A0010.hard";	tStmp <- Sys.time()
+	allZoidMtx <- pEnv$allZoidMtx;	zhF <- pEnv$zhF
+
+	allCodeMtx <- allZoidMtx[,2:6]-allZoidMtx[,1:5]
+	flag <- rep( TRUE ,nrow(allCodeMtx) )
+	for( aIdx in 1:nrow(allCodeMtx) ){
+		curCode <- allCodeMtx[aIdx,]
+		cnt <- max(table(curCode))
+		if( 3 > cnt ){
+			next
+		} else if(4<=cnt){
+			flag[aIdx] <- FALSE
+			next
+		}
+		
+		seqCnt <- 0
+		for( idx in 1:(length(curCode)-1) ){
+			if( curCode[idx]==curCode[idx+1] ){
+				seqCnt <- seqCnt + 1
+			} else { seqCnt<-0 }
+			if(2<=seqCnt){ # 즉 3연속 발생.
+				flag[aIdx] <- FALSE
+			}
+		}
+	}
+
+	pEnv$logStr( sprintf("ID:%s rem:%d",filtId,sum(!flag)) )
+	return( list(filtId=filtId ,flag=flag ,filtCnt=sum(!flag), tCost=(Sys.time()-tStmp)) 
+		)
+
+} # filt_A0010.hard()
+
 
 filt_A0020 <- function( pEnv ){	# 7599240
 	
@@ -74,8 +112,9 @@ filt_A0100.A <- function( pEnv ){	# 7740330
 } # filt_A0100.A()
 
 #-[A0110.A]------------------------------------------------------
-filt_A0110.A <- function( pEnv ){	# 7740330
-	
+filt_A0110.A <- function( pEnv ){
+	# 117/389 (30%)
+
 	filtId="A0110.A";	tStmp <- Sys.time()
 	stdCodeMtx <- pEnv$zhF
 	allCodeMtx <- pEnv$allZoidMtx
@@ -97,6 +136,33 @@ filt_A0110.A <- function( pEnv ){	# 7740330
 		)
 
 } # filt_A0110.A()
+
+filt_A0110.A.hard <- function( pEnv ){
+	# pSurviveLimit=1	 1/389
+	# pSurviveLimit=2	11/389
+
+	filtId="A0110.A.hard";	tStmp <- Sys.time()
+	stdCodeMtx <- pEnv$zhF
+	allCodeMtx <- pEnv$allZoidMtx
+
+	flag <- rep( TRUE ,nrow(allCodeMtx) )
+	for( nextJump in 1:2 ){
+		filtGrp <- getPtnRebGrp2( stdCodeMtx ,pNextJump=nextJump )
+		filtRst <- filtGrp$filt( allCodeMtx ,pSurviveLimit=1 )
+		rstFlag <- sapply(filtRst ,function(p){p$survive})
+		flag <- flag & rstFlag
+		tDiff <- Sys.time() - tStmp
+		pEnv$logStr(sprintf("nextJump:%d  past:%.1f%s remove:%d"
+						,nextJump,tDiff,units(tDiff),sum(!flag) )
+				)
+	}
+
+	pEnv$logStr( sprintf("ID:%s rem:%d",filtId,sum(!flag)) )
+	return( list(filtId=filtId ,flag=flag ,filtCnt=sum(!flag), tCost=(Sys.time()-tStmp)) 
+		)
+
+} # filt_A0110.A.hard()
+
 
 #-[AJ000.A]------------------------------------------------------
 #	rebLen <- getRebLen( 1:45 ,zhF )
@@ -434,6 +500,7 @@ filt_AP000.E <- function( pEnv ,pStepSize=1000000 ){	#
 	backMtx <- matrix( c(1,2) ,ncol=2 ,nrow=1 ) # grp 크기 ,검색 H 범위
 	backMtx <- rbind( backMtx ,c(2,5) )
 	backMtx <- rbind( backMtx ,c(3,200) )
+	#	4이상은 아예 존재치를 않았다. AP000.C에서 제거됨.
 
 	flag <- rep( TRUE ,nrow(allZoidMtx) )
 	stepEadge <- nrow(allZoidMtx)	# 메모리 용량한계땜시 부분부분 처리하자.
@@ -469,6 +536,46 @@ filt_AP000.E <- function( pEnv ,pStepSize=1000000 ){	#
 		)
 
 } # filt_AP000.E()
+
+filt_AP000.E.hard <- function( pEnv ,pStepSize=1000000 ){	#
+
+	filtId="AP000.E.hard";	tStmp <- Sys.time()
+	allZoidMtx <- pEnv$allZoidMtx
+	stdGrpLst <- apply( pEnv$zhF ,1 ,function(p){ getQGrp(p,0:4) } )
+	# grp 1짜리는 아예 backMtx에서 취급 안하기로 한다.
+
+	# grp 크기 ,검색 H 범위. 
+	# AP000.C등의 필터를 거치지 않을 상태도 포함될 수 있으므로 6개까지 모두 체크한다.
+	backMtx <- matrix( c(2,1) ,ncol=2 ,nrow=1 ) # 6 / 788
+	backMtx <- rbind( backMtx ,c(3,40) )	# 4 / 788
+	backMtx <- rbind( backMtx ,c(4,length(stdGrpLst)) )	# 0 / 788
+	backMtx <- rbind( backMtx ,c(5,length(stdGrpLst)) )	# 0 / 788
+	backMtx <- rbind( backMtx ,c(6,length(stdGrpLst)) )	# 0 / 788
+
+	flag <- rep( TRUE ,nrow(allZoidMtx) )
+	stepEadge <- nrow(allZoidMtx)	# 메모리 용량한계땜시 부분부분 처리하자.
+	stepSize <- pStepSize
+	for( stepIdx in 0:(stepEadge %/% stepSize) ){
+		stepSpan <- (1:stepSize) + stepIdx*stepSize
+		stepSpan <- stepSpan[stepSpan<=stepEadge]
+
+		allGrpLst <- apply( allZoidMtx[stepSpan,] ,1 ,function(p){ getQGrp(p,0:4) } )
+		for( bIdx in 1:nrow(backMtx) ){	
+			scanSpan <- (length(stdGrpLst)-backMtx[bIdx,2]+1):length(stdGrpLst)
+			for( sIdx in scanSpan ){
+				rstFlag <- stdGrpLst[[sIdx]]$filt( allGrpLst ,pMin=backMtx[bIdx,1] )
+				flag[stepSpan] <- (rstFlag==0) & flag[stepSpan]
+			}
+		}
+		allGrpLst <- NULL;	gc()
+	}
+
+	pEnv$logStr( sprintf("ID:%s rem:%d",filtId,sum(!flag)) )
+	return( list(filtId=filtId ,flag=flag ,filtCnt=sum(!flag), tCost=(Sys.time()-tStmp)) 
+		)
+
+} # filt_AP000.E.hard()
+
 
 #-[AQ000.A]------------------------------------------------------
 #	DNA 코드가 다음 H에서 몇 개나 재발되는지. (3개 이상 20/787)
