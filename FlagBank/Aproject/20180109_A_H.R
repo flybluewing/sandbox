@@ -70,13 +70,62 @@ filt_A0020 <- function( pEnv ){	# 7599240
 } # filt_A0020()
 
 filt_A0030 <- function( pEnv ){	# 7041489
-	
+	# 8 / 789
+
 	filtId="A0030";	tStmp <- Sys.time()
 	allZoidMtx <- pEnv$allZoidMtx;	zhF <- pEnv$zhF
 
 	codeMtx <- allZoidMtx %% 3
 	cnt <- apply( codeMtx ,1 ,function(p){sum(p==0)})
-	flag <- cnt>0
+	flag <- cnt < 5
+
+	pEnv$logStr( sprintf("ID:%s rem:%d",filtId,sum(!flag)) )
+	return( list(filtId=filtId ,flag=flag ,filtCnt=sum(!flag), tCost=(Sys.time()-tStmp)) 
+		)
+
+} # filt_A0030()
+
+filt_A0030.hard <- function( pEnv ){	# 7041489
+	# 2 / 789
+
+	filtId="A0030.hard";	tStmp <- Sys.time()
+	allZoidMtx <- pEnv$allZoidMtx;	zhF <- pEnv$zhF
+
+	codeMtx <- allZoidMtx %% 3
+	cnt <- apply( codeMtx ,1 ,function(p){sum(p==0)})
+	flag <- cnt < 6
+
+	pEnv$logStr( sprintf("ID:%s rem:%d",filtId,sum(!flag)) )
+	return( list(filtId=filtId ,flag=flag ,filtCnt=sum(!flag), tCost=(Sys.time()-tStmp)) 
+		)
+
+} # filt_A0030.hard()
+
+filt_A0040 <- function( pEnv ) {
+	# 6 / 789
+
+	filtId="A0040";	tStmp <- Sys.time()
+	allZoidMtx <- pEnv$allZoidMtx;	zhF <- pEnv$zhF
+
+	codeMtx <- allZoidMtx %% 5
+	cnt <- apply( codeMtx ,1 ,function(p){sum(p==0)})
+	flag <- cnt < 4
+
+	pEnv$logStr( sprintf("ID:%s rem:%d",filtId,sum(!flag)) )
+	return( list(filtId=filtId ,flag=flag ,filtCnt=sum(!flag), tCost=(Sys.time()-tStmp)) 
+		)
+
+} # filt_A0030()
+
+filt_A0040.hard <- function( pEnv ) {
+	# 0 / 789
+
+	filtId="A0040.hard";	tStmp <- Sys.time()
+	allZoidMtx <- pEnv$allZoidMtx;	zhF <- pEnv$zhF
+
+	codeMtx <- allZoidMtx %% 5
+	cnt <- apply( codeMtx ,1 ,function(p){sum(p==0)})
+	flag <- cnt < 5
 
 	pEnv$logStr( sprintf("ID:%s rem:%d",filtId,sum(!flag)) )
 	return( list(filtId=filtId ,flag=flag ,filtCnt=sum(!flag), tCost=(Sys.time()-tStmp)) 
@@ -86,14 +135,14 @@ filt_A0030 <- function( pEnv ){	# 7041489
 
 #----------------------------------------------------------------
 #  A0100 : lastZoid를 기준으로 잘라낸다.
-filt_A0100.A <- function( pEnv ){	# 7740330
+filt_A0100.A <- function( pEnv ,pJumpSpan=1:8 ){
 	
 	filtId="A0100.A";	tStmp <- Sys.time()
 	stdCodeMtx <- pEnv$zhF
 	allCodeMtx <- pEnv$allZoidMtx
 
 	flag <- rep( TRUE ,nrow(allCodeMtx) )
-	for( nextJump in 1:8 ){
+	for( nextJump in pJumpSpan ){
 		filtGrp <- getPtnRebGrp( stdCodeMtx ,pNextJump=nextJump )
 		filtRst <- filtGrp$filt( allCodeMtx )
 		rstFlag <- sapply(filtRst ,function(p){p$survive})
@@ -110,6 +159,34 @@ filt_A0100.A <- function( pEnv ){	# 7740330
 		)
 
 } # filt_A0100.A()
+
+filt_A0100.A.hard <- function( pEnv ,pJumpSpan=1:2 ){
+	#	pJumpSpan 기본값만 바꿨는데, 뭔가 더 좋은 방안 있을 듯.
+	
+	filtId="A0100.A.hard";	tStmp <- Sys.time()
+	stdCodeMtx <- pEnv$zhF
+	allCodeMtx <- pEnv$allZoidMtx
+
+	flag <- rep( TRUE ,nrow(allCodeMtx) )
+	for( nextJump in pJumpSpan ){
+		filtGrp <- getPtnRebGrp( stdCodeMtx ,pNextJump=nextJump )
+		filtRst <- filtGrp$filt( allCodeMtx )
+		rstFlag <- sapply(filtRst ,function(p){p$survive})
+		flag <- flag & rstFlag
+		# allCodeMtx <- allCodeMtx[flag,] 속도 단축 시도는 나중에 하자.
+		tDiff <- Sys.time() - tStmp
+		pEnv$logStr(sprintf("nextJump:%d  past:%.1f%s remove:%d"
+						,nextJump,tDiff,units(tDiff),sum(!rstFlag) )
+				)
+	}
+
+	pEnv$logStr( sprintf("ID:%s rem:%d",filtId,sum(!flag)) )
+	return( list(filtId=filtId ,flag=flag ,filtCnt=sum(!flag), tCost=(Sys.time()-tStmp)) 
+		)
+
+} # filt_A0100.A.hard()
+
+
 
 #-[A0110.A]------------------------------------------------------
 filt_A0110.A <- function( pEnv ){
@@ -313,6 +390,23 @@ filt_AK000.A <- function( pEnv ){	#
 
 } # filt_AK000.A()
 
+filt_AK000.A.hard <- function( pEnv ){	#
+	# 4 / 789
+	
+	filtId="AK000.A.hard";	tStmp <- Sys.time()
+	stdCodeMtx <- pEnv$zhF
+	allCodeMtx <- pEnv$allZoidMtx
+
+	flag <- apply( allCodeMtx ,1 ,function(p){p[6]-p[1]})
+	flag <- flag>15
+
+	pEnv$logStr( sprintf("ID:%s rem:%d",filtId,sum(!flag)) )
+	return( list(filtId=filtId ,flag=flag ,filtCnt=sum(!flag), tCost=(Sys.time()-tStmp)) 
+		)
+
+} # filt_AK000.A.hard()
+
+
 #-[AK000.B]------------------------------------------------------
 #	zhF[,6]-zhF[,1] 이 다음에도 반복될 가능성.. 5% 미만.
 filt_AK000.B <- function( pEnv ){	#
@@ -435,6 +529,31 @@ filt_AP000.B <- function( pEnv ){	#
 
 } # filt_AP000.B()
 
+filt_AP000.B.hard <- function( pEnv ){	#
+	# 9 / 789 # 바로 다음에도 똑같은 패턴 발생.
+	filtId="AP000.B.hard";	tStmp <- Sys.time()
+	stdCodeMtx <- pEnv$zhF %/% 10
+	stdCodeMtx <- stdCodeMtx[nrow(stdCodeMtx),,drop=F]
+	allCodeMtx <- pEnv$allZoidMtx %/% 10
+
+	flag <- rep( 0 ,nrow(allCodeMtx) )
+	for( aIdx in 1:nrow(allCodeMtx) ){
+		for( sIdx in 1:nrow(stdCodeMtx) ){
+			if( all(allCodeMtx[aIdx,]==stdCodeMtx[sIdx,]) ){
+				flag[aIdx] <- sIdx
+				break
+			}
+		}
+	}
+	flag <- flag==0
+
+	pEnv$logStr( sprintf("ID:%s rem:%d",filtId,sum(!flag)) )
+	return( list(filtId=filtId ,flag=flag ,filtCnt=sum(!flag), tCost=(Sys.time()-tStmp)) 
+		)
+
+} # filt_AP000.B.hard()
+
+
 #-[AP000.C]------------------------------------------------------
 #	zhF %/% 10 Quoatient.  한가지 Quoatient가 4개 이상인 경우 49/787
 filt_AP000.C <- function( pEnv ){	#
@@ -451,6 +570,22 @@ filt_AP000.C <- function( pEnv ){	#
 		)
 
 } # filt_AP000.C()
+
+filt_AP000.C.hard <- function( pEnv ){	#
+	# 기본형과 똑같이 한다. 그냥 filt_AP000.C() 는 허용대상에서 제외..
+	filtId="AP000.C";	tStmp <- Sys.time()
+	allCodeMtx <- pEnv$allZoidMtx %/% 10
+
+	flagLst <- apply(allCodeMtx ,1 ,table)
+	flag <- sapply(flagLst,max)
+	flag <- flag < 4
+
+	pEnv$logStr( sprintf("ID:%s rem:%d",filtId,sum(!flag)) )
+	return( list(filtId=filtId ,flag=flag ,filtCnt=sum(!flag), tCost=(Sys.time()-tStmp)) 
+		)
+
+} # filt_AP000.C.hard()
+
 
 #-[AP000.D]------------------------------------------------------
 #	zhF %/% 10 Quoatient.  Quoatient패턴 Next 값.	5/288
@@ -480,7 +615,7 @@ filt_AP000.D <- function( pEnv ){	#
 #-[AP000.E]------------------------------------------------------
 #	zhF %/% 10 Quoatient.  Quoatient그룹이 다음에도 반복.
 filt_AP000.E <- function( pEnv ,pStepSize=1000000 ){	#
-	
+
 	filtId="AP000.E";	tStmp <- Sys.time()
 	allZoidMtx <- pEnv$allZoidMtx
 	stdGrpLst <- apply( pEnv$zhF ,1 ,function(p){ getQGrp(p,0:4) } )
@@ -619,6 +754,30 @@ filt_AR000.A <- function( pEnv ){	#
 
 } # filt_AR000.A()
 
+filt_AR000.A.hard <- function( pEnv ){	#
+	#	2 / 789
+	filtId="AR000.A.hard";	tStmp <- Sys.time()
+	stdCodeMtx <- pEnv$zhF %% 10
+	allCodeMtx <- pEnv$allZoidMtx %% 10
+
+	flag <- rep( 0 ,nrow(allCodeMtx) )
+	for( aIdx in 1:nrow(allCodeMtx) ){
+		for( sIdx in 1:nrow(stdCodeMtx) ){
+			if( all(allCodeMtx[aIdx,]==stdCodeMtx[sIdx,]) ){
+				flag[aIdx] <- sIdx
+				break
+			}
+		}
+	}
+	flag <- flag==0
+
+	pEnv$logStr( sprintf("ID:%s rem:%d",filtId,sum(!flag)) )
+	return( list(filtId=filtId ,flag=flag ,filtCnt=sum(!flag), tCost=(Sys.time()-tStmp)) 
+		)
+
+} # filt_AR000.A.hard()
+
+
 #-[AR000.B]------------------------------------------------------
 #	remainder 패턴 재발 (nextVal)	17% 탈락.
 filt_AR000.B <- function( pEnv ){	#
@@ -642,25 +801,28 @@ filt_AR000.B <- function( pEnv ){	#
 } # filt_AR000.B()
 
 #-[AS000.A]------------------------------------------------------
-#	연이은 DNA코드가 다음에도 연이어서 재발 38/787
-filt_AS000.A <- function( pEnv ){	#
-	
+#	연이은 DNA코드가 다음에도 같은 간격으로 재발 38/787
+filt_AS000.A <- function( pEnv ){	
+	# 29/389  7.5%	
 	filtId="AS000.A";	tStmp <- Sys.time()
 	lastZoid <- pEnv$zhF[nrow(pEnv$zhF),]
 	allCodeMtx <- pEnv$allZoidMtx
 
-	flag <- rep( 0 ,nrow(allZoidMtx) )
-	for( aIdx in 1:nrow(allZoidMtx) ){
-		rebIdx.1 <- which( lastZoid %in% allZoidMtx[aIdx,] )
-		if( 2!=length(rebIdx.1) ){
-			next	# 3개 이상발생은 AQ000.A에서 제거되었다.
+	flag <- rep( 0 ,nrow(allCodeMtx) )
+	for( aIdx in 1:nrow(allCodeMtx) ){
+		rebIdx.1 <- which( lastZoid %in% allCodeMtx[aIdx,] )
+		if( 2>length(rebIdx.1) ){
+			next
 		}
-		flag[aIdx] <- 2
-		rebIdx.2 <- which( allZoidMtx[aIdx,] %in% lastZoid )
-		if( (rebIdx.1[2]-rebIdx.1[1])==(rebIdx.2[2]-rebIdx.2[1]) ){
+		rebIdx.2 <- which( allCodeMtx[aIdx,] %in% lastZoid )
+		rebLen <- length(rebIdx.1)
+		widthF <- ( rebIdx.1[2:rebLen]-rebIdx.1[1:(rebLen-1)] ) ==
+					( rebIdx.2[2:rebLen]-rebIdx.2[1:(rebLen-1)] )
+		if( all(widthF) ){ # all()이 더 엄하긴 한데...
 			flag[aIdx] <- rebIdx.1[1]
 		}
 	}
+	flag <- flag==0
 
 	pEnv$logStr( sprintf("ID:%s rem:%d",filtId,sum(!flag)) )
 	return( list(filtId=filtId ,flag=flag ,filtCnt=sum(!flag), tCost=(Sys.time()-tStmp)) 
@@ -668,18 +830,43 @@ filt_AS000.A <- function( pEnv ){	#
 
 } # filt_AS000.A()
 
+filt_AS000.A.hard <- function( pEnv ){	#
+	# 7/389  2%
+	filtId="AS000.A.hard";	tStmp <- Sys.time()
+	lastZoid <- pEnv$zhF[nrow(pEnv$zhF),]
+	allCodeMtx <- pEnv$allZoidMtx
 
+	flag <- rep( 0 ,nrow(allCodeMtx) )
+	for( aIdx in 1:nrow(allCodeMtx) ){
+		rebIdx.1 <- which( lastZoid %in% allCodeMtx[aIdx,] )
+		if( 3>length(rebIdx.1) ){
+			next	# 3개 이상발생은 AQ000.A에서 제거되었다.
+		}
+		# flag[aIdx] <- 2
+		rebIdx.2 <- which( allCodeMtx[aIdx,] %in% lastZoid )
+		if( (rebIdx.1[2]-rebIdx.1[1])==(rebIdx.2[2]-rebIdx.2[1]) ){
+			flag[aIdx] <- rebIdx.1[1]
+		}
+	}
+	flag <- flag==0
+
+	pEnv$logStr( sprintf("ID:%s rem:%d",filtId,sum(!flag)) )
+	return( list(filtId=filtId ,flag=flag ,filtCnt=sum(!flag), tCost=(Sys.time()-tStmp)) 
+		)
+
+} # filt_AS000.A.hard()
 
 #-[C0000.A]------------------------------------------------------
-#	zhF[,2:6]-zhF[,1:5] : 똑같은 경우는 없었고, 1개 틀린 경우는 32/787
-#		백만개 당 23분 정도 소요.
+#	zhF[,2:6]-zhF[,1:5] 
 filt_C0000.A <- function( pEnv ){	#
-	
+	#	22 / 389
+	#	백만개 당 23분 정도 소요.
+
 	filtId="C0000.A";	tStmp <- Sys.time()
 	stdCodeMtx <- pEnv$zhF[,2:6] - pEnv$zhF[,1:5]
-	allCodeMtx <- pEnv$allZoidMtx[,2:6] - pEnv$allZoidMtx[,1:5]
+	allCodeMtx <- pEnv$allZoidMtx[,2:6,drop=F] - pEnv$allZoidMtx[,1:5,drop=F]
 
-	flag <- rep(0,nrow(allZoidMtx))
+	flag <- rep(0,nrow(allCodeMtx))
 	for( aIdx in 1:nrow(allCodeMtx) ){
 		for( sIdx in 1:nrow(stdCodeMtx) ){
 			cnt <- sum(stdCodeMtx[sIdx,]!=allCodeMtx[aIdx,])
@@ -697,15 +884,42 @@ filt_C0000.A <- function( pEnv ){	#
 
 } # filt_C0000.A()
 
+filt_C0000.A.hard <- function( pEnv ){	#
+	#	0 / 389
+
+	filtId="C0000.A.hard";	tStmp <- Sys.time()
+	stdCodeMtx <- pEnv$zhF[,2:6] - pEnv$zhF[,1:5]
+	allCodeMtx <- pEnv$allZoidMtx[,2:6,drop=F] - pEnv$allZoidMtx[,1:5,drop=F]
+
+	flag <- rep(0,nrow(allCodeMtx))
+	for( aIdx in 1:nrow(allCodeMtx) ){
+		for( sIdx in 1:nrow(stdCodeMtx) ){
+			cnt <- sum(stdCodeMtx[sIdx,]!=allCodeMtx[aIdx,])
+			if( 0 >= cnt ){
+				flag[aIdx] <- sIdx
+				break
+			}	
+		}
+	}
+	flag <- flag == 0
+
+	pEnv$logStr( sprintf("ID:%s rem:%d",filtId,sum(!flag)) )
+	return( list(filtId=filtId ,flag=flag ,filtCnt=sum(!flag), tCost=(Sys.time()-tStmp)) 
+		)
+
+} # filt_C0000.A.hard()
+
+
 #-[C1000.A]------------------------------------------------------
 #	abs(zhF[1:(nrow(zhF)-1),] - zhF[2:nrow(zhF),])
-#		2개 이하로 틀린 경우는 65개 정도
-filt_C1000.A <- function( pEnv ){	#
+filt_C1000.A <- function( pEnv ){
+	#	2개 이하로 틀린 경우는 65개 정도
 	
 	filtId="C1000.A";	tStmp <- Sys.time()
 	zhF <- pEnv$zhF
 	stdCodeMtx <- abs(zhF[1:(nrow(zhF)-1),] - zhF[2:nrow(zhF),])
 	allCodeMtx <- pEnv$allZoidMtx
+	lastZoid <- pEnv$allZoidMtx[nrow(pEnv$allZoidMtx),]
 
 	flag <- rep( 0 ,nrow(allZoidMtx) )
 	for( aIdx in 1:nrow(allZoidMtx) ){
@@ -726,6 +940,33 @@ filt_C1000.A <- function( pEnv ){	#
 
 } # filt_C1000.A()
 
+filt_C1000.A.hard <- function( pEnv ){
+	#	1개 이하로 틀린 경우
+	
+	filtId="C1000.A.hard";	tStmp <- Sys.time()
+	zhF <- pEnv$zhF
+	stdCodeMtx <- abs(zhF[1:(nrow(zhF)-1),] - zhF[2:nrow(zhF),])
+	allCodeMtx <- pEnv$allZoidMtx
+	lastZoid <- pEnv$allZoidMtx[nrow(pEnv$allZoidMtx),]
+
+	flag <- rep( 0 ,nrow(allZoidMtx) )
+	for( aIdx in 1:nrow(allZoidMtx) ){
+		chkVal <- abs(allZoidMtx[aIdx,]-lastZoid)
+		for( sIdx in 1:nrow(stdCodeMtx) ){
+			cnt <- sum(chkVal==stdCodeMtx[sIdx,])
+			if( 5<=cnt ){
+				flag[aIdx] <- sIdx
+				break
+			}
+		}
+	}
+	flag <- flag==0
+
+	pEnv$logStr( sprintf("ID:%s rem:%d",filtId,sum(!flag)) )
+	return( list(filtId=filtId ,flag=flag ,filtCnt=sum(!flag), tCost=(Sys.time()-tStmp)) 
+		)
+
+} # filt_C1000.A.hard()
 
 
 

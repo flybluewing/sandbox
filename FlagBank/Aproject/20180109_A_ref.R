@@ -86,6 +86,8 @@ cutCand <- function( rObj ,pCutIdx ){
 	return( newRObj )
 } # cutCand()
 
+candFiltCnt <- table(as.vector(candObj$filtNmMtx))
+
 #========================================================================================
 #	이제 4만개에서 하나씩 좁혀나가자.
 #------------------------------------------
@@ -114,6 +116,14 @@ if( !is.null(ptn) ){
 }
 candObj <- cutCand( candObj ,which(!flag) )
 
-
-
+	# k <- as.vector(candObj$filtNmMtx)
+	# 100*sort(table(k),decreasing=T)/nrow(candObj$filtNmMtx)
+	# 	A0110.A     A0100.A     AR000.B     C0000.A       A0010     AK000.A 
+	# 66.19178539 63.50356855 52.10364076 51.80371574 47.49368214 43.01424644 
+	# 	AP000.E     AP000.B     AP000.C       A0030 
+	# 38.77363992 29.76200394 28.87611430 26.84328918 
+	# 	AR000.A       A0020     AK000.C     AP000.D 
+	# 20.95031798 16.77358438 10.19189647  2.94926268
+	# 	AS000.A     C1000.A     AP000.A     AQ000.A     AK000.D 
+	# 0.46099586  0.21938960  0.05276459  0.02221667  0.01388542 
 

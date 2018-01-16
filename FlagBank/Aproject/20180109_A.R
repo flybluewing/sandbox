@@ -31,6 +31,7 @@ filtFuncLst <- list()
 filtFuncLst[[1+length(filtFuncLst)]] <- filt_A0010
 filtFuncLst[[1+length(filtFuncLst)]] <- filt_A0020
 filtFuncLst[[1+length(filtFuncLst)]] <- filt_A0030
+filtFuncLst[[1+length(filtFuncLst)]] <- filt_A0040
 
 filtFuncLst[[1+length(filtFuncLst)]] <- filt_A0100.A
 filtFuncLst[[1+length(filtFuncLst)]] <- filt_A0110.A
