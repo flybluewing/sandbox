@@ -27,37 +27,7 @@ allZoidMtx <- zhF	# 일단 필터링 결과를 보기위해..
 # zhF ,allZoidMtx
 testSpan <- 400:nrow(zhF)
 
-filtFuncLst <- list()
-filtFuncLst[[1+length(filtFuncLst)]] <- filt_A0010
-filtFuncLst[[1+length(filtFuncLst)]] <- filt_A0020
-filtFuncLst[[1+length(filtFuncLst)]] <- filt_A0030
-filtFuncLst[[1+length(filtFuncLst)]] <- filt_A0040
-
-filtFuncLst[[1+length(filtFuncLst)]] <- filt_A0100.A
-filtFuncLst[[1+length(filtFuncLst)]] <- filt_A0110.A
-
-filtFuncLst[[1+length(filtFuncLst)]] <- filt_AJ000.A
-filtFuncLst[[1+length(filtFuncLst)]] <- filt_AJ000.B
-filtFuncLst[[1+length(filtFuncLst)]] <- filt_AJ000.C
-
-filtFuncLst[[1+length(filtFuncLst)]] <- filt_AK000.A
-filtFuncLst[[1+length(filtFuncLst)]] <- filt_AK000.B
-filtFuncLst[[1+length(filtFuncLst)]] <- filt_AK000.C
-filtFuncLst[[1+length(filtFuncLst)]] <- filt_AK000.D
-
-filtFuncLst[[1+length(filtFuncLst)]] <- filt_AL000.A
-filtFuncLst[[1+length(filtFuncLst)]] <- filt_AP000.A
-filtFuncLst[[1+length(filtFuncLst)]] <- filt_AP000.B
-filtFuncLst[[1+length(filtFuncLst)]] <- filt_AP000.C
-filtFuncLst[[1+length(filtFuncLst)]] <- filt_AP000.D
-filtFuncLst[[1+length(filtFuncLst)]] <- filt_AP000.E
-filtFuncLst[[1+length(filtFuncLst)]] <- filt_AQ000.A
-filtFuncLst[[1+length(filtFuncLst)]] <- filt_AR000.A
-filtFuncLst[[1+length(filtFuncLst)]] <- filt_AR000.B
-filtFuncLst[[1+length(filtFuncLst)]] <- filt_AS000.A
-
-filtFuncLst[[1+length(filtFuncLst)]] <- filt_C0000.A
-filtFuncLst[[1+length(filtFuncLst)]] <- filt_C1000.A
+filtFuncLst <- getFiltLst.base()
 
 # =====================================================================================
 # 실제 Zoid History들의 필터링 테스트.

@@ -1,5 +1,65 @@
 # 20180109_A_H.R 마지막 시도가 되길..
 
+getFiltLst.base <- function( ){
+
+	filtFuncLst <- list()
+	filtFuncLst[[1+length(filtFuncLst)]] <- filt_A0010
+	filtFuncLst[[1+length(filtFuncLst)]] <- filt_A0020
+	filtFuncLst[[1+length(filtFuncLst)]] <- filt_A0030
+	filtFuncLst[[1+length(filtFuncLst)]] <- filt_A0040
+
+	filtFuncLst[[1+length(filtFuncLst)]] <- filt_A0100.A
+	filtFuncLst[[1+length(filtFuncLst)]] <- filt_A0110.A
+
+	filtFuncLst[[1+length(filtFuncLst)]] <- filt_AJ000.A
+	filtFuncLst[[1+length(filtFuncLst)]] <- filt_AJ000.B
+	filtFuncLst[[1+length(filtFuncLst)]] <- filt_AJ000.C
+
+	filtFuncLst[[1+length(filtFuncLst)]] <- filt_AK000.A
+	filtFuncLst[[1+length(filtFuncLst)]] <- filt_AK000.B
+	filtFuncLst[[1+length(filtFuncLst)]] <- filt_AK000.C
+	filtFuncLst[[1+length(filtFuncLst)]] <- filt_AK000.D
+
+	filtFuncLst[[1+length(filtFuncLst)]] <- filt_AL000.A
+	filtFuncLst[[1+length(filtFuncLst)]] <- filt_AP000.A
+	filtFuncLst[[1+length(filtFuncLst)]] <- filt_AP000.B
+	filtFuncLst[[1+length(filtFuncLst)]] <- filt_AP000.C
+	filtFuncLst[[1+length(filtFuncLst)]] <- filt_AP000.D
+	filtFuncLst[[1+length(filtFuncLst)]] <- filt_AP000.E
+	filtFuncLst[[1+length(filtFuncLst)]] <- filt_AQ000.A
+	filtFuncLst[[1+length(filtFuncLst)]] <- filt_AR000.A
+	filtFuncLst[[1+length(filtFuncLst)]] <- filt_AR000.B
+	filtFuncLst[[1+length(filtFuncLst)]] <- filt_AS000.A
+
+	filtFuncLst[[1+length(filtFuncLst)]] <- filt_C0000.A
+	filtFuncLst[[1+length(filtFuncLst)]] <- filt_C1000.A
+
+	return( filtFuncLst )
+
+} # getFiltLst.base()
+
+getFiltLst.hard <- function( ){
+
+	filtFuncLst <- list()
+	filtFuncLst[[1+length(filtFuncLst)]] <- filt_A0010.hard
+	filtFuncLst[[1+length(filtFuncLst)]] <- filt_A0030.hard
+	filtFuncLst[[1+length(filtFuncLst)]] <- filt_A0040.hard
+	filtFuncLst[[1+length(filtFuncLst)]] <- filt_A0100.A.hard
+	filtFuncLst[[1+length(filtFuncLst)]] <- filt_A0110.A.hard
+	filtFuncLst[[1+length(filtFuncLst)]] <- filt_AK000.A.hard
+	filtFuncLst[[1+length(filtFuncLst)]] <- filt_AP000.B.hard
+	filtFuncLst[[1+length(filtFuncLst)]] <- filt_AP000.C.hard
+	filtFuncLst[[1+length(filtFuncLst)]] <- filt_AP000.E.hard
+	filtFuncLst[[1+length(filtFuncLst)]] <- filt_AR000.A.hard
+	filtFuncLst[[1+length(filtFuncLst)]] <- filt_AS000.A.hard
+	filtFuncLst[[1+length(filtFuncLst)]] <- filt_C0000.A.hard
+	filtFuncLst[[1+length(filtFuncLst)]] <- filt_C1000.A.hard
+
+	return( filtFuncLst )
+
+} # getFiltLst.hard()
+
+
 
 filt_A0010 <- function( pEnv ){
 	#	42/789 5%

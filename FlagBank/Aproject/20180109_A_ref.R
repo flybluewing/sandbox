@@ -7,7 +7,6 @@ source("../breedingPlace/20171116_C_H.R")
 source("../breedingPlace/20171116_D_H.R")
 source("20180109_A_H.R")
 
-# save( gEnv ,file="./save/Obj_gEnv.save" )
 load("./save/Obj_gEnv.save")
 load("./save/Obj_fRstLst.save")
 load("./save/Obj_remLst.save")
@@ -16,55 +15,41 @@ allZoidMtx <- gEnv$allZoidMtx
 zhF <- gEnv$zhF
 testSpan <- 400:nrow(zhF)
 
-# save( fRstLst ,file="Obj_fRstLst.save" )
-# load("Obj_fRstLst.save")
+curLogStr <- function( pMsg ,pConsole=F ,pTime=T ){
+	k.FLogStr( pMsg ,pConsole=pConsole ,pTime=pTime ,pFile="./log/A_ref.log" )
+}
 
 # =====================================================================================
-#	5개 필터 기준으로...
-#
-#
-#
-filtedCnt <- sapply( fRstLst ,length )
-fRstMtx <- do.call( rbind ,fRstLst[filtedCnt==5] )
-rownames(fRstMtx) <- testSpan[which( filtedCnt==5 )]
-# -------------------------------------------------------------------
-# fRstMtx 에 대해.. 최대 가뭄은 15번. 
-#	- 2번 까지는 동일반복 없음 taskId.001
-	matMtx <- scanSameRow( fRstMtx )
-# 	- ptn$nextVal 일치검사. 19개 기존 패턴 중 5개 일치 없음.(4개는 2번) taskId.002
-	inspSpan <- 10:nrow(fRstMtx)
-	flag <- rep( -1 ,nrow(fRstMtx) )
-	for( iIdx in inspSpan ){
-		ptn <- getPtnReb( fRstMtx[1:(iIdx-1),] )
-		if( !is.null(ptn) ){
-			flag[iIdx] <- sum(fRstMtx[iIdx,]==ptn$nextRow)
-		}
-	}
+#	Zoid History 분석 (fRstLst)
+# =====================================================================================
+stdFiltedCnt <- sapply( fRstLst ,length )
+		# 		1   2   3   4   5   6   7   8   9  12 
+		# 		8  63  99 101  69  31  10   3   3   1 
+stdFiltCnt.all <- table(do.call(c,fRstLst))
+#	barplot( stdFiltCnt.all )
 
-# 
+opt.groupSize <- 7
+# -------------------------------------------------------------------------------------
+#	Zoid History 분석 (fRstLst)
+stdRstMtx <- do.call( rbind ,fRstLst[stdFiltedCnt==opt.groupSize] )
+rownames(stdRstMtx) <- testSpan[which( stdFiltedCnt==opt.groupSize )]
 
-#  - 아예 한번도 안 나온 필터가 있긴 하다... taskId.003
-stdFiltCnt <- table(as.vector(fRstMtx))
-	# A0010 A0020 A0030 A0100.A A0110.A AK000.A AK000.C AK000.D AL000.A 
-	#     4     2     6      42      40       5       4       5      14 
-	# AP000.A AP000.B AP000.C AP000.D AP000.E AQ000.A AR000.A AR000.B AS000.A C0000.A C1000.A 
-	#      4       4       3       2      29       4       9      18      62      69      19 
+stdFiltCnt <- table(as.vector(stdRstMtx))
 
-
-# save( remLst ,file="Obj_remLst.save" )
-# load("Obj_remLst.save")
-
-filtCnt <- rep( 0 ,nrow(gEnv$allZoidMtx) )
+# =====================================================================================
+#	allZoidMtx 분석 (remLst)
+# =====================================================================================
+allFiltCnt <- rep( 0 ,nrow(gEnv$allZoidMtx) )
 for( rIdx in 1:length(remLst) ){
-	filtCnt[remLst[[rIdx]]] <- filtCnt[remLst[[rIdx]]] + 1
+	allFiltCnt[remLst[[rIdx]]] <- allFiltCnt[remLst[[rIdx]]] + 1
 }
-cnt5Idx <- which(filtCnt==5)	# filtCnt==5는 4만개 정도.
+allChosenIdx <- which(allFiltCnt==opt.groupSize)	# allFiltCnt==5는 4만개 정도.
+allFiltName <- attributes(remLst)$name
 
-#========================================================================================
-# candidate 들에 대한 정리. (cand.*)
-filtName <- attributes(remLst)$name
-
-candObj <- list( idx=cnt5Idx )
+# =====================================================================================
+#	candObj
+# =====================================================================================
+candObj <- list( idx=allChosenIdx )
 candObj$filtLst <- lapply(candObj$idx,function( p ){
 							fndFlag <- sapply( remLst ,function(p2){ p %in% p2} )
 							return( which(fndFlag) )
@@ -72,8 +57,9 @@ candObj$filtLst <- lapply(candObj$idx,function( p ){
 candObj$filtIdMtx <- do.call( rbind ,candObj$filtLst )
 candObj$filtNmMtx <- matrix( "" ,nrow=nrow(candObj$filtIdMtx) ,ncol=ncol(candObj$filtIdMtx) )
 for( rIdx in 1:nrow(candObj$filtNmMtx) ){
-	candObj$filtNmMtx[rIdx, ] <- filtName[candObj$filtIdMtx[rIdx,]]
+	candObj$filtNmMtx[rIdx, ] <- allFiltName[candObj$filtIdMtx[rIdx,]]
 }
+candObj$filtCnt <- table(as.vector( candObj$filtNmMtx ))
 
 cutCand <- function( rObj ,pCutIdx ){
 	if( 0==length(pCutIdx) ){
@@ -83,47 +69,43 @@ cutCand <- function( rObj ,pCutIdx ){
 	newRObj$filtLst <- rObj$filtLst[-pCutIdx]
 	newRObj$filtIdMtx <- rObj$filtIdMtx[-pCutIdx,]
 	newRObj$filtNmMtx <- rObj$filtNmMtx[-pCutIdx,]
+	newRObj$filtCnt <- table(as.vector(newRObj$filtNmMtx))
 	return( newRObj )
 } # cutCand()
 
-candFiltCnt <- table(as.vector(candObj$filtNmMtx))
-
-#========================================================================================
-#	이제 4만개에서 하나씩 좁혀나가자.
-#------------------------------------------
-#	taskId.003 적용.
-unUsedIdx <- which( !( filtName %in% names(stdFiltCnt) ) )	# filtName[unUsedIdx]
+# =====================================================================================
+#	Zoid History 상에서 걸리지 않은 필터는 무조건 제외.
+# =====================================================================================
+unUsedIdx <- which( !( allFiltName %in% names(stdFiltCnt) ) )	# allFiltName[unUsedIdx]
 flagCnt <- apply( candObj$filtIdMtx ,1 ,function(p){sum(p%in%unUsedIdx)} )
 candObj <- cutCand( candObj ,which(flagCnt>0) )
 
-# taskId.001. 모두 동일한 패턴이 2H 연속으로 나온 적은 없다.
-#				별반 효과 없는 거 같다....
-flagCnt <- rep( 0 ,length(candObj$idx) )
-for( dIdx in 1:2 ){
-	extRow <- fRstMtx[nrow(fRstMtx)-dIdx+1 ,]
-	flag <- apply( candObj$filtNmMtx ,1 ,function(p){all(p==extRow)})
-	flagCnt[flag] <- dIdx
+
+# =====================================================================================
+#	임의 절대 기준 탈락 확인.
+# =====================================================================================
+remIdx.arbital <- integer(0)
+# QQE.todo
+
+# =====================================================================================
+#	표준 절대 기준 탈락 확인.
+# =====================================================================================
+tEnv <- gEnv	;tStmp <- Sys.time()
+filtFuncLst <- getFiltLst.hard( )
+for( fIdx in seq_len(length(filtFuncLst)) ){
+	tEnv$allZoidMtx <- gEnv$allZoidMtx[candObj$idx,]
+	rstObj <- filtFuncLst[[fIdx]]( tEnv )
+	candObj <- cutCand( candObj ,which(!rstObj$flag) )
+	tDiff <- Sys.time() - tStmp
+	curLogStr(sprintf("current candidate : %d",length(candObj$idx),tDiff,units(tDiff) )
+			,pConsole=T
+		)
 }
-candObj <- cutCand( candObj ,which(flagCnt>0) )
 
-# taskId.002. 모두 동일한 패턴이 2H 연속으로 나온 적은 없다.
-#				이것도 별반 효과 없다.
-flag <- rep( TRUE ,length(candObj$idx) )
-ptn <- getPtnReb( fRstMtx )
-if( !is.null(ptn) ){
-	cnt <- apply( candObj$filtNmMtx ,1 ,function(p){sum(p==ptn$nextRow)} )
-	flag <- cnt < ncol(candObj$filtNmMtx)
-}
-candObj <- cutCand( candObj ,which(!flag) )
 
-	# k <- as.vector(candObj$filtNmMtx)
-	# 100*sort(table(k),decreasing=T)/nrow(candObj$filtNmMtx)
-	# 	A0110.A     A0100.A     AR000.B     C0000.A       A0010     AK000.A 
-	# 66.19178539 63.50356855 52.10364076 51.80371574 47.49368214 43.01424644 
-	# 	AP000.E     AP000.B     AP000.C       A0030 
-	# 38.77363992 29.76200394 28.87611430 26.84328918 
-	# 	AR000.A       A0020     AK000.C     AP000.D 
-	# 20.95031798 16.77358438 10.19189647  2.94926268
-	# 	AS000.A     C1000.A     AP000.A     AQ000.A     AK000.D 
-	# 0.46099586  0.21938960  0.05276459  0.02221667  0.01388542 
+# =====================================================================================
+#	결과저장.
+# =====================================================================================
 
+candObj$groupSize <- opt.groupSize
+save( candObj ,file=sprintf("Obj_candObj%d.save",opt.groupSize) )
