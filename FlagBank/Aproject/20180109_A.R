@@ -12,6 +12,9 @@ FB.f <- getFlagBank("./zoidHistory/ZH_Final.csv")
 setwd(curWd)
 zh	<- as.matrix( FB$zh )
 zhF	<- as.matrix( FB.f$zh )	;rownames(zhF) <- 1:nrow(zhF)
+saveId <- gsub(".*-([0-9]*)-([0-9]*) ([0-9]*).*","\\1\\2_\\3"
+				,sprintf("%s",Sys.time())
+			)
 lastZoid <- zhF[nrow(zhF),]
 filtLst <- list()
 getFiltHist <- function( pFiltId ,pTStmp ,pAllZoidMtx ,pFlag=NULL ){
@@ -36,7 +39,7 @@ for( hIdx in testSpan ){ # 35분 정도 소요.(388 ZH, 21 Filt)
 
 	gEnv <- list( allZoidMtx = allZoidMtx 
 					,zhF = zhF[1:(nrow(zhF)-1),]
-					,logFile = "./log/gEnv.log"
+					,logFile = sprintf("./log/gEnv%s.log",saveId)
 					,doLog = TRUE
 				)
 	gEnv$log <- function( pMsg ){ if(gEnv$doLog) k.FLog(pMsg ,pFile=gEnv$logFile,pTime=F) }
@@ -55,7 +58,7 @@ for( hIdx in testSpan ){ # 35분 정도 소요.(388 ZH, 21 Filt)
 
 } # hIdx
 
-save( fRstLst ,file="Obj_fRstLst.save" )
+save( fRstLst ,file=sprintf("./save/Obj_fRstLst%s.save",saveId) )
 # load("Obj_fRstLst.save")
 
 # =====================================================================================
@@ -95,11 +98,12 @@ stdFiltCnt <- table(as.vector(fRstMtx))
 # 실제 AllZoidMtx 대상
 gEnv <- list( allZoidMtx = getAllZoid()
 				,zhF = zhF
-				,logFile = "./log/allZoidMtx.log"
+				,logFile = sprintf("./log/allZoidMtx%s.log",saveId)
 				,doLog = TRUE
 			)
 gEnv$log <- function( pMsg ){ if(gEnv$doLog) k.FLog(pMsg ,pFile=gEnv$logFile) }
 gEnv$logStr <- function( pMsg ){ if(gEnv$doLog) k.FLogStr( pMsg ,pFile=gEnv$logFile) }
+save( gEnv ,file=sprintf("./save/Obj_gEnv%s.save",saveId) )
 
 tStmp <- Sys.time()
 remLst <- list()
@@ -114,7 +118,7 @@ for( fIdx in 1:length(filtFuncLst) ){
 	}
 } # fIdx
 tDiff <- Sys.time() - tStmp
-save( remLst ,file="Obj_remLst.save" )
+save( remLst ,file=sprintf("./save/Obj_remLst%s.save",saveId) )
 # load("Obj_remLst.save")
 
 filtCnt <- rep( 0 ,nrow(gEnv$allZoidMtx) )

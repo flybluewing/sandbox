@@ -7,16 +7,19 @@ source("../breedingPlace/20171116_C_H.R")
 source("../breedingPlace/20171116_D_H.R")
 source("20180109_A_H.R")
 
-load("./save/Obj_gEnv.save")
-load("./save/Obj_fRstLst.save")
-load("./save/Obj_remLst.save")
+saveId <- "0117_17" # 대상에 따라 바꿔사용.
+load(sprintf("./save/Obj_gEnv%s.save",saveId))
+load(sprintf("./save/Obj_fRstLst%s.save",saveId))
+load(sprintf("./save/Obj_remLst%s.save",saveId))
 
 allZoidMtx <- gEnv$allZoidMtx
 zhF <- gEnv$zhF
 testSpan <- 400:nrow(zhF)
 
 curLogStr <- function( pMsg ,pConsole=F ,pTime=T ){
-	k.FLogStr( pMsg ,pConsole=pConsole ,pTime=pTime ,pFile="./log/A_ref.log" )
+	k.FLogStr( pMsg ,pConsole=pConsole ,pTime=pTime 
+				,pFile=sprintf("./log/A_ref%s.log",saveId)
+			)
 }
 
 # =====================================================================================
@@ -28,13 +31,14 @@ stdFiltedCnt <- sapply( fRstLst ,length )
 stdFiltCnt.all <- table(do.call(c,fRstLst))
 #	barplot( stdFiltCnt.all )
 
-opt.groupSize <- 7
+opt.groupSize <- 5
+saveId <- sprintf("%sG%d",saveId,opt.groupSize)
 # -------------------------------------------------------------------------------------
 #	Zoid History 분석 (fRstLst)
 stdRstMtx <- do.call( rbind ,fRstLst[stdFiltedCnt==opt.groupSize] )
 rownames(stdRstMtx) <- testSpan[which( stdFiltedCnt==opt.groupSize )]
 
-stdFiltCnt <- table(as.vector(stdRstMtx))
+# stdFiltCnt <- table(as.vector(stdRstMtx)) # 의미 없는 듯.
 
 # =====================================================================================
 #	allZoidMtx 분석 (remLst)
@@ -49,6 +53,7 @@ allFiltName <- attributes(remLst)$name
 # =====================================================================================
 #	candObj
 # =====================================================================================
+curLogStr("startAnalysis")
 candObj <- list( idx=allChosenIdx )
 candObj$filtLst <- lapply(candObj$idx,function( p ){
 							fndFlag <- sapply( remLst ,function(p2){ p %in% p2} )
@@ -73,19 +78,28 @@ cutCand <- function( rObj ,pCutIdx ){
 	return( newRObj )
 } # cutCand()
 
+curLogStr("start candObj : %d",length(candObj$idx))
+
 # =====================================================================================
 #	Zoid History 상에서 걸리지 않은 필터는 무조건 제외.
 # =====================================================================================
 unUsedIdx <- which( !( allFiltName %in% names(stdFiltCnt) ) )	# allFiltName[unUsedIdx]
 flagCnt <- apply( candObj$filtIdMtx ,1 ,function(p){sum(p%in%unUsedIdx)} )
 candObj <- cutCand( candObj ,which(flagCnt>0) )
-
+curLogStr("remove unUsedIdx candObj : %d",length(candObj$idx))
 
 # =====================================================================================
 #	임의 절대 기준 탈락 확인.
 # =====================================================================================
-remIdx.arbital <- integer(0)
-# QQE.todo
+remIdx.flex <- integer(0)
+lastZoid <- zhF[nrow(zhF),]
+
+# lastZoid 이후로 1개 이상 값 발생.
+allCodeMtx <- gEnv$allZoidMtx[candObj$idx,]
+cnt <- apply( allCodeMtx ,1 ,function(p){sum(lastZoid%in%p)})
+candObj <- cutCand( candObj ,which(cnt>1) )
+
+curLogStr("remove flex candObj : %d",length(candObj$idx))
 
 # =====================================================================================
 #	표준 절대 기준 탈락 확인.
@@ -97,15 +111,17 @@ for( fIdx in seq_len(length(filtFuncLst)) ){
 	rstObj <- filtFuncLst[[fIdx]]( tEnv )
 	candObj <- cutCand( candObj ,which(!rstObj$flag) )
 	tDiff <- Sys.time() - tStmp
-	curLogStr(sprintf("current candidate : %d",length(candObj$idx),tDiff,units(tDiff) )
-			,pConsole=T
+	curLogStr(sprintf("current candidate : %d cost : %.1f%s (%s)"
+					,length(candObj$idx),tDiff,units(tDiff),rstObj$filtId
+			)
+			,pConsole=T ,pTime=F
 		)
 }
-
+curLogStr("remove std harden candObj : %d",length(candObj$idx))
 
 # =====================================================================================
 #	결과저장.
 # =====================================================================================
 
 candObj$groupSize <- opt.groupSize
-save( candObj ,file=sprintf("Obj_candObj%d.save",opt.groupSize) )
+save( candObj ,file=sprintf("Obj_candObj%s.save",saveId) )
