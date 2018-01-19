@@ -60,7 +60,7 @@ getFiltLst.hard <- function( ){
 } # getFiltLst.hard()
 
 
-
+# allZoidMtx[,2:6]-allZoidMtx[,1:5]
 filt_A0010 <- function( pEnv ){
 	#	42/789 5%
 	

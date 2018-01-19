@@ -51,6 +51,13 @@ allChosenIdx <- which(allFiltCnt==opt.groupSize)	# allFiltCnt==5는 4만개 정도.
 allFiltName <- attributes(remLst)$name
 
 # =====================================================================================
+#	임의 제거... 주사위를 굴려야 하는 부분.
+# =====================================================================================
+
+source("20180109_A_HDice.R")
+surviveIdx <- dice789( allZoidMtx ,zhF ,allChosenIdx )
+
+# =====================================================================================
 #	candObj
 # =====================================================================================
 curLogStr("startAnalysis")
@@ -125,3 +132,22 @@ curLogStr("remove std harden candObj : %d",length(candObj$idx))
 
 candObj$groupSize <- opt.groupSize
 save( candObj ,file=sprintf("Obj_candObj%s.save",saveId) )
+
+
+		# > tail(zhF)
+		# 	E1 E2 E3 E4 E5 E6
+		# 784  3 10 23 24 31 39
+		# 785  4  6 15 25 26 33
+		# 786 12 15 16 20 24 30
+		# 787  5  6 13 16 27 28
+		# 788  2 10 11 19 35 39
+		# 789  2  6  7 12 19 45
+
+# 1st. 2,19 제외
+# 2nd. 2,3컬럼에서의 1차이 제외
+# 3rd. 5 컬럼에서의 13 제외
+# 4rd. 2 컬럼에서의 6
+# 5th. Qoutient 에서의 3,2,1 비율 제외
+# 6th. 같은 컬럼에서의 반복 제외.
+# 7th. h-1 에서 같은 컬럼에서의 반복 제외.
+
