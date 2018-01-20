@@ -31,14 +31,56 @@ stdFiltedCnt <- sapply( fRstLst ,length )
 stdFiltCnt.all <- table(do.call(c,fRstLst))
 #	barplot( stdFiltCnt.all )
 
-opt.groupSize <- 5
+stdRebCnt <- rep( 0 ,nrow(zhF) )
+for( hIdx in 2:nrow(zhF) ){
+	stdRebCnt[hIdx] <- sum(zhF[hIdx,]%in%zhF[(hIdx-1),])
+}
+stdRebCnt <- stdRebCnt[testSpan]
+stdRebCnt.FiltedCnt <- sapply( fRstLst[stdRebCnt==0] ,length )
+# table(stdRebCnt.FiltedCnt)
+# 		 1  2  3  4  5  6  7 12 
+# 		10 56 52 23  9  2  1  1 
+
+
+opt.groupSize <- 3
 saveId <- sprintf("%sG%d",saveId,opt.groupSize)
+
+chosen.rebCnt <- which(stdRebCnt==0) # groupSize는 제각각.
+chosen.rebCnt.hIdx <- testSpan[chosen.rebCnt]
+chosen.group <- which(stdFiltedCnt==opt.groupSize)
+chosen.group.hIdx <- testSpan[chosen.group]
+
+# rebCnt==0 일때의 필터 분포. A0030 ,AK000.C 는 그냥 제외하자.
+# table( do.call( c ,fRstLst[chosen.group] ) )
+# 		A0010   A0020   A0030   A0040 A0100.A A0110.A 
+# 			5       4       1       3      42      35 
+# 		AJ000.B AJ000.C AK000.A AK000.B AK000.C AK000.D 
+# 			5      11       3       7       2       3 
+# 		AP000.A AP000.B AP000.C AP000.E AQ000.A AR000.A 
+# 			8       8       7      25       3       8 
+# 		AR000.B AS000.A C0000.A C1000.A 
+# 			25       5     114      18 
+
+# rebCnt==0 이고 opt.groupSize를 만족하는 상태에서의 필터분포
+#  table( do.call( c ,fRstLst[intersect(chosen.rebCnt,chosen.group)] ) )
+# 		A0010   A0020   A0030   A0040 A0100.A A0110.A AJ000.B 
+# 			1       2       1       2      14      15       2
+# 		AJ000.C AK000.A AK000.B AK000.C AK000.D AP000.A AP000.B 
+# 			5       2       3       2       1       5       4 
+# 		AP000.C AP000.E AQ000.A AR000.A AR000.B AS000.A C0000.A C1000.A 
+# 			6       8       2       4      10       3      52      12 
+
+k <- table( do.call( c ,fRstLst[intersect(chosen.rebCnt,chosen.group)] ) )
+
 # -------------------------------------------------------------------------------------
 #	Zoid History 분석 (fRstLst)
-stdRstMtx <- do.call( rbind ,fRstLst[stdFiltedCnt==opt.groupSize] )
-rownames(stdRstMtx) <- testSpan[which( stdFiltedCnt==opt.groupSize )]
 
-# stdFiltCnt <- table(as.vector(stdRstMtx)) # 의미 없는 듯.
+# opt.groupSize 기반.
+stdRstMtx <- do.call( rbind ,fRstLst[chosen.group] )
+rownames(stdRstMtx) <- testSpan[chosen.group]
+stdFiltCnt <- table(as.vector(stdRstMtx)) # 선택된 opt.groupSize 내에서의 필터분포
+
+
 
 # =====================================================================================
 #	allZoidMtx 분석 (remLst)
@@ -47,15 +89,42 @@ allFiltCnt <- rep( 0 ,nrow(gEnv$allZoidMtx) )
 for( rIdx in 1:length(remLst) ){
 	allFiltCnt[remLst[[rIdx]]] <- allFiltCnt[remLst[[rIdx]]] + 1
 }
-allChosenIdx <- which(allFiltCnt==opt.groupSize)	# allFiltCnt==5는 4만개 정도.
+
 allFiltName <- attributes(remLst)$name
+allChosenIdx <- which(allFiltCnt==opt.groupSize)
+curLogStr(sprintf("Initial allChosenIdx : %d",length(allChosenIdx)))
 
 # =====================================================================================
 #	임의 제거... 주사위를 굴려야 하는 부분.
 # =====================================================================================
+#	allChosenIdx 조정.
+
+# rebCnt==0 일때의 필터 분포 (2번 이하로 나온 필터는 그냥 제거하자.)
+# 		table( do.call( c ,fRstLst[chosen.group] ) )
+rebFiltNm <- c( 	c( "A0030" ,"AK000.C" ) # 발생횟수 1회, 2회
+					,setdiff( allFiltName ,unique(do.call(c,fRstLst[chosen.group])) )
+				)
+for( remNm in rebFiltNm ){
+	allChosenIdx <- setdiff(allChosenIdx,remLst[[remNm]])
+}
+
+# rebCnt==0 이고 opt.groupSize 적용상태에서의 분포.
+#	(1번 이하로 나온 필터는 그냥 제거하자.)
+rebFiltNm <- c( 	c( "A0010" ,"A0030" ,"AK000.D") # 발생횟수 1회
+					,setdiff( allFiltName 
+							,unique(do.call(c,fRstLst[intersect(chosen.rebCnt,chosen.group)])) 
+						)
+				)
+for( remNm in rebFiltNm ){
+	allChosenIdx <- setdiff(allChosenIdx,remLst[[remNm]])
+}
+
+# rebCnt==0 이고 opt.groupSize 적용상태에서 자주 나오는 필터의 반복분포.
+# QQE.todo
 
 source("20180109_A_HDice.R")
-surviveIdx <- dice789( allZoidMtx ,zhF ,allChosenIdx )
+allChosenIdx <- dice789( allZoidMtx ,zhF ,allChosenIdx )
+curLogStr(sprintf("remove flex candObj : %d",length(allChosenIdx)))
 
 # =====================================================================================
 #	candObj
@@ -85,7 +154,7 @@ cutCand <- function( rObj ,pCutIdx ){
 	return( newRObj )
 } # cutCand()
 
-curLogStr("start candObj : %d",length(candObj$idx))
+curLogStr(sprintf("start candObj : %d",length(candObj$idx))
 
 # =====================================================================================
 #	Zoid History 상에서 걸리지 않은 필터는 무조건 제외.
@@ -93,20 +162,8 @@ curLogStr("start candObj : %d",length(candObj$idx))
 unUsedIdx <- which( !( allFiltName %in% names(stdFiltCnt) ) )	# allFiltName[unUsedIdx]
 flagCnt <- apply( candObj$filtIdMtx ,1 ,function(p){sum(p%in%unUsedIdx)} )
 candObj <- cutCand( candObj ,which(flagCnt>0) )
-curLogStr("remove unUsedIdx candObj : %d",length(candObj$idx))
+curLogStr(sprintf("remove unUsedIdx candObj : %d",length(candObj$idx)))
 
-# =====================================================================================
-#	임의 절대 기준 탈락 확인.
-# =====================================================================================
-remIdx.flex <- integer(0)
-lastZoid <- zhF[nrow(zhF),]
-
-# lastZoid 이후로 1개 이상 값 발생.
-allCodeMtx <- gEnv$allZoidMtx[candObj$idx,]
-cnt <- apply( allCodeMtx ,1 ,function(p){sum(lastZoid%in%p)})
-candObj <- cutCand( candObj ,which(cnt>1) )
-
-curLogStr("remove flex candObj : %d",length(candObj$idx))
 
 # =====================================================================================
 #	표준 절대 기준 탈락 확인.
@@ -124,30 +181,13 @@ for( fIdx in seq_len(length(filtFuncLst)) ){
 			,pConsole=T ,pTime=F
 		)
 }
-curLogStr("remove std harden candObj : %d",length(candObj$idx))
+curLogStr(sprintf("remove std harden candObj : %d",length(candObj$idx)))
 
 # =====================================================================================
 #	결과저장.
 # =====================================================================================
 
 candObj$groupSize <- opt.groupSize
-save( candObj ,file=sprintf("Obj_candObj%s.save",saveId) )
+save( candObj ,file=sprintf("./save/Obj_candObj%s.save",saveId) )
 
-
-		# > tail(zhF)
-		# 	E1 E2 E3 E4 E5 E6
-		# 784  3 10 23 24 31 39
-		# 785  4  6 15 25 26 33
-		# 786 12 15 16 20 24 30
-		# 787  5  6 13 16 27 28
-		# 788  2 10 11 19 35 39
-		# 789  2  6  7 12 19 45
-
-# 1st. 2,19 제외
-# 2nd. 2,3컬럼에서의 1차이 제외
-# 3rd. 5 컬럼에서의 13 제외
-# 4rd. 2 컬럼에서의 6
-# 5th. Qoutient 에서의 3,2,1 비율 제외
-# 6th. 같은 컬럼에서의 반복 제외.
-# 7th. h-1 에서 같은 컬럼에서의 반복 제외.
 
