@@ -860,6 +860,27 @@ filt_AR000.B <- function( pEnv ){	#
 
 } # filt_AR000.B()
 
+filt_AR000.B.hard <- function( pEnv ){	#
+	
+	filtId="AR000.B.hard";	tStmp <- Sys.time()
+	stdCodeMtx <- pEnv$zhF %% 10
+	allZoidMtx <- pEnv$allZoidMtx
+
+	flag <- rep( TRUE ,nrow(allZoidMtx) )
+	ptn <- getPtnRebGrp( stdCodeMtx ,pNextJump=1 )
+	if( !is.null(ptn) ){
+		flag <- sapply( ptn$filt( allZoidMtx %% 10 ,pLevel=4 )
+						,function(p){p$survive} 
+					)
+	}
+
+	pEnv$logStr( sprintf("ID:%s rem:%d",filtId,sum(!flag)) )
+	return( list(filtId=filtId ,flag=flag ,filtCnt=sum(!flag), tCost=(Sys.time()-tStmp)) 
+		)
+
+} # filt_AR000.B.hard()
+
+
 #-[AS000.A]------------------------------------------------------
 #	연이은 DNA코드가 다음에도 같은 간격으로 재발 38/787
 filt_AS000.A <- function( pEnv ){	

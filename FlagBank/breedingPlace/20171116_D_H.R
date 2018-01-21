@@ -193,11 +193,18 @@ getPtnRebGrp <- function( pStdMtx ,pNextJump=1 ){
 	} # for( filtColNum )
 
 	rObj <- list( filtGrpLst=filtGrpLst ,nextJump=pNextJump )
-	rObj$filt <- function( pAllMtx ){
+	rObj$filt <- function( pAllMtx ,pLevel=NULL ){
+			if( is.null(pLevel) ){
+				pLevel <- length(rObj$filtGrpLst)
+			}
+
 			rstLst <- list()
 			for( aIdx in 1:nrow(pAllMtx) ){
 				rstObj <- list( aIdx=aIdx ,survive=TRUE )
 				for( fgIdx in length(rObj$filtGrpLst):1 ){
+					if( pLevel<fgIdx ){
+						next
+					}
 					filtLst <- rObj$filtGrpLst[[fgIdx]]$filtLst
 					for( fIdx in seq_len(length(filtLst)) ){
 						if( all(filtLst[[fIdx]]$nextRow==pAllMtx[aIdx,filtLst[[fIdx]]$filtCol]) ){
