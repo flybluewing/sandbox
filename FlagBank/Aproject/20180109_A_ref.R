@@ -23,8 +23,10 @@ curLogStr <- function( pMsg ,pConsole=F ,pTime=T ){
 }
 
 # =====================================================================================
-#	Zoid History 분석 (fRstLst)
+#	A0. Zoid History 분석 (fRstLst)
 # =====================================================================================
+#		G0. 부분과 맞출 것.
+
 stdFiltedCnt <- sapply( fRstLst ,length )
 		# 		1   2   3   4   5   6   7   8   9  12 
 		# 		8  63  99 101  69  31  10   3   3   1 
@@ -83,7 +85,7 @@ stdFiltCnt <- table(as.vector(stdRstMtx)) # 선택된 opt.groupSize 내에서의 필터분
 
 
 # =====================================================================================
-#	allZoidMtx 분석 (remLst)
+#	B0. allZoidMtx 분석 (remLst)
 # =====================================================================================
 allFiltCnt <- rep( 0 ,nrow(gEnv$allZoidMtx) )
 for( rIdx in 1:length(remLst) ){
@@ -95,7 +97,7 @@ allChosenIdx <- which(allFiltCnt==opt.groupSize)
 curLogStr(sprintf("Initial allChosenIdx : %d",length(allChosenIdx)))
 
 # =====================================================================================
-#	임의 제거... 주사위를 굴려야 하는 부분.
+#	C0. 임의 제거... 주사위를 굴려야 하는 부분.
 # =====================================================================================
 #	allChosenIdx 조정.
 
@@ -127,7 +129,7 @@ allChosenIdx <- dice789( allZoidMtx ,zhF ,allChosenIdx )
 curLogStr(sprintf("remove flex candObj : %d",length(allChosenIdx)))
 
 # =====================================================================================
-#	candObj
+#	D0. candObj
 # =====================================================================================
 curLogStr("startAnalysis")
 candObj <- list( idx=allChosenIdx )
@@ -157,7 +159,7 @@ cutCand <- function( rObj ,pCutIdx ){
 curLogStr(sprintf("start candObj : %d",length(candObj$idx))
 
 # =====================================================================================
-#	Zoid History 상에서 걸리지 않은 필터는 무조건 제외.
+#	E0. Zoid History 상에서 걸리지 않은 필터는 무조건 제외.
 # =====================================================================================
 unUsedIdx <- which( !( allFiltName %in% names(stdFiltCnt) ) )	# allFiltName[unUsedIdx]
 flagCnt <- apply( candObj$filtIdMtx ,1 ,function(p){sum(p%in%unUsedIdx)} )
@@ -166,7 +168,7 @@ curLogStr(sprintf("remove unUsedIdx candObj : %d",length(candObj$idx)))
 
 
 # =====================================================================================
-#	표준 절대 기준 탈락 확인.
+#	F0. 표준 절대 기준 탈락 확인.
 # =====================================================================================
 tEnv <- gEnv	;tStmp <- Sys.time()
 filtFuncLst <- getFiltLst.hard( )
@@ -182,6 +184,32 @@ for( fIdx in seq_len(length(filtFuncLst)) ){
 		)
 }
 curLogStr(sprintf("remove std harden candObj : %d",length(candObj$idx)))
+
+# =====================================================================================
+#	G0. 임의 기준 내(rebCnt==0) Zoid History 기반 절대 기준 탈락
+# =====================================================================================
+tEnv <- gEnv	;tStmp <- Sys.time()
+stdRebCnt <- rep( 0 ,nrow(zhF) )	# A0 영역에서 testSpan 한정되었기 때문에 다시계산.
+for( hIdx in 2:nrow(zhF) ){
+	stdRebCnt[hIdx] <- sum(zhF[hIdx,]%in%zhF[(hIdx-1),])
+}
+
+tEnv$zhF <- gEnv$zhF[stdRebCnt==0,]
+
+filtFuncLst <- getFiltLst.hard( ) # rebCnt==0 용도에 맞게 새로운 hard 함수 필요할 듯.
+for( fIdx in seq_len(length(filtFuncLst)) ){
+	tEnv$allZoidMtx <- gEnv$allZoidMtx[candObj$idx,]
+	rstObj <- filtFuncLst[[fIdx]]( tEnv )
+	candObj <- cutCand( candObj ,which(!rstObj$flag) )
+	tDiff <- Sys.time() - tStmp
+	curLogStr(sprintf("G0. current candidate : %d cost : %.1f%s (%s)"
+					,length(candObj$idx),tDiff,units(tDiff),rstObj$filtId
+			)
+			,pConsole=T ,pTime=F
+		)
+}
+
+curLogStr(sprintf("remove G0 harden candObj : %d",length(candObj$idx)))
 
 # =====================================================================================
 #	결과저장.
