@@ -38,7 +38,7 @@ fRstLst <- list() # 각 hIdx에서 걸린 필터들의 ID
 for( hIdx in testSpan ){ # 35분 정도 소요.(388 ZH, 21 Filt)
 
 	gEnv <- list( allZoidMtx = allZoidMtx 
-					,zhF = zhF[1:(nrow(zhF)-1),]
+					,zhF = zhF[1:(hIdx-1),]
 					,logFile = sprintf("./log/gEnv%s.log",saveId)
 					,doLog = TRUE
 				)

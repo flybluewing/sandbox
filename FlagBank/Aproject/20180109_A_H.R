@@ -7,7 +7,6 @@ getFiltLst.base <- function( ){
 	filtFuncLst[[1+length(filtFuncLst)]] <- filt_A0020
 	filtFuncLst[[1+length(filtFuncLst)]] <- filt_A0030
 	filtFuncLst[[1+length(filtFuncLst)]] <- filt_A0040
-
 	filtFuncLst[[1+length(filtFuncLst)]] <- filt_A0100.A
 	filtFuncLst[[1+length(filtFuncLst)]] <- filt_A0110.A
 
@@ -68,6 +67,19 @@ getFiltLst.hard <- function( ){
 
 } # getFiltLst.hard()
 
+# getFiltLst.base() 에 적용대기상태 함수들.
+#	일단 나중에 걸러주기로 사용함.(20180109_A_ref.R)
+getFiltLst.bench <- function(){
+	
+	filtFuncLst <- list()
+	filtFuncLst[[1+length(filtFuncLst)]] <- filt_A0020.hard	# .hard관계가 뒤바뀐상태
+	filtFuncLst[[1+length(filtFuncLst)]] <- filt_A0050	#
+	filtFuncLst[[1+length(filtFuncLst)]] <- filt_AR000.C #
+	filtFuncLst[[1+length(filtFuncLst)]] <- filt_AQ000.B #
+
+	return( filtFuncLst )
+
+} # getFiltLst.bench()
 
 # allZoidMtx[,2:6]-allZoidMtx[,1:5]
 filt_A0010 <- function( pEnv ){
@@ -617,8 +629,6 @@ filt_AJ000.C.hard <- function( pEnv ){	#
 } # filt_AJ000.C.hard()
 
 
-
-
 #-[AK000.A]------------------------------------------------------
 #	zhF[,6]-zhF[,1] 이 20 이하인 경우는 전체 5.6% 정도.. 자르자!!
 filt_AK000.A <- function( pEnv ){	#
@@ -1030,6 +1040,65 @@ filt_AQ000.A <- function( pEnv ){	#
 		)
 
 } # filt_AQ000.A()
+
+#-[AQ000.B]------------------------------------------------------
+#	2개 재발 DNA가 나중에도 2개로 재발될 가능성 (10/790 1.2%)
+filt_AQ000.B <- function( pEnv ){	#
+	# 1.2% 수준이라 이것 자체로도 hard 사용가능성은 있으나..
+	filtId="AQ000.B";	tStmp <- Sys.time()
+	allZoidMtx <- pEnv$allZoidMtx
+	zhF <- pEnv$zhF
+
+	rebLst <- list()
+	for( hIdx in 2:nrow(zhF) ){
+		comDna <- intersect( zhF[hIdx,] ,zhF[(hIdx-1),] )
+		if( 2==length(comDna) ){
+			rebLst[[1+length(rebLst)]] <- comDna
+		}
+	}
+	stdCodeMtx <- do.call( rbind ,rebLst )
+	matMtx <- scanSameRow(stdCodeMtx)
+	stdCodeMtx <- stdCodeMtx[-matMtx[,2],]
+
+	lastZoid <- zhF[nrow(zhF),]
+	# lastZoid 내에 있는 조합만 골라내자.
+	stdCodeMtx <- stdCodeMtx[apply( stdCodeMtx ,1 ,function(p){ 2==sum(p%in%lastZoid) } ) ,]
+
+	flag <- rep( TRUE ,nrow(allZoidMtx) )
+	for( aIdx in 1:nrow(allZoidMtx) ){
+		for( sIdx in 1:nrow(stdCodeMtx) ){
+			cnt <- sum( stdCodeMtx[sIdx,] %in% allZoidMtx[aIdx,] )
+			if( 2==cnt ){
+				flag[aIdx] <- FALSE
+				break
+			}
+		}
+	}
+
+	pEnv$logStr( sprintf("ID:%s rem:%d",filtId,sum(!flag)) )
+	return( list(filtId=filtId ,flag=flag ,filtCnt=sum(!flag), tCost=(Sys.time()-tStmp)) 
+		)
+
+} # filt_AQ000.B()
+
+#-[AQ000.C]------------------------------------------------------
+#	DNA 코드가 다음 H에서 몇 개나 재발되는지. (3개 이상 20/787)
+filt_AQ000.C <- function( pEnv ){	#
+	
+	filtId="AQ000.C";	tStmp <- Sys.time()
+	lastZoid <- pEnv$zhF[nrow(pEnv$zhF),]
+	allCodeMtx <- pEnv$allZoidMtx
+
+	# flag <- apply( allZoidMtx ,1 ,function(p){ sum(lastZoid%in%p) } )
+	
+
+	pEnv$logStr( sprintf("ID:%s rem:%d",filtId,sum(!flag)) )
+	return( list(filtId=filtId ,flag=flag ,filtCnt=sum(!flag), tCost=(Sys.time()-tStmp)) 
+		)
+
+} # filt_AQ000.C()
+
+
 
 #-[AR000.A]------------------------------------------------------
 #	remainder 근거리 재발. (3H 이내 재발 31/787)

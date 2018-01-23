@@ -7,7 +7,7 @@ source("../breedingPlace/20171116_C_H.R")
 source("../breedingPlace/20171116_D_H.R")
 source("20180109_A_H.R")
 
-saveId <- "0117_17" # 대상에 따라 바꿔사용.
+saveId <- "0123_14" # 대상에 따라 바꿔사용.
 load(sprintf("./save/Obj_gEnv%s.save",saveId))
 load(sprintf("./save/Obj_fRstLst%s.save",saveId))
 load(sprintf("./save/Obj_remLst%s.save",saveId))
@@ -28,10 +28,7 @@ curLogStr <- function( pMsg ,pConsole=F ,pTime=T ){
 #		G0. 부분과 맞출 것.
 
 stdFiltedCnt <- sapply( fRstLst ,length )
-		# 		1   2   3   4   5   6   7   8   9  12 
-		# 		8  63  99 101  69  31  10   3   3   1 
 stdFiltCnt.all <- table(do.call(c,fRstLst))
-#	barplot( stdFiltCnt.all )
 
 stdRebCnt <- rep( 0 ,nrow(zhF) )
 for( hIdx in 2:nrow(zhF) ){
@@ -39,12 +36,11 @@ for( hIdx in 2:nrow(zhF) ){
 }
 stdRebCnt <- stdRebCnt[testSpan]
 stdRebCnt.FiltedCnt <- sapply( fRstLst[stdRebCnt==0] ,length )
-# table(stdRebCnt.FiltedCnt)
-# 		 1  2  3  4  5  6  7 12 
-# 		10 56 52 23  9  2  1  1 
 
+opt.groupSize <- 4	# 18.6%
+	# 	   0    1    2    3    4    5    6    7    9 
+	# 	14.6 29.2 30.0 13.0  8.4  3.3  0.8  0.5  0.3
 
-opt.groupSize <- 3
 saveId <- sprintf("%sG%d",saveId,opt.groupSize)
 
 chosen.rebCnt <- which(stdRebCnt==0) # groupSize는 제각각.
