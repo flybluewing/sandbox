@@ -388,8 +388,7 @@ filt_AJ000.A <- function( pEnv ){	#
 
 	filtId="AJ000.A";	tStmp <- Sys.time()
 	rebLen <- getRebLen( 1:45 ,pEnv$zhF )
-	zhF <- pEnv$zhF
-	allZoidMtx <- pEnv$allZoidMtx
+	allZoidMtx <- pEnv$allZoidMtx;	zhF <- pEnv$zhF
 
 	testSpan <- 100:nrow(zhF)
 	stdCodeMtx <- matrix( NA ,nrow=length(testSpan) ,ncol=ncol(zhF) )
@@ -424,8 +423,7 @@ filt_AJ000.A.hard <- function( pEnv ){	#
 
 	filtId="AJ000.A.hard";	tStmp <- Sys.time()
 	rebLen <- getRebLen( 1:45 ,pEnv$zhF )
-	zhF <- pEnv$zhF
-	allZoidMtx <- pEnv$allZoidMtx
+	allZoidMtx <- pEnv$allZoidMtx;	zhF <- pEnv$zhF
 
 	testSpan <- 100:nrow(zhF)
 	stdCodeMtx <- matrix( NA ,nrow=length(testSpan) ,ncol=ncol(zhF) )
@@ -465,8 +463,7 @@ filt_AJ000.B <- function( pEnv ){	#
 
 	filtId="AJ000.B";	tStmp <- Sys.time()
 	rebLen <- getRebLen( 1:45 ,pEnv$zhF )
-	zhF <- pEnv$zhF
-	allZoidMtx <- pEnv$allZoidMtx
+	allZoidMtx <- pEnv$allZoidMtx;	zhF <- pEnv$zhF
 
 	testSpan <- 100:nrow(zhF)
 	stdCodeMtx <- matrix( NA ,nrow=length(testSpan) ,ncol=ncol(zhF) )
@@ -504,8 +501,7 @@ filt_AJ000.B.hard <- function( pEnv ){	#
 
 	filtId="AJ000.B.hard";	tStmp <- Sys.time()
 	rebLen <- getRebLen( 1:45 ,pEnv$zhF )
-	zhF <- pEnv$zhF
-	allZoidMtx <- pEnv$allZoidMtx
+	allZoidMtx <- pEnv$allZoidMtx;	zhF <- pEnv$zhF
 
 	testSpan <- 100:nrow(zhF)
 	stdCodeMtx <- matrix( NA ,nrow=length(testSpan) ,ncol=ncol(zhF) )
@@ -547,8 +543,7 @@ filt_AJ000.C <- function( pEnv ){	#
 
 	filtId="AJ000.C";	tStmp <- Sys.time()
 	rebLen <- getRebLen( 1:45 ,pEnv$zhF )
-	zhF <- pEnv$zhF
-	allZoidMtx <- pEnv$allZoidMtx
+	allZoidMtx <- pEnv$allZoidMtx;	zhF <- pEnv$zhF
 
 	testSpan <- 100:nrow(zhF)
 	stdCodeMtx <- matrix( NA ,nrow=length(testSpan) ,ncol=ncol(zhF) )
@@ -590,8 +585,7 @@ filt_AJ000.C.hard <- function( pEnv ){	#
 
 	filtId="AJ000.C.hard";	tStmp <- Sys.time()
 	rebLen <- getRebLen( 1:45 ,pEnv$zhF )
-	zhF <- pEnv$zhF
-	allZoidMtx <- pEnv$allZoidMtx
+	allZoidMtx <- pEnv$allZoidMtx;	zhF <- pEnv$zhF
 
 	testSpan <- 100:nrow(zhF)
 	stdCodeMtx <- matrix( NA ,nrow=length(testSpan) ,ncol=ncol(zhF) )
@@ -634,6 +628,7 @@ filt_AJ000.C.hard <- function( pEnv ){	#
 filt_AK000.A <- function( pEnv ){	#
 	
 	filtId="AK000.A";	tStmp <- Sys.time()
+	allZoidMtx <- pEnv$allZoidMtx;	zhF <- pEnv$zhF
 	stdCodeMtx <- pEnv$zhF
 	allCodeMtx <- pEnv$allZoidMtx
 
@@ -650,6 +645,7 @@ filt_AK000.A.hard <- function( pEnv ){	#
 	# 4 / 789
 	
 	filtId="AK000.A.hard";	tStmp <- Sys.time()
+	allZoidMtx <- pEnv$allZoidMtx;	zhF <- pEnv$zhF
 	stdCodeMtx <- pEnv$zhF
 	allCodeMtx <- pEnv$allZoidMtx
 
@@ -668,6 +664,7 @@ filt_AK000.A.hard <- function( pEnv ){	#
 filt_AK000.B <- function( pEnv ){	#
 	
 	filtId="AK000.B";	tStmp <- Sys.time()
+	allZoidMtx <- pEnv$allZoidMtx;	zhF <- pEnv$zhF
 	lastZoid <- pEnv$zhF[nrow(pEnv$zhF),]
 	allCodeMtx <- pEnv$allZoidMtx
 
@@ -682,6 +679,7 @@ filt_AK000.B <- function( pEnv ){	#
 filt_AK000.B.hard <- function( pEnv ){	#
 	
 	filtId="AK000.B.hard";	tStmp <- Sys.time()
+	allZoidMtx <- pEnv$allZoidMtx;	zhF <- pEnv$zhF
 	lastZoid <- pEnv$zhF[nrow(pEnv$zhF),]
 	stdCode.width <- lastZoid[6]-lastZoid[1]
 	stdCode.bin <- lastZoid%%2
@@ -716,8 +714,8 @@ filt_AK000.B.hard <- function( pEnv ){	#
 filt_AK000.C <- function( pEnv ){	#
 	
 	filtId="AK000.C";	tStmp <- Sys.time()
+	allZoidMtx <- pEnv$allZoidMtx;	zhF <- pEnv$zhF
 	stdCode <- pEnv$zhF[,6]-pEnv$zhF[,1]
-	allZoidMtx <- pEnv$allZoidMtx
 
 	flag <- rep( TRUE ,nrow(allZoidMtx) )
 	for( dIdx in 5:1 ){
@@ -736,15 +734,15 @@ filt_AK000.C <- function( pEnv ){	#
 
 #-[AK000.D]------------------------------------------------------
 #	zhF[,6]-zhF[,1]	: 이전과 같은 간격으로 건너뛸 가능성. 55/785
-filt_AK000.D <- function( pEnv ){	#
+filt_AK000.D <- function( pEnv ){
 	
 	filtId="AK000.D";	tStmp <- Sys.time()
+	allZoidMtx <- pEnv$allZoidMtx;	zhF <- pEnv$zhF
 	stdCode <- pEnv$zhF[,6]-pEnv$zhF[,1]
-	allCodeMtx <- pEnv$allZoidMtx
 
-	remVal <- c( stdCode[length(stdCode)-1] , 
-					stdCode[length(stdCode)] + 
-						abs(stdCode[length(stdCode)]-stdCode[length(stdCode)-1])
+	stepDiff <- abs(stdCode[length(stdCode)]-stdCode[length(stdCode)-1])
+	remVal <- c( stdCode[length(stdCode)]-stepDiff , 
+					stdCode[length(stdCode)] + stepDiff
 				)
 	flag <- apply( allZoidMtx ,1 ,function(p){ !( (p[6]-p[1])%in%remVal ) })
 
@@ -759,7 +757,7 @@ filt_AK000.D <- function( pEnv ){	#
 filt_AL000.A <- function( pEnv ){	#
 	
 	filtId="AL000.A";	tStmp <- Sys.time()
-	zhF <- pEnv$zhF
+	allZoidMtx <- pEnv$allZoidMtx;	zhF <- pEnv$zhF
 	allCodeMtx <- pEnv$allZoidMtx
 
 	flag <- rep( TRUE ,nrow(allCodeMtx) )
@@ -779,7 +777,7 @@ filt_AL000.A <- function( pEnv ){	#
 filt_AP000.A <- function( pEnv ){	#
 	
 	filtId="AP000.A";	tStmp <- Sys.time()
-	allCodeMtx <- pEnv$allZoidMtx
+	allZoidMtx <- pEnv$allZoidMtx;	zhF <- pEnv$zhF
 	stdCode <- pEnv$zhF[nrow(pEnv$zhF),] %/% 10
 
 	flag <- apply( allZoidMtx %/% 10 ,1 ,function(p){ sum(p!=stdCode) })
@@ -796,6 +794,7 @@ filt_AP000.A <- function( pEnv ){	#
 filt_AP000.B <- function( pEnv ){	#
 	
 	filtId="AP000.B";	tStmp <- Sys.time()
+	allZoidMtx <- pEnv$allZoidMtx;	zhF <- pEnv$zhF
 	stdCodeMtx <- pEnv$zhF %/% 10
 	stdCodeMtx <- stdCodeMtx[(nrow(stdCodeMtx)-6):nrow(stdCodeMtx),]
 	allCodeMtx <- pEnv$allZoidMtx %/% 10
@@ -820,6 +819,7 @@ filt_AP000.B <- function( pEnv ){	#
 filt_AP000.B.hard <- function( pEnv ){	#
 	# 9 / 789 # 바로 다음에도 똑같은 패턴 발생.
 	filtId="AP000.B.hard";	tStmp <- Sys.time()
+	allZoidMtx <- pEnv$allZoidMtx;	zhF <- pEnv$zhF
 	stdCodeMtx <- pEnv$zhF %/% 10
 	stdCodeMtx <- stdCodeMtx[nrow(stdCodeMtx),,drop=F]
 	allCodeMtx <- pEnv$allZoidMtx %/% 10
@@ -847,6 +847,7 @@ filt_AP000.B.hard <- function( pEnv ){	#
 filt_AP000.C <- function( pEnv ){	#
 	
 	filtId="AP000.C";	tStmp <- Sys.time()
+	allZoidMtx <- pEnv$allZoidMtx;	zhF <- pEnv$zhF
 	allCodeMtx <- pEnv$allZoidMtx %/% 10
 
 	flagLst <- apply(allCodeMtx ,1 ,table)
@@ -862,6 +863,7 @@ filt_AP000.C <- function( pEnv ){	#
 filt_AP000.C.hard <- function( pEnv ){	#
 	# 기본형과 똑같이 한다. 그냥 filt_AP000.C() 는 허용대상에서 제외..
 	filtId="AP000.C.hard";	tStmp <- Sys.time()
+	allZoidMtx <- pEnv$allZoidMtx;	zhF <- pEnv$zhF
 	allCodeMtx <- pEnv$allZoidMtx %/% 10
 
 	flagLst <- apply(allCodeMtx ,1 ,table)
@@ -880,6 +882,7 @@ filt_AP000.C.hard <- function( pEnv ){	#
 filt_AP000.D <- function( pEnv ){	#
 	
 	filtId="AP000.D";	tStmp <- Sys.time()
+	allZoidMtx <- pEnv$allZoidMtx;	zhF <- pEnv$zhF
 	stdCodeMtx <- getTblCnt( pEnv$zhF %/% 10 )
 	allCodeMtx <- getTblCnt( pEnv$allZoidMtx %/% 10 )
 
@@ -903,6 +906,7 @@ filt_AP000.D <- function( pEnv ){	#
 filt_AP000.D.hard <- function( pEnv ){	#
 	# 원본과 동일. 
 	filtId="AP000.D.hard";	tStmp <- Sys.time()
+	allZoidMtx <- pEnv$allZoidMtx;	zhF <- pEnv$zhF
 	stdCodeMtx <- getTblCnt( pEnv$zhF %/% 10 )
 	allCodeMtx <- getTblCnt( pEnv$allZoidMtx %/% 10 )
 
@@ -929,7 +933,7 @@ filt_AP000.D.hard <- function( pEnv ){	#
 filt_AP000.E <- function( pEnv ,pStepSize=1000000 ){	#
 
 	filtId="AP000.E";	tStmp <- Sys.time()
-	allZoidMtx <- pEnv$allZoidMtx
+	allZoidMtx <- pEnv$allZoidMtx;	zhF <- pEnv$zhF
 	stdGrpLst <- apply( pEnv$zhF ,1 ,function(p){ getQGrp(p,0:4) } )
 	for( gIdx in 1:length(stdGrpLst) ){
 		# 1~9, 40번 대역에서 1개 나오는 경우는 너무 흔하니,
@@ -987,7 +991,7 @@ filt_AP000.E <- function( pEnv ,pStepSize=1000000 ){	#
 filt_AP000.E.hard <- function( pEnv ,pStepSize=1000000 ){	#
 
 	filtId="AP000.E.hard";	tStmp <- Sys.time()
-	allZoidMtx <- pEnv$allZoidMtx
+	allZoidMtx <- pEnv$allZoidMtx;	zhF <- pEnv$zhF
 	stdGrpLst <- apply( pEnv$zhF ,1 ,function(p){ getQGrp(p,0:4) } )
 	# grp 1짜리는 아예 backMtx에서 취급 안하기로 한다.
 
@@ -1026,11 +1030,11 @@ filt_AP000.E.hard <- function( pEnv ,pStepSize=1000000 ){	#
 
 #-[AQ000.A]------------------------------------------------------
 #	DNA 코드가 다음 H에서 몇 개나 재발되는지. (3개 이상 20/787)
-filt_AQ000.A <- function( pEnv ){	#
+filt_AQ000.A <- function( pEnv ){	# 전체기준 2.3%제거.
 	
 	filtId="AQ000.A";	tStmp <- Sys.time()
+	allZoidMtx <- pEnv$allZoidMtx;	zhF <- pEnv$zhF
 	lastZoid <- pEnv$zhF[nrow(pEnv$zhF),]
-	allCodeMtx <- pEnv$allZoidMtx
 
 	flag <- apply( allZoidMtx ,1 ,function(p){ sum(lastZoid%in%p) } )
 	flag <- flag<3
@@ -1046,8 +1050,7 @@ filt_AQ000.A <- function( pEnv ){	#
 filt_AQ000.B <- function( pEnv ){	#
 	# 1.2% 수준이라 이것 자체로도 hard 사용가능성은 있으나..
 	filtId="AQ000.B";	tStmp <- Sys.time()
-	allZoidMtx <- pEnv$allZoidMtx
-	zhF <- pEnv$zhF
+	allZoidMtx <- pEnv$allZoidMtx;	zhF <- pEnv$zhF
 
 	rebLst <- list()
 	for( hIdx in 2:nrow(zhF) ){
@@ -1082,12 +1085,12 @@ filt_AQ000.B <- function( pEnv ){	#
 } # filt_AQ000.B()
 
 #-[AQ000.C]------------------------------------------------------
-#	DNA 코드가 다음 H에서 몇 개나 재발되는지. (3개 이상 20/787)
+#	최근 H 개 내 재발값 좌표일치.  ( QQE working )
 filt_AQ000.C <- function( pEnv ){	#
 	
 	filtId="AQ000.C";	tStmp <- Sys.time()
-	lastZoid <- pEnv$zhF[nrow(pEnv$zhF),]
-	allCodeMtx <- pEnv$allZoidMtx
+	allZoidMtx <- pEnv$allZoidMtx;	zhF <- pEnv$zhF
+	lastZoid <- zhF[nrow(zhF),]
 
 	# flag <- apply( allZoidMtx ,1 ,function(p){ sum(lastZoid%in%p) } )
 	
@@ -1105,6 +1108,7 @@ filt_AQ000.C <- function( pEnv ){	#
 filt_AR000.A <- function( pEnv ){	#
 	
 	filtId="AR000.A";	tStmp <- Sys.time()
+	allZoidMtx <- pEnv$allZoidMtx;	zhF <- pEnv$zhF
 	stdCodeMtx <- pEnv$zhF[(nrow(pEnv$zhF)-2):nrow(pEnv$zhF),] %% 2
 	allCodeMtx <- pEnv$allZoidMtx %% 2
 
@@ -1128,6 +1132,7 @@ filt_AR000.A <- function( pEnv ){	#
 filt_AR000.A.hard <- function( pEnv ){	#
 	#	2 / 789
 	filtId="AR000.A.hard";	tStmp <- Sys.time()
+	allZoidMtx <- pEnv$allZoidMtx;	zhF <- pEnv$zhF
 	stdCodeMtx <- pEnv$zhF %% 10
 	allCodeMtx <- pEnv$allZoidMtx %% 10
 
@@ -1154,6 +1159,7 @@ filt_AR000.A.hard <- function( pEnv ){	#
 filt_AR000.B <- function( pEnv ){	#
 	
 	filtId="AR000.B";	tStmp <- Sys.time()
+	allZoidMtx <- pEnv$allZoidMtx;	zhF <- pEnv$zhF
 	stdCodeMtx <- pEnv$zhF %% 10
 	allZoidMtx <- pEnv$allZoidMtx
 
@@ -1174,6 +1180,7 @@ filt_AR000.B <- function( pEnv ){	#
 filt_AR000.B.hard <- function( pEnv ){	#
 	
 	filtId="AR000.B.hard";	tStmp <- Sys.time()
+	allZoidMtx <- pEnv$allZoidMtx;	zhF <- pEnv$zhF
 	stdCodeMtx <- pEnv$zhF %% 10
 	allZoidMtx <- pEnv$allZoidMtx
 
@@ -1196,10 +1203,10 @@ filt_AR000.B.hard <- function( pEnv ){	#
 filt_AR000.C <- function( pEnv ){	#
 	# 3개 동일이 16/789(2%), 4개 이상은 없음. .hard 함수 전용으로 쓰자.
 	filtId="AR000.C";	tStmp <- Sys.time()
-	stdCode <- pEnv$zhF[nrow(pEnv$zhF),] %% 10
-	allZoidMtx <- pEnv$allZoidMtx %% 10
+	allZoidMtx <- pEnv$allZoidMtx;	zhF <- pEnv$zhF
+	stdCode <- zhF[nrow(zhF),] %% 10
 
-	flag <- apply( allZoidMtx ,1 ,function(p){sum(p==stdCode)} )
+	flag <- apply( allZoidMtx %% 10 ,1 ,function(p){sum(p==stdCode)} )
 	flag <- flag < 3
 
 	pEnv$logStr( sprintf("ID:%s rem:%d",filtId,sum(!flag)) )
@@ -1211,10 +1218,10 @@ filt_AR000.C <- function( pEnv ){	#
 filt_AR000.C.hard <- function( pEnv ){	#
 	# 3개 동일이 16/789(2%), 4개 이상은 없음.
 	filtId="AR000.C.hard";	tStmp <- Sys.time()
-	stdCode <- pEnv$zhF[nrow(pEnv$zhF),] %% 10
-	allZoidMtx <- pEnv$allZoidMtx %% 10
+	allZoidMtx <- pEnv$allZoidMtx;	zhF <- pEnv$zhF
+	stdCode <- zhF[nrow(zhF),] %% 10
 
-	flag <- apply( allZoidMtx ,1 ,function(p){sum(p==stdCode)} )
+	flag <- apply( allZoidMtx %% 10 ,1 ,function(p){sum(p==stdCode)} )
 	flag <- flag < 3
 
 	pEnv$logStr( sprintf("ID:%s rem:%d",filtId,sum(!flag)) )
@@ -1229,6 +1236,7 @@ filt_AR000.C.hard <- function( pEnv ){	#
 filt_AS000.A <- function( pEnv ){	
 	# 29/389  7.5%	
 	filtId="AS000.A";	tStmp <- Sys.time()
+	allZoidMtx <- pEnv$allZoidMtx;	zhF <- pEnv$zhF
 	lastZoid <- pEnv$zhF[nrow(pEnv$zhF),]
 	allCodeMtx <- pEnv$allZoidMtx
 
@@ -1257,6 +1265,7 @@ filt_AS000.A <- function( pEnv ){
 filt_AS000.A.hard <- function( pEnv ){	#
 	# 7/389  2%
 	filtId="AS000.A.hard";	tStmp <- Sys.time()
+	allZoidMtx <- pEnv$allZoidMtx;	zhF <- pEnv$zhF
 	lastZoid <- pEnv$zhF[nrow(pEnv$zhF),]
 	allCodeMtx <- pEnv$allZoidMtx
 
@@ -1287,6 +1296,7 @@ filt_C0000.A <- function( pEnv ){	#
 	#	백만개 당 23분 정도 소요.
 
 	filtId="C0000.A";	tStmp <- Sys.time()
+	allZoidMtx <- pEnv$allZoidMtx;	zhF <- pEnv$zhF
 	stdCodeMtx <- pEnv$zhF[,2:6] - pEnv$zhF[,1:5]
 	allCodeMtx <- pEnv$allZoidMtx[,2:6,drop=F] - pEnv$allZoidMtx[,1:5,drop=F]
 
@@ -1312,6 +1322,7 @@ filt_C0000.A.hard <- function( pEnv ){	#
 	#	0 / 389
 
 	filtId="C0000.A.hard";	tStmp <- Sys.time()
+	allZoidMtx <- pEnv$allZoidMtx;	zhF <- pEnv$zhF
 	stdCodeMtx <- pEnv$zhF[,2:6] - pEnv$zhF[,1:5]
 	allCodeMtx <- pEnv$allZoidMtx[,2:6,drop=F] - pEnv$allZoidMtx[,1:5,drop=F]
 
@@ -1340,10 +1351,9 @@ filt_C1000.A <- function( pEnv ){
 	#	2개 이하로 틀린 경우는 65개 정도
 	
 	filtId="C1000.A";	tStmp <- Sys.time()
-	zhF <- pEnv$zhF
+	allZoidMtx <- pEnv$allZoidMtx;	zhF <- pEnv$zhF
+	lastZoid <- zhF[nrow(zhF),]
 	stdCodeMtx <- abs(zhF[1:(nrow(zhF)-1),] - zhF[2:nrow(zhF),])
-	allCodeMtx <- pEnv$allZoidMtx
-	lastZoid <- pEnv$allZoidMtx[nrow(pEnv$allZoidMtx),]
 
 	flag <- rep( 0 ,nrow(allZoidMtx) )
 	for( aIdx in 1:nrow(allZoidMtx) ){
@@ -1368,10 +1378,9 @@ filt_C1000.A.hard <- function( pEnv ){
 	#	1개 이하로 틀린 경우
 	
 	filtId="C1000.A.hard";	tStmp <- Sys.time()
-	zhF <- pEnv$zhF
+	allZoidMtx <- pEnv$allZoidMtx;	zhF <- pEnv$zhF
+	lastZoid <- zhF[nrow(zhF),]
 	stdCodeMtx <- abs(zhF[1:(nrow(zhF)-1),] - zhF[2:nrow(zhF),])
-	allCodeMtx <- pEnv$allZoidMtx
-	lastZoid <- pEnv$allZoidMtx[nrow(pEnv$allZoidMtx),]
 
 	flag <- rep( 0 ,nrow(allZoidMtx) )
 	for( aIdx in 1:nrow(allZoidMtx) ){

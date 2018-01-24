@@ -1,4 +1,69 @@
 # 20180109_A_val.R filt 함수들에 대한 성능검증 코드들.
+testSpan <- 400:nrow(zhF)
+
+#-[AK000.D]------------------------------------------------------
+#	zhF[,6]-zhF[,1]	: 이전과 같은 간격으로 건너뛸 가능성. 28/391 7%
+val_AK000.D <- function( pEnv ){
+	
+	filtId="AK000.D";	tStmp <- Sys.time()
+
+	tEnv <- gEnv
+	flag <- rep( TRUE ,nrow(pEnv$zhF) )
+	for( hIdx in testSpan ){
+		tEnv$zhF <- gEnv$zhF[1:(hIdx-1),]
+		tEnv$allZoidMtx <- gEnv$allZoidMtx[hIdx,,drop=F]
+		rstObj <- filt_AK000.D( tEnv )
+		flag[hIdx] <- rstObj$flag[1]
+	}
+
+	pEnv$logStr( sprintf("ID:%s rem:%d",filtId,sum(!flag)) )
+	return( list(filtId=filtId ,flag=flag ,filtCnt=sum(!flag), tCost=(Sys.time()-tStmp)) 
+		)
+
+} # val_AK000.D()
+
+#-[AP000.A]------------------------------------------------------
+#	zhF %/% 10 Quoatient.  이전 H와 1개 이내로 틀리는 것 3/391 0.7%
+val_AP000.A <- function( pEnv ){
+	
+	filtId="AP000.A";	tStmp <- Sys.time()
+
+	tEnv <- gEnv
+	flag <- rep( TRUE ,nrow(pEnv$zhF) )
+	for( hIdx in testSpan ){
+		tEnv$zhF <- gEnv$zhF[1:(hIdx-1),]
+		tEnv$allZoidMtx <- gEnv$allZoidMtx[hIdx,,drop=F]
+		rstObj <- filt_AP000.A( tEnv )
+		flag[hIdx] <- rstObj$flag[1]
+	}
+
+	pEnv$logStr( sprintf("ID:%s rem:%d",filtId,sum(!flag)) )
+	return( list(filtId=filtId ,flag=flag ,filtCnt=sum(!flag), tCost=(Sys.time()-tStmp)) 
+		)
+
+} # val_AP000.A()
+
+#-[AQ000.A]------------------------------------------------------
+#	DNA 코드가 다음 H에서 몇 개나 재발되는지. (3개 이상 9/391	2.3%)
+val_AQ000.A <- function( pEnv ){
+	
+	filtId="AQ000.A";	tStmp <- Sys.time()
+
+	tEnv <- gEnv
+	flag <- rep( TRUE ,nrow(pEnv$zhF) )
+	for( hIdx in testSpan ){
+		tEnv$zhF <- gEnv$zhF[1:(hIdx-1),]
+		tEnv$allZoidMtx <- gEnv$allZoidMtx[hIdx,,drop=F]
+		rstObj <- filt_AQ000.A( tEnv )
+		flag[hIdx] <- rstObj$flag[1]
+	}
+
+	pEnv$logStr( sprintf("ID:%s rem:%d",filtId,sum(!flag)) )
+	return( list(filtId=filtId ,flag=flag ,filtCnt=sum(!flag), tCost=(Sys.time()-tStmp)) 
+		)
+
+} # val_AQ000.A()
+
 
 #-[AQ000.C]------------------------------------------------------
 #	다음 H에서 DNA가 1개 재발
@@ -48,6 +113,26 @@ Val_AQ000.C <- function( pEnv ){	#
 
 } # filt_AQ000.C()
 
+#-[C1000.A]------------------------------------------------------
+#	abs(zhF[1:(nrow(zhF)-1),] - zhF[2:nrow(zhF),])  0/391 0%
+val_C1000.A <- function( pEnv ){
+	
+	filtId="C1000.A";	tStmp <- Sys.time()
+
+	tEnv <- gEnv
+	flag <- rep( TRUE ,nrow(pEnv$zhF) )
+	for( hIdx in testSpan ){
+		tEnv$zhF <- gEnv$zhF[1:(hIdx-1),]
+		tEnv$allZoidMtx <- gEnv$allZoidMtx[hIdx,,drop=F]
+		rstObj <- filt_C1000.A( tEnv )
+		flag[hIdx] <- rstObj$flag[1]
+	}
+
+	pEnv$logStr( sprintf("ID:%s rem:%d",filtId,sum(!flag)) )
+	return( list(filtId=filtId ,flag=flag ,filtCnt=sum(!flag), tCost=(Sys.time()-tStmp)) 
+		)
+
+} # val_C1000.A()
 
 
 Val_AX000.X <- function( pEnv ){	#
