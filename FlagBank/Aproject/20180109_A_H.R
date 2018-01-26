@@ -41,10 +41,11 @@ getFiltLst.hard <- function( ){
 
 	filtFuncLst <- list()
 	filtFuncLst[[1+length(filtFuncLst)]] <- filt_A0010.hard
-	filtFuncLst[[1+length(filtFuncLst)]] <- filt_A0020.hard	
+	filtFuncLst[[1+length(filtFuncLst)]] <- filt_A0020.hard
 	filtFuncLst[[1+length(filtFuncLst)]] <- filt_A0030.hard
 	filtFuncLst[[1+length(filtFuncLst)]] <- filt_A0040.hard
-	filtFuncLst[[1+length(filtFuncLst)]] <- filt_A0050.hard	
+	filtFuncLst[[1+length(filtFuncLst)]] <- filt_A0050.hard
+	filtFuncLst[[1+length(filtFuncLst)]] <- filt_A0060.hard
 	filtFuncLst[[1+length(filtFuncLst)]] <- filt_A0100.A.hard
 	filtFuncLst[[1+length(filtFuncLst)]] <- filt_A0110.A.hard
 	filtFuncLst[[1+length(filtFuncLst)]] <- filt_AJ000.A.hard
@@ -248,7 +249,7 @@ filt_A0040.hard <- function( pEnv ) {
 # 40 영역대가 3개 이상. (20/789 2.5% )
 filt_A0050 <- function( pEnv ) {
 
-	filtId="A0040";	tStmp <- Sys.time()
+	filtId="A0050";	tStmp <- Sys.time()
 	allZoidMtx <- pEnv$allZoidMtx;	zhF <- pEnv$zhF
 
 	allCodeMtx <- allZoidMtx %/% 10
@@ -275,6 +276,31 @@ filt_A0050.hard <- function( pEnv ) {
 		)
 
 } # filt_A0050.hard()
+
+# zoid[1] 값이 20 이상 (18/790 2% )
+filt_A0060 <- function( pEnv ) {
+
+	filtId="A0060";	tStmp <- Sys.time()
+	allZoidMtx <- pEnv$allZoidMtx;	zhF <- pEnv$zhF
+
+	flag <- apply( allZoidMtx ,1 ,function(p){(p[1]<20)})
+
+	pEnv$logStr( sprintf("ID:%s rem:%d",filtId,sum(!flag)) )
+	return( list(filtId=filtId ,flag=flag ,filtCnt=sum(!flag), tCost=(Sys.time()-tStmp)) 
+		)
+}	# filt_A0060()
+
+filt_A0060.hard <- function( pEnv ) {
+	# 2% 수준이라 그냥 동일하게 hard()함수로 사용.
+	filtId="A0060.hard";	tStmp <- Sys.time()
+	allZoidMtx <- pEnv$allZoidMtx;	zhF <- pEnv$zhF
+
+	flag <- apply( allZoidMtx ,1 ,function(p){(p[1]<20)})
+
+	pEnv$logStr( sprintf("ID:%s rem:%d",filtId,sum(!flag)) )
+	return( list(filtId=filtId ,flag=flag ,filtCnt=sum(!flag), tCost=(Sys.time()-tStmp)) 
+		)
+}	# filt_A0060.hard()
 
 
 #----------------------------------------------------------------
