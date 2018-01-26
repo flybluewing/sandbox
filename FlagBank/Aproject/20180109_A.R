@@ -42,7 +42,7 @@ logFile <- sprintf("./log/gEnv%s.log",saveId)
 fRstLst <- list() # 각 hIdx에서 걸린 필터들의 ID
 for( hIdx in testSpan ){ # 35분 정도 소요.(388 ZH, 21 Filt)
 
-	gEnv <- list( allZoidMtx = allZoidMtx 
+	gEnv <- list( allZoidMtx = zhF
 					,zhF = zhF[1:(hIdx-1),]
 					,logFile = logFile
 					,doLog = TRUE
@@ -98,3 +98,33 @@ tDiff <- Sys.time() - tStmp
 save( remLst ,file=sprintf("./save/Obj_remLst%s.save",saveId) )
 # load("Obj_remLst.save")
 k.FLogStr(sprintf("remLst is created.(logfile:%s)",logFile))
+
+
+# =====================================================================================
+# 실제 AllZoidMtx 대상, 절대 제거대상 확인.
+logFile <- sprintf("./log/allZoidMtx%s_hard.log",saveId)
+gEnv <- list( allZoidMtx = getAllZoid()
+				,zhF = zhF
+				,logFile = logFile
+				,doLog = TRUE
+			)
+gEnv$log <- function( pMsg ){ if(gEnv$doLog) k.FLog(pMsg ,pFile=gEnv$logFile) }
+gEnv$logStr <- function( pMsg ){ if(gEnv$doLog) k.FLogStr( pMsg ,pFile=gEnv$logFile) }
+
+tStmp <- Sys.time()
+filtFuncLst.hard <- getFiltLst.hard()
+remLst.hard <- list()
+for( fIdx in 1:length(filtFuncLst.hard) ){
+	rstObj <- filtFuncLst.hard[[fIdx]]( gEnv )	# 소요시간 rstObj$tCost
+	remLst.hard[[rstObj$filtId]] <- which( !rstObj$flag )
+	tDiff <- Sys.time() - tStmp
+	k.FLogStr(sprintf("current filt:%s  time:%.1f%s",rstObj$filtId,tDiff,units(tDiff)))
+	if( 0==(fIdx%%2) ){
+		k.FLogStr(sprintf("   memory:%.1f",memory.size()))
+		gc()
+	}
+} # fIdx
+tDiff <- Sys.time() - tStmp
+save( remLst.hard ,file=sprintf("./save/Obj_remLst%s_hard.save",saveId) )
+# load("Obj_remLst.save")
+k.FLogStr(sprintf("remLst for hard is created.(logfile:%s)",logFile))

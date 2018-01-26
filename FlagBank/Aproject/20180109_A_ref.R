@@ -7,7 +7,7 @@ source("../breedingPlace/20171116_C_H.R")
 source("../breedingPlace/20171116_D_H.R")
 source("20180109_A_H.R")
 
-saveId <- "0123_14" # 대상에 따라 바꿔사용.
+saveId <- "0124_12" # 대상에 따라 바꿔사용.
 load(sprintf("./save/Obj_gEnv%s.save",saveId))
 load(sprintf("./save/Obj_fRstLst%s.save",saveId))
 load(sprintf("./save/Obj_remLst%s.save",saveId))
@@ -23,195 +23,165 @@ curLogStr <- function( pMsg ,pConsole=F ,pTime=T ){
 }
 
 # =====================================================================================
-#	A0. Zoid History 분석 (fRstLst)
+#	A0. Zoid History 분석
 # =====================================================================================
 #		G0. 부분과 맞출 것.
 
 stdFiltedCnt <- sapply( fRstLst ,length )
-stdFiltCnt.all <- table(do.call(c,fRstLst))
-
-stdRebCnt <- rep( 0 ,nrow(zhF) )
-for( hIdx in 2:nrow(zhF) ){
-	stdRebCnt[hIdx] <- sum(zhF[hIdx,]%in%zhF[(hIdx-1),])
-}
-stdRebCnt <- stdRebCnt[testSpan]
-stdRebCnt.FiltedCnt <- sapply( fRstLst[stdRebCnt==0] ,length )
-
-opt.groupSize <- 4	# 18.6%
 	# 	   0    1    2    3    4    5    6    7    9 
 	# 	14.6 29.2 30.0 13.0  8.4  3.3  0.8  0.5  0.3
+stdFiltCnt.all <- table(do.call(c,fRstLst))
+	# 필터별 zoid history 필터링 수.
 
-saveId <- sprintf("%sG%d",saveId,opt.groupSize)
+allFiltName <- attributes(remLst)$names
 
-chosen.rebCnt <- which(stdRebCnt==0) # groupSize는 제각각.
-chosen.rebCnt.hIdx <- testSpan[chosen.rebCnt]
-chosen.group <- which(stdFiltedCnt==opt.groupSize)
-chosen.group.hIdx <- testSpan[chosen.group]
-
-# rebCnt==0 일때의 필터 분포. A0030 ,AK000.C 는 그냥 제외하자.
-# table( do.call( c ,fRstLst[chosen.group] ) )
-# 		A0010   A0020   A0030   A0040 A0100.A A0110.A 
-# 			5       4       1       3      42      35 
-# 		AJ000.B AJ000.C AK000.A AK000.B AK000.C AK000.D 
-# 			5      11       3       7       2       3 
-# 		AP000.A AP000.B AP000.C AP000.E AQ000.A AR000.A 
-# 			8       8       7      25       3       8 
-# 		AR000.B AS000.A C0000.A C1000.A 
-# 			25       5     114      18 
-
-# rebCnt==0 이고 opt.groupSize를 만족하는 상태에서의 필터분포
-#  table( do.call( c ,fRstLst[intersect(chosen.rebCnt,chosen.group)] ) )
-# 		A0010   A0020   A0030   A0040 A0100.A A0110.A AJ000.B 
-# 			1       2       1       2      14      15       2
-# 		AJ000.C AK000.A AK000.B AK000.C AK000.D AP000.A AP000.B 
-# 			5       2       3       2       1       5       4 
-# 		AP000.C AP000.E AQ000.A AR000.A AR000.B AS000.A C0000.A C1000.A 
-# 			6       8       2       4      10       3      52      12 
-
-k <- table( do.call( c ,fRstLst[intersect(chosen.rebCnt,chosen.group)] ) )
-
-# -------------------------------------------------------------------------------------
-#	Zoid History 분석 (fRstLst)
-
-# opt.groupSize 기반.
-stdRstMtx <- do.call( rbind ,fRstLst[chosen.group] )
-rownames(stdRstMtx) <- testSpan[chosen.group]
-stdFiltCnt <- table(as.vector(stdRstMtx)) # 선택된 opt.groupSize 내에서의 필터분포
-
-
-
-# =====================================================================================
-#	B0. allZoidMtx 분석 (remLst)
-# =====================================================================================
 allFiltCnt <- rep( 0 ,nrow(gEnv$allZoidMtx) )
 for( rIdx in 1:length(remLst) ){
 	allFiltCnt[remLst[[rIdx]]] <- allFiltCnt[remLst[[rIdx]]] + 1
 }
 
-allFiltName <- attributes(remLst)$name
-allChosenIdx <- which(allFiltCnt==opt.groupSize)
-curLogStr(sprintf("Initial allChosenIdx : %d",length(allChosenIdx)))
+# =====================================================================================
+#	B0. 기초 필터링.
+# =====================================================================================
+#		gSel$surviveIdx 에서 단계적으로 제외시켜 나가자.
+#			./save/Obj_remLstNNNN_NN_hard.save 데이터를 사용.
+gSel <- list( surviveIdx = 1:nrow(gEnv$allZoidMtx) )
+gSel$filtIdx0 <- which(allFiltCnt == 0 )
+gSel$filtIdx3 <- which(allFiltCnt == 3 )
+
+# -------------------------------------------------------------------------------------
+#	B1.1 절대 제거 필터링 
+#		특정 필터는 아예 발생불가로 치고, 절대기준으로서 잘라낸다.
+forbiddenFilt <- c( 	"A0050"		# 2.5% Quo4 3개 이상.
+						,"AK000.C"	# 4.0% width 과거패턴 재발.
+						,"AP000.C"	# 2.5% 한가지 Quo가 4개 이상.
+						,"AP000.D"	# 1.5% Quo의 nextRow
+					)
+for( filtName in forbiddenFilt ){
+	gSel$surviveIdx <- setdiff( gSel$surviveIdx ,remLst[[filtName]] )
+}
+gSel$filtIdx0 <- gSel$filtIdx0 # 애시당초 아무런 필터링이 없으므로..
+gSel$filtIdx3 <- intersect( gSel$surviveIdx ,gSel$filtIdx3 )
+
 
 # =====================================================================================
-#	C0. 임의 제거... 주사위를 굴려야 하는 부분.
+#	C0. 기초 필터링.
 # =====================================================================================
-#	allChosenIdx 조정.
+# gSel$filtIdx0 을 대상으로 함. 차후 함수로 바뀔 부분
+#	정의될 파라미터
+#		- surviveIdx ,gEnv
 
-# rebCnt==0 일때의 필터 분포 (2번 이하로 나온 필터는 그냥 제거하자.)
-# 		table( do.call( c ,fRstLst[chosen.group] ) )
-rebFiltNm <- c( 	c( "A0030" ,"AK000.C" ) # 발생횟수 1회, 2회
-					,setdiff( allFiltName ,unique(do.call(c,fRstLst[chosen.group])) )
-				)
-for( remNm in rebFiltNm ){
-	allChosenIdx <- setdiff(allChosenIdx,remLst[[remNm]])
+surviveIdx	<- gSel$filtIdx0	# surviveIdx는 allZoidMtx의 rIdx임을 명심!!!
+
+# -------------------------------------------------------------------------------------
+#	C1. .hard() 함수 적용.
+
+filtFuncLst.hard <- getFiltLst.hard()	# filtIdx0에겐 c(5,12,18,19,21,22)만 유효..
+
+tEnv <- gEnv
+tEnv$allZoidMtx <- gEnv$allZoidMtx[surviveIdx,]
+
+tStmp <- Sys.time()
+for( filtIdx in seq_len(length(filtFuncLst.hard)) ){
+	rstObj <- filtFuncLst.hard[[filtIdx]]( tEnv )
+	surviveIdx <- surviveIdx[rstObj$flag]
+	tEnv$allZoidMtx <- tEnv$allZoidMtx[rstObj$flag,]
+	k.FLogStr(sprintf("[C1.]%s survive:%d",rstObj$filtId,sum(rstObj$flag)))
+}
+tDiff <- Sys.time() - tStmp		# 1.9hr for 55만
+tEnv <- NULL	# 중요한 것은 surviveIdx임.
+
+# -------------------------------------------------------------------------------------
+#	C2.0 rebCnt 기준으로 나누어 처리.
+#		역시 별도 함수 제작 대상.
+#			pSurviveIdx ,pEnv ,pRebCnt
+lastZoid <- gEnv$zhF[nrow(gEnv$zhF),]
+allRebCnt <- apply( pEnv$allZoidMtx[surviveIdx,] ,1 ,function(p){sum(p%in%lastZoid)} )
+workRebCnt <- 0
+
+# 파라미터 준비구역.
+pEnv <- gEnv
+pSurviveIdx <- surviveIdx[allRebCnt==workRebCnt]
+pRebCnt <- workRebCnt
+
+# 함수시작.
+
+stdRebCnt <- rep( 0 ,nrow(pEnv$zhF) )
+for( hIdx in 2:nrow(pEnv$zhF) ){
+	stdRebCnt[hIdx] <- sum( pEnv$zhF[hIdx,] %in% pEnv$zhF[(hIdx-1),] )
 }
 
-# rebCnt==0 이고 opt.groupSize 적용상태에서의 분포.
-#	(1번 이하로 나온 필터는 그냥 제거하자.)
-rebFiltNm <- c( 	c( "A0010" ,"A0030" ,"AK000.D") # 발생횟수 1회
-					,setdiff( allFiltName 
-							,unique(do.call(c,fRstLst[intersect(chosen.rebCnt,chosen.group)])) 
-						)
-				)
-for( remNm in rebFiltNm ){
-	allChosenIdx <- setdiff(allChosenIdx,remLst[[remNm]])
+tStmp <- Sys.time()
+tSurviveIdx <- pSurviveIdx
+tEnv <- pEnv
+tEnv$zhF <- pEnv$zhF[stdRebCnt==pRebCnt,]
+filtLst.hard4RebCnt <- getFiltLst.hard4RebCnt()
+for( filtIdx in seq_len(length(filtLst.hard4RebCnt)) ){
+	tEnv$allZoidMtx <- pEnv$allZoidMtx[tSurviveIdx,]
+	rstObj <- filtLst.hard4RebCnt[[filtIdx]](tEnv)
+	tSurviveIdx <- tSurviveIdx[rstObj$flag]
 }
+tDiff <- Sys.time() - tStmp
 
-# rebCnt==0 이고 opt.groupSize 적용상태에서 자주 나오는 필터의 반복분포.
-# QQE.todo
+#	return( tSurviveIdx )
 
-source("20180109_A_HDice.R")
-allChosenIdx <- dice789( allZoidMtx ,zhF ,allChosenIdx )
-curLogStr(sprintf("remove flex candObj : %d",length(allChosenIdx)))
 
-# =====================================================================================
-#	D0. candObj
-# =====================================================================================
-curLogStr("startAnalysis")
-candObj <- list( idx=allChosenIdx )
-candObj$filtLst <- lapply(candObj$idx,function( p ){
-							fndFlag <- sapply( remLst ,function(p2){ p %in% p2} )
-							return( which(fndFlag) )
-						}) # 7.5 min for 40k
-candObj$filtIdMtx <- do.call( rbind ,candObj$filtLst )
-candObj$filtNmMtx <- matrix( "" ,nrow=nrow(candObj$filtIdMtx) ,ncol=ncol(candObj$filtIdMtx) )
-for( rIdx in 1:nrow(candObj$filtNmMtx) ){
-	candObj$filtNmMtx[rIdx, ] <- allFiltName[candObj$filtIdMtx[rIdx,]]
-}
-candObj$filtCnt <- table(as.vector( candObj$filtNmMtx ))
 
-cutCand <- function( rObj ,pCutIdx ){
-	if( 0==length(pCutIdx) ){
-		return( rObj )
+# -[testing 영역]-------------------------------------------------------------
+testSpan.reb <- 200:nrow(zhF.reb)	# AJ000.C 등에서 100이상 필요.
+
+remHardLst <- list()
+filtLst.hard4RebCnt <- getFiltLst.hard4RebCnt()
+for( filtIdx in seq_len(length(filtLst.hard4RebCnt)) ){
+	filtId <- NULL
+	tFlag <- rep( TRUE ,nrow(zhF.reb) )
+	tIdx.dbg <- 0
+	for( tIdx in testSpan.reb ){
+		tIdx.dbg <- tIdx
+		tEnv <- pEnv
+		tEnv$zhF <- zhF.reb[1:(tIdx-1),]
+		tEnv$allZoidMtx <- zhF.reb[tIdx,,drop=F]
+
+		rstObj <- filtLst.hard4RebCnt[[filtIdx]](tEnv)
+		tFlag[tIdx] <- rstObj$flag[1]
+		filtId <- rstObj$filtId
 	}
-	newRObj <- list( idx=rObj$idx[-pCutIdx] )
-	newRObj$filtLst <- rObj$filtLst[-pCutIdx]
-	newRObj$filtIdMtx <- rObj$filtIdMtx[-pCutIdx,]
-	newRObj$filtNmMtx <- rObj$filtNmMtx[-pCutIdx,]
-	newRObj$filtCnt <- table(as.vector(newRObj$filtNmMtx))
-	return( newRObj )
-} # cutCand()
-
-curLogStr(sprintf("start candObj : %d",length(candObj$idx))
-
-# =====================================================================================
-#	E0. Zoid History 상에서 걸리지 않은 필터는 무조건 제외.
-# =====================================================================================
-unUsedIdx <- which( !( allFiltName %in% names(stdFiltCnt) ) )	# allFiltName[unUsedIdx]
-flagCnt <- apply( candObj$filtIdMtx ,1 ,function(p){sum(p%in%unUsedIdx)} )
-candObj <- cutCand( candObj ,which(flagCnt>0) )
-curLogStr(sprintf("remove unUsedIdx candObj : %d",length(candObj$idx)))
-
-
-# =====================================================================================
-#	F0. 표준 절대 기준 탈락 확인.
-# =====================================================================================
-tEnv <- gEnv	;tStmp <- Sys.time()
-filtFuncLst <- getFiltLst.hard( )
-for( fIdx in seq_len(length(filtFuncLst)) ){
-	tEnv$allZoidMtx <- gEnv$allZoidMtx[candObj$idx,]
-	rstObj <- filtFuncLst[[fIdx]]( tEnv )
-	candObj <- cutCand( candObj ,which(!rstObj$flag) )
-	tDiff <- Sys.time() - tStmp
-	curLogStr(sprintf("current candidate : %d cost : %.1f%s (%s)"
-					,length(candObj$idx),tDiff,units(tDiff),rstObj$filtId
-			)
-			,pConsole=T ,pTime=F
-		)
-}
-curLogStr(sprintf("remove std harden candObj : %d",length(candObj$idx)))
-
-# =====================================================================================
-#	G0. 임의 기준 내(rebCnt==0) Zoid History 기반 절대 기준 탈락
-# =====================================================================================
-tEnv <- gEnv	;tStmp <- Sys.time()
-stdRebCnt <- rep( 0 ,nrow(zhF) )	# A0 영역에서 testSpan 한정되었기 때문에 다시계산.
-for( hIdx in 2:nrow(zhF) ){
-	stdRebCnt[hIdx] <- sum(zhF[hIdx,]%in%zhF[(hIdx-1),])
+	remHardLst[[filtId]] <- tFlag
+	k.FLogStr(sprintf("  filtId:%s failed:%d/%d"
+		,filtId,sum(!tFlag),length(testSpan.reb) ))
 }
 
-tEnv$zhF <- gEnv$zhF[stdRebCnt==0,]
 
-filtFuncLst <- getFiltLst.hard( ) # rebCnt==0 용도에 맞게 새로운 hard 함수 필요할 듯.
-for( fIdx in seq_len(length(filtFuncLst)) ){
-	tEnv$allZoidMtx <- gEnv$allZoidMtx[candObj$idx,]
-	rstObj <- filtFuncLst[[fIdx]]( tEnv )
-	candObj <- cutCand( candObj ,which(!rstObj$flag) )
-	tDiff <- Sys.time() - tStmp
-	curLogStr(sprintf("G0. current candidate : %d cost : %.1f%s (%s)"
-					,length(candObj$idx),tDiff,units(tDiff),rstObj$filtId
-			)
-			,pConsole=T ,pTime=F
-		)
-}
 
-curLogStr(sprintf("remove G0 harden candObj : %d",length(candObj$idx)))
 
-# =====================================================================================
-#	결과저장.
-# =====================================================================================
 
-candObj$groupSize <- opt.groupSize
-save( candObj ,file=sprintf("./save/Obj_candObj%s.save",saveId) )
+getFiltLst.hard4RebCnt <- function( ){
+	# 전체 34%, filt_AK000.B.hard() 제외시 23% 손실.
+	filtFuncLst <- list()
+	filtFuncLst[[1+length(filtFuncLst)]] <- filt_A0020.hard		# 2/104
+	filtFuncLst[[1+length(filtFuncLst)]] <- filt_A0100.A.hard	# 4/104 
+	filtFuncLst[[1+length(filtFuncLst)]] <- filt_A0110.A.hard	# 3/104
+	filtFuncLst[[1+length(filtFuncLst)]] <- filt_AJ000.A.hard	# 0/104
+	filtFuncLst[[1+length(filtFuncLst)]] <- filt_AJ000.B.hard	# 3/104
+	filtFuncLst[[1+length(filtFuncLst)]] <- filt_AJ000.C.hard	# 1/104
+	# filtFuncLst[[1+length(filtFuncLst)]] <- filt_AK000.B.hard	#13/104
+	filtFuncLst[[1+length(filtFuncLst)]] <- filt_AK000.C		# 7/104
+	filtFuncLst[[1+length(filtFuncLst)]] <- filt_AP000.B.hard	# 1/104
+	filtFuncLst[[1+length(filtFuncLst)]] <- filt_AP000.D		# 0/104
+	filtFuncLst[[1+length(filtFuncLst)]] <- filt_AP000.E.hard	# 1/104
+	filtFuncLst[[1+length(filtFuncLst)]] <- filt_AQ000.A		# 2/104
+	filtFuncLst[[1+length(filtFuncLst)]] <- filt_AQ000.B		# 0/104
+	filtFuncLst[[1+length(filtFuncLst)]] <- filt_AQ000.C		# 0/104
+	filtFuncLst[[1+length(filtFuncLst)]] <- filt_AR000.A.hard	# 0/104
+	filtFuncLst[[1+length(filtFuncLst)]] <- filt_AR000.B.hard	# 1/104
+	filtFuncLst[[1+length(filtFuncLst)]] <- filt_AR000.C.hard	# 1/104
+	filtFuncLst[[1+length(filtFuncLst)]] <- filt_AS000.A.hard	# 2/104
+	filtFuncLst[[1+length(filtFuncLst)]] <- filt_C1000.A.hard	# 1/104
+
+	return( filtFuncLst )
+
+} # getFiltLst..hard4RebCnt()
+
+
 
 
