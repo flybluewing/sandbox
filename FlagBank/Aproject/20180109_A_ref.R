@@ -155,32 +155,6 @@ for( filtIdx in seq_len(length(filtLst.hard4RebCnt)) ){
 
 
 
-getFiltLst.hard4RebCnt <- function( ){
-	# 전체 34%, filt_AK000.B.hard() 제외시 23% 손실.
-	filtFuncLst <- list()
-	filtFuncLst[[1+length(filtFuncLst)]] <- filt_A0020.hard		# 2/104
-	filtFuncLst[[1+length(filtFuncLst)]] <- filt_A0100.A.hard	# 4/104 
-	filtFuncLst[[1+length(filtFuncLst)]] <- filt_A0110.A.hard	# 3/104
-	filtFuncLst[[1+length(filtFuncLst)]] <- filt_AJ000.A.hard	# 0/104
-	filtFuncLst[[1+length(filtFuncLst)]] <- filt_AJ000.B.hard	# 3/104
-	filtFuncLst[[1+length(filtFuncLst)]] <- filt_AJ000.C.hard	# 1/104
-	# filtFuncLst[[1+length(filtFuncLst)]] <- filt_AK000.B.hard	#13/104
-	filtFuncLst[[1+length(filtFuncLst)]] <- filt_AK000.C		# 7/104
-	filtFuncLst[[1+length(filtFuncLst)]] <- filt_AP000.B.hard	# 1/104
-	filtFuncLst[[1+length(filtFuncLst)]] <- filt_AP000.D		# 0/104
-	filtFuncLst[[1+length(filtFuncLst)]] <- filt_AP000.E.hard	# 1/104
-	filtFuncLst[[1+length(filtFuncLst)]] <- filt_AQ000.A		# 2/104
-	filtFuncLst[[1+length(filtFuncLst)]] <- filt_AQ000.B		# 0/104
-	filtFuncLst[[1+length(filtFuncLst)]] <- filt_AQ000.C		# 0/104
-	filtFuncLst[[1+length(filtFuncLst)]] <- filt_AR000.A.hard	# 0/104
-	filtFuncLst[[1+length(filtFuncLst)]] <- filt_AR000.B.hard	# 1/104
-	filtFuncLst[[1+length(filtFuncLst)]] <- filt_AR000.C.hard	# 1/104
-	filtFuncLst[[1+length(filtFuncLst)]] <- filt_AS000.A.hard	# 2/104
-	filtFuncLst[[1+length(filtFuncLst)]] <- filt_C1000.A.hard	# 1/104
-
-	return( filtFuncLst )
-
-} # getFiltLst..hard4RebCnt()
 
 
 

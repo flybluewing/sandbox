@@ -73,6 +73,36 @@ getFiltLst.hard <- function( ){
 
 } # getFiltLst.hard()
 
+getFiltLst.hard4RebCnt <- function( ){
+	# 전체 zhF가 아닌 특정 조건을 유지(rebCnt==0 등)하는 zhF만 골라내서 
+	#	새로운 lastZoid를 기준으로 적용하기 위한 함수들.
+	# 	전체 34%, filt_AK000.B.hard() 제외시 23% 손실.
+	filtFuncLst <- list()
+	filtFuncLst[[1+length(filtFuncLst)]] <- filt_A0020.hard		# 2/104
+	filtFuncLst[[1+length(filtFuncLst)]] <- filt_A0100.A.hard	# 4/104 
+	filtFuncLst[[1+length(filtFuncLst)]] <- filt_A0110.A.hard	# 3/104
+	filtFuncLst[[1+length(filtFuncLst)]] <- filt_AJ000.A.hard	# 0/104
+	filtFuncLst[[1+length(filtFuncLst)]] <- filt_AJ000.B.hard	# 3/104
+	filtFuncLst[[1+length(filtFuncLst)]] <- filt_AJ000.C.hard	# 1/104
+	# filtFuncLst[[1+length(filtFuncLst)]] <- filt_AK000.B.hard	#13/104
+	filtFuncLst[[1+length(filtFuncLst)]] <- filt_AK000.C		# 7/104
+	filtFuncLst[[1+length(filtFuncLst)]] <- filt_AP000.B.hard	# 1/104
+	filtFuncLst[[1+length(filtFuncLst)]] <- filt_AP000.D		# 0/104
+	filtFuncLst[[1+length(filtFuncLst)]] <- filt_AP000.E.hard	# 1/104
+	filtFuncLst[[1+length(filtFuncLst)]] <- filt_AQ000.A		# 2/104
+	filtFuncLst[[1+length(filtFuncLst)]] <- filt_AQ000.B		# 0/104
+	filtFuncLst[[1+length(filtFuncLst)]] <- filt_AQ000.C		# 0/104
+	filtFuncLst[[1+length(filtFuncLst)]] <- filt_AR000.A.hard	# 0/104
+	filtFuncLst[[1+length(filtFuncLst)]] <- filt_AR000.B.hard	# 1/104
+	filtFuncLst[[1+length(filtFuncLst)]] <- filt_AR000.C.hard	# 1/104
+	filtFuncLst[[1+length(filtFuncLst)]] <- filt_AS000.A.hard	# 2/104
+	filtFuncLst[[1+length(filtFuncLst)]] <- filt_C1000.A.hard	# 1/104
+
+	return( filtFuncLst )
+
+} # getFiltLst..hard4RebCnt()
+
+
 # getFiltLst.base() 에 적용대기상태 함수들.
 #	일단 나중에 걸러주기로 사용함.(20180109_A_ref.R)
 getFiltLst.bench <- function(){
@@ -1494,6 +1524,88 @@ filt_C1000.A.hard <- function( pEnv ){
 } # filt_C1000.A.hard()
 
 
+#-[D0000.A]------------------------------------------------------
+#	rebMtx (7*6)
+filt_D0000.A <- function( pEnv ,pHeight=7 ){
+
+	filtId="D0000.A";	tStmp <- Sys.time()
+	allZoidMtx <- pEnv$allZoidMtx;	zhF <- pEnv$zhF
+	stdCode <- zhF[nrow(zhF),] %% 10
+
+	rowSpan <- (nrow(zhF)-pHeight+1):nrow(zhF)
+	stdMtx <- zhF[rowSpan-10,]	# 바로 이전 맵을 체크하는 것은 너무 유사성이 많아서.
+	allMtx <- zhF[rowSpan   ,]
+	lastZoid <- zhF[nrow(zhF),]
+
+	remValLst <- lapply( lastZoid ,function(p){integer(0)} )
+	for( rIdx in 1:pHeight ){
+		for( cIdx in 1:length(lastZoid) ){
+			lzIdx <- which(lastZoid==stdMtx[rIdx,cIdx])	# Last zoid col index
+			if( 0<length(lzIdx) ){
+				remValLst[[lzIdx]] <- c( remValLst[[lzIdx]] ,allMtx[rIdx,cIdx] )
+			}
+		}
+	}
+	scanCol <- which( sapply( remValLst ,length ) > 0 )	# 모든 컬럼이 아닌, 배제대상 있는 것만.
+
+	flag <- rep( 0 ,nrow(allZoidMtx) )
+	for( aIdx in 1:nrow(allZoidMtx) ){
+		for( cIdx in scanCol ){
+			#	하나만 일치해도 예외대상.
+			if( allZoidMtx[aIdx,cIdx] %in% remValLst[[cIdx]] ){
+				flag[aIdx] <- cIdx
+			}
+		}
+	}
+	flag <- flag==0
+
+	pEnv$logStr( sprintf("ID:%s rem:%d",filtId,sum(!flag)) )
+	return( list(filtId=filtId ,flag=flag ,filtCnt=sum(!flag), tCost=(Sys.time()-tStmp)) 
+		)
+
+} # filt_D0000.A()
+
+filt_D0000.A.hard <- function( pEnv ,pHeight=7 ,pThld=2 ){
+
+	filtId="D0000.A.hard";	tStmp <- Sys.time()
+	allZoidMtx <- pEnv$allZoidMtx;	zhF <- pEnv$zhF
+	stdCode <- zhF[nrow(zhF),] %% 10
+
+	rowSpan <- (nrow(zhF)-pHeight+1):nrow(zhF)
+	stdMtx <- zhF[rowSpan-10,]	# 바로 이전 맵을 체크하는 것은 너무 유사성이 많아서.
+	allMtx <- zhF[rowSpan   ,]
+	lastZoid <- zhF[nrow(zhF),]
+
+	remValLst <- lapply( lastZoid ,function(p){integer(0)} )
+	for( rIdx in 1:pHeight ){
+		for( cIdx in 1:length(lastZoid) ){
+			lzIdx <- which(lastZoid==stdMtx[rIdx,cIdx])	# Last zoid col index
+			if( 0<length(lzIdx) ){
+				remValLst[[lzIdx]] <- c( remValLst[[lzIdx]] ,allMtx[rIdx,cIdx] )
+			}
+		}
+	}
+	scanCol <- which( sapply( remValLst ,length ) > 0 )	# 모든 컬럼이 아닌, 배제대상 있는 것만.
+	
+	chkFlag <- rep( 0 ,length(lastZoid) )
+
+	flag <- rep( 0 ,nrow(allZoidMtx) )
+	for( aIdx in 1:nrow(allZoidMtx) ){
+		chkFlag[] <- 0
+		for( cIdx in scanCol ){
+			if( allZoidMtx[aIdx,cIdx] %in% remValLst[[cIdx]] ){
+				chkFlag[cIdx] <- cIdx
+			}
+		}
+		flag[aIdx] <- sum(chkFlag>1)	# 매치 갯수.
+	}
+	flag <- flag<pThld	# pThld보다 작은 수의 매치만 허용.
+
+	pEnv$logStr( sprintf("ID:%s rem:%d",filtId,sum(!flag)) )
+	return( list(filtId=filtId ,flag=flag ,filtCnt=sum(!flag), tCost=(Sys.time()-tStmp)) 
+		)
+
+} # filt_D0000.A.hard()
 
 
 tempBlk <- function(){

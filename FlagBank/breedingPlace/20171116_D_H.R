@@ -1,3 +1,24 @@
+# pZH <- gEnv$zhF	;pMapSize=3		;pNaVal=-1
+getRebMap <- function( pZH ,pMapSize=3 ,pNaVal=0 ){
+
+	lastZoid <- pZH[nrow(pZH),]
+	scanSpan <- (nrow(pZH)-pMapSize):(nrow(pZH)-1)
+	rMtx <- matrix( pNaVal ,nrow=length(scanSpan) ,ncol=ncol(pZH) )
+
+	for( rIdx in 1:length(scanSpan) ){
+		for( cIdx in 1:length(lastZoid) ){
+			matIdx <- which(lastZoid==pZH[scanSpan[rIdx],cIdx])
+			if( 0 < length(matIdx) ){
+				rMtx[rIdx,cIdx] <- matIdx
+			}
+		}
+	}
+	
+	return(rMtx)
+
+} # getRebMap()
+
+
 # 20171116_D_H.R ÇÑ±Û
 minFreqCnt <- function( pMtx ,pSize=3 ,pInitVal=0 ){
 
