@@ -33,6 +33,8 @@ getFiltLst.base <- function( ){
 	filtFuncLst[[1+length(filtFuncLst)]] <- filt_C0000.A
 	filtFuncLst[[1+length(filtFuncLst)]] <- filt_C1000.A
 
+	filtFuncLst[[1+length(filtFuncLst)]] <- filt_D0000.A
+
 	return( filtFuncLst )
 
 } # getFiltLst.base()
@@ -69,6 +71,8 @@ getFiltLst.hard <- function( ){
 	filtFuncLst[[1+length(filtFuncLst)]] <- filt_C0000.A.hard
 	filtFuncLst[[1+length(filtFuncLst)]] <- filt_C1000.A.hard
 
+	filtFuncLst[[1+length(filtFuncLst)]] <- filt_D0000.A.hard
+
 	return( filtFuncLst )
 
 } # getFiltLst.hard()
@@ -97,6 +101,8 @@ getFiltLst.hard4RebCnt <- function( ){
 	filtFuncLst[[1+length(filtFuncLst)]] <- filt_AR000.C.hard	# 1/104
 	filtFuncLst[[1+length(filtFuncLst)]] <- filt_AS000.A.hard	# 2/104
 	filtFuncLst[[1+length(filtFuncLst)]] <- filt_C1000.A.hard	# 1/104
+
+	filtFuncLst[[1+length(filtFuncLst)]] <- filt_D0000.A.hard
 
 	return( filtFuncLst )
 
@@ -1530,10 +1536,9 @@ filt_D0000.A <- function( pEnv ,pHeight=7 ){
 
 	filtId="D0000.A";	tStmp <- Sys.time()
 	allZoidMtx <- pEnv$allZoidMtx;	zhF <- pEnv$zhF
-	stdCode <- zhF[nrow(zhF),] %% 10
 
 	rowSpan <- (nrow(zhF)-pHeight+1):nrow(zhF)
-	stdMtx <- zhF[rowSpan-10,]	# 바로 이전 맵을 체크하는 것은 너무 유사성이 많아서.
+	stdMtx <- zhF[rowSpan-20,]	# 바로 이전 맵을 체크하는 것은 너무 유사성이 많아서.
 	allMtx <- zhF[rowSpan   ,]
 	lastZoid <- zhF[nrow(zhF),]
 
@@ -1569,10 +1574,9 @@ filt_D0000.A.hard <- function( pEnv ,pHeight=7 ,pThld=2 ){
 
 	filtId="D0000.A.hard";	tStmp <- Sys.time()
 	allZoidMtx <- pEnv$allZoidMtx;	zhF <- pEnv$zhF
-	stdCode <- zhF[nrow(zhF),] %% 10
 
 	rowSpan <- (nrow(zhF)-pHeight+1):nrow(zhF)
-	stdMtx <- zhF[rowSpan-10,]	# 바로 이전 맵을 체크하는 것은 너무 유사성이 많아서.
+	stdMtx <- zhF[rowSpan-20,]	# 바로 이전 맵을 체크하는 것은 너무 유사성이 많아서.
 	allMtx <- zhF[rowSpan   ,]
 	lastZoid <- zhF[nrow(zhF),]
 

@@ -252,6 +252,33 @@ val_C1000.A <- function( pEnv ){
 } # val_C1000.A()
 
 
+#-[D0000.A]------------------------------------------------------
+#	rebMtx (7*6)
+val_D0000.A <- function( gEnv ){
+	# 87/391 22%	hard : 5/391
+	filtId="D0000.A";	tStmp <- Sys.time()
+
+	tEnv <- gEnv
+	flag <- rep( TRUE ,nrow(gEnv$zhF) )
+	for( hIdx in testSpan ){
+		tEnv$zhF <- gEnv$zhF[1:(hIdx-1),]
+		tEnv$allZoidMtx <- gEnv$zhF[hIdx,,drop=F]
+		rstObj <- filt_D0000.A.hard( tEnv )
+		flag[hIdx] <- rstObj$flag[1]
+	}
+
+	pEnv$logStr( sprintf("ID:%s rem:%d",filtId,sum(!flag)) )
+	return( list(filtId=filtId ,flag=flag ,filtCnt=sum(!flag), tCost=(Sys.time()-tStmp)) 
+		)
+
+} # val_D0000.A()
+
+
+
+
+
+
+
 Val_AX000.X <- function( pEnv ){	#
 	
 	filtId="AX000.X";	tStmp <- Sys.time()
