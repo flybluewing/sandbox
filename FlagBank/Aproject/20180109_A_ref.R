@@ -6,6 +6,7 @@ source("../breedingPlace/20171116_B_H.R")
 source("../breedingPlace/20171116_C_H.R")
 source("../breedingPlace/20171116_D_H.R")
 source("20180109_A_H.R")
+source("20180109_B_H.R")
 
 saveId <- "0124_12" # 대상에 따라 바꿔사용.
 load(sprintf("./save/Obj_gEnv%s.save",saveId))
