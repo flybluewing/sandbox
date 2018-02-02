@@ -17,6 +17,48 @@ allZoidMtx <- gEnv$allZoidMtx
 zhF <- gEnv$zhF
 
 
+pFlag <- (zhF%%4)[,1]
+pEleSet <- sort(unique(pFlag))
+
+getFreqDist <- function( pFlag ,pEleSet ,pDbg=F ){	# Frequency Distribute
+
+	flag.len <- length(pFlag)
+	eleMean <- sapply( pEleSet ,function(p){ sum(pFlag==p)/flag.len })
+	eleStatLst <- createEleStatLst( pEleSet ,eleMean )
+
+	for( hIdx in 1:length(pFlag) ){
+		hauntVal <- pFlag[hIdx]
+		for( idx in 1:length(pEleSet) ){
+			if( hauntVal==eleStatLst[[idx]]$val ){
+				eleStatLst[[idx]] <- bank.haunt( eleStatLst[[idx]] )
+			} else {
+				eleStatLst[[idx]] <- bank.quiet( eleStatLst[[idx]] )
+			}
+		}
+
+		if( pDbg ){
+			if( 0==(hIdx%%50) ){
+				k.FLogStr(sprintf("     getFreqDist( ) %d/%d",hIdx,length(pFlag)))
+			}
+		} # if(pDbg)
+
+	} # for(hIdx)
+
+	rFreqDist <- sapply( eleStatLst ,function(p){p$energy} )
+
+	return( rFreqDist )
+}
+
+
+tFlag <- (zhF%%4)[,1]
+tEleSet <- sort(unique(tFlag))
+for( tIdx in 700:length(tFlag) ){
+	cFlag <- tFlag[1:(tIdx-1)]
+	cFlag.ele <- sort(unique(cFlag))
+	freqDist <- getFreqDist( cFlag ,cFlag.ele )
+}
+
+# -------------------------------------------------------------------------------------------------------
 stdMtx <- zhF %% 4
 flagThread <- stdMtx[,1]
 measureSpan <- 1:200
@@ -32,8 +74,8 @@ for( hIdx in 700:length(flagThread) ){
     eleStatLst <- createEleStatLst( eleSet ,eleMean )
 
     logStr <- ""
-    for( chIdx in 1:hIdx ){
-
+    # for( chIdx in 1:hIdx ){
+	for(chIdx in 1:698 ) {
 		hauntVal <- curThread[chIdx]
 		# if( T ){
 		if( chIdx==hIdx ){
@@ -43,9 +85,9 @@ for( hIdx in 700:length(flagThread) ){
 
 		for( idx in 1:length(eleSet) ){
             if( hauntVal==eleStatLst[[idx]]$val ){
-                eleStatLst[[idx]] <- bank.haunt3( eleStatLst[[idx]] )
+                eleStatLst[[idx]] <- bank.haunt( eleStatLst[[idx]] )
             } else{
-                eleStatLst[[idx]] <- bank.quiet3( eleStatLst[[idx]] )
+                eleStatLst[[idx]] <- bank.quiet( eleStatLst[[idx]] )
             }
         }
     }
@@ -81,11 +123,13 @@ for( idx in 1:length(eleSet) ){
 	lines( c(1,length(rstLogLst)) ,c(1,1) ,col="yellow" )
 	
     lines( 1:length(rstLogLst) ,energy ,col="blue")
-    points( (1:length(rstLogLst))[hitFlag] ,rep(0.5,sum(hitFlag)) ,pch="." ,col="red" )
+    points( (1:length(rstLogLst))[hitFlag] ,rep(0.5,sum(hitFlag)) ,pch="*" ,col="red" )
 	magVal <- 2.0	# mMean 수치가 너무 낮아 보기 어려워 확대..
     lines( mMeanSpan ,mMean*magVal ,col="green" )
 
 }
+
+
 
 
 
