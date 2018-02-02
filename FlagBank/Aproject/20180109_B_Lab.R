@@ -7,6 +7,15 @@ source("../breedingPlace/20171116_D_H.R")
 source("20180109_A_H.R")
 source("20180109_B_H.R")
 
+# Basic Data load
+saveId <- "0123_14"
+load(sprintf("./save/Obj_gEnv%s.save",saveId))
+load(sprintf("./save/Obj_fRstLst%s.save",saveId))
+load(sprintf("./save/Obj_remLst%s.save",saveId))
+
+allZoidMtx <- gEnv$allZoidMtx
+zhF <- gEnv$zhF
+
 
 stdMtx <- zhF %% 4
 flagThread <- stdMtx[,1]
@@ -14,73 +23,114 @@ measureSpan <- 1:200
 # flagThread <- c(1:4,1:4,1:4)
 
 eleSet  <- sort(unique(flagThread))  # element set 발생가능 경우들.
-eleMean <- table(flagThread[measureSpan])/length(measureSpan)   # 발생 평균. 1/n에 해당하는 값이기도 하다.
-eleMTTH    <- 1/eleMean    # mean time to haunt. (의외로 그리 많이 쓰이지는 않을 듯.)
 
-eleStatLst <- list()
-for( idx in 1:length(eleSet) ){
-    eleObj <- list( val=eleSet[idx] ,salary=eleMean[idx] )
-    eleObj$energy <- eleObj$salary  # 기본급. 즉 최소 발생확률은 항상 유지되어야 한다.
-    eleObj$bank <- 0
-    eleStatLst[[sprintf("ele%d",eleSet[idx])]] <- eleObj
-}
+rstLogLst <- list() ;logStart <- 300
+for( hIdx in 100:length(flagThread) ){
 
+    curThread <- flagThread[1:hIdx]
+    eleMean <- table(curThread)/length(curThread)
+    eleStatLst <- createEleStatLst( eleSet ,eleMean )
 
-flagThread <- c( 1 ,1 ,1 ,4 ,1    ,1 ,4 ,1 ,1 ,1
-                ,1 ,4 ,4 ,1 ,1    ,4 ,4 ,1 ,1 ,1
+    for( chIdx in 1:hIdx ){
+        for( idx in 1:length(eleSet) ){
+            if( hauntVal==eleStatLst[[idx]]$val ){
+                eleStatLst[[idx]] <- bank.haunt3( eleStatLst[[idx]] )
+            } else{
+                eleStatLst[[idx]] <- bank.quiet3( eleStatLst[[idx]] )
+            }
+        }
+    }
+
+    eleObj <- eleStatLst[[1]]
+    logStr <- sprintf("[%s] E:%.3f B:%.3f (min/max %.3f/%.3f) - lastH:%s" ,ifelse(hauntVal==eleObj$val,"T"," ")
+                    ,eleObj$energy  ,eleObj$bank    ,eleObj$eMin    ,eleObj$eMax
+                    ,paste(ifelse(eleObj$lastH,"T","."),collapse=" ")
                 )
 
-eleObj <- eleStatLst[[4]]
-for( hIdx in 1:length(flagThread) ){
-    # 어떤 것이 발생 했는지의 여부
+    k.FLogStr(sprintf("%3d %s",hIdx,logStr))
 
-    QQE:working
-    
-    # 발생/비발생에 따른 다음 발생 에너지 계산.
-    #   다음 H에서의(hIdx+1) 발생 에너지를 가늠한다.
-    if( 4==flagThread[hIdx] ){
-        eleObj <- bank.haunt( eleObj )
-    } else{
-        eleObj <- bank.quiet( eleObj )
-    }
-    k.FLogStr(sprintf("[%s]hIdx:%2d energy:%.2f bank:%.2f    salary:%.2f" 
-                ,ifelse( 4==flagThread[hIdx] ,"T" ,"F" )
-                ,hIdx   ,eleObj$energy ,eleObj$bank ,eleObj$salary
-            ))
 }
 
 
 
-bank.haunt <- function( pEleObj ) {     # 발생 시 뱅킹처리.
-    rEleObj <- pEleObj
+eleMean <- table(flagThread[measureSpan])/length(measureSpan)   # 발생 평균. 1/n에 해당하는 값이기도 하다.
+
+
+    # 테스트용 데이터. (25%용)
+    #     flagThread <- c( 1 ,1 ,1 ,4 ,1    ,1 ,4 ,1 ,1 ,1
+    #                     ,1 ,4 ,4 ,1 ,1    ,4 ,4 ,1 ,1 ,1
+    #                     )
+
+
+# eleStatLst <- createEleStatLst( eleSet ,eleMean ,pSalScale=rep(0.1,length(eleSet)) )
+# eleStatLst <- createEleStatLst( eleSet ,rep(0.25,4) ,pSalScale=rep(0.1,length(eleSet)) )
+
+# eleMean <- c( 0.195 ,0.280 ,0.305 ,0.220 )
+# eleMean <- c( 0.21 ,0.33 ,0.275 ,0.220 )
+eleStatLst <- createEleStatLst( eleSet ,eleMean ,pSalScale=rep(0.1,length(eleSet)) )
+
+rstLogLst <- list() ;logStart <- 300
+for( hIdx in 1:length(flagThread) ){
+# for( hIdx in 1:12 ){
+
+    logStr <- ""
+    hauntVal <- flagThread[hIdx]
     
-    rEleObj$energy <- (rEleObj$energy+rEleObj$bank) - 1.0
-    rEleObj$bank <- 0.0                 # 계좌 밸런스 정리.
-    if( 1.00001 < rEleObj$energy ){     # 빼고나서도 에너지가 남으면 저축.
-        rEleObj$bank <- rEleObj$energy <- 1.0
-        rEleObj$energy <- 1.0
-    } else if( 0 > rEleObj$energy ){    # 발생 에너지 부족하면 대출 추가.
-        rEleObj$bank <- rEleObj$energy
-        rEleObj$energy <- 0.0
+    if( hIdx >= logStart ){
+        obj <- list( hIdx=hIdx ,hauntVal=hauntVal ,eleStatLst=eleStatLst )
+        rstLogLst[[1+length(rstLogLst)]] <- obj
     }
 
-    rEleObj$energy <- rEleObj$energy + rEleObj$salary   # 발생 시엔 월급 없다.
+    log.idx <- 0
+    for( idx in 1:length(eleStatLst) ){
+        logStr <- paste( logStr ,sprintf("[%s] %.3f"
+                        ,ifelse( eleStatLst[[idx]]$val==hauntVal ,"T" ," " )
+                        ,eleStatLst[[idx]]$energy
+                    ))
+        log.idx <- idx
 
-    return( rEleObj )
-} # bank.haunt()
-
-bank.quiet <- function( pEleObj ) {     # 미발생 시 뱅킹처리.
-    rEleObj <- pEleObj
-    rEleObj$energy <- (rEleObj$energy+rEleObj$bank) + rEleObj$salary
-    rEleObj$bank <- 0.0                 # 계좌 밸런스 정리.
-    if( 1.00001 < rEleObj$energy ) {    # 발생 에너지가 1.0 넘으면 저축.
-        rEleObj$bank <- rEleObj$energy - 1.0
-        rEleObj$energy <- 1.0
-    } else if( 0 > rEleObj$energy ) {   # 아직도 갚아야 할 대출금이 남았다.
-        rEleObj$bank    <- rEleObj$energy - rEleObj$salary  # 이번 월급만 유지하고 나머지는 대출금.
-        rEleObj$energy  <- rEleObj$salary
+        # 발생/비발생에 따른 다음 발생 에너지 계산.
+        #   다음 H에서의(hIdx+1) 발생 에너지를 가늠한다.
+        if( hauntVal==eleStatLst[[idx]]$val ){
+            eleStatLst[[idx]] <- bank.haunt3( eleStatLst[[idx]] )
+        } else{
+            eleStatLst[[idx]] <- bank.quiet3( eleStatLst[[idx]] )
+        }
     }
 
-    return( rEleObj )
-} # bank.haunt()
+    eleObj <- eleStatLst[[1]]
+    logStr <- sprintf("[%s] E:%.3f B:%.3f (min/max %.3f/%.3f) - lastH:%s" ,ifelse(hauntVal==eleObj$val,"T"," ")
+                    ,eleObj$energy  ,eleObj$bank    ,eleObj$eMin    ,eleObj$eMax
+                    ,paste(ifelse(eleObj$lastH,"T","."),collapse=" ")
+                )
+
+    k.FLogStr(sprintf("%3d %s",hIdx,logStr))
+
+}
+
+
+hauntVal <- sapply( rstLogLst ,function(p){p$hauntVal} )
+
+par( mfrow=c(1,1) )
+for( idx in 1:length(eleSet) ){
+    # idx <- 2
+    energy <- sapply( rstLogLst ,function(p){p$eleStatLst[[idx]]$energy} )
+    energyTot <- sapply( rstLogLst ,function(p){ p$eleStatLst[[idx]]$energy+p$eleStatLst[[idx]]$bank } )
+    hitFlag <- sapply( rstLogLst ,function(p){ p$hauntVal==p$eleStatLst[[idx]]$val } )
+    mMeanSpan <- 10:(length(hitFlag)-10)
+    mMean <- rep( 0 ,length(mMeanSpan) )
+    for( mIdx in 1:length(mMeanSpan) ){
+        cPos <- mMeanSpan[mIdx]
+        mMean[mIdx] <- mean(hitFlag[(cPos-5):(cPos+5)])
+    }
+
+    plot( 1:length(rstLogLst) ,energyTot ,type="l" ,ylim=c(-2,2) )
+    lines( 1:length(rstLogLst) ,energy ,col="blue")
+    points( (1:length(rstLogLst))[hitFlag] ,rep(0.5,sum(hitFlag)) ,pch="." ,col="red" )
+    lines( mMeanSpan ,mMean ,col="green" )
+
+}
+
+
+
 
