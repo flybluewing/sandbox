@@ -26,7 +26,8 @@ getFreqDist <- function( pFlag ,pEleSet ,pDbg=F ){	# Frequency Distribute
 	eleMean <- sapply( pEleSet ,function(p){ sum(pFlag==p)/flag.len })
 	eleStatLst <- createEleStatLst( pEleSet ,eleMean )
 
-	for( hIdx in 1:length(pFlag) ){
+	#for( hIdx in 1:length(pFlag) ){
+	for( hIdx in 1:699 ){		
 		hauntVal <- pFlag[hIdx]
 		for( idx in 1:length(pEleSet) ){
 			if( hauntVal==eleStatLst[[idx]]$val ){
@@ -74,8 +75,8 @@ for( hIdx in 700:length(flagThread) ){
     eleStatLst <- createEleStatLst( eleSet ,eleMean )
 
     logStr <- ""
-    # for( chIdx in 1:hIdx ){
-	for(chIdx in 1:698 ) {
+    #for( chIdx in 1:hIdx ){
+	for(chIdx in 1:700 ) {
 		hauntVal <- curThread[chIdx]
 		# if( T ){
 		if( chIdx==hIdx ){
