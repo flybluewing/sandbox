@@ -8,7 +8,7 @@ source("20180109_A_H.R")
 source("20180109_B_H.R")
 
 # Basic Data load
-saveId <- "0123_14"
+saveId <- "0127_23"
 load(sprintf("./save/Obj_gEnv%s.save",saveId))
 load(sprintf("./save/Obj_fRstLst%s.save",saveId))
 load(sprintf("./save/Obj_remLst%s.save",saveId))
@@ -26,9 +26,19 @@ getFreqDist <- function( pFlag ,pEleSet ,pDbg=F ){	# Frequency Distribute
 	eleMean <- sapply( pEleSet ,function(p){ sum(pFlag==p)/flag.len })
 	eleStatLst <- createEleStatLst( pEleSet ,eleMean )
 
-	#for( hIdx in 1:length(pFlag) ){
-	for( hIdx in 1:699 ){		
+	for( hIdx in 1:flag.len ){
 		hauntVal <- pFlag[hIdx]
+		if( pDbg ){
+			if( hIdx==flag.len ){				
+				energyStr <- sprintf("%.3f" ,sapply( eleStatLst ,function(p){p$energy+p$bank}) )
+				logStr <- sprintf("hIdx:%d [%d] %s" ,hIdx ,hauntVal ,paste(energyStr,collapse=" ") )
+				k.FLogStr( logStr )
+
+				meanStr <- sprintf("%.3f" ,sapply(eleStatLst ,function(p){p$salary}) )
+				k.FLogStr(sprintf( "      mean : %s" ,paste(meanStr,collapse=" ") ))
+			}
+		} # if(pDbg)
+
 		for( idx in 1:length(pEleSet) ){
 			if( hauntVal==eleStatLst[[idx]]$val ){
 				eleStatLst[[idx]] <- bank.haunt( eleStatLst[[idx]] )
@@ -36,13 +46,6 @@ getFreqDist <- function( pFlag ,pEleSet ,pDbg=F ){	# Frequency Distribute
 				eleStatLst[[idx]] <- bank.quiet( eleStatLst[[idx]] )
 			}
 		}
-
-		if( pDbg ){
-			if( 0==(hIdx%%50) ){
-				k.FLogStr(sprintf("     getFreqDist( ) %d/%d",hIdx,length(pFlag)))
-			}
-		} # if(pDbg)
-
 	} # for(hIdx)
 
 	rFreqDist <- sapply( eleStatLst ,function(p){p$energy} )
@@ -56,7 +59,9 @@ tEleSet <- sort(unique(tFlag))
 for( tIdx in 700:length(tFlag) ){
 	cFlag <- tFlag[1:(tIdx-1)]
 	cFlag.ele <- sort(unique(cFlag))
-	freqDist <- getFreqDist( cFlag ,cFlag.ele )
+	freqDist <- getFreqDist( cFlag ,cFlag.ele ,pDbg=T )
+	freqDistStr <- sprintf("%.3f",freqDist)
+	k.FLogStr(sprintf( "      freqDist : %s" ,paste(freqDistStr,collapse=" ") ))
 }
 
 # -------------------------------------------------------------------------------------------------------
