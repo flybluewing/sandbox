@@ -64,3 +64,37 @@ bank.haunt <- function( pEleObj ) {     # ¹ß»ı ½Ã ¹ğÅ·Ã³¸®.
     return( rEleObj )
 } # bank.haunt()
 
+# getFreqDist() ÀÇ ÃÊ±â¸ğµ¨. 
+#	Æò±Õ³»´Â ½ÃÁ¡¿¡ energy °ªÀÌ 0.0 or 1.0À¸·Î ¶³¾îÁø´Ù.
+getFreqDist.old <- function( pFlag ,pEleSet ,pDbg=F ){	# Frequency Distribute
+
+	flag.len <- length(pFlag)
+	eleMean <- sapply( pEleSet ,function(p){ sum(pFlag==p)/flag.len })
+	eleStatLst <- createEleStatLst( pEleSet ,eleMean )
+
+	for( hIdx in 1:flag.len ){
+		hauntVal <- pFlag[hIdx]
+		if( pDbg ){
+			if( hIdx==flag.len ){				
+				energyStr <- sprintf("%.3f" ,sapply( eleStatLst ,function(p){p$energy+p$bank}) )
+				logStr <- sprintf("hIdx:%d [%d] %s" ,hIdx ,hauntVal ,paste(energyStr,collapse=" ") )
+				k.FLogStr( logStr )
+
+				meanStr <- sprintf("%.3f" ,sapply(eleStatLst ,function(p){p$salary}) )
+				k.FLogStr(sprintf( "      mean : %s" ,paste(meanStr,collapse=" ") ))
+			}
+		} # if(pDbg)
+
+		for( idx in 1:length(pEleSet) ){
+			if( hauntVal==eleStatLst[[idx]]$val ){
+				eleStatLst[[idx]] <- bank.haunt( eleStatLst[[idx]] )
+			} else {
+				eleStatLst[[idx]] <- bank.quiet( eleStatLst[[idx]] )
+			}
+		}
+	} # for(hIdx)
+
+	rFreqDist <- sapply( eleStatLst ,function(p){p$energy} )
+
+	return( rFreqDist )
+} # getFreqDist.old()

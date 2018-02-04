@@ -16,52 +16,35 @@ load(sprintf("./save/Obj_remLst%s.save",saveId))
 allZoidMtx <- gEnv$allZoidMtx
 zhF <- gEnv$zhF
 
+tFlag <- (zhF%%4)[,1]
+tEleSet <- sort(unique(tFlag))
 
-pFlag <- (zhF%%4)[,1]
-pEleSet <- sort(unique(pFlag))
+# eleStatLst의 운영 성능 테스트
+traceBackH <- 2	# 과거 발생상태를 반영키 위한 범위
+rstLst <- list()
+for( tIdx in 550:(length(tFlag)-20) ){
+	cFlag <- tFlag[1:(tIdx-1)]
+	cFlag.ele <- sort(unique(cFlag))
 
-getFreqDist <- function( pFlag ,pEleSet ,pDbg=F ){	# Frequency Distribute
+	# 최근 평균이동 추세를 eleMean에 반영 시키는 것도 좋을 듯.
+	eleMean <- sapply( cFlag.ele ,function(p){ sum(cFlag==p)/length(cFlag) } )
+	eleStatLst <- createEleStatLst( cFlag.ele ,eleMean )
 
-	flag.len <- length(pFlag)
-	eleMean <- sapply( pEleSet ,function(p){ sum(pFlag==p)/flag.len })
-	eleStatLst <- createEleStatLst( pEleSet ,eleMean )
-
-	for( hIdx in 1:flag.len ){
-		hauntVal <- pFlag[hIdx]
-		if( pDbg ){
-			if( hIdx==flag.len ){				
-				energyStr <- sprintf("%.3f" ,sapply( eleStatLst ,function(p){p$energy+p$bank}) )
-				logStr <- sprintf("hIdx:%d [%d] %s" ,hIdx ,hauntVal ,paste(energyStr,collapse=" ") )
-				k.FLogStr( logStr )
-
-				meanStr <- sprintf("%.3f" ,sapply(eleStatLst ,function(p){p$salary}) )
-				k.FLogStr(sprintf( "      mean : %s" ,paste(meanStr,collapse=" ") ))
-			}
-		} # if(pDbg)
-
-		for( idx in 1:length(pEleSet) ){
+	guessSpan <- (tIdx-traceBackH):(tIdx+15)
+	guessLst <- list()
+	for( gIdx in guessSpan ){
+		hauntVal <- tFlag[gIdx]
+		for( idx in 1:length(cFlag.ele) ){
 			if( hauntVal==eleStatLst[[idx]]$val ){
 				eleStatLst[[idx]] <- bank.haunt( eleStatLst[[idx]] )
 			} else {
 				eleStatLst[[idx]] <- bank.quiet( eleStatLst[[idx]] )
 			}
 		}
-	} # for(hIdx)
+		guessLst[[1+length(guessLst)]] <- list( hIdx=gIdx ,eleStatLst=eleStatLst )
+	}
 
-	rFreqDist <- sapply( eleStatLst ,function(p){p$energy} )
-
-	return( rFreqDist )
-}
-
-
-tFlag <- (zhF%%4)[,1]
-tEleSet <- sort(unique(tFlag))
-for( tIdx in 700:length(tFlag) ){
-	cFlag <- tFlag[1:(tIdx-1)]
-	cFlag.ele <- sort(unique(cFlag))
-	freqDist <- getFreqDist( cFlag ,cFlag.ele ,pDbg=T )
-	freqDistStr <- sprintf("%.3f",freqDist)
-	k.FLogStr(sprintf( "      freqDist : %s" ,paste(freqDistStr,collapse=" ") ))
+	rstLst[[1+length(rstLst)]] <- guessLst
 }
 
 # -------------------------------------------------------------------------------------------------------
