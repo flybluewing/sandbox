@@ -28,7 +28,7 @@ for( tIdx in 550:(length(tFlag)-20) ){
 
 	# 최근 평균이동 추세를 eleMean에 반영 시키는 것도 좋을 듯.
 	eleMean <- sapply( cFlag.ele ,function(p){ sum(cFlag==p)/length(cFlag) } )
-	eleStatLst <- createEleStatLst( cFlag.ele ,eleMean )
+	eleStatLst <- createEleStatLst( cFlag.ele ,eleMean ,pSalScale=rep(0.1,length(cFlag.ele)) )
 
 	guessSpan <- (tIdx-traceBackH):(tIdx+15)
 	guessLst <- list()
@@ -41,11 +41,54 @@ for( tIdx in 550:(length(tFlag)-20) ){
 				eleStatLst[[idx]] <- bank.quiet( eleStatLst[[idx]] )
 			}
 		}
-		guessLst[[1+length(guessLst)]] <- list( hIdx=gIdx ,eleStatLst=eleStatLst )
+		guessLst[[1+length(guessLst)]] <- list( hIdx=gIdx ,eleStatLst=eleStatLst ,hauntVal=hauntVal)
 	}
 
 	rstLst[[1+length(rstLst)]] <- guessLst
 }
+
+
+
+plot(NULL, xlim=c(0,20), ylim=c(0,4.5 ), ylab="y label", xlab="x lablel")
+plotCol <- c("blue","red")
+
+for( rstIdx in seq_len(length(rstLst)) ){
+    guessLst <- rstLst[[rstIdx]]
+
+    hitAss <- c( 0 ,0 ,0 )  ;names(hitAss) <- c("gIdx" ,"hit" ,"energy" )
+    hitRank <- rep( 0 ,(length(guessLst)-1) )
+
+    hitAssLst <- list()
+    for( gIdx in 2:length(guessLst) ){
+        hauntVal <- guessLst[[gIdx]]$hauntVal
+        eleStatLst <- guessLst[[gIdx-1]]$eleStatLst
+
+        hitAss[] <- 0
+        hitIdx <- 0
+        for( idx in 1:length(eleStatLst) ){
+            hitAss["gIdx"]  <- gIdx
+            hitAss["hit"]   <- ifelse( hauntVal==eleStatLst[[idx]]$val ,2 ,1 )
+            hitAss["energy"]<- eleStatLst[[idx]]$energy
+            # hitAssLst[[1+length(hitAssLst)]] <- hitAss
+            if( hauntVal==eleStatLst[[idx]]$val ){
+                hitIdx <- idx
+            }
+        }
+
+        energy <- sapply( eleStatLst ,function(p){p$energy} )
+        hitRank[gIdx-1] <- which(order(energy,decreasing=T) == hitIdx )
+    } # for(gIdx)
+
+    hitAssLst[[1+length(hitAssLst)]] <- list( hitAss=hitAss ,hitRank=hitRank )
+    points( jitter(1:length(hitRank)) ,jitter(hitRank) ,pch="." )
+
+    # hitMtx <- do.call( rbind ,hitAssLst )
+    # points( jitter(hitMtx[,"gIdx"]) ,jitter(hitMtx[,"energy"]) ,col=plotCol[hitMtx[,"hit"]],pch="." )
+
+}
+
+
+
 
 # -------------------------------------------------------------------------------------------------------
 stdMtx <- zhF %% 4
