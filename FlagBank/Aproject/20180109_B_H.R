@@ -1,5 +1,42 @@
 # 20180109_B_H.R Flag thread. Bank model.
 
+getBiCoder <- function( pZh ){
+    
+    rObj <- list()
+    rObj$codeMtx <- matrix( c(0,0,1,1 ,0,1,0,1) ,nrow=4 ,ncol=2 )    
+    rObj$enCode <- function( bCodeVal ){
+        zipVal <- rep(0,length(bCodeVal)-1)
+        for( idx in 2:length(bCodeVal) ){
+            zipVal[idx-1] <- which(apply(rObj$codeMtx ,1 ,function(p){ all(p==bCodeVal[(idx-1):idx]) }))
+        }
+        return( zipVal )
+    } # rObj$getCode()
+    rObj$deCode <- function( zipVal ){
+        bCodeVal <- rep( 0 ,length(zipVal)+1 )
+        for( idx in 1:length(zipVal) ){
+            bCodeVal[idx:(idx+1)] <- rObj$codeMtx[zipVal[idx],]
+        }
+        return( bCodeVal )
+    } # rObj$deCode()
+    rObj$getAllCode( pPriCode=NULL ){ # 모든 발생가능 ZipValue
+        
+        if( is.null(pPriCode) ){
+            pPriCode <- 1:4
+        }
+
+        for( ){
+
+        }
+
+    } # rObj$getAllCode()
+
+
+    rObj$allCodeMtx <- t(apply( pZh%%2 ,1 ,rObj$getCode ))
+
+    return( rObj )
+}
+
+
 createEleStatLst <- function( pEleSet ,pEleMean ,pSalScale=NULL){
 
     if( is.null(pSalScale) ){
