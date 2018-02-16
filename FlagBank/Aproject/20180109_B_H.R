@@ -18,20 +18,30 @@ getBiCoder <- function( pZh ){
         }
         return( bCodeVal )
     } # rObj$deCode()
-    rObj$getAllCode( pPriCode=NULL ){ # 모든 발생가능 ZipValue
-        
-        if( is.null(pPriCode) ){
-            pPriCode <- 1:4
+
+    rObj$stdCodeMtx <- t(apply( pZh%%2 ,1 ,rObj$enCode ))
+
+    # --------------------------------------------------------------------------------------------
+    rObj$getAllCode <- function( ){ # 모든 발생가능 ZipValue
+
+        codeSeed <- seq_len(nrow(rObj$codeMtx))
+
+        codeLst <- as.list( codeSeed )
+        for( lvl in 2:5 ){
+            extLst <- lapply( codeLst ,function(p){ 
+                                lastVal <- p[length(p)]
+                                nextVal <- which(rObj$codeMtx[lastVal,2]==rObj$codeMtx[,1])
+                                return( lapply(nextVal,function(pp){c(p,pp)}) )
+                            })
+            lst <- extLst[[1]]
+            for( lIdx in 2:length(extLst) ){
+                lst <- append( lst ,extLst[[lIdx]] )
+            }
+            codeLst <- lst
         }
 
-        for( ){
-
-        }
-
+        return( do.call(rbind,codeLst) )
     } # rObj$getAllCode()
-
-
-    rObj$allCodeMtx <- t(apply( pZh%%2 ,1 ,rObj$getCode ))
 
     return( rObj )
 }
@@ -101,37 +111,53 @@ bank.haunt <- function( pEleObj ) {     # 발생 시 뱅킹처리.
     return( rEleObj )
 } # bank.haunt()
 
-# getFreqDist() 의 초기모델. 
-#	평균내는 시점에 energy 값이 0.0 or 1.0으로 떨어진다.
-getFreqDist.old <- function( pFlag ,pEleSet ,pDbg=F ){	# Frequency Distribute
 
-	flag.len <- length(pFlag)
-	eleMean <- sapply( pEleSet ,function(p){ sum(pFlag==p)/flag.len })
-	eleStatLst <- createEleStatLst( pEleSet ,eleMean )
+# ================================================================================================
+# filt for getBiCoder()$allCodeMtx
+# ================================================================================================
+# pBiObj <- getBiCoder( zhF )       ;allCodeMtx <- pBiObj$getAllCode()
 
-	for( hIdx in 1:flag.len ){
-		hauntVal <- pFlag[hIdx]
-		if( pDbg ){
-			if( hIdx==flag.len ){				
-				energyStr <- sprintf("%.3f" ,sapply( eleStatLst ,function(p){p$energy+p$bank}) )
-				logStr <- sprintf("hIdx:%d [%d] %s" ,hIdx ,hauntVal ,paste(energyStr,collapse=" ") )
-				k.FLogStr( logStr )
+biObj_FA0010 <- function( pBiObj ,allCodeMtx ){
+    # 21 / 791 (2.6%)
+	filtId="biFA0010";	tStmp <- Sys.time()
+	stdCodeMtx <- pBiObj$stdCodeMtx
 
-				meanStr <- sprintf("%.3f" ,sapply(eleStatLst ,function(p){p$salary}) )
-				k.FLogStr(sprintf( "      mean : %s" ,paste(meanStr,collapse=" ") ))
-			}
-		} # if(pDbg)
+    codeMtx <- allCodeMtx[,2:5]-allCodeMtx[,1:4]
+    stepM <- apply( codeMtx ,1 ,function(p){max(table(p))})
+	flag <- stepM<=4
 
-		for( idx in 1:length(pEleSet) ){
-			if( hauntVal==eleStatLst[[idx]]$val ){
-				eleStatLst[[idx]] <- bank.haunt( eleStatLst[[idx]] )
-			} else {
-				eleStatLst[[idx]] <- bank.quiet( eleStatLst[[idx]] )
-			}
-		}
-	} # for(hIdx)
+	pEnv$logStr( sprintf("biF. ID:%s rem:%d",filtId,sum(!flag)) )
+	return( list(filtId=filtId ,flag=flag ,filtCnt=sum(!flag), tCost=(Sys.time()-tStmp)) 
+		)
 
-	rFreqDist <- sapply( eleStatLst ,function(p){p$energy} )
+} # biObj_FA0010()
 
-	return( rFreqDist )
-} # getFreqDist.old()
+biObj_FA0020 <- function( pBiObj ,allCodeMtx ){
+    # 21 / 791 (2.6%)
+	filtId="biFA0020";	tStmp <- Sys.time()
+	stdCodeMtx <- pBiObj$stdCodeMtx
+
+    flag <- apply(allCodeMtx ,1 ,function(p){ max(table(p)) } )
+	flag <- stepM<=5
+
+	pEnv$logStr( sprintf("biF. ID:%s rem:%d",filtId,sum(!flag)) )
+	return( list(filtId=filtId ,flag=flag ,filtCnt=sum(!flag), tCost=(Sys.time()-tStmp)) 
+		)
+
+} # biObj_FA0020()
+
+biObj_FA0030 <- function( pBiObj ,allCodeMtx ){
+    # 8 / 791 (1%)
+	filtId="biFA0030";	tStmp <- Sys.time()
+	stdCodeMtx <- pBiObj$stdCodeMtx
+
+    nStd <- nrow(stdCodeMtx)
+
+    flag <- apply(allCodeMtx ,1 ,function(p){!all(p==stdCodeMtx[nStd,])} )
+
+	pEnv$logStr( sprintf("biF. ID:%s rem:%d",filtId,sum(!flag)) )
+	return( list(filtId=filtId ,flag=flag ,filtCnt=sum(!flag), tCost=(Sys.time()-tStmp)) 
+		)
+
+} # biObj_FA0030()
+

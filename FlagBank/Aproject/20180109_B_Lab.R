@@ -16,6 +16,44 @@ load(sprintf("./save/Obj_remLst%s.save",saveId))
 allZoidMtx <- gEnv$allZoidMtx
 zhF <- gEnv$zhF
 
+
+biObj <- getBiCoder( zhF )
+allCodeMtx <- biObj$getAllCode()
+
+cFlag.ele <- 1:4
+eleMean <- rep( 0.25 ,length(cFlag.ele) )
+
+testSpan <- 300:nrow(zhF)
+hScoreBuf <- rep( 0 ,ncol(biObj$stdCodeMtx) )
+aScoreBuf <- allCodeMtx    ;aScoreBuf[,] <- 0
+
+hScore <- rep( 0 ,nrow(zhF)  )
+aScore <- matrix( 0 ,ncol=nrow(allCodeMtx) ,nrow=nrow(zhF) )
+
+traceBackH <- 3
+for( hIdx in testSpan ){
+    for( cIdx in 1:5 ){
+        eleStatLst <- createEleStatLst( cFlag.ele ,eleMean ,pSalScale=rep(0.2,length(cFlag.ele)) )
+        # traceBackH부터 예측치 까지 계산
+        for( tIdx in (hIdx-traceBackH):(hIdx-1) ){
+            hauntVal <- biObj$stdCodeMtx[hIdx,cIdx]
+            for( eIdx in 1:length(eleStatLst) ){
+                if( hauntVal==eleStatLst[[eIdx]]$val ){
+                    eleStatLst[[eIdx]] <- bank.haunt( eleStatLst[[eIdx]] )
+                } else {
+                    eleStatLst[[eIdx]] <- bank.quiet( eleStatLst[[eIdx]] )
+                }
+            } # eIdx
+        } # tIdx
+
+        # 이제 각각에 대한 기대치 계산.
+        
+    } # cIdx
+}
+
+
+# -------------------------------------------------------------------------------------------------------
+
 tFlag <- (zhF%%4)[,1]
 tEleSet <- sort(unique(tFlag))
 
@@ -129,8 +167,6 @@ for( rstIdx in seq_len(length(rstLst)) ){
     points( jitter(hitMtx[,"gIdx"]) ,jitter(hitMtx[,"energy"]) ,col=plotCol[hitMtx[,"hit"]],pch="." )	# Q
 
 }
-
-
 
 
 
