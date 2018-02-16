@@ -29,14 +29,16 @@ aScoreBuf <- allCodeMtx    ;aScoreBuf[,] <- 0
 
 hScore <- rep( 0 ,nrow(zhF)  )
 aScore <- matrix( 0 ,ncol=nrow(allCodeMtx) ,nrow=nrow(zhF) )
+aGrade <- rep( 0 ,nrow(zhF)  )
 
-traceBackH <- 3
+traceBackH <- 5
 for( hIdx in testSpan ){
+
     for( cIdx in 1:5 ){
         eleStatLst <- createEleStatLst( cFlag.ele ,eleMean ,pSalScale=rep(0.2,length(cFlag.ele)) )
         # traceBackH부터 예측치 까지 계산
         for( tIdx in (hIdx-traceBackH):(hIdx-1) ){
-            hauntVal <- biObj$stdCodeMtx[hIdx,cIdx]
+            hauntVal <- biObj$stdCodeMtx[tIdx,cIdx]
             for( eIdx in 1:length(eleStatLst) ){
                 if( hauntVal==eleStatLst[[eIdx]]$val ){
                     eleStatLst[[eIdx]] <- bank.haunt( eleStatLst[[eIdx]] )
@@ -46,12 +48,21 @@ for( hIdx in testSpan ){
             } # eIdx
         } # tIdx
 
-        # 이제 각각에 대한 기대치 계산.
-        
+        # 이제 각 ele에 대한 기대치 계산.
+		eleEnergy <- sapply( eleStatLst ,function(p){p$energy} )
+		hScoreBuf[cIdx] <- eleEnergy[biObj$stdCodeMtx[hIdx,cIdx]==cFlag.ele]
+        aScoreBuf[,cIdx] <- eleEnergy[ sapply( allCodeMtx[,cIdx] ,function(p){which(p==cFlag.ele)} ) ]
     } # cIdx
+
+	hScore[hIdx] <- sum(hScoreBuf)
+	aScore[hIdx,] <- apply( aScoreBuf ,1 ,sum )
+	
+	scoreVal <- c( hScore[hIdx], aScore[hIdx,] )
+	aGrade[hIdx] <- 1 - which(order(scoreVal)==1)/length(scoreVal)
+
 }
 
-
+hist( aGrade[testSpan] )
 # -------------------------------------------------------------------------------------------------------
 
 tFlag <- (zhF%%4)[,1]
