@@ -63,9 +63,15 @@ for( hIdx in testSpan ){
 }
 
 hist( aGrade[testSpan] )
+
+
+
+
+
 # -------------------------------------------------------------------------------------------------------
 
-tFlag <- (zhF%%4)[,1]
+# tFlag <- (zhF%%4)[,1]
+tFlag <- biObj$stdCodeMtx[,1]
 tEleSet <- sort(unique(tFlag))
 
 # eleStatLst의 운영 성능 테스트
@@ -182,8 +188,7 @@ for( rstIdx in seq_len(length(rstLst)) ){
 
 
 # -------------------------------------------------------------------------------------------------------
-stdMtx <- zhF %% 4
-flagThread <- stdMtx[,1]
+flagThread <- biObj$stdCodeMtx[,1]
 measureSpan <- 1:200
 # flagThread <- c(1:4,1:4,1:4)
 
@@ -197,8 +202,8 @@ for( hIdx in 700:length(flagThread) ){
     eleStatLst <- createEleStatLst( eleSet ,eleMean )
 
     logStr <- ""
-    #for( chIdx in 1:hIdx ){
-	for(chIdx in 1:700 ) {
+    for( chIdx in 1:hIdx ){
+	#for(chIdx in 1:700 ) {
 		hauntVal <- curThread[chIdx]
 		# if( T ){
 		if( chIdx==hIdx ){
