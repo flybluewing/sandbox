@@ -19,6 +19,9 @@ getCFLst.base <- function( pEnv ){
 	cfObjLst[[1+length(cfObjLst)]] <- cf_A0010( pEnv )
 	cfObjLst[[1+length(cfObjLst)]] <- cf_A0020( pEnv )
 	cfObjLst[[1+length(cfObjLst)]] <- cf_A0030( pEnv )
+	cfObjLst[[1+length(cfObjLst)]] <- cf_A0040( pEnv )
+	cfObjLst[[1+length(cfObjLst)]] <- cf_A0050( pEnv )
+	cfObjLst[[1+length(cfObjLst)]] <- cf_A0060( pEnv )
 	return( cfObjLst )
 } # getCFLst.base()
 
