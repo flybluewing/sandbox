@@ -64,7 +64,7 @@ cf_A0010 <- function( pEnv ,pBase=3 ){
 		tStmp <- Sys.time()
 
 		rLst <- lapply( seq_len(nrow(pZoidMtx)) ,function(p){ 
-						(pZoidMtx[p,2:6]-pZoidMtx[p,1:5])%%pBase } 
+						(pZoidMtx[p,])%%pBase } 
 					)
 		if( !is.null(pLogFunc) ){
 			tDiff <- Sys.time() - tStmp
@@ -106,4 +106,104 @@ cf_A0020 <- function( pEnv ,pBase=3 ){
 
 } # cf_A0020()
 
+cf_A0030 <- function( pEnv ,pBase=3 ){
+	
+	cfObj <- list( idStr=sprintf("A0030_o%s",pBase) )
+	cfObj$enc <- function( pZoidMtx ,pLogFunc=NULL ){
+		tStmp <- Sys.time()
 
+		rLst <- lapply( seq_len(nrow(pZoidMtx)) ,function(p){ 
+						(pZoidMtx[p,2:6]-pZoidMtx[p,1:5])%%pBase } 
+					)
+		if( !is.null(pLogFunc) ){
+			tDiff <- Sys.time() - tStmp
+			pLogFunc( sprintf("ID:%s cost:%.1f%s",cfObj$idStr,tDiff,units(tDiff)) )
+		}
+		
+		return( rLst )
+	} # cfObj$enc()
+	cfObj$diffCnt <- function( p1 ,p2 ){
+		return( sum(p1!=p2) )
+	}
+	
+	return( cfObj )
+
+} # cf_A0030()
+
+cf_A0040 <- function( pEnv ,pBase=3 ){
+	
+	cfObj <- list( idStr=sprintf("A0040_o%s",pBase) )
+	cfObj$zhF <- pEnv$zhF
+	cfObj$enc <- function( pZoidMtx ,pLogFunc=NULL ){
+		tStmp <- Sys.time()
+		rebLen <- getRebLen( 1:45 ,cfObj$zhF )
+		
+		rLst <- lapply( seq_len(nrow(pZoidMtx)) ,function(p){ 
+						rebLen[pZoidMtx[p,]] %% pBase
+					} )
+		if( !is.null(pLogFunc) ){
+			tDiff <- Sys.time() - tStmp
+			pLogFunc( sprintf("ID:%s cost:%.1f%s",cfObj$idStr,tDiff,units(tDiff)) )
+		}
+		
+		return( rLst )
+	} # cfObj$enc()
+	cfObj$diffCnt <- function( p1 ,p2 ){
+		return( sum(p1!=p2) )
+	}
+	
+	return( cfObj )
+
+} # cf_A0040()
+
+cf_A0050 <- function( pEnv ,pBase=5 ){
+	
+	cfObj <- list( idStr=sprintf("A0050_o%s",pBase) )
+	cfObj$enc <- function( pZoidMtx ,pLogFunc=NULL ){
+		tStmp <- Sys.time()
+		
+		rLst <- lapply( seq_len(nrow(pZoidMtx)) ,function(p){ 
+						pZoidMtx[p,]%/%pBase
+					} )
+		if( !is.null(pLogFunc) ){
+			tDiff <- Sys.time() - tStmp
+			pLogFunc( sprintf("ID:%s cost:%.1f%s",cfObj$idStr,tDiff,units(tDiff)) )
+		}
+		
+		return( rLst )
+	} # cfObj$enc()
+	cfObj$diffCnt <- function( p1 ,p2 ){
+		return( sum(p1!=p2) )
+	}
+	
+	return( cfObj )
+
+} # cf_A0050()
+
+cf_A0060 <- function( pEnv ,pBase=7 ){
+	
+	cfObj <- list( idStr=sprintf("A0060_o%s",pBase) )
+	cfObj$enc <- function( pZoidMtx ,pLogFunc=NULL ){
+		tStmp <- Sys.time()
+		
+		rMtx <- getTblCnt( pZoidMtx%/%pBase ,pTblVal=0:(45%/%pBase) )
+		rLst <- lapply( seq_len(nrow(rMtx)) ,function(p){rMtx[p,]} )
+		if( !is.null(pLogFunc) ){
+			tDiff <- Sys.time() - tStmp
+			pLogFunc( sprintf("ID:%s cost:%.1f%s",cfObj$idStr,tDiff,units(tDiff)) )
+		}
+		
+		return( rLst )
+	} # cfObj$enc()
+	cfObj$diffCnt <- function( p1 ,p2 ){
+		return( sum(p1!=p2) )
+	}
+	
+	return( cfObj )
+
+} # cf_A0060()
+
+#--------------------------
+#  QQE : 추가대상
+#	연이어 발생 : 값과 col 위치
+#	1증가 시퀸스 발생 : 값과 col 위치

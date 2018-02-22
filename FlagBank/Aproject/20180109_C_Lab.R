@@ -18,6 +18,7 @@ getCFLst.base <- function( pEnv ){
 	cfObjLst <- list()
 	cfObjLst[[1+length(cfObjLst)]] <- cf_A0010( pEnv )
 	cfObjLst[[1+length(cfObjLst)]] <- cf_A0020( pEnv )
+	cfObjLst[[1+length(cfObjLst)]] <- cf_A0030( pEnv )
 	return( cfObjLst )
 } # getCFLst.base()
 
@@ -41,7 +42,7 @@ for( tIdx in 3:nrow(gEnv$zhF) ){	# lastZoid 기반 동작들 때문에 1부터 시작은 의미
 
 cfNames <- sapply(cfObjLst,function(p){p$idStr})
 pairNum <-	sapply( cfNames ,function(p){
-						# 각 encVal에서 얼마나 중복쌍이 나오는지 측정
+						# 각 encVal에서 중복쌍이 얼마나 많이 나오는지 측정
 						mtx <- evalScan.pair( encValLst ,p ,cfObjLst )
 						return( nrow(mtx) )
 					})
@@ -75,10 +76,7 @@ for( cfIdx in 1:nrow(cfNameIdxMtx) ){
 
 } # cfIdx
 
-
-
-evalScan.pair <- function( pEVL ,pName ,pCFLst ,pThld=0 )
-
+lapply( rstValLst ,table )
 
 
 
