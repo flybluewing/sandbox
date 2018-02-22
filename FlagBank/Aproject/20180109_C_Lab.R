@@ -13,6 +13,7 @@ load(sprintf("./save/Obj_gEnv%s.save",saveId))
 load(sprintf("./save/Obj_fRstLst%s.save",saveId))
 load(sprintf("./save/Obj_remLst%s.save",saveId))
 
+
 getCFLst.base <- function( pEnv ){
 	cfObjLst <- list()
 	cfObjLst[[1+length(cfObjLst)]] <- cf_A0010( pEnv )
@@ -21,10 +22,9 @@ getCFLst.base <- function( pEnv ){
 } # getCFLst.base()
 
 
-testSpan <- 400:nrow(zhF)
 cfObjLst <- NULL
 encValLst <- list()
-for( tIdx in testSpan ){
+for( tIdx in 3:nrow(gEnv$zhF) ){	# lastZoid 기반 동작들 때문에 1부터 시작은 의미없다.
 	tEnv <- gEnv
 	tEnv$zhF <- gEnv$zhF[1:(tIdx-1),]
 	tEnv$allZoidMtx <- gEnv$zhF[tIdx,,drop=F]
@@ -39,5 +39,47 @@ for( tIdx in testSpan ){
 	}
 }
 
+cfNames <- sapply(cfObjLst,function(p){p$idStr})
+pairNum <-	sapply( cfNames ,function(p){
+						# 각 encVal에서 얼마나 중복쌍이 나오는지 측정
+						mtx <- evalScan.pair( encValLst ,p ,cfObjLst )
+						return( nrow(mtx) )
+					})
+names(pairNum) <- cfNames
+encVal.len <- length(encValLst[[1]])
 
-rObj <- evlScan( encValLst ,pSBC="A0010_o3" ,pNZC="A0020_o3" ,pCFLst=cfObjLst )
+cfNameIdxMtx <- permutations( length(cfNames) ,2 )
+rstValLst <- list()
+for( cfIdx in 1:nrow(cfNameIdxMtx) ){
+
+	scanName <- cfNames[cfNameIdxMtx[cfIdx,]]
+	sbc.name <- scanName[1]
+	nzc.name <- scanName[2]
+	
+	testSpan <- 200:encVal.len
+	rstVal <- rep( NA ,length(testSpan) )
+	for( tIdx in 1:length(testSpan) ){
+		tIdx.r <- testSpan[tIdx]
+		valLst <- list()
+		valLst[[sbc.name]] <- encValLst[[sbc.name]][1:(tIdx.r-1)]
+		valLst[[nzc.name]] <- encValLst[[nzc.name]][1:(tIdx.r-1)]
+		rstObj <- evlScan( valLst ,sbc.name ,nzc.name ,cfObjLst )
+		if( !is.null(rstObj$lastZC) ){
+			stdVal <- encValLst[[nzc.name]][[tIdx.r]]
+			cfObj <- cfObjLst[[ cfNameIdxMtx[cfIdx,2] ]]	# nzc.name
+			rstVal[tIdx] <- cfObj$diffCnt( stdVal ,rstObj$lastZC )
+		}
+	}
+
+	rstValLst[[1+length(rstValLst)]] <- rstVal
+
+} # cfIdx
+
+
+
+evalScan.pair <- function( pEVL ,pName ,pCFLst ,pThld=0 )
+
+
+
+
+

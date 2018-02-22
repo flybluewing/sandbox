@@ -30,7 +30,29 @@ evlScan <- function( pEVL ,pSBC ,pNZC ,pCFLst ){
 	}
 
 	return( rObj )
-}
+} # evlScan()
+
+evalScan.pair <- function( pEVL ,pName ,pCFLst ,pThld=0 ){
+
+	cfName <- sapply(pCFLst,function(p){p$idStr})
+	cfObj <- pCFLst[[which(cfName==pName)]]
+	sbcLst <- encValLst[[pName]]
+
+	pairLst <- list()
+	for( aIdx in 1:(length(sbcLst)-2) ){
+		for( bIdx in (aIdx+1):length(sbcLst) ){
+			dCnt <- cfObj$diffCnt( sbcLst[[aIdx]] ,sbcLst[[bIdx]] )
+			if( pThld>=dCnt ){
+				pairLst[[1+length(pairLst)]] <- c( aIdx ,bIdx ,dCnt )
+			}
+		}
+	}
+
+	pairMtx <- do.call( rbind ,pairLst )
+	colnames(pairMtx) <- c("aIdx","bIdx","thld")
+	return( pairMtx )
+
+} # evalScan.pair()
 
 
 # ====================================================================================
