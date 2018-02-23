@@ -57,6 +57,22 @@ evalScan.pair <- function( pEVL ,pName ,pCFLst ,pThld=0 ){
 
 # ====================================================================================
 
+getCFLst.base <- function( pEnv ){
+	cfObjLst <- list()
+	cfObjLst[[1+length(cfObjLst)]] <- cf_A0010( pEnv )
+	cfObjLst[[1+length(cfObjLst)]] <- cf_A0020( pEnv )
+	cfObjLst[[1+length(cfObjLst)]] <- cf_A0030( pEnv )
+	cfObjLst[[1+length(cfObjLst)]] <- cf_A0040( pEnv )
+	cfObjLst[[1+length(cfObjLst)]] <- cf_A0050( pEnv )
+	cfObjLst[[1+length(cfObjLst)]] <- cf_A0060( pEnv )
+	cfObjLst[[1+length(cfObjLst)]] <- cf_A0070( pEnv )
+	cfObjLst[[1+length(cfObjLst)]] <- cf_A0080( pEnv )
+	cfObjLst[[1+length(cfObjLst)]] <- cf_A0090( pEnv )
+	return( cfObjLst )
+} # getCFLst.base()
+
+
+
 cf_A0010 <- function( pEnv ,pBase=3 ){
 	
 	cfObj <- list( idStr=sprintf("A0010_o%s",pBase) )

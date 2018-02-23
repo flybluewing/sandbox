@@ -14,20 +14,6 @@ load(sprintf("./save/Obj_fRstLst%s.save",saveId))
 load(sprintf("./save/Obj_remLst%s.save",saveId))
 
 
-getCFLst.base <- function( pEnv ){
-	cfObjLst <- list()
-	cfObjLst[[1+length(cfObjLst)]] <- cf_A0010( pEnv )
-	cfObjLst[[1+length(cfObjLst)]] <- cf_A0020( pEnv )
-	cfObjLst[[1+length(cfObjLst)]] <- cf_A0030( pEnv )
-	cfObjLst[[1+length(cfObjLst)]] <- cf_A0040( pEnv )
-	cfObjLst[[1+length(cfObjLst)]] <- cf_A0050( pEnv )
-	cfObjLst[[1+length(cfObjLst)]] <- cf_A0060( pEnv )
-	cfObjLst[[1+length(cfObjLst)]] <- cf_A0070( pEnv )
-	cfObjLst[[1+length(cfObjLst)]] <- cf_A0080( pEnv )
-	cfObjLst[[1+length(cfObjLst)]] <- cf_A0090( pEnv )
-	return( cfObjLst )
-} # getCFLst.base()
-
 
 cfObjLst <- NULL
 encValLst <- list()

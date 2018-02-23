@@ -1,4 +1,19 @@
 # 20180109_A_H.R 마지막 시도가 되길..
+#   pEnv <- gEnv    ;pRemLst <- remLst
+getAllZoidIdx.FltCnt <- function( pEnv ,pRemLst ){
+
+    fltCnt <- rep( 0 ,nrow(pEnv$allZoidMtx) )
+    names(fltCnt) <- 1:nrow(pEnv$allZoidMtx)
+
+    for( idx in seq_len(length(pRemLst)) ){
+        fltCnt[ pRemLst[[idx]] ] <- fltCnt[ pRemLst[[idx]] ] + 1
+    }
+
+    return( fltCnt )
+
+}   # getAllZoidIdx.FltCnt( )
+
+
 
 getFiltLst.base <- function( ){
 
