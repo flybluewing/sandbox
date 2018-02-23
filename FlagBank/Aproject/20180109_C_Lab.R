@@ -22,13 +22,16 @@ getCFLst.base <- function( pEnv ){
 	cfObjLst[[1+length(cfObjLst)]] <- cf_A0040( pEnv )
 	cfObjLst[[1+length(cfObjLst)]] <- cf_A0050( pEnv )
 	cfObjLst[[1+length(cfObjLst)]] <- cf_A0060( pEnv )
+	cfObjLst[[1+length(cfObjLst)]] <- cf_A0070( pEnv )
+	cfObjLst[[1+length(cfObjLst)]] <- cf_A0080( pEnv )
+	cfObjLst[[1+length(cfObjLst)]] <- cf_A0090( pEnv )
 	return( cfObjLst )
 } # getCFLst.base()
 
 
 cfObjLst <- NULL
 encValLst <- list()
-for( tIdx in 3:nrow(gEnv$zhF) ){	# lastZoid 기반 동작들 때문에 1부터 시작은 의미없다.
+for( tIdx in 10:nrow(gEnv$zhF) ){	# lastZoid 기반 동작들 때문에 1부터 시작은 의미없다.
 	tEnv <- gEnv
 	tEnv$zhF <- gEnv$zhF[1:(tIdx-1),]
 	tEnv$allZoidMtx <- gEnv$zhF[tIdx,,drop=F]

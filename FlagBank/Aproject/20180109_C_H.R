@@ -203,7 +203,111 @@ cf_A0060 <- function( pEnv ,pBase=7 ){
 
 } # cf_A0060()
 
-#--------------------------
-#  QQE : 추가대상
-#	연이어 발생 : 값과 col 위치
-#	1증가 시퀸스 발생 : 값과 col 위치
+cf_A0070 <- function( pEnv ,pBase=3 ,pDepth=2 ){
+	
+	cfObj <- list( idStr=sprintf("A0070_o%s",pBase) )
+	pastVal <- (pEnv$zhF[,6]-pEnv$zhF[,1]) %% pBase
+	cfObj$pastVal <- pastVal[(length(pastVal)-pDepth):length(pastVal)]
+
+	cfObj$enc <- function( pZoidMtx ,pLogFunc=NULL ){
+		tStmp <- Sys.time()
+
+		rLst <- lapply( seq_len(nrow(pZoidMtx)) ,function(p){ 
+						c(  cfObj$pastVal ,(pZoidMtx[p,6]-pZoidMtx[p,1])%%pBase )
+					} )
+		if( !is.null(pLogFunc) ){
+			tDiff <- Sys.time() - tStmp
+			pLogFunc( sprintf("ID:%s cost:%.1f%s",cfObj$idStr,tDiff,units(tDiff)) )
+		}
+		
+		return( rLst )
+	} # cfObj$enc()
+	cfObj$diffCnt <- function( p1 ,p2 ){
+		return( sum(p1!=p2) )
+	}
+	
+	return( cfObj )
+
+} # cf_A0070()
+
+cf_A0080 <- function( pEnv ,pBase=3 ,pDepth=3 ){
+	# 다음 h에서 똑같은 코드 발생.
+	cfObj <- list( idStr=sprintf("A0080_o%s",pBase) )
+	cfObj$lastZoid <- pEnv$zhF[nrow(pEnv$zhF),]
+
+	cfObj$enc <- function( pZoidMtx ,pLogFunc=NULL ){
+		tStmp <- Sys.time()
+
+		rLst <- lapply( seq_len(nrow(pZoidMtx)) ,function(p){ 
+						codeVal <- c( 0 ,0 ,0 ,0 )
+						fndIdx <- which( cfObj$lastZoid %in% pZoidMtx[p,] )
+						if( 0<length(fndIdx) ){
+							codeVal[1] <- fndIdx[1]
+							codeVal[2] <- cfObj$lastZoid[fndIdx[1]]
+							if( 1<length(fndIdx) ){
+								codeVal[3] <- fndIdx[2]
+								codeVal[4] <- cfObj$lastZoid[fndIdx[2]]
+							}
+						}
+						return( codeVal )
+					} )
+		if( !is.null(pLogFunc) ){
+			tDiff <- Sys.time() - tStmp
+			pLogFunc( sprintf("ID:%s cost:%.1f%s",cfObj$idStr,tDiff,units(tDiff)) )
+		}
+		
+		return( rLst )
+	} # cfObj$enc()
+	cfObj$diffCnt <- function( p1 ,p2 ){
+		dCnt <- sum(p1!=p2)
+		if( all(p1==0) ){	# 발견되지 않은 경우는 너무 흔하기 때문에 같은 것으로 인정하지 않기로 한다.
+			dCnt <- length(p1)
+		}
+		return(  )
+	}
+	
+	return( cfObj )
+
+} # cf_A0080()
+
+cf_A0090 <- function( pEnv ,pBase=3 ,pDepth=3 ){
+	#	다음 h에서 1 증가한 코드 발생.
+	cfObj <- list( idStr=sprintf("A0090_o%s",pBase) )
+	cfObj$lastZoid <- pEnv$zhF[nrow(pEnv$zhF),]
+
+	cfObj$enc <- function( pZoidMtx ,pLogFunc=NULL ){
+		tStmp <- Sys.time()
+
+		rLst <- lapply( seq_len(nrow(pZoidMtx)) ,function(p){ 
+						codeVal <- c( 0 ,0 ,0 ,0 )
+						fndIdx <- which( cfObj$lastZoid %in% (pZoidMtx[p,]-1) )
+						if( 0<length(fndIdx) ){
+							codeVal[1] <- fndIdx[1]
+							codeVal[2] <- cfObj$lastZoid[fndIdx[1]]
+							if( 1<length(fndIdx) ){
+								codeVal[3] <- fndIdx[2]
+								codeVal[4] <- cfObj$lastZoid[fndIdx[2]]
+							}
+						}
+						return( codeVal )
+					} )
+		if( !is.null(pLogFunc) ){
+			tDiff <- Sys.time() - tStmp
+			pLogFunc( sprintf("ID:%s cost:%.1f%s",cfObj$idStr,tDiff,units(tDiff)) )
+		}
+		
+		return( rLst )
+	} # cfObj$enc()
+	cfObj$diffCnt <- function( p1 ,p2 ){
+		dCnt <- sum(p1!=p2)
+		if( all(p1==0) ){	# 발견되지 않은 경우는 너무 흔하기 때문에 같은 것으로 인정하지 않기로 한다.
+			dCnt <- length(p1)
+		}
+		return(  )
+	}
+	
+	return( cfObj )
+
+} # cf_A0090()
+
+
