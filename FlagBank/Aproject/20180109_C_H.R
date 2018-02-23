@@ -17,7 +17,7 @@ evlScan <- function( pEVL ,pSBC ,pNZC ,pCFLst ){
 	idx.fnd <- list()
 	for( idx in 1:(length(sbcLst)-1) ){
 		dCnt <- sbc.cfObj$diffCnt( sbcLst[[idx]] ,sbc.last )
-		if( 0==dCnt ){
+		if( (!is.na(dCnt)) && (0==dCnt) ){
 			idx.fnd[[1+length(idx.fnd)]] <- idx
 			nzcLst.fnd[[1+length(nzcLst.fnd)]] <- nzcLst[[(idx+1)]]
 		}
@@ -42,7 +42,7 @@ evalScan.pair <- function( pEVL ,pName ,pCFLst ,pThld=0 ){
 	for( aIdx in 1:(length(sbcLst)-2) ){
 		for( bIdx in (aIdx+1):length(sbcLst) ){
 			dCnt <- cfObj$diffCnt( sbcLst[[aIdx]] ,sbcLst[[bIdx]] )
-			if( pThld>=dCnt ){
+			if( (!is.null(dCnt)) && (!is.na(dCnt)) && (pThld>=dCnt) ){
 				pairLst[[1+length(pairLst)]] <- c( aIdx ,bIdx ,dCnt )
 			}
 		}
@@ -279,7 +279,7 @@ cf_A0080 <- function( pEnv ,pBase=3 ,pDepth=3 ){
 		if( all(p1==0) ){	# 발견되지 않은 경우는 너무 흔하기 때문에 같은 것으로 인정하지 않기로 한다.
 			dCnt <- length(p1)
 		}
-		return(  )
+		return( dCnt )
 	}
 	
 	return( cfObj )
@@ -319,7 +319,7 @@ cf_A0090 <- function( pEnv ,pBase=3 ,pDepth=3 ){
 		if( all(p1==0) ){	# 발견되지 않은 경우는 너무 흔하기 때문에 같은 것으로 인정하지 않기로 한다.
 			dCnt <- length(p1)
 		}
-		return(  )
+		return( dCnt )
 	}
 	
 	return( cfObj )

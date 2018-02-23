@@ -10,8 +10,8 @@ source("20180109_C_H.R")
 
 saveId <- "0127_23"
 load(sprintf("./save/Obj_gEnv%s.save",saveId))
-load(sprintf("./save/Obj_fRstLst%s.save",saveId))
-load(sprintf("./save/Obj_remLst%s.save",saveId))
+# load(sprintf("./save/Obj_fRstLst%s.save",saveId))
+# load(sprintf("./save/Obj_remLst%s.save",saveId))
 
 
 
@@ -45,6 +45,8 @@ cfNameIdxMtx <- permutations( length(cfNames) ,2 )
 rstValLst <- list()
 for( cfIdx in 1:nrow(cfNameIdxMtx) ){
 
+	k.FLogStr(sprintf("  starting cfIdx:%d",cfIdx))
+	
 	scanName <- cfNames[cfNameIdxMtx[cfIdx,]]
 	sbc.name <- scanName[1]
 	nzc.name <- scanName[2]
@@ -65,11 +67,14 @@ for( cfIdx in 1:nrow(cfNameIdxMtx) ){
 	}
 
 	rstValLst[[1+length(rstValLst)]] <- rstVal
-
+	
 } # cfIdx
 
 lapply( rstValLst ,table )
 
-
-
+cnt4Zero <- sapply( rstValLst ,function(p){
+					ifelse( any(p==0,na.rm=T) ,table(p)["0"] ,NA )
+				})
+rstValMtx <- do.call( rbind ,rstValLst )
+rstVal.fltNum <- apply( rstValMtx ,2 ,function(p){sum(!is.na(p))})
 
