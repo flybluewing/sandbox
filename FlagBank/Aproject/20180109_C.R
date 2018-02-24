@@ -42,8 +42,11 @@ getCFltObj <- function( pEnv ){
             encValLst[[cfObj$idStr]][[1+length(encValLst[[cfObj$idStr]])]] <- cfObj$enc( tEnv$allZoidMtx )[[1]]
         }
     }
-
+    
     cfNames <- sapply(cfObjLst,function(p){p$idStr})
+
+    encValLst[[1]][[691]] <- encValLst[[1]][[692]]
+
     encVal.len <- length(encValLst[[1]])
 
     cfNameMtx <- apply( permutations( length(cfNames) ,2 )
@@ -64,6 +67,22 @@ getCFltObj <- function( pEnv ){
         }
     } # cfIdx
 
+    # Row가 동일 연속 재발하는 빈도 측정
+    #   발생빈도를 봐가며 사용해야 할 듯.
+    dupRowCnt <- rep( 0 ,length(cfNames) ) ;names(dupRowCnt) <- cfNames
+    for( idx in 2:length(encSpan) ) {
+        dupFlag <- sapply( seq_len(length(encValLst)) ,function(eIdx){
+                        dCnt <- cfObjLst[[eIdx]]$diffCnt( encValLst[[eIdx]][[idx-1]] ,encValLst[[eIdx]][[idx]] )
+                        return( !is.na(dCnt) && (0==dCnt) )
+                    })
+        dupRowCnt <- dupRowCnt + dupFlag
+    }
+    dupBanLst <- lapply( encValLst ,function(p){p[[length(p)]]})
+
+    rObj <- list( cfNameMtx=cfNameMtx ,banLst=banLst ,cfObjLst=cfObjLst
+                    ,dupRowCnt=dupRowCnt )
+
+    return( rObj )
 
 } # getCFltObj()
 
