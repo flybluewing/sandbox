@@ -54,6 +54,153 @@ evalScan.pair <- function( pEVL ,pName ,pCFLst ,pThld=0 ){
 
 } # evalScan.pair()
 
+getCFltObj <- function( pEnv ){
+
+    cfObjLst <- NULL
+    encSpan <- 50:nrow(pEnv$zhF)
+    hIdx.encVal <- encSpan
+    encValLst <- list()
+    for( tIdx in encSpan ){	# lastZoid 기반 동작들 때문에 1부터 시작은 의미없다.
+        tEnv <- pEnv
+        tEnv$zhF <- pEnv$zhF[1:(tIdx-1),]
+        tEnv$allZoidMtx <- pEnv$zhF[tIdx,,drop=F]
+        
+        cfObjLst <- getCFLst.base( tEnv )
+        for( lIdx in seq_len(length(cfObjLst)) ){
+            cfObj <- cfObjLst[[lIdx]]
+            if( is.null(encValLst[[cfObj$idStr]]) ){
+                encValLst[[cfObj$idStr]] <- list()
+            }
+            encValLst[[cfObj$idStr]][[1+length(encValLst[[cfObj$idStr]])]] <- cfObj$enc( tEnv$allZoidMtx )[[1]]
+        }
+    }
+
+    cfNames <- sapply(cfObjLst,function(p){p$idStr})
+    encVal.len <- length(encValLst[[1]])
+
+    cfNameMtx <- apply( permutations( length(cfNames) ,2 )
+                         ,1 ,function(p){cfNames[p]}
+                    )
+    cfNameMtx <- t(cfNameMtx)   ;colnames(cfNameMtx) <- c("sbc.name","nzc.name")
+
+    banLst <- list()
+    for( cfIdx in 1:nrow(cfNameMtx) ){
+
+        sbc.name <- cfNameMtx[cfIdx,1]
+        nzc.name <- cfNameMtx[cfIdx,2]
+        rstObj <- evlScan( encValLst ,sbc.name ,nzc.name ,cfObjLst )
+        if( !is.null(rstObj$lastZC) ){
+            banLst[[cfIdx]] <- rstObj$lastZC
+        } else {
+            banLst[[cfIdx]] <- integer(0)   # NULL 이면 맨 끝 인덱스가 달라질 수 있어서..
+        }
+    } # cfIdx
+
+    banLst.dup <- lapply( encValLst ,function(p){p[[length(p)]]})
+
+    if( FALSE ){    # 측정파트
+
+        # < failHIdx.dupRow >
+        #   Row가 동일 연속 재발하는 빈도 측정(발생빈도를 봐가며 사용해야 할 듯)
+        failIdx <- rep( 0 ,length(encSpan) )
+        dupRowCnt <- rep( 0 ,length(cfNames) ) ;names(dupRowCnt) <- cfNames
+        for( idx in 2:length(encSpan) ) {
+            dupFlag <- sapply( seq_len(length(encValLst)) ,function(eIdx){
+                            dCnt <- cfObjLst[[eIdx]]$diffCnt( encValLst[[eIdx]][[idx-1]] ,encValLst[[eIdx]][[idx]] )
+                            return( !is.na(dCnt) && (0==dCnt) )
+                        })
+            dupRowCnt <- dupRowCnt + dupFlag
+            failIdx[idx] <- sum(dupFlag)
+        }
+        failHIdx.dupRow <- encSpan[failIdx>0]
+
+        # < failHIdx.banLst >
+        #   evlScan() 함수로부터의 banLst 에 의해 제거되는 hIdx
+        failIdx <- rep( 0 ,length(encSpan) )
+        testSpan <- 150:length(encSpan)
+        for( tIdx in testSpan ){
+            tValLst <- lapply( encValLst ,function(p){p[1:(tIdx-1)]})
+            stdValLst <- lapply( encValLst ,function(p){p[[tIdx]]})
+            failFlag <- rep( FALSE ,nrow(cfNameMtx) )
+            for( rIdx in 1:nrow(cfNameMtx) ){
+                nameIdx <- which( cfNames == cfNameMtx[rIdx,"nzc.name"] )
+                rstObj <- evlScan( tValLst
+                                ,cfNameMtx[rIdx,"sbc.name"] ,cfNameMtx[rIdx,"nzc.name"]
+                                ,cfObjLst
+                            )
+                if( !is.null(rstObj$lastZC) ){
+                    dCnt <- cfObjLst[[nameIdx]]$diffCnt( rstObj$lastZC ,stdValLst[[nameIdx]] )
+                    failFlag[rIdx] <- dCnt==0
+                }
+            }
+            failIdx[tIdx] <- sum(failFlag)
+        }
+        failHIdx.banLst <- encSpan[failIdx>0]
+
+        failHIdx <- unique( c(failHIdx.banLst,intersect(failHIdx.dupRow,testSpan)) )
+        length(failHIdx) / length(testSpan)
+
+    } # if( FALSE )    # 측정파트
+
+	# =[ rObj ]=============================================================
+    rObj <- list( cfNameMtx=cfNameMtx	,banLst=banLst    ,banLst.dup=banLst.dup
+                    ,cfNames=cfNames	,cfObjLst=cfObjLst
+                	,hIdx.encVal=hIdx.encVal )
+	names(rObj$cfObjLst) <- rObj$cfNames
+
+	rObj$getFiltedIdx <- function( pZoidMtx ,pZIdx=NULL ){
+
+		if( is.null(pZIdx) ){
+			pZIdx <- 1:nrow(pZoidMtx)
+		}
+
+		codeLst <- list()
+		for( nIdx in rObj$cfNames ){
+			codeLst[[nIdx]] <- rObj$cfObjLst[[nIdx]]$enc(pZoidMtx)
+		}
+
+		# --------------------------------------------------
+		#	filtLst.dupRow ,filtedIdx.dupRow
+		filtLst.dupRow <- lapply( 1:nrow(pZoidMtx) ,function(pIdx){
+				# 어느 banLst.dupRow에서 걸렸는지의 flag
+				flag <- sapply(rObj$cfNames ,function(pName){
+								cfObj <- rObj$cfObjLst[[pName]]
+								dCnt <- cfObj$diffCnt( codeLst[[pName]][[pIdx]] ,rObj$banLst.dup[[pName]] )
+								return( dCnt==0 )
+							})
+				return( rObj$cfNames[flag] )
+			})
+		filtedIdx.dupRow <- pZIdx[0<sapply(filtLst.dupRow ,length)]
+
+		# --------------------------------------------------
+		#	filtLst.cf1 ,filtedIdx.cf1
+		filtLst.cf1 <- lapply( 1:nrow(pZoidMtx) ,function(pIdx){
+				# 어느 banLst에서 걸렸는지의 flag
+				flag <- sapply( 1:nrow(rObj$cfNameMtx) ,function(pRIdx){
+								banCode <- rObj$banLst[[pRIdx]]
+								if( 0==length(banCode) ){
+									return( FALSE )	# 판단 기준자체가 없으니 ban에 걸리지 않은 걸로 처리.
+								}
+								banFltName <- rObj$cfNameMtx[pRIdx,2]
+								zCode <- codeLst[[banFltName]][[pIdx]]
+								dCnt <- rObj$cfObjLst[[banFltName]]$diffCnt( banCode ,zCode )
+								return( dCnt==0 )
+							})
+				return( which(flag) )
+			})
+		filtedIdx.cf1 <- pZIdx[0<sapply(filtLst.cf1 ,length)]
+
+		assObj <- list( filtLst.dupRow=filtLst.dupRow	,filtedIdx.dupRow=filtedIdx.dupRow
+						,filtLst.cf1=filtLst.cf1			,filtedIdx.cf1=filtedIdx.cf1
+					)
+
+		return( assObj )
+	} # rObj$getFiltedIdx()
+
+    return( rObj )
+
+} # getCFltObj()
+
 
 # ====================================================================================
 

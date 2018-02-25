@@ -1,7 +1,7 @@
 # 20180109_A_H.R 마지막 시도가 되길..
-#   pEnv <- gEnv    ;pRemLst <- remLst
-getAllZoidIdx.FltCnt <- function( pEnv ,pRemLst ){
 
+getAllZoidIdx.FltCnt <- function( pEnv ,pRemLst ){
+	#   pEnv <- gEnv    ;pRemLst <- remLst
     fltCnt <- rep( 0 ,nrow(pEnv$allZoidMtx) )
     names(fltCnt) <- 1:nrow(pEnv$allZoidMtx)
 
@@ -13,6 +13,15 @@ getAllZoidIdx.FltCnt <- function( pEnv ,pRemLst ){
 
 }   # getAllZoidIdx.FltCnt( )
 
+getAllZoidIdx.hIdxCnt <- function( pEnv ,pFRstLst ){
+	#   pEnv <- gEnv    ;pFRstLst <- fRstLst
+    testSpan <- (nrow(pEnv$zhF)-length(pFRstLst)+1):nrow(pEnv$zhF)
+
+    hIdxCnt <- sapply( pFRstLst ,length )
+    names(hIdxCnt) <- testSpan
+
+    return( hIdxCnt )
+}   # getAllZoidIdx.hIdxCnt( )
 
 
 getFiltLst.base <- function( ){
