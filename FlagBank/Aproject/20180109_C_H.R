@@ -161,9 +161,13 @@ getCFltObj <- function( pEnv ){
 
 		# --------------------------------------------------
 		#	filtLst.dupRow ,filtedIdx.dupRow
+		excBanLst.dupRow=c("A0070_o3")
 		filtLst.dupRow <- lapply( 1:nrow(pZoidMtx) ,function(pIdx){
 				# 어느 banLst.dupRow에서 걸렸는지의 flag
 				flag <- sapply(rObj$cfNames ,function(pName){
+								if( pName %in% excBanLst.dupRow ){
+									return( FALSE )
+								}
 								cfObj <- rObj$cfObjLst[[pName]]
 								dCnt <- cfObj$diffCnt( codeLst[[pName]][[pIdx]] ,rObj$banLst.dup[[pName]] )
 								return( dCnt==0 )

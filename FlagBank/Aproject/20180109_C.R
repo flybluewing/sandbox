@@ -25,6 +25,8 @@ allZoidMtx <- gEnv$allZoidMtx[(allZoid.fltCnt==0),]
 
 tStmp <- Sys.time()
 filtedIdxObj <- banObj$getFiltedIdx( allZoidMtx )
+filtedIdx <- unique( filtedIdxObj$filtedIdx.dupRow ,filtedIdxObj$filtedIdx.cf1 )
+    # filtedIdxObj$filtedIdx.dupRow 에게 모두 파묻히는 거 같은데.. 뭔가 수상타?
 tDiff <- Sys.time() - tStmp
 cat(sprintf("time cost %.1f%s \n",tDiff,units(tDiff)))
 
