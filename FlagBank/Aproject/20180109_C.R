@@ -19,6 +19,9 @@ names(stdFilted.per) <- names(stdFilted.tbl)
 
 
 banObj <- getCFltObj( gEnv )
+allZoidMtx <- gEnv$zhF
+codeLst <- banObj$getCodeLst( allZoidMtx )
+# 개발 샘플 시점.
 
 allZoid.fltCnt <- getAllZoidIdx.FltCnt( gEnv ,remLst )
 allZoidMtx <- gEnv$allZoidMtx[(allZoid.fltCnt==0),]
@@ -32,42 +35,6 @@ cat(sprintf("time cost %.1f%s \n",tDiff,units(tDiff)))
 
 # ===============================================================================
 
-
-#   동일 패턴이 그대로 재발.
-ban.hntSameRow <- function( pBanObj ,pZoidMtx ,pInitZIdx=NULL ,pCodeLst=NULL ){
-
-    if( is.null(pInitZIdx) ){
-        pInitZIdx <- 1:nrow(pZoidMtx)
-    }
-
-    codeLst <- pCodeLst
-    if( is.null(codeLst) ){
-        codeLst <- list()
-        for( nIdx in pBanObj$cfNames ){
-            codeLst[[nIdx]] <- pBanObj$cfObjLst[[nIdx]]$enc(pZoidMtx)
-        }
-    }
-
-    # --------------------------------------------------
-    #	filtLst.dupRow ,filtedIdx.dupRow
-    excBan=c("A0070_o3")
-    filtLst <- lapply( 1:nrow(pZoidMtx) ,function(pIdx){
-            # 어느 banLst.dupRow에서 걸렸는지의 flag
-            flag <- sapply(pBanObj$cfNames ,function(pName){
-                            if( pName %in% excBan ){
-                                return( FALSE )
-                            }
-                            cfObj <- pBanObj$cfObjLst[[pName]]
-                            dCnt <- cfObj$diffCnt( codeLst[[pName]][[pIdx]] ,pBanObj$banLst.dup[[pName]] )
-                            return( dCnt==0 )
-                        })
-            return( pBanObj$cfNames[flag] )
-        })
-    filtedIdx <- pZIdx[0<sapply(filtLst ,length)]
-
-
-
-} # ban.hntSameRow()
 
 
 

@@ -128,3 +128,4 @@ tDiff <- Sys.time() - tStmp
 save( remLst.hard ,file=sprintf("./save/Obj_remLst%s_hard.save",saveId) )
 # load("Obj_remLst.save")
 k.FLogStr(sprintf("remLst for hard is created.(logfile:%s)",logFile))
+
