@@ -128,7 +128,7 @@ ban.hntCrossDim <- function( pBanObj ,pZoidMtx ,pCodeLst ,pInitZIdx=NULL ,pDepth
 
 
     # --------------------------------------------------
-    #	filtLst.dupRow ,filtedIdx.dupRow
+    #	filtLst ,filtedIdx
     filtLst <- lapply( 1:nrow(pZoidMtx) ,function(pIdx){
             # 어느 banLst에서 걸렸는지의 flag
             flag <- sapply( 1:nrow(cfNameMtx) ,function(pRIdx){

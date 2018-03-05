@@ -35,8 +35,63 @@ cat(sprintf("time cost %.1f%s \n",tDiff,units(tDiff)))
 
 # ===============================================================================
 
+#   pDimCnt : 동일한 dim이 n개 이상 존재하는 것은 자른다.
+#   	pBanObj<-banObj ;pZoidMtx<-gEnv$zhF ;pInitZIdx=NULL ;pCodeLst=codeLst   ;pDimThld=2  ;pDepth=2
+ban.multiDim <-function( pBanObj ,pZoidMtx ,pCodeLst ,pInitZIdx=NULL ,pDimThld=2 ,pDepth=2 ){
+
+    if( is.null(pInitZIdx) ){
+        pInitZIdx <- 1:nrow(pZoidMtx)
+    }
+
+    # --------------------------------------------------
+    #	filtLst ,filtedIdx
+    filtLst <- list()
+    dbgLst <- list()
+    for( zIdx in 1:nrow(pZoidMtx) ){
+        dbgObj <- list( cfNameFndLst=list() )
+        for( nIdx in pBanObj$cfNames ){
+            fndIdxLst <- list( )
+            for( eIdx in pBanObj$encVal.len:1 ){
+                dCnt <- pBanObj$cfObjLst[[nIdx]]$diffCnt( 
+                                pCodeLst[[nIdx]][[zIdx]]
+                                ,pBanObj$encValLst[[nIdx]][[eIdx]]
+                            )
+                if(0==dCnt){
+                    fndIdxLst[[1+length(fndIdxLst)]] <- eIdx
+                }
+            }
+
+            fndLen <- length(fndIdxLst)
+            if( 0==fndLen ){
+                dbgObj$cfNameFndLst[[nIdx]] <- integer(0)
+            } else {
+                fndLen <- ifelse( fndLen>pDepth ,pDepth ,fndLen )
+                dbgObj$cfNameFndLst[[nIdx]] <- do.call( c ,fndIdxLst[1:fndLen] )
+            }
+
+            sapply( dbgObj$cfNameFndLst[[nIdx]] ,function(p){
+                
+            })
+        } # nIdx
 
 
+    } # for(zIdx)
+
+
+    lapply( pCodeLst ,function(p){p[[75]]})
+    lapply( pBanObj$encValLst ,function(p){p[[26]]})
+
+    a10Lst <- pBanObj$encValLst[["A0010_o3"]]
+    a30Lst <- pBanObj$encValLst[["A0030_o3"]]
+
+    # filtedIdx <- pInitZIdx[pDimCnt<sapply(filtLst ,length)]
+
+    rstObj <- list( idStr="hntCrossDim" )
+    rstObj$filtLst      <- filtLst
+    rstObj$filtedIdx    <- filtedIdx
+    # 디버깅용 -------
+
+} # ban.multiDim()
 
 
 
