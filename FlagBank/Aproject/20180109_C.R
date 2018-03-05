@@ -45,53 +45,124 @@ ban.multiDim <-function( pBanObj ,pZoidMtx ,pCodeLst ,pInitZIdx=NULL ,pDimThld=2
 
     # --------------------------------------------------
     #	filtLst ,filtedIdx
-    filtLst <- list()
-    dbgLst <- list()
+    fndLst <- list()
     for( zIdx in 1:nrow(pZoidMtx) ){
-        dbgObj <- list( cfNameFndLst=list() )
-        for( nIdx in pBanObj$cfNames ){
-            fndIdxLst <- list( )
-            for( eIdx in pBanObj$encVal.len:1 ){
-                dCnt <- pBanObj$cfObjLst[[nIdx]]$diffCnt( 
-                                pCodeLst[[nIdx]][[zIdx]]
-                                ,pBanObj$encValLst[[nIdx]][[eIdx]]
-                            )
-                if(0==dCnt){
-                    fndIdxLst[[1+length(fndIdxLst)]] <- eIdx
-                }
-            }
-
-            fndLen <- length(fndIdxLst)
-            if( 0==fndLen ){
-                dbgObj$cfNameFndLst[[nIdx]] <- integer(0)
-            } else {
-                fndLen <- ifelse( fndLen>pDepth ,pDepth ,fndLen )
-                dbgObj$cfNameFndLst[[nIdx]] <- do.call( c ,fndIdxLst[1:fndLen] )
-            }
-
-            sapply( dbgObj$cfNameFndLst[[nIdx]] ,function(p){
-                
-            })
-        } # nIdx
-
+		curCodeLst <- lapply( pCodeLst ,function(p){p[[zIdx]]})
+		
+		cfNameFndLst <- list()
+		for( snIdx in pBanObj$cfNames ){ # search name index
+			fndIdxLst <- list()
+			for( eIdx in pBanObj$encVal.len:1 ){
+				dCnt <- pBanObj$cfObjLst[[snIdx]]$diffCnt( 
+								curCodeLst[[snIdx]] ,pBanObj$encValLst[[snIdx]][[eIdx]]
+							)
+				if( 0==dCnt ){
+					fndIdxLst[[1+length(fndIdxLst)]] <- eIdx
+				}
+			}
+			matLst <- lapply(fndIdxLst ,function(pFndIdx){
+					hCodeLst <- lapply(pBanObj$encValLst,function(valLst){valLst[[pFndIdx]]})
+					matCnt <- sapply(pBanObj$cfNames,function(mName){
+									pBanObj$cfObjLst[[mName]]$diffCnt( curCodeLst[[mName]] ,hCodeLst[[mName]] )
+								})
+					return( pBanObj$cfNames[matCnt==0] )
+				})
+			cfNameFndLst[[snIdx]] <- list( fndIdxLst=fndIdxLst ,matLst=matLst )
+		} # snIdx
+		fndLst[[1+length(fndLst)]] <- cfNameFndLst
 
     } # for(zIdx)
+	
+	nameLst <- list()
+	filtLst <- list()
+	for( fIdx in 1:length(fndLst) ){
+		cfNameFndLst <- fndLst[[fIdx]]
+		maxFnd <- 0
+		for( snIdx in pBanObj$cfNames ){
+			fndObj <- cfNameFndLst[[snIdx]]
+			if( 0<length(fndObj$matLst) ){
+				nameCmb <- sapply( fndObj$matLst ,function(p){paste(p,collapse=" ")})
+				nameLst[[1+length(nameLst)]] <- nameCmb
 
-
-    lapply( pCodeLst ,function(p){p[[75]]})
-    lapply( pBanObj$encValLst ,function(p){p[[26]]})
-
-    a10Lst <- pBanObj$encValLst[["A0010_o3"]]
-    a30Lst <- pBanObj$encValLst[["A0030_o3"]]
-
-    # filtedIdx <- pInitZIdx[pDimCnt<sapply(filtLst ,length)]
+				curMax <- max(sapply(fndObj$matLst,length))
+				maxFnd <- ifelse( curMax>maxFnd ,curMax ,maxFnd )
+			}
+		}
+		filtLst[[1+length(filtLst)]] <- maxFnd
+	}
+	
+	flag <- sapply( filtLst ,function(p){p>1})
+	filtedIdx <- pInitZIdx[flag]
 
     rstObj <- list( idStr="hntCrossDim" )
     rstObj$filtLst      <- filtLst
     rstObj$filtedIdx    <- filtedIdx
     # 디버깅용 -------
-
+	rstObj$nameLst <- nameLst
+	
 } # ban.multiDim()
 
+# -- 제외 대상이..
 
+kName <- do.call( c ,nameLst )
+
+> table(kName)
+kName
+                                    A0010_o3 A0030_o3 
+                                                 1944 
+                           A0010_o3 A0030_o3 A0040_o3 
+                                                   12 
+   A0010_o3 A0030_o3 A0040_o3 A0050_o5 A0060_o7 A0070 
+                                                   12 
+                  A0010_o3 A0030_o3 A0050_o5 A0060_o7 
+                                                    8 
+            A0010_o3 A0030_o3 A0050_o5 A0060_o7 A0070 
+                                                 3610 
+      A0010_o3 A0030_o3 A0050_o5 A0060_o7 A0070 A0080 
+                                                   54 
+A0010_o3 A0030_o3 A0050_o5 A0060_o7 A0070 A0080 A0090 
+                                                    7 
+      A0010_o3 A0030_o3 A0050_o5 A0060_o7 A0070 A0090 
+                                                   48 
+                           A0010_o3 A0030_o3 A0060_o7 
+                                                    6 
+                              A0010_o3 A0030_o3 A0070 
+                                                    3 
+                              A0010_o3 A0030_o3 A0090 
+                                                   12 
+                                             A0020_o3 
+                                                  756 
+                                    A0020_o3 A0030_o3 
+                                                    8 
+                                    A0020_o3 A0060_o7 
+                                                    8 
+                                       A0020_o3 A0080 
+                                                   10 
+                                       A0020_o3 A0090 
+                                                    4 
+                                             A0030_o3 
+                                                 1624 
+                                    A0030_o3 A0040_o3 
+                                                   14 
+                                    A0030_o3 A0060_o7 
+                                                   12 
+                                       A0030_o3 A0070 
+                                                   12 
+                                       A0030_o3 A0090 
+                                                    2 
+                                             A0040_o3 
+                                                  941 
+                                    A0040_o3 A0060_o7 
+                                                    6 
+                                       A0040_o3 A0080 
+                                                    2 
+                                             A0050_o5 
+                                                  238 
+                                    A0050_o5 A0060_o7 
+                                                  110 
+                                       A0050_o5 A0080 
+                                                    2 
+                                             A0060_o7 
+                                                 1614 
+                                       A0060_o7 A0070 
 
