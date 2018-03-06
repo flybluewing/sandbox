@@ -8,7 +8,7 @@ for( tIdx in testSpan ){
 	tEnv <- gEnv
 	tEnv$zhF <- gEnv$zhF[1:(tIdx-1),]
 	banObj <- getCFltObj( tEnv )
-	
+
 	allZoidMtx <- gEnv$zhF[tIdx,,drop=F]
 	codeLst <- banObj$getCodeLst( allZoidMtx )
 
@@ -19,13 +19,21 @@ for( tIdx in testSpan ){
 	}
 	rstLst[[bRstObj$idStr]][[1+length(rstLst[[bRstObj$idStr]])]] <- bRstObj
 
-	# -------------
+	# -<hntCrossDim>------------
 	bRstObj <- ban.hntCrossDim(banObj ,allZoidMtx ,pCodeLst=codeLst ,pDepth=2)
 	if( is.null(rstLst[[bRstObj$idStr]]) ){
 		rstLst[[bRstObj$idStr]] <- list()
 	}
 	rstLst[[bRstObj$idStr]][[1+length(rstLst[[bRstObj$idStr]])]] <- bRstObj
 
+	# -<multiDim>------------
+	#	pBanObj<-banObj ;pZoidMtx<-allZoidMtx ;pCodeLst<-codeLst ;pInitZIdx=NULL ;pDimThld=2 ;pDepth=2
+	bRstObj <- ban.multiDim(banObj ,allZoidMtx ,pCodeLst=codeLst )
+	if( is.null(rstLst[[bRstObj$idStr]]) ){
+		rstLst[[bRstObj$idStr]] <- list()
+	}
+	rstLst[[bRstObj$idStr]][[1+length(rstLst[[bRstObj$idStr]])]] <- bRstObj
+	
 }
 tDiff <- Sys.time() - tStmp
 

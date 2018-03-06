@@ -159,6 +159,102 @@ ban.hntCrossDim <- function( pBanObj ,pZoidMtx ,pCodeLst ,pInitZIdx=NULL ,pDepth
 
 } # ban.hntCrossDim()
 
+#   pDimCnt : 동일한 dim이 n개 이상 존재하는 것은 자른다.
+#   	pBanObj<-banObj ;pZoidMtx<-gEnv$zhF ;pInitZIdx=NULL ;pCodeLst=codeLst   ;pDebug=F
+ban.multiDim <-function( pBanObj ,pZoidMtx ,pCodeLst ,pInitZIdx=NULL ,pDebug=F ){
+
+    if( is.null(pInitZIdx) ){
+        pInitZIdx <- 1:nrow(pZoidMtx)
+    }
+
+	# --------------------------------------------------
+	#	예외 리스트 정의
+	excFiltCmbLst <- list(	cmb0103=which(pBanObj$cfNames %in% c("A0010_o3","A0030_o3"))
+							,cmb0506=which(pBanObj$cfNames %in% c("A0050_o5","A0060_o7"))
+						)
+	isExcFiltCmb <- function( pFiltCmb ){
+		for( idx in 1:length(excFiltCmbLst) ){
+			if( length(pFiltCmb)==length(excFiltCmbLst[[idx]]) ){
+				if( all(pFiltCmb==excFiltCmbLst[[idx]]) ){
+					return(TRUE)
+				}
+			}
+		}
+		return(FALSE)
+	} # isExcFiltCmb( )
+
+    # --------------------------------------------------
+    #	filtLst ,filtedIdx
+    fndLst <- list()
+    for( zIdx in 1:nrow(pZoidMtx) ){
+		curCodeLst <- lapply( pCodeLst ,function(p){p[[zIdx]]})
+
+		cfNameFndLst <- list()
+		for( snIdx in pBanObj$cfNames ){ # search name index
+			fndIdxLst <- list()
+			for( eIdx in pBanObj$encVal.len:1 ){
+				dCnt <- pBanObj$cfObjLst[[snIdx]]$diffCnt( 
+								curCodeLst[[snIdx]] ,pBanObj$encValLst[[snIdx]][[eIdx]]
+							)
+				if( 0==dCnt ){
+					fndIdxLst[[1+length(fndIdxLst)]] <- eIdx
+				}
+			}
+			matIdxLst	<- lapply(fndIdxLst ,function(pFndIdx){
+							hCodeLst <- lapply(pBanObj$encValLst,function(valLst){valLst[[pFndIdx]]})
+							matCnt <- sapply(pBanObj$cfNames,function(mName){
+											pBanObj$cfObjLst[[mName]]$diffCnt( curCodeLst[[mName]] ,hCodeLst[[mName]] )
+										})
+							return( which(matCnt==0) )
+						})
+			matCnt <- sapply(matIdxLst,length)
+			fndIdxLst <- fndIdxLst[matCnt>1]
+			matIdxLst <- matIdxLst[matCnt>1]
+			
+			if( 0<length(matIdxLst) ){
+				excFlag	<- sapply(matIdxLst,isExcFiltCmb)
+				fndIdxLst <- fndIdxLst[!excFlag]
+				matIdxLst <- matIdxLst[!excFlag]
+			}
+			cfNameFndLst[[snIdx]] <- list( fndIdxLst=fndIdxLst ,matIdxLst=matIdxLst )
+		} # snIdx
+		fndLst[[1+length(fndLst)]] <- cfNameFndLst
+
+    } # for(zIdx)
+
+	nameLst <- list()
+	filtLst <- list()
+	for( fIdx in 1:length(fndLst) ){
+		cfNameFndLst <- fndLst[[fIdx]]
+		maxFnd <- 0
+		for( snIdx in pBanObj$cfNames ){
+			fndObj <- cfNameFndLst[[snIdx]]
+			if( 0<length(fndObj$matIdxLst) ){
+				if( pDebug ){
+					nameCmb <- sapply( fndObj$matIdxLst ,function(p){paste(pBanObj$cfNames[p],collapse=" ")})
+					nameLst[[1+length(nameLst)]] <- nameCmb
+				}
+				curMax <- max(sapply(fndObj$matIdxLst,length))
+				maxFnd <- ifelse( curMax>maxFnd ,curMax ,maxFnd )
+			}
+		}
+		filtLst[[1+length(filtLst)]] <- maxFnd
+	}
+
+	flag <- sapply( filtLst ,function(p){p>1})
+	filtedIdx <- pInitZIdx[flag]
+
+    rstObj <- list( idStr="hntCrossDim" )
+    rstObj$filtLst      <- filtLst
+    rstObj$filtedIdx    <- filtedIdx
+    # 디버깅용 -------
+	if( pDebug ){
+		rstObj$nameLst <- nameLst
+	}
+	
+	return( rstObj )
+	
+} # ban.multiDim()
 
 
 getCFltObj <- function( pEnv ){
