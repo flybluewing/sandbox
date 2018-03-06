@@ -42,6 +42,3 @@ ban.multiDim <-function( pBanObj ,pZoidMtx ,pCodeLst ,pInitZIdx=NULL ,pDebug=F )
 }
 
 
-ban.testRepeat <- function( pName ,pCodeLst ){
-	codeLst <- pCodeLst[[pName]]
-} # ban.testRepeat()
