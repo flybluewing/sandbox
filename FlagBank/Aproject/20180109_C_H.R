@@ -244,7 +244,7 @@ ban.multiDim <-function( pBanObj ,pZoidMtx ,pCodeLst ,pInitZIdx=NULL ,pDebug=F )
 	flag <- sapply( filtLst ,function(p){p>1})
 	filtedIdx <- pInitZIdx[flag]
 
-    rstObj <- list( idStr="hntCrossDim" )
+    rstObj <- list( idStr="multiDim" )
     rstObj$filtLst      <- filtLst
     rstObj$filtedIdx    <- filtedIdx
     # µð¹ö±ë¿ë -------

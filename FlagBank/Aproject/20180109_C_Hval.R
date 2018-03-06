@@ -48,3 +48,31 @@ for( idIdx in attributes(rstLst)$names ){
 }
 
 
+# ===============================================================================================
+tIdx <- 791
+tEnv <- gEnv
+tEnv$zhF <- gEnv$zhF[1:(tIdx-1),]
+banObj <- getCFltObj( tEnv )
+
+allZoidMtx <- gEnv$zhF[tIdx,,drop=F]
+codeLst <- banObj$getCodeLst( allZoidMtx )
+
+#	pName="A0010_o3"	;pBanObj <- banObj
+ban.testRepeat <- function( pName ,pBanObj ){
+	
+	encValLst <- pBanObj$encValLst[[pName]]
+	
+	sDepth <- 5	# 다음 5개 까지 검색.
+	matFlag <- rep( TRUE ,length(encValLst[[1]]) )
+	matLog	<- rep( 0 ,sDepth )
+	for( eIdx in 1:(length(encValLst)-sDepth-1)){
+		matFlag[] <- TRUE
+		for( mIdx <- 1:sDepth ){
+			mrIdx <- eIdx+mIdx
+			
+		}
+	} # for(eIdx)
+	
+} # ban.testRepeat()
+
+

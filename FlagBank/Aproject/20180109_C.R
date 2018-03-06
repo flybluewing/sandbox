@@ -36,3 +36,12 @@ cat(sprintf("time cost %.1f%s \n",tDiff,units(tDiff)))
 # ===============================================================================
 
 
+#   pDimCnt : 동일한 dim이 n개 이상 존재하는 것은 자른다.
+#   	pBanObj<-banObj ;pZoidMtx<-gEnv$zhF ;pInitZIdx=NULL ;pCodeLst=codeLst   ;pDebug=F
+ban.multiDim <-function( pBanObj ,pZoidMtx ,pCodeLst ,pInitZIdx=NULL ,pDebug=F ){
+}
+
+
+ban.testRepeat <- function( pName ,pCodeLst ){
+	codeLst <- pCodeLst[[pName]]
+} # ban.testRepeat()
