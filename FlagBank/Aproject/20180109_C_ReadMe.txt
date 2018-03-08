@@ -1,0 +1,183 @@
+추가정보 파일.
+
+
+[ban.throughH.test()]-----------------------------------------------
+
+    [A0010_o3]
+      freq 0:55 1:183 2:261 3:160 4:63 5:16 6:2 
+       thld 5 depth 2 fail 0.0% (0 of 740) 
+       thld 4 depth 2 fail 0.0% (0 of 740) 
+       thld 3 depth 2 fail 0.4% (3 of 740) 
+    [A0020_o3]
+      freq 0:59 1:211 2:237 3:173 4:53 5:7         
+       thld 5 depth 2 fail 0.0% (0 of 740) 
+       thld 4 depth 2 fail 0.1% (1 of 740) 
+       thld 3 depth 2 fail 1.4% (10 of 740) 
+    [A0030_o3]
+      freq 0:81 1:252 2:239 3:127 4:36 5:5     
+       thld 4 depth 2 fail 0.0% (0 of 740) 
+       thld 3 depth 2 fail 0.8% (6 of 740) 
+       thld 2 depth 2 fail 4.6% (34 of 740) 
+    [A0040_o3]
+      freq 0:60 1:178 2:260 3:164 4:67 5:10 6:1 
+       thld 5 depth 2 fail 0.0% (0 of 740) 
+       thld 4 depth 2 fail 0.0% (0 of 740) 
+       thld 3 depth 2 fail 0.9% (7 of 740) 
+    [A0050_o5]
+      freq 0:192 1:244 2:190 3:85 4:24 5:5 
+       thld 5 depth 2 fail 0.0% (0 of 740) 
+       thld 4 depth 2 fail 0.0% (0 of 740) 
+       thld 3 depth 2 fail 0.1% (1 of 740) 
+    [A0060_o7]
+      freq 1:19 2:145 3:212 4:239 5:62 6:62 8:1 
+        thld 7 depth 2 fail 0.0% (0 of 740) 
+        thld 6 depth 2 fail 0.1% (1 of 740) 
+        thld 5 depth 2 fail 0.4% (3 of 740) 
+        thld 4 depth 2 fail 2.4% (18 of 740) 
+        thld 3 depth 2 fail 5.8% (43 of 740) 
+    [A0070]
+      freq 0:656 1:82 2:2 
+        thld 2 depth 2 fail 0.0% (0 of 740) 
+        thld 1 depth 2 fail 0.5% (4 of 740) 
+    [A0080]
+      freq 0:230 1:31 2:341 3:28 4:110 
+       thld 3 depth 2 fail 4.2% (31 of 740) 
+       thld 2 depth 2 fail 40.4% (299 of 740) 
+       thld 1 depth 2 fail 40.5% (300 of 740) 
+    [A0090]
+      freq 0:180 1:19 2:385 3:32 4:124 
+       thld 3 depth 2 fail 6.5% (48 of 740) 
+       thld 2 depth 2 fail 51.1% (378 of 740) 
+       thld 1 depth 2 fail 51.2% (379 of 740) 
+
+    [A0010_o3]
+      freq 0:345 1:297 2:81 3:15 4:1 
+       thld 5 depth 3 fail 0.0% (0 of 739) 
+       thld 4 depth 3 fail 0.0% (0 of 739) 
+       thld 3 depth 3 fail 0.1% (1 of 739) 
+       thld 2 depth 3 fail 1.9% (14 of 739) 
+       thld 1 depth 3 fail 16.2% (120 of 739) 
+    [A0020_o3]
+      freq 0:372 1:259 2:87 3:19 4:2 
+       thld 5 depth 3 fail 0.0% (0 of 739) 
+       thld 4 depth 3 fail 0.0% (0 of 739) 
+       thld 3 depth 3 fail 0.1% (1 of 739) 
+       thld 2 depth 3 fail 1.8% (13 of 739) 
+       thld 1 depth 3 fail 14.6% (108 of 739) 
+    [A0030_o3]
+      freq 0:383 1:269 2:78 3:9 
+       thld 4 depth 3 fail 0.0% (0 of 739) 
+       thld 3 depth 3 fail 0.0% (0 of 739) 
+       thld 2 depth 3 fail 1.1% (8 of 739) 
+       thld 1 depth 3 fail 14.5% (107 of 739) 
+       thld 0 depth 3 fail 66.3% (490 of 739) 
+    [A0040_o3]
+      freq 0:342 1:272 2:108 3:16 4:1 
+       thld 5 depth 3 fail 0.0% (0 of 739) 
+       thld 4 depth 3 fail 0.0% (0 of 739) 
+       thld 3 depth 3 fail 0.0% (0 of 739) 
+       thld 2 depth 3 fail 1.9% (14 of 739) 
+       thld 1 depth 3 fail 14.9% (110 of 739) 
+    [A0050_o5]
+      freq 0:514 1:183 2:39 3:3 
+       thld 5 depth 3 fail 0.0% (0 of 739) 
+       thld 4 depth 3 fail 0.0% (0 of 739) 
+       thld 3 depth 3 fail 0.1% (1 of 739) 
+       thld 2 depth 3 fail 0.8% (6 of 739) 
+       thld 1 depth 3 fail 9.2% (68 of 739) 
+    [A0060_o7]
+      freq 1:245 2:305 3:147 4:34 5:6 6:2 
+       thld 7 depth 3 fail 0.0% (0 of 739) 
+       thld 6 depth 3 fail 0.0% (0 of 739) 
+       thld 5 depth 3 fail 0.0% (0 of 739) 
+       thld 4 depth 3 fail 0.1% (1 of 739) 
+       thld 3 depth 3 fail 3.5% (26 of 739) 
+
+    [A0010_o3]
+      freq 0:575 1:145 2:17 3:1 
+       thld 5 depth 4 fail 0.0% (0 of 738) 
+       thld 4 depth 4 fail 0.0% (0 of 738) 
+       thld 3 depth 4 fail 0.0% (0 of 738) 
+       thld 2 depth 4 fail 0.4% (3 of 738) 
+       thld 1 depth 4 fail 8.0% (59 of 738) 
+    [A0020_o3]
+      freq 0:572 1:145 2:20 3:1 
+       thld 5 depth 4 fail 0.0% (0 of 738) 
+       thld 4 depth 4 fail 0.0% (0 of 738) 
+       thld 3 depth 4 fail 0.0% (0 of 738) 
+       thld 2 depth 4 fail 0.1% (1 of 738) 
+       thld 1 depth 4 fail 7.2% (53 of 738) 
+    [A0030_o3]
+      freq 0:593 1:135 2:10 
+       thld 4 depth 4 fail 0.0% (0 of 738) 
+       thld 3 depth 4 fail 0.0% (0 of 738) 
+       thld 2 depth 4 fail 0.1% (1 of 738) 
+       thld 1 depth 4 fail 6.4% (47 of 738) 
+       thld 0 depth 4 fail 86.7% (640 of 738) 
+    [A0040_o3]
+      freq 0:567 1:153 2:17 3:1 
+       thld 5 depth 4 fail 0.0% (0 of 738) 
+       thld 4 depth 4 fail 0.0% (0 of 738) 
+       thld 3 depth 4 fail 0.0% (0 of 738) 
+       thld 2 depth 4 fail 0.1% (1 of 738) 
+       thld 1 depth 4 fail 6.5% (48 of 738) 
+    [A0050_o5]
+      freq 0:657 1:75 2:5 3:1 
+       thld 5 depth 4 fail 0.0% (0 of 738) 
+       thld 4 depth 4 fail 0.0% (0 of 738) 
+       thld 3 depth 4 fail 0.0% (0 of 738) 
+       thld 2 depth 4 fail 0.1% (1 of 738) 
+       thld 1 depth 4 fail 3.5% (26 of 738) 
+    [A0060_o7]
+      freq 1:481 2:217 3:36 4:4 
+       thld 7 depth 4 fail 0.0% (0 of 738) 
+       thld 6 depth 4 fail 0.0% (0 of 738) 
+       thld 5 depth 4 fail 0.0% (0 of 738) 
+       thld 4 depth 4 fail 0.0% (0 of 738) 
+       thld 3 depth 4 fail 0.8% (6 of 738) 
+	   thld 2 depth 4 fail 13.3% (98 of 738)	   
+
+    [A0010_o3]
+      freq 0:671 1:63 2:3 
+       thld 5 depth 5 fail 0.0% (0 of 737) 
+       thld 4 depth 5 fail 0.0% (0 of 737) 
+       thld 3 depth 5 fail 0.0% (0 of 737) 
+       thld 2 depth 5 fail 0.0% (0 of 737) 
+       thld 1 depth 5 fail 3.8% (28 of 737) 
+    [A0020_o3]
+      freq 0:669 1:67 2:1 
+       thld 5 depth 5 fail 0.0% (0 of 737) 
+       thld 4 depth 5 fail 0.0% (0 of 737) 
+       thld 3 depth 5 fail 0.0% (0 of 737) 
+       thld 2 depth 5 fail 0.0% (0 of 737) 
+       thld 1 depth 5 fail 3.1% (23 of 737) 
+    [A0030_o3]
+      freq 0:685 1:51 2:1 
+       thld 4 depth 5 fail 0.0% (0 of 737) 
+       thld 3 depth 5 fail 0.0% (0 of 737) 
+       thld 2 depth 5 fail 0.0% (0 of 737) 
+       thld 1 depth 5 fail 2.2% (16 of 737) 
+       thld 0 depth 5 fail 95.1% (701 of 737) 
+    [A0040_o3]
+      freq 0:680 1:56 2:1 
+       thld 5 depth 5 fail 0.0% (0 of 737) 
+       thld 4 depth 5 fail 0.0% (0 of 737) 
+       thld 3 depth 5 fail 0.0% (0 of 737) 
+       thld 2 depth 5 fail 0.0% (0 of 737) 
+       thld 1 depth 5 fail 2.3% (17 of 737) 
+    [A0050_o5]
+      freq 0:708 1:28 2:1 
+       thld 5 depth 5 fail 0.0% (0 of 737) 
+       thld 4 depth 5 fail 0.0% (0 of 737) 
+       thld 3 depth 5 fail 0.0% (0 of 737) 
+       thld 2 depth 5 fail 0.0% (0 of 737) 
+       thld 1 depth 5 fail 1.4% (10 of 737) 
+    [A0060_o7]
+      freq 1:621 2:110 3:6 
+       thld 7 depth 5 fail 0.0% (0 of 737) 
+       thld 6 depth 5 fail 0.0% (0 of 737) 
+       thld 5 depth 5 fail 0.0% (0 of 737) 
+       thld 4 depth 5 fail 0.0% (0 of 737) 
+       thld 3 depth 5 fail 0.0% (0 of 737)
+	   thld 2 depth 5 fail 6.0% (44 of 737) 
+

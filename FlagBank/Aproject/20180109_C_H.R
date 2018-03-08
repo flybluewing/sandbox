@@ -458,6 +458,14 @@ cf_A0010 <- function( pEnv ,pBase=3 ){
 	cfObj$diffCnt <- function( p1 ,p2 ){
 		return( sum(p1!=p2) )
 	}
+
+	throughHisMtx <- matrix( 0 ,nrow=0 ,ncol=4 )
+	throughHisMtx <- rbind( throughHisMtx ,c( 2 ,3 ,3 ,2 ) )
+	throughHisMtx <- rbind( throughHisMtx ,c( 3 ,3 ,2 ,2 ) )
+	throughHisMtx <- rbind( throughHisMtx ,c( 4 ,2 ,2 ,2 ) )
+	throughHisMtx <- rbind( throughHisMtx ,c( 5 ,2 ,2 ,1 ) )
+	colnames(throughHisMtx) <- c("depth","hard","mid","easy") # 1%이내, 2%부근 ,5% 부근
+	cfObj$throughHisMtx <- throughHisMtx
 	
 	return( cfObj )
 
@@ -483,6 +491,12 @@ cf_A0020 <- function( pEnv ,pBase=3 ){
 	cfObj$diffCnt <- function( p1 ,p2 ){
 		return( sum(p1!=p2) )
 	}
+	throughHisMtx <- matrix( 0 ,nrow=0 ,ncol=4 )
+	throughHisMtx <- rbind( throughHisMtx ,c( 2 ,4 ,3 ,2 ) )
+	throughHisMtx <- rbind( throughHisMtx ,c( 3 ,3 ,2 ,2 ) )
+	throughHisMtx <- rbind( throughHisMtx ,c( 4 ,2 ,2 ,2 ) )
+	throughHisMtx <- rbind( throughHisMtx ,c( 5 ,2 ,2 ,1 ) )
+	colnames(throughHisMtx) <- c("depth","hard","mid","easy") # 1%이내, 2%부근 ,5% 부근
 	
 	return( cfObj )
 
@@ -507,6 +521,12 @@ cf_A0030 <- function( pEnv ,pBase=3 ){
 	cfObj$diffCnt <- function( p1 ,p2 ){
 		return( sum(p1!=p2) )
 	}
+	throughHisMtx <- matrix( 0 ,nrow=0 ,ncol=4 )
+	throughHisMtx <- rbind( throughHisMtx ,c( 2 ,4 ,3 ,2 ) )
+	throughHisMtx <- rbind( throughHisMtx ,c( 3 ,3 ,2 ,2 ) )
+	throughHisMtx <- rbind( throughHisMtx ,c( 4 ,2 ,2 ,2 ) )
+	throughHisMtx <- rbind( throughHisMtx ,c( 5 ,2 ,1 ,1 ) )
+	colnames(throughHisMtx) <- c("depth","hard","mid","easy") # 1%이내, 2%부근 ,5% 부근
 	
 	return( cfObj )
 
@@ -533,6 +553,12 @@ cf_A0040 <- function( pEnv ,pBase=3 ){
 	cfObj$diffCnt <- function( p1 ,p2 ){
 		return( sum(p1!=p2) )
 	}
+	throughHisMtx <- matrix( 0 ,nrow=0 ,ncol=4 )
+	throughHisMtx <- rbind( throughHisMtx ,c( 2 ,3 ,3 ,2 ) )
+	throughHisMtx <- rbind( throughHisMtx ,c( 3 ,2 ,2 ,2 ) )
+	throughHisMtx <- rbind( throughHisMtx ,c( 4 ,2 ,2 ,2 ) )
+	throughHisMtx <- rbind( throughHisMtx ,c( 5 ,2 ,1 ,1 ) )
+	colnames(throughHisMtx) <- c("depth","hard","mid","easy") # 1%이내, 2%부근 ,5% 부근
 	
 	return( cfObj )
 
@@ -557,6 +583,12 @@ cf_A0050 <- function( pEnv ,pBase=5 ){
 	cfObj$diffCnt <- function( p1 ,p2 ){
 		return( sum(p1!=p2) )
 	}
+	throughHisMtx <- matrix( 0 ,nrow=0 ,ncol=4 )
+	throughHisMtx <- rbind( throughHisMtx ,c( 2 ,3 ,3 ,2 ) )
+	throughHisMtx <- rbind( throughHisMtx ,c( 3 ,2 ,2 ,2 ) )
+	throughHisMtx <- rbind( throughHisMtx ,c( 4 ,2 ,2 ,2 ) )
+	throughHisMtx <- rbind( throughHisMtx ,c( 5 ,2 ,1 ,1 ) )
+	colnames(throughHisMtx) <- c("depth","hard","mid","easy") # 1%이내, 2%부근 ,5% 부근
 	
 	return( cfObj )
 
@@ -580,7 +612,13 @@ cf_A0060 <- function( pEnv ,pBase=7 ){
 	cfObj$diffCnt <- function( p1 ,p2 ){
 		return( sum(p1!=p2) )
 	}
-	
+	throughHisMtx <- matrix( 0 ,nrow=0 ,ncol=4 )
+	throughHisMtx <- rbind( throughHisMtx ,c( 2 ,5 ,4 ,3 ) )
+	throughHisMtx <- rbind( throughHisMtx ,c( 3 ,4 ,4 ,3 ) )
+	throughHisMtx <- rbind( throughHisMtx ,c( 4 ,3 ,3 ,3 ) )
+	throughHisMtx <- rbind( throughHisMtx ,c( 5 ,3 ,3 ,3 ) )
+	colnames(throughHisMtx) <- c("depth","hard","mid","easy") # 1%이내, 2%부근 ,5% 부근
+
 	return( cfObj )
 
 } # cf_A0060()
@@ -605,6 +643,12 @@ cf_A0070 <- function( pEnv ){
 	cfObj$diffCnt <- function( p1 ,p2 ){
 		return( sum(p1!=p2) )
 	}
+	throughHisMtx <- matrix( 0 ,nrow=0 ,ncol=4 )
+	throughHisMtx <- rbind( throughHisMtx ,c( 2 ,1 ,1 ,1 ) )
+	throughHisMtx <- rbind( throughHisMtx ,c( 3 ,1 ,1 ,1 ) )
+	throughHisMtx <- rbind( throughHisMtx ,c( 4 ,1 ,1 ,1 ) )
+	throughHisMtx <- rbind( throughHisMtx ,c( 5 ,1 ,1 ,1 ) )
+	colnames(throughHisMtx) <- c("depth","hard","mid","easy") # 1%이내, 2%부근 ,5% 부근
 
 	# pastValMtx <- do.call( rbind ,cfObj$enc(pEnv$zhF) )
 	return( cfObj )
@@ -646,6 +690,12 @@ cf_A0080 <- function( pEnv ){
 		}
 		return( dCnt )
 	}
+	throughHisMtx <- matrix( 0 ,nrow=0 ,ncol=4 )
+	throughHisMtx <- rbind( throughHisMtx ,c( 2 ,4 ,4 ,3 ) )
+	throughHisMtx <- rbind( throughHisMtx ,c( 3 ,4 ,3 ,3 ) )
+	throughHisMtx <- rbind( throughHisMtx ,c( 4 ,4 ,3 ,3 ) )
+	throughHisMtx <- rbind( throughHisMtx ,c( 5 ,4 ,3 ,3 ) )
+	colnames(throughHisMtx) <- c("depth","hard","mid","easy") # 1%이내, 2%부근 ,5% 부근
 	
 	return( cfObj )
 
@@ -686,6 +736,12 @@ cf_A0090 <- function( pEnv ){
 		}
 		return( dCnt )
 	}
+	throughHisMtx <- matrix( 0 ,nrow=0 ,ncol=4 )
+	throughHisMtx <- rbind( throughHisMtx ,c( 2 ,4 ,4 ,4 ) )
+	throughHisMtx <- rbind( throughHisMtx ,c( 3 ,4 ,4 ,4 ) )
+	throughHisMtx <- rbind( throughHisMtx ,c( 4 ,4 ,4 ,4 ) )
+	throughHisMtx <- rbind( throughHisMtx ,c( 5 ,4 ,4 ,4 ) )
+	colnames(throughHisMtx) <- c("depth","hard","mid","easy") # 1%이내, 2%부근 ,5% 부근
 	
 	return( cfObj )
 
