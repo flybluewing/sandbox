@@ -256,6 +256,150 @@ ban.multiDim <-function( pBanObj ,pZoidMtx ,pCodeLst ,pInitZIdx=NULL ,pDebug=F )
 	
 } # ban.multiDim()
 
+#   동일한 패턴이 여러 H동안 나타났을 때, 다음 H에도 동일하게 나타날 것인가?
+#  	pBanObj<-banObj ;pZoidMtx<-gEnv$zhF ;pInitZIdx=NULL ;pCodeLst=codeLst   ;pLevel="mid"   ;pDebug=F
+ban.throughH <-function( pBanObj ,pZoidMtx ,pCodeLst ,pInitZIdx=NULL ,pLevel="mid" ,pDebug=F ){
+
+    if( is.null(pInitZIdx) ){
+        pInitZIdx <- 1:nrow(pZoidMtx)
+    }
+
+    banFlagLst <- list( )
+    for( depthIdx in 2:5 ){
+        codeSearchSpan <- (pBanObj$encVal.len-depthIdx+1):pBanObj$encVal.len
+        encValLst <- lapply( pBanObj$encValLst ,function(p){p[codeSearchSpan]})
+
+        thld <- sapply( pBanObj$cfObjLst ,function(cfObj){
+                            cfObj$throughHisMtx[
+                                depthIdx==cfObj$throughHisMtx[,"depth"]
+                                ,pLevel]
+                        })
+        names(thld) <- pBanObj$cfNames
+
+        for( cfName in pBanObj$cfNames ){
+
+            if( cfName %in% c("A0080","A0090") ){
+                # "A0080", "A0090"에서는 0000 상태가 많아 폭주발생위험있음.
+                if( all(c(0,0,0,0)==encValLst[[cfName]][[1]]) ){
+                    next
+                }
+            }
+
+            dupFlag <- rep( TRUE ,length(encValLst[[cfName]][[1]]) )
+            for( codeIdx in 2:length(encValLst[[cfName]]) ){
+                dupFlag <- dupFlag & encValLst[[cfName]][[1]]==encValLst[[cfName]][[codeIdx]]
+            }
+            if( thld[cfName]<=sum(dupFlag) ){
+                banFlagObj <- list(depth=depthIdx,cfName=cfName,thldSize=thld[cfName])
+                banFlagObj$rawCode <- encValLst[[cfName]][[1]]
+                banFlagObj$rawCode.Idx <- codeSearchSpan[1]
+                banFlagObj$dupFlag <- dupFlag
+                banFlagObj$rawCode.chk <- banFlagObj$rawCode[dupFlag]
+
+                banFlagLst[[1+length(banFlagLst)]] <- banFlagObj
+            }
+        } # cfName
+    } # depthIdx
+
+    filtLst <- list()
+    for( pIdx in 1:nrow(pZoidMtx) ){
+        bfIdxLst <- list()  # idx for banFlagLst
+        for( banIdx in seq_len(length(banFlagLst)) ){
+            banFlagObj <- banFlagLst[[banIdx]]
+            chkCode <- pCodeLst[[banFlagObj$cfName]][[pIdx]][banFlagObj$dupFlag]
+            if( all(banFlagObj$rawCode.chk==chkCode) ){
+                bfIdxLst[[1+length(bfIdxLst)]] <- banIdx
+            }
+        } # banIdx
+        filtLst[[1+length(filtLst)]] <- bfIdxLst
+    }
+    filtedIdx <- which( sapply(filtLst,length) > 0 )
+
+    rstObj <- list( idStr="throughH" )
+    rstObj$filtLst      <- filtLst
+    rstObj$filtedIdx    <- filtedIdx
+    # 디버깅용 -------
+    rstObj$level        <- pLevel
+    rstObj$banFlagLst     <- banFlagLst
+    return( rstObj )
+
+} # ban.throughH()
+
+#   동일한 패턴이 여러 H동안 나타났을 때, 다음 H에도 동일하게 나타날 것인가?
+#       단 한번씩 건너뛴 H에서의 패턴을 다룸.
+#       pLevel : "hard","mid","easy"
+#  	pBanObj<-banObj ;pZoidMtx<-gEnv$zhF ;pInitZIdx=NULL ;pCodeLst=codeLst   ;pLevel="mid"   ;pDebug=F
+ban.throughH2 <-function( pBanObj ,pZoidMtx ,pCodeLst ,pInitZIdx=NULL ,pLevel="hard" ,pDebug=F ){
+
+    if( is.null(pInitZIdx) ){
+        pInitZIdx <- 1:nrow(pZoidMtx)
+    }
+
+    banFlagLst <- list( )
+    for( depthIdx in 2:5 ){
+        # 현재 pBanObj$encVal.len이 742라면 다음 차례는 743. 
+        #   따라서 과거 패턴은 739, 741 스텝을 밟는다.
+        stepSpan <- 2*(depthIdx:1)
+        codeSearchSpan <- (pBanObj$encVal.len+1) - stepSpan
+
+        encValLst <- lapply( pBanObj$encValLst ,function(p){p[codeSearchSpan]})
+
+        thld <- sapply( pBanObj$cfObjLst ,function(cfObj){
+                            cfObj$throughHisMtx[
+                                depthIdx==cfObj$throughHisMtx[,"depth"]
+                                ,pLevel]
+                        })
+        names(thld) <- pBanObj$cfNames
+
+        for( cfName in pBanObj$cfNames ){
+
+            if( cfName %in% c("A0080","A0090") ){
+                # "A0080", "A0090"에서는 0000 상태가 많아 폭주발생위험있음.
+                if( all(c(0,0,0,0)==encValLst[[cfName]][[1]]) ){
+                    next
+                }
+            }
+
+            dupFlag <- rep( TRUE ,length(encValLst[[cfName]][[1]]) )
+            for( codeIdx in 2:length(encValLst[[cfName]]) ){
+                dupFlag <- dupFlag & encValLst[[cfName]][[1]]==encValLst[[cfName]][[codeIdx]]
+            }
+            if( thld[cfName]<=sum(dupFlag) ){
+                banFlagObj <- list(depth=depthIdx,cfName=cfName,thldSize=thld[cfName])
+                banFlagObj$rawCode <- encValLst[[cfName]][[1]]
+                banFlagObj$rawCode.Idx <- codeSearchSpan[1]
+                banFlagObj$dupFlag <- dupFlag
+                banFlagObj$rawCode.chk <- banFlagObj$rawCode[dupFlag]
+
+                banFlagLst[[1+length(banFlagLst)]] <- banFlagObj
+            }
+        } # cfName
+    } # depthIdx
+
+    filtLst <- list()
+    for( pIdx in 1:nrow(pZoidMtx) ){
+        bfIdxLst <- list()  # idx for banFlagLst
+        for( banIdx in seq_len(length(banFlagLst)) ){
+            banFlagObj <- banFlagLst[[banIdx]]
+            chkCode <- pCodeLst[[banFlagObj$cfName]][[pIdx]][banFlagObj$dupFlag]
+            if( all(banFlagObj$rawCode.chk==chkCode) ){
+                bfIdxLst[[1+length(bfIdxLst)]] <- banIdx
+            }
+        } # banIdx
+        filtLst[[1+length(filtLst)]] <- bfIdxLst
+    }
+    filtedIdx <- which( sapply(filtLst,length) > 0 )
+
+    rstObj <- list( idStr="throughH2" )
+    rstObj$filtLst      <- filtLst
+    rstObj$filtedIdx    <- filtedIdx
+    # 디버깅용 -------
+    rstObj$level        <- pLevel
+    rstObj$banFlagLst     <- banFlagLst
+    return( rstObj )
+
+} # ban.throughH2()
+
 
 getCFltObj <- function( pEnv ){
 
@@ -497,6 +641,7 @@ cf_A0020 <- function( pEnv ,pBase=3 ){
 	throughHisMtx <- rbind( throughHisMtx ,c( 4 ,2 ,2 ,2 ) )
 	throughHisMtx <- rbind( throughHisMtx ,c( 5 ,2 ,2 ,1 ) )
 	colnames(throughHisMtx) <- c("depth","hard","mid","easy") # 1%이내, 2%부근 ,5% 부근
+	cfObj$throughHisMtx <- throughHisMtx
 	
 	return( cfObj )
 
@@ -527,6 +672,7 @@ cf_A0030 <- function( pEnv ,pBase=3 ){
 	throughHisMtx <- rbind( throughHisMtx ,c( 4 ,2 ,2 ,2 ) )
 	throughHisMtx <- rbind( throughHisMtx ,c( 5 ,2 ,1 ,1 ) )
 	colnames(throughHisMtx) <- c("depth","hard","mid","easy") # 1%이내, 2%부근 ,5% 부근
+	cfObj$throughHisMtx <- throughHisMtx
 	
 	return( cfObj )
 
@@ -559,6 +705,7 @@ cf_A0040 <- function( pEnv ,pBase=3 ){
 	throughHisMtx <- rbind( throughHisMtx ,c( 4 ,2 ,2 ,2 ) )
 	throughHisMtx <- rbind( throughHisMtx ,c( 5 ,2 ,1 ,1 ) )
 	colnames(throughHisMtx) <- c("depth","hard","mid","easy") # 1%이내, 2%부근 ,5% 부근
+	cfObj$throughHisMtx <- throughHisMtx
 	
 	return( cfObj )
 
@@ -589,6 +736,7 @@ cf_A0050 <- function( pEnv ,pBase=5 ){
 	throughHisMtx <- rbind( throughHisMtx ,c( 4 ,2 ,2 ,2 ) )
 	throughHisMtx <- rbind( throughHisMtx ,c( 5 ,2 ,1 ,1 ) )
 	colnames(throughHisMtx) <- c("depth","hard","mid","easy") # 1%이내, 2%부근 ,5% 부근
+	cfObj$throughHisMtx <- throughHisMtx
 	
 	return( cfObj )
 
@@ -618,6 +766,7 @@ cf_A0060 <- function( pEnv ,pBase=7 ){
 	throughHisMtx <- rbind( throughHisMtx ,c( 4 ,3 ,3 ,3 ) )
 	throughHisMtx <- rbind( throughHisMtx ,c( 5 ,3 ,3 ,3 ) )
 	colnames(throughHisMtx) <- c("depth","hard","mid","easy") # 1%이내, 2%부근 ,5% 부근
+	cfObj$throughHisMtx <- throughHisMtx
 
 	return( cfObj )
 
@@ -649,6 +798,7 @@ cf_A0070 <- function( pEnv ){
 	throughHisMtx <- rbind( throughHisMtx ,c( 4 ,1 ,1 ,1 ) )
 	throughHisMtx <- rbind( throughHisMtx ,c( 5 ,1 ,1 ,1 ) )
 	colnames(throughHisMtx) <- c("depth","hard","mid","easy") # 1%이내, 2%부근 ,5% 부근
+	cfObj$throughHisMtx <- throughHisMtx
 
 	# pastValMtx <- do.call( rbind ,cfObj$enc(pEnv$zhF) )
 	return( cfObj )
@@ -696,6 +846,7 @@ cf_A0080 <- function( pEnv ){
 	throughHisMtx <- rbind( throughHisMtx ,c( 4 ,4 ,3 ,3 ) )
 	throughHisMtx <- rbind( throughHisMtx ,c( 5 ,4 ,3 ,3 ) )
 	colnames(throughHisMtx) <- c("depth","hard","mid","easy") # 1%이내, 2%부근 ,5% 부근
+	cfObj$throughHisMtx <- throughHisMtx
 	
 	return( cfObj )
 
@@ -742,6 +893,7 @@ cf_A0090 <- function( pEnv ){
 	throughHisMtx <- rbind( throughHisMtx ,c( 4 ,4 ,4 ,4 ) )
 	throughHisMtx <- rbind( throughHisMtx ,c( 5 ,4 ,4 ,4 ) )
 	colnames(throughHisMtx) <- c("depth","hard","mid","easy") # 1%이내, 2%부근 ,5% 부근
+	cfObj$throughHisMtx <- throughHisMtx
 	
 	return( cfObj )
 
