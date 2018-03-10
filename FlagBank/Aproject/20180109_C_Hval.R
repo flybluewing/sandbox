@@ -18,14 +18,16 @@ for( tIdx in testSpan ){
 	if( is.null(rstLst[[bRstObj$idStr]]) ){
 		rstLst[[bRstObj$idStr]] <- list()
 	}
-	rstLst[[bRstObj$idStr]][[1+length(rstLst[[bRstObj$idStr]])]] <- bRstObj
+	rstIdStr <- sprintf("%s_base",bRstObj$idStr)
+	rstLst[[rstIdStr]][[1+length(rstLst[[rstIdStr]])]] <- bRstObj
 
 	# -<hntCrossDim>------------
 	bRstObj <- ban.hntCrossDim(banObj ,allZoidMtx ,pCodeLst=codeLst ,pDepth=2)
 	if( is.null(rstLst[[bRstObj$idStr]]) ){
 		rstLst[[bRstObj$idStr]] <- list()
 	}
-	rstLst[[bRstObj$idStr]][[1+length(rstLst[[bRstObj$idStr]])]] <- bRstObj
+	rstIdStr <- sprintf("%s_base",bRstObj$idStr)
+	rstLst[[rstIdStr]][[1+length(rstLst[[rstIdStr]])]] <- bRstObj
 
 	# -<multiDim>------------
 	#	pBanObj<-banObj ;pZoidMtx<-allZoidMtx ;pCodeLst<-codeLst ;pInitZIdx=NULL ;pDimThld=2 ;pDepth=2
@@ -33,7 +35,8 @@ for( tIdx in testSpan ){
 	if( is.null(rstLst[[bRstObj$idStr]]) ){
 		rstLst[[bRstObj$idStr]] <- list()
 	}
-	rstLst[[bRstObj$idStr]][[1+length(rstLst[[bRstObj$idStr]])]] <- bRstObj
+	rstIdStr <- sprintf("%s_base",bRstObj$idStr)
+	rstLst[[rstIdStr]][[1+length(rstLst[[rstIdStr]])]] <- bRstObj
 
 	# -<throughH>------------
 	#	pBanObj<-banObj ;pZoidMtx<-allZoidMtx ;pCodeLst<-codeLst ;pInitZIdx=NULL ;pDimThld=2 ;pDepth=2
@@ -41,7 +44,8 @@ for( tIdx in testSpan ){
 	if( is.null(rstLst[[bRstObj$idStr]]) ){
 		rstLst[[bRstObj$idStr]] <- list()
 	}
-	rstLst[[bRstObj$idStr]][[1+length(rstLst[[bRstObj$idStr]])]] <- bRstObj
+	rstIdStr <- sprintf("%s_base",bRstObj$idStr)
+	rstLst[[rstIdStr]][[1+length(rstLst[[rstIdStr]])]] <- bRstObj
 
 	# -<throughH2>------------
 	#	pBanObj<-banObj ;pZoidMtx<-allZoidMtx ;pCodeLst<-codeLst ;pInitZIdx=NULL ;pDimThld=2 ;pDepth=2
@@ -49,7 +53,8 @@ for( tIdx in testSpan ){
 	if( is.null(rstLst[[bRstObj$idStr]]) ){
 		rstLst[[bRstObj$idStr]] <- list()
 	}
-	rstLst[[bRstObj$idStr]][[1+length(rstLst[[bRstObj$idStr]])]] <- bRstObj
+	rstIdStr <- sprintf("%s_base",bRstObj$idStr)
+	rstLst[[rstIdStr]][[1+length(rstLst[[rstIdStr]])]] <- bRstObj
 
 	# ==================================================================
 	banCmbObj <- getCFltCmbObj( tEnv )
@@ -60,14 +65,16 @@ for( tIdx in testSpan ){
 	if( is.null(rstLst[[bRstObj$idStr]]) ){
 		rstLst[[bRstObj$idStr]] <- list()
 	}
-	rstLst[[bRstObj$idStr]][[1+length(rstLst[[bRstObj$idStr]])]] <- bRstObj
+	rstIdStr <- sprintf("%s_comb",bRstObj$idStr)
+	rstLst[[rstIdStr]][[1+length(rstLst[[rstIdStr]])]] <- bRstObj
 
 	# -<hntCrossDim>------------
 	bRstObj <- ban.hntCrossDim(banCmbObj ,allZoidMtx ,pCodeLst=codeCmbLst ,pDepth=2)
 	if( is.null(rstLst[[bRstObj$idStr]]) ){
 		rstLst[[bRstObj$idStr]] <- list()
 	}
-	rstLst[[bRstObj$idStr]][[1+length(rstLst[[bRstObj$idStr]])]] <- bRstObj
+	rstIdStr <- sprintf("%s_comb",bRstObj$idStr)
+	rstLst[[rstIdStr]][[1+length(rstLst[[rstIdStr]])]] <- bRstObj
 
 	# -<multiDim>------------
 	#	pbanCmbObj<-banCmbObj ;pZoidMtx<-allZoidMtx ;pCodeLst<-codeCmbLst ;pInitZIdx=NULL ;pDimThld=2 ;pDepth=2
@@ -75,7 +82,8 @@ for( tIdx in testSpan ){
 	if( is.null(rstLst[[bRstObj$idStr]]) ){
 		rstLst[[bRstObj$idStr]] <- list()
 	}
-	rstLst[[bRstObj$idStr]][[1+length(rstLst[[bRstObj$idStr]])]] <- bRstObj
+	rstIdStr <- sprintf("%s_comb",bRstObj$idStr)
+	rstLst[[rstIdStr]][[1+length(rstLst[[rstIdStr]])]] <- bRstObj
 
 	# -<throughH>------------
 	#	pbanCmbObj<-banCmbObj ;pZoidMtx<-allZoidMtx ;pCodeLst<-codeCmbLst ;pInitZIdx=NULL ;pDimThld=2 ;pDepth=2
@@ -83,7 +91,8 @@ for( tIdx in testSpan ){
 	if( is.null(rstLst[[bRstObj$idStr]]) ){
 		rstLst[[bRstObj$idStr]] <- list()
 	}
-	rstLst[[bRstObj$idStr]][[1+length(rstLst[[bRstObj$idStr]])]] <- bRstObj
+	rstIdStr <- sprintf("%s_comb",bRstObj$idStr)
+	rstLst[[rstIdStr]][[1+length(rstLst[[rstIdStr]])]] <- bRstObj
 
 	# -<throughH2>------------
 	#	pbanCmbObj<-banCmbObj ;pZoidMtx<-allZoidMtx ;pCodeLst<-codeCmbLst ;pInitZIdx=NULL ;pDimThld=2 ;pDepth=2
@@ -91,21 +100,24 @@ for( tIdx in testSpan ){
 	if( is.null(rstLst[[bRstObj$idStr]]) ){
 		rstLst[[bRstObj$idStr]] <- list()
 	}
-	rstLst[[bRstObj$idStr]][[1+length(rstLst[[bRstObj$idStr]])]] <- bRstObj
+	rstIdStr <- sprintf("%s_comb",bRstObj$idStr)
+	rstLst[[rstIdStr]][[1+length(rstLst[[rstIdStr]])]] <- bRstObj
 
 }
 tDiff <- Sys.time() - tStmp
 
-
+filtedIdxLst <- list()
 for( idIdx in attributes(rstLst)$names ){
 	filtedCnt <- sapply( rstLst[[idIdx]] ,function(p){ length(p$filtedIdx) } )
 	cat(sprintf("%s : %5.1f%%(%d/%d) \n",idIdx,100*sum(filtedCnt)/length(filtedCnt),sum(filtedCnt),length(filtedCnt)))
+	filtedIdxLst[[idIdx]] <- which(filtedCnt>0)
 
 	fltNameLst <- lapply( rstLst[[idIdx]] ,function(p){p$filtLst[[1]]})
 	# table(do.call( c ,fltNameLst ))	# 어떤 필터에 주로 걸렸는지..?
 	# flag <- sapply( rstLst[["hntSameRow"]] ,function(p){ (p$filtLst %in% c("A0080","A0090") ) } )
 }
-
+filtedIdx <- do.call( c ,filtedIdxLst )
+filtedIdx <- unique(filtedIdx)
 
 # ===============================================================================================
 tIdx <- 791
