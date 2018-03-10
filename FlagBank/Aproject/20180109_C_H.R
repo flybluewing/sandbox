@@ -900,3 +900,24 @@ cf_A0090 <- function( pEnv ){
 } # cf_A0090()
 
 
+# ====================================================================================
+
+cf_CUtil.4enc <- function( pAVal ,pBVal ){
+
+	rVal <- rep( 0 ,length(pAVal) )
+	for( idx in 1:length(pAVal) ){
+		if( (0==pAVal[idx])&&(0==pBVal[idx]) ){
+			rVal[idx] <- 0
+		} else if( (0==pAVal[idx])&&(1==pBVal[idx]) ){
+			rVal[idx] <- 1
+		} else if( (1==pAVal[idx])&&(0==pBVal[idx]) ){
+			rVal[idx] <- 2
+		} else {	# 1,1
+			rVal[idx] <- 3
+		}
+	}
+
+	return( rVal )
+
+} # cf_CUtil.4enc()
+

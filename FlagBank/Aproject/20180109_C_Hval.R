@@ -33,7 +33,23 @@ for( tIdx in testSpan ){
 		rstLst[[bRstObj$idStr]] <- list()
 	}
 	rstLst[[bRstObj$idStr]][[1+length(rstLst[[bRstObj$idStr]])]] <- bRstObj
-	
+
+	# -<throughH>------------
+	#	pBanObj<-banObj ;pZoidMtx<-allZoidMtx ;pCodeLst<-codeLst ;pInitZIdx=NULL ;pDimThld=2 ;pDepth=2
+	bRstObj <- ban.throughH(banObj ,allZoidMtx ,pCodeLst=codeLst )
+	if( is.null(rstLst[[bRstObj$idStr]]) ){
+		rstLst[[bRstObj$idStr]] <- list()
+	}
+	rstLst[[bRstObj$idStr]][[1+length(rstLst[[bRstObj$idStr]])]] <- bRstObj
+
+	# -<throughH2>------------
+	#	pBanObj<-banObj ;pZoidMtx<-allZoidMtx ;pCodeLst<-codeLst ;pInitZIdx=NULL ;pDimThld=2 ;pDepth=2
+	bRstObj <- ban.throughH2(banObj ,allZoidMtx ,pCodeLst=codeLst )
+	if( is.null(rstLst[[bRstObj$idStr]]) ){
+		rstLst[[bRstObj$idStr]] <- list()
+	}
+	rstLst[[bRstObj$idStr]][[1+length(rstLst[[bRstObj$idStr]])]] <- bRstObj
+
 }
 tDiff <- Sys.time() - tStmp
 

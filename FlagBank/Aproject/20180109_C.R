@@ -36,78 +36,46 @@ cat(sprintf("time cost %.1f%s \n",tDiff,units(tDiff)))
 # ===============================================================================
 
 
-#   동일한 패턴이 여러 H동안 나타났을 때, 다음 H에도 동일하게 나타날 것인가?
-#       단 한번씩 건너뛴 H에서의 패턴을 다룸.
-#       pLevel : "hard","mid","easy"
-#  	pBanObj<-banObj ;pZoidMtx<-gEnv$zhF ;pInitZIdx=NULL ;pCodeLst=codeLst   ;pLevel="mid"   ;pDebug=F
-ban.throughH2 <-function( pBanObj ,pZoidMtx ,pCodeLst ,pInitZIdx=NULL ,pLevel="hard" ,pDebug=F ){
 
-    if( is.null(pInitZIdx) ){
-        pInitZIdx <- 1:nrow(pZoidMtx)
-    }
+cf_C0010w02 <- function( pEnv ){
+	
+	cfObj <- list( idStr="C0010w02" )
+    cfObj$rawCfA <- cf_A0010( pEnv ,pBase=2 )
+    cfObj$rawCfB <- cf_A0020( pEnv ,pBase=2 )
+	cfObj$enc <- function( pZoidMtx ,pLogFunc=NULL ){
+		tStmp <- Sys.time()
 
-    banFlagLst <- list( )
-    for( depthIdx in 2:5 ){
-        # 현재 pBanObj$encVal.len이 742라면 다음 차례는 743. 
-        #   따라서 과거 패턴은 739, 741 스텝을 밟는다.
-        stepSpan <- 2*(depthIdx:1)
-        codeSearchSpan <- (pBanObj$encVal.len+1) - stepSpan
+        aValLst <- cfObj$rawCfA$enc( pZoidMtx )
+        bValLst <- cfObj$rawCfB$enc( pZoidMtx )
+        rLst <- lapply(1:length(aValLst),function(idx){
+                        cf_CUtil.4enc(aValLst[[idx]],bValLst[[idx]])
+                    })
 
-        encValLst <- lapply( pBanObj$encValLst ,function(p){p[codeSearchSpan]})
+		if( !is.null(pLogFunc) ){
+			tDiff <- Sys.time() - tStmp
+			pLogFunc( sprintf("ID:%s cost:%.1f%s",cfObj$idStr,tDiff,units(tDiff)) )
+		}
+		
+		return( rLst )
+	} # cfObj$enc()
+	cfObj$diffCnt <- function( p1 ,p2 ){
+		return( sum(p1!=p2) )
+	}
 
-        thld <- sapply( pBanObj$cfObjLst ,function(cfObj){
-                            cfObj$throughHisMtx[
-                                depthIdx==cfObj$throughHisMtx[,"depth"]
-                                ,pLevel]
-                        })
-        names(thld) <- pBanObj$cfNames
+	throughHisMtx <- matrix( 0 ,nrow=0 ,ncol=4 )
+	throughHisMtx <- rbind( throughHisMtx ,c( 2 ,3 ,3 ,2 ) )
+	throughHisMtx <- rbind( throughHisMtx ,c( 3 ,3 ,2 ,2 ) )
+	throughHisMtx <- rbind( throughHisMtx ,c( 4 ,2 ,2 ,2 ) )
+	throughHisMtx <- rbind( throughHisMtx ,c( 5 ,2 ,2 ,1 ) )
+	colnames(throughHisMtx) <- c("depth","hard","mid","easy") # 1%이내, 2%부근 ,5% 부근
+	cfObj$throughHisMtx <- throughHisMtx
+	
+	return( cfObj )
 
-        for( cfName in pBanObj$cfNames ){
+} # cf_C0010w02()
 
-            if( cfName %in% c("A0080","A0090") ){
-                # "A0080", "A0090"에서는 0000 상태가 많아 폭주발생위험있음.
-                if( all(c(0,0,0,0)==encValLst[[cfName]][[1]]) ){
-                    next
-                }
-            }
+cf_C0010w04
 
-            dupFlag <- rep( TRUE ,length(encValLst[[cfName]][[1]]) )
-            for( codeIdx in 2:length(encValLst[[cfName]]) ){
-                dupFlag <- dupFlag & encValLst[[cfName]][[1]]==encValLst[[cfName]][[codeIdx]]
-            }
-            if( thld[cfName]<=sum(dupFlag) ){
-                banFlagObj <- list(depth=depthIdx,cfName=cfName,thldSize=thld[cfName])
-                banFlagObj$rawCode <- encValLst[[cfName]][[1]]
-                banFlagObj$rawCode.Idx <- codeSearchSpan[1]
-                banFlagObj$dupFlag <- dupFlag
-                banFlagObj$rawCode.chk <- banFlagObj$rawCode[dupFlag]
+cf_C0020w03
 
-                banFlagLst[[1+length(banFlagLst)]] <- banFlagObj
-            }
-        } # cfName
-    } # depthIdx
-
-    filtLst <- list()
-    for( pIdx in 1:nrow(pZoidMtx) ){
-        bfIdxLst <- list()  # idx for banFlagLst
-        for( banIdx in seq_len(length(banFlagLst)) ){
-            banFlagObj <- banFlagLst[[banIdx]]
-            chkCode <- pCodeLst[[banFlagObj$cfName]][[pIdx]][banFlagObj$dupFlag]
-            if( all(banFlagObj$rawCode.chk==chkCode) ){
-                bfIdxLst[[1+length(bfIdxLst)]] <- banIdx
-            }
-        } # banIdx
-        filtLst[[1+length(filtLst)]] <- bfIdxLst
-    }
-    filtedIdx <- which( sapply(filtLst,length) > 0 )
-
-    rstObj <- list( idStr="throughH2" )
-    rstObj$filtLst      <- filtLst
-    rstObj$filtedIdx    <- filtedIdx
-    # 디버깅용 -------
-    rstObj$level        <- pLevel
-    rstObj$banFlagLst     <- banFlagLst
-    return( rstObj )
-
-} # ban.throughH2()
-
+cf_C0030w04
