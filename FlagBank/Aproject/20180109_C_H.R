@@ -902,10 +902,76 @@ cf_A0090 <- function( pEnv ){
 
 # ====================================================================================
 
-cf_CUtil.4enc <- function( pAVal ,pBVal ){
+getCFltCmbObj <- function( pEnv ){
 
-	rVal <- rep( 0 ,length(pAVal) )
-	for( idx in 1:length(pAVal) ){
+    cfObjLst <- NULL
+    encSpan <- 50:nrow(pEnv$zhF)
+    hIdx.encVal <- encSpan
+    encValLst <- list()
+    for( tIdx in encSpan ){	# lastZoid 기반 동작들 때문에 1부터 시작은 의미없다.
+        tEnv <- pEnv
+        tEnv$zhF <- pEnv$zhF[1:(tIdx-1),]
+        tEnv$allZoidMtx <- pEnv$zhF[tIdx,,drop=F]
+        
+        cfObjLst <- getCFLst.comb( tEnv )
+        for( lIdx in seq_len(length(cfObjLst)) ){
+            cfObj <- cfObjLst[[lIdx]]
+            if( is.null(encValLst[[cfObj$idStr]]) ){
+                encValLst[[cfObj$idStr]] <- list()
+            }
+            encValLst[[cfObj$idStr]][[1+length(encValLst[[cfObj$idStr]])]] <- cfObj$enc( tEnv$allZoidMtx )[[1]]
+        }
+    }
+
+	# cfObjLst는 pEnv 기준으로 다시 만들어져야 한다.(lastZoid 값을 위해..)
+	cfObjLst <- getCFLst.comb( pEnv )
+
+    cfNames <- sapply(cfObjLst,function(p){p$idStr})
+    encVal.len <- length(encValLst[[1]])
+
+    cfNameMtx <- apply( permutations( length(cfNames) ,2 ) # 삭제
+                         ,1 ,function(p){cfNames[p]}
+                    )
+    cfNameMtx <- t(cfNameMtx)   ;colnames(cfNameMtx) <- c("sbc.name","nzc.name")
+
+
+	# =[ rObj ]=============================================================
+    rObj <- list( cfNameMtx=cfNameMtx
+                    ,cfNames=cfNames	,cfObjLst=cfObjLst
+					,encValLst=encValLst,encVal.len=encVal.len
+                	,hIdx.encVal=hIdx.encVal )
+	names(rObj$cfObjLst) <- rObj$cfNames
+
+	rObj$getCodeLst <- function( pZoidMtx ){
+        codeLst <- list()
+        for( nIdx in rObj$cfNames ){
+            codeLst[[nIdx]] <- rObj$cfObjLst[[nIdx]]$enc(pZoidMtx)
+        }
+		return( codeLst )
+	} # rObj$getCodeLst()
+
+    return( rObj )
+
+} # getCFltCmbObj()
+
+
+getCFLst.comb <- function( pEnv ){
+	cfObjLst <- list()
+	cfObjLst[[1+length(cfObjLst)]] <- cf_C0010w02( pEnv )
+	cfObjLst[[1+length(cfObjLst)]] <- cf_C0010w04( pEnv )
+	cfObjLst[[1+length(cfObjLst)]] <- cf_C0020w03( pEnv )
+	cfObjLst[[1+length(cfObjLst)]] <- cf_C0030w04( pEnv )
+	return( cfObjLst )
+} # getCFLst.comb()
+
+
+cf_CUtil.4enc <- function( pAVal ,pBVal ,pLen=NULL ){
+
+	if( is.null(pLen) ){
+		pLen <- length(pAVal)
+	}
+	rVal <- rep( 0 ,pLen )
+	for( idx in 1:pLen ){
 		if( (0==pAVal[idx])&&(0==pBVal[idx]) ){
 			rVal[idx] <- 0
 		} else if( (0==pAVal[idx])&&(1==pBVal[idx]) ){
@@ -920,4 +986,161 @@ cf_CUtil.4enc <- function( pAVal ,pBVal ){
 	return( rVal )
 
 } # cf_CUtil.4enc()
+
+cf_C0010w02 <- function( pEnv ){
+	
+	cfObj <- list( idStr="C0010w02" )
+    cfObj$rawCfA <- cf_A0010( pEnv ,pBase=2 )
+    cfObj$rawCfB <- cf_A0020( pEnv ,pBase=2 )
+	cfObj$enc <- function( pZoidMtx ,pLogFunc=NULL ){
+
+		tStmp <- Sys.time()
+        aValLst <- cfObj$rawCfA$enc( pZoidMtx )
+        bValLst <- cfObj$rawCfB$enc( pZoidMtx )
+		val.len <- length(aValLst[[1]])
+        rLst <- lapply(1:length(aValLst),function(idx){
+                        cf_CUtil.4enc(aValLst[[idx]],bValLst[[idx]],pLen=val.len)
+                    })
+
+		if( !is.null(pLogFunc) ){
+			tDiff <- Sys.time() - tStmp
+			pLogFunc( sprintf("ID:%s cost:%.1f%s",cfObj$idStr,tDiff,units(tDiff)) )
+		}
+		
+		return( rLst )
+	} # cfObj$enc()
+	cfObj$diffCnt <- function( p1 ,p2 ){
+		return( sum(p1!=p2) )
+	}
+
+	throughHisMtx <- matrix( 0 ,nrow=0 ,ncol=4 )
+	throughHisMtx <- rbind( throughHisMtx ,c( 2 ,3 ,3 ,2 ) )
+	throughHisMtx <- rbind( throughHisMtx ,c( 3 ,3 ,2 ,2 ) )
+	throughHisMtx <- rbind( throughHisMtx ,c( 4 ,2 ,2 ,2 ) )
+	throughHisMtx <- rbind( throughHisMtx ,c( 5 ,2 ,2 ,1 ) )
+	colnames(throughHisMtx) <- c("depth","hard","mid","easy") # 1%이내, 2%부근 ,5% 부근
+	cfObj$throughHisMtx <- throughHisMtx
+	
+	return( cfObj )
+
+} # cf_C0010w02()
+
+cf_C0010w04 <- function( pEnv ){
+	
+	cfObj <- list( idStr="C0010w04" )
+    cfObj$rawCfA <- cf_A0010( pEnv ,pBase=2 )
+    cfObj$rawCfB <- cf_A0040( pEnv ,pBase=2 )
+	cfObj$enc <- function( pZoidMtx ,pLogFunc=NULL ){
+
+		tStmp <- Sys.time()
+        aValLst <- cfObj$rawCfA$enc( pZoidMtx )
+        bValLst <- cfObj$rawCfB$enc( pZoidMtx )
+		val.len <- length(aValLst[[1]])
+        rLst <- lapply(1:length(aValLst),function(idx){
+                        cf_CUtil.4enc(aValLst[[idx]],bValLst[[idx]],pLen=val.len)
+                    })
+
+		if( !is.null(pLogFunc) ){
+			tDiff <- Sys.time() - tStmp
+			pLogFunc( sprintf("ID:%s cost:%.1f%s",cfObj$idStr,tDiff,units(tDiff)) )
+		}
+		
+		return( rLst )
+	} # cfObj$enc()
+	cfObj$diffCnt <- function( p1 ,p2 ){
+		return( sum(p1!=p2) )
+	}
+
+	throughHisMtx <- matrix( 0 ,nrow=0 ,ncol=4 )
+	throughHisMtx <- rbind( throughHisMtx ,c( 2 ,3 ,3 ,2 ) )
+	throughHisMtx <- rbind( throughHisMtx ,c( 3 ,3 ,2 ,2 ) )
+	throughHisMtx <- rbind( throughHisMtx ,c( 4 ,2 ,2 ,2 ) )
+	throughHisMtx <- rbind( throughHisMtx ,c( 5 ,2 ,2 ,1 ) )
+	colnames(throughHisMtx) <- c("depth","hard","mid","easy") # 1%이내, 2%부근 ,5% 부근
+	cfObj$throughHisMtx <- throughHisMtx
+	
+	return( cfObj )
+
+} # cf_C0010w04()
+
+cf_C0020w03 <- function( pEnv ){
+
+	cfObj <- list( idStr="C0020w03" )
+    cfObj$rawCfA <- cf_A0020( pEnv ,pBase=2 )
+    cfObj$rawCfB <- cf_A0030( pEnv ,pBase=2 )
+	cfObj$enc <- function( pZoidMtx ,pLogFunc=NULL ){
+
+		tStmp <- Sys.time()
+        aValLst <- cfObj$rawCfA$enc( pZoidMtx )
+        bValLst <- cfObj$rawCfB$enc( pZoidMtx )
+		val.len <- length(bValLst[[1]])
+        rLst <- lapply(1:length(aValLst),function(idx){
+                        cf_CUtil.4enc(aValLst[[idx]],bValLst[[idx]],pLen=val.len)
+                    })
+
+		if( !is.null(pLogFunc) ){
+			tDiff <- Sys.time() - tStmp
+			pLogFunc( sprintf("ID:%s cost:%.1f%s",cfObj$idStr,tDiff,units(tDiff)) )
+		}
+
+		return( rLst )
+	} # cfObj$enc()
+	cfObj$diffCnt <- function( p1 ,p2 ){
+		return( sum(p1!=p2) )
+	}
+
+	throughHisMtx <- matrix( 0 ,nrow=0 ,ncol=4 )
+	throughHisMtx <- rbind( throughHisMtx ,c( 2 ,3 ,3 ,2 ) )
+	throughHisMtx <- rbind( throughHisMtx ,c( 3 ,3 ,2 ,2 ) )
+	throughHisMtx <- rbind( throughHisMtx ,c( 4 ,2 ,2 ,2 ) )
+	throughHisMtx <- rbind( throughHisMtx ,c( 5 ,2 ,2 ,1 ) )
+	colnames(throughHisMtx) <- c("depth","hard","mid","easy") # 1%이내, 2%부근 ,5% 부근
+	cfObj$throughHisMtx <- throughHisMtx
+
+	return( cfObj )
+
+} # cf_C0020w03()
+
+cf_C0030w04 <- function( pEnv ){
+
+	cfObj <- list( idStr="C0030w04" )
+    cfObj$rawCfA <- cf_A0030( pEnv ,pBase=2 )
+    cfObj$rawCfB <- cf_A0040( pEnv ,pBase=2 )
+	cfObj$enc <- function( pZoidMtx ,pLogFunc=NULL ){
+
+		tStmp <- Sys.time()
+        aValLst <- cfObj$rawCfA$enc( pZoidMtx )
+        bValLst <- cfObj$rawCfB$enc( pZoidMtx )
+		val.len <- length(aValLst[[1]])
+        rLst <- lapply(1:length(aValLst),function(idx){
+                        cf_CUtil.4enc(aValLst[[idx]],bValLst[[idx]],pLen=val.len)
+                    })
+
+		if( !is.null(pLogFunc) ){
+			tDiff <- Sys.time() - tStmp
+			pLogFunc( sprintf("ID:%s cost:%.1f%s",cfObj$idStr,tDiff,units(tDiff)) )
+		}
+
+		return( rLst )
+	} # cfObj$enc()
+	cfObj$diffCnt <- function( p1 ,p2 ){
+		return( sum(p1!=p2) )
+	}
+
+	throughHisMtx <- matrix( 0 ,nrow=0 ,ncol=4 )
+	throughHisMtx <- rbind( throughHisMtx ,c( 2 ,3 ,3 ,2 ) )
+	throughHisMtx <- rbind( throughHisMtx ,c( 3 ,3 ,2 ,2 ) )
+	throughHisMtx <- rbind( throughHisMtx ,c( 4 ,2 ,2 ,2 ) )
+	throughHisMtx <- rbind( throughHisMtx ,c( 5 ,2 ,2 ,1 ) )
+	colnames(throughHisMtx) <- c("depth","hard","mid","easy") # 1%이내, 2%부근 ,5% 부근
+	cfObj$throughHisMtx <- throughHisMtx
+
+	return( cfObj )
+
+} # cf_C0030w04()
+
+
+
+
+
 

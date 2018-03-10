@@ -7,9 +7,10 @@ for( tIdx in testSpan ){
 
 	tEnv <- gEnv
 	tEnv$zhF <- gEnv$zhF[1:(tIdx-1),]
-	banObj <- getCFltObj( tEnv )
-
 	allZoidMtx <- gEnv$zhF[tIdx,,drop=F]
+
+	# ==================================================================
+	banObj <- getCFltObj( tEnv )
 	codeLst <- banObj$getCodeLst( allZoidMtx )
 
 	# -<hntSameRow>------------
@@ -45,6 +46,48 @@ for( tIdx in testSpan ){
 	# -<throughH2>------------
 	#	pBanObj<-banObj ;pZoidMtx<-allZoidMtx ;pCodeLst<-codeLst ;pInitZIdx=NULL ;pDimThld=2 ;pDepth=2
 	bRstObj <- ban.throughH2(banObj ,allZoidMtx ,pCodeLst=codeLst )
+	if( is.null(rstLst[[bRstObj$idStr]]) ){
+		rstLst[[bRstObj$idStr]] <- list()
+	}
+	rstLst[[bRstObj$idStr]][[1+length(rstLst[[bRstObj$idStr]])]] <- bRstObj
+
+	# ==================================================================
+	banCmbObj <- getCFltCmbObj( tEnv )
+	codeCmbLst <- banCmbObj$getCodeLst( allZoidMtx )
+
+	# -<hntSameRow>------------
+	bRstObj <- ban.hntSameRow(banCmbObj ,allZoidMtx ,pCodeLst=codeCmbLst)
+	if( is.null(rstLst[[bRstObj$idStr]]) ){
+		rstLst[[bRstObj$idStr]] <- list()
+	}
+	rstLst[[bRstObj$idStr]][[1+length(rstLst[[bRstObj$idStr]])]] <- bRstObj
+
+	# -<hntCrossDim>------------
+	bRstObj <- ban.hntCrossDim(banCmbObj ,allZoidMtx ,pCodeLst=codeCmbLst ,pDepth=2)
+	if( is.null(rstLst[[bRstObj$idStr]]) ){
+		rstLst[[bRstObj$idStr]] <- list()
+	}
+	rstLst[[bRstObj$idStr]][[1+length(rstLst[[bRstObj$idStr]])]] <- bRstObj
+
+	# -<multiDim>------------
+	#	pbanCmbObj<-banCmbObj ;pZoidMtx<-allZoidMtx ;pCodeLst<-codeCmbLst ;pInitZIdx=NULL ;pDimThld=2 ;pDepth=2
+	bRstObj <- ban.multiDim(banCmbObj ,allZoidMtx ,pCodeLst=codeCmbLst )
+	if( is.null(rstLst[[bRstObj$idStr]]) ){
+		rstLst[[bRstObj$idStr]] <- list()
+	}
+	rstLst[[bRstObj$idStr]][[1+length(rstLst[[bRstObj$idStr]])]] <- bRstObj
+
+	# -<throughH>------------
+	#	pbanCmbObj<-banCmbObj ;pZoidMtx<-allZoidMtx ;pCodeLst<-codeCmbLst ;pInitZIdx=NULL ;pDimThld=2 ;pDepth=2
+	bRstObj <- ban.throughH(banCmbObj ,allZoidMtx ,pCodeLst=codeCmbLst )
+	if( is.null(rstLst[[bRstObj$idStr]]) ){
+		rstLst[[bRstObj$idStr]] <- list()
+	}
+	rstLst[[bRstObj$idStr]][[1+length(rstLst[[bRstObj$idStr]])]] <- bRstObj
+
+	# -<throughH2>------------
+	#	pbanCmbObj<-banCmbObj ;pZoidMtx<-allZoidMtx ;pCodeLst<-codeCmbLst ;pInitZIdx=NULL ;pDimThld=2 ;pDepth=2
+	bRstObj <- ban.throughH2(banCmbObj ,allZoidMtx ,pCodeLst=codeCmbLst )
 	if( is.null(rstLst[[bRstObj$idStr]]) ){
 		rstLst[[bRstObj$idStr]] <- list()
 	}
