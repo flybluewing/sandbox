@@ -62,7 +62,7 @@ for( tIdx in testSpan ){
 	rstLst[[rstIdStr]][[1+length(rstLst[[rstIdStr]])]] <- bRstObj
 
 	# -<throughH>------------
-	#	pbanCmbObj<-banCmbObj ;pZoidMtx<-allZoidMtx ;pCodeLst<-codeCmbLst ;pInitZIdx=NULL ;pDimThld=2 ;pDepth=2
+	#	pbanCmbObj<-banCmbObj ;pZoidMtx<-allZoidMtx ;pCodeLst<-codeCmbLst ;pInitZIdx=NULL ;pDimThld=2 ;pDepth=2 ;pLevel="mid"
 	bRstObj <- ban.throughH(banCmbObj ,allZoidMtx ,pCodeLst=codeCmbLst )
 	rstIdStr <- sprintf("%s_comb",bRstObj$idStr)
 	rstLst[[rstIdStr]][[1+length(rstLst[[rstIdStr]])]] <- bRstObj
@@ -78,6 +78,9 @@ tDiff <- Sys.time() - tStmp
 
 filtedIdxLst <- list()
 for( idIdx in attributes(rstLst)$names ){
+	# if( idIdx %in% c("multiDim_comb","throughH_base") ){
+	# 	next
+	# }
 	filtedCnt <- sapply( rstLst[[idIdx]] ,function(p){ length(p$filtedIdx) } )
 	cat(sprintf("%s : %5.1f%%(%d/%d) \n",idIdx,100*sum(filtedCnt)/length(filtedCnt),sum(filtedCnt),length(filtedCnt)))
 	filtedIdxLst[[idIdx]] <- which(filtedCnt>0)
@@ -100,7 +103,7 @@ for( remIdx in 1:length(remLst) ){
 }
 
 
-chosenZ.idx <- which( fltCnt==2 )
+chosenZ.idx <- which( fltCnt==3 )
 # chosenZ.idx <- sort(sample(chosenZ.idx,100))
 chosenZMtx <- gEnv$allZoidMtx[chosenZ.idx,]
 
