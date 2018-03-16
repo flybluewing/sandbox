@@ -31,7 +31,7 @@ for( tIdx in testSpan ){
 
 	# -<throughH>------------
 	#	pBanObj<-banObj ;pZoidMtx<-allZoidMtx ;pCodeLst<-codeLst ;pInitZIdx=NULL ;pDimThld=2 ;pDepth=2
-	bRstObj <- ban.throughH(banObj ,allZoidMtx ,pCodeLst=codeLst )
+	bRstObj <- ban.throughH(banObj ,allZoidMtx ,pCodeLst=codeLst ,pLevel="hard" )
 	rstIdStr <- sprintf("%s_base",bRstObj$idStr)
 	rstLst[[rstIdStr]][[1+length(rstLst[[rstIdStr]])]] <- bRstObj
 
