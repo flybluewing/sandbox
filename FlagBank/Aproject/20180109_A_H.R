@@ -1,5 +1,55 @@
 # 20180109_A_H.R 마지막 시도가 되길..
 
+last3Ptn.ana <- function( pZhF ,pCol ,pThld=2 ){
+
+    colSpan <- if( pCol==1 ){ 1:3
+                } else if( pCol==6 ){ 4:6
+                } else { (pCol-1):(pCol+1) }
+
+    codeSpan <- sort( unique(pZhF[,pCol]) )
+    anaLst <- list()
+    for( codeIdx in codeSpan ){
+        stdCodeMtx <- pZhF[pZhF[,pCol]==codeIdx,,drop=F][,colSpan,drop=F]
+		mDist.all <- 1
+		if( 1<nrow(stdCodeMtx) ){
+			srMtx <- scanSameRow( stdCodeMtx )
+			mDist.all <- sort(srMtx[,"bIdx"] - srMtx[,"aIdx"])
+		}
+        
+        thldSize <- (nrow(stdCodeMtx)*pThld) %/% 100
+        thldSize <- ifelse(thldSize==0,1,thldSize)
+
+        mDist <- nrow(stdCodeMtx)
+        if( 0<length(mDist.all) ){
+            if( thldSize<=length(mDist.all) ){
+                mDist <- mDist.all[thldSize]
+            } else {
+                mDist <- mDist.all[length(mDist.all)]
+            }
+        }
+
+        anaObj <- list( col=pCol ,code=codeIdx ,mDist=mDist )
+        anaObj$stdCodeMtx <- stdCodeMtx[(nrow(stdCodeMtx)-mDist+1):nrow(stdCodeMtx),,drop=F]
+        anaObj$mDist.all <- mDist.all
+        anaObj$hunCnt <- nrow(stdCodeMtx)
+
+        anaLst[[1+length(anaLst)]] <- anaObj
+    } # codeIdx
+
+	rObj <- list(col=pCol ,anaLst=anaLst ,thld.per=pThld)
+	rObj$colSpan <- colSpan
+	rObj$codeSpan <- codeSpan
+	rObj$getAnaObj <- function( pCode ){
+		codeIdx <- which(rObj$codeSpan==pCode)
+		if( 0==length(codeIdx) ){
+			return( NULL )
+		}
+		return( rObj$anaLst[[codeIdx]] )
+	} # rObj$getAnaObj()
+
+    return( rObj )
+} # last3Ptn()
+
 getAllZoidIdx.FltCnt <- function( pEnv ,pRemLst ){
 	#   pEnv <- gEnv    ;pRemLst <- remLst
     fltCnt <- rep( 0 ,nrow(pEnv$allZoidMtx) )

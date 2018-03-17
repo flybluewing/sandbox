@@ -7,7 +7,7 @@ source("../breedingPlace/20171116_D_H.R")
 source("20180109_A_H.R")
 source("20180109_C_H.R")
 
-saveId <- "0127_23"
+saveId <- "Z797"
 load(sprintf("./save/Obj_gEnv%s.save",saveId))
 load(sprintf("./save/Obj_fRstLst%s.save",saveId))
 load(sprintf("./save/Obj_remLst%s.save",saveId))
