@@ -54,6 +54,123 @@ evalScan.pair <- function( pEVL ,pName ,pCFLst ,pThld=0 ){
 
 } # evalScan.pair()
 
+# 최근 pDepth만큼의 동일값 연속이 있는 지 확인.
+getColSeq <- function( pValMtx ,pDepth=2 ){
+
+	valLen <- nrow(pValMtx)
+	if(pDepth>valLen){
+		return( NULL )
+	}
+
+	stdVal <- pValMtx[valLen-pDepth+1 ,]
+	matFlag <- rep( TRUE ,length(stdVal) )
+	for( idx in (valLen-pDepth+2):valLen ){
+		matFlag <- matFlag & (pValMtx[idx,]==stdVal)
+	}
+
+	rObj <- list( stdVal=stdVal ,flag=matFlag ,depth=pDepth )
+	return( rObj )
+
+} # getColSeq()
+
+getBanPtn <- function( pValMtx ,pMaxDepth=5 ,pDebug=F ){
+
+	valLen <- nrow(pValMtx)
+	if( valLen < 2*2 ){	# 최소한 2번의 패턴반복이 나와야 하므로.
+		return( NULL )
+	}
+
+	ptnLst <- list()
+	for( dIdx in 2:pMaxDepth ){	# depthIdx
+		for( psIdx in 0:(dIdx-1) ){	# pattern slide(이하 pSlide로 약칭) index
+			if( valLen < (dIdx*2+psIdx) ){
+				break			# 최초 오버 이후로는 계속 크므로 dIdx를 위한 break는 추가할 필요 없음.
+			}
+			dSpan <- dIdx:1		# depth span
+			plateA <- pValMtx[valLen-(dSpan-1)		- psIdx	,]
+			plateB <- pValMtx[valLen-(dSpan-1)-dIdx	- psIdx	,]
+			matFlagMtx <- plateA==plateB
+			matFlagMtx[is.na(matFlagMtx)] <- FALSE
+			if( !any(matFlagMtx) ){
+				next	# 매치 자체가 없다.
+			}
+
+			plateB[!matFlagMtx] <- NA				# 매치되어야 할 부분 빼고는 모두 NA
+													# 따라서 plateB만 가지고도 패턴매치 확인 가능.
+			matRowIdx	<- 1
+			matRowVal	<- plateB[matRowIdx,]
+			matCnt		<- 0	# pSlide 내에서 확인된 매치 수. psIdx가 0이면 자연히 0
+			chkCnt		<- sum(!is.na(matRowVal))	# 다음 H에서 매치 확인해야 하는 갯수
+
+			if( psIdx>0 ){	# pSlide 영역 존재 시
+				matRowIdx <- matRowIdx + psIdx
+				matRowVal	<- plateB[matRowIdx,]
+
+				# pSlide 영역 내에서도 매치가 발견되는가? (plateB는 이미 매치될 부분만 남은 상태임을 참고)
+				valMtx.B 	<- plateB[1:psIdx,,drop=F]
+				valMtx.s 	<- pValMtx[(valLen-psIdx+1):valLen,,drop=F] # pSlide
+				psMatFlagMtx <- valMtx.B == valMtx.s
+				
+				matCnt		<- sum(!is.na(valMtx.B))	# pSlide 내에서 확인된 매치 수. psIdx가 0이면 자연히 0
+														# pSlide가 있음에도 불구하고 matCnt가 0인 경우에 대해 고려필요
+				if( matCnt != sum(psMatFlagMtx,na.rm=T) ){
+					next	# pSlide에서의 매치가 어긋났다...
+				}				
+				chkCnt		<- sum(!is.na(matRowVal))	# 다음 H에서 매치 확인해야 하는 갯수
+			}
+
+			if( 0==chkCnt ){
+				next	# 다음 H에서는 매치 확인할 게 없다...
+			}
+
+			ptnObj <- list( matCnt=matCnt ,chkCnt=chkCnt ,matVal=plateB[matRowIdx,] )
+			ptnObj$depth		<- dIdx
+			ptnObj$ptnSlide		<- psIdx
+			ptnObj$matFlagMtx	<- matFlagMtx
+			ptnObj$matValMtx	<- plateB
+			ptnObj$matFlag		<- matFlagMtx[matRowIdx,]
+
+			ptnLst[[1+length(ptnLst)]] <- ptnObj
+		}
+	} # dIdx
+
+	rObj <- list( ptnLst=ptnLst )
+	rObj$chkMatch <- function( pValMtx ,pDebug=F ){ 
+
+		rstLst <- list()
+		for( valIdx in 1:nrow(pValMtx) ){
+			ptnIdx <- integer(0)
+			for( pIdx in 1:length(rObj$ptnLst) ){
+				matCnt <- sum(rObj$ptnLst[[pIdx]]$matVal==pValMtx[valIdx,] ,na.rm=T)
+				if( matCnt==rObj$ptnLst[[pIdx]]$chkCnt ){
+					ptnIdx[1+length(ptnIdx)] <- pIdx
+					if( !pDebug ){
+						break	# 디버그 모드일 때 만 모든 ptn 체크하자.
+					}
+				}
+			}
+			rstLst[[1+length(rstLst)]] <- ptnIdx
+		} # valIdx
+
+		rstObj <- list( rstLst=rstLst )
+		if( pDebug ){
+			rstObj$chkCntLst <- lapply( rstLst ,function(ptnIdx){
+										sapply(rObj$ptnLst[ptnIdx] ,function(p){p$chkCnt})
+									})
+			rstObj$matCntLst <- lapply( rstLst ,function(ptnIdx){
+										sapply(rObj$ptnLst[ptnIdx] ,function(p){p$matCnt})
+									})
+			rstObj$ptnSlideLst <- lapply( rstLst ,function(ptnIdx){
+										sapply(rObj$ptnLst[ptnIdx] ,function(p){p$ptnSlide})
+									})
+		}
+		return( rstObj )
+
+	} # rObj$chkMatch()
+
+	return( rObj )
+
+} # getBanPtn()
 
 #   동일 패턴이 그대로 재발.
 #	pBanObj : getCFltObj() 리턴 값.
@@ -171,6 +288,8 @@ ban.multiDim <-function( pBanObj ,pZoidMtx ,pCodeLst ,pInitZIdx=NULL ,pDebug=F )
 	#	예외 리스트 정의
 	excFiltCmbLst <- list(	cmb0103=which(pBanObj$cfNames %in% c("A0010_o3","A0030_o3"))
 							,cmb0506=which(pBanObj$cfNames %in% c("A0050_o5","A0060_o7"))
+							,cmbC12_23=which(pBanObj$cfNames %in% c("C0010w02","C0020w03"))
+							,cmbC14_34=which(pBanObj$cfNames %in% c("C0010w04","C0030w04"))
 						)
 	isExcFiltCmb <- function( pFiltCmb ){
 		for( idx in 1:length(excFiltCmbLst) ){
@@ -202,15 +321,15 @@ ban.multiDim <-function( pBanObj ,pZoidMtx ,pCodeLst ,pInitZIdx=NULL ,pDebug=F )
 			}
 			matIdxLst	<- lapply(fndIdxLst ,function(pFndIdx){
 							hCodeLst <- lapply(pBanObj$encValLst,function(valLst){valLst[[pFndIdx]]})
-							matCnt <- sapply(pBanObj$cfNames,function(mName){
+							dCnt <- sapply(pBanObj$cfNames,function(mName){
 											pBanObj$cfObjLst[[mName]]$diffCnt( curCodeLst[[mName]] ,hCodeLst[[mName]] )
 										})
-							return( which(matCnt==0) )
+							return( which(dCnt==0) )
 						})
 			matCnt <- sapply(matIdxLst,length)
 			fndIdxLst <- fndIdxLst[matCnt>1]
 			matIdxLst <- matIdxLst[matCnt>1]
-			
+
 			if( 0<length(matIdxLst) ){
 				excFlag	<- sapply(matIdxLst,isExcFiltCmb)
 				fndIdxLst <- fndIdxLst[!excFlag]

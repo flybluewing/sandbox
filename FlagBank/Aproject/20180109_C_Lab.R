@@ -30,9 +30,7 @@ for( fnIdx in attributes(remLst)$names ){
 }
 azFltCnt <- sapply( azFltLst ,length )
 
-azflt.cnt1 <- sapply( azFltLst[which(azFltCnt==1)] ,function(p){p[1]} )
-#   tblPer.az <- table(azflt.cnt1)*100/length(azflt.cnt1)
-#   tblPer.az[c("A0100.A","A0110.A","AP000.E","C1000.A","AR000.B","D0000.A")]
+azFlt.cnt1 <- which(azFltCnt==1)
 
 azFlt.cnt0 <- which(azFltCnt==0)
 allZoidMtx <- gEnv$allZoidMtx[azFlt.cnt0,]

@@ -56,7 +56,7 @@ for( tIdx in testSpan ){
 	rstLst[[rstIdStr]][[1+length(rstLst[[rstIdStr]])]] <- bRstObj
 
 	# -<multiDim>------------
-	#	pbanCmbObj<-banCmbObj ;pZoidMtx<-allZoidMtx ;pCodeLst<-codeCmbLst ;pInitZIdx=NULL ;pDimThld=2 ;pDepth=2
+	#	pBanObj<-banCmbObj ;pZoidMtx<-allZoidMtx ;pCodeLst<-codeCmbLst ;pInitZIdx=NULL ;pDebug=T
 	bRstObj <- ban.multiDim(banCmbObj ,allZoidMtx ,pCodeLst=codeCmbLst )
 	rstIdStr <- sprintf("%s_comb",bRstObj$idStr)
 	rstLst[[rstIdStr]][[1+length(rstLst[[rstIdStr]])]] <- bRstObj
@@ -187,3 +187,45 @@ filtedIdx <- sort(unique(do.call( c ,rstLst )))
 
 
 
+working
+
+banObj <- getCFltObj(gEnv)
+valMtx <- do.call( rbind ,valLst )
+
+valMtx <- do.call( rbind ,banObj$encValLst[["A0010_o3"]] )
+valMtx[valMtx[,3]==0,3] <- NA
+valMtx[valMtx[,4]==0,4] <- NA
+valMtx <- valMtx %% 3
+rownames(valMtx) <- 1:nrow(valMtx)
+
+
+
+k.cnt <- apply(allZoidMtx ,1 ,function(p){ sum(p%in%c(5,22,31,45)) })
+
+tIdx <- 747
+tEnv <- gEnv
+tEnv$zhF <- gEnv$zhF[1:(tIdx-1),]
+allZoidMtx <- gEnv$zhF[tIdx,,drop=F]
+
+banObj <- getCFltObj( tEnv )
+codeLst <- banObj$getCodeLst( allZoidMtx )
+
+valMtx <- do.call( rbind ,banObj$encValLst[[1]] )
+
+pValMtx <- valMtx ;pMaxDepth=5 ;pDebug=F
+
+rLst <- list()
+for( vIdx in 600:nrow(valMtx) ){
+	banObj <- getBanPtn( valMtx[1:(vIdx-1),] )
+	banRst <- banObj$chkMatch( valMtx[vIdx,,drop=F] ,pDebug=T )
+
+	rObj <- list( ptnCnt=length(banObj$ptnLst) ,banRst=banRst$rstLst[[1]] )
+	rObj$banObj <- banObj
+	rLst[[1+length(rLst)]] <- rObj
+}
+
+sapply( rLst ,function(p){p$ptnCnt} )
+sapply( rLst ,function(p){length(p$banRst)} )
+sapply( rLst ,function(p){length(p$chkCntLst)} )
+sapply( rLst ,function(p){length(p$matCntLst)} )
+sapply( rLst ,function(p){length(p$ptnSlideLst)} )
