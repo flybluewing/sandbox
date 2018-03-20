@@ -184,6 +184,77 @@ filtedIdx <- sort(unique(do.call( c ,rstLst )))
 
 # ==================================================================
 
+val.getBanPtn <- function( ){
+
+	tIdx <- 747
+	tEnv <- gEnv
+	tEnv$zhF <- gEnv$zhF[1:(tIdx-1),]
+	allZoidMtx <- gEnv$zhF[tIdx,,drop=F]
+
+	# valMtx : 테스트 목적에 따라 만들기
+	banObj <- getCFltObj( tEnv )
+	codeLst <- banObj$getCodeLst( allZoidMtx )
+	valMtx <- do.call( rbind ,banObj$encValLst[[1]] )
+	rownames(valMtx) <- 1:nrow(valMtx)
+	
+	pValMtx <- valMtx ;pMaxDepth=5 ;pDebug=F
+
+	rLst <- list()
+	for( vIdx in 600:nrow(valMtx) ){
+		banObj <- getBanPtn( valMtx[1:(vIdx-1),] )
+		banRst <- banObj$chkMatch( valMtx[vIdx,,drop=F] ,pDebug=T )
+
+		rObj <- list( ptnCnt=length(banObj$ptnLst) ,banRst=banRst$rstLst[[1]] )
+		rObj$chkCnt		<- banRst$chkCntLst[[1]]
+		rObj$matCnt		<- banRst$matCntLst[[1]]
+		rObj$ptnSlide	<- banRst$ptnSlideLst[[1]]
+		rObj$banObj <- banObj
+		rLst[[1+length(rLst)]] <- rObj
+	}
+
+	ptnCnt <- sapply( rLst ,function(p){p$ptnCnt} )
+	banCnt <- sapply( rLst ,function(p){length(p$banRst)} )
+	tbl <- table(banCnt>0)
+	cat(sprintf("rstMtx all %d/%d (%.1f%%) \n",tbl["TRUE"],length(rLst),tbl["TRUE"]*100/length(rLst) ))
+
+	# banCnt.idx <- which(banCnt>2)
+	# lapply( rLst[banCnt.idx] ,function(p){p$chkCnt} )
+	# lapply( rLst[banCnt.idx] ,function(p){p$matCnt} )
+	# lapply( rLst[banCnt.idx] ,function(p){p$ptnSlide} )
+
+	cName <- c("rIdx","fail","depth","pSlide","chkCnt","matCnt")
+	rstMtx <- matrix( 0 ,nrow=0 ,ncol=length(cName) )
+	# for( rIdx in banCnt.idx ){
+	for( rIdx in 1:length(banCnt) ){
+		rObj <- rLst[[rIdx]]
+		mtx <- matrix( 0 ,nrow=rObj$ptnCnt ,ncol=length(cName) )
+		colnames(mtx)<-cName
+
+		mtx[,"rIdx"]	<- rIdx
+		mtx[,"depth"]	<- sapply(rObj$banObj$ptnLst ,function(p){p$depth})
+		mtx[rObj$banRst,"fail"] 	<- 1
+		mtx[,"pSlide"]	<- sapply(rObj$banObj$ptnLst,function(p){p$ptnSlide})
+		mtx[,"chkCnt"]	<- sapply(rObj$banObj$ptnLst,function(p){p$chkCnt})
+		mtx[,"matCnt"]	<- sapply(rObj$banObj$ptnLst,function(p){p$matCnt})
+		rstMtx <- rbind( rstMtx ,mtx )
+	}
+
+	anaMtx <- rstMtx
+	tbl <- table(anaMtx[,"fail"])
+	cat(sprintf("rstMtx all %d/%d (%.1f%%) \n",tbl["1"],nrow(anaMtx),tbl["1"]*100/nrow(anaMtx) ))
+
+	for( chkCnt in 1:4 ){
+		anaMtx <- rstMtx[rstMtx[,"chkCnt"]>chkCnt,]
+		failCnt <- sum(anaMtx[,"fail"]==1)
+		cat(sprintf("chkCnt>%d all %d/%d (%.1f%%) \n"
+				,chkCnt ,failCnt,nrow(anaMtx),failCnt*100/nrow(anaMtx) ))
+
+		failCnt <- sum(0<tapply( anaMtx[,"fail"] ,anaMtx[,"rIdx"] ,sum ))
+		cat(sprintf("    failCnt %d/%d (%.1f%%) \n"
+				,failCnt,length(rLst),failCnt*100/length(rLst) ))
+	}
+
+} # val.getBanPtn()
 
 
 
