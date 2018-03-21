@@ -74,6 +74,7 @@ getColSeq <- function( pValMtx ,pDepth=2 ){
 } # getColSeq()
 
 getBanPtn <- function( pValMtx ,pMaxDepth=5 ,pDebug=F ){
+	# val.getBanPtn() 함수 참고.
 
 	valLen <- nrow(pValMtx)
 	if( valLen < 2*2 ){	# 최소한 2번의 패턴반복이 나와야 하므로.
