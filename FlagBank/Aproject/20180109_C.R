@@ -7,7 +7,7 @@ source("../breedingPlace/20171116_D_H.R")
 source("20180109_A_H.R")
 source("20180109_C_H.R")
 
-saveId <- "Z797"
+saveId <- "Z798"
 load(sprintf("./save/Obj_gEnv%s.save",saveId))
 load(sprintf("./save/Obj_fRstLst%s.save",saveId))
 load(sprintf("./save/Obj_remLst%s.save",saveId))
@@ -17,19 +17,110 @@ stdFilted.tbl <- table(stdFiltedCnt)
 stdFilted.per <- sprintf( "%.1f" ,100*stdFilted.tbl / length(fRstLst) )
 names(stdFilted.per) <- names(stdFilted.tbl)
 
+allZoid.lst <- vector("list",nrow(gEnv$allZoidMtx))
+for( nIdx in attributes(remLst)$name ){
+    for( aIdx in remLst[[nIdx]] ){
+        allZoid.lst[[aIdx]][1+length(allZoid.lst[[aIdx]])] <- nIdx
+    }
+}
 
-banObj <- getCFltObj( gEnv )
-allZoidMtx <- gEnv$zhF
-codeLst <- banObj$getCodeLst( allZoidMtx )
-# 개발 샘플 시점.
 
 allZoid.fltCnt <- getAllZoidIdx.FltCnt( gEnv ,remLst )
-allZoidMtx <- gEnv$allZoidMtx[(allZoid.fltCnt==0),]
+# allZoidMtx <- gEnv$allZoidMtx[(allZoid.fltCnt==0),]
+
+lastZoid <- gEnv$zhF[nrow(gEnv$zhF),]
+# 가정 : allZoid.fltCnt 는 1~3이다.
+allZoid.idx0 <- which(allZoid.fltCnt==0)
+allZoid.idx1 <- which(allZoid.fltCnt==1)
+allZoid.idx2 <- which(allZoid.fltCnt==2)
+
+# 가정 : zoid[1]==1
+flag <- sapply( allZoid.idx0 ,function( p ){ gEnv$allZoidMtx[p,1] == 1 })
+allZoid.idx0 <- allZoid.idx0[flag]
+flag <- sapply( allZoid.idx1 ,function( p ){ gEnv$allZoidMtx[p,1] == 1 })
+allZoid.idx1 <- allZoid.idx1[flag]
+flag <- sapply( allZoid.idx2 ,function( p ){ gEnv$allZoidMtx[p,1] == 1 })
+allZoid.idx2 <- allZoid.idx2[flag]
+
+# 가정 : 22,32는 포함되지 않는다.
+flag <- sapply( allZoid.idx0 ,function( p ){ !any(c(22,23) %in%gEnv$allZoidMtx[p,]) })
+allZoid.idx0 <- allZoid.idx0[flag]
+flag <- sapply( allZoid.idx1 ,function( p ){ !any(c(22,23) %in%gEnv$allZoidMtx[p,]) })
+allZoid.idx1 <- allZoid.idx1[flag]
+flag <- sapply( allZoid.idx2 ,function( p ){ !any(c(22,23) %in%gEnv$allZoidMtx[p,]) })
+allZoid.idx2 <- allZoid.idx2[flag]
+
+# 가정 : 연속 값은 1개이다.
+flag <- sapply( allZoid.idx0 ,function( p ){ 1==sum(c(2,10,14,36) %in%gEnv$allZoidMtx[p,]) })
+allZoid.idx0 <- allZoid.idx0[flag]
+flag <- sapply( allZoid.idx1 ,function( p ){ 1==sum(c(2,10,14,36) %in%gEnv$allZoidMtx[p,]) })
+allZoid.idx1 <- allZoid.idx1[flag]
+flag <- sapply( allZoid.idx2 ,function( p ){ 1==sum(c(2,10,14,36) %in%gEnv$allZoidMtx[p,]) })
+allZoid.idx2 <- allZoid.idx2[flag]
+
+# 가정 : allZoid.fltCnt의 1영역에서, 바로이전 필터링 결과는 포함되지 않는다.
+#   단, 과거에 일어난 필터링만 사용한다.
+#   단 1영역에서 "A0110.A" 반복은 제외(반복 발생량의 60%)
+stdFiltedCnt.idx1 <- which(stdFiltedCnt==1)
+lastFlt <- fRstLst[[ stdFiltedCnt.idx1[[length(stdFiltedCnt.idx1)]] ]]
+fName <- do.call( c ,allZoid.lst[allZoid.idx1] )
+allZoid.idx1 <- allZoid.idx1[fName!=lastFlt]
+
+neverFnd <- setdiff( attributes(remLst)$name ,unique(do.call(c,fRstLst[stdFiltedCnt==1])) )
+fName <- do.call( c ,allZoid.lst[allZoid.idx1] )
+flag <- sapply( allZoid.lst[allZoid.idx1] ,function(p){ p%in%neverFnd })
+allZoid.idx1 <- allZoid.idx1[!flag]
+
+
+# 가정 : allZoid.fltCnt의 2영역에서, 바로이전 필터링 결과는 포함되지 않는다.
+#   단, 과거에 일어난 필터링 조합만 사용한다.
+stdFiltedCnt.idx2 <- which(stdFiltedCnt==2)
+lastFlt <- fRstLst[[ stdFiltedCnt.idx2[[length(stdFiltedCnt.idx2)]] ]]
+lastFlt.name <- paste(sort(lastFlt),collapse="_")
+flag <- sapply( allZoid.lst[allZoid.idx2] ,function(p){
+                    lastFlt.name != paste(sort(p),collapse="_")
+                })
+allZoid.idx2 <- allZoid.idx2[flag]
+
+hnt.name <- unique(sapply(fRstLst[stdFiltedCnt.idx2] ,function(p){ paste(sort(p),collapse="_") } ))
+flag <- sapply( allZoid.lst[allZoid.idx2] ,function(p){
+                    return( paste(sort(p),collapse="_") %in% hnt.name )
+                })
+allZoid.idx2 <- allZoid.idx2[flag]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+fRstLst.cnt <- sapply( fRstLst ,length )
+kMtx <- do.call(rbind, fRstLst[fRstLst.cnt==1] )
+dupCnt <- sum( kMtx[2:nrow(kMtx),]==kMtx[1:(nrow(kMtx)-1),] )
+cat(sprintf("dup : %d of %d\n",dupCnt,nrow(kMtx)))
+fRstLst.cnt <- sapply( fRstLst ,length )
+kMtx <- do.call(rbind, fRstLst[fRstLst.cnt==2] )
+dupCnt <- sum( all(kMtx[2:nrow(kMtx),]==kMtx[1:(nrow(kMtx)-1),]) )
+cat(sprintf("dup : %d of %d\n",dupCnt,nrow(kMtx)))
+
 
 tStmp <- Sys.time()
-filtedIdxObj <- banObj$getFiltedIdx( allZoidMtx )
-filtedIdx <- unique( filtedIdxObj$filtedIdx.dupRow ,filtedIdxObj$filtedIdx.cf1 )
-    # filtedIdxObj$filtedIdx.dupRow 에게 모두 파묻히는 거 같은데.. 뭔가 수상타?
 tDiff <- Sys.time() - tStmp
 cat(sprintf("time cost %.1f%s \n",tDiff,units(tDiff)))
 
