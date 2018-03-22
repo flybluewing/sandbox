@@ -1260,7 +1260,148 @@ cf_C0030w04 <- function( pEnv ){
 } # cf_C0030w04()
 
 
+cutEadge.colValCut <- function( gEnv ,allIdx ,colValLst ){
 
+    surviveMtx <- matrix( F ,nrow=length(allIdx) ,ncol=6 )
 
+    colIdx <- 1
+    valMtx <- colValLst[[colIdx]]
+    availVal <- valMtx["val", valMtx["freq",]>5 ]
+    surviveMtx[,colIdx] <- apply( gEnv$allZoidMtx[allIdx,] ,1 ,function(p){p[colIdx]%in%availVal})
+
+    colIdx <- 2
+    valMtx <- colValLst[[colIdx]]
+    availVal <- valMtx["val", valMtx["freq",]>5 ]
+    surviveMtx[,colIdx] <- apply( gEnv$allZoidMtx[allIdx,] ,1 ,function(p){p[colIdx]%in%availVal})
+
+    colIdx <- 3
+    valMtx <- colValLst[[colIdx]]
+    availVal <- valMtx["val", valMtx["freq",]>5 ]
+    surviveMtx[,colIdx] <- apply( gEnv$allZoidMtx[allIdx,] ,1 ,function(p){p[colIdx]%in%availVal})
+
+    colIdx <- 4
+    valMtx <- colValLst[[colIdx]]
+    availVal <- valMtx["val", valMtx["freq",]>5 ]
+    surviveMtx[,colIdx] <- apply( gEnv$allZoidMtx[allIdx,] ,1 ,function(p){p[colIdx]%in%availVal})
+
+    colIdx <- 5
+    valMtx <- colValLst[[colIdx]]
+    availVal <- valMtx["val", valMtx["freq",]>5 ]
+    surviveMtx[,colIdx] <- apply( gEnv$allZoidMtx[allIdx,] ,1 ,function(p){p[colIdx]%in%availVal})
+
+    colIdx <- 6
+    valMtx <- colValLst[[colIdx]]
+    availVal <- valMtx["val", valMtx["freq",]>5 ]
+    surviveMtx[,colIdx] <- apply( gEnv$allZoidMtx[allIdx,] ,1 ,function(p){p[colIdx]%in%availVal})
+
+    rObj <- list( idStr="cutEadge.colValCut" )
+    rObj$flag <- apply( surviveMtx ,1 ,all )
+    return( rObj )
+
+} # cutEadge.colVal()
+
+cutEadge.dup3Col <- function( gEnv ,allIdx ,colValLst ,pThld=5 ){
+
+    surviveMtx <- matrix( TRUE ,nrow=length(allIdx) ,ncol=6 )
+    for( colIdx in 1:6 ){
+        lastPtnObj <- last3Ptn.ana( gEnv$zhF ,colIdx ,pThld=pThld )
+        colSpan <- lastPtnObj$colSpan
+
+        colFlag <- rep( TRUE ,length(allIdx) )
+        for( aIdx in 1:length(allIdx) ){
+            anaObj <- lastPtnObj$getAnaObj( allZoidMtx[aIdx,colIdx] )
+            if( is.null(anaObj) ){
+                next
+            }
+            for( stdIdx in 1:nrow(anaObj$stdCodeMtx) ){
+                if( all(anaObj$stdCodeMtx[stdIdx,]==allZoidMtx[aIdx,colSpan] ) ){
+                    colFlag[aIdx] <- FALSE
+                    break
+                }
+            }
+        } # aIdx
+        surviveMtx[,colIdx] <- colFlag
+    }
+
+    rObj <- list( idStr="cutEadge.dup3Col" )
+    rObj$flag <- apply( surviveMtx ,1 ,all )
+    return( rObj )
+
+} # cutEadge.dup3Col()
+
+cutEadge.getCFltObj <- function( gEnv ,allIdx ){
+
+    allZoidMtx <- gEnv$allZoidMtx[allIdx,]
+    bRstObjLst <- list()
+
+    banObj <- getCFltObj( gEnv )
+    codeLst <- banObj$getCodeLst( allZoidMtx )
+    bRstObj <- ban.hntSameRow(banObj ,allZoidMtx ,pCodeLst=codeLst)
+    bRstObjLst[[1+length(bRstObjLst)]] <- bRstObj$filtedIdx
+    bRstObj <- ban.hntCrossDim(banObj ,allZoidMtx ,pCodeLst=codeLst ,pDepth=2)
+    bRstObjLst[[1+length(bRstObjLst)]] <- bRstObj$filtedIdx
+    bRstObj <- ban.multiDim(banObj ,allZoidMtx ,pCodeLst=codeLst )
+    bRstObjLst[[1+length(bRstObjLst)]] <- bRstObj$filtedIdx
+    bRstObj <- ban.throughH(banObj ,allZoidMtx ,pCodeLst=codeLst ,pLevel="hard" )
+    bRstObjLst[[1+length(bRstObjLst)]] <- bRstObj$filtedIdx
+    bRstObj <- ban.throughH2(banObj ,allZoidMtx ,pCodeLst=codeLst ,pLevel="hard" )
+    bRstObjLst[[1+length(bRstObjLst)]] <- bRstObj$filtedIdx
+
+    banCmbObj <- getCFltCmbObj( gEnv )
+    codeCmbLst <- banCmbObj$getCodeLst( allZoidMtx )
+    bRstObj <- ban.hntSameRow(banCmbObj ,allZoidMtx ,pCodeLst=codeCmbLst)
+    bRstObjLst[[1+length(bRstObjLst)]] <- bRstObj$filtedIdx
+    bRstObj <- ban.hntCrossDim(banCmbObj ,allZoidMtx ,pCodeLst=codeCmbLst ,pDepth=2)
+    bRstObjLst[[1+length(bRstObjLst)]] <- bRstObj$filtedIdx
+    bRstObj <- ban.multiDim(banCmbObj ,allZoidMtx ,pCodeLst=codeCmbLst )
+    bRstObjLst[[1+length(bRstObjLst)]] <- bRstObj$filtedIdx
+    bRstObj <- ban.throughH(banCmbObj ,allZoidMtx ,pCodeLst=codeCmbLst )
+    bRstObjLst[[1+length(bRstObjLst)]] <- bRstObj$filtedIdx
+    bRstObj <- ban.throughH2(banCmbObj ,allZoidMtx ,pCodeLst=codeCmbLst )
+    bRstObjLst[[1+length(bRstObjLst)]] <- bRstObj$filtedIdx
+
+    filtedCnt <- rep( 0 ,length(allIdx) ) # qqe work
+    for( idx in 1:length(bRstObjLst) ){
+        filtedIdx <- bRstObjLst[[idx]]
+        filtedCnt[filtedIdx] <- 1 + filtedCnt[filtedIdx]
+    }
+
+    rObj <- list( idStr="cutEadge.getCFltObj" )
+    rObj$flag <- filtedCnt==0
+    return( rObj )
+
+} # cutEadge.getCFltObj()
+
+cutEadge.remLstHard <- function( gEnv ,allIdx ){
+	# 최저 기준
+    logFile <- sprintf("./log/allZoidMtx%s_hard.log",saveId)
+    tEnv <- list( allZoidMtx = gEnv$allZoidMtx[allIdx,]
+                    ,zhF = gEnv$zhF
+                    ,logFile = logFile
+                    ,doLog = TRUE
+                )
+    tEnv$log <- function( pMsg ){ if(tEnv$doLog) k.FLog(pMsg ,pFile=tEnv$logFile) }
+    tEnv$logStr <- function( pMsg ){ if(tEnv$doLog) k.FLogStr( pMsg ,pFile=tEnv$logFile) }
+
+    tStmp <- Sys.time()
+    filtFuncLst.hard <- getFiltLst.hard()
+    remLst.hard <- list()
+    for( fIdx in 1:length(filtFuncLst.hard) ){
+        rstObj <- filtFuncLst.hard[[fIdx]]( tEnv )	# 소요시간 rstObj$tCost
+        remLst.hard[[rstObj$filtId]] <- which( !rstObj$flag )
+        tDiff <- Sys.time() - tStmp
+    } # fIdx
+    tDiff <- Sys.time() - tStmp
+
+    surviveMtx <- matrix( TRUE ,nrow=length(allIdx) ,ncol=length(remLst.hard) )
+    for( idx in 1:length(remLst.hard) ){
+        surviveMtx[remLst.hard[[idx]] ,idx] <- FALSE
+    }
+
+    rObj <- list( idStr="cutEadge.remLstHard" )
+    rObj$flag <- apply( surviveMtx ,1 ,all )    # QQE:work
+    return( rObj )
+
+} # cutEadge.remLstHard()
 
 

@@ -184,6 +184,24 @@ filtedIdx <- sort(unique(do.call( c ,rstLst )))
 
 # ==================================================================
 
+val.getColSeq <- function(){
+
+	tIdx <- 747
+	tEnv <- gEnv
+	tEnv$zhF <- gEnv$zhF[1:(tIdx-1),]
+	allZoidMtx <- gEnv$zhF[tIdx,,drop=F]
+
+	depth <- 3
+	seqLst <- list()
+	for( tIdx in 500:nrow(gEnv$zhF) ){
+		valMtx <- gEnv$zhF[1:tIdx,]
+		seqLst[[1+length(seqLst)]] <- getColSeq( valMtx ,pDepth=depth )
+	}
+
+	cnt <- sapply( seqLst ,function(p){ sum(p$flag) })
+
+} # val.getColSeq()
+
 val.getBanPtn <- function( ){
 
 	tIdx <- 747

@@ -189,7 +189,7 @@ getPtnRebGrp <- function( pStdMtx ,pNextJump=1 ){
 
 	filtGrpLst <- list()
 	for( filtColNum in ncol(pStdMtx):2 ){
-		chkColMtx <- combinations(ncol(zhF),filtColNum)
+		chkColMtx <- combinations( 6 ,filtColNum)	# combinations(ncol(zhF),filtColNum)
 		filtLst <- list()
 		for( chkColIdx in 1:nrow(chkColMtx) ){
 			filtObj <- list( filtCol=chkColMtx[chkColIdx,] )

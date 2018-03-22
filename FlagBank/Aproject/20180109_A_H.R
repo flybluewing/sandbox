@@ -16,8 +16,8 @@ last3Ptn.ana <- function( pZhF ,pCol ,pThld=2 ){
 			mDist.all <- sort(srMtx[,"bIdx"] - srMtx[,"aIdx"])
 		}
         
-        thldSize <- (nrow(stdCodeMtx)*pThld) %/% 100
-        thldSize <- ifelse(thldSize==0,1,thldSize)
+        thldSize <- round( (nrow(stdCodeMtx)*pThld)/100 )
+        thldSize <- ifelse(thldSize<1,1,thldSize)
 
         mDist <- nrow(stdCodeMtx)
         if( 0<length(mDist.all) ){

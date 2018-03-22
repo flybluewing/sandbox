@@ -88,16 +88,93 @@ flag <- sapply( allZoid.lst[allZoid.idx2] ,function(p){
                 })
 allZoid.idx2 <- allZoid.idx2[flag]
 
+# 가정 : zoid[4]%%10은 2가 아님.
+
+#   allIdx <- allZoid.idx1
+cutEadge <- function( gEnv ,allIdx ){
+
+    allZoidMtx <- gEnv$allZoidMtx[allIdx,]
+    colValLst <- apply( gEnv$zhF ,2 ,function(p){
+                        val <- sort(unique(p))
+                        tbl <- table(p)
+                        mtx <- matrix( 0 ,ncol=length(val) ,nrow=2 )
+                        mtx[1,] <- val
+                        mtx[2,] <- tbl[as.character(val)]
+                        rownames(mtx) <- c("val","freq")
+                        return(mtx)
+                    })
+
+    rstObj <- cutEadge.colValCut( gEnv ,allIdx ,colValLst )
+    allIdx <- allIdx[rstObj$flag]
+
+    rstObj <- cutEadge.dup3Col( gEnv ,allIdx ,colValLst ,pThld=5 )  # pThld^6 에 비해 효과는 좋음.
+    allIdx <- allIdx[rstObj$flag]
+
+    rstObj <- cutEadge.getCFltObj( gEnv ,allIdx )
+    allIdx <- allIdx[rstObj$flag]
+
+    rstObj <- cutEadge.getCFltObj( gEnv ,allIdx )
+    allIdx <- allIdx[rstObj$flag]
+
+    rstObj <- cutEadge.remLstHard( gEnv ,allIdx )
+    allIdx <- allIdx[rstObj$flag]
+
+    allIdx.bak <- allIdx
+
+} # cutEadge()
 
 
 
 
 
+cutEadge.getColSeq <- function( gEnv ,allIdx ){
+
+    colValLst <- apply( gEnv$allZoidMtx[allIdx,,drop=F] ,2 ,function(p){ sort(unique(p)) })
+
+
+    for( colIdx in 1:length(colValLst) ){
+        for( valIdx in colValLst[[colIdx]] ){
+            valMtx <- gEnv$zhF[gEnv$zhF[,colIdx]==valIdx ,]
+            seqObj <- getColSeq( valMtx ,pDepth=2 )
+
+            fndSeqIdx <- setdiff( which(seqObj$flag) ,colIdx )
+            if( 0==length(fndSeqIdx) ){
+                next
+            }
+
+            # QQE working
+        }
+    } # colIdx
+
+    # zhF 에 대해서도 getColSeq() 적용.
+
+    seqLst[[1+length(seqLst)]] <- getColSeq( valMtx ,pDepth=depth )
+
+    rObj <- list( idStr="cutEadge.getColSeq" )
+    rObj$flag <- apply( surviveMtx ,1 ,all )
+    return( rObj )
+
+} # cutEadge.getColSeq()
+
+
+# > tail(valMtx)
+#         E1 E2 E3 E4 E5 E6
+#     745  1  2  3  9 12 23
+#     750  1  2 15 19 24 36
+#     762  1  3 12 21 26 41
+#     765  1  3  8 12 42 43
+#     770  1  9 12 23 39 43
+#     796  1 21 26 36 40 41
 
 
 
+cutEadge.XXXX <- function( gEnv ,allIdx ){
 
+    rObj <- list( idStr="cutEadge.XXXX" )
+    rObj$flag <- apply( surviveMtx ,1 ,all )
+    return( rObj )
 
+} # cutEadge.XXXX()
 
 
 
