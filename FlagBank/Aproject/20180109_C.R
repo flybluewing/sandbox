@@ -50,6 +50,14 @@ allZoid.idx1 <- allZoid.idx1[flag]
 flag <- sapply( allZoid.idx2 ,function( p ){ !any(c(22,23) %in%gEnv$allZoidMtx[p,]) })
 allZoid.idx2 <- allZoid.idx2[flag]
 
+# 가정 : zoid[4]%%10은 2가 아님.
+flag <- sapply( allZoid.idx0 ,function(p){ 2!=gEnv$allZoidMtx[p,4]%%10 } )
+allZoid.idx0 <- allZoid.idx0[flag]
+flag <- sapply( allZoid.idx1 ,function(p){ 2!=gEnv$allZoidMtx[p,4]%%10 } )
+allZoid.idx1 <- allZoid.idx1[flag]
+flag <- sapply( allZoid.idx2 ,function(p){ 2!=gEnv$allZoidMtx[p,4]%%10 } )
+allZoid.idx2 <- allZoid.idx2[flag]
+
 # 가정 : 연속 값은 1개이다.
 flag <- sapply( allZoid.idx0 ,function( p ){ 1==sum(c(2,10,14,36) %in%gEnv$allZoidMtx[p,]) })
 allZoid.idx0 <- allZoid.idx0[flag]
@@ -88,9 +96,8 @@ flag <- sapply( allZoid.lst[allZoid.idx2] ,function(p){
                 })
 allZoid.idx2 <- allZoid.idx2[flag]
 
-# 가정 : zoid[4]%%10은 2가 아님.
 
-#   allIdx <- allZoid.idx1
+#   allIdx <- allZoid.idx1  ;allIdx.bak <- allIdx
 cutEadge <- function( gEnv ,allIdx ){
 
     allZoidMtx <- gEnv$allZoidMtx[allIdx,]
@@ -119,52 +126,45 @@ cutEadge <- function( gEnv ,allIdx ){
     rstObj <- cutEadge.remLstHard( gEnv ,allIdx )
     allIdx <- allIdx[rstObj$flag]
 
+    rstObj <- cutEadge.getColSeq( gEnv ,allIdx )
+    allIdx <- allIdx[rstObj$flag]
+
+    rstObj <- cutEadge.getBanPtn( gEnv ,allIdx )
+    allIdx <- allIdx[rstObj$flag]
+    # cutEadge.getBanPtnColVal() 컬럼 값 별,
+    # cutEadge.getBanPtnRem10() %% 10 에 대한 ptn
+
     allIdx.bak <- allIdx
 
 } # cutEadge()
 
 
 
+cutEadge.getBanPtn <- function( gEnv ,allIdx ,pThldChk=1 ){
+
+    banObj <- getBanPtn( gEnv$zhF )
+    chkCnt <- sapply(banObj$ptnLst ,function(p){p$chkCnt})
+    thldPtnIdx <- which(chkCnt<pThldChk)    # chkCnt에 대한 갯수 기준.
+
+    banRst <- banObj$chkMatchAny( gEnv$allZoidMtx[allIdx,,drop=F] ,pDebug=T )
+    rstLst <- banRst$rstLst
+    #   chkMatchAny() 가 사용된다면 pThldChk는 의미없다.
+    # rstLst <- lapply( banRst$rstLst ,function(p){ setdiff(p,thldPtnIdx) })
+
+    rObj <- list( idStr="cutEadge.getBanPtn" )
+    rObj$flag <- ( 0==sapply(rstLst,length) )
+    return( rObj )
+
+} # cutEadge.getBanPtn()
 
 
-cutEadge.getColSeq <- function( gEnv ,allIdx ){
+cutEadge.getBanSym <- function( gEnv ,allIdx ){
 
-    colValLst <- apply( gEnv$allZoidMtx[allIdx,,drop=F] ,2 ,function(p){ sort(unique(p)) })
-
-
-    for( colIdx in 1:length(colValLst) ){
-        for( valIdx in colValLst[[colIdx]] ){
-            valMtx <- gEnv$zhF[gEnv$zhF[,colIdx]==valIdx ,]
-            seqObj <- getColSeq( valMtx ,pDepth=2 )
-
-            fndSeqIdx <- setdiff( which(seqObj$flag) ,colIdx )
-            if( 0==length(fndSeqIdx) ){
-                next
-            }
-
-            # QQE working
-        }
-    } # colIdx
-
-    # zhF 에 대해서도 getColSeq() 적용.
-
-    seqLst[[1+length(seqLst)]] <- getColSeq( valMtx ,pDepth=depth )
-
-    rObj <- list( idStr="cutEadge.getColSeq" )
+    rObj <- list( idStr="cutEadge.getBanSym" )
     rObj$flag <- apply( surviveMtx ,1 ,all )
     return( rObj )
 
-} # cutEadge.getColSeq()
-
-
-# > tail(valMtx)
-#         E1 E2 E3 E4 E5 E6
-#     745  1  2  3  9 12 23
-#     750  1  2 15 19 24 36
-#     762  1  3 12 21 26 41
-#     765  1  3  8 12 42 43
-#     770  1  9 12 23 39 43
-#     796  1 21 26 36 40 41
+} # cutEadge.getBanSym()
 
 
 
@@ -180,30 +180,64 @@ cutEadge.XXXX <- function( gEnv ,allIdx ){
 
 
 
+    # 짝 패턴 : [787:790,1] ,홀 패턴 : [789:793,3]
+	# 	787  5  6 13 16 27 28
+	# 	788  2 10 11 19 35 39
+	# 	789  2  6  7 12 19 45
+	# 	790  3  8 19 27 30 41
+	# 	791  2 10 12 31 33 42
+	# 	792  2  7 19 25 29 36
+	# 	793 10 15 21 35 38 43
+
+#   컬럼 값에서 연속으로 대칭발생 ban
+getBanSeqSym <- function( pValMtx ,pMaxDepth=5 ,pDepbug=F ){
 
 
 
+	valLen <- nrow(pValMtx)
+	if( 4>valLen || pDepth>valLen ){	# 4이상 필요(최소한 1,2,3,2,? 패턴은 가능해야...)
+		return( NULL )
+	}
 
 
+	rObj <- list( stdVal=stdVal ,flag=matFlag ,depth=pDepth )
+	return( rObj )
 
+} # getBanSeqSym()
 
-fRstLst.cnt <- sapply( fRstLst ,length )
-kMtx <- do.call(rbind, fRstLst[fRstLst.cnt==1] )
-dupCnt <- sum( kMtx[2:nrow(kMtx),]==kMtx[1:(nrow(kMtx)-1),] )
-cat(sprintf("dup : %d of %d\n",dupCnt,nrow(kMtx)))
-fRstLst.cnt <- sapply( fRstLst ,length )
-kMtx <- do.call(rbind, fRstLst[fRstLst.cnt==2] )
-dupCnt <- sum( all(kMtx[2:nrow(kMtx),]==kMtx[1:(nrow(kMtx)-1),]) )
-cat(sprintf("dup : %d of %d\n",dupCnt,nrow(kMtx)))
+#   3,2,1,1,2,? 패턴
+col.fndSymEven <- function( pVal ,pMaxDepth=5 ){
+    
+    if( 3>length(pVal) ){   # 2,1,1,?
+        return(NULL)
+    }
 
+    ptn <- integer(0)
+    eadgeVal <- NA
+    for( dIdx in 1:pMaxDepth ){
+        if(  ){
+            break
+        }
+    } # for(dIdx)
 
-tStmp <- Sys.time()
-tDiff <- Sys.time() - tStmp
-cat(sprintf("time cost %.1f%s \n",tDiff,units(tDiff)))
+    if( is.na(eadgeVal) ){  return(NULL)
+    } else {
+        return( list(banVal=eadgeVal ,ptn=ptn) )
+    }
+
+} # col.fndSymEven()
+
+#   3,2,1,2,? 패턴
+col.fndSymOdd <- function( pVal ,pMaxDepth=5 ){
+
+    if( 4>length(pVal) ){   # 3,2,1,2,?
+        return(NULL)
+    }
+
+} # col.fndSymOdd()
+
 
 # ===============================================================================
-
-
 
 
 

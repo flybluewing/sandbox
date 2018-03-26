@@ -136,12 +136,12 @@ getBanPtn <- function( pValMtx ,pMaxDepth=5 ,pDebug=F ){
 	} # dIdx
 
 	rObj <- list( ptnLst=ptnLst )
-	rObj$chkMatch <- function( pValMtx ,pDebug=F ){ 
+	rObj$chkMatchAll <- function( pValMtx ,pDebug=F ){ 
 
 		rstLst <- list()
 		for( valIdx in 1:nrow(pValMtx) ){
 			ptnIdx <- integer(0)
-			for( pIdx in 1:length(rObj$ptnLst) ){
+			for( pIdx in seq_len(length(rObj$ptnLst)) ){
 				matCnt <- sum(rObj$ptnLst[[pIdx]]$matVal==pValMtx[valIdx,] ,na.rm=T)
 				if( matCnt==rObj$ptnLst[[pIdx]]$chkCnt ){
 					ptnIdx[1+length(ptnIdx)] <- pIdx
@@ -167,11 +167,41 @@ getBanPtn <- function( pValMtx ,pMaxDepth=5 ,pDebug=F ){
 		}
 		return( rstObj )
 
-	} # rObj$chkMatch()
+	} # rObj$chkMatchAll()
+	rObj$chkMatchAny <- function( pValMtx ,pDebug=F ){
+
+		rstLst <- list()
+		for( valIdx in 1:nrow(pValMtx) ){
+			ptnIdx <- integer(0)
+			for( pIdx in seq_len(length(rObj$ptnLst)) ){
+				if( any(rObj$ptnLst[[pIdx]]$matVal==pValMtx[valIdx,],na.rm=T) ){
+					ptnIdx[1+length(ptnIdx)] <- pIdx
+				}
+			}
+			rstLst[[1+length(rstLst)]] <- ptnIdx
+		} # valIdx
+
+		rstObj <- list( rstLst=rstLst )
+		if( pDebug ){
+			rstObj$chkCntLst <- lapply( rstLst ,function(ptnIdx){
+										sapply(rObj$ptnLst[ptnIdx] ,function(p){p$chkCnt})
+									})
+			rstObj$matCntLst <- lapply( rstLst ,function(ptnIdx){
+										sapply(rObj$ptnLst[ptnIdx] ,function(p){p$matCnt})
+									})
+			rstObj$ptnSlideLst <- lapply( rstLst ,function(ptnIdx){
+										sapply(rObj$ptnLst[ptnIdx] ,function(p){p$ptnSlide})
+									})
+		}
+		return( rstObj )
+
+	} # rObj$chkMatchAny()
+
 
 	return( rObj )
 
 } # getBanPtn()
+
 
 #   동일 패턴이 그대로 재발.
 #	pBanObj : getCFltObj() 리턴 값.
@@ -1403,5 +1433,75 @@ cutEadge.remLstHard <- function( gEnv ,allIdx ){
     return( rObj )
 
 } # cutEadge.remLstHard()
+
+
+cutEadge.getColSeq <- function( gEnv ,allIdx ){
+
+    colValLst <- apply( gEnv$allZoidMtx[allIdx,,drop=F] ,2 ,function(p){ sort(unique(p)) })
+
+	# apply( gEnv$allZoidMtx[allIdx,,drop=F] ,2 ,function(p){ sort(unique(p)) } )
+
+
+    fltMtx.col <- matrix( 0 ,nrow=length(allIdx) ,ncol=length(colValLst) )
+    for( colIdx in 1:length(colValLst) ){
+        for( valIdx in colValLst[[colIdx]] ){
+            valMtx <- gEnv$zhF[gEnv$zhF[,colIdx]==valIdx , ,drop=F]
+            if( 2>nrow(valMtx) ){
+                next
+            }
+
+            seqObj <- getColSeq( valMtx ,pDepth=2 )
+            seqIdx <- setdiff( which(seqObj$flag) ,colIdx )
+            if( 0==length(seqIdx) ){  # 반복이 자기 자신뿐이라면...
+                next
+            }
+
+            fltPtn <- valMtx[nrow(valMtx), seqIdx ]
+            flag <- apply( gEnv$allZoidMtx[allIdx,,drop=F] ,1 ,function(zoid){ 
+                            (zoid[colIdx]==valIdx) && (any(zoid[seqIdx]==fltPtn)) 
+                        })
+            fltMtx.col[flag,colIdx] <- 1 + fltMtx.col[flag,colIdx]
+        }
+    } # colIdx
+    fltMtx.col.cnt <- apply( fltMtx.col ,1 ,sum )
+
+    # zhF 에 대해서도 getColSeq() 적용.
+    fltMtx.zhF <- matrix( 0 ,nrow=length(allIdx) ,ncol=6 )
+    for( colIdx in 1:length(colValLst) ){
+        for( valIdx in colValLst[[colIdx]] ){
+            valMtx <- gEnv$zhF
+            seqObj <- getColSeq( valMtx ,pDepth=2 )
+
+            fltPtn <- valMtx[nrow(valMtx),seqObj$flag]
+            flag <- apply( gEnv$allZoidMtx[allIdx,seqObj$flag,drop=F] ,1 ,function(p){ any(p==fltPtn) })
+            fltMtx.zhF[flag,colIdx] <- 1 + fltMtx.zhF[flag,colIdx]
+        }
+    } # colIdx
+    fltMtx.zhF.cnt <- apply( fltMtx.zhF ,1 ,sum )
+
+    rObj <- list( idStr="cutEadge.getColSeq" )
+    rObj$flag <- (fltMtx.col.cnt==0) & (fltMtx.zhF.cnt==0)
+    return( rObj )
+
+} # cutEadge.getColSeq()
+
+cutEadge.getBanPtn <- function( gEnv ,allIdx ,pThldChk=1 ){
+
+    banObj <- getBanPtn( gEnv$zhF )
+    chkCnt <- sapply(banObj$ptnLst ,function(p){p$chkCnt})
+    thldPtnIdx <- which(chkCnt<pThldChk)    # chkCnt에 대한 갯수 기준.
+
+    banRst <- banObj$chkMatchAny( gEnv$allZoidMtx[allIdx,,drop=F] ,pDebug=T )
+    rstLst <- banRst$rstLst
+    #   chkMatchAny() 가 사용된다면 pThldChk는 의미없다.
+    # rstLst <- lapply( banRst$rstLst ,function(p){ setdiff(p,thldPtnIdx) })
+
+    rObj <- list( idStr="cutEadge.getBanPtn" )
+    rObj$flag <- ( 0==sapply(rstLst,length) )
+    return( rObj )
+
+} # cutEadge.getBanPtn()
+
+
 
 

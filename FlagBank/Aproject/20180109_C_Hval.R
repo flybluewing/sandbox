@@ -214,13 +214,15 @@ val.getBanPtn <- function( ){
 	codeLst <- banObj$getCodeLst( allZoidMtx )
 	valMtx <- do.call( rbind ,banObj$encValLst[[1]] )
 	rownames(valMtx) <- 1:nrow(valMtx)
-	
-	pValMtx <- valMtx ;pMaxDepth=5 ;pDebug=F
 
 	rLst <- list()
 	for( vIdx in 600:nrow(valMtx) ){
+					
+		# pValMtx <- valMtx ;pMaxDepth=5 ;pDebug=F
 		banObj <- getBanPtn( valMtx[1:(vIdx-1),] )
-		banRst <- banObj$chkMatch( valMtx[vIdx,,drop=F] ,pDebug=T )
+
+		# banRst <- banObj$chkMatchAll( valMtx[vIdx,,drop=F] ,pDebug=T )
+		banRst <- banObj$chkMatchAny( valMtx[vIdx,,drop=F] ,pDebug=T )
 
 		rObj <- list( ptnCnt=length(banObj$ptnLst) ,banRst=banRst$rstLst[[1]] )
 		rObj$chkCnt		<- banRst$chkCntLst[[1]]
@@ -233,7 +235,8 @@ val.getBanPtn <- function( ){
 	ptnCnt <- sapply( rLst ,function(p){p$ptnCnt} )
 	banCnt <- sapply( rLst ,function(p){length(p$banRst)} )
 	tbl <- table(banCnt>0)
-	cat(sprintf("rstMtx all %d/%d (%.1f%%) \n",tbl["TRUE"],length(rLst),tbl["TRUE"]*100/length(rLst) ))
+	# 테스트 구간 내에서 발생 수.
+	cat(sprintf(" %d/%d (%.1f%%) \n",tbl["TRUE"],length(rLst),tbl["TRUE"]*100/length(rLst) ))
 
 	# banCnt.idx <- which(banCnt>2)
 	# lapply( rLst[banCnt.idx] ,function(p){p$chkCnt} )
@@ -258,7 +261,7 @@ val.getBanPtn <- function( ){
 	}
 
 	anaMtx <- rstMtx
-	tbl <- table(anaMtx[,"fail"])
+	tbl <- table(anaMtx[,"fail"])	# 전체 ptn에 대해 걸린 비율.
 	cat(sprintf("rstMtx all %d/%d (%.1f%%) \n",tbl["1"],nrow(anaMtx),tbl["1"]*100/nrow(anaMtx) ))
 
 	for( chkCnt in 1:4 ){
