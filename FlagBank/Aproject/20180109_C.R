@@ -192,12 +192,8 @@ cutEadge.XXXX <- function( gEnv ,allIdx ){
 #   컬럼 값에서 연속으로 대칭발생 ban
 getBanSeqSym <- function( pValMtx ,pMaxDepth=5 ,pDepbug=F ){
 
-
-
-	valLen <- nrow(pValMtx)
-	if( 4>valLen || pDepth>valLen ){	# 4이상 필요(최소한 1,2,3,2,? 패턴은 가능해야...)
-		return( NULL )
-	}
+    # QQE working
+    # col.fndSymEven(), col.fndSymOdd() 각각에 대해서 테스트
 
 
 	rObj <- list( stdVal=stdVal ,flag=matFlag ,depth=pDepth )
@@ -208,30 +204,62 @@ getBanSeqSym <- function( pValMtx ,pMaxDepth=5 ,pDepbug=F ){
 #   3,2,1,1,2,? 패턴
 col.fndSymEven <- function( pVal ,pMaxDepth=5 ){
     
-    if( 3>length(pVal) ){   # 2,1,1,?
+    val.len <- length(pVal)
+    if( 3 > val.len ){   # 2,1,1,?
         return(NULL)
     }
 
-    ptn <- integer(0)
+    srcPtn <- integer(0)
     eadgeVal <- NA
     for( dIdx in 1:pMaxDepth ){
-        if(  ){
+        srcPtn <- pVal[val.len:(val.len-dIdx+1)]
+        matSpan <- (val.len-dIdx-dIdx+1):(val.len-dIdx)
+        if( 2 > matSpan[1] ){ # 최소한 pVal[1]은 존재해야 ? 매칭값 할당가능
+            break
+        }
+
+        if( all(srcPtn==pVal[matSpan]) ){
+            eadgeVal <- pVal[ matSpan[1]-1 ]
             break
         }
     } # for(dIdx)
 
-    if( is.na(eadgeVal) ){  return(NULL)
+    if( is.na(eadgeVal) ){  return( NULL )
     } else {
         return( list(banVal=eadgeVal ,ptn=ptn) )
     }
 
 } # col.fndSymEven()
 
+
+# pVal <- c( 30,20,10,20 )
+# pVal <- c( 40,30,20,10,20,30 )
 #   3,2,1,2,? 패턴
 col.fndSymOdd <- function( pVal ,pMaxDepth=5 ){
 
+    val.len <- length(pVal)
     if( 4>length(pVal) ){   # 3,2,1,2,?
         return(NULL)
+    }
+
+    srcPtn <- integer(0)
+    eadgeVal <- NA
+    for( dIdx in 1:pMaxDepth ){
+        srcPtn <- pVal[val.len:(val.len-dIdx+1)]
+        matSpan <- (val.len-dIdx-1-dIdx+1):(val.len-dIdx-1)
+        if( 2 > matSpan[1] ){ # 최소한 pVal[1]은 존재해야 ? 매칭값 할당가능
+            break
+        }
+
+        if( all(srcPtn==pVal[matSpan]) ){
+            eadgeVal <- pVal[ matSpan[1]-1 ]
+            break
+        }
+    } # for(dIdx)
+
+    if( is.na(eadgeVal) ){  return( NULL )
+    } else {
+        return( list(banVal=eadgeVal ,ptn=ptn) )
     }
 
 } # col.fndSymOdd()
