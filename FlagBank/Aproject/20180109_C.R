@@ -134,37 +134,17 @@ cutEadge <- function( gEnv ,allIdx ){
     # cutEadge.getBanPtnColVal() 컬럼 값 별,
     # cutEadge.getBanPtnRem10() %% 10 에 대한 ptn
 
+    rstObj <- cutEadge.getBanSym( gEnv ,allIdx )
+    allIdx <- allIdx[rstObj$flag]
+
+
     allIdx.bak <- allIdx
 
 } # cutEadge()
 
+# ~~ 32min
 
 
-cutEadge.getBanPtn <- function( gEnv ,allIdx ,pThldChk=1 ){
-
-    banObj <- getBanPtn( gEnv$zhF )
-    chkCnt <- sapply(banObj$ptnLst ,function(p){p$chkCnt})
-    thldPtnIdx <- which(chkCnt<pThldChk)    # chkCnt에 대한 갯수 기준.
-
-    banRst <- banObj$chkMatchAny( gEnv$allZoidMtx[allIdx,,drop=F] ,pDebug=T )
-    rstLst <- banRst$rstLst
-    #   chkMatchAny() 가 사용된다면 pThldChk는 의미없다.
-    # rstLst <- lapply( banRst$rstLst ,function(p){ setdiff(p,thldPtnIdx) })
-
-    rObj <- list( idStr="cutEadge.getBanPtn" )
-    rObj$flag <- ( 0==sapply(rstLst,length) )
-    return( rObj )
-
-} # cutEadge.getBanPtn()
-
-
-cutEadge.getBanSym <- function( gEnv ,allIdx ){
-
-    rObj <- list( idStr="cutEadge.getBanSym" )
-    rObj$flag <- apply( surviveMtx ,1 ,all )
-    return( rObj )
-
-} # cutEadge.getBanSym()
 
 
 
@@ -178,91 +158,6 @@ cutEadge.XXXX <- function( gEnv ,allIdx ){
 
 
 
-
-
-    # 짝 패턴 : [787:790,1] ,홀 패턴 : [789:793,3]
-	# 	787  5  6 13 16 27 28
-	# 	788  2 10 11 19 35 39
-	# 	789  2  6  7 12 19 45
-	# 	790  3  8 19 27 30 41
-	# 	791  2 10 12 31 33 42
-	# 	792  2  7 19 25 29 36
-	# 	793 10 15 21 35 38 43
-
-#   컬럼 값에서 연속으로 대칭발생 ban
-getBanSeqSym <- function( pValMtx ,pMaxDepth=5 ,pDepbug=F ){
-
-    # QQE working
-    # col.fndSymEven(), col.fndSymOdd() 각각에 대해서 테스트
-
-
-	rObj <- list( stdVal=stdVal ,flag=matFlag ,depth=pDepth )
-	return( rObj )
-
-} # getBanSeqSym()
-
-#   3,2,1,1,2,? 패턴
-col.fndSymEven <- function( pVal ,pMaxDepth=5 ){
-    
-    val.len <- length(pVal)
-    if( 3 > val.len ){   # 2,1,1,?
-        return(NULL)
-    }
-
-    srcPtn <- integer(0)
-    eadgeVal <- NA
-    for( dIdx in 1:pMaxDepth ){
-        srcPtn <- pVal[val.len:(val.len-dIdx+1)]
-        matSpan <- (val.len-dIdx-dIdx+1):(val.len-dIdx)
-        if( 2 > matSpan[1] ){ # 최소한 pVal[1]은 존재해야 ? 매칭값 할당가능
-            break
-        }
-
-        if( all(srcPtn==pVal[matSpan]) ){
-            eadgeVal <- pVal[ matSpan[1]-1 ]
-            break
-        }
-    } # for(dIdx)
-
-    if( is.na(eadgeVal) ){  return( NULL )
-    } else {
-        return( list(banVal=eadgeVal ,ptn=ptn) )
-    }
-
-} # col.fndSymEven()
-
-
-# pVal <- c( 30,20,10,20 )
-# pVal <- c( 40,30,20,10,20,30 )
-#   3,2,1,2,? 패턴
-col.fndSymOdd <- function( pVal ,pMaxDepth=5 ){
-
-    val.len <- length(pVal)
-    if( 4>length(pVal) ){   # 3,2,1,2,?
-        return(NULL)
-    }
-
-    srcPtn <- integer(0)
-    eadgeVal <- NA
-    for( dIdx in 1:pMaxDepth ){
-        srcPtn <- pVal[val.len:(val.len-dIdx+1)]
-        matSpan <- (val.len-dIdx-1-dIdx+1):(val.len-dIdx-1)
-        if( 2 > matSpan[1] ){ # 최소한 pVal[1]은 존재해야 ? 매칭값 할당가능
-            break
-        }
-
-        if( all(srcPtn==pVal[matSpan]) ){
-            eadgeVal <- pVal[ matSpan[1]-1 ]
-            break
-        }
-    } # for(dIdx)
-
-    if( is.na(eadgeVal) ){  return( NULL )
-    } else {
-        return( list(banVal=eadgeVal ,ptn=ptn) )
-    }
-
-} # col.fndSymOdd()
 
 
 # ===============================================================================

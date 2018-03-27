@@ -202,6 +202,99 @@ getBanPtn <- function( pValMtx ,pMaxDepth=5 ,pDebug=F ){
 
 } # getBanPtn()
 
+#   컬럼 값에서 연속으로 대칭발생 ban
+#       pValMtx <- gEnv$zhF[1:792,] ;pMaxDepth=5 ;pDebug=F
+getBanSeqSym <- function( pValMtx ,pMaxDepth=5 ,pDebug=F ){
+
+    symLst <- list()
+    colBanLst <- lapply(1:ncol(pValMtx),function(p){integer(0)})
+    for( colIdx in 1:ncol(pValMtx) ){
+        symObj <- col.fndSymEven( pValMtx[,colIdx] )
+        if( !is.null(symObj) ){
+            symObj$colIdx <- colIdx
+            symLst[[1+length(symLst)]] <- symObj
+            colBanLst[[colIdx]][1+length(colBanLst[[colIdx]])] <- symObj$banVal
+        }
+
+        symObj <- col.fndSymOdd( pValMtx[,colIdx] )
+        if( !is.null(symObj) ){
+            symObj$colIdx <- colIdx
+            symLst[[1+length(symLst)]] <- symObj
+            colBanLst[[colIdx]][1+length(colBanLst[[colIdx]])] <- symObj$banVal
+        }
+    }
+
+	rObj <- list( colBanLst=colBanLst )
+    if( pDebug ){
+        rObj$symLst <- symLst
+    }
+	return( rObj )
+
+} # getBanSeqSym()
+
+#   3,2,1,1,2,? 패턴
+col.fndSymEven <- function( pVal ,pMaxDepth=5 ){
+    
+    val.len <- length(pVal)
+    if( 3 > val.len ){   # 2,1,1,?
+        return(NULL)
+    }
+
+    srcPtn <- integer(0)
+    eadgeVal <- NA
+    for( dIdx in 1:pMaxDepth ){
+        srcPtn <- pVal[val.len:(val.len-dIdx+1)]
+        matSpan <- (val.len-dIdx-dIdx+1):(val.len-dIdx)
+        if( 2 > matSpan[1] ){ # 최소한 pVal[1]은 존재해야 ? 매칭값 할당가능
+            break
+        }
+
+        if( all(srcPtn==pVal[matSpan]) ){
+            eadgeVal <- pVal[ matSpan[1]-1 ]
+            break
+        }
+    } # for(dIdx)
+
+    if( is.na(eadgeVal) ){  return( NULL )
+    } else {
+        return( list(banVal=eadgeVal ,srcPtn=srcPtn) )
+    }
+
+} # col.fndSymEven()
+
+#   3,2,1,2,? 패턴
+col.fndSymOdd <- function( pVal ,pMaxDepth=5 ){
+
+	# pVal <- c( 30,20,10,20 )
+	# pVal <- c( 40,30,20,10,20,30 )
+
+    val.len <- length(pVal)
+    if( 4>length(pVal) ){   # 3,2,1,2,?
+        return(NULL)
+    }
+
+    srcPtn <- integer(0)
+    eadgeVal <- NA
+    for( dIdx in 1:pMaxDepth ){
+        srcPtn <- pVal[val.len:(val.len-dIdx+1)]
+        matSpan <- (val.len-dIdx-1-dIdx+1):(val.len-dIdx-1)
+        if( 2 > matSpan[1] ){ # 최소한 pVal[1]은 존재해야 ? 매칭값 할당가능
+            break
+        }
+
+        if( all(srcPtn==pVal[matSpan]) ){
+            eadgeVal <- pVal[ matSpan[1]-1 ]
+            break
+        }
+    } # for(dIdx)
+
+    if( is.na(eadgeVal) ){  return( NULL )
+    } else {
+        return( list(banVal=eadgeVal ,srcPtn=srcPtn) )
+    }
+
+} # col.fndSymOdd()
+
 
 #   동일 패턴이 그대로 재발.
 #	pBanObj : getCFltObj() 리턴 값.
@@ -1501,6 +1594,59 @@ cutEadge.getBanPtn <- function( gEnv ,allIdx ,pThldChk=1 ){
     return( rObj )
 
 } # cutEadge.getBanPtn()
+
+cutEadge.getBanSym <- function( gEnv ,allIdx ){
+
+    colBanLst <- getBanSeqSym( gEnv$zhF )$colBanLst
+    # colBanLst <- getBanSeqSym( gEnv$zhF[1:792,] )$colBanLst  # for test
+    flagLst.base <- lapply( 1:length(allIdx) ,function(p){integer(0)})
+    for( colIdx in seq_len(length(colBanLst)) ){
+
+        if( 0==length(colBanLst[[colIdx]]) ){
+            next
+        }
+
+        for( idx in seq_len(length(allIdx)) ){
+            aIdx <- allIdx[idx]
+            if( gEnv$allZoidMtx[aIdx,colIdx] %in% colBanLst[[colIdx]] ){
+                flagLst.base[[idx]][ 1+length(flagLst.base[[idx]]) ] <- colIdx
+            }
+        }
+    } # colIdx
+
+    azColValLst <- apply( gEnv$allZoidMtx[allIdx,,drop=F] ,2 ,function(p){unique(p)} )
+    flagLst.cv <- vector( "list", length(allIdx) )    # by column value
+    for( azColIdx in 1:6 ){
+        for( vIdx in azColValLst[[azColIdx]] ){
+            valMtx <- gEnv$zhF[gEnv$zhF[,azColIdx]==vIdx ,]
+            colBanLst <- getBanSeqSym( valMtx )$colBanLst
+            for( colIdx in seq_len(length(colBanLst)) ){
+                if( colIdx==azColIdx ){
+                    next
+                }
+                if( 0==length(colBanLst[[colIdx]]) ){
+                    next
+                }
+                for( idx in seq_len(length(allIdx)) ){
+                    aIdx <- allIdx[idx]
+                    if( gEnv$allZoidMtx[aIdx,azColIdx]==vIdx ){
+                        if( gEnv$allZoidMtx[aIdx,colIdx] %in% colBanLst[[colIdx]] ){
+                            flagLst.cv[[idx]][[ 1+length(flagLst.cv[[idx]]) ]] <- c( azColIdx ,vIdx ,colIdx )
+                        }
+                    }
+                }
+            } # colIdx
+        }
+    } # azColIdx
+
+    rObj <- list( idStr="cutEadge.getBanSym" )
+    rObj$flag <- sapply( seq_len(length(allIdx)) ,function(idx){ 
+                            ( 0==length(flagLst.base[[idx]]) ) && ( 0==length(flagLst.cv[[idx]]) )
+                        })
+
+    return( rObj )
+
+} # cutEadge.getBanSym()
 
 
 
