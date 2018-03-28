@@ -1737,5 +1737,90 @@ cutEadge.getBanGrad <- function( gEnv ,allIdx ){
 
 } # cutEadge.getBanGrad()
 
+cutEadge.getBanPtnColVal <- function( gEnv ,allIdx ){
+
+	valMtx <- gEnv$zhF
+
+	azColValLst <- apply( gEnv$allZoidMtx[allIdx,,drop=F] ,2 ,function(p){unique(p)} )
+	flagLst.cv <- vector( "list" ,length(allIdx) )
+	for( azColIdx in 1:6 ){
+		for( vIdx in azColValLst[[azColIdx]] ){
+			tValMtx <- valMtx[valMtx[,azColIdx]==vIdx ,]
+			banObj <- getBanPtn( tValMtx )
+			banRst <- banObj$chkMatchAny( gEnv$allZoidMtx[allIdx,,drop=F] ,pExcCol=azColIdx ,pDebug=T )
+			
+			for( idx in seq_len(length(allIdx)) ){
+				if( 0==length(banRst$rstLst[[idx]]) ){
+					next
+				}
+				zoid <- gEnv$allZoidMtx[ allIdx[idx] ,]
+				if( zoid[azColIdx]!=vIdx ){
+					next
+				}
+				flagLst.cv[[idx]][[ 1+length(flagLst.cv[[idx]]) ]] <- c(azColIdx,vIdx)
+			}
+		} # vIdx
+	} # azColIdx
+
+    rObj <- list( idStr="cutEadge.getBanPtnColVal" )
+    rObj$flag <- 0==sapply(flagLst.cv,length)
+    return( rObj )
+
+} # cutEadge.getBanPtnColVal()
+
+cutEadge.banDupSeq <- function( gEnv ,allIdx ){
+
+	getBanDupVal <- function( pVal ){
+		val.len <- length(pVal)
+		if( 3>val.len ){
+			return( NA )
+		}
+		if( pVal[val.len-2]==pVal[val.len-1] ){
+			return( pVal[val.len] )
+		} else {
+			return( NA )
+		}
+	} # getBanDupVal( )
+
+	# flagLst.base
+	banVal <- apply( gEnv$zhF ,2 ,getBanDupVal )
+	flagLst.base <- lapply( gEnv$allZoidMtx[allIdx,,drop=F] ,function(zoid){
+							return( which(zoid==banVal) )
+						})
+
+	# flagLst.cv
+	azColValLst <- apply( gEnv$allZoidMtx[allIdx,,drop=F] ,2 ,function(p){unique(p)} )
+	flagLst.cv <- vector( "list" ,length(allIdx) )
+	for( azColIdx in 1:6 ){
+		for( vIdx in azColValLst[[azColIdx]] ){
+			tValMtx <- valMtx[valMtx[,azColIdx]==vIdx ,]
+			banVal <- apply( tValMtx ,2 ,getBanDupVal )
+			banVal[azColIdx] <- NA	# 현재 기준 컬럼은 제외시켜야..
+			if( all(is.na(banVal)) ){
+				next
+			}
+			for( idx in seq_len(length(allIdx)) ){
+				zoid <- gEnv$allZoidMtx[allIdx[idx],]
+				if( zoid[azColIdx]!=vIdx ){
+					next
+				}
+
+				matIdx <- which(zoid==banVal)
+				if( 0<length(matIdx) ){
+					flagLst.cv[[idx]][[ 1+length(flagLst.cv[[idx]]) ]] <- c( azColIdx ,vIdx ,matIdx[1] )
+				}
+			}
+		} # vIdx
+	} # azColIdx
+	
+    rObj <- list( idStr="cutEadge.banDupSeq" )
+    rObj$flag <- sapply( seq_len(length(allIdx)) ,function(idx){ 
+						(length(flagLst.base[[idx]])==0) && (length(flagLst.cv[[idx]])==0)
+					})
+
+    return( rObj )
+
+} # cutEadge.banDupSeq()
+
 
 
