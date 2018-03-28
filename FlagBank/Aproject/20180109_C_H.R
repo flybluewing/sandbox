@@ -168,13 +168,21 @@ getBanPtn <- function( pValMtx ,pMaxDepth=5 ,pDebug=F ){
 		return( rstObj )
 
 	} # rObj$chkMatchAll()
-	rObj$chkMatchAny <- function( pValMtx ,pDebug=F ){
+	
+	#	pExcCol : 체크대상에서 제외하고픈 컬럼 idx
+	rObj$chkMatchAny <- function( pValMtx ,pExcCol=NULL ,pDebug=F ){
 
 		rstLst <- list()
 		for( valIdx in 1:nrow(pValMtx) ){
 			ptnIdx <- integer(0)
 			for( pIdx in seq_len(length(rObj$ptnLst)) ){
-				if( any(rObj$ptnLst[[pIdx]]$matVal==pValMtx[valIdx,],na.rm=T) ){
+				flag <- rObj$ptnLst[[pIdx]]$matVal==pValMtx[valIdx,]
+				if( any(flag,na.rm=T) ){
+					if( !is.null(pExcCol) ){
+						if( all(which(flag)%in%pExcCol) ){
+							next
+						}
+					}
 					ptnIdx[1+length(ptnIdx)] <- pIdx
 				}
 			}
@@ -196,7 +204,6 @@ getBanPtn <- function( pValMtx ,pMaxDepth=5 ,pDebug=F ){
 		return( rstObj )
 
 	} # rObj$chkMatchAny()
-
 
 	return( rObj )
 

@@ -131,7 +131,6 @@ cutEadge <- function( gEnv ,allIdx ){
 
     rstObj <- cutEadge.getBanPtn( gEnv ,allIdx )
     allIdx <- allIdx[rstObj$flag]
-    # cutEadge.getBanPtnColVal() 컬럼 값 별,
     # cutEadge.getBanPtnRem10() %% 10 에 대한 ptn
 
     rstObj <- cutEadge.getBanSym( gEnv ,allIdx )
@@ -145,6 +144,49 @@ cutEadge <- function( gEnv ,allIdx ){
 } # cutEadge()
 
 # ~~ 32min
+
+    banObj <- getBanPtn( gEnv$zhF )
+    chkCnt <- sapply(banObj$ptnLst ,function(p){p$chkCnt})
+    thldPtnIdx <- which(chkCnt<pThldChk)    # chkCnt에 대한 갯수 기준.
+
+    banRst <- banObj$chkMatchAny( gEnv$allZoidMtx[allIdx,,drop=F] ,pDebug=T )
+    rstLst <- banRst$rstLst
+    #   chkMatchAny() 가 사용된다면 pThldChk는 의미없다.
+    # rstLst <- lapply( banRst$rstLst ,function(p){ setdiff(p,thldPtnIdx) })
+
+
+# cutEadge.getBanPtnColVal() 컬럼 값 별
+cutEadge.getBanPtnColVal <- function( gEnv ,allIdx ){
+
+	valMtx <- gEnv$zhF
+
+	azColValLst <- apply( gEnv$allZoidMtx[allIdx,,drop=F] ,2 ,function(p){unique(p)} )
+	flagLst.cv <- vector( "list" ,length(allIdx) )
+	for( azColIdx in 1:6 ){
+		for( vIdx in azColValLst[[azColIdx]] ){
+			tValMtx <- valMtx[valMtx[,azColIdx]==vIdx ,]
+			banObj <- getBanPtn( tValMtx )			
+			banRst <- banObj$chkMatchAny( gEnv$allZoidMtx[allIdx,,drop=F] ,pExcCol=azColIdx ,pDebug=T )
+			
+			for( idx in seq_len(length(allIdx)) ){
+				if( 0==length(banRst$rstLst[[idx]]) ){
+					next
+				}
+				zoid <- gEnv$allZoidMtx[ allIdx[idx] ,]
+				if( zoid[azColIdx]!=vIdx ){
+					next
+				}
+				flagLst.cv[[idx]][[ 1+length(flagLst.cv[[idx]]) ]] <- c(azColIdx,vIdx)
+			}
+		} # vIdx
+	} # azColIdx
+	## QQE debuging flagLst.cv last result
+	
+    rObj <- list( idStr="cutEadge.getBanPtnColVal" )
+    rObj$flag <- QQE # 
+    return( rObj )
+
+} # cutEadge.getBanPtnColVal()
 
 
 
