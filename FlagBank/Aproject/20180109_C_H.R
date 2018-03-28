@@ -295,6 +295,42 @@ col.fndSymOdd <- function( pVal ,pMaxDepth=5 ){
 
 } # col.fndSymOdd()
 
+#	4,5,? 패턴
+getBanGrad <- function( pValMtx ){
+
+	valLen <- nrow(pValMtx)
+	if( 2>valLen ){
+		return( list(banVal=rep(NA,ncol(pValMtx))) )
+	}
+
+    vDiff <- pValMtx[valLen,] - pValMtx[(valLen-1),]
+    banVal <- pValMtx[valLen,] + vDiff
+    banVal[1!=abs(vDiff)] <- NA
+
+	rObj <- list( banVal=banVal )
+	return( rObj )
+
+} # getBanGrad()
+
+#	28,21,14,? 패턴
+getBanGrad.n <- function( pValMtx ){
+
+	valLen <- nrow(pValMtx)
+	if( 3>valLen ){
+		return( list(banVal=rep(NA,ncol(pValMtx))) )
+	}
+
+    vDiffMtx <- pValMtx[valLen-(0:1),] - pValMtx[valLen-(1:2),]
+    flag <- apply( vDiffMtx ,2 ,function(p){1==length(unique(p))} )
+
+    banVal <- pValMtx[valLen,] + vDiffMtx[1,]
+    banVal[!flag] <- NA
+
+	rObj <- list( banVal=banVal )
+	return( rObj )
+
+} # getBanGrad.n()
+
 
 #   동일 패턴이 그대로 재발.
 #	pBanObj : getCFltObj() 리턴 값.
@@ -1648,6 +1684,51 @@ cutEadge.getBanSym <- function( gEnv ,allIdx ){
 
 } # cutEadge.getBanSym()
 
+cutEadge.getBanGrad <- function( gEnv ,allIdx ){
+
+	valMtx <- gEnv$zhF
+
+    # flagLst.base
+    banMtx <- rbind( getBanGrad(valMtx)$banVal ,getBanGrad.n(valMtx)$banVal )
+    banLst <- lapply( 1:ncol(banMtx) ,function(idx){ banMtx[,idx][!is.na(banMtx[,idx])] })
+    flagLst.base <- lapply( allIdx ,function(aIdx){
+                zoid <- gEnv$allZoidMtx[aIdx,]
+                flag <- sapply( 1:length(zoid) ,function(idx){ zoid[idx]%in%banLst[[idx]] })
+                return( which(flag) )
+            })
+
+    # flagLst.cv
+    azColValLst <- apply( gEnv$allZoidMtx[allIdx,,drop=F] ,2 ,function(p){unique(p)} )
+    banMtx <- matrix( NA ,nrow=2 ,ncol=ncol(valMtx) )
+    flagLst.cv <- vector( "list", length(allIdx) )    # by column value
+    for( azColIdx in 1:6 ){
+		for( vIdx in azColValLst[[azColIdx]] ){
+			tValMtx <- valMtx[valMtx[,azColIdx]==vIdx ,]
+			banMtx[1,] <- getBanGrad(tValMtx)$banVal
+			banMtx[2,] <- getBanGrad.n(tValMtx)$banVal
+			banLst <- lapply( 1:ncol(banMtx) ,function(idx){ banMtx[,idx][!is.na(banMtx[,idx])] })
+			banLst[[ azColIdx ]] <- integer(0)
+			for( idx in seq_len(length(allIdx)) ){
+				zoid <- gEnv$allZoidMtx[ allIdx[idx] ,]
+				if( zoid[azColIdx]!=vIdx ){
+					next
+				}
+				flag <- sapply( 1:length(zoid) ,function(p){zoid[p]%in%banLst[[p]]})
+				if( any(flag) ){
+					flagLst.cv[[idx]][[ 1+length(flagLst.cv[[idx]]) ]] <- c(azColIdx,vIdx,which(flag)[1])
+				}
+			}
+		} # vIdx
+	} # azColIdx
+	# tDiff <- Sys.time() - tStmp
+
+    rObj <- list( idStr="cutEadge.getBanGrad" )
+    rObj$flag <- sapply( seq_len(length(allIdx)) ,function(idx){ 
+						(length(flagLst.base[[idx]])==0) && (length(flagLst.cv[[idx]])==0)
+					})
+    return( rObj )
+
+} # cutEadge.getBanGrad()
 
 
 
