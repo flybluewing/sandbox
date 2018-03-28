@@ -145,13 +145,31 @@ cutEadge <- function( gEnv ,allIdx ){
 # ~~ 32min
 
 
+cutEadge.getBanGrad <- function( gEnv ,allIdx ){
+
+    # flagLst.base
+    banMtx <- rbind( getBanGrad( gEnv$zhF )$banVal ,getBanGrad.n( gEnv$zhF )$banVal )
+    banLst <- lapply( 1:ncol(banMtx) ,function(idx){ banMtx[,idx][!is.na(banMtx[,idx])] })
+    flagLst.base <- lapply( allIdx ,function(aIdx){
+                zoid <- gEnv$allZoidMtx[aIdx,]
+                flag <- sapply( 1:length(zoid) ,function(idx){ zoid[idx]%in%banLst[[idx]] })
+                return( which(flag) )
+            })
+
+    # QQE working
+
+    rObj <- list( idStr="cutEadge.getBanGrad" )
+    rObj$flag <- QQE #
+    return( rObj )
+
+} # cutEadge.getBanGrad()
 
 
 
 cutEadge.XXXX <- function( gEnv ,allIdx ){
 
     rObj <- list( idStr="cutEadge.XXXX" )
-    rObj$flag <- apply( surviveMtx ,1 ,all )
+    rObj$flag <- QQE # 
     return( rObj )
 
 } # cutEadge.XXXX()
@@ -161,6 +179,43 @@ cutEadge.XXXX <- function( gEnv ,allIdx ){
 
 
 # ===============================================================================
+
+
+getBanGrad <- function( pValMtx ){
+
+	valLen <- nrow(pValMtx)
+	if( 2>valLen ){
+		return( list(banVal=rep(NA,ncol(pValMtx))) )
+	}
+
+    vDiff <- pValMtx[valLen,] - pValMtx[(valLen-1),]
+    banVal <- pValMtx[valLen,] + vDiff
+    banVal[1!=abs(vDiff)] <- NA
+
+	rObj <- list( banVal=banVal )
+	return( rObj )
+
+} # getBanGrad()
+
+getBanGrad.n <- function( pValMtx ){
+
+	valLen <- nrow(pValMtx)
+	if( 3>valLen ){
+		return( list(banVal=rep(NA,ncol(pValMtx))) )
+	}
+
+    vDiffMtx <- pValMtx[valLen-(0:1),] - pValMtx[valLen-(1:2),]
+    flag <- apply( vDiffMtx ,2 ,function(p){1==length(unique(p))} )
+
+    banVal <- pValMtx[valLen,] + vDiffMtx[1,]
+    banVal[!flag] <- NA
+
+	rObj <- list( banVal=banVal )
+	return( rObj )
+
+} # getBanGrad.n()
+
+
 
 
 
