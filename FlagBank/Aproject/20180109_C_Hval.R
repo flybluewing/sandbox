@@ -213,11 +213,14 @@ val.getBanPtn <- function( ){
 	banObj <- getCFltObj( tEnv )
 	codeLst <- banObj$getCodeLst( allZoidMtx )
 	valMtx <- do.call( rbind ,banObj$encValLst[[1]] )
+
+	valMtx <- gEnv$zhF %% 10
 	rownames(valMtx) <- 1:nrow(valMtx)
 
 	rLst <- list()
-	for( vIdx in 600:nrow(valMtx) ){
-					
+	#for( vIdx in 600:nrow(valMtx) ){
+	for( vIdx in 100:nrow(valMtx) ){		
+
 		# pValMtx <- valMtx ;pMaxDepth=5 ;pDebug=F
 		banObj <- getBanPtn( valMtx[1:(vIdx-1),] )
 
@@ -277,5 +280,11 @@ val.getBanPtn <- function( ){
 
 } # val.getBanPtn()
 
+# 4개가 똑같은 경우는 없다?
+stdCodeMtx <- gEnv$zhF %% 2
 
+srMtx <- scanSameRow(stdCodeMtx)
+k <- srMtx[,"bIdx"]-srMtx[,"aIdx"]
+
+srMtx[k==1,]
 

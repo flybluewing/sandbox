@@ -1710,7 +1710,7 @@ cutEadge.getBanGrad <- function( gEnv ,allIdx ){
     flagLst.cv <- vector( "list", length(allIdx) )    # by column value
     for( azColIdx in 1:6 ){
 		for( vIdx in azColValLst[[azColIdx]] ){
-			tValMtx <- valMtx[valMtx[,azColIdx]==vIdx ,]
+			tValMtx <- valMtx[valMtx[,azColIdx]==vIdx ,,drop=F]
 			banMtx[1,] <- getBanGrad(tValMtx)$banVal
 			banMtx[2,] <- getBanGrad.n(tValMtx)$banVal
 			banLst <- lapply( 1:ncol(banMtx) ,function(idx){ banMtx[,idx][!is.na(banMtx[,idx])] })
@@ -1782,6 +1782,8 @@ cutEadge.banDupSeq <- function( gEnv ,allIdx ){
 		}
 	} # getBanDupVal( )
 
+	valMtx <- gEnv$zhF
+
 	# flagLst.base
 	banVal <- apply( gEnv$zhF ,2 ,getBanDupVal )
 	flagLst.base <- lapply( gEnv$allZoidMtx[allIdx,,drop=F] ,function(zoid){
@@ -1793,7 +1795,7 @@ cutEadge.banDupSeq <- function( gEnv ,allIdx ){
 	flagLst.cv <- vector( "list" ,length(allIdx) )
 	for( azColIdx in 1:6 ){
 		for( vIdx in azColValLst[[azColIdx]] ){
-			tValMtx <- valMtx[valMtx[,azColIdx]==vIdx ,]
+			tValMtx <- valMtx[valMtx[,azColIdx]==vIdx ,,drop=F]
 			banVal <- apply( tValMtx ,2 ,getBanDupVal )
 			banVal[azColIdx] <- NA	# 현재 기준 컬럼은 제외시켜야..
 			if( all(is.na(banVal)) ){
@@ -1812,7 +1814,7 @@ cutEadge.banDupSeq <- function( gEnv ,allIdx ){
 			}
 		} # vIdx
 	} # azColIdx
-	
+
     rObj <- list( idStr="cutEadge.banDupSeq" )
     rObj$flag <- sapply( seq_len(length(allIdx)) ,function(idx){ 
 						(length(flagLst.base[[idx]])==0) && (length(flagLst.cv[[idx]])==0)

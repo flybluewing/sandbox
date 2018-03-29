@@ -7,7 +7,8 @@ source("../breedingPlace/20171116_D_H.R")
 source("20180109_A_H.R")
 source("20180109_C_H.R")
 
-saveId <- "Z798"
+tStmp <- Sys.time()
+saveId <- "Z799"
 load(sprintf("./save/Obj_gEnv%s.save",saveId))
 load(sprintf("./save/Obj_fRstLst%s.save",saveId))
 load(sprintf("./save/Obj_remLst%s.save",saveId))
@@ -145,7 +146,7 @@ cutEadge <- function( gEnv ,allIdx ){
 
     rstObj <- cutEadge.banDupSeq( gEnv ,allIdx )
     allIdx <- allIdx[rstObj$flag]
-		
+
     allIdx.bak <- allIdx
 
 } # cutEadge()
@@ -159,6 +160,16 @@ k <- which(seqCntMtx[,"cnt"]>1)
 kDiff <- k[2:length(k)] - k[1:(length(k)-1)]
 sum(kDiff==1)
 
+
+cutEadge.unknown <- function( gEnv ,allIdx ){
+
+    
+
+    rObj <- list( idStr="cutEadge.unknown" )
+    rObj$flag <- QQE # 
+    return( rObj )
+
+} # cutEadge.unknown()
 
 
 
