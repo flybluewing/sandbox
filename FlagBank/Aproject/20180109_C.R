@@ -136,8 +136,6 @@ cutEadge <- function( gEnv ,allIdx ){
     rstObj <- cutEadge.getBanPtnColVal( gEnv ,allIdx )
     allIdx <- allIdx[rstObj$flag]
 
-    # cutEadge.getBanPtnRem10() %% 10 ¿¡ ´ëÇÑ ptn
-
     rstObj <- cutEadge.getBanSym( gEnv ,allIdx )
     allIdx <- allIdx[rstObj$flag]
 
@@ -147,29 +145,18 @@ cutEadge <- function( gEnv ,allIdx ){
     rstObj <- cutEadge.banDupSeq( gEnv ,allIdx )
     allIdx <- allIdx[rstObj$flag]
 
+
+    rstObj <- cutEadge.getBanSymBin( gEnv ,allIdx )
+    allIdx <- allIdx[rstObj$flag]
+
+
+
     allIdx.bak <- allIdx
 
 } # cutEadge()
 
 # ~~ 32min
 
-flag <- gEnv$zhF[,5]
-
-seqCntMtx <- k.seq(flag)$seqCntMtx
-k <- which(seqCntMtx[,"cnt"]>1)
-kDiff <- k[2:length(k)] - k[1:(length(k)-1)]
-sum(kDiff==1)
-
-
-cutEadge.unknown <- function( gEnv ,allIdx ){
-
-    
-
-    rObj <- list( idStr="cutEadge.unknown" )
-    rObj$flag <- QQE # 
-    return( rObj )
-
-} # cutEadge.unknown()
 
 
 

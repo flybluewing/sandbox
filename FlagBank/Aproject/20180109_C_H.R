@@ -1824,5 +1824,63 @@ cutEadge.banDupSeq <- function( gEnv ,allIdx ){
 
 } # cutEadge.banDupSeq()
 
+cutEadge.getBanSymBin <- function( gEnv ,allIdx ){
+
+    stdCodeMtx <- gEnv$zhF %% 2
+    stdCodeLen <- nrow(stdCodeMtx)
+    allCodeMtx <- gEnv$allZoidMtx[allIdx,] %% 2
+    allCodeLen <- nrow(allCodeMtx)
+
+    # flagLst.base
+    flagLst.base <- lapply( seq_len(length(allIdx)) ,function(p){integer(0)} )
+    for( dIdx in 1:5 ){
+        chkHIdx <- stdCodeLen +1 -(1:2*dIdx)
+        if( 1>chkHIdx[2] ){
+            break
+        }
+        if( !all(stdCodeMtx[chkHIdx[1],]==stdCodeMtx[chkHIdx[2],]) ){
+            next
+        }
+        for( idx in seq_len(allCodeLen) ){
+            if( all(stdCodeMtx[chkHIdx[1],]==allCodeMtx[idx,]) ){
+                flagLst.base[[idx]][1+length(flagLst.base[[idx]])] <- dIdx
+            }
+        }
+    } # for(dIdx)
+
+    azColValLst <- apply( gEnv$allZoidMtx[allIdx,,drop=F] ,2 ,function(p){unique(p)} )
+    flagLst.cv <- vector( "list" ,allCodeLen )
+    for( azColIdx in 1:ncol(gEnv$zhF) ){
+        for( vIdx in azColValLst[[azColIdx]] ){
+            tCodeMtx <- (gEnv$zhF[gEnv$zhF[,azColIdx]==vIdx ,,drop=F]) %% 2
+            tCodeMtxlen <- nrow( tCodeMtx )
+            for( dIdx in 1:5 ){
+                chkHIdx <- tCodeMtxlen +1 -(1:2*dIdx)
+                if( 1>chkHIdx[2] ){
+                    break
+                }
+                if( !all(tCodeMtx[chkHIdx[1],]==tCodeMtx[chkHIdx[2],]) ){
+                    next
+                }
+                for( idx in seq_len(allCodeLen) ){
+                    if( vIdx != gEnv$allZoidMtx[allIdx[idx],azColIdx] ){
+                        next
+                    }
+                    if( all(tCodeMtx[chkHIdx[1],]==allCodeMtx[idx,]) ){
+                        flagLst.cv[[idx]][[1+length(flagLst.cv[[idx]])]] <- c( azColIdx ,vIdx ,dIdx )
+                    }
+                }
+            } # dIdx
+        } # vIdx
+    } # azColIdx
+
+    rObj <- list( idStr="cutEadge.getBanSymBin" )
+    rObj$flag <- sapply( seq_len(length(allIdx)) ,function(idx){ 
+						(length(flagLst.base[[idx]])==0) && (length(flagLst.cv[[idx]])==0)
+					})
+    return( rObj )
+
+} # cutEadge.getBanSymBin()
+
 
 
