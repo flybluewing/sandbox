@@ -1882,5 +1882,53 @@ cutEadge.getBanSymBin <- function( gEnv ,allIdx ){
 
 } # cutEadge.getBanSymBin()
 
+cutEadge.banDupSeqBin <- function( gEnv ,allIdx ){
+
+    chkDup <- function( pMtx ){
+        mtxLen <- nrow(pMtx)
+        if( 3 > mtxLen ){
+            return( NULL )
+        }
+        if( !all(pMtx[mtxLen-1,]==pMtx[mtxLen-2,]) ){
+            return( NULL )
+        }
+        return( pMtx[mtxLen,] )
+    }
+
+    banCode <- chkDup( gEnv$zhF %% 2 )
+    flag.base <- if( is.null(banCode) ){ rep(TRUE,length(allIdx))
+                    } else { 
+                        apply( gEnv$allZoidMtx[allIdx,]%%2 ,1 ,function(aCode){!all(aCode==banCode)} )
+                    }
+
+    azColValLst <- apply( gEnv$allZoidMtx[allIdx,,drop=F] ,2 ,function(p){unique(p)} )
+    flagLst.cv <- vector( "list" ,length(allIdx) )
+    for( azColIdx in 1:6 ){
+        for( vIdx in azColValLst[[azColIdx]] ){
+            tCodeMtx <- (gEnv$zhF[gEnv$zhF[,azColIdx]==vIdx ,,drop=F]) %% 2
+            banCode <- chkDup( tCodeMtx )
+            if( is.null(banCode) ){
+                next
+            }
+            for( idx in seq_len(length(allIdx)) ){
+                aIdx <- allIdx[idx]
+                if( vIdx != gEnv$allZoidMtx[aIdx,azColIdx] ){
+                    next
+                }
+                if( all( (gEnv$allZoidMtx[aIdx,]%%2)==banCode ) ){
+                    flagLst.cv[[idx]][[ 1+length(flagLst.cv[[idx]]) ]] <- c( azColIdx ,vIdx )
+                }
+            }
+        } # vIdx
+    }
+
+    rObj <- list( idStr="cutEadge.banDupSeqBin" )
+    rObj$flag <- sapply( seq_len(length(allIdx)) ,function(idx){
+                        (flag.base[idx]) && (0==length(flagLst.cv[[idx]]))
+                    })
+    return( rObj )
+
+} # cutEadge.banDupSeqBin()
+
 
 

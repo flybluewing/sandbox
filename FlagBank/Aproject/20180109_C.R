@@ -149,6 +149,12 @@ cutEadge <- function( gEnv ,allIdx ){
     rstObj <- cutEadge.getBanSymBin( gEnv ,allIdx )
     allIdx <- allIdx[rstObj$flag]
 
+    rstObj <- cutEadge.banDupSeqBin( gEnv ,allIdx )
+    allIdx <- allIdx[rstObj$flag]
+
+
+
+
 
 
     allIdx.bak <- allIdx
@@ -156,7 +162,6 @@ cutEadge <- function( gEnv ,allIdx ){
 } # cutEadge()
 
 # ~~ 32min
-
 
 
 
