@@ -35,29 +35,6 @@ allZoid.idx0 <- which(allZoid.fltCnt==0)
 allZoid.idx1 <- which(allZoid.fltCnt==1)
 allZoid.idx2 <- which(allZoid.fltCnt==2)
 
-# 가정 : zoid[1]==1
-flag <- sapply( allZoid.idx0 ,function( p ){ gEnv$allZoidMtx[p,1] == 1 })
-allZoid.idx0 <- allZoid.idx0[flag]
-flag <- sapply( allZoid.idx1 ,function( p ){ gEnv$allZoidMtx[p,1] == 1 })
-allZoid.idx1 <- allZoid.idx1[flag]
-flag <- sapply( allZoid.idx2 ,function( p ){ gEnv$allZoidMtx[p,1] == 1 })
-allZoid.idx2 <- allZoid.idx2[flag]
-
-# 가정 : 22,32는 포함되지 않는다.
-flag <- sapply( allZoid.idx0 ,function( p ){ !any(c(22,23) %in%gEnv$allZoidMtx[p,]) })
-allZoid.idx0 <- allZoid.idx0[flag]
-flag <- sapply( allZoid.idx1 ,function( p ){ !any(c(22,23) %in%gEnv$allZoidMtx[p,]) })
-allZoid.idx1 <- allZoid.idx1[flag]
-flag <- sapply( allZoid.idx2 ,function( p ){ !any(c(22,23) %in%gEnv$allZoidMtx[p,]) })
-allZoid.idx2 <- allZoid.idx2[flag]
-
-# 가정 : zoid[4]%%10은 2가 아님.
-flag <- sapply( allZoid.idx0 ,function(p){ 2!=gEnv$allZoidMtx[p,4]%%10 } )
-allZoid.idx0 <- allZoid.idx0[flag]
-flag <- sapply( allZoid.idx1 ,function(p){ 2!=gEnv$allZoidMtx[p,4]%%10 } )
-allZoid.idx1 <- allZoid.idx1[flag]
-flag <- sapply( allZoid.idx2 ,function(p){ 2!=gEnv$allZoidMtx[p,4]%%10 } )
-allZoid.idx2 <- allZoid.idx2[flag]
 
 # 가정 : 연속 값은 1개이다.
 flag <- sapply( allZoid.idx0 ,function( p ){ 1==sum(c(2,10,14,36) %in%gEnv$allZoidMtx[p,]) })
@@ -67,6 +44,7 @@ allZoid.idx1 <- allZoid.idx1[flag]
 flag <- sapply( allZoid.idx2 ,function( p ){ 1==sum(c(2,10,14,36) %in%gEnv$allZoidMtx[p,]) })
 allZoid.idx2 <- allZoid.idx2[flag]
 
+# ================================================================================================
 # 가정 : allZoid.fltCnt의 1영역에서, 바로이전 필터링 결과는 포함되지 않는다.
 #   단, 과거에 일어난 필터링만 사용한다.
 #   단 1영역에서 "A0110.A" 반복은 제외(반복 발생량의 60%)
@@ -146,12 +124,14 @@ cutEadge <- function( gEnv ,allIdx ){
     allIdx <- allIdx[rstObj$flag]
 
 
-    rstObj <- cutEadge.getBanSymBin( gEnv ,allIdx )
+    rstObj <- cutEadge.getBanRebBin( gEnv ,allIdx )
     allIdx <- allIdx[rstObj$flag]
 
     rstObj <- cutEadge.banDupSeqBin( gEnv ,allIdx )
     allIdx <- allIdx[rstObj$flag]
 
+    rstObj <- cutEadge.getBanSymBin( gEnv ,allIdx )
+    allIdx <- allIdx[rstObj$flag]
 
 
 
@@ -181,8 +161,8 @@ cutEadge.XXXX <- function( gEnv ,allIdx ){
 # ===============================================================================
 
 
+k <- gEnv$zhF[,6] - gEnv$zhF[,1]
+seqCntMtx <- k.seq(k)$seqCntMtx
 
-
-
-
+seqCntMtx[seqCntMtx[,"cnt"]>1 ,]
 

@@ -1824,7 +1824,7 @@ cutEadge.banDupSeq <- function( gEnv ,allIdx ){
 
 } # cutEadge.banDupSeq()
 
-cutEadge.getBanSymBin <- function( gEnv ,allIdx ){
+cutEadge.getBanRebBin <- function( gEnv ,allIdx ){
 
     stdCodeMtx <- gEnv$zhF %% 2
     stdCodeLen <- nrow(stdCodeMtx)
@@ -1874,13 +1874,13 @@ cutEadge.getBanSymBin <- function( gEnv ,allIdx ){
         } # vIdx
     } # azColIdx
 
-    rObj <- list( idStr="cutEadge.getBanSymBin" )
+    rObj <- list( idStr="cutEadge.getBanRebBin" )
     rObj$flag <- sapply( seq_len(length(allIdx)) ,function(idx){ 
 						(length(flagLst.base[[idx]])==0) && (length(flagLst.cv[[idx]])==0)
 					})
     return( rObj )
 
-} # cutEadge.getBanSymBin()
+} # cutEadge.getBanRebBin()
 
 cutEadge.banDupSeqBin <- function( gEnv ,allIdx ){
 
@@ -1930,5 +1930,68 @@ cutEadge.banDupSeqBin <- function( gEnv ,allIdx ){
 
 } # cutEadge.banDupSeqBin()
 
+
+cutEadge.getBanSymBin <- function( gEnv ,allIdx ){
+
+    scanSymm <- function( pMtx ){
+        mtxLen <- nrow(pMtx)
+
+        banPtnLst <- list()
+
+        # A,B,B,? 패턴
+        if( mtxLen>=3 ){
+            if( all(pMtx[mtxLen,]==pMtx[mtxLen-1,]) ) {
+                banPtnLst[[ 1+length(banPtnLst) ]] <- pMtx[mtxLen-2,]
+            }
+        }
+
+        # A,B,C,B,? 패턴
+        if( mtxLen>=4 ){
+            if( all(pMtx[mtxLen,]==pMtx[mtxLen-2,]) ){
+                banPtnLst[[ 1+length(banPtnLst) ]] <- pMtx[mtxLen-1,]
+                banPtnLst[[ 1+length(banPtnLst) ]] <- pMtx[mtxLen-3,]
+            }
+        }
+
+        return( banPtnLst )
+    } # scanSymm
+
+    # flag.base
+    banPtnLst <- scanSymm( gEnv$zhF%%2 )
+    flag.base <- apply( gEnv$allZoidMtx[allIdx,]%%2 ,1 ,function(aZoid){
+                        flag <- sapply( banPtnLst ,function(banPtn){all(banPtn==aZoid)})
+                        return( !any(flag) )
+                    })
+
+    # flagLst.cv
+    azColValLst <- apply( gEnv$allZoidMtx[allIdx,,drop=F] ,2 ,function(p){unique(p)} )
+    flagLst.cv <- vector( "list" ,length(allIdx) )
+    for( azColIdx in 1:6 ){
+        for( vIdx in azColValLst[[azColIdx]]){
+            tMtx <- gEnv$zhF[gEnv$zhF[,azColIdx]==vIdx ,] %% 2
+            banPtnLst <- scanSymm( tMtx )
+            if( 0==length(banPtnLst) ){
+                next
+            }
+            for( idx in seq_len(length(allIdx)) ){
+                if( vIdx != gEnv$allZoidMtx[allIdx[idx],azColIdx] ){
+                    next
+                }
+                aCode <- gEnv$allZoidMtx[allIdx[idx],] %% 2
+                flag <- sapply( banPtnLst ,function(banPtn){ all(banPtn==aCode ) })
+                if( any(flag) ){
+                    flagLst.cv[[idx]][[ 1+length(flagLst.cv[[idx]]) ]] <- c( azColIdx ,vIdx )
+                }
+            } # idx
+        } # vIdx
+    }
+
+    rObj <- list( idStr="cutEadge.getBanSymBin" )
+    rObj$flag <- sapply( seq_len(length(allIdx)) ,function(idx){
+                        (flag.base[idx]) && (0==length(flagLst.cv[[idx]]))
+                    })
+    return( rObj )
+
+} # cutEadge.getBanSymBin()
 
 
