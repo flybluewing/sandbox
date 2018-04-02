@@ -8,7 +8,7 @@ source("20180109_A_H.R")
 source("20180109_C_H.R")
 
 tStmp <- Sys.time()
-saveId <- "Z799"
+saveId <- "Z800"
 load(sprintf("./save/Obj_gEnv%s.save",saveId))
 load(sprintf("./save/Obj_fRstLst%s.save",saveId))
 load(sprintf("./save/Obj_remLst%s.save",saveId))
@@ -36,13 +36,6 @@ allZoid.idx1 <- which(allZoid.fltCnt==1)
 allZoid.idx2 <- which(allZoid.fltCnt==2)
 
 
-# 가정 : 연속 값은 1개이다.
-flag <- sapply( allZoid.idx0 ,function( p ){ 1==sum(c(2,10,14,36) %in%gEnv$allZoidMtx[p,]) })
-allZoid.idx0 <- allZoid.idx0[flag]
-flag <- sapply( allZoid.idx1 ,function( p ){ 1==sum(c(2,10,14,36) %in%gEnv$allZoidMtx[p,]) })
-allZoid.idx1 <- allZoid.idx1[flag]
-flag <- sapply( allZoid.idx2 ,function( p ){ 1==sum(c(2,10,14,36) %in%gEnv$allZoidMtx[p,]) })
-allZoid.idx2 <- allZoid.idx2[flag]
 
 # ================================================================================================
 # 가정 : allZoid.fltCnt의 1영역에서, 바로이전 필터링 결과는 포함되지 않는다.
@@ -76,7 +69,7 @@ flag <- sapply( allZoid.lst[allZoid.idx2] ,function(p){
 allZoid.idx2 <- allZoid.idx2[flag]
 
 
-#   allIdx <- allZoid.idx1  ;allIdx.bak <- allIdx
+#   allIdx <- allZoid.idx0  ;allIdx.bak <- allIdx
 cutEadge <- function( gEnv ,allIdx ){
 
     allZoidMtx <- gEnv$allZoidMtx[allIdx,]
@@ -133,15 +126,14 @@ cutEadge <- function( gEnv ,allIdx ){
     rstObj <- cutEadge.getBanSymBin( gEnv ,allIdx )
     allIdx <- allIdx[rstObj$flag]
 
-
+    rstObj <- cutEadge.getBanRebDiff( gEnv ,allIdx )
+    allIdx <- allIdx[rstObj$flag]
 
 
 
     allIdx.bak <- allIdx
 
 } # cutEadge()
-
-# ~~ 32min
 
 
 
