@@ -8,7 +8,7 @@ source("20180109_A_H.R")
 source("20180109_C_H.R")
 
 tStmp <- Sys.time()
-saveId <- "Z800"
+saveId <- "Z801"
 load(sprintf("./save/Obj_gEnv%s.save",saveId))
 load(sprintf("./save/Obj_fRstLst%s.save",saveId))
 load(sprintf("./save/Obj_remLst%s.save",saveId))
@@ -68,6 +68,9 @@ flag <- sapply( allZoid.lst[allZoid.idx2] ,function(p){
                 })
 allZoid.idx2 <- allZoid.idx2[flag]
 
+allIdxLst <- list( allZoid.idx0=allZoid.idx0 ,allZoid.idx1=allZoid.idx1 ,allZoid.idx2=allZoid.idx2 )
+allIdxLst$saveId <- saveId
+save( allIdxLst, file="Obj_allIdxLst.save" )
 
 #   allIdx <- allZoid.idx0  ;allIdx.bak <- allIdx
 cutEadge <- function( gEnv ,allIdx ){
@@ -87,9 +90,6 @@ cutEadge <- function( gEnv ,allIdx ){
     allIdx <- allIdx[rstObj$flag]
 
     rstObj <- cutEadge.dup3Col( gEnv ,allIdx ,colValLst ,pThld=5 )  # pThld^6 에 비해 효과는 좋음.
-    allIdx <- allIdx[rstObj$flag]
-
-    rstObj <- cutEadge.getCFltObj( gEnv ,allIdx )
     allIdx <- allIdx[rstObj$flag]
 
     rstObj <- cutEadge.getCFltObj( gEnv ,allIdx )
@@ -148,7 +148,10 @@ cutEadge <- function( gEnv ,allIdx ){
     allIdx <- allIdx[rstObj$flag]
     rstObj <- cutEadge.getBanStepRebWidth( gEnv ,allIdx )
     allIdx <- allIdx[rstObj$flag]
+    rstObj <- cutEadge.getBanGradWidth( gEnv ,allIdx )
+    allIdx <- allIdx[rstObj$flag]
 
+    # -----------------------------------------
 
     # rebind cnt
 
@@ -157,136 +160,6 @@ cutEadge <- function( gEnv ,allIdx ){
     allIdx.bak <- allIdx
 
 } # cutEadge()
-
-
-cutEadge.getBanStepRebWidth <- function( gEnv ,allIdx ){
-
-    scanPtn <- getPtnScanner()$stepReb
-
-    allIdx.len <- length(allIdx)
-    stdWidth <- gEnv$zhF[,6] - gEnv$zhF[,1]
-    allWidth <- gEnv$allZoidMtx[allIdx,6] - gEnv$allZoidMtx[allIdx,1]
-
-    flagLst.base <- vector("list",allIdx.len)
-    banPtn <- scanPtn( stdWidth )
-    for( idx in seq_len(allIdx.len) ){
-        if( allWidth[idx]%in%banPtn ){
-            flagLst.base[[idx]][[1+length(flagLst.base[[idx]])]] <- allWidth[idx]
-        }
-    }
-
-    flagLst.cv <- vector("list",allIdx.len)
-    widthSpan <- sort(unique(allWidth))
-    for( wIdx in widthSpan ){
-        tMtx <- gEnv$zhF[stdWidth==wIdx ,]
-        for( azColIdx in 1:6 ){
-            banPtn <- scanPtn( tMtx[,azColIdx] )
-            for( idx in seq_len(allIdx.len) ){
-                if( wIdx!=allWidth[idx] ){
-                    next
-                }
-                if( gEnv$allZoidMtx[allIdx[idx],azColIdx]%in%banPtn ){
-                    flagLst.cv[[idx]][[1+length(flagLst.cv[[idx]])]] <- c( azColIdx ,wIdx )
-                }
-            } # idx
-        } # azColIdx
-    }
-
-    rObj <- list( idStr="cutEadge.getBanStepRebWidth" )
-    rObj$flag <- sapply( seq_len(allIdx.len) ,function(idx){
-                        (length(flagLst.base[[idx]])==0) && (length(flagLst.cv[[idx]])==0)
-                    })
-
-    return( rObj )
-
-} # cutEadge.getBanStepRebWidth()
-
-cutEadge.getBanSymWidth <- function( gEnv ,allIdx ){
-
-    scanPtn <- getPtnScanner()$symm
-
-    allIdx.len <- length(allIdx)
-    stdWidth <- gEnv$zhF[,6] - gEnv$zhF[,1]
-    allWidth <- gEnv$allZoidMtx[allIdx,6] - gEnv$allZoidMtx[allIdx,1]
-
-    flagLst.base <- vector("list",allIdx.len)
-    banPtn <- scanPtn( stdWidth )
-    for( idx in seq_len(allIdx.len) ){
-        if( allWidth[idx]%in%banPtn ){
-            flagLst.base[[idx]][[1+length(flagLst.base[[idx]])]] <- allWidth[idx]
-        }
-    }
-
-    flagLst.cv <- vector("list",allIdx.len)
-    widthSpan <- sort(unique(allWidth))
-    for( wIdx in widthSpan ){
-        tMtx <- gEnv$zhF[stdWidth==wIdx ,]
-        for( azColIdx in 1:6 ){
-            banPtn <- scanPtn( tMtx[,azColIdx] )
-            for( idx in seq_len(allIdx.len) ){
-                if( wIdx!=allWidth[idx] ){
-                    next
-                }
-                if( gEnv$allZoidMtx[allIdx[idx],azColIdx]%in%banPtn ){
-                    flagLst.cv[[idx]][[1+length(flagLst.cv[[idx]])]] <- c( azColIdx ,wIdx )
-                }
-            } # idx
-        } # azColIdx
-    }
-
-    rObj <- list( idStr="cutEadge.getBanSymWidth" )
-    rObj$flag <- sapply( seq_len(allIdx.len) ,function(idx){
-                        (length(flagLst.base[[idx]])==0) && (length(flagLst.cv[[idx]])==0)
-                    })
-
-    return( rObj )
-
-} # cutEadge.getBanSymWidth()
-
-cutEadge.getBanSeqRebWidth <- function( gEnv ,allIdx ){
-
-    scanPtn <- getPtnScanner()$seqReb
-
-    allIdx.len <- length(allIdx)
-    stdWidth <- gEnv$zhF[,6] - gEnv$zhF[,1]
-    allWidth <- gEnv$allZoidMtx[allIdx,6] - gEnv$allZoidMtx[allIdx,1]
-
-    flagLst.base <- vector("list",allIdx.len)
-    banPtn <- scanPtn( stdWidth )
-    for( idx in seq_len(allIdx.len) ){
-        if( allWidth[idx]%in%banPtn ){
-            flagLst.base[[idx]][[1+length(flagLst.base[[idx]])]] <- allWidth[idx]
-        }
-    }
-
-    flagLst.cv <- vector("list",allIdx.len)
-    widthSpan <- sort(unique(allWidth))
-    for( wIdx in widthSpan ){
-        tMtx <- gEnv$zhF[stdWidth==wIdx ,]
-        for( azColIdx in 1:6 ){
-            banPtn <- scanPtn( tMtx[,azColIdx] )
-            for( idx in seq_len(allIdx.len) ){
-                if( wIdx!=allWidth[idx] ){
-                    next
-                }
-                if( gEnv$allZoidMtx[allIdx[idx],azColIdx]%in%banPtn ){
-                    flagLst.cv[[idx]][[1+length(flagLst.cv[[idx]])]] <- c( azColIdx ,wIdx )
-                }
-            } # idx
-        } # azColIdx
-    }
-
-    rObj <- list( idStr="cutEadge.getBanSeqRebWidth" )
-    rObj$flag <- sapply( seq_len(allIdx.len) ,function(idx){
-                        (length(flagLst.base[[idx]])==0) && (length(flagLst.cv[[idx]])==0)
-                    })
-
-    return( rObj )
-
-} # cutEadge.getBanSeqRebWidth()
-
-
-
 
 
 
@@ -311,8 +184,61 @@ grad
 # ===============================================================================
 
 
-k <- gEnv$zhF[,6] - gEnv$zhF[,1]
-seqCntMtx <- k.seq(k)$seqCntMtx
+cutEadgeLst <- function( ){
 
-seqCntMtx[seqCntMtx[,"cnt"]>1 ,]
+    rLst <- list()
+
+    rLst[[1+length(rLst)]] <- cutEadge.getCFltObj
+    rLst[[1+length(rLst)]] <- cutEadge.getCFltObj
+    rLst[[1+length(rLst)]] <- cutEadge.remLstHard
+    rLst[[1+length(rLst)]] <- cutEadge.getColSeq
+    rLst[[1+length(rLst)]] <- cutEadge.getBanPtn
+    rLst[[1+length(rLst)]] <- cutEadge.getBanPtnColVal
+    rLst[[1+length(rLst)]] <- cutEadge.getBanSym
+    rLst[[1+length(rLst)]] <- cutEadge.getBanGrad
+    rLst[[1+length(rLst)]] <- cutEadge.banDupSeq
+    rLst[[1+length(rLst)]] <- cutEadge.getBanRebBin
+    rLst[[1+length(rLst)]] <- cutEadge.banDupSeqBin
+    rLst[[1+length(rLst)]] <- cutEadge.getBanSymBin
+    rLst[[1+length(rLst)]] <- cutEadge.getBanRebDiff
+    rLst[[1+length(rLst)]] <- cutEadge.banDupSeqDiff
+    rLst[[1+length(rLst)]] <- cutEadge.getBanSymDiff
+
+    rLst[[1+length(rLst)]] <- cutEadge.banSeqRebCStep
+    rLst[[1+length(rLst)]] <- cutEadge.getBanSymCStep
+    rLst[[1+length(rLst)]] <- cutEadge.getBanStepRebCStep
+    rLst[[1+length(rLst)]] <- cutEadge.getBanGradCStep
+
+    rLst[[1+length(rLst)]] <- cutEadge.getBanSeqRebWidth
+    rLst[[1+length(rLst)]] <- cutEadge.getBanSymWidth
+    rLst[[1+length(rLst)]] <- cutEadge.getBanStepRebWidth
+    rLst[[1+length(rLst)]] <- cutEadge.getBanGradWidth
+
+    return( rLst )
+
+}
+
+
+cutEadge.test <- function( gEnv ,allIdx ){
+
+    rstObj <- list()
+
+    colValLst <- apply( gEnv$zhF ,2 ,function(p){
+                        val <- sort(unique(p))
+                        tbl <- table(p)
+                        mtx <- matrix( 0 ,ncol=length(val) ,nrow=2 )
+                        mtx[1,] <- val
+                        mtx[2,] <- tbl[as.character(val)]
+                        rownames(mtx) <- c("val","freq")
+                        return(mtx)
+                    })
+
+    rstObj <- cutEadge.colValCut( gEnv ,allIdx ,colValLst )
+
+    rstObj <- cutEadge.dup3Col( gEnv ,allIdx ,colValLst ,pThld=5 )  # pThld^6 에 비해 효과는 좋음.
+    
+
+    return( rstObj )
+
+}
 

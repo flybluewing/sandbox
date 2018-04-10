@@ -1504,36 +1504,37 @@ cf_C0030w04 <- function( pEnv ){
 cutEadge.colValCut <- function( gEnv ,allIdx ,colValLst ){
 
     surviveMtx <- matrix( F ,nrow=length(allIdx) ,ncol=6 )
+    allZoidMtx <- gEnv$allZoidMtx[allIdx,,drop=F]
 
     colIdx <- 1
     valMtx <- colValLst[[colIdx]]
     availVal <- valMtx["val", valMtx["freq",]>5 ]
-    surviveMtx[,colIdx] <- apply( gEnv$allZoidMtx[allIdx,] ,1 ,function(p){p[colIdx]%in%availVal})
+    surviveMtx[,colIdx] <- apply( allZoidMtx ,1 ,function(p){p[colIdx]%in%availVal})
 
     colIdx <- 2
     valMtx <- colValLst[[colIdx]]
     availVal <- valMtx["val", valMtx["freq",]>5 ]
-    surviveMtx[,colIdx] <- apply( gEnv$allZoidMtx[allIdx,] ,1 ,function(p){p[colIdx]%in%availVal})
+    surviveMtx[,colIdx] <- apply( allZoidMtx ,1 ,function(p){p[colIdx]%in%availVal})
 
     colIdx <- 3
     valMtx <- colValLst[[colIdx]]
     availVal <- valMtx["val", valMtx["freq",]>5 ]
-    surviveMtx[,colIdx] <- apply( gEnv$allZoidMtx[allIdx,] ,1 ,function(p){p[colIdx]%in%availVal})
+    surviveMtx[,colIdx] <- apply( allZoidMtx ,1 ,function(p){p[colIdx]%in%availVal})
 
     colIdx <- 4
     valMtx <- colValLst[[colIdx]]
     availVal <- valMtx["val", valMtx["freq",]>5 ]
-    surviveMtx[,colIdx] <- apply( gEnv$allZoidMtx[allIdx,] ,1 ,function(p){p[colIdx]%in%availVal})
+    surviveMtx[,colIdx] <- apply( allZoidMtx ,1 ,function(p){p[colIdx]%in%availVal})
 
     colIdx <- 5
     valMtx <- colValLst[[colIdx]]
     availVal <- valMtx["val", valMtx["freq",]>5 ]
-    surviveMtx[,colIdx] <- apply( gEnv$allZoidMtx[allIdx,] ,1 ,function(p){p[colIdx]%in%availVal})
+    surviveMtx[,colIdx] <- apply( allZoidMtx ,1 ,function(p){p[colIdx]%in%availVal})
 
     colIdx <- 6
     valMtx <- colValLst[[colIdx]]
     availVal <- valMtx["val", valMtx["freq",]>5 ]
-    surviveMtx[,colIdx] <- apply( gEnv$allZoidMtx[allIdx,] ,1 ,function(p){p[colIdx]%in%availVal})
+    surviveMtx[,colIdx] <- apply( allZoidMtx ,1 ,function(p){p[colIdx]%in%availVal})
 
     rObj <- list( idStr="cutEadge.colValCut" )
     rObj$flag <- apply( surviveMtx ,1 ,all )
@@ -1550,12 +1551,12 @@ cutEadge.dup3Col <- function( gEnv ,allIdx ,colValLst ,pThld=5 ){
 
         colFlag <- rep( TRUE ,length(allIdx) )
         for( aIdx in 1:length(allIdx) ){
-            anaObj <- lastPtnObj$getAnaObj( allZoidMtx[aIdx,colIdx] )
+            anaObj <- lastPtnObj$getAnaObj( gEnv$allZoidMtx[aIdx,colIdx] )
             if( is.null(anaObj) ){
                 next
             }
             for( stdIdx in 1:nrow(anaObj$stdCodeMtx) ){
-                if( all(anaObj$stdCodeMtx[stdIdx,]==allZoidMtx[aIdx,colSpan] ) ){
+                if( all(anaObj$stdCodeMtx[stdIdx,]==gEnv$allZoidMtx[aIdx,colSpan] ) ){
                     colFlag[aIdx] <- FALSE
                     break
                 }
@@ -1572,7 +1573,7 @@ cutEadge.dup3Col <- function( gEnv ,allIdx ,colValLst ,pThld=5 ){
 
 cutEadge.getCFltObj <- function( gEnv ,allIdx ){
 
-    allZoidMtx <- gEnv$allZoidMtx[allIdx,]
+    allZoidMtx <- gEnv$allZoidMtx[allIdx,,drop=F]
     bRstObjLst <- list()
 
     banObj <- getCFltObj( gEnv )
@@ -1616,7 +1617,7 @@ cutEadge.getCFltObj <- function( gEnv ,allIdx ){
 cutEadge.remLstHard <- function( gEnv ,allIdx ){
 	# 최저 기준
     logFile <- sprintf("./log/allZoidMtx%s_hard.log",saveId)
-    tEnv <- list( allZoidMtx = gEnv$allZoidMtx[allIdx,]
+    tEnv <- list( allZoidMtx = gEnv$allZoidMtx[allIdx,,drop=F]
                     ,zhF = gEnv$zhF
                     ,logFile = logFile
                     ,doLog = TRUE
@@ -1736,7 +1737,7 @@ cutEadge.getBanSym <- function( gEnv ,allIdx ){
     flagLst.cv <- vector( "list", length(allIdx) )    # by column value
     for( azColIdx in 1:6 ){
         for( vIdx in azColValLst[[azColIdx]] ){
-            valMtx <- gEnv$zhF[gEnv$zhF[,azColIdx]==vIdx ,]
+            valMtx <- gEnv$zhF[gEnv$zhF[,azColIdx]==vIdx ,,drop=F]
             colBanLst <- getBanSeqSym( valMtx )$colBanLst
             for( colIdx in seq_len(length(colBanLst)) ){
                 if( colIdx==azColIdx ){
@@ -1820,8 +1821,11 @@ cutEadge.getBanPtnColVal <- function( gEnv ,allIdx ){
 	flagLst.cv <- vector( "list" ,length(allIdx) )
 	for( azColIdx in 1:6 ){
 		for( vIdx in azColValLst[[azColIdx]] ){
-			tValMtx <- valMtx[valMtx[,azColIdx]==vIdx ,]
+			tValMtx <- valMtx[valMtx[,azColIdx]==vIdx ,,drop=F]
 			banObj <- getBanPtn( tValMtx )
+            if( is.null(banObj) ){
+                next
+            }
 			banRst <- banObj$chkMatchAny( gEnv$allZoidMtx[allIdx,,drop=F] ,pExcCol=azColIdx ,pDebug=T )
 			
 			for( idx in seq_len(length(allIdx)) ){
@@ -1903,7 +1907,7 @@ cutEadge.getBanRebBin <- function( gEnv ,allIdx ){
 
     stdCodeMtx <- gEnv$zhF %% 2
     stdCodeLen <- nrow(stdCodeMtx)
-    allCodeMtx <- gEnv$allZoidMtx[allIdx,] %% 2
+    allCodeMtx <- gEnv$allZoidMtx[allIdx,,drop=F] %% 2
     allCodeLen <- nrow(allCodeMtx)
 
     # flagLst.base
@@ -1973,7 +1977,7 @@ cutEadge.banDupSeqBin <- function( gEnv ,allIdx ){
     banCode <- chkDup( gEnv$zhF %% 2 )
     flag.base <- if( is.null(banCode) ){ rep(TRUE,length(allIdx))
                     } else { 
-                        apply( gEnv$allZoidMtx[allIdx,]%%2 ,1 ,function(aCode){!all(aCode==banCode)} )
+                        apply( gEnv$allZoidMtx[allIdx,,drop=F]%%2 ,1 ,function(aCode){!all(aCode==banCode)} )
                     }
 
     azColValLst <- apply( gEnv$allZoidMtx[allIdx,,drop=F] ,2 ,function(p){unique(p)} )
@@ -1990,7 +1994,7 @@ cutEadge.banDupSeqBin <- function( gEnv ,allIdx ){
                 if( vIdx != gEnv$allZoidMtx[aIdx,azColIdx] ){
                     next
                 }
-                if( all( (gEnv$allZoidMtx[aIdx,]%%2)==banCode ) ){
+                if( all( (gEnv$allZoidMtx[aIdx,,drop=F]%%2)==banCode ) ){
                     flagLst.cv[[idx]][[ 1+length(flagLst.cv[[idx]]) ]] <- c( azColIdx ,vIdx )
                 }
             }
@@ -2033,7 +2037,7 @@ cutEadge.getBanSymBin <- function( gEnv ,allIdx ){
 
     # flag.base
     banPtnLst <- scanSymm( gEnv$zhF%%2 )
-    flag.base <- apply( gEnv$allZoidMtx[allIdx,]%%2 ,1 ,function(aZoid){
+    flag.base <- apply( gEnv$allZoidMtx[allIdx,,drop=F]%%2 ,1 ,function(aZoid){
                         flag <- sapply( banPtnLst ,function(banPtn){all(banPtn==aZoid)})
                         return( !any(flag) )
                     })
@@ -2043,7 +2047,7 @@ cutEadge.getBanSymBin <- function( gEnv ,allIdx ){
     flagLst.cv <- vector( "list" ,length(allIdx) )
     for( azColIdx in 1:6 ){
         for( vIdx in azColValLst[[azColIdx]]){
-            tMtx <- gEnv$zhF[gEnv$zhF[,azColIdx]==vIdx ,] %% 2
+            tMtx <- gEnv$zhF[gEnv$zhF[,azColIdx]==vIdx ,,drop=F] %% 2
             banPtnLst <- scanSymm( tMtx )
             if( 0==length(banPtnLst) ){
                 next
@@ -2052,7 +2056,7 @@ cutEadge.getBanSymBin <- function( gEnv ,allIdx ){
                 if( vIdx != gEnv$allZoidMtx[allIdx[idx],azColIdx] ){
                     next
                 }
-                aCode <- gEnv$allZoidMtx[allIdx[idx],] %% 2
+                aCode <- gEnv$allZoidMtx[allIdx[idx],,drop=F] %% 2
                 flag <- sapply( banPtnLst ,function(banPtn){ all(banPtn==aCode ) })
                 if( any(flag) ){
                     flagLst.cv[[idx]][[ 1+length(flagLst.cv[[idx]]) ]] <- c( azColIdx ,vIdx )
@@ -2092,7 +2096,7 @@ cutEadge.getBanRebDiff <- function( gEnv ,allIdx ){
     } # scanPtn()
 
     lastZoid <- gEnv$zhF[nrow(gEnv$zhF),]
-    allCodeMtx <- t(apply( gEnv$allZoidMtx[allIdx,] ,1 ,function(aZoid){lastZoid-aZoid} ))
+    allCodeMtx <- t(apply( gEnv$allZoidMtx[allIdx,,drop=F] ,1 ,function(aZoid){lastZoid-aZoid} ))
     stdCodeMtx <- gEnv$zhF[1:(nrow(gEnv$zhF)-1),] - gEnv$zhF[2:nrow(gEnv$zhF),]
 
     flagLst.base <- lapply( seq_len(length(allIdx)) ,function(p){integer(0)})
@@ -2105,7 +2109,7 @@ cutEadge.getBanRebDiff <- function( gEnv ,allIdx ){
         }
     }
 
-    azColValLst <- apply( gEnv$allZoidMtx[allIdx,] ,2 ,function(p){sort(unique(p))})
+    azColValLst <- apply( gEnv$allZoidMtx[allIdx,,drop=F] ,2 ,function(p){sort(unique(p))})
     flagLst.cv <- vector( "list" ,length(allIdx) )
     for( azColIdx in 1:6 ){
         for( vIdx in azColValLst[[azColIdx]] ){
@@ -2114,7 +2118,7 @@ cutEadge.getBanRebDiff <- function( gEnv ,allIdx ){
                 next
             }
             tStdMtx <- tZhF[1:(nrow(tZhF)-1),,drop=F] - tZhF[2:nrow(tZhF),,drop=F]
-            tAllMtx <- t(apply(gEnv$allZoidMtx[allIdx,],1,function(aZoid){tZhF[nrow(tZhF),]-aZoid}))
+            tAllMtx <- t(apply(gEnv$allZoidMtx[allIdx,,drop=F],1,function(aZoid){tZhF[nrow(tZhF),]-aZoid}))
 
             banValLst <- lapply( 1:6 ,function(p){scanPtn(tStdMtx[,p])})
             banValLst[[azColIdx]] <- integer(0) # 작업중인 컬럼은 건너뛰어야..
@@ -2174,7 +2178,7 @@ cutEadge.banDupSeqDiff <- function( gEnv ,allIdx ){
         for( vIdx in azColValLst[[azColIdx]] ){
             tRawMtx <- gEnv$zhF[gEnv$zhF[,azColIdx]==vIdx ,,drop=F]
             rawLen <- nrow(tRawMtx)
-            if(1>rawLen){
+            if(1>=rawLen){
                 next
             }
             lastRaw <- tRawMtx[rawLen,]
@@ -2277,7 +2281,7 @@ cutEadge.banSeqRebCStep <- function( gEnv ,allIdx ){
 
     scanPtn <- getPtnScanner()$seqReb
     allIdx.len <- length(allIdx)
-    allCodeMtx <- gEnv$allZoidMtx[allIdx,2:6] - gEnv$allZoidMtx[allIdx,1:5]
+    allCodeMtx <- gEnv$allZoidMtx[allIdx,2:6,drop=F] - gEnv$allZoidMtx[allIdx,1:5,drop=F]
 
     flagLst.base <- vector("list",allIdx.len)
     stdCodeMtx <- gEnv$zhF[,2:6] - gEnv$zhF[,1:5]
@@ -2291,11 +2295,11 @@ cutEadge.banSeqRebCStep <- function( gEnv ,allIdx ){
     }
 
     flagLst.cv <- vector("list",allIdx.len)
-    azColValLst <- apply( gEnv$allZoidMtx[allIdx,] ,2 ,function(p){sort(unique(p))})
+    azColValLst <- apply( gEnv$allZoidMtx[allIdx,,drop=F] ,2 ,function(p){sort(unique(p))})
     for( azColIdx in 1:6 ){
         for( vIdx in azColValLst[[azColIdx]] ){
-            tRawMtx <- gEnv$zhF[gEnv$zhF[,azColIdx]==vIdx ,]
-            tStdMtx <- tRawMtx[,2:6] - tRawMtx[,1:5]
+            tRawMtx <- gEnv$zhF[gEnv$zhF[,azColIdx]==vIdx ,,drop=F]
+            tStdMtx <- tRawMtx[,2:6,drop=F] - tRawMtx[,1:5,drop=F]
             for( colIdx in (1:ncol(tStdMtx)) ){
                 banVal <- scanPtn( tStdMtx[,colIdx] )
                 for( idx in seq_len(allIdx.len) ){
@@ -2322,7 +2326,7 @@ cutEadge.getBanSymCStep <- function( gEnv ,allIdx ){
 
     scanPtn <- getPtnScanner()$symm
     allIdx.len <- length(allIdx)
-    allCodeMtx <- gEnv$allZoidMtx[allIdx,2:6] - gEnv$allZoidMtx[allIdx,1:5]
+    allCodeMtx <- gEnv$allZoidMtx[allIdx,2:6,drop=F] - gEnv$allZoidMtx[allIdx,1:5,drop=F]
 
     flagLst.base <- vector("list",allIdx.len)
     stdCodeMtx <- gEnv$zhF[,2:6] - gEnv$zhF[,1:5]
@@ -2336,11 +2340,11 @@ cutEadge.getBanSymCStep <- function( gEnv ,allIdx ){
     }
 
     flagLst.cv <- vector("list",allIdx.len)
-    azColValLst <- apply( gEnv$allZoidMtx[allIdx,] ,2 ,function(p){sort(unique(p))})
+    azColValLst <- apply( gEnv$allZoidMtx[allIdx,,drop=F] ,2 ,function(p){sort(unique(p))})
     for( azColIdx in 1:6 ){
         for( vIdx in azColValLst[[azColIdx]] ){
-            tRawMtx <- gEnv$zhF[gEnv$zhF[,azColIdx]==vIdx ,]
-            tStdMtx <- tRawMtx[,2:6] - tRawMtx[,1:5]
+            tRawMtx <- gEnv$zhF[gEnv$zhF[,azColIdx]==vIdx ,,drop=F]
+            tStdMtx <- tRawMtx[,2:6,drop=F] - tRawMtx[,1:5,drop=F]
             for( colIdx in (1:ncol(tStdMtx)) ){
                 banVal <- scanPtn( tStdMtx[,colIdx] )
                 for( idx in seq_len(allIdx.len) ){
@@ -2368,7 +2372,7 @@ cutEadge.getBanStepRebCStep <- function( gEnv ,allIdx ){
 
     scanPtn <- getPtnScanner()$stepReb
     allIdx.len <- length(allIdx)
-    allCodeMtx <- gEnv$allZoidMtx[allIdx,2:6] - gEnv$allZoidMtx[allIdx,1:5]
+    allCodeMtx <- gEnv$allZoidMtx[allIdx,2:6,drop=F] - gEnv$allZoidMtx[allIdx,1:5,drop=F]
 
     flagLst.base <- vector("list",allIdx.len)
     stdCodeMtx <- gEnv$zhF[,2:6] - gEnv$zhF[,1:5]
@@ -2382,11 +2386,11 @@ cutEadge.getBanStepRebCStep <- function( gEnv ,allIdx ){
     }
 
     flagLst.cv <- vector("list",allIdx.len)
-    azColValLst <- apply( gEnv$allZoidMtx[allIdx,] ,2 ,function(p){sort(unique(p))})
+    azColValLst <- apply( gEnv$allZoidMtx[allIdx,,drop=F] ,2 ,function(p){sort(unique(p))})
     for( azColIdx in 1:6 ){
         for( vIdx in azColValLst[[azColIdx]] ){
-            tRawMtx <- gEnv$zhF[gEnv$zhF[,azColIdx]==vIdx ,]
-            tStdMtx <- tRawMtx[,2:6] - tRawMtx[,1:5]
+            tRawMtx <- gEnv$zhF[gEnv$zhF[,azColIdx]==vIdx ,,drop=F]
+            tStdMtx <- tRawMtx[,2:6,drop=F] - tRawMtx[,1:5,drop=F]
             for( colIdx in (1:ncol(tStdMtx)) ){
                 banVal <- scanPtn( tStdMtx[,colIdx] )
                 for( idx in seq_len(allIdx.len) ){
@@ -2414,7 +2418,7 @@ cutEadge.getBanGradCStep <- function( gEnv ,allIdx ){
 
     scanPtn <- getPtnScanner()$grad
     allIdx.len <- length(allIdx)
-    allCodeMtx <- gEnv$allZoidMtx[allIdx,2:6] - gEnv$allZoidMtx[allIdx,1:5]
+    allCodeMtx <- gEnv$allZoidMtx[allIdx,2:6,drop=F] - gEnv$allZoidMtx[allIdx,1:5,drop=F]
 
     flagLst.base <- vector("list",allIdx.len)
     stdCodeMtx <- gEnv$zhF[,2:6] - gEnv$zhF[,1:5]
@@ -2428,11 +2432,11 @@ cutEadge.getBanGradCStep <- function( gEnv ,allIdx ){
     }
 
     flagLst.cv <- vector("list",allIdx.len)
-    azColValLst <- apply( gEnv$allZoidMtx[allIdx,] ,2 ,function(p){sort(unique(p))})
+    azColValLst <- apply( gEnv$allZoidMtx[allIdx,,drop=F] ,2 ,function(p){sort(unique(p))})
     for( azColIdx in 1:6 ){
         for( vIdx in azColValLst[[azColIdx]] ){
-            tRawMtx <- gEnv$zhF[gEnv$zhF[,azColIdx]==vIdx ,]
-            tStdMtx <- tRawMtx[,2:6] - tRawMtx[,1:5]
+            tRawMtx <- gEnv$zhF[gEnv$zhF[,azColIdx]==vIdx ,,drop=F]
+            tStdMtx <- tRawMtx[,2:6,drop=F] - tRawMtx[,1:5,drop=F]
             for( colIdx in (1:ncol(tStdMtx)) ){
                 banVal <- scanPtn( tStdMtx[,colIdx] )
                 for( idx in seq_len(allIdx.len) ){
@@ -2456,5 +2460,174 @@ cutEadge.getBanGradCStep <- function( gEnv ,allIdx ){
 
 } # cutEadge.getBanGradCStep()
 
+
+
+cutEadge.getBanGradWidth <- function( gEnv ,allIdx ){
+
+    scanPtn <- getPtnScanner()$grad
+
+    allIdx.len <- length(allIdx)
+    stdWidth <- gEnv$zhF[,6] - gEnv$zhF[,1]
+    allWidth <- gEnv$allZoidMtx[allIdx,6] - gEnv$allZoidMtx[allIdx,1]
+
+    flagLst.base <- vector("list",allIdx.len)
+    banPtn <- scanPtn( stdWidth )
+    for( idx in seq_len(allIdx.len) ){
+        if( allWidth[idx]%in%banPtn ){
+            flagLst.base[[idx]][[1+length(flagLst.base[[idx]])]] <- allWidth[idx]
+        }
+    }
+
+    flagLst.cv <- vector("list",allIdx.len)
+    widthSpan <- sort(unique(allWidth))
+    for( wIdx in widthSpan ){
+        tMtx <- gEnv$zhF[stdWidth==wIdx ,,drop=F]
+        for( azColIdx in 2:5 ){ # (1:6)[-c(1,6)]
+            banPtn <- scanPtn( tMtx[,azColIdx] )
+            for( idx in seq_len(allIdx.len) ){
+                if( wIdx!=allWidth[idx] ){
+                    next
+                }
+                if( gEnv$allZoidMtx[allIdx[idx],azColIdx]%in%banPtn ){
+                    flagLst.cv[[idx]][[1+length(flagLst.cv[[idx]])]] <- c( azColIdx ,wIdx )
+                }
+            } # idx
+        } # azColIdx
+    }
+
+    rObj <- list( idStr="cutEadge.getBanGradWidth" )
+    rObj$flag <- sapply( seq_len(allIdx.len) ,function(idx){
+                        (length(flagLst.base[[idx]])==0) && (length(flagLst.cv[[idx]])==0)
+                    })
+
+    return( rObj )
+
+} # cutEadge.getBanGradWidth()
+
+cutEadge.getBanStepRebWidth <- function( gEnv ,allIdx ){
+
+    scanPtn <- getPtnScanner()$stepReb
+
+    allIdx.len <- length(allIdx)
+    stdWidth <- gEnv$zhF[,6] - gEnv$zhF[,1]
+    allWidth <- gEnv$allZoidMtx[allIdx,6] - gEnv$allZoidMtx[allIdx,1]
+
+    flagLst.base <- vector("list",allIdx.len)
+    banPtn <- scanPtn( stdWidth )
+    for( idx in seq_len(allIdx.len) ){
+        if( allWidth[idx]%in%banPtn ){
+            flagLst.base[[idx]][[1+length(flagLst.base[[idx]])]] <- allWidth[idx]
+        }
+    }
+
+    flagLst.cv <- vector("list",allIdx.len)
+    widthSpan <- sort(unique(allWidth))
+    for( wIdx in widthSpan ){
+        tMtx <- gEnv$zhF[stdWidth==wIdx ,,drop=F]
+        for( azColIdx in 2:5 ){ # (1:6)[-c(1,6)]
+            banPtn <- scanPtn( tMtx[,azColIdx] )
+            for( idx in seq_len(allIdx.len) ){
+                if( wIdx!=allWidth[idx] ){
+                    next
+                }
+                if( gEnv$allZoidMtx[allIdx[idx],azColIdx]%in%banPtn ){
+                    flagLst.cv[[idx]][[1+length(flagLst.cv[[idx]])]] <- c( azColIdx ,wIdx )
+                }
+            } # idx
+        } # azColIdx
+    }
+
+    rObj <- list( idStr="cutEadge.getBanStepRebWidth" )
+    rObj$flag <- sapply( seq_len(allIdx.len) ,function(idx){
+                        (length(flagLst.base[[idx]])==0) && (length(flagLst.cv[[idx]])==0)
+                    })
+
+    return( rObj )
+
+} # cutEadge.getBanStepRebWidth()
+
+cutEadge.getBanSymWidth <- function( gEnv ,allIdx ){
+
+    scanPtn <- getPtnScanner()$symm
+
+    allIdx.len <- length(allIdx)
+    stdWidth <- gEnv$zhF[,6] - gEnv$zhF[,1]
+    allWidth <- gEnv$allZoidMtx[allIdx,6] - gEnv$allZoidMtx[allIdx,1]
+
+    flagLst.base <- vector("list",allIdx.len)
+    banPtn <- scanPtn( stdWidth )
+    for( idx in seq_len(allIdx.len) ){
+        if( allWidth[idx]%in%banPtn ){
+            flagLst.base[[idx]][[1+length(flagLst.base[[idx]])]] <- allWidth[idx]
+        }
+    }
+
+    flagLst.cv <- vector("list",allIdx.len)
+    widthSpan <- sort(unique(allWidth))
+    for( wIdx in widthSpan ){
+        tMtx <- gEnv$zhF[stdWidth==wIdx ,,drop=F]
+        for( azColIdx in 2:5 ){ # (1:6)[-c(1,6)]
+            banPtn <- scanPtn( tMtx[,azColIdx] )
+            for( idx in seq_len(allIdx.len) ){
+                if( wIdx!=allWidth[idx] ){
+                    next
+                }
+                if( gEnv$allZoidMtx[allIdx[idx],azColIdx]%in%banPtn ){
+                    flagLst.cv[[idx]][[1+length(flagLst.cv[[idx]])]] <- c( azColIdx ,wIdx )
+                }
+            } # idx
+        } # azColIdx
+    }
+
+    rObj <- list( idStr="cutEadge.getBanSymWidth" )
+    rObj$flag <- sapply( seq_len(allIdx.len) ,function(idx){
+                        (length(flagLst.base[[idx]])==0) && (length(flagLst.cv[[idx]])==0)
+                    })
+
+    return( rObj )
+
+} # cutEadge.getBanSymWidth()
+
+cutEadge.getBanSeqRebWidth <- function( gEnv ,allIdx ){
+
+    scanPtn <- getPtnScanner()$seqReb
+
+    allIdx.len <- length(allIdx)
+    stdWidth <- gEnv$zhF[,6] - gEnv$zhF[,1]
+    allWidth <- gEnv$allZoidMtx[allIdx,6] - gEnv$allZoidMtx[allIdx,1]
+
+    flagLst.base <- vector("list",allIdx.len)
+    banPtn <- scanPtn( stdWidth )
+    for( idx in seq_len(allIdx.len) ){
+        if( allWidth[idx]%in%banPtn ){
+            flagLst.base[[idx]][[1+length(flagLst.base[[idx]])]] <- allWidth[idx]
+        }
+    }
+
+    flagLst.cv <- vector("list",allIdx.len)
+    widthSpan <- sort(unique(allWidth))
+    for( wIdx in widthSpan ){
+        tMtx <- gEnv$zhF[stdWidth==wIdx ,,drop=F]
+        for( azColIdx in 2:5 ){ # (1:6)[-c(1,6)]
+            banPtn <- scanPtn( tMtx[,azColIdx] )
+            for( idx in seq_len(allIdx.len) ){
+                if( wIdx!=allWidth[idx] ){
+                    next
+                }
+                if( gEnv$allZoidMtx[allIdx[idx],azColIdx]%in%banPtn ){
+                    flagLst.cv[[idx]][[1+length(flagLst.cv[[idx]])]] <- c( azColIdx ,wIdx )
+                }
+            } # idx
+        } # azColIdx
+    }
+
+    rObj <- list( idStr="cutEadge.getBanSeqRebWidth" )
+    rObj$flag <- sapply( seq_len(allIdx.len) ,function(idx){
+                        (length(flagLst.base[[idx]])==0) && (length(flagLst.cv[[idx]])==0)
+                    })
+
+    return( rObj )
+
+} # cutEadge.getBanSeqRebWidth()
 
 

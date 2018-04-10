@@ -221,7 +221,7 @@ filt_A0010.hard <- function( pEnv ) {
 	filtId="A0010.hard";	tStmp <- Sys.time()
 	allZoidMtx <- pEnv$allZoidMtx;	zhF <- pEnv$zhF
 
-	allCodeMtx <- allZoidMtx[,2:6]-allZoidMtx[,1:5]
+	allCodeMtx <- allZoidMtx[,2:6,drop=F]-allZoidMtx[,1:5,drop=F]
 	flag <- rep( TRUE ,nrow(allCodeMtx) )
 	for( aIdx in 1:nrow(allCodeMtx) ){
 		curCode <- allCodeMtx[aIdx,]

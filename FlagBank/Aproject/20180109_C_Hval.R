@@ -280,11 +280,76 @@ val.getBanPtn <- function( ){
 
 } # val.getBanPtn()
 
-# 4개가 똑같은 경우는 없다?
-stdCodeMtx <- gEnv$zhF %% 2
+rstLst <- list()
+testSpan <- 200:nrow(gEnv$zhF)
+for( tIdx in testSpan ){
 
-srMtx <- scanSameRow(stdCodeMtx)
-k <- srMtx[,"bIdx"]-srMtx[,"aIdx"]
+	tEnv <- gEnv
+	tEnv$zhF <- gEnv$zhF[1:(tIdx-1),]
+	tEnv$allZoidMtx <- gEnv$zhF[tIdx,,drop=F]
+	allIdx <- 1
 
-srMtx[k==1,]
+    colValLst <- apply( gEnv$zhF ,2 ,function(p){
+                        val <- sort(unique(p))
+                        tbl <- table(p)
+                        mtx <- matrix( 0 ,ncol=length(val) ,nrow=2 )
+                        mtx[1,] <- val
+                        mtx[2,] <- tbl[as.character(val)]
+                        rownames(mtx) <- c("val","freq")
+                        return(mtx)
+                    })
+
+	rstFlag <- character(0)
+
+    rstObj <- cutEadge.colValCut( tEnv ,allIdx ,colValLst )
+	if( !rstObj$flag ){	rstFlag[1+length(rstFlag)] <- rstObj$idStr }
+
+    rstObj <- cutEadge.dup3Col( tEnv ,allIdx ,colValLst ,pThld=5 )  # pThld^6 에 비해 효과는 좋음.
+	if( !rstObj$flag ){	rstLst[[1+length(rstLst)]] <- rstObj$idStr }
+
+	cutEadgeLst <- getCutEadgeLst()
+	for( idx in seq_len(length(cutEadgeLst)) ){
+		rstObj <- cutEadgeLst[[idx]]( tEnv ,allIdx )
+		if( !rstObj$flag ){	rstLst[[1+length(rstLst)]] <- rstObj$idStr }
+	}
+
+	rstLst[[1+length(rstLst)]] <- rstFlag
+
+} # tIdx
+
+
+getCutEadgeLst <- function( ){
+
+    rLst <- list()
+
+    rLst[[1+length(rLst)]] <- cutEadge.getCFltObj
+    rLst[[1+length(rLst)]] <- cutEadge.remLstHard
+    rLst[[1+length(rLst)]] <- cutEadge.getColSeq
+    rLst[[1+length(rLst)]] <- cutEadge.getBanPtn
+    rLst[[1+length(rLst)]] <- cutEadge.getBanPtnColVal
+    rLst[[1+length(rLst)]] <- cutEadge.getBanSym
+    rLst[[1+length(rLst)]] <- cutEadge.getBanGrad
+    rLst[[1+length(rLst)]] <- cutEadge.banDupSeq
+    rLst[[1+length(rLst)]] <- cutEadge.getBanRebBin
+    rLst[[1+length(rLst)]] <- cutEadge.banDupSeqBin
+    rLst[[1+length(rLst)]] <- cutEadge.getBanSymBin
+    rLst[[1+length(rLst)]] <- cutEadge.getBanRebDiff
+    rLst[[1+length(rLst)]] <- cutEadge.banDupSeqDiff
+    rLst[[1+length(rLst)]] <- cutEadge.getBanSymDiff # 14th
+
+    rLst[[1+length(rLst)]] <- cutEadge.banSeqRebCStep
+    rLst[[1+length(rLst)]] <- cutEadge.getBanSymCStep
+    rLst[[1+length(rLst)]] <- cutEadge.getBanStepRebCStep
+    rLst[[1+length(rLst)]] <- cutEadge.getBanGradCStep
+
+    rLst[[1+length(rLst)]] <- cutEadge.getBanSeqRebWidth
+    rLst[[1+length(rLst)]] <- cutEadge.getBanSymWidth
+    rLst[[1+length(rLst)]] <- cutEadge.getBanStepRebWidth
+    rLst[[1+length(rLst)]] <- cutEadge.getBanGradWidth
+
+    return( rLst )
+
+}
+
+
 
