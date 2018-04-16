@@ -987,11 +987,16 @@ filt_AP000.B.hard <- function( pEnv ){	#
 #	zhF %/% 10 Quoatient.  한가지 Quoatient가 4개 이상인 경우 10/391
 filt_AP000.C <- function( pEnv ){	#
 	
-	filtId="AP000.C";	tStmp <- Sys.time()
+	filtId="AP000.C.hard";	tStmp <- Sys.time()
 	allZoidMtx <- pEnv$allZoidMtx;	zhF <- pEnv$zhF
-	allCodeMtx <- pEnv$allZoidMtx %/% 10
+	allCodeMtx <- allZoidMtx %/% 10
 
-	flagLst <- apply(allCodeMtx ,1 ,table)
+	flagLst <- list()
+	if( 1<nrow(allCodeMtx) ){
+		flagLst <- apply(allCodeMtx ,1 ,table)
+	} else {
+		flagLst[[1]] <- table(allCodeMtx[1,])
+	}
 	flag <- sapply(flagLst,max)
 	flag <- flag < 4
 
@@ -1005,9 +1010,14 @@ filt_AP000.C.hard <- function( pEnv ){	#
 	# 기본형과 똑같이 한다. 그냥 filt_AP000.C() 는 허용대상에서 제외..
 	filtId="AP000.C.hard";	tStmp <- Sys.time()
 	allZoidMtx <- pEnv$allZoidMtx;	zhF <- pEnv$zhF
-	allCodeMtx <- pEnv$allZoidMtx %/% 10
+	allCodeMtx <- allZoidMtx %/% 10
 
-	flagLst <- apply(allCodeMtx ,1 ,table)
+	flagLst <- list()
+	if( 1<nrow(allCodeMtx) ){
+		flagLst <- apply(allCodeMtx ,1 ,table)
+	} else {
+		flagLst[[1]] <- table(allCodeMtx[1,])
+	}
 	flag <- sapply(flagLst,max)
 	flag <- flag < 4
 
@@ -1021,7 +1031,7 @@ filt_AP000.C.hard <- function( pEnv ){	#
 #-[AP000.D]------------------------------------------------------
 #	zhF %/% 10 Quoatient.  Quoatient패턴 Next 값.	5/288
 filt_AP000.D <- function( pEnv ){	#
-	
+
 	filtId="AP000.D";	tStmp <- Sys.time()
 	allZoidMtx <- pEnv$allZoidMtx;	zhF <- pEnv$zhF
 	stdCodeMtx <- getTblCnt( pEnv$zhF%/%10 ,pTblVal=0:4 )

@@ -280,6 +280,7 @@ val.getBanPtn <- function( ){
 
 } # val.getBanPtn()
 
+tStmp <- Sys.time()
 rstLst <- list()
 testSpan <- 200:nrow(gEnv$zhF)
 for( tIdx in testSpan ){
@@ -305,18 +306,22 @@ for( tIdx in testSpan ){
 	if( !rstObj$flag ){	rstFlag[1+length(rstFlag)] <- rstObj$idStr }
 
     rstObj <- cutEadge.dup3Col( tEnv ,allIdx ,colValLst ,pThld=5 )  # pThld^6 에 비해 효과는 좋음.
-	if( !rstObj$flag ){	rstLst[[1+length(rstLst)]] <- rstObj$idStr }
+	if( !rstObj$flag ){	rstFlag[[1+length(rstFlag)]] <- rstObj$idStr }
 
 	cutEadgeLst <- getCutEadgeLst()
 	for( idx in seq_len(length(cutEadgeLst)) ){
 		rstObj <- cutEadgeLst[[idx]]( tEnv ,allIdx )
-		if( !rstObj$flag ){	rstLst[[1+length(rstLst)]] <- rstObj$idStr }
+		if( !rstObj$flag ){	rstFlag[[1+length(rstFlag)]] <- rstObj$idStr }
 	}
 
 	rstLst[[1+length(rstLst)]] <- rstFlag
 
 } # tIdx
+tDiff <- Sys.time() - tStmp
 
+fltFlag <- sapply( rstLst ,length )	# table(fltFlag)
+fltDensity <- do.call( c ,rstLst )	# table(fltDensity)
+fltDensity.tbl <- sort( table(fltDensity) ,decreasing=T )
 
 getCutEadgeLst <- function( ){
 

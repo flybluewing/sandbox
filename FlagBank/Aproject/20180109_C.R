@@ -8,7 +8,7 @@ source("20180109_A_H.R")
 source("20180109_C_H.R")
 
 tStmp <- Sys.time()
-saveId <- "Z801"
+saveId <- "Z802"
 load(sprintf("./save/Obj_gEnv%s.save",saveId))
 load(sprintf("./save/Obj_fRstLst%s.save",saveId))
 load(sprintf("./save/Obj_remLst%s.save",saveId))
@@ -151,17 +151,63 @@ cutEadge <- function( gEnv ,allIdx ){
     rstObj <- cutEadge.getBanGradWidth( gEnv ,allIdx )
     allIdx <- allIdx[rstObj$flag]
 
+
+    rstObj <- cutEadge.barReb3( gEnv ,allIdx )
+    allIdx <- allIdx[rstObj$flag]
+
     # -----------------------------------------
 
     # rebind cnt
 
-    # QQE : %%10에 대한 3연속 이상 금지
+    # QQE : %%10에 대한 3연속 이상 금지 # 취소. 4연속도 엄청 많음..
 
     allIdx.bak <- allIdx
 
 } # cutEadge()
 
 
+cutEadge.getBanGradColValReb <- function( gEnv ,allIdx ){
+
+    scanPtn <- getPtnScanner()$grad
+
+    allIdx.len <- length(allIdx)
+    rebMtx <- getRebCnt.colVal( gEnv )$rebMtx
+
+    # QQE
+
+    flagLst.base <- vector("list",allIdx.len)
+    banPtn <- scanPtn( stdWidth )
+    for( idx in seq_len(allIdx.len) ){
+        if( allWidth[idx]%in%banPtn ){
+            flagLst.base[[idx]][[1+length(flagLst.base[[idx]])]] <- allWidth[idx]
+        }
+    }
+
+    flagLst.cv <- vector("list",allIdx.len)
+    widthSpan <- sort(unique(allWidth))
+    for( wIdx in widthSpan ){
+        tMtx <- gEnv$zhF[stdWidth==wIdx ,,drop=F]
+        for( azColIdx in 2:5 ){ # (1:6)[-c(1,6)]
+            banPtn <- scanPtn( tMtx[,azColIdx] )
+            for( idx in seq_len(allIdx.len) ){
+                if( wIdx!=allWidth[idx] ){
+                    next
+                }
+                if( gEnv$allZoidMtx[allIdx[idx],azColIdx]%in%banPtn ){
+                    flagLst.cv[[idx]][[1+length(flagLst.cv[[idx]])]] <- c( azColIdx ,wIdx )
+                }
+            } # idx
+        } # azColIdx
+    }
+
+    rObj <- list( idStr="cutEadge.getBanGradColValReb" )
+    rObj$flag <- sapply( seq_len(allIdx.len) ,function(idx){
+                        (length(flagLst.base[[idx]])==0) && (length(flagLst.cv[[idx]])==0)
+                    })
+
+    return( rObj )
+
+} # cutEadge.getBanGradColValReb( )
 
 
 
@@ -175,10 +221,51 @@ cutEadge.XXXX <- function( gEnv ,allIdx ){
 } # cutEadge.XXXX()
 
 
-stepReb
-grad
+finalCut <- function( gEnv ,allIdx ){
+
+    allIdxF <- allIdx
+    azColValLst <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,2 ,function(p){sort(unique(p))})
+
+    flag <- gEnv$allZoidMtx[allIdxF,6] != 44
+    allIdxF <- allIdxF[flag]
+
+    lastZoid <- gEnv$zhF[nrow(gEnv$zhF),]
+    flag <- apply( gEnv$allZoidMtx[allIdxF,] ,1 ,function(aZoid){ sum(aZoid %in% lastZoid) } )
+    allIdxF <- allIdxF[flag==1]
 
 
+    firstCode <- 7
+    flag <- gEnv$allZoidMtx[allIdxF,1] %in% c(firstCode) # zoid[1]은 1:5 사이에서 가장 오래 안 나온 값.
+    allIdxF <- allIdxF[flag]
+
+    localHisMtx <- gEnv$zhF[gEnv$zhF[,1]%in%firstCode ,]
+    rebCnt <- sapply( 2:nrow(localHisMtx) ,function(idx){
+                        sum( localHisMtx[(idx-1),] %in% localHisMtx[idx,] )
+                    })
+    rebMtxLst <- lapply( which(rebCnt>1) ,function( idx ){
+                        return( localHisMtx[idx+0:1,] )
+                    })
+
+    #     > tail(localHisMtx)     E1 E2 E3 E4 E5 E6
+    #                         739  7 22 29 33 34 35
+    #                         747  7  9 12 14 23 28
+    #                         764  7 22 24 31 34 36
+    #                         768  7 27 29 30 38 44
+
+    flag <- apply( gEnv$allZoidMtx[allIdxF,c(2,5)] ,1 ,function( p ){
+                        all( p!=c(22,34) )
+                    })
+    allIdxF <- allIdxF[flag]
+
+    allZoidMtx <- gEnv$allZoidMtx[allIdxF,]
+    flagCnt <- apply( gEnv$allZoidMtx[allIdxF,] ,1 ,function( aZoid ){
+                    sum( aZoid %in% localHisMtx[nrow(localHisMtx),])
+                })
+    allIdxF <- allIdxF[flagCnt<3]
+
+    return( allIdxF )
+
+} # finalCut()
 
 
 # ===============================================================================
@@ -214,6 +301,9 @@ cutEadgeLst <- function( ){
     rLst[[1+length(rLst)]] <- cutEadge.getBanStepRebWidth
     rLst[[1+length(rLst)]] <- cutEadge.getBanGradWidth
 
+    rLst[[1+length(rLst)]] <- cutEadge.barReb3
+
+
     return( rLst )
 
 }
@@ -241,4 +331,7 @@ cutEadge.test <- function( gEnv ,allIdx ){
     return( rstObj )
 
 }
+
+
+
 

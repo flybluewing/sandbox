@@ -412,6 +412,34 @@ getPtnScanner <- function( ){
 
 }
 
+# 각 컬럼 값이 이전 발생 zoid에서의 다른 값도 재발한 수.
+getRebCnt.colVal <- function( gEnv ){
+
+    rObj <- list()
+    rebMtx <- matrix( 0 ,nrow=nrow(gEnv$zhF) ,ncol=ncol(gEnv$zhF) )
+
+    for( rIdx in 2:nrow(rebMtx) ){
+        for( cIdx in 1:6 ){
+            tRawMtx <- gEnv$zhF[1:(rIdx-1), ,drop=F]
+            tRawMtx <- tRawMtx[tRawMtx[,cIdx]==gEnv$zhF[rIdx,cIdx]  ,,drop=F]
+            if( 0==nrow(tRawMtx) ){
+                next
+            }
+            rebMtx[rIdx,cIdx] <- sum( gEnv$zhF[rIdx,] %in% tRawMtx[nrow(tRawMtx),] )
+        }
+    }
+
+    rebCnt <- apply( rebMtx ,1 ,function( reb ){
+                    sum(reb>2)
+                })
+    tMtx <- rebMtx  ;tMtx[tMtx<3] <- 0
+
+
+    rObj$rebMtx <- rebMtx
+    return( rObj )
+
+} # getRebCnt.colVal()
+
 
 
 #   동일 패턴이 그대로 재발.
@@ -2629,5 +2657,44 @@ cutEadge.getBanSeqRebWidth <- function( gEnv ,allIdx ){
     return( rObj )
 
 } # cutEadge.getBanSeqRebWidth()
+
+cutEadge.barReb3 <- function( gEnv ,allIdx ){
+
+    allIdx.len <- length(allIdx)
+
+    flagLst.base <- vector( "list" ,allIdx.len )
+    lastZoid <- gEnv$zhF[nrow(gEnv$zhF) ,]
+    for( idx in seq_len(allIdx.len) ){
+        cnt <- sum( lastZoid %in% gEnv$allZoidMtx[allIdx[idx],] )
+        if( cnt > 1 ){ 
+            flagLst.base[[idx]] <- cnt
+        }
+    }
+
+    flagLst.cv <- vector( "list" ,allIdx.len )
+    azColValLst <- apply( gEnv$allZoidMtx[allIdx,,drop=F] ,2 ,function(p){sort(unique(p))})
+    for( azColIdx in 1:6 ){
+        for( vIdx in azColValLst[[azColIdx]] ){
+            tRawMtx <- gEnv$zhF[gEnv$zhF[,azColIdx]==vIdx ,,drop=F]
+            lastH <- tRawMtx[nrow(tRawMtx),]
+            for( idx in seq_len(allIdx.len) ){
+                if( vIdx != gEnv$allZoidMtx[allIdx[idx],azColIdx] ){
+                    next
+                }
+                cnt <- sum( gEnv$allZoidMtx[allIdx[idx],] %in% lastH )
+                if( cnt>2 ){
+                    flagLst.cv[[idx]][[1+length(flagLst.cv[[idx]])]] <- c(azColIdx,vIdx,cnt)
+                }
+            }
+        }
+    }
+
+    rObj <- list( idStr="cutEadge.barReb3" )
+    rObj$flag <- sapply( seq_len(allIdx.len) ,function(idx){
+                        (length(flagLst.base[[idx]])==0) && (length(flagLst.cv[[idx]])==0)
+                    })
+    return( rObj )
+
+} # cutEadge.barReb3()
 
 
