@@ -79,7 +79,7 @@ for( hIdx in 100:nrow(gEnv$zhF) ){
 	fndLst <- fnd3SeqReb( gEnv$zhF[1:(hIdx-1),] ,gEnv$zhF[hIdx,] )
 	rstLst[[1+length(rstLst)]] <- fndLst
 }
-#	50,48,5,39번이 있었다... 50 가자.
+#	50,48,5,39번 4개뿐... 확실해야 하니 30가자.
 
 
 kCnt <- sapply( rstLst ,length )
