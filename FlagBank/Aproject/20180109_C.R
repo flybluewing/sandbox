@@ -154,6 +154,8 @@ cutEadge <- function( gEnv ,allIdx ){
 
     rstObj <- cutEadge.barReb3( gEnv ,allIdx )
     allIdx <- allIdx[rstObj$flag]
+    rstObj <- cutEadge.banSeq3Twice( gEnv ,allIdx )
+    allIdx <- allIdx[rstObj$flag]
 
     # -----------------------------------------
 
@@ -336,6 +338,16 @@ finalCut <- function( gEnv ,allIdx ){
     allIdxF <- allIdxF[flag]
     cat(sprintf("allIdxF %d\n",length(allIdxF)))
 
+    # allIdx <- allIdxF
+
+    for( idx in ){
+
+    }
+    fndLst <- fnd2SeqReb( gEnv$zhF ,gEnv$allZoidMtx[allIdx[idx],] ,pSrcNum=2  )
+
+    fndLst <- fnd2SeqReb( gEnv$zhF ,gEnv$allZoidMtx[2994332,] ,pSrcNum=2  )
+
+    
 
     rebCnt <- sapply( 2:nrow(localHisMtx) ,function(idx){
                         sum( localHisMtx[(idx-1),] %in% localHisMtx[idx,] )
@@ -343,23 +355,6 @@ finalCut <- function( gEnv ,allIdx ){
     rebMtxLst <- lapply( which(rebCnt>1) ,function( idx ){
                         return( localHisMtx[idx+0:1,] )
                     })
-
-    #     > tail(localHisMtx)     E1 E2 E3 E4 E5 E6
-    #                         739  7 22 29 33 34 35
-    #                         747  7  9 12 14 23 28
-    #                         764  7 22 24 31 34 36
-    #                         768  7 27 29 30 38 44
-
-    flag <- apply( gEnv$allZoidMtx[allIdxF,c(2,5)] ,1 ,function( p ){
-                        all( p!=c(22,34) )
-                    })
-    allIdxF <- allIdxF[flag]
-
-    allZoidMtx <- gEnv$allZoidMtx[allIdxF,]
-    flagCnt <- apply( gEnv$allZoidMtx[allIdxF,] ,1 ,function( aZoid ){
-                    sum( aZoid %in% localHisMtx[nrow(localHisMtx),])
-                })
-    allIdxF <- allIdxF[flagCnt<3]
 
     return( allIdxF )
 
@@ -401,6 +396,7 @@ cutEadgeLst <- function( ){
 
     rLst[[1+length(rLst)]] <- cutEadge.barReb3
 
+    rLst[[1+length(rLst)]] <- cutEadge.banSeq3Twice
 
     return( rLst )
 
