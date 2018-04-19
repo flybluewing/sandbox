@@ -159,6 +159,19 @@ cutEadge <- function( gEnv ,allIdx ){
 } # cutEadge()
 
 
+chkEadge <- function( gEnv ,allIdx ){
+
+    allZoidMtx <- gEnv$allZoidMtx[allIdx,]
+	chkLst <- list()
+
+    rstObj <- chkEadge.xxx( gEnv ,allIdx )
+    chkLst[[rstObj$idStr]] <- rstObj$flag
+
+	# ----------------------------------------------------
+	# chkLst 에 대한 결과 분석 후 return.
+	
+}
+
 cutEadge.getBanGradColValReb <- function( gEnv ,allIdx ){
 
     scanPtn <- getPtnScanner()$grad
