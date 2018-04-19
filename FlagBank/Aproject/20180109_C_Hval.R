@@ -317,7 +317,7 @@ for( tIdx in testSpan ){
 	rstLst[[1+length(rstLst)]] <- rstFlag
 
 } # tIdx
-tDiff <- Sys.time() - tStmp
+tDiff <- Sys.time() - tStmp	# 43min
 
 fltFlag <- sapply( rstLst ,length )	# table(fltFlag)
 fltDensity <- do.call( c ,rstLst )	# table(fltDensity)
@@ -344,13 +344,16 @@ getCutEadgeLst <- function( ){
 
     rLst[[1+length(rLst)]] <- cutEadge.banSeqRebCStep
     rLst[[1+length(rLst)]] <- cutEadge.getBanSymCStep
-    rLst[[1+length(rLst)]] <- cutEadge.getBanStepRebCStep
+    # rLst[[1+length(rLst)]] <- cutEadge.getBanStepRebCStep
     rLst[[1+length(rLst)]] <- cutEadge.getBanGradCStep
 
     rLst[[1+length(rLst)]] <- cutEadge.getBanSeqRebWidth
     rLst[[1+length(rLst)]] <- cutEadge.getBanSymWidth
     rLst[[1+length(rLst)]] <- cutEadge.getBanStepRebWidth
     rLst[[1+length(rLst)]] <- cutEadge.getBanGradWidth
+
+    rLst[[1+length(rLst)]] <- cutEadge.barReb3
+    rLst[[1+length(rLst)]] <- cutEadge.banSeq3Twice
 
     return( rLst )
 

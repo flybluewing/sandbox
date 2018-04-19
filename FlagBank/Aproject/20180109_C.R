@@ -88,34 +88,25 @@ cutEadge <- function( gEnv ,allIdx ){
 
     rstObj <- cutEadge.colValCut( gEnv ,allIdx ,colValLst )
     allIdx <- allIdx[rstObj$flag]
-
     rstObj <- cutEadge.dup3Col( gEnv ,allIdx ,colValLst ,pThld=5 )  # pThld^6 에 비해 효과는 좋음.
     allIdx <- allIdx[rstObj$flag]
 
     rstObj <- cutEadge.getCFltObj( gEnv ,allIdx )
     allIdx <- allIdx[rstObj$flag]
-
     rstObj <- cutEadge.remLstHard( gEnv ,allIdx )
     allIdx <- allIdx[rstObj$flag]
-
     rstObj <- cutEadge.getColSeq( gEnv ,allIdx )
     allIdx <- allIdx[rstObj$flag]
-
     rstObj <- cutEadge.getBanPtn( gEnv ,allIdx )
     allIdx <- allIdx[rstObj$flag]
-
-    rstObj <- cutEadge.getBanPtnColVal( gEnv ,allIdx )
-    allIdx <- allIdx[rstObj$flag]
-
-    rstObj <- cutEadge.getBanSym( gEnv ,allIdx )
-    allIdx <- allIdx[rstObj$flag]
-
-    rstObj <- cutEadge.getBanGrad( gEnv ,allIdx )
-    allIdx <- allIdx[rstObj$flag]
-
+    # rstObj <- cutEadge.getBanPtnColVal( gEnv ,allIdx )
+    # allIdx <- allIdx[rstObj$flag]
+    # rstObj <- cutEadge.getBanSym( gEnv ,allIdx )
+    # allIdx <- allIdx[rstObj$flag]
+    # rstObj <- cutEadge.getBanGrad( gEnv ,allIdx )
+    # allIdx <- allIdx[rstObj$flag]
     rstObj <- cutEadge.banDupSeq( gEnv ,allIdx )
     allIdx <- allIdx[rstObj$flag]
-
 
     rstObj <- cutEadge.getBanRebBin( gEnv ,allIdx )
     allIdx <- allIdx[rstObj$flag]
@@ -124,22 +115,22 @@ cutEadge <- function( gEnv ,allIdx ){
     rstObj <- cutEadge.getBanSymBin( gEnv ,allIdx )
     allIdx <- allIdx[rstObj$flag]
 
-    rstObj <- cutEadge.getBanRebDiff( gEnv ,allIdx )
-    allIdx <- allIdx[rstObj$flag]
+    # rstObj <- cutEadge.getBanRebDiff( gEnv ,allIdx )
+    # allIdx <- allIdx[rstObj$flag]
     rstObj <- cutEadge.banDupSeqDiff( gEnv ,allIdx )
     allIdx <- allIdx[rstObj$flag]
     rstObj <- cutEadge.getBanSymDiff( gEnv ,allIdx )
     allIdx <- allIdx[rstObj$flag]
 
     # code step 너무 빈번한 듯 함.
-    rstObj <- cutEadge.banSeqRebCStep( gEnv ,allIdx )
-    allIdx <- allIdx[rstObj$flag]
-    rstObj <- cutEadge.getBanSymCStep( gEnv ,allIdx )
-    allIdx <- allIdx[rstObj$flag]
+    # rstObj <- cutEadge.banSeqRebCStep( gEnv ,allIdx )
+    # allIdx <- allIdx[rstObj$flag]
+    # rstObj <- cutEadge.getBanSymCStep( gEnv ,allIdx )
+    # allIdx <- allIdx[rstObj$flag]
     rstObj <- cutEadge.getBanStepRebCStep( gEnv ,allIdx )
     allIdx <- allIdx[rstObj$flag]
-    rstObj <- cutEadge.getBanGradCStep( gEnv ,allIdx )
-    allIdx <- allIdx[rstObj$flag]
+    # rstObj <- cutEadge.getBanGradCStep( gEnv ,allIdx )
+    # allIdx <- allIdx[rstObj$flag]
 
     # zoid[,c(1,6)] 은 피해야 할 듯. 빈번할 수 밖에 없음.
     rstObj <- cutEadge.getBanSeqRebWidth( gEnv ,allIdx )
@@ -152,8 +143,8 @@ cutEadge <- function( gEnv ,allIdx ){
     allIdx <- allIdx[rstObj$flag]
 
 
-    rstObj <- cutEadge.barReb3( gEnv ,allIdx )
-    allIdx <- allIdx[rstObj$flag]
+    # rstObj <- cutEadge.barReb3( gEnv ,allIdx )
+    # allIdx <- allIdx[rstObj$flag]
     rstObj <- cutEadge.banSeq3Twice( gEnv ,allIdx )
     allIdx <- allIdx[rstObj$flag]
 
@@ -369,7 +360,6 @@ cutEadgeLst <- function( ){
     rLst <- list()
 
     rLst[[1+length(rLst)]] <- cutEadge.getCFltObj
-    rLst[[1+length(rLst)]] <- cutEadge.getCFltObj
     rLst[[1+length(rLst)]] <- cutEadge.remLstHard
     rLst[[1+length(rLst)]] <- cutEadge.getColSeq
     rLst[[1+length(rLst)]] <- cutEadge.getBanPtn
@@ -395,7 +385,6 @@ cutEadgeLst <- function( ){
     rLst[[1+length(rLst)]] <- cutEadge.getBanGradWidth
 
     rLst[[1+length(rLst)]] <- cutEadge.barReb3
-
     rLst[[1+length(rLst)]] <- cutEadge.banSeq3Twice
 
     return( rLst )
