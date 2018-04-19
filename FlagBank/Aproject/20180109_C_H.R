@@ -2466,23 +2466,42 @@ cutEadge.getBanSymCStep <- function( gEnv ,allIdx ){
 
 } # cutEadge.getBanSymCStep()
 
-cutEadge.getBanStepRebCStep <- function( gEnv ,allIdx ){
+
+cutEadge.getBanStepRebCStep <- function( gEnv ,allIdx ,pDebug=F ){
+	# 보완점 : flagLst.cv 에 대해서도 getChkRareObj()활용필요.
 
     scanPtn <- getPtnScanner()$stepReb
     allIdx.len <- length(allIdx)
     allCodeMtx <- gEnv$allZoidMtx[allIdx,2:6,drop=F] - gEnv$allZoidMtx[allIdx,1:5,drop=F]
 
+	# flagLst.base ,flag.base ---------------------------------------------------------------
     flagLst.base <- vector("list",allIdx.len)
+	flagLst.base.val <- vector("list",allIdx.len)
     stdCodeMtx <- gEnv$zhF[,2:6] - gEnv$zhF[,1:5]
     for( azColIdx in 1:5 ){
         banPtn <- scanPtn( stdCodeMtx[,azColIdx] )
         for( idx in seq_len(allIdx.len) ){
             if( allCodeMtx[idx,azColIdx]%in%banPtn ){
                 flagLst.base[[idx]][[1+length(flagLst.base[[idx]])]] <- c( azColIdx )
+				flagLst.base.val[[idx]][[1+length(flagLst.base.val[[idx]])]] <- allCodeMtx[idx,azColIdx]
             }
         }
     }
+	rareObj <- getChkRareObj( stdCodeMtx ,pThld=0.07 )
+	flag.base <- sapply( seq_len(allIdx.len) ,function(idx){
+						if( 1<length(flagLst.base[[idx]]) ){
+							return(FALSE)
+						}
+						if( 1==length(flagLst.base[[idx]]) ){
+							# 한개 일치뿐이지만 rare한 값이라면 필터링 대상.(생존대상 아님.)
+							rst <- rareObj$isRare( flagLst.base.val[[idx]] ,flagLst.base[[idx]] )
+							return( rst==0 ) # 흔한 값의 일치이므로 생존으로 인정.(TRUE반납)
+						}
+						return( TRUE )
+					})
 
+
+	# flagLst.cv ,flag.cv ---------------------------------------------------------------
     flagLst.cv <- vector("list",allIdx.len)
     azColValLst <- apply( gEnv$allZoidMtx[allIdx,,drop=F] ,2 ,function(p){sort(unique(p))})
     for( azColIdx in 1:6 ){
@@ -2502,15 +2521,19 @@ cutEadge.getBanStepRebCStep <- function( gEnv ,allIdx ){
             }
         } # vIdx
     }
-
+	flag.cv <- sapply( flagLst.cv ,function(p){1>=length(p)} )
+	
     rObj <- list( idStr="cutEadge.getBanStepRebCStep" )
-    rObj$flag <- sapply( seq_len(allIdx.len) ,function(idx){
-                        (length(flagLst.base[[idx]])==0) && (length(flagLst.cv[[idx]])==0)
-                    })
+    rObj$flag <- flag.base | flag.cv
+	if( pDebug ){
+		rObj$flagLst.base <- flagLst.base
+		rObj$flagLst.cv <- flagLst.cv
+	}
 
     return( rObj )
 
 } # cutEadge.getBanStepRebCStep()
+
 
 cutEadge.getBanGradCStep <- function( gEnv ,allIdx ){
 
