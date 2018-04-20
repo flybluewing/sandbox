@@ -143,7 +143,7 @@ cutEadge <- function( gEnv ,allIdx ){
     allIdx <- allIdx[rstObj$flag]
 
 
-    # rstObj <- cutEadge.barReb3( gEnv ,allIdx )
+    # rstObj <- cutEadge.banReb3( gEnv ,allIdx )
     # allIdx <- allIdx[rstObj$flag]
     rstObj <- cutEadge.banSeq3Twice( gEnv ,allIdx )
     allIdx <- allIdx[rstObj$flag]
@@ -397,7 +397,7 @@ cutEadgeLst <- function( ){
     rLst[[1+length(rLst)]] <- cutEadge.getBanStepRebWidth
     rLst[[1+length(rLst)]] <- cutEadge.getBanGradWidth
 
-    rLst[[1+length(rLst)]] <- cutEadge.barReb3
+    rLst[[1+length(rLst)]] <- cutEadge.banReb3
     rLst[[1+length(rLst)]] <- cutEadge.banSeq3Twice
 
     return( rLst )

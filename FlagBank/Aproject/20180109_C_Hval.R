@@ -352,7 +352,7 @@ getCutEadgeLst <- function( ){
     rLst[[1+length(rLst)]] <- cutEadge.getBanStepRebWidth
     rLst[[1+length(rLst)]] <- cutEadge.getBanGradWidth
 
-    rLst[[1+length(rLst)]] <- cutEadge.barReb3
+    rLst[[1+length(rLst)]] <- cutEadge.banReb3
     rLst[[1+length(rLst)]] <- cutEadge.banSeq3Twice
 
     return( rLst )
