@@ -12,9 +12,9 @@ FB.f <- getFlagBank("./zoidHistory/ZH_Final.csv")
 setwd(curWd)
 zh	<- as.matrix( FB$zh )
 zhF	<- as.matrix( FB.f$zh )	;rownames(zhF) <- 1:nrow(zhF)
-saveId <- gsub(".*-([0-9]*)-([0-9]*) ([0-9]*).*","\\1\\2_\\3"
-				,sprintf("%s",Sys.time())
-			)
+saveId <- sprintf( "Z%d" ,nrow(zhF) )
+# saveId <- gsub(".*-([0-9]*)-([0-9]*) ([0-9]*).*","\\1\\2_\\3" ,sprintf("%s",Sys.time()) )
+
 lastZoid <- zhF[nrow(zhF),]
 filtLst <- list()
 getFiltHist <- function( pFiltId ,pTStmp ,pAllZoidMtx ,pFlag=NULL ){
@@ -28,7 +28,7 @@ getFiltHist <- function( pFiltId ,pTStmp ,pAllZoidMtx ,pFlag=NULL ){
 allZoidMtx <- zhF	# 일단 필터링 결과를 보기위해..
 
 # zhF ,allZoidMtx
-testSpan <- 400:nrow(zhF)
+testSpan <- 200:nrow(zhF)
 
 filtFuncLst <- getFiltLst.base()
 
