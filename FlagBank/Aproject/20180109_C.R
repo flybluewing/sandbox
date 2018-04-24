@@ -99,12 +99,12 @@ cutEadge <- function( gEnv ,allIdx ){
     allIdx <- allIdx[rstObj$flag]
     rstObj <- cutEadge.getBanPtn( gEnv ,allIdx )
     allIdx <- allIdx[rstObj$flag]
-    # rstObj <- cutEadge.getBanPtnColVal( gEnv ,allIdx )
-    # allIdx <- allIdx[rstObj$flag]
-    # rstObj <- cutEadge.getBanSym( gEnv ,allIdx )
-    # allIdx <- allIdx[rstObj$flag]
-    # rstObj <- cutEadge.getBanGrad( gEnv ,allIdx )
-    # allIdx <- allIdx[rstObj$flag]
+    rstObj <- cutEadge.getBanPtnColVal( gEnv ,allIdx )
+    allIdx <- allIdx[rstObj$flag]
+    rstObj <- cutEadge.getBanSym( gEnv ,allIdx )
+    allIdx <- allIdx[rstObj$flag]
+    rstObj <- cutEadge.getBanGrad( gEnv ,allIdx )
+    allIdx <- allIdx[rstObj$flag]
     rstObj <- cutEadge.banDupSeq( gEnv ,allIdx )
     allIdx <- allIdx[rstObj$flag]
 
@@ -115,22 +115,22 @@ cutEadge <- function( gEnv ,allIdx ){
     rstObj <- cutEadge.getBanSymBin( gEnv ,allIdx )
     allIdx <- allIdx[rstObj$flag]
 
-    # rstObj <- cutEadge.getBanRebDiff( gEnv ,allIdx )
-    # allIdx <- allIdx[rstObj$flag]
+    rstObj <- cutEadge.getBanRebDiff( gEnv ,allIdx )
+    allIdx <- allIdx[rstObj$flag]
     rstObj <- cutEadge.banDupSeqDiff( gEnv ,allIdx )
     allIdx <- allIdx[rstObj$flag]
     rstObj <- cutEadge.getBanSymDiff( gEnv ,allIdx )
     allIdx <- allIdx[rstObj$flag]
 
     # code step 너무 빈번한 듯 함.
-    # rstObj <- cutEadge.banSeqRebCStep( gEnv ,allIdx )
-    # allIdx <- allIdx[rstObj$flag]
-    # rstObj <- cutEadge.getBanSymCStep( gEnv ,allIdx )
-    # allIdx <- allIdx[rstObj$flag]
+    rstObj <- cutEadge.banSeqRebCStep( gEnv ,allIdx )
+    allIdx <- allIdx[rstObj$flag]
+    rstObj <- cutEadge.getBanSymCStep( gEnv ,allIdx )
+    allIdx <- allIdx[rstObj$flag]
     rstObj <- cutEadge.getBanStepRebCStep( gEnv ,allIdx )
     allIdx <- allIdx[rstObj$flag]
-    # rstObj <- cutEadge.getBanGradCStep( gEnv ,allIdx )
-    # allIdx <- allIdx[rstObj$flag]
+    rstObj <- cutEadge.getBanGradCStep( gEnv ,allIdx )
+    allIdx <- allIdx[rstObj$flag]
 
     # zoid[,c(1,6)] 은 피해야 할 듯. 빈번할 수 밖에 없음.
     rstObj <- cutEadge.getBanSeqRebWidth( gEnv ,allIdx )
@@ -143,8 +143,8 @@ cutEadge <- function( gEnv ,allIdx ){
     allIdx <- allIdx[rstObj$flag]
 
 
-    # rstObj <- cutEadge.banReb3( gEnv ,allIdx )
-    # allIdx <- allIdx[rstObj$flag]
+    rstObj <- cutEadge.banReb3( gEnv ,allIdx )
+    allIdx <- allIdx[rstObj$flag]
     rstObj <- cutEadge.banSeq3Twice( gEnv ,allIdx )
     allIdx <- allIdx[rstObj$flag]
 

@@ -1,62 +1,81 @@
 # 20180109_D.R 교차모델
 
 
-cutEadge.getBanPtnColVal <- function( gEnv ,allIdx ,pDebug=F ){
+cutEadge.getBanRebDiff <- function( gEnv ,allIdx ,pDebug=F ){
 
-	allIdx.len <- length(allIdx)
-	valMtx <- gEnv$zhF
+    scanPtn <- function( pVal ,pFirstOnly=TRUE ){
+        valLen <- length(pVal)
 
-	azColValLst <- apply( gEnv$allZoidMtx[allIdx,,drop=F] ,2 ,function(p){unique(p)} )
-	flagLst.cv <- vector( "list" ,allIdx.len )
-	banLst <- lapply( seq_len(allIdx.len) ,function(idx){ vector("list",6) })
-	# banLst[[aIdx]][[colIdx]][["valIdx"]]  $colIdx $vIdx  $ptnLst $ptnIdx $chkCnt
-	for( azColIdx in 1:6 ){
-		for( vIdx in azColValLst[[azColIdx]] ){
-			tValMtx <- valMtx[valMtx[,azColIdx]==vIdx ,,drop=F]
-			banObj <- getBanPtn( tValMtx )
-            if( is.null(banObj) ){
+        banVal <- integer(0)
+        for( dIdx in 1:5 ){
+            ptnSpan <- valLen - (1:2)*dIdx + 1
+            if( 1>ptnSpan[2] ){
+                break
+            }
+            if( pVal[ptnSpan[1]]==pVal[ptnSpan[2]] ){
+                banVal[1+length(banVal)] <- pVal[ptnSpan[1]]
+                if( pFirstOnly ){
+                    break
+                }
+            }
+        }
+
+        return(banVal)
+    } # scanPtn()
+
+    lastZoid <- gEnv$zhF[nrow(gEnv$zhF),]
+    allCodeMtx <- t(apply( gEnv$allZoidMtx[allIdx,,drop=F] ,1 ,function(aZoid){lastZoid-aZoid} ))
+    stdCodeMtx <- gEnv$zhF[1:(nrow(gEnv$zhF)-1),] - gEnv$zhF[2:nrow(gEnv$zhF),]
+
+    flagLst.base <- lapply( seq_len(length(allIdx)) ,function(p){integer(0)})
+    for( azColIdx in 1:6 ){
+        banVal <- scanPtn( stdCodeMtx[,azColIdx] )
+        for( idx in seq_len(length(allIdx)) ){
+            if( any( allCodeMtx[idx,azColIdx]%in%banVal ) ){
+                flagLst.base[[idx]][1+length(flagLst.base[[idx]])] <- azColIdx
+            }
+        }
+    }
+	flag.base <- sapply( flagLst.base ,function(p){1>length(p)} )
+
+    azColValLst <- apply( gEnv$allZoidMtx[allIdx,,drop=F] ,2 ,function(p){sort(unique(p))})
+    flagLst.cv <- vector( "list" ,length(allIdx) )
+    for( azColIdx in 1:6 ){
+        for( vIdx in azColValLst[[azColIdx]] ){
+            tZhF <- gEnv$zhF[vIdx==gEnv$zhF[,azColIdx] ,,drop=F]
+            if( 2>nrow(tZhF)){
                 next
             }
-			banRst <- banObj$chkMatchAny( gEnv$allZoidMtx[allIdx,,drop=F] ,pExcCol=azColIdx ,pDebug=T )
+            tStdMtx <- tZhF[1:(nrow(tZhF)-1),,drop=F] - tZhF[2:nrow(tZhF),,drop=F]
+            tAllMtx <- t(apply(gEnv$allZoidMtx[allIdx,,drop=F],1,function(aZoid){tZhF[nrow(tZhF),]-aZoid}))
 
-			for( idx in seq_len(allIdx.len) ){
-				if( 0==length(banRst$rstLst[[idx]]) ){
-					next
-				}
-				zoid <- gEnv$allZoidMtx[ allIdx[idx] ,]
-				if( zoid[azColIdx]!=vIdx ){
-					next
-				}
-				flagLst.cv[[idx]][[ 1+length(flagLst.cv[[idx]]) ]] <- c(azColIdx,vIdx)
-
-				banLst[[idx]][[azColIdx]][[as.character(vIdx)]] <-
-						list( colIdx=azColIdx ,vIdx=vIdx 
-								,ptnLst=banObj$ptnLst[ banRst$rstLst[[idx]] ]
-								,ptnIdx=banRst$rstLst[[idx]] ,chkCnt=banRst$chkCntLst[[idx]] 
-							)
-                # 추가 제약조건 : azColIdx를 제외하고, 2개 컬럼 이상
-                #                1개 뿐이면 희귀값인지 검토..
-                #                희귀값이 아니더라도 azColIdx 2개에 걸쳐서 나왔다면 제외.
-			}
-		} # vIdx
-	} # azColIdx
-	
-	flag.cv <- sapply( flagLst.cv ,function(p){
-					# 	  0   1   2   3   4   5 
-					# 	305 188  87  21   2   1 
-					return( 2<=length(p) ) # 사실 2 개 발생도 꽤 나타나서 위험하긴 하다.
-				})
-
-
-    rObj <- list( idStr="cutEadge.getBanPtnColVal" )
-    rObj$flag <- flag.cv
-    if( pDebug ){
-		rObj$flagLst.cv <- flagLst.cv
-        rObj$banLst <- banLst
+            banValLst <- lapply( 1:6 ,function(p){scanPtn(tStdMtx[,p])})
+            banValLst[[azColIdx]] <- integer(0) # 작업중인 컬럼은 건너뛰어야..
+            for( idx in seq_len(length(allIdx)) ){
+                if( vIdx!=gEnv$allZoidMtx[allIdx[idx],azColIdx] ){
+                    next
+                }
+                flag <- sapply(1:6,function(pCol){ tAllMtx[idx,pCol]%in%banValLst[[pCol]] })
+                if( any(flag) ){
+                    flagLst.cv[[idx]][[ 1+length(flagLst.cv[[idx]]) ]] <- c(azColIdx,vIdx)
+                }
+            } # idx
+        } # vIdx
     }
+	flag.cv <- sapply( flagLst.cv ,function(p){ 2>length(p) } )
+
+    rObj <- list( idStr="cutEadge.getBanRebDiff" )
+    rObj$flag <- flag.base & flag.cv
+	if( pDebug ){
+		rObj$flagLst.base	<- flagLst.base
+		rObj$flagLst.cv		<- flagLst.cv
+	}
     return( rObj )
 
-} # cutEadge.getBanPtnColVal()
+} # cutEadge.getBanRebDiff()
+
+
+
 
 
 
