@@ -229,6 +229,7 @@ cutEadge.XXXX <- function( gEnv ,allIdx ){
 
 # allIdx <- allZoid.idx1
 finalCut <- function( gEnv ,allIdx ){
+    # cutEadge.getBanPtnColVal() 에서 1~2개 발생 탈락값들에 대한 검토 권장.
 
     allIdxF <- allIdx
     azColValLst <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,2 ,function(p){sort(unique(p))})

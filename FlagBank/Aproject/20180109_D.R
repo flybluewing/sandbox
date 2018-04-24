@@ -40,11 +40,19 @@ cutEadge.getBanPtnColVal <- function( gEnv ,allIdx ,pDebug=F ){
 			}
 		} # vIdx
 	} # azColIdx
+	
+	flag.cv <- sapply( flagLst.cv ,function(p){
+					# 	  0   1   2   3   4   5 
+					# 	305 188  87  21   2   1 
+					return( 2<=length(p) ) # 사실 2 개 발생도 꽤 나타나서 위험하긴 하다.
+				})
+
 
     rObj <- list( idStr="cutEadge.getBanPtnColVal" )
-    rObj$flag <- 0==sapply(flagLst.cv,length)
+    rObj$flag <- flag.cv
     if( pDebug ){
-        rObj$flagLst.cv <- flagLst.cv
+		rObj$flagLst.cv <- flagLst.cv
+        rObj$banLst <- banLst
     }
     return( rObj )
 
