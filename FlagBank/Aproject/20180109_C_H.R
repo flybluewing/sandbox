@@ -182,6 +182,30 @@ getColSeq <- function( pValMtx ,pDepth=2 ){
 
 } # getColSeq()
 
+#	pVal 내에 pSrch 배열이 존재하는지 검사.
+#		pVal<-c(1,2,3,1,2)	;pSrch<-c(1,2)	;pFirstOnly=T
+haveSeq <- function( pVal ,pSrch ,pFirstOnly=T ){
+	valLen <- length(pVal)
+	srchLen <- length(pSrch)
+	if( valLen<srchLen ){
+		return( NULL )
+	}
+
+	indices <- NULL
+	span <- 1:srchLen -1
+	for( aIdx in 1:(valLen-srchLen+1) ){
+		flag <- pVal[aIdx+span]==pSrch
+		if( all(flag) ){
+			indices <- c( indices ,aIdx )
+			if( pFirstOnly ){
+				return( indices )
+			}
+		}
+	} # aIdx
+
+	return( indices )
+} # haveSeq()
+
 getBanPtn <- function( pValMtx ,pMaxDepth=5 ,pDebug=F ){
 	# val.getBanPtn() 함수 참고.
 

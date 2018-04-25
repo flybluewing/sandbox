@@ -97,7 +97,245 @@ finalCut.first4 <- function( gEnv ,allIdxF ){
         })
     allIdxF <- allIdxF[flag]
     cat(sprintf("allIdxF %d\n",length(allIdxF)))
+	
+    flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+					cnt <- sum(4==(aZoid%%10))
+					return( 2>=cnt )
+                })
+    allIdxF <- allIdxF[flag]
+    cat(sprintf("allIdxF %d\n",length(allIdxF)))
+	
+	# localHisMtx[,4]%%10 : 5,6,3,4,5,?  6이 나오긴 어렵겠지?
+	flag <- (gEnv$allZoidMtx[allIdxF,4]%%10) != 6
+    allIdxF <- allIdxF[flag]
+    cat(sprintf("allIdxF %d\n",length(allIdxF)))
 
+	# lastZoid에서도 3 두개 뿐(30,43)이고, lastLH에서도 33 뿐이다.
+	#	33혼자만 나오고 나머지엔 3이 없기는 힘들겠지?
+	flag <- apply( gEnv$allZoidMtx[allIdxF,] ,1 ,function(aZoid){
+					if( any(aZoid==33) ){
+						cnt <- sum(aZoid%%10) + sum(aZoid%/%10)
+						if( cnt==2 ){
+							return(FALSE)
+						}
+					}
+					return( TRUE )
+				})
+    allIdxF <- allIdxF[flag]
+    cat(sprintf("allIdxF %d\n",length(allIdxF)))
+
+	# %%10 에서 5나 6이 2개인 것.(4도 2개 이상인 상태에서..)
+	flag <- apply( gEnv$allZoidMtx[allIdxF,]%%10 ,1 ,function(p){
+					if( 1<sum(p==4) ){
+						if( (sum(p==5)==2)||(sum(p==6)==2) ){
+							return( FALSE )
+						}
+					}
+					return( TRUE )
+				})
+    allIdxF <- allIdxF[flag]
+    cat(sprintf("allIdxF %d\n",length(allIdxF)))
+
+	# =============================================================================
+	# secondCode
+	#	16 17 18 19 20 21 22 23 
+	#	15 12  2 18 24 31 34  9 
+	
+	# 	sCode 21 : 4,21,22,34,37,38
+	#	sCode 22 : 4,22,27,28,38,40
+	#		--> 4,21,22,?,?,c(38,40) 은 제외시키자.
+	flag <- apply( gEnv$allZoidMtx[allIdxF,] ,1 ,function(aZoid){
+				if( all(aZoid[1:3]==c(4,21,22)) ){
+					if( aZoid[6] %in% c(38,40) ){
+						return(FALSE)
+					}
+				}
+				return( TRUE )
+			})
+    allIdxF <- allIdxF[flag]
+    cat(sprintf("allIdxF %d\n",length(allIdxF)))
+
+	flag <- apply( gEnv$allZoidMtx[allIdxF,] ,1 ,function(aZoid){
+				if( all(aZoid[1:3]==c(4,22,27)) ){
+					if( any(aZoid[4:6] %in% c(28,38)) ){
+						return(FALSE)
+					}
+				}
+				return( TRUE )
+			})
+    allIdxF <- allIdxF[flag]
+    cat(sprintf("allIdxF %d\n",length(allIdxF)))
+		
+	#	sCode 20 : 4 20 26 28 35 40
+	#		4,20,?,?,28,?,40 을 제외시키자. (28과 40이 꽤 많이 보이네.)
+	flag <- apply( gEnv$allZoidMtx[allIdxF,] ,1 ,function(aZoid){
+				if( all(aZoid[1:2]==c(4,20)) ){
+					if( any(aZoid[4]==28 || aZoid[6]==40) ){
+						return(FALSE)
+					}
+				}
+				return( TRUE )
+			})
+    allIdxF <- allIdxF[flag]
+    cat(sprintf("allIdxF %d\n",length(allIdxF)))
+	
+	#	sCode 19
+	#	172  4 19 21 24 26 41
+	#	224  4 19 26 27 30 42
+	#	242  4 19 20 21 32 34
+	#	455  4 19 20 26 30 35
+	#		 4,19,?,?,?,(30,40),? 을 제외시키자. (lastZoid : 5  9 14 26 30 43 )
+	flag <- apply( gEnv$allZoidMtx[allIdxF,] ,1 ,function(aZoid){
+				if( all(aZoid[1:2]==c(4,19)) ){
+					if( aZoid[5]%in%c(30,40) ){
+						return(FALSE)
+					}
+				}
+				return( TRUE )
+			});	kIdx <- head(which(!flag))
+    allIdxF <- allIdxF[flag]
+    cat(sprintf("allIdxF %d\n",length(allIdxF)))
+
+	#	sCode 16 : 752  4 16 20 33 40 43
+	flag <- apply( gEnv$allZoidMtx[allIdxF,] ,1 ,function(aZoid){
+				if( all(aZoid[1:2]==c(4,16)) ){
+					if( aZoid[4]%in%c(33) || aZoid[5]%in%c(40) ){
+						return(FALSE)
+					}
+				}
+				return( TRUE )
+			});	kIdx <- head(which(!flag))
+    allIdxF <- allIdxF[flag]
+    cat(sprintf("allIdxF %d\n",length(allIdxF)))
+	
+	# aZoid[4] 에서 31, 32는 제외하자.
+	#	611  2 22 27 33 36 37
+	#	739  7 22 29 33 34 35
+	#	760 10 22 27 31 42 43
+	#	764  7 22 24 31 34 36
+	#	797  5 22 31 32 39 45
+	flag <- apply( gEnv$allZoidMtx[allIdxF,] ,1 ,function(aZoid){
+				if( all(aZoid[1:2]==c(4,22)) ){
+					if( aZoid[4]%in%c(31) || aZoid[5]%in%c(42) ){
+						return(FALSE)
+					}
+				}
+				return( TRUE )
+			});	kIdx <- head(which(!flag))
+    allIdxF <- allIdxF[flag]
+    cat(sprintf("allIdxF %d\n",length(allIdxF)))
+
+	# aZoid[4] 에서 31, 32는 제외하자.
+	#	778  6 21 35 36 37 41
+	#	796  1 21 26 36 40 41	
+	flag <- apply( gEnv$allZoidMtx[allIdxF,] ,1 ,function(aZoid){
+				if( all(aZoid[1:2]==c(4,21)) ){
+					if( aZoid[4]%in%c(26,36) || aZoid[5]%in%c(30,40) ){
+						return(FALSE)
+					}
+				}
+				return( TRUE )
+			});	kIdx <- head(which(!flag))
+    allIdxF <- allIdxF[flag]
+    cat(sprintf("allIdxF %d\n",length(allIdxF)))
+	
+	#	557  4 20 26 28 35 40
+	#	664 10 20 33 36 41 44
+	#	712 17 20 30 31 33 45
+	flag <- apply( gEnv$allZoidMtx[allIdxF,] ,1 ,function(aZoid){
+				if( all(aZoid[1:2]==c(4,20)) ){
+					if( aZoid[3]%in%c(30,33) || aZoid[5]%in%c(33) ){
+						return(FALSE)
+					}
+				}
+				return( TRUE )
+			});	kIdx <- head(which(!flag))
+    allIdxF <- allIdxF[flag]
+    cat(sprintf("allIdxF %d\n",length(allIdxF)))
+	
+	secondCode <- 16
+	localHisMtx <- gEnv$zhF[ (gEnv$zhF[,2]==secondCode) ,]
+	# localHisMtx <- gEnv$zhF[ (gEnv$zhF[,1]==firstCode)&(gEnv$zhF[,2]==secondCode) ,]
+
+	# =============================================================================
+	# thirdCode
+	#	23 24 25 27
+	#	23 17 19 26
+	thirdCode <- 25
+	localHisMtx <- gEnv$zhF[ (gEnv$zhF[,1]==firstCode)&(gEnv$zhF[,3]==thirdCode) ,]
+	localHisMtx <- gEnv$zhF[ (gEnv$zhF[,3]==thirdCode) ,]
+
+	allZoidMtx <- gEnv$allZoidMtx[allIdxF,]
+	allZoidMtx[ (allZoidMtx[,1]==firstCode)&(allZoidMtx[,3]==thirdCode) ,]
+	
+	#	124  4 16 23 25 29 42
+	#	306  4 18 23 30 34 41
+	#	360  4 16 23 25 35 40
+	#	660  4  9 23 33 39 44
+	flag <- apply( gEnv$allZoidMtx[allIdxF,] ,1 ,function(aZoid){
+				if( all(aZoid[c(1,3)]==c(4,23)) ){
+					if( aZoid[2]%in%c(16) ){
+						return(FALSE)
+					}
+				}
+				return( TRUE )
+			});	kIdx <- head(which(!flag))
+    allIdxF <- allIdxF[flag]
+    cat(sprintf("allIdxF %d\n",length(allIdxF)))
+
+	#	487  4  8 25 27 37 41
+	#	545  4 24 25 27 34 35
+	flag <- apply( gEnv$allZoidMtx[allIdxF,] ,1 ,function(aZoid){
+				if( all(aZoid[c(1,3)]==c(4,25)) ){
+					if( aZoid[4]%in%c(27) ){
+						return(FALSE)
+					}
+				}
+				return( TRUE )
+			});	kIdx <- head(which(!flag))
+    allIdxF <- allIdxF[flag]
+    cat(sprintf("allIdxF %d\n",length(allIdxF)))
+
+	#	520  4 22 27 28 38 40
+	#	609  4  8 27 34 39 40
+	flag <- apply( gEnv$allZoidMtx[allIdxF,] ,1 ,function(aZoid){
+				if( all(aZoid[c(1,3)]==c(4,27)) ){
+					if( aZoid[6]%in%c(40) ){
+						return(FALSE)
+					}
+				}
+				return( TRUE )
+			});	kIdx <- head(which(!flag))
+    allIdxF <- allIdxF[flag]
+    cat(sprintf("allIdxF %d\n",length(allIdxF)))
+
+	# =============================================================================
+	# forthCode
+	#	29 30 31
+	#	26 15 23
+	forthCode <- 31
+	tail(gEnv$zhF[ (gEnv$zhF[,1]==firstCode)&(gEnv$zhF[,4]==forthCode) ,])
+	tail(gEnv$zhF[ (gEnv$zhF[,4]==forthCode) ,])
+
+	allZoidMtx <- gEnv$allZoidMtx[allIdxF,]
+	allZoidMtx[ (allZoidMtx[,1]==firstCode)&(allZoidMtx[,4]==forthCode) ,]
+	
+	gEnv$allZoidMtx[allIdxF[kIdx],]
+
+
+	#	767  5 15 20 31 34 42
+	#	791  2 10 12 31 33 42
+	flag <- apply( gEnv$allZoidMtx[allIdxF,] ,1 ,function(aZoid){
+				if( all(aZoid[c(1,4)]==c(4,31)) ){
+					if( aZoid[5]%in%c(32,33) ){
+						return(FALSE)
+					}
+				}
+				return( TRUE )
+			});	kIdx <- head(which(!flag))
+    allIdxF <- allIdxF[flag]
+    cat(sprintf("allIdxF %d\n",length(allIdxF)))
+	
 	return( allIdxF )
 
 } # finalCut.first4( )
@@ -196,6 +434,34 @@ finalCut <- function( gEnv ,allIdx ){
     allIdxF <- allIdxF[flag]
     cat(sprintf("allIdxF %d\n",length(allIdxF)))
 
+	
+	# zoid[3:5]는 변화량 절대값이 2로 3번 연속이다. 재현 어렵겠지?
+	#	802 10 11 12 18 24 42
+	#	803  5  9 14 26 30 43
+	lastZoid <- gEnv$zhF[nrow(gEnv$zhF),]
+    flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+                    idx <- which( 2==abs(aZoid-lastZoid) )					
+					fndIdx <- haveSeq( idx ,c(2,2,2) )
+					return( is.null(fndIdx) )
+                })
+    allIdxF <- allIdxF[flag]
+    cat(sprintf("allIdxF %d\n",length(allIdxF)))	
+
+    flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+					cnt <- sum(0==(aZoid%%10))
+					return( 1>=cnt )
+                })
+    allIdxF <- allIdxF[flag]
+    cat(sprintf("allIdxF %d\n",length(allIdxF)))
+
+    flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+					cnt <- sum(0==(aZoid%%11))
+					return( 1>=cnt )
+                })
+    allIdxF <- allIdxF[flag]
+    cat(sprintf("allIdxF %d\n",length(allIdxF)))
+
+	
 	allIdxF.4 <- finalCut.first4( gEnv ,allIdxF )
 	allIdxF.7 <- finalCut.first4( gEnv ,allIdxF )
 	
