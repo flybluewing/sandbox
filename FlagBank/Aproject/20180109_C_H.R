@@ -1,4 +1,90 @@
 # 20180109_C_H.R 교차모델
+
+#   allIdx <- allZoid.idx0  ;allIdx.bak <- allIdx
+cutEadge <- function( gEnv ,allIdx ){
+
+    allZoidMtx <- gEnv$allZoidMtx[allIdx,]
+    colValLst <- apply( gEnv$zhF ,2 ,function(p){
+                        val <- sort(unique(p))
+                        tbl <- table(p)
+                        mtx <- matrix( 0 ,ncol=length(val) ,nrow=2 )
+                        mtx[1,] <- val
+                        mtx[2,] <- tbl[as.character(val)]
+                        rownames(mtx) <- c("val","freq")
+                        return(mtx)
+                    })
+
+    rstObj <- cutEadge.colValCut( gEnv ,allIdx ,colValLst )
+    allIdx <- allIdx[rstObj$flag]
+    rstObj <- cutEadge.dup3Col( gEnv ,allIdx ,colValLst ,pThld=5 )  # pThld^6 에 비해 효과는 좋음.
+    allIdx <- allIdx[rstObj$flag]
+
+    rstObj <- cutEadge.getCFltObj( gEnv ,allIdx )
+    allIdx <- allIdx[rstObj$flag]
+    rstObj <- cutEadge.remLstHard( gEnv ,allIdx )
+    allIdx <- allIdx[rstObj$flag]
+    rstObj <- cutEadge.getColSeq( gEnv ,allIdx )
+    allIdx <- allIdx[rstObj$flag]
+    rstObj <- cutEadge.getBanPtn( gEnv ,allIdx )
+    allIdx <- allIdx[rstObj$flag]
+    rstObj <- cutEadge.getBanPtnColVal( gEnv ,allIdx )
+    allIdx <- allIdx[rstObj$flag]
+    rstObj <- cutEadge.getBanSym( gEnv ,allIdx )
+    allIdx <- allIdx[rstObj$flag]
+    rstObj <- cutEadge.getBanGrad( gEnv ,allIdx )
+    allIdx <- allIdx[rstObj$flag]
+    rstObj <- cutEadge.banDupSeq( gEnv ,allIdx )
+    allIdx <- allIdx[rstObj$flag]
+
+    rstObj <- cutEadge.getBanRebBin( gEnv ,allIdx )
+    allIdx <- allIdx[rstObj$flag]
+    rstObj <- cutEadge.banDupSeqBin( gEnv ,allIdx )
+    allIdx <- allIdx[rstObj$flag]
+    rstObj <- cutEadge.getBanSymBin( gEnv ,allIdx )
+    allIdx <- allIdx[rstObj$flag]
+
+    rstObj <- cutEadge.getBanRebDiff( gEnv ,allIdx )
+    allIdx <- allIdx[rstObj$flag]
+    rstObj <- cutEadge.banDupSeqDiff( gEnv ,allIdx )
+    allIdx <- allIdx[rstObj$flag]
+    rstObj <- cutEadge.getBanSymDiff( gEnv ,allIdx )
+    allIdx <- allIdx[rstObj$flag]
+
+    # code step 너무 빈번한 듯 함.
+    rstObj <- cutEadge.banSeqRebCStep( gEnv ,allIdx )
+    allIdx <- allIdx[rstObj$flag]
+    rstObj <- cutEadge.getBanSymCStep( gEnv ,allIdx )
+    allIdx <- allIdx[rstObj$flag]
+    rstObj <- cutEadge.getBanStepRebCStep( gEnv ,allIdx )
+    allIdx <- allIdx[rstObj$flag]
+    rstObj <- cutEadge.getBanGradCStep( gEnv ,allIdx )
+    allIdx <- allIdx[rstObj$flag]
+
+    # zoid[,c(1,6)] 은 피해야 할 듯. 빈번할 수 밖에 없음.
+    rstObj <- cutEadge.getBanSeqRebWidth( gEnv ,allIdx )
+    allIdx <- allIdx[rstObj$flag]
+    rstObj <- cutEadge.getBanSymWidth( gEnv ,allIdx )
+    allIdx <- allIdx[rstObj$flag]
+    rstObj <- cutEadge.getBanStepRebWidth( gEnv ,allIdx )
+    allIdx <- allIdx[rstObj$flag]
+    rstObj <- cutEadge.getBanGradWidth( gEnv ,allIdx )
+    allIdx <- allIdx[rstObj$flag]
+
+    rstObj <- cutEadge.banReb3( gEnv ,allIdx )
+    allIdx <- allIdx[rstObj$flag]
+    rstObj <- cutEadge.banSeq3Twice( gEnv ,allIdx )
+    allIdx <- allIdx[rstObj$flag]
+    rstObj <- cutEadge.banReb10RemSeq( gEnv ,allIdx )
+    allIdx <- allIdx[rstObj$flag]
+
+    # -----------------------------------------
+
+	return( allIdx )
+
+} # cutEadge()
+
+
+
 #	pEVL : encValLst, encoded value list
 #	pSBC : search base code name
 #	pNZC : next zoid code name
@@ -2919,4 +3005,72 @@ cutEadge.banSeq3Twice <- function( gEnv ,allIdx ){
 
 } # cutEadge.banSeq3Twice()
 
+cutEadge.banReb10RemSeq <- function( gEnv ,allIdx ,pDebug=F ){
+	# %% 10 이 연달아 3개 같은 패턴 재현
+
+	# pValMtx <- tail(gEnv$zhF%%10)	;pBase <- c( 2,0,2,8,7,9 )
+	chk3Seq <- function( pValMtx ,pBase ,pSize=3 ){
+		valLen <- ncol(pValMtx)
+		baseLen <- length(pBase)
+		spanBase <- 1:pSize - 1
+		flag <- rep( NA ,nrow(pValMtx) )
+		for( idx in seq_len(nrow(pValMtx)) ){
+			for( aIdx in 1:(valLen-pSize+1) ){
+				for( bIdx in 1:(baseLen-pSize+1) ){
+					aSpan <- pValMtx[idx,aIdx+spanBase]
+					bSpan <- pBase[bIdx+spanBase]
+					if( all(aSpan==bSpan) ){
+						flag[idx] <- bIdx
+						break
+					}
+				} # bIdx
+			} # aIdx
+		} # idx
+
+		return( flag )
+	} # chk3Seq()
+
+    allIdx.len <- length(allIdx)
+
+	flag <- chk3Seq( gEnv$allZoidMtx[allIdx,,drop=F]%%10 
+						,gEnv$zhF[nrow(gEnv$zhF),]%%10 
+						,pSize=3 
+					)
+	flag.base <- is.na(flag)
+	flagLst.base <- lapply( flag.base ,function(p){ if(p) integer(0) else 1 })
+
+    flagLst.cv <- vector("list",allIdx.len)
+    azColValLst <- apply( gEnv$allZoidMtx[allIdx,,drop=F] ,2 ,function(p){sort(unique(p))})
+    for( azColIdx in 1:6 ){
+        for( vIdx in azColValLst[[azColIdx]] ){
+            tRawMtx <- gEnv$zhF[gEnv$zhF[,azColIdx]==vIdx ,,drop=F]
+            tRawMtx <- tRawMtx[,-azColIdx,drop=F]
+			if( 0==nrow(tRawMtx) ){
+				next
+			}
+			flag <- chk3Seq( gEnv$allZoidMtx[allIdx,-azColIdx,drop=F]%%10 
+							,tRawMtx[nrow(tRawMtx),] %% 10
+							,pSize=3
+						)
+            for( idx in seq_len(allIdx.len) ){
+                if( vIdx!=gEnv$allZoidMtx[allIdx[idx],azColIdx] ){
+                    next
+                }
+				if( !is.na(flag[idx]) ){
+					flagLst.cv[[idx]][[1+length(flagLst.cv[[idx]])]] <- c(azColIdx,vIdx)
+				}
+			}
+        } # vIdx
+    }
+	flag.cv <- 1 > sapply( flagLst.cv ,length ) 
+
+    rObj <- list( idStr="cutEadge.banReb10RemSeq" )
+    rObj$flag <- flag.base & flag.cv
+	if( pDebug ){
+		rObj$flagLst.base	<- flagLst.base
+		rObj$flagLst.cv		<- flagLst.cv
+	}
+    return( rObj )
+
+} # cutEadge.banReb10RemSeq()
 
