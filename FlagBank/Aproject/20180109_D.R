@@ -47,4 +47,6 @@ chkPtnObj <- function(){
 } # chkPtnObj()
 
 
+flag <- apply( allZoidMtx ,1 ,function(p){ sum(0==p%%10) } )
 
+flag <- apply( gEnv$zhF ,1 ,function(p){ sum(0==(p%%10)) } )
