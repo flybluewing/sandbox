@@ -342,6 +342,81 @@ finalCut.first4 <- function( gEnv ,allIdxF ){
 
 finalCut.first7 <- function( gEnv ,allIdxF ){
 
+	# ===================================================================================
+	fObj <- list( idx=1 ,val=7 )
+	fObj$lastMtx	<- tail(gEnv$zhF)
+	fObj$lastZoid	<- fObj$lastMtx[nrow(fObj$lastMtx),]
+	fObj$lastMtx.1	<- tail(gEnv$zhF[gEnv$zhF[,fObj$idx]==fObj$val,])
+	fObj$lastZoid.1	<- fObj$lastMtx.1[nrow(fObj$lastMtx.1),]
+	
+	flag <- gEnv$allZoidMtx[allIdxF,fObj$idx] %in% fObj$val
+	allIdxF <- allIdxF[flag]
+    cat(sprintf("allIdxF %d\n",length(allIdxF)))
+    if( 0==length(allIdxF) ){
+        cat("None of them....\n")
+    }
+
+	# fObj$lastMtx.1[,5] : 33 ,.. ,34 ,.. ,34 ,.. ,? 34
+	flag <- apply( gEnv$allZoidMtx[allIdxF,] ,1 ,function(aZoid){
+				if( all(aZoid[fObj$idx]==c(fObj$val)) ){
+					if( aZoid[5]%in%c(33,34) ){
+						return(FALSE)
+					}
+				}
+				return( TRUE )
+			});	kIdx <- head(which(!flag))
+    allIdxF <- allIdxF[flag]
+    cat(sprintf("allIdxF %d\n",length(allIdxF)))
+	
+	# fObj$lastMtx.1[,2] : 22 ,.. ,22 ,.. ,? 22 밴
+	flag <- apply( gEnv$allZoidMtx[allIdxF,] ,1 ,function(aZoid){
+				if( all(aZoid[fObj$idx]==c(fObj$val)) ){
+					if( aZoid[2]%in%c(22) ){
+						return(FALSE)
+					}
+				}
+				return( TRUE )
+			});	kIdx <- head(which(!flag))
+    allIdxF <- allIdxF[flag]
+    cat(sprintf("allIdxF %d\n",length(allIdxF)))
+
+	# lastMtx.1 %/% 10 패턴이 반복적.. 0 ,2 ,2 ,3 ,3 ,3
+	flag <- apply( gEnv$allZoidMtx[allIdxF,] ,1 ,function(aZoid){
+				if( all(aZoid[fObj$idx]==c(fObj$val)) ){
+					if( all( (aZoid%/%10)==c(0,2,2,3,3,3) ) ){
+						return(FALSE)
+					}
+				}
+				return( TRUE )
+			});	kIdx <- head(which(!flag))
+    allIdxF <- allIdxF[flag]
+    cat(sprintf("allIdxF %d\n",length(allIdxF)))
+
+	# lastMtx.1[,c(2,3)] 둘 다 똑같이 5씩 증가했다. 다음에도 그럴까?
+	#		32,34..
+	flag <- apply( gEnv$allZoidMtx[allIdxF,] ,1 ,function(aZoid){
+				if( all(aZoid[fObj$idx]==c(fObj$val)) ){
+					if( all( aZoid[2:3]==c(32,34) ) ){
+						return(FALSE)
+					}
+				}
+				return( TRUE )
+			});	kIdx <- head(which(!flag))
+    allIdxF <- allIdxF[flag]
+    cat(sprintf("allIdxF %d\n",length(allIdxF)))
+	
+	# suspenct
+	#	aZoid[2] : 33
+	#	aZoid[6] : 37
+	
+
+	
+	
+	table(flag)
+	head(gEnv$allZoidMtx[allIdxF[kIdx],])
+	allZoidMtx <- gEnv$allZoidMtx[allIdxF,]
+	apply( allZoidMtx ,2 ,function(p){sort(unique(p))} )
+	
 	return( allIdxF )
 
 } # finalCut.first7( )

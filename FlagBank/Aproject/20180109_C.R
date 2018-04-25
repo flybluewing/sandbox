@@ -76,7 +76,7 @@ save( allIdxLst, file="Obj_allIdxLst.save" )
 #=[Final Course]=========================================================================
 tStmp <- Sys.time()
 source("./toFinal/to20180428.R")
-allIdxObj <- finalCut( gEnv ,allIdx <- allZoid.idx1 )
+allIdxObj <- finalCut( gEnv ,allIdx=allIdxLst$allZoid.idx1 )
 
 allIdxF.4 <- cutEadge( gEnv ,allIdxObj$allIdxF.4 )
 allIdxF.7 <- cutEadge( gEnv ,allIdxObj$allIdxF.7 )
