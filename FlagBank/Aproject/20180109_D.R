@@ -50,3 +50,8 @@ chkPtnObj <- function(){
 flag <- apply( allZoidMtx ,1 ,function(p){ sum(0==p%%10) } )
 
 flag <- apply( gEnv$zhF ,1 ,function(p){ sum(0==(p%%10)) } )
+
+
+load("Obj_allIdxLst.save")
+allIdx <- allIdxLst$allZoid.idx1
+
