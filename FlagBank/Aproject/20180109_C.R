@@ -6,14 +6,16 @@ source("../breedingPlace/20171116_C_H.R")
 source("../breedingPlace/20171116_D_H.R")
 source("20180109_A_H.R")
 source("20180109_C_H.R")
+source("20180109_C_HRad.R")
+
 
 tStmp <- Sys.time()
-saveId <- "Z803"
+saveId <- "Z804"
 load(sprintf("./save/Obj_gEnv%s.save",saveId))
 load(sprintf("./save/Obj_fRstLst%s.save",saveId))
 load(sprintf("./save/Obj_remLst%s.save",saveId))
 
-stdFiltedCnt <- sapply( fRstLst ,length )
+stdFiltedCnt <- sapply( fRstLst ,length )   ;names(stdFiltedCnt) <- ( nrow(gEnv$zhF)-length(stdFiltedCnt)+1 ):nrow(gEnv$zhF)
 stdFilted.tbl <- table(stdFiltedCnt)
 stdFilted.per <- sprintf( "%.1f" ,100*stdFilted.tbl / length(fRstLst) )
 names(stdFilted.per) <- names(stdFilted.tbl)
@@ -70,17 +72,31 @@ allZoid.idx2 <- allZoid.idx2[flag]
 
 allIdxLst <- list( allZoid.idx0=allZoid.idx0 ,allZoid.idx1=allZoid.idx1 ,allZoid.idx2=allZoid.idx2 )
 allIdxLst$saveId <- saveId
-save( allIdxLst, file="Obj_allIdxLst.save" )
+allIdxLst$stdFiltedCnt <- stdFiltedCnt
+allIdxLst$stdFiltedCnt.n0 <- names(stdFiltedCnt)[stdFiltedCnt==0]
+allIdxLst$stdFiltedCnt.n1 <- names(stdFiltedCnt)[stdFiltedCnt==1]
+
+save( allIdxLst, file=sprintf("Obj_allIdxLst%s.save",saveId) )
 
 
 #=[Final Course]=========================================================================
 tStmp <- Sys.time()
-source("./toFinal/to20180428.R")
-allIdxObj <- finalCut( gEnv ,allIdx=allIdxLst$allZoid.idx1 )
+#   source("./toFinal/to20180428.R")
+source("./toFinal/to20180505.R")
 
-allIdxF.4 <- cutEadge( gEnv ,allIdxObj$allIdxF.4 )
-allIdxF.7 <- cutEadge( gEnv ,allIdxObj$allIdxF.7 )
-tDiff <- Sys.time - Stmp
+allIdxObj.0428.1 <- finalCut( gEnv ,allIdx=allIdxLst$allZoid.idx1 )
+
+curEadgeObj <- cutEadge( gEnv ,allIdxObj.0428.1$allIdxF.4 )
+allIdxObj.0428.1$allIdxF.4.eadge <- curEadgeObj$allIdx
+
+curEadgeObj <- cutEadge( gEnv ,allIdxObj.0428.1$allIdxF.7 )
+allIdxObj.0428.1$allIdxF.7.eadge <- curEadgeObj$allIdx
+
+save( allIdxObj.0428.1 ,file="./toFinal/Obj_allIdxObj.0428.1.save" )
+tDiff <- Sys.time() - tStmp
+sapply( allIdxObj.0428.1 ,length )
+
+
 
 
 

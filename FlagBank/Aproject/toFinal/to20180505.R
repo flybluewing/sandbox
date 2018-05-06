@@ -2,40 +2,27 @@
 
 finalCut.first4 <- function( gEnv ,allIdxF ){
 
-    # ===================================================================================
-    firstCode <- c(4)
-    flag <- gEnv$allZoidMtx[allIdxF,1] %in% c(firstCode) # zoid[1]은 1:5 사이에서 가장 오래 안 나온 값.
-    allIdxF <- allIdxF[flag]
+	# ===================================================================================
+	fObj <- list( idx=1 ,val=4 )
+	fObj$lastMtx	<- tail(gEnv$zhF)
+	fObj$lastZoid	<- fObj$lastMtx[nrow(fObj$lastMtx),]
+	fObj$lastMtx.1	<- tail(gEnv$zhF[gEnv$zhF[,fObj$idx]==fObj$val,])
+	fObj$lastZoid.1	<- fObj$lastMtx.1[nrow(fObj$lastMtx.1),]
+	fObj$localZhF	<- gEnv$zhF[gEnv$zhF[,1]==fObj$val ,]
+	fObj$tailZhF	<- tail(fObj$localZhF)
+
+	flag <- gEnv$allZoidMtx[allIdxF,fObj$idx] %in% fObj$val
+	allIdxF <- allIdxF[flag]
     cat(sprintf("allIdxF %d\n",length(allIdxF)))
     if( 0==length(allIdxF) ){
         cat("None of them....\n")
     }
 
-    # zoid[1]을 4로 정하면 5->4가 된다. 다른 컬럼에서까지 이런 1간격 변경은 없겠지.
-    banCode <- gEnv$zhF[nrow(gEnv$zhF),][2:6]-1
-    flag <- apply( gEnv$allZoidMtx[allIdxF,2:6,drop=F] ,1 ,function( aCode ){
-                return( !any(aCode==banCode) )
-            })
+    # zoid[1]을 4로 정하면 1->4가 된다. lastZoid[2:3] 처럼 +x,-x 형태 변화는 없겠지.
+	#		즉 aZoid[2] 는 7(10-3) 제외하자.
+    flag <- gEnv$allZoidMtx[allIdxF,2] != 7
     allIdxF <- allIdxF[flag]
     cat(sprintf("allIdxF %d\n",length(allIdxF)))
-
-    # zoid[1]을 4로 정하면 5->4가 된다. 전체 코드에서 1 변경값이 3개이상 있지는 않겠지.
-    lastZoid <- gEnv$zhF[nrow(gEnv$zhF),]
-    flag <- apply( gEnv$allZoidMtx[allIdxF,] ,1 ,function( aZoid ){
-                    oneLess <- intersect( aZoid ,(lastZoid-1) )
-                    oneMore <- intersect( aZoid ,(lastZoid+1) )
-                    cnt <- length(unique( oneLess ,oneMore ))
-                    return( cnt<3 )
-                })
-    allIdxF <- allIdxF[flag]
-    cat(sprintf("allIdxF %d\n",length(allIdxF)))
-
-
-    localHisMtx <- gEnv$zhF[gEnv$zhF[,1]%in%firstCode ,]
-    #         740  4  8  9 16 17 19
-    #         752  4 16 20 33 40 43
-    #         761  4  7 11 24 42 45
-    #         785  4  6 15 25 26 33
 
     # aZoid4[1:2]에 대해 (4,7) (4,6) ... and (4,5)? no
     flag <- gEnv$allZoidMtx[allIdxF,2]!=5
@@ -53,35 +40,16 @@ finalCut.first4 <- function( gEnv ,allIdxF ){
     cat(sprintf("allIdxF %d\n",length(allIdxF)))
 
     # aZoid4 %/% 10 값이 같은 거 거부.
-    lastQuo <- localHisMtx[nrow(localHisMtx),] %/% 10
+    lastQuo <- fObj$lastZoid.1 %/% 10
     flag <- apply( gEnv$allZoidMtx[allIdxF,] ,1 ,function( aZoid ){
                 return( !all(aZoid%/%10==lastQuo) )
         })
     allIdxF <- allIdxF[flag]
     cat(sprintf("allIdxF %d\n",length(allIdxF)))
 
-    # zhF[730,]  4 10 14 15 18 22.. (10 많음)
-    #   (10,14) (14,15) (15,18) 패턴은 피하자. lastZoid에서도 10 많음.
-    flag <- apply( gEnv$allZoidMtx[allIdxF,] ,1 ,function( aZoid ){
-
-                    idx <- which( aZoid %in% c(10,14) )
-                    if( 2==length(idx) && 1==(idx[2]-idx[1]) ) return( FALSE )
-
-                    idx <- which( aZoid %in% c(14,15) )
-                    if( 2==length(idx) && 1==(idx[2]-idx[1]) ) return( FALSE )
-
-                    idx <- which( aZoid %in% c(15,18) )
-                    if( 2==length(idx) && 1==(idx[2]-idx[1]) ) return( FALSE )
-
-                    return( TRUE )
-                })
-    allIdxF <- allIdxF[flag]
-    cat(sprintf("allIdxF %d\n",length(allIdxF)))
-
     # aZoid4와 연속으로 3개 똑같은 발생은 피하자.(3개 초과는 아예 스킵.)
-    lastLH <- localHisMtx[nrow(localHisMtx),]
     flag <- apply( gEnv$allZoidMtx[allIdxF,] ,1 ,function( aZoid ){
-                    idx <- which( aZoid %in% lastLH )
+                    idx <- which( aZoid %in% fObj$lastZoid.1 )
                     if( 3<length(idx) ) return( FALSE )
                     if( 3==length(idx) && 2==(idx[3]-idx[1]) ) return( FALSE )
 
@@ -91,36 +59,35 @@ finalCut.first4 <- function( gEnv ,allIdxF ){
     cat(sprintf("allIdxF %d\n",length(allIdxF)))
 
     # aZoid[n,6] 이 43 . . 43 . . ? 2번씩 건너뛰어서 43이 또 나올까?
-    #   게다가 lastZoid[6]은 33임. 3이 너무 많다. 33, 43 둘 다 빼자.
+	#			43,33 모두 빼자.
     flag <- apply( gEnv$allZoidMtx[allIdxF,] ,1 ,function( aZoid ){
                 return( !any( aZoid[6] %in% c(33,43) ) )
         })
     allIdxF <- allIdxF[flag]
     cat(sprintf("allIdxF %d\n",length(allIdxF)))
-	
-    flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
-					cnt <- sum(4==(aZoid%%10))
-					return( 2>=cnt )
-                })
-    allIdxF <- allIdxF[flag]
-    cat(sprintf("allIdxF %d\n",length(allIdxF)))
-	
+
 	# localHisMtx[,4]%%10 : 5,6,3,4,5,?  6이 나오긴 어렵겠지?
 	flag <- (gEnv$allZoidMtx[allIdxF,4]%%10) != 6
     allIdxF <- allIdxF[flag]
     cat(sprintf("allIdxF %d\n",length(allIdxF)))
 
-	# lastZoid에서도 3 두개 뿐(30,43)이고, lastLH에서도 33 뿐이다.
-	#	33혼자만 나오고 나머지엔 3이 없기는 힘들겠지?
+	# fObj$lastZoid, fObj$lastZoid.l 모두 26나왔다. 또 나오긴..
 	flag <- apply( gEnv$allZoidMtx[allIdxF,] ,1 ,function(aZoid){
-					if( any(aZoid==33) ){
-						cnt <- sum(aZoid%%10) + sum(aZoid%/%10)
-						if( cnt==2 ){
-							return(FALSE)
-						}
-					}
-					return( TRUE )
-				})
+				return( !(26 %in% aZoid) )
+			} )
+    allIdxF <- allIdxF[flag]
+    cat(sprintf("allIdxF %d\n",length(allIdxF)))
+
+	# lZoid[2] 에 6이 올 수 있을까?
+	#	8,X,7,X,? 에다가 fObj$lastZoid.l[2] 도 6임
+	flag <- gEnv$allZoidMtx[allIdxF,2] != 6
+    allIdxF <- allIdxF[flag]
+    cat(sprintf("allIdxF %d\n",length(allIdxF)))
+
+	# 11 배수가 연달아 3번째다. 다음에도 나오긴 어렵겠지? (33,11,33..)
+	flag <- apply( gEnv$allZoidMtx[allIdxF,] ,1 ,function(aZoid){
+				return( !any(aZoid%%11==0) )
+			} )
     allIdxF <- allIdxF[flag]
     cat(sprintf("allIdxF %d\n",length(allIdxF)))
 
@@ -135,6 +102,11 @@ finalCut.first4 <- function( gEnv ,allIdxF ){
 				})
     allIdxF <- allIdxF[flag]
     cat(sprintf("allIdxF %d\n",length(allIdxF)))
+
+	# length(allIdxF)	4377
+
+	lastIdx <- tail(which(gEnv$zhF[,1]==fObj$val))
+	gEnv$zhF[sort(c(lastIdx,lastIdx-1)) ,]
 
 	# =============================================================================
 	# secondCode
@@ -419,27 +391,46 @@ finalCut.first7 <- function( gEnv ,allIdxF ){
 
 } # finalCut.first7( )
 
-# allIdx <- allZoid.idx1
+# allIdx <- allIdxLst$allZoid.idx1
 finalCut <- function( gEnv ,allIdx ){
     # cutEadge.getBanPtnColVal() 에서 1~2개 발생 탈락값들에 대한 검토 권장.
 
     allIdxF <- allIdx
-    azColValLst <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,2 ,function(p){sort(unique(p))})
-    cat(sprintf("allIdxF %d\n",length(allIdxF)))
 
-#     798  2 10 14 22 32 36
-#     799 12 17 23 34 42 45
-#     800  1  4 10 12 28 45
-#     801 17 25 28 37 43 44
-#     802 10 11 12 18 24 42
-#     803  5  9 14 26 30 43
+	# 참고 자료 --------------------------------------------------------------------
     rebCnt <- sapply( 2:nrow(gEnv$zhF) ,function(idx){
                     cnt <- sum( gEnv$zhF[idx-1,] %in% gEnv$zhF[idx,] )
                     return(cnt)
                 })
+    azColValLst <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,2 ,function(p){sort(unique(p))})
+    cat(sprintf("allIdxF %d\n",length(allIdxF)))
 
-    # zoid[6] : 42,43.. 44? no
-    flag <- gEnv$allZoidMtx[allIdxF,6] != 44
+	# 	799 12 17 23 34 42 45
+	# 	800  1  4 10 12 28 45
+	# 	801 17 25 28 37 43 44
+	# 	802 10 11 12 18 24 42
+	# 	803  5  9 14 26 30 43
+	# 	804  1 10 13 26 32 36
+
+    # zoid[2] : (11) ,9 ,10 ... 11? no
+    flag <- gEnv$allZoidMtx[allIdxF,2] != 11
+    allIdxF <- allIdxF[flag]
+    cat(sprintf("allIdxF %d\n",length(allIdxF)))
+
+    # zoid[3] : (12) ,14 ,13 ... 12? no
+    flag <- gEnv$allZoidMtx[allIdxF,3] != 12
+    allIdxF <- allIdxF[flag]
+    cat(sprintf("allIdxF %d\n",length(allIdxF)))
+
+    # zoid[4] : (18) ,26 ,26 ... 26? 18? no
+    flag <- !( gEnv$allZoidMtx[allIdxF,3] %in% c(18,26) )
+    allIdxF <- allIdxF[flag]
+    cat(sprintf("allIdxF %d\n",length(allIdxF)))
+
+    # 10 배수가 최근 너무 많다.
+	flag <- apply( gEnv$allZoidMtx[allIdxF,] ,1 ,function(aZoid){
+					return( !any(0==aZoid%%10) )
+				})
     allIdxF <- allIdxF[flag]
     cat(sprintf("allIdxF %d\n",length(allIdxF)))
 
@@ -452,89 +443,64 @@ finalCut <- function( gEnv ,allIdx ){
     allIdxF <- allIdxF[flag]
     cat(sprintf("allIdxF %d\n",length(allIdxF)))
 
-    # zoid[3:6] %/% 10 이 (1,1,2,4) 패턴이 두번이나 반복되었다..
-    flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F]%/%10 ,1 ,function( aZoid ){
-            if( all(aZoid[3:4]==c(1,1)) ) return( FALSE )
-            if( all(aZoid[4:5]==c(1,2)) ) return( FALSE )
-            if( all(aZoid[5:6]==c(2,4)) ) return( FALSE )
-            return( TRUE )
-        })
+    # zoid[3]*2 == zoid[4]... 반복될 수 있을까?
+	flag <- apply( gEnv$allZoidMtx[allIdxF,] ,1 ,function(aZoid){
+					return( (aZoid[3]*2) != aZoid[4] )
+				})
     allIdxF <- allIdxF[flag]
     cat(sprintf("allIdxF %d\n",length(allIdxF)))
 
-    # zoid[2:6]-zoid[1:5] 4, 5,12, 4,13 : 4가 두개씩이나? 다음엔 없겠지.
-    flag <- apply( gEnv$allZoidMtx[allIdxF,2:6,drop=F] - gEnv$allZoidMtx[allIdxF,1:5,drop=F]
-            ,1 
-            ,function( aCStep ){
-                return( !any(aCStep==4) )
-            })
+    # zoid%%10 6이 두번 나오긴 힘들겠지.
+	flag <- apply( gEnv$allZoidMtx[allIdxF,] ,1 ,function(aZoid){
+					return( 2>sum(6==aZoid%%10) )
+				})
     allIdxF <- allIdxF[flag]
     cat(sprintf("allIdxF %d\n",length(allIdxF)))
 
-    # 12,17이 너무 자주 나왔다. (12,17 이 연달아 붙어 나오긴 힘들겠지?)
-    flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
-                    idx <- which( aZoid %in% c(12,17) )
-                    if( 2!=length(idx) ) return( TRUE )
-                    if( 1==(idx[2]-idx[1]) ) return( FALSE )
-                    return( TRUE )
-                })
-    allIdxF <- allIdxF[flag]
-    cat(sprintf("allIdxF %d\n",length(allIdxF)))
-
-    # 42,45도 최근에 나왔으니, (42,45) 연달아 붙어 나오긴 힘들겠지?
-    flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
-                    idx <- which( aZoid %in% c(42,45) )
-                    if( 2!=length(idx) ) return( TRUE )
-                    if( 1==(idx[2]-idx[1]) ) return( FALSE )
-                    return( TRUE )
-                })
-    allIdxF <- allIdxF[flag]
-    cat(sprintf("allIdxF %d\n",length(allIdxF)))
-
-    # 10,11,12 이 최근에 나왔다. CStep 1이 2번연속되는 건 아직 없겠지..
-    flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
-                    cStep2 <- aZoid[3:6] - aZoid[1:4]
-                    return( !any(cStep2==2) )
-                })
-    allIdxF <- allIdxF[flag]
-    cat(sprintf("allIdxF %d\n",length(allIdxF)))
-
-    # zoid %% 10 에서 한 개 quo가 4개 이상 차지하는 것은 피하자.
-    flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
-                    maxCnt <- max(table(aZoid%/%10))
-                    return( maxCnt<4 )
-                })
-    allIdxF <- allIdxF[flag]
-    cat(sprintf("allIdxF %d\n",length(allIdxF)))
-
-
-	# zoid[3:5]는 변화량 절대값이 2로 3번 연속이다. 재현 어렵겠지?
-	#	802 10 11 12 18 24 42
-	#	803  5  9 14 26 30 43
+    # 같은 컬럼에서의 동일 반복이 또 나올까?
 	lastZoid <- gEnv$zhF[nrow(gEnv$zhF),]
-    flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
-                    idx <- which( 2==abs(aZoid-lastZoid) )					
-					fndIdx <- haveSeq( idx ,c(2,2,2) )
-					return( is.null(fndIdx) )
-                })
-    allIdxF <- allIdxF[flag]
-    cat(sprintf("allIdxF %d\n",length(allIdxF)))	
-
-    flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
-					cnt <- sum(0==(aZoid%%10))
-					return( 1>=cnt )
-                })
+	flag <- apply( gEnv$allZoidMtx[allIdxF,] ,1 ,function(aZoid){
+					return( 0==sum(aZoid==lastZoid) )
+				})
     allIdxF <- allIdxF[flag]
     cat(sprintf("allIdxF %d\n",length(allIdxF)))
 
-    flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
-					cnt <- sum(0==(aZoid%%11))
-					return( 1>=cnt )
-                })
+    # 같은 컬럼에서의 변화량이 1인 경우 연속발생이 재현되긴 어렵겠지.
+	lastZoid <- gEnv$zhF[nrow(gEnv$zhF),]
+	flag <- apply( gEnv$allZoidMtx[allIdxF,] ,1 ,function(aZoid){
+					idx <- which(1==abs(aZoid-lastZoid))
+					idx.len <- length(idx)
+					if( 2<=idx.len ){
+						sDiff <- idx[2:idx.len]-idx[1:(idx.len-1)]
+						return( !any(sDiff==1) )
+					}
+					return( TRUE )
+				})
     allIdxF <- allIdxF[flag]
     cat(sprintf("allIdxF %d\n",length(allIdxF)))
 
+    # zoid[2,3] 컬럼에서의 변경 절대값이 계속 같을 수 있을까?
+	lastZoid <- gEnv$zhF[nrow(gEnv$zhF),]
+	flag <- apply( gEnv$allZoidMtx[allIdxF,] ,1 ,function(aZoid){
+					cDiff <- abs(aZoid[2:3]-lastZoid[2:3])
+					return( cDiff[1]!=cDiff[2] )
+				})
+    allIdxF <- allIdxF[flag]
+    cat(sprintf("allIdxF %d\n",length(allIdxF)))
 
+    # zoid[6] 45,X,44,X,43,X...42? no.
+	flag <- gEnv$allZoidMtx[allIdxF,6]!=42
+    allIdxF <- allIdxF[flag]
+    cat(sprintf("allIdxF %d\n",length(allIdxF)))
+
+    # zoid %/% 10 이 4개 이상인 것은 제외하자.
+	flag <- apply( gEnv$allZoidMtx[allIdxF,] ,1 ,function(aZoid){
+					return( 3>=max(aZoid%/%10) )
+				})
+    allIdxF <- allIdxF[flag]
+    cat(sprintf("allIdxF %d\n",length(allIdxF)))
+
+	# length(allZoidF) 148,916
 	allIdxF.4 <- finalCut.first4( gEnv ,allIdxF )
 	allIdxF.7 <- finalCut.first7( gEnv ,allIdxF )
 
@@ -557,3 +523,13 @@ finalCut <- function( gEnv ,allIdx ){
 } # finalCut()
 
 
+anaColLineEnd <- function( pZhF ){	# pZhF <- gEnv$zhF
+
+	rowLen <- nrow(pZhF)
+	rObj <- apply( pZhF ,2 ,function( colLine ){
+
+		})
+
+	return( rObj )
+
+} # anaThread()

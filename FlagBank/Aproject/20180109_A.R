@@ -28,7 +28,7 @@ getFiltHist <- function( pFiltId ,pTStmp ,pAllZoidMtx ,pFlag=NULL ){
 allZoidMtx <- zhF	# 일단 필터링 결과를 보기위해..
 
 # zhF ,allZoidMtx
-testSpan <- 200:nrow(zhF)
+testSpan <- 300:nrow(zhF)
 
 filtFuncLst <- getFiltLst.base()
 
@@ -100,8 +100,26 @@ save( remLst ,file=sprintf("./save/Obj_remLst%s.save",saveId) )
 k.FLogStr(sprintf("remLst is created.(logfile:%s)",logFile))
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # =====================================================================================
-# 실제 AllZoidMtx 대상, 절대 제거대상 확인.
+# remLst.hard : 실제 AllZoidMtx 대상, 절대 제거대상 확인.
 logFile <- sprintf("./log/allZoidMtx%s_hard.log",saveId)
 gEnv <- list( allZoidMtx = getAllZoid()
 				,zhF = zhF

@@ -14,72 +14,130 @@ cutEadge <- function( gEnv ,allIdx ){
                         return(mtx)
                     })
 
+    logStr <- sprintf("Start %d",length(allIdx))
+    getLogStr <- function( pRstObj ,pTStmp ){
+        tDiff <- Sys.time() - pTStmp
+        logStr <- sprintf("%s %d(-%d %.1f%%)  %.1f%s",pRstObj$idStr
+                            ,sum(pRstObj$flag),sum(!pRstObj$flag) 
+                            ,ifelse( length(pRstObj$flag)>0 ,100*sum(!pRstObj$flag)/length(pRstObj$flag) ,0 )
+                            ,tDiff ,units(tDiff)
+                        )
+    } # getLogStr()
+
+    tStmp <- Sys.time()
     rstObj <- cutEadge.colValCut( gEnv ,allIdx ,colValLst )
+    logStr[1+length(logStr)] <- getLogStr( rstObj ,tStmp )
     allIdx <- allIdx[rstObj$flag]
+
     rstObj <- cutEadge.dup3Col( gEnv ,allIdx ,colValLst ,pThld=5 )  # pThld^6 에 비해 효과는 좋음.
+    logStr[1+length(logStr)] <- getLogStr( rstObj ,tStmp )
     allIdx <- allIdx[rstObj$flag]
 
     rstObj <- cutEadge.getCFltObj( gEnv ,allIdx )
+    logStr[1+length(logStr)] <- getLogStr( rstObj ,tStmp )
     allIdx <- allIdx[rstObj$flag]
+
     rstObj <- cutEadge.remLstHard( gEnv ,allIdx )
+    logStr[1+length(logStr)] <- getLogStr( rstObj ,tStmp )
     allIdx <- allIdx[rstObj$flag]
+
     rstObj <- cutEadge.getColSeq( gEnv ,allIdx )
+    logStr[1+length(logStr)] <- getLogStr( rstObj ,tStmp )
     allIdx <- allIdx[rstObj$flag]
+
     rstObj <- cutEadge.getBanPtn( gEnv ,allIdx )
+    logStr[1+length(logStr)] <- getLogStr( rstObj ,tStmp )
     allIdx <- allIdx[rstObj$flag]
+
     rstObj <- cutEadge.getBanPtnColVal( gEnv ,allIdx )
+    logStr[1+length(logStr)] <- getLogStr( rstObj ,tStmp )
     allIdx <- allIdx[rstObj$flag]
+
     rstObj <- cutEadge.getBanSym( gEnv ,allIdx )
+    logStr[1+length(logStr)] <- getLogStr( rstObj ,tStmp )
     allIdx <- allIdx[rstObj$flag]
+
     rstObj <- cutEadge.getBanGrad( gEnv ,allIdx )
+    logStr[1+length(logStr)] <- getLogStr( rstObj ,tStmp )
     allIdx <- allIdx[rstObj$flag]
+
     rstObj <- cutEadge.banDupSeq( gEnv ,allIdx )
+    logStr[1+length(logStr)] <- getLogStr( rstObj ,tStmp )
     allIdx <- allIdx[rstObj$flag]
 
     rstObj <- cutEadge.getBanRebBin( gEnv ,allIdx )
+    logStr[1+length(logStr)] <- getLogStr( rstObj ,tStmp )
     allIdx <- allIdx[rstObj$flag]
+
     rstObj <- cutEadge.banDupSeqBin( gEnv ,allIdx )
+    logStr[1+length(logStr)] <- getLogStr( rstObj ,tStmp )
     allIdx <- allIdx[rstObj$flag]
+
     rstObj <- cutEadge.getBanSymBin( gEnv ,allIdx )
+    logStr[1+length(logStr)] <- getLogStr( rstObj ,tStmp )
     allIdx <- allIdx[rstObj$flag]
 
     rstObj <- cutEadge.getBanRebDiff( gEnv ,allIdx )
+    logStr[1+length(logStr)] <- getLogStr( rstObj ,tStmp )
     allIdx <- allIdx[rstObj$flag]
+
     rstObj <- cutEadge.banDupSeqDiff( gEnv ,allIdx )
+    logStr[1+length(logStr)] <- getLogStr( rstObj ,tStmp )
     allIdx <- allIdx[rstObj$flag]
+
     rstObj <- cutEadge.getBanSymDiff( gEnv ,allIdx )
+    logStr[1+length(logStr)] <- getLogStr( rstObj ,tStmp )
     allIdx <- allIdx[rstObj$flag]
 
     # code step 너무 빈번한 듯 함.
     rstObj <- cutEadge.banSeqRebCStep( gEnv ,allIdx )
+    logStr[1+length(logStr)] <- getLogStr( rstObj ,tStmp )
     allIdx <- allIdx[rstObj$flag]
+
     rstObj <- cutEadge.getBanSymCStep( gEnv ,allIdx )
+    logStr[1+length(logStr)] <- getLogStr( rstObj ,tStmp )
     allIdx <- allIdx[rstObj$flag]
+
     rstObj <- cutEadge.getBanStepRebCStep( gEnv ,allIdx )
+    logStr[1+length(logStr)] <- getLogStr( rstObj ,tStmp )
     allIdx <- allIdx[rstObj$flag]
+
     rstObj <- cutEadge.getBanGradCStep( gEnv ,allIdx )
+    logStr[1+length(logStr)] <- getLogStr( rstObj ,tStmp )
     allIdx <- allIdx[rstObj$flag]
 
     # zoid[,c(1,6)] 은 피해야 할 듯. 빈번할 수 밖에 없음.
     rstObj <- cutEadge.getBanSeqRebWidth( gEnv ,allIdx )
+    logStr[1+length(logStr)] <- getLogStr( rstObj ,tStmp )
     allIdx <- allIdx[rstObj$flag]
+
     rstObj <- cutEadge.getBanSymWidth( gEnv ,allIdx )
+    logStr[1+length(logStr)] <- getLogStr( rstObj ,tStmp )
     allIdx <- allIdx[rstObj$flag]
+
     rstObj <- cutEadge.getBanStepRebWidth( gEnv ,allIdx )
+    logStr[1+length(logStr)] <- getLogStr( rstObj ,tStmp )
     allIdx <- allIdx[rstObj$flag]
+
     rstObj <- cutEadge.getBanGradWidth( gEnv ,allIdx )
+    logStr[1+length(logStr)] <- getLogStr( rstObj ,tStmp )
     allIdx <- allIdx[rstObj$flag]
 
     rstObj <- cutEadge.banReb3( gEnv ,allIdx )
+    logStr[1+length(logStr)] <- getLogStr( rstObj ,tStmp )
     allIdx <- allIdx[rstObj$flag]
+
     rstObj <- cutEadge.banSeq3Twice( gEnv ,allIdx )
+    logStr[1+length(logStr)] <- getLogStr( rstObj ,tStmp )
     allIdx <- allIdx[rstObj$flag]
+
     rstObj <- cutEadge.banReb10RemSeq( gEnv ,allIdx )
+    logStr[1+length(logStr)] <- getLogStr( rstObj ,tStmp )
     allIdx <- allIdx[rstObj$flag]
 
     # -----------------------------------------
-
-	return( allIdx )
+    finalRst <- list( allIdx=allIdx ,logStr=logStr )
+	return( finalRst )
 
 } # cutEadge()
 
@@ -1782,7 +1840,7 @@ cutEadge.dup3Col <- function( gEnv ,allIdx ,colValLst ,pThld=5 ){
 
         colFlag <- rep( TRUE ,length(allIdx) )
         for( aIdx in 1:length(allIdx) ){
-            anaObj <- lastPtnObj$getAnaObj( gEnv$allZoidMtx[aIdx,colIdx] )
+            anaObj <- lastPtnObj$getAnaObj( gEnv$allZoidMtx[allIdx[aIdx],colIdx] )
             if( is.null(anaObj) ){
                 next
             }
@@ -2096,7 +2154,7 @@ cutEadge.getBanPtnColVal <- function( gEnv ,allIdx ,pDebug=F ){
 	flag.cv <- sapply( flagLst.cv ,function(p){
 					# 	  0   1   2   3   4   5 
 					# 	305 188  87  21   2   1 
-					return( 2<=length(p) ) # 사실 2 개 발생도 꽤 나타나서 위험하긴 하다.
+					return( 2>=length(p) ) # 사실 2 개 발생도 꽤 나타나서 위험하긴 하다.
 				})
 
 
