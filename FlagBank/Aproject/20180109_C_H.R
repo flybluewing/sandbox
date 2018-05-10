@@ -141,6 +141,86 @@ cutEadge <- function( gEnv ,allIdx ){
 
 } # cutEadge()
 
+anaColEndPtn <- function( pZhF ,pDebug=F ){	# pZhF <- gEnv$zhF
+
+	rowLen <- nrow(pZhF)
+	if( 3>rowLen ){
+		return(NULL)
+	}
+
+	rstLst <- list()
+	for( colIdx in 1:6 ){
+		cObj <- list( code=pZhF[rowLen:(rowLen-1),colIdx] )
+		dbgLst <- list()
+		valLst <- list()
+		for( rowIdx in (rowLen-1):2 ){
+			for( cIdx in 1:6 ){
+				code <- pZhF[rowIdx:(rowIdx-1),cIdx]
+				if( all(cObj$code==code) ){
+					valLst[[1+length(valLst)]] <- pZhF[rowIdx+1,cIdx]
+					if( pDebug ){
+                        dbgIdx <- c(rowIdx,cIdx);   names(dbgIdx)<-c("rowIdx","cIdx")
+                        dbgObj <- list( idx=dbgIdx ,code=code )
+						dbgLst[[1+length(dbgLst)]] <- dbgObj
+					}
+				}
+			}
+		} # rowIdx
+		if( 0 < length(valLst) ){
+			cObj$val <- do.call( c ,valLst )
+			cObj$dbgLst <- dbgLst
+		} else {
+			cObj$val <- integer(0)
+		}
+		rstLst[[1+length(rstLst)]] <- cObj
+	}
+
+	return( rstLst )
+
+} # anaColEndPtn()
+
+#	pZhF<-gEnv$zhF	;pColSize=2	;pDebug=T
+colValSeqNext <- function( pZhF ,pColSize=2 ,pDebug=F ){
+
+	rowLen <- nrow( pZhF )
+	lastZoid <- pZhF[rowLen,]
+
+	cvSeqLst <- list()
+	for( cIdx in 1:(6-pColSize+1) ){
+		colSpan <- cIdx + (1:pColSize-1)
+		seqObj <- list( colSpan=colSpan ,code=lastZoid[colSpan] )
+		fndLst <- list()	;dbgLst<-list()
+		for( hIdx in (rowLen-1):1 ){
+			for( cIdx.bk in 1:(6-pColSize+1) ){
+				colSpan.bk <- cIdx.bk + (1:pColSize-1)
+				if( all(seqObj$code==pZhF[hIdx,colSpan.bk]) ){
+					fndLst[[1+length(fndLst)]] <- pZhF[hIdx+1,colSpan.bk]
+					dbgVal <- c( hIdx ,cIdx ,cIdx.bk)	;names(dbgVal) <- c("hIdx","cIdx","cIdx.bk")
+					dbgLst[[1+length(dbgLst)]] <- dbgVal
+					break
+				}
+			}
+		}
+		seqObj$fndMtx <-if( 0==length(fndLst) ) { matrix(0,nrow=0,ncol=pColSize) 
+						} else {
+							mtx <- do.call(rbind,fndLst)
+							rownames(mtx) <- sapply(dbgLst,function(p){p["hIdx"]})
+							mtx
+						}
+		if( pDebug ){
+			seqObj$dbgMtx <- if( 0==length(fndLst) ){	matrix(0,nrow=0,ncol=3) 
+								} else {
+									mtx <- do.call(rbind,dbgLst)	;colnames(mtx)<-c("hIdx","cIdx","cIdx.bk")
+									mtx
+								}
+		}
+
+		cvSeqLst[[1+length(cvSeqLst)]] <- seqObj
+	}
+
+	return( cvSeqLst )
+} # colValSeqNext( )
+
 
 
 #	pEVL : encValLst, encoded value list

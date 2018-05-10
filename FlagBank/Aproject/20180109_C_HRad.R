@@ -1,82 +1,33 @@
 # 20180109_C_HRad.R ±³Â÷¸ðµ¨
 
-loose.funcTest <- function( gEnv ,allIdxLst ){
+#	pColPtnLst <- anaColEndPtn( gEnv$zhF )  ;pZoidMtx <- gEnv$allZoidMtx[allIdx,]   ;pLevel=1   ;pDebug=F
+loose.ban.linePtn.reb <- function( pColPtnLst ,pZoidMtx ,pLevel=1 ,pDebug=F ){
 
-    testSpan <- as.integer(names(allIdxLst$stdFiltedCnt))
-    testSpan.n0 <- as.integer(allIdxLst$stdFiltedCnt.n0)
-    testSpan.n1 <- as.integer(allIdxLst$stdFiltedCnt.n1)
+    thldLevel <- c(2 ,10) # 19% ,44%
+    thld <- thldLevel[pLevel]
+    banValLst <- lapply( pColPtnLst ,function( p ){
+                        return( if(thld>length(p$val)) p$val else p$val[1:thld] )
+                    })
 
-    allIdx <- allIdxLst$allZoid.idx0
-    allIdx <- allIdx[ gEnv$allZoidMtx[allIdx,1] %in% c(4) ]
+    filtLst <- lapply( 1:nrow(pZoidMtx) ,function(pIdx){
+                        flag <- rep( F ,6 )
+                        for( colIdx in 1:6 ){
+                            flag <- pZoidMtx[pIdx,colIdx] %in% banValLst[[colIdx]]
+                        }
+                        return( which(flag) )
+                    })
+    filtedIdx <- ( 1:nrow(pZoidMtx) )[0<sapply(filtLst ,length)]
 
-    tStmp <- Sys.time()
-    rst <- rep( FALSE ,length(testSpan) )   ;names(rst)<-as.character(testSpan)
-    for( tIdx in testSpan ){
-        tEnv <- gEnv
-        tEnv$zhF <- gEnv$zhF[1:(tIdx-1),]
-        allZoidMtx <- gEnv$zhF[tIdx,,drop=F]
-        banObj <- getCFltObj( tEnv )
-        codeLst <- banObj$getCodeLst( allZoidMtx )
-
-        bRstObj <- loose.ban.multiDim(banObj ,allZoidMtx ,pLevel=1 ,pCodeLst=codeLst)
-
-        rst[as.character(tIdx)] <- 0<length(bRstObj$filtedIdx)
+    rstObj <- list( idStr="loose.ban.linePtn.reb" )
+    rstObj$filtLst  <- filtLst
+    rstObj$filtedIdx<- filtedIdx
+    if( pDebug ){
+        rstObj$banValLst <- banValLst
     }
-    tDiff <- Sys.time() - tStmp
 
-    table( rst )
-    table( allIdxLst$stdFiltedCnt[rst] )
+    return( rstObj )
 
-    table( allIdxLst$stdFiltedCnt )
-    table( allIdxLst$stdFiltedCnt ) %/% 4
-
-    # Function combination --------------------------------------------------------
-    funcLst <- list()
-    funcLst[[1+length(funcLst)]] <- loose.ban.hntSameRow
-    funcLst[[1+length(funcLst)]] <- loose.ban.multiDim
-
-    tStmp <- Sys.time()
-    rstLst <- list()
-    for( tIdx in testSpan ){
-        tEnv <- gEnv
-        tEnv$zhF <- gEnv$zhF[1:(tIdx-1),]
-        allZoidMtx <- gEnv$zhF[tIdx,,drop=F]
-        banObj <- getCFltObj( tEnv )
-        codeLst <- banObj$getCodeLst( allZoidMtx )
-
-        rstFlag <- rep( F ,length(funcLst) )
-        for( fIdx in seq_len(length(funcLst)) ){
-            bRstObj <- funcLst[[fIdx]](banObj ,allZoidMtx ,pLevel=2 ,pCodeLst=codeLst)
-            rstFlag[fIdx] <- 0<length(bRstObj$filtedIdx)
-        }
-    }
-    tDiff <- Sys.time() - tStmp
-
-    rstMtx <- do.call( rbind ,rstLst )
-    apply( rstMtx ,2 ,mean )
-    flag <- apply( rstMtx ,1 ,any ) ;names(flag)<-attributes(rstLst)$names
-    table( flag[allIdxLst$stdFiltedCnt.n0] )
-    table( flag[allIdxLst$stdFiltedCnt.n1] )
-
-
-    tStmp <- Sys.time()
-    tEnv <- gEnv
-    tEnv$zhF <- gEnv$zhF
-    allZoidMtx <- gEnv$allZoidMtx[allIdx,]
-    banObj <- getCFltObj( tEnv )
-    codeLst <- banObj$getCodeLst( allZoidMtx )
-    rstMtx <- matrix( F ,ncol=2 ,nrow=nrow(allZoidMtx) )
-    for( fIdx in seq_len(length(funcLst)) ){
-        bRstObj <- funcLst[[fIdx]](banObj ,allZoidMtx ,pLevel=2 ,pCodeLst=codeLst)
-        rstMtx[bRstObj$filtedIdx,fIdx] <- TRUE
-    }
-    tDiff <- Sys.time() - tStmp
-
-    flag <- apply(rstMtx,1,any)    
-    table(flag)
-    apply( rstMtx,2,mean )
-
-} # loose.funcTest()
+} # loose.ban.linePtn.reb( )
 
 
 loose.ban.hntSameRow <- function( pBanObj ,pZoidMtx ,pCodeLst ,pLevel=1 ,pInitZIdx=NULL ){
