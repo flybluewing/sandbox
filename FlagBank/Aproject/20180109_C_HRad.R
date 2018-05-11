@@ -1,9 +1,41 @@
 # 20180109_C_HRad.R 교차모델
 
+#   pZhF<-gEnv$zhF  ;pZoidMtx<-gEnv$allZoidMtx[allIdxF,]    ;pLevel=1   ;pDebug=T
+loose.ban.colValSeqNext <- function( pZhF ,pZoidMtx ,pLevel=1 ,pDebug=F ){
+
+    thldLevel <- c( 2,1 ) # 0.0% ,0.1% ,12%
+    thld <- thldLevel[pLevel]
+
+    banNextLst <- colValSeqNext( gEnv$zhF ,pColSize=2 )
+
+    filtLst <- lapply( 1:nrow(pZoidMtx) ,function(pIdx){
+                        flag <- rep( F ,5 )
+                        for( cIdx in 1:5 ){
+                            if( 0==nrow(banNextLst[[cIdx]]$fndMtx) ){
+                                next
+                            }
+                            flag[cIdx] <- any( banNextLst[[cIdx]]$fndMtx[1,]==pZoidMtx[pIdx,0:1+cIdx] )
+                            # all이 아니고 일부만이라도 매칭되는 것 조차 일반적이지는 않음.. 사실.
+                        }
+                        return( which(flag) )
+                    })
+    filtedIdx <- which(sapply(filtLst,length)>=thld)
+
+    rstObj <- list( idStr="loose.ban.colValSeqNext" )
+    rstObj$filtLst  <- filtLst
+    rstObj$filtedIdx<- filtedIdx
+    if( pDebug ){
+        rstObj$banNextLst <- banNextLst
+    }
+
+    return( rstObj )
+
+} # loose.ban.colValSeqNext( )
+
 #	pColPtnLst <- anaColEndPtn( gEnv$zhF )  ;pZoidMtx <- gEnv$allZoidMtx[allIdx,]   ;pLevel=1   ;pDebug=F
 loose.ban.linePtn.reb <- function( pColPtnLst ,pZoidMtx ,pLevel=1 ,pDebug=F ){
 
-    thldLevel <- c(2 ,10) # 19% ,44%
+    thldLevel <- c(2 ,10) # 19% ,44%(의미 없을 듯.)
     thld <- thldLevel[pLevel]
     banValLst <- lapply( pColPtnLst ,function( p ){
                         return( if(thld>length(p$val)) p$val else p$val[1:thld] )

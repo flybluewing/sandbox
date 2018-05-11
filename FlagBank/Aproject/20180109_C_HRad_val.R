@@ -1,5 +1,37 @@
 # 20180109_C_HRad_val.R loose 필터 검증용.
 
+loose.funcTest <- function( gEnv ,allIdxLst ){
+
+    testSpan <- as.integer(names(allIdxLst$stdFiltedCnt))
+    testSpan.n0 <- as.integer(allIdxLst$stdFiltedCnt.n0)
+    testSpan.n1 <- as.integer(allIdxLst$stdFiltedCnt.n1)
+
+    allIdx <- allIdxLst$allZoid.idx0
+    allIdx <- allIdx[ gEnv$allZoidMtx[allIdx,1] %in% c(4) ]
+
+    tStmp <- Sys.time()
+    rst <- rep( FALSE ,length(testSpan) )   ;names(rst)<-as.character(testSpan)
+    for( tIdx in testSpan ){
+        tEnv <- gEnv
+        tEnv$zhF <- gEnv$zhF[1:(tIdx-1),]
+        allZoidMtx <- gEnv$zhF[tIdx,,drop=F]
+
+        bRstObj <- loose.ban.colValSeqNext( tEnv$zhF ,allZoidMtx ,pLevel=2 )
+
+        rst[as.character(tIdx)] <- 0<length(bRstObj$filtedIdx)
+    }
+    tDiff <- Sys.time() - tStmp
+
+    table( rst )
+    table( allIdxLst$stdFiltedCnt[rst] )
+
+    table( allIdxLst$stdFiltedCnt )
+    table( allIdxLst$stdFiltedCnt ) %/% 4
+
+
+} # loose.funcTest()
+
+
 loose.funcTest.getCFltObj <- function( gEnv ,allIdxLst ){
 
     testSpan <- as.integer(names(allIdxLst$stdFiltedCnt))

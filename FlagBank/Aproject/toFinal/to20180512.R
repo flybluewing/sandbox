@@ -548,6 +548,10 @@ finalCut <- function( gEnv ,allIdx ){
 	#			zoid[4]-zoid[2] : 1 차이 반복될까?
 	#		cvSeqNextLst[[3]] zoid[5:6] - 14,22
 
+	# loose.ban.colValSeqNext() 0.05%
+	cvSeqNextObj <- loose.ban.colValSeqNext( gEnv$zhF ,gEnv$allZoidMtx[allIdxF,] ,pLevel=2 )
+	allIdxF <- allIdxF[-cvSeqNextObj$filtedIdx]
+
 	# cvSeqNextLst[[1]]$fndMtx[,1] : 6,x,8,6,x,8,? 6이 다시 재발하기엔 너무 규칙적이겠지?
 	flag <- gEnv$allZoidMtx[allIdxF,1]!=6	;kIdx<-head(which(!flag))
     allIdxF <- allIdxF[flag]
@@ -590,6 +594,11 @@ finalCut <- function( gEnv ,allIdx ){
     cat(sprintf("allIdxF %d\n",length(allIdxF)))
 
 
+	# ==============================================================================
+	# zoid[1] 9 미만으로 제한
+	flag <- gEnv$allZoidMtx[allIdxF,1]<9	;kIdx<-head(which(!flag))
+    allIdxF <- allIdxF[flag]
+    cat(sprintf("allIdxF %d\n",length(allIdxF)))
 
 
 	# length(allZoidF) 70834
