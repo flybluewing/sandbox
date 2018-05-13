@@ -1,5 +1,20 @@
 # 20180109_C_HRad.R ±³Â÷¸ðµ¨
 
+# ban.throughH() 
+#   banObj <- getCFltObj( tEnv )
+#           hard: 8%    mid:20%     easy:35%
+# ban.throughH2() 
+#   banObj <- getCFltObj( tEnv )
+#           hard: 8%    mid: 15%     easy:35%
+
+# ban.throughH()
+#   banCmbObj <- getCFltCmbObj( gEnv )
+#           hard: 2%    mid:20%(0) 4%(1)    easy: 45%(0) 27%(1)
+# ban.throughH2()
+#   banCmbObj <- getCFltCmbObj( gEnv )
+#           hard: 1%    mid: 1%    easy: 1%
+# keyword - c("depth","hard","mid","easy")
+
 #   pZhF<-gEnv$zhF  ;pZoidMtx<-gEnv$allZoidMtx[allIdxF,]    ;pLevel=1   ;pDebug=T
 loose.ban.colValSeqNext <- function( pZhF ,pZoidMtx ,pLevel=1 ,pDebug=F ){
 
@@ -165,7 +180,7 @@ loose.ban.hntCrossDim <- function( pBanObj ,pZoidMtx ,pCodeLst ,pLevel=1 ,pInitZ
 } # loose.ban.hntCrossDim()
 
 #   pBanObj <- banObj   ;pZoidMtx<-allZoidMtx   ;pCodeLst<-codeLst ;pLevel=1    ;pInitZIdx=NULL ;pDepth=2
-loose.ban.multiDim <-function( pBanObj ,pZoidMtx ,pCodeLst ,pLevel=1 ,pInitZIdx=NULL ,pDebug=F ){
+loose.ban.multiDim <- function( pBanObj ,pZoidMtx ,pCodeLst ,pLevel=1 ,pInitZIdx=NULL ,pDebug=F ){
 
     if( is.null(pInitZIdx) ){
         pInitZIdx <- 1:nrow(pZoidMtx)

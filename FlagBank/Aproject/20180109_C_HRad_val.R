@@ -146,3 +146,59 @@ loose.funcTest.anaColEndPtn <- function( gEnv ,allIdxLst ){
 } # loose.funcTest.anaColEndPtn()
 
 
+loose.funcTest.throughH <- function( gEnv ,allIdxLst ){
+
+    testSpan <- as.integer(names(allIdxLst$stdFiltedCnt))
+    testSpan.n0 <- as.integer(allIdxLst$stdFiltedCnt.n0)
+    testSpan.n1 <- as.integer(allIdxLst$stdFiltedCnt.n1)
+
+    allIdx <- allIdxLst$allZoid.idx0
+    allIdx <- allIdx[ gEnv$allZoidMtx[allIdx,1] %in% c(4) ]
+
+    tStmp <- Sys.time()
+    rst <- rep( FALSE ,length(testSpan) )   ;names(rst)<-as.character(testSpan)
+    for( tIdx in testSpan ){
+        tEnv <- gEnv
+        tEnv$zhF <- gEnv$zhF[1:(tIdx-1),]
+        allZoidMtx <- gEnv$zhF[tIdx,,drop=F]
+        banObj <- getCFltObj( tEnv )
+        codeLst <- banObj$getCodeLst( allZoidMtx )
+
+        # "hard" "mid" "easy"
+        # bRstObj <- ban.throughH(banObj ,allZoidMtx ,pCodeLst=codeLst ,pLevel="easy" )
+        bRstObj <- ban.throughH2(banObj ,allZoidMtx ,pCodeLst=codeLst ,pLevel="easy" )
+
+        rst[as.character(tIdx)] <- 0<length(bRstObj$filtedIdx)
+    }
+    tDiff <- Sys.time() - tStmp
+
+    table( rst )
+    table( allIdxLst$stdFiltedCnt[rst] )
+
+    table( allIdxLst$stdFiltedCnt )
+    table( allIdxLst$stdFiltedCnt ) %/% 4
+
+    tStmp <- Sys.time()
+    rst <- rep( FALSE ,length(testSpan) )   ;names(rst)<-as.character(testSpan)
+    for( tIdx in testSpan ){
+        tEnv <- gEnv
+        tEnv$zhF <- gEnv$zhF[1:(tIdx-1),]
+        allZoidMtx <- gEnv$zhF[tIdx,,drop=F]
+        banCmbObj <- getCFltCmbObj( gEnv )
+        codeCmbLst <- banCmbObj$getCodeLst( allZoidMtx )
+
+        # bRstObj <- ban.throughH(banCmbObj ,allZoidMtx ,pCodeLst=codeCmbLst ,pLevel="easy")
+        bRstObj <- ban.throughH2(banCmbObj ,allZoidMtx ,pCodeLst=codeCmbLst ,pLevel="easy")
+
+        rst[as.character(tIdx)] <- 0<length(bRstObj$filtedIdx)
+    }
+    tDiff <- Sys.time() - tStmp
+
+    table( rst )
+    table( allIdxLst$stdFiltedCnt[rst] )
+
+    table( allIdxLst$stdFiltedCnt )
+    table( allIdxLst$stdFiltedCnt ) %/% 4
+
+
+} # loose.funcTest()
