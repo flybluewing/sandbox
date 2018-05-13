@@ -188,7 +188,7 @@ loose.funcTest.throughH <- function( gEnv ,allIdxLst ){
         codeCmbLst <- banCmbObj$getCodeLst( allZoidMtx )
 
         # bRstObj <- ban.throughH(banCmbObj ,allZoidMtx ,pCodeLst=codeCmbLst ,pLevel="easy")
-        bRstObj <- ban.throughH2(banCmbObj ,allZoidMtx ,pCodeLst=codeCmbLst ,pLevel="easy")
+        bRstObj <- ban.throughH2(banCmbObj ,allZoidMtx ,pCodeLst=codeCmbLst ,pLevel="loose")
 
         rst[as.character(tIdx)] <- 0<length(bRstObj$filtedIdx)
     }

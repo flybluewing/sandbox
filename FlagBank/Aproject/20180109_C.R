@@ -10,7 +10,7 @@ source("20180109_C_HRad.R")
 
 
 tStmp <- Sys.time()
-saveId <- "Z805"
+saveId <- "Z806"
 load(sprintf("./save/Obj_gEnv%s.save",saveId))
 load(sprintf("./save/Obj_fRstLst%s.save",saveId))
 load(sprintf("./save/Obj_remLst%s.save",saveId))

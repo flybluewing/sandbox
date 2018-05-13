@@ -12,7 +12,7 @@
 #           hard: 2%    mid:20%(0) 4%(1)    easy: 45%(0) 27%(1)
 # ban.throughH2()
 #   banCmbObj <- getCFltCmbObj( gEnv )
-#           hard: 1%    mid: 1%    easy: 1%
+#           hard: 1%    mid: 1%    easy: 1%     loose : 57%
 # keyword - c("depth","hard","mid","easy")
 
 #   pZhF<-gEnv$zhF  ;pZoidMtx<-gEnv$allZoidMtx[allIdxF,]    ;pLevel=1   ;pDebug=T
