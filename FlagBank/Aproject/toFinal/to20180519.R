@@ -1,5 +1,5 @@
-# to20180512.R 최종접근
-source("./toFinal/to20180512_H.R")
+# to20180519.R 최종접근
+source("./toFinal/to20180519_H.R")
 
 # allIdx <- allIdxLst$allZoid.idx1
 finalCut <- function( gEnv ,allIdx ){
@@ -7,6 +7,8 @@ finalCut <- function( gEnv ,allIdx ){
 
     allIdxF <- allIdx
 	lastZoid <- gEnv$zhF[nrow(gEnv$zhF),]
+	cStep <- lastZoid[2:6] - lastZoid[1:5]
+	fStep <- gEnv$zhF[nrow(gEnv$zhF)-1,] - lastZoid
 
 	# 참고 자료 --------------------------------------------------------------------
     rebCnt <- sapply( 2:nrow(gEnv$zhF) ,function(idx){
@@ -23,94 +25,59 @@ finalCut <- function( gEnv ,allIdx ){
 	# 	803  5  9 14 26 30 43
 	# 	804  1 10 13 26 32 36
 	#   805  3 12 13 18 31 32
+	#   806 14,20,23,31,37,38
 
-    # zoid[5] : 30,32,31,? 30? no
-    flag <- gEnv$allZoidMtx[allIdxF,5] != 30
+    # zoid[3] : 13,13,23,q3?
+    flag <- gEnv$allZoidMtx[allIdxF,3]%%10 != 3	;kIdx<-head(which(!flag))
     allIdxF <- allIdxF[flag]
     cat(sprintf("allIdxF %d\n",length(allIdxF)))
 
-    # zoid[4] : 37,18,26,26,18,? 37? no.
-    flag <- gEnv$allZoidMtx[allIdxF,4] != 37
+    # zoid[3] : 14,xx,13,xx,12?
+    flag <- gEnv$allZoidMtx[allIdxF,3] != 12	;kIdx<-head(which(!flag))
     allIdxF <- allIdxF[flag]
     cat(sprintf("allIdxF %d\n",length(allIdxF)))
 
-    # zoid[3] : 14,13,13,? 14? no
-    flag <- gEnv$allZoidMtx[allIdxF,3] != 14
+    # zoid[5] : 30,XX,31,XX,32? no
+    flag <- gEnv$allZoidMtx[allIdxF,5] != 32	;kIdx<-head(which(!flag))
     allIdxF <- allIdxF[flag]
     cat(sprintf("allIdxF %d\n",length(allIdxF)))
 
-	# 26->26 ,13->13 재현될까?
-	flag <- apply( gEnv$allZoidMtx[allIdxF,] ,1 ,function(aZoid){
-					return( !any( aZoid==lastZoid ) )
-				})	;kIdx<-head(which(!flag))
-    allIdxF <- allIdxF[flag]
-    cat(sprintf("allIdxF %d\n",length(allIdxF)))
-
-	# zoid[1:2]는 똑같이 2 씩 증가했다... 반복될까?
-	flag <- apply( gEnv$allZoidMtx[allIdxF,] ,1 ,function(aZoid){
-					cDiff <- aZoid-lastZoid
-					return( !any(cDiff[2:6]==cDiff[1:5]) )
-				})	;kIdx<-head(which(!flag))
-    allIdxF <- allIdxF[flag]
-    cat(sprintf("allIdxF %d\n",length(allIdxF)))
-
-	# lastZoid %% 10 에서 2 두개, 3두개.. 반복될까?
-	flag <- apply( gEnv$allZoidMtx[allIdxF,] ,1 ,function(aZoid){
-					rem <- aZoid %% 10
-					cnt2 <- sum(rem==2)
-					cnt3 <- sum(rem==3)
-					return( !( 2==cnt2 && 2==cnt3 ) )
-				})	;kIdx<-head(which(!flag))
-    allIdxF <- allIdxF[flag]
-    cat(sprintf("allIdxF %d\n",length(allIdxF)))
-	
-	# cStep 1이 2개나 발생... 다음에도 또 있을 수 있을까?
-	flag <- apply( gEnv$allZoidMtx[allIdxF,] ,1 ,function(aZoid){
-					cStep <- aZoid[2:6] - aZoid[1:5]
-					return( !any(cStep==1) )
-				})	;kIdx<-head(which(!flag))
-    allIdxF <- allIdxF[flag]
-    cat(sprintf("allIdxF %d\n",length(allIdxF)))
-
-    # 2개 재발은 떼자.
+    # 재발이 너무 많았다.
     flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
 					cnt <- sum( lastZoid %in% aZoid )
-					return( cnt<2 )
+					return( cnt<1 )
+				})	;kIdx<-head(which(!flag))
+    allIdxF <- allIdxF[flag]
+    cat(sprintf("allIdxF %d\n",length(allIdxF)))
+
+    # cStep 1도 너무 많았다.
+    flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+					return( !any( 1==(aZoid[2:6]-aZoid[1:5]) ) )
+				})	;kIdx<-head(which(!flag))
+    allIdxF <- allIdxF[flag]
+    cat(sprintf("allIdxF %d\n",length(allIdxF)))
+
+    # zoid[3] q4,xx,q3,xx,q2? and zoid[6] q4,xx,q3,xx,q2,xx,q1?
+    flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+					rem <-(aZoid%%10)[c(3,6)]
+					return( !all( rem==c(2,1) ) )
 				})	;kIdx<-head(which(!flag))
     allIdxF <- allIdxF[flag]
     cat(sprintf("allIdxF %d\n",length(allIdxF)))
 
     # zoid %/% 10 이 4개 이상인 것은 제외하자.
 	flag <- apply( gEnv$allZoidMtx[allIdxF,] ,1 ,function(aZoid){
-					return( 3>=max(aZoid%/%10) )
-				})	;kIdx<-head(which(!flag))
-    allIdxF <- allIdxF[flag]
-    cat(sprintf("allIdxF %d\n",length(allIdxF)))
-
-    # 12,13,18은 최근에 너무 많이 나온 듯. 빼자.
-	flag <- apply( gEnv$allZoidMtx[allIdxF,] ,1 ,function(aZoid){
-					return( !any(c(12,13,18) %in% aZoid) )
-				})	;kIdx<-head(which(!flag))
-    allIdxF <- allIdxF[flag]
-    cat(sprintf("allIdxF %d\n",length(allIdxF)))
-
-    # 26이 또 나올까? 너무 많지않나?
-	flag <- apply( gEnv$allZoidMtx[allIdxF,] ,1 ,function(aZoid){
-					return( !any(c(26) %in% aZoid) )
+					return( 3>=max(table(aZoid%/%10)) )
 				})	;kIdx<-head(which(!flag))
     allIdxF <- allIdxF[flag]
     cat(sprintf("allIdxF %d\n",length(allIdxF)))
 
 
-	# lastZoid %/% 10 이 그대로 반복되긴 어렵겠지?
-	lastCode <- lastZoid %/% 10
-	flag <- apply( gEnv$allZoidMtx[allIdxF,]%/%10 ,1 ,function(aCode){
-					cnt1 <- sum(aCode==1)
-					cnt3 <- sum(aCode==3)
-					return( !( 3==cnt1 && 2==cnt3 ) )
-				})	;kIdx<-head(which(!flag))
-    allIdxF <- allIdxF[flag]
-    cat(sprintf("allIdxF %d\n",length(allIdxF)))
+	# qqe working	0:91,693		1:167,098
+
+
+
+
 
 	# --------------------------------------------
 	# anaColEndPtn()

@@ -1,5 +1,68 @@
 # 20180109_C_HRad_val.R loose 필터 검증용.
 
+loose.combTest <- function( gEnv ,allIdxLst ){
+
+    testSpan <- as.integer(names(allIdxLst$stdFiltedCnt))
+    testSpan.n0 <- as.integer(allIdxLst$stdFiltedCnt.n0)
+    testSpan.n1 <- as.integer(allIdxLst$stdFiltedCnt.n1)
+
+    allIdx <- allIdxLst$allZoid.idx0
+    allIdx <- allIdx[ gEnv$allZoidMtx[allIdx,1] %in% c(4) ]
+
+    tStmp <- Sys.time()
+    rstLst <- vector("list",length(testSpan))   ;names(rstLst)<-as.character(testSpan)
+    for( tIdx in testSpan ){
+        tEnv <- gEnv
+        tEnv$zhF <- gEnv$zhF[1:(tIdx-1),]
+        allZoidMtx <- gEnv$zhF[tIdx,,drop=F]
+        banObj <- getCFltObj( tEnv )
+        banCmbObj <- getCFltCmbObj( gEnv )
+
+        filted <- character(0)
+
+        bRstObj <- loose.ban.colValSeqNext( tEnv$zhF ,allZoidMtx ,pLevel=2 )
+        if( 0<length(bRstObj$filtedIdx) ) filted[1+length(filted)] <- "loose.ban.colValSeqNext"
+
+        colPtnLst <- anaColEndPtn( gEnv$zhF )
+        bRstObj <- loose.ban.linePtn.reb( colPtnLst ,allZoidMtx ,pLevel=2 ,pDebug=T )
+        if( 0<length(bRstObj$filtedIdx) ) filted[1+length(filted)] <- "loose.ban.linePtn.reb"
+
+        codeLst <- banObj$getCodeLst( allZoidMtx )
+        bRstObj <- loose.ban.hntSameRow(banObj ,allZoidMtx ,pLevel=2 ,pCodeLst=codeLst)
+        if( 0<length(bRstObj$filtedIdx) ) filted[1+length(filted)] <- "loose.ban.hntSameRow(getCFltObj)"
+        bRstObj <- loose.ban.hntCrossDim(banObj ,allZoidMtx ,pLevel=2 ,pCodeLst=codeLst)
+        if( 0<length(bRstObj$filtedIdx) ) filted[1+length(filted)] <- "loose.ban.hntCrossDim(getCFltObj)"
+        bRstObj <- loose.ban.multiDim(banObj ,allZoidMtx ,pLevel=2 ,pCodeLst=codeLst)
+        if( 0<length(bRstObj$filtedIdx) ) filted[1+length(filted)] <- "loose.ban.multiDim(getCFltObj)"
+        bRstObj <- ban.throughH(banObj ,allZoidMtx ,pCodeLst=codeLst ,pLevel="loose" )
+        if( 0<length(bRstObj$filtedIdx) ) filted[1+length(filted)] <- "ban.throughH(getCFltObj)"
+        bRstObj <- ban.throughH2(banObj ,allZoidMtx ,pCodeLst=codeLst ,pLevel="loose" )
+        if( 0<length(bRstObj$filtedIdx) ) filted[1+length(filted)] <- "ban.throughH2(getCFltObj)"
+
+        codeCmbLst <- banCmbObj$getCodeLst( allZoidMtx )
+        bRstObj <- loose.ban.hntSameRow(banCmbObj ,allZoidMtx ,pLevel=2 ,pCodeLst=codeCmbLst)
+        if( 0<length(bRstObj$filtedIdx) ) filted[1+length(filted)] <- "loose.ban.hntSameRow(getCFltObj)"
+        bRstObj <- loose.ban.hntCrossDim(banCmbObj ,allZoidMtx ,pLevel=2 ,pCodeLst=codeCmbLst)
+        if( 0<length(bRstObj$filtedIdx) ) filted[1+length(filted)] <- "loose.ban.hntCrossDim(getCFltObj)"
+        bRstObj <- loose.ban.multiDim(banCmbObj ,allZoidMtx ,pLevel=2 ,pCodeLst=codeCmbLst)
+        if( 0<length(bRstObj$filtedIdx) ) filted[1+length(filted)] <- "loose.ban.multiDim(getCFltObj)"
+        bRstObj <- ban.throughH(banCmbObj ,allZoidMtx ,pCodeLst=codeCmbLst ,pLevel="loose" )
+        if( 0<length(bRstObj$filtedIdx) ) filted[1+length(filted)] <- "ban.throughH(getCFltCmbObj)"
+        bRstObj <- ban.throughH2(banCmbObj ,allZoidMtx ,pCodeLst=codeCmbLst ,pLevel="loose" )
+        if( 0<length(bRstObj$filtedIdx) ) filted[1+length(filted)] <- "ban.throughH2(getCFltCmbObj)"
+
+        rstLst[[as.character(tIdx)]] <- filted
+    }
+    tDiff <- Sys.time() - tStmp
+
+    rstCnt <- sapply(rstLst,length) ;names(rstCnt) <- testSpan
+    table( rstCnt )
+
+    table( rstCnt[allIdxLst$stdFiltedCnt.n0] )
+    table( rstCnt[allIdxLst$stdFiltedCnt.n1] )
+
+} # loose.combTest()
+
 loose.funcTest <- function( gEnv ,allIdxLst ){
 
     testSpan <- as.integer(names(allIdxLst$stdFiltedCnt))
