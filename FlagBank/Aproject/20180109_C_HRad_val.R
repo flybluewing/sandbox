@@ -139,7 +139,7 @@ loose.funcTest.getCFltObj <- function( gEnv ,allIdxLst ){
         banObj <- getCFltObj( tEnv )
         codeLst <- banObj$getCodeLst( allZoidMtx )
 
-        bRstObj <- loose.ban.multiDim(banObj ,allZoidMtx ,pLevel=1 ,pCodeLst=codeLst)
+        bRstObj <- loose.ban.multiDim(banObj ,allZoidMtx ,pLevel=2 ,pCodeLst=codeLst)
 
         rst[as.character(tIdx)] <- 0<length(bRstObj$filtedIdx)
     }
