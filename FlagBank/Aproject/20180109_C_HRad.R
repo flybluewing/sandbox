@@ -82,8 +82,11 @@ loose.ban.hntSameRow <- function( pBanObj ,pZoidMtx ,pCodeLst ,pLevel=1 ,pInitZI
     if( is.null(pInitZIdx) ){
         pInitZIdx <- 1:nrow(pZoidMtx)
     }
-    thldLevel <- c(1 ,2) # 15% ,75%
+    thldLevel <- c(1 ,2) # 6~9% ,35~50%
     thld <- thldLevel[pLevel]
+    codeSize <- sapply(codeLst ,function(p){length(p[[1]])})
+    thldSize <- ifelse( codeSize>4 ,thld ,thld-1 )
+    thldSize[thldSize<0] <- 0   # codeSize 이름은 유지됨.
 
     codeLst <- pCodeLst
     banLst.dup <- lapply( pBanObj$encValLst ,function(p){p[[length(p)]]})
@@ -99,7 +102,7 @@ loose.ban.hntSameRow <- function( pBanObj ,pZoidMtx ,pCodeLst ,pLevel=1 ,pInitZI
                             }
                             cfObj <- pBanObj$cfObjLst[[pName]]
                             dCnt <- cfObj$diffCnt( codeLst[[pName]][[pIdx]] ,banLst.dup[[pName]] )
-                            return( thld>=dCnt )
+                            return( dCnt<=thldSize[pName] )
                         })
             return( pBanObj$cfNames[flag] )
         })
@@ -147,8 +150,12 @@ loose.ban.hntCrossDim <- function( pBanObj ,pZoidMtx ,pCodeLst ,pLevel=1 ,pInitZ
 
     # --------------------------------------------------
     #	filtLst ,filtedIdx
-    thldLevel <- c(1 ,2) # 20% ,90%
+    thldLevel <- c(1 ,2) # 15% ,65% 
     thld <- thldLevel[pLevel]
+    codeSize <- sapply(codeLst ,function(p){length(p[[1]])})
+    thldSize <- ifelse( codeSize>4 ,thld ,thld-1 )
+    thldSize[thldSize<0] <- 0   # codeSize 이름은 유지됨.
+
     filtLst <- lapply( 1:nrow(pZoidMtx) ,function(pIdx){
             # 어느 banLst에서 걸렸는지의 flag
             flag <- sapply( 1:nrow(cfNameMtx) ,function(pRIdx){
@@ -161,7 +168,7 @@ loose.ban.hntCrossDim <- function( pBanObj ,pZoidMtx ,pCodeLst ,pLevel=1 ,pInitZ
                             dCnt <- sapply( banLst[[pRIdx]] ,function(banCode){ 
                                             pBanObj$cfObjLst[[banFltName]]$diffCnt( banCode ,zCode )
                                         })
-                            return( all(dCnt<=thld) )
+                            return( all(dCnt<=thldSize[banFltName]) )
                         })
             return( which(flag) )
         })
@@ -194,20 +201,24 @@ loose.ban.multiDim <- function( pBanObj ,pZoidMtx ,pCodeLst ,pLevel=1 ,pInitZIdx
 							,cmbC14_34=which(pBanObj$cfNames %in% c("C0010w04","C0030w04"))
 						)
 	isExcFiltCmb <- function( pFiltCmb ){
-		for( idx in 1:length(excFiltCmbLst) ){
-			if( length(pFiltCmb)==length(excFiltCmbLst[[idx]]) ){
-				if( all(pFiltCmb==excFiltCmbLst[[idx]]) ){
-					return(TRUE)
-				}
-			}
-		}
-		return(FALSE)
+        for( idx in 1:length(excFiltCmbLst) ){
+            if( length(pFiltCmb)==length(excFiltCmbLst[[idx]]) ){
+                if( all(pFiltCmb==excFiltCmbLst[[idx]]) ){
+                    return(TRUE)
+                }
+            }
+        }
+        return(FALSE)
 	} # isExcFiltCmb( )
 
     # --------------------------------------------------
     #	filtLst ,filtedIdx
     thldLevel <- c(0,1) # 7% ,97%
     thld <- thldLevel[pLevel]
+    codeSize <- sapply(codeLst ,function(p){length(p[[1]])})
+    thldSize <- ifelse( codeSize>4 ,thld ,thld-1 )
+    thldSize[thldSize<0] <- 0   # codeSize 이름은 유지됨.
+
     fndLst <- list()
     for( zIdx in 1:nrow(pZoidMtx) ){
 		curCodeLst <- lapply( pCodeLst ,function(p){p[[zIdx]]})
@@ -219,7 +230,7 @@ loose.ban.multiDim <- function( pBanObj ,pZoidMtx ,pCodeLst ,pLevel=1 ,pInitZIdx
 				dCnt <- pBanObj$cfObjLst[[snIdx]]$diffCnt( 
 								curCodeLst[[snIdx]] ,pBanObj$encValLst[[snIdx]][[eIdx]]
 							)
-				if( thld>=dCnt ){
+				if( dCnt<=thldSize[snIdx] ){
 					fndIdxLst[[1+length(fndIdxLst)]] <- eIdx
 				}
 			}
@@ -228,7 +239,7 @@ loose.ban.multiDim <- function( pBanObj ,pZoidMtx ,pCodeLst ,pLevel=1 ,pInitZIdx
 							dCnt <- sapply(pBanObj$cfNames,function(mName){
 											pBanObj$cfObjLst[[mName]]$diffCnt( curCodeLst[[mName]] ,hCodeLst[[mName]] )
 										})
-							return( which(thld>=dCnt) )
+							return( which(dCnt<=thldSize) )
 						})
 			matCnt <- sapply(matIdxLst,length)
 			fndIdxLst <- fndIdxLst[matCnt>1]
@@ -264,7 +275,7 @@ loose.ban.multiDim <- function( pBanObj ,pZoidMtx ,pCodeLst ,pLevel=1 ,pInitZIdx
 		filtLst[[1+length(filtLst)]] <- maxFnd
 	}
 
-	flag <- sapply( filtLst ,function(p){p>1})
+	flag <- sapply( filtLst ,function(p){p>1})  # thldLevel 적용 및 측정
 	filtedIdx <- pInitZIdx[flag]
 
     rstObj <- list( idStr="multiDim" )
@@ -280,7 +291,77 @@ loose.ban.multiDim <- function( pBanObj ,pZoidMtx ,pCodeLst ,pLevel=1 ,pInitZIdx
 } # loose.ban.multiDim()
 
 
+#=====================================================================================================
+#   remPuriN functions()
+#=====================================================================================================
+#       끝까지 살아남는 게 더 수상해... 라는 컨셉
+
+remPuri2.ban.throughH.loose <- function( gEnv ,allIdxF ){
+
+    surviveLst <- list()
+    banObj <- getCFltObj( gEnv )
+    banCmbObj <- getCFltCmbObj( gEnv )
+
+    allZoidMtx <- gEnv$allZoidMtx[allIdxF,,drop=F]
+    codeLst <- banObj$getCodeLst( allZoidMtx )
+    bRstObj <- ban.throughH( banObj ,allZoidMtx ,pCodeLst=codeLst ,pLevel="easy" )
+    allIdxT <- allIdxF[-bRstObj$filtedIdx]
+    if( 0<length(allIdxT) ){    # 전멸이 많다.
+        allZoidMtx <- gEnv$allZoidMtx[allIdxT,,drop=F]
+        codeLst <- banObj$getCodeLst( allZoidMtx )
+
+        bRstObj <- ban.throughH2(banObj ,allZoidMtx ,pCodeLst=codeLst ,pLevel="loose" )
+        surviveLst[["1.ban.throughH2(getCFltObj)"]] <- allIdxT[-bRstObj$filtedIdx]
+
+        bRstObj <- loose.ban.hntCrossDim( banObj ,allZoidMtx ,pLevel=2 ,pCodeLst=codeLst )
+        surviveLst[["1.loose.ban.hntCrossDim(getCFltObj)"]] <- allIdxT[-bRstObj$filtedIdx]
+
+        bRstObj <- loose.ban.hntSameRow(banObj ,allZoidMtx ,pLevel=2 ,pCodeLst=codeLst)
+        surviveLst[["1.loose.ban.hntSameRow(getCFltObj)"]] <- allIdxT[-bRstObj$filtedIdx]
+
+        bRstObj <- loose.ban.multiDim(banObj ,allZoidMtx ,pLevel=2 ,pCodeLst=codeLst)
+        surviveLst[["1.loose.ban.multiDim(getCFltObj)"]] <- allIdxT[-bRstObj$filtedIdx]
+    }
 
 
+    allZoidMtx <- gEnv$allZoidMtx[allIdxF,,drop=F]
+    codeCmbLst <- banCmbObj$getCodeLst( allZoidMtx )
+    bRstObj <- ban.throughH( banCmbObj ,allZoidMtx ,pCodeLst=codeCmbLst ,pLevel="loose" )
+    allIdxT <- allIdxF[-bRstObj$filtedIdx]
+    if( 0<length(allIdxT) ){    # 전멸이 많다.
+        allZoidMtx <- gEnv$allZoidMtx[allIdxT,,drop=F]
+        codeLst <- banCmbObj$getCodeLst( allZoidMtx )
 
+        bRstObj <- loose.ban.multiDim(banCmbObj ,allZoidMtx ,pLevel=2 ,pCodeLst=codeLst)
+        surviveLst[["2.loose.ban.multiDim(getCFltObj)"]] <- allIdxT[-bRstObj$filtedIdx]
+    }
+
+    #     ban.throughH(getCFltObj)          ban.throughH2(getCFltObj)
+    #     ban.throughH(getCFltObj)          loose.ban.hntCrossDim(getCFltObj)
+    #     ban.throughH(getCFltObj)          loose.ban.hntSameRow(getCFltObj)
+    #     ban.throughH(getCFltObj)          loose.ban.multiDim(getCFltObj)
+    #     ban.throughH(getCFltCmbObj)       ban.throughH2(getCFltObj)
+
+
+} # remPuri.ban.throughH.loose()
+
+remPuri2.ban.throughH2.loose <- function(){
+
+    ban.throughH2
+
+    #     ban.throughH2(getCFltCmbObj)      ban.throughH2(getCFltObj)        
+    #     ban.throughH2(getCFltObj)         loose.ban.colValSeqNext          
+    #     ban.throughH2(getCFltObj)         loose.ban.hntCrossDim(getCFltObj)
+    #     ban.throughH2(getCFltObj)         loose.ban.hntSameRow(getCFltObj) 
+    #     ban.throughH2(getCFltObj)         loose.ban.linePtn.reb            
+    #     ban.throughH2(getCFltObj)         loose.ban.multiDim(getCFltObj)
+
+} # remPuri.ban.throughH2.loose()
+
+remPuri2.loose.ban.hntCrossDim <- function(){
+
+    loose.ban.hntCrossDim
+    #     loose.ban.hntCrossDim(getCFltObj)   loose.ban.multiDim(getCFltObj)
+
+} # remPuri2.loose.ban.hntCrossDim()
 

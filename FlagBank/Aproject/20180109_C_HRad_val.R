@@ -32,34 +32,60 @@ loose.combTest <- function( gEnv ,allIdxLst ){
         if( 0<length(bRstObj$filtedIdx) ) filted[1+length(filted)] <- "loose.ban.hntSameRow(getCFltObj)"
         bRstObj <- loose.ban.hntCrossDim(banObj ,allZoidMtx ,pLevel=2 ,pCodeLst=codeLst)
         if( 0<length(bRstObj$filtedIdx) ) filted[1+length(filted)] <- "loose.ban.hntCrossDim(getCFltObj)"
-        bRstObj <- loose.ban.multiDim(banObj ,allZoidMtx ,pLevel=2 ,pCodeLst=codeLst)
-        if( 0<length(bRstObj$filtedIdx) ) filted[1+length(filted)] <- "loose.ban.multiDim(getCFltObj)"
-        bRstObj <- ban.throughH(banObj ,allZoidMtx ,pCodeLst=codeLst ,pLevel="loose" )
+        #   bRstObj <- loose.ban.multiDim(banObj ,allZoidMtx ,pLevel=2 ,pCodeLst=codeLst)
+        #   if( 0<length(bRstObj$filtedIdx) ) filted[1+length(filted)] <- "loose.ban.multiDim(getCFltObj)"
+        bRstObj <- ban.throughH(banObj ,allZoidMtx ,pCodeLst=codeLst ,pLevel="easy" )
         if( 0<length(bRstObj$filtedIdx) ) filted[1+length(filted)] <- "ban.throughH(getCFltObj)"
-        bRstObj <- ban.throughH2(banObj ,allZoidMtx ,pCodeLst=codeLst ,pLevel="loose" )
+        bRstObj <- ban.throughH2(banObj ,allZoidMtx ,pCodeLst=codeLst ,pLevel="easy" )
         if( 0<length(bRstObj$filtedIdx) ) filted[1+length(filted)] <- "ban.throughH2(getCFltObj)"
 
         codeCmbLst <- banCmbObj$getCodeLst( allZoidMtx )
-        bRstObj <- loose.ban.hntSameRow(banCmbObj ,allZoidMtx ,pLevel=2 ,pCodeLst=codeCmbLst)
-        if( 0<length(bRstObj$filtedIdx) ) filted[1+length(filted)] <- "loose.ban.hntSameRow(getCFltObj)"
+        #   bRstObj <- loose.ban.hntSameRow(banCmbObj ,allZoidMtx ,pLevel=1 ,pCodeLst=codeCmbLst)   # 100%³ª¿È
+        #   if( 0<length(bRstObj$filtedIdx) ) filted[1+length(filted)] <- "loose.ban.hntSameRow(getCFltCmbObj)"
         bRstObj <- loose.ban.hntCrossDim(banCmbObj ,allZoidMtx ,pLevel=2 ,pCodeLst=codeCmbLst)
-        if( 0<length(bRstObj$filtedIdx) ) filted[1+length(filted)] <- "loose.ban.hntCrossDim(getCFltObj)"
-        bRstObj <- loose.ban.multiDim(banCmbObj ,allZoidMtx ,pLevel=2 ,pCodeLst=codeCmbLst)
-        if( 0<length(bRstObj$filtedIdx) ) filted[1+length(filted)] <- "loose.ban.multiDim(getCFltObj)"
-        bRstObj <- ban.throughH(banCmbObj ,allZoidMtx ,pCodeLst=codeCmbLst ,pLevel="loose" )
+        if( 0<length(bRstObj$filtedIdx) ) filted[1+length(filted)] <- "loose.ban.hntCrossDim(getCFltCmbObj)"
+        #   bRstObj <- loose.ban.multiDim(banCmbObj ,allZoidMtx ,pLevel=2 ,pCodeLst=codeCmbLst)
+        #   if( 0<length(bRstObj$filtedIdx) ) filted[1+length(filted)] <- "loose.ban.multiDim(getCFltCmbObj)"
+        bRstObj <- ban.throughH(banCmbObj ,allZoidMtx ,pCodeLst=codeCmbLst ,pLevel="easy" )
         if( 0<length(bRstObj$filtedIdx) ) filted[1+length(filted)] <- "ban.throughH(getCFltCmbObj)"
-        bRstObj <- ban.throughH2(banCmbObj ,allZoidMtx ,pCodeLst=codeCmbLst ,pLevel="loose" )
+        bRstObj <- ban.throughH2(banCmbObj ,allZoidMtx ,pCodeLst=codeCmbLst ,pLevel="easy" )
         if( 0<length(bRstObj$filtedIdx) ) filted[1+length(filted)] <- "ban.throughH2(getCFltCmbObj)"
 
         rstLst[[as.character(tIdx)]] <- filted
     }
     tDiff <- Sys.time() - tStmp
 
+    tRstLst <- rstLst[ sort(unique(c(allIdxLst$stdFiltedCnt.n0,allIdxLst$stdFiltedCnt.n1))) ]
+    # tRstLst <- rstLst
+    rstNames <- sort(unique(do.call(c,tRstLst)))
+    mtx <- matrix( 0 ,nrow=length(tRstLst) ,ncol=length(rstNames) )
+    rownames(mtx) <- attributes(tRstLst)$names   ;colnames(mtx) <- rstNames
+    for( idx in seq_len(length(tRstLst)) ){
+        mtx[idx,tRstLst[[idx]]] <- mtx[idx,tRstLst[[idx]]] + 1
+    }
+    round( 100*apply(mtx,2,sum)/nrow(mtx) )
+    table(apply(mtx,1,sum))
+
+    combMtx <- combinations(length(rstNames),7)
+    minVal <- rep( 0 ,nrow(combMtx) )
+    for( rIdx in 1:nrow(combMtx) ){
+        rSum <- apply( mtx[,combMtx[rIdx,]] ,1 ,sum )
+        minVal[rIdx] <- sum( rSum==0 )
+    }
+    min(minVal)
+
+    t(apply( combMtx[which(minVal==0),,drop=F] ,1 ,function(comb){rstNames[comb]}))
+
+
+
+    save( rstLst ,file="Obj_tempSave.save")
+
     rstCnt <- sapply(rstLst,length) ;names(rstCnt) <- testSpan
     table( rstCnt )
 
     table( rstCnt[allIdxLst$stdFiltedCnt.n0] )
     table( rstCnt[allIdxLst$stdFiltedCnt.n1] )
+
 
 } # loose.combTest()
 
