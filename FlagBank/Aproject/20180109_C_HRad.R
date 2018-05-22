@@ -275,7 +275,7 @@ loose.ban.multiDim <- function( pBanObj ,pZoidMtx ,pCodeLst ,pLevel=1 ,pInitZIdx
 		filtLst[[1+length(filtLst)]] <- maxFnd
 	}
 
-    thldLevel <- c(1,2) #  % , %
+    thldLevel <- c(1,2) #  % 7, 19%
     thld <- thldLevel[pLevel]
 	flag <- sapply( filtLst ,function(p){p>thld})  # thldLevel 적용 및 측정
 	filtedIdx <- pInitZIdx[flag]

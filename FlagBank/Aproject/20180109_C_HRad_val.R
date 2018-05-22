@@ -55,8 +55,9 @@ loose.combTest <- function( gEnv ,allIdxLst ){
     }
     tDiff <- Sys.time() - tStmp
 
-    tRstLst <- rstLst[ sort(unique(c(allIdxLst$stdFiltedCnt.n0,allIdxLst$stdFiltedCnt.n1))) ]
-    # tRstLst <- rstLst
+    tRstLst <- rstLst
+    # tRstLst <- rstLst[ sort(unique(c(allIdxLst$stdFiltedCnt.n0)) ]
+    # tRstLst <- rstLst[ sort(unique(c(allIdxLst$stdFiltedCnt.n0,allIdxLst$stdFiltedCnt.n1))) ]
     rstNames <- sort(unique(do.call(c,tRstLst)))
     mtx <- matrix( 0 ,nrow=length(tRstLst) ,ncol=length(rstNames) )
     rownames(mtx) <- attributes(tRstLst)$names   ;colnames(mtx) <- rstNames
@@ -132,6 +133,7 @@ loose.funcTest.getCFltObj <- function( gEnv ,allIdxLst ){
 
     tStmp <- Sys.time()
     rst <- rep( FALSE ,length(testSpan) )   ;names(rst)<-as.character(testSpan)
+    filtLst <- list()
     for( tIdx in testSpan ){
         tEnv <- gEnv
         tEnv$zhF <- gEnv$zhF[1:(tIdx-1),]
@@ -139,9 +141,10 @@ loose.funcTest.getCFltObj <- function( gEnv ,allIdxLst ){
         banObj <- getCFltObj( tEnv )
         codeLst <- banObj$getCodeLst( allZoidMtx )
 
-        bRstObj <- loose.ban.multiDim(banObj ,allZoidMtx ,pLevel=2 ,pCodeLst=codeLst)
+        bRstObj <- loose.ban.multiDim(banObj ,allZoidMtx ,pLevel=1 ,pCodeLst=codeLst)
 
         rst[as.character(tIdx)] <- 0<length(bRstObj$filtedIdx)
+        filtLst[[1+length(filtLst)]] <- bRstObj$filtLst[[1]]
     }
     tDiff <- Sys.time() - tStmp
 
@@ -149,7 +152,9 @@ loose.funcTest.getCFltObj <- function( gEnv ,allIdxLst ){
     table( allIdxLst$stdFiltedCnt[rst] )
 
     table( allIdxLst$stdFiltedCnt )
-    table( allIdxLst$stdFiltedCnt ) %/% 4
+    # table( allIdxLst$stdFiltedCnt ) %/% 4
+
+    
 
     # Function combination --------------------------------------------------------
     funcLst <- list()
