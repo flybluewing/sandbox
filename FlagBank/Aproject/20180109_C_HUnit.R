@@ -37,6 +37,9 @@ uaUtil.decline <- function( val ){
     if( fDiff[1]!=fDiff[2] ){
         return( NULL )
     }
+    if( 0==fDiff[2] ){
+        return( NULL )
+    }
 
     banVal <- val[val.len] + fDiff[1]
     return(banVal)
@@ -141,7 +144,7 @@ uaUtil.symm3 <- function( val ){
 } # uaUtil.symm3()
 
 #   동일 패턴이 연속 발생.
-uaUtil.seqReb <- function( pCodeMtx ,pECol=NULL ,pFirstOnly=T ){
+uaUtil.seqReb <- function( pCodeMtx ,pECol=NULL ){
     #  A,e,C,e,e
     #  e,A,e,C,e
     #  e,e,A,e,C
@@ -151,25 +154,48 @@ uaUtil.seqReb <- function( pCodeMtx ,pECol=NULL ,pFirstOnly=T ){
         return( NULL )
     }
 
+    # 차라리 날코딩이 가독성 좋을 듯....
+    #             5,6 1,2
+    #           4,5,6 1,2,3
+    #         3,4,5,6 1,2,3,4
+    #       2,3,4,5,6 1,2,3,4,5
+    #     1,2,3,4,5,6 1,2,3,4,5,6
+    #     1,2,3,4,5     2,3,4,5,6
+    #     1,2,3,4         3,4,5,6
+    #     1,2,3             4,5,6
+    #     1,2                 5,6
+    idxLst <- list()
+    idxLst[[1+length(idxLst)]] <- c(        5,6)
+    idxLst[[1+length(idxLst)]] <- c(      4,5,6)
+    idxLst[[1+length(idxLst)]] <- c(    3,4,5,6)
+    idxLst[[1+length(idxLst)]] <- c(  2,3,4,5,6)
+    idxLst[[1+length(idxLst)]] <- c(1,2,3,4,5,6)
+    idxLst[[1+length(idxLst)]] <- c(1,2,3,4,5  )
+    idxLst[[1+length(idxLst)]] <- c(1,2,3,4    )
+    idxLst[[1+length(idxLst)]] <- c(1,2,3      )
+    idxLst[[1+length(idxLst)]] <- c(1,2        )
+
     fndLst <- list()
-    for( cIdx in 0:(col.len-1) ){
-        flag <- pCodeMtx[code.len ,1:(col.len-cIdx)]==pCodeMtx[code.len-1 ,(1+cIdx):col.len]
+    for( cIdx in 0:(length(idxLst)-1) ){
+        idxSpan.pre <- idxLst[[             1+cIdx]]
+        idxSpan.next<- idxLst[[length(idxLst)-cIdx]]
+        flag <- pCodeMtx[code.len  ,idxSpan.next]==pCodeMtx[code.len-1,idxSpan.pre ]
         if( !is.null(pECol) ){
-            flag[pECol] <- FALSE
+            naFlag <- (idxSpan.pre %in% pECol) | (idxSpan.next %in% pECol)
+            flag[naFlag] <- FALSE
         }
         if( 1<sum(flag) ){
-            val <- pCodeMtx[code.len ,1:(col.len-cIdx)]
+            val <- pCodeMtx[code.len ,idxSpan.next]
             val[!flag] <- NA
             flagIdx <- which(flag)
             val <- val[ flagIdx[1]:flagIdx[length(flagIdx)] ]
             fndLst[[1+length(fndLst)]] <- val
-            if(pFirstOnly){ 
-                break 
-            }
         }
     }
 
-    return( NULL )
+    # 개선 가능성 : fndLst 내에서 서로 포함관계가 되는 대상은 제외시킬 수 있다.
+
+    return( fndLst )
 } # uaUtil.seqReb()
 
 pCodeMtx <- c(1,2,3,2,2,0)
@@ -181,9 +207,9 @@ pCodeMtx <- rbind( pCodeMtx ,c(2,2,1,2,3,0) )
 
 
 # 같은 컬럼에서 같은 값 반복.
-get.UA0001 <- function( pMtx ,dInfo ){
+get.UA0001 <- function( pMtx ,dInfo ,pOptStr="" ){
     
-    fObj <- list( idStr="UA0001" ,dInfo=dInfo )]
+    fObj <- list( idStr=sprintf("UA0001%s",pOptStr) ,dInfo=dInfo )]
     
     #   반환값 0이면 필터링 결과 없음. 1이면 교차검증 대기. 2 이상이면 단독 필터링 가능.
     fObj$filt <- function( aZoid ){
@@ -195,6 +221,35 @@ get.UA0001 <- function( pMtx ,dInfo ){
     return( fObj )
 } # ua.a0001()
 
+# uaUtil.decline() 2,3,4,5(?) 순차증가/감소
+get.UA0002.base <- function( pMtx ,dInfo ,pOptStr="" ){
 
+    fObj <- list( idStr=sprintf("UA0002%s",pOptStr) ,dInfo=dInfo )
+    fObj$banLst <- vector("list",ncol(pMtx) )
+    for( cIdx in 1:ncol(pMtx) ){
+        if( cIdx %in% dInfo$eCol ){
+            fObj$banLst[[cIdx]] <- integer(0)
+            next
+        }
+        banVal <- uaUtil.decline( pMtx[,cIdx] )
+        fObj$banLst[[cIdx]] <- if( is.null(banVal) ) integer(0) else banVal
+    }
+
+    #   반환값 0이면 필터링 결과 없음. 1이면 교차검증 대기. 2 이상이면 단독 필터링 가능.
+    fObj$filt <- function( aZoid ){
+        flag <- sapply( 1:fObj$dInfo$dWidth ,function(idx){
+                        any( aZoid[idx] %in% fObj$banLst[[idx]] )
+                    })
+        return( sum(flag) )
+    } # fObj$filt()
+
+    return( fObj )
+} # ua.a0002.base()
+
+
+pMtx <-              c( 1 ,10 ,15 ,20 ,30 ,40 )
+pMtx <- rbind( pMtx ,c( 2 ,10 ,15 ,21 ,30 ,40 ) )
+pMtx <- rbind( pMtx ,c( 3 ,10 ,14 ,22 ,30 ,40 ) )
+pMtx <- rbind( pMtx ,c( 4 ,10 ,15 ,23 ,30 ,40 ) )
 
 
