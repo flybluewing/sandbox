@@ -1,5 +1,28 @@
 # 20180109_A_H.R 마지막 시도가 되길..
 
+#	pZoid 내에 pCode 패턴이 포함되어 있는 지 체크
+chkHaveSeq <- function( pZoid ,pCode ,pFirstOnly=TRUE ){
+	chkMask <- !is.na(pCode)
+	zoid.len <- length(pZoid)
+	code.len <- length(pCode)
+	if( zoid.len<code.len ){
+		return(0)
+	}
+
+	fndCnt <- 0
+	for( idx in 0:(zoid.len-code.len) ){
+		flag <- pZoid[1:code.len + idx] == pCode
+		if( all(flag[chkMask]) ){
+			fndCnt <- fndCnt + 1
+			if( pFirstOnly ){
+				return(fndCnt)
+			}
+		}
+	}
+	return(fndCnt)
+} # chkHaveSeq
+
+
 last3Ptn.ana <- function( pZhF ,pCol ,pThld=2 ){
 
     colSpan <- if( pCol==1 ){ 1:3

@@ -2,31 +2,251 @@
 
 #   pECol : 예외대상 컬럼. Exception column
 getUnitAnalyzer <- function( pMtx ,pECol=NULL ){
+    # nrow(pMtx) 는 2 이상을 사용하자.
+    getDInfo <- function( pMtx ,pECol ){
+        dSize <- nrow(pMtx) ;dWidth <- ncol(pMtx)
+        dLast <- pMtx[dSize,]
+        dCStep <- dLast[2:dWidth] - dLast[1:(dWidth-1)]
+        dFStep <- if( dSize>1 ) pMtx[dSize,]-pMtx[(dSize-1),] else NULL
 
-    dSize <- nrow(pMtx) ;dWidth <- ncol(pMtx)
-    dLast <- pMtx[dSize,]
-    dCStep <- dLast[2:dWidth] - dLast[1:(dWidth-1)]
-    dFStep <- if( dSize>1 ) pMtx[dSize,]-pMtx[(dSize-1),] else NULL
+        dInfo <- list( dLast=dLast ,dCStep=dCStep ,dFStep=dFStep ,dSize=dSize ,dWidth=dWidth )
+        dInfo$eCol <- pECol
+        return( dInfo )
+    } # getDInfo()
+    getColValBan <- function( pWorkMtx ,pDInfo ,pFunc ){ # function( val )
+        colValBan <- list()
+        for( cIdx in 1:ncol(pWorkMtx) ){
+            banVal <- pFunc( pWorkMtx[,cIdx] )
+            if( !is.null(pDInfo$eCol) && !(cIdx%in%pDInfo$eCol) ){
+                banVal <- NULL
+            }
+            colValBan[[cIdx]] <- if( is.null(banVal) ) integer(0) else banVal
+        }
 
-    dInfo <- list( dLast=dLast ,dCStep=dCStep ,dFStep=dFStep ,dSize=dSize ,dWidth=dWidth )
-    dInfo$eCol <- pECol
-
-    funcLst.1st <- list()
-    funcLst.1st[[1+length(funcLst.1st)]] <- get.UA0001
+        return(colValBan)
+    } # getColValBan()
 
 
+    dInfo <- getDInfo( pMtx=pMtx ,pECol=pECol )
+    cStepMtx <- pMtx[,2:6,drop=F] - pMtx[,1:5,drop=F]
+    fStepMtx <- pMtx[2:dInfo$dSize,,drop=F] - pMtx[1:(dInfo$dSize-1),,drop=F]
 
-    funcLst.2nd <- list()
+    # ==========================================================================
+    #   RAW Data
+    colValBanLst <- list()
+    valPtnBanLst <- list()
+    # --------------------------------------------------------------------------
+    # Basic filtering
+    workMtx <- pMtx
+    colValBanLst[["decline1"]] <- getColValBan( workMtx ,dInfo ,uaUtil.decline1 )
+    colValBanLst[["decline2"]] <- getColValBan( workMtx ,dInfo ,uaUtil.decline2 )
+    colValBanLst[["rebAgain"]] <- getColValBan( workMtx ,dInfo ,uaUtil.rebAgain )
+    colValBanLst[["rebPtn1" ]] <- getColValBan( workMtx ,dInfo ,uaUtil.rebPtn1  )
+    colValBanLst[["rebPtn2" ]] <- getColValBan( workMtx ,dInfo ,uaUtil.rebPtn2  )
+    colValBanLst[["rebPtn3" ]] <- getColValBan( workMtx ,dInfo ,uaUtil.rebPtn3  )
+    colValBanLst[["rebPtn4" ]] <- getColValBan( workMtx ,dInfo ,uaUtil.rebPtn4  )
+    colValBanLst[["symm1"   ]] <- getColValBan( workMtx ,dInfo ,uaUtil.symm1    )
+    colValBanLst[["symm2"   ]] <- getColValBan( workMtx ,dInfo ,uaUtil.symm2    )
+    colValBanLst[["symm3"   ]] <- getColValBan( workMtx ,dInfo ,uaUtil.symm3    )
+    valPtnBanLst[["seqReb"  ]] <- uaUtil.seqReb( workMtx ,pECol=dInfo$eCol      )
+    # --------------------------------------------------------------------------
+    # two step
+    rowSpan <- seq( from=(dInfo$dSize-1) ,to=1 ,by=-2 )
+    workMtx <- pMtx[sort(rowSpan),,drop=F]
+    dInfo.work <- getDInfo( pMtx=workMtx ,pECol=pECol )
+    colValBanLst[["decline1.s2"]] <- getColValBan( workMtx ,dInfo.work ,uaUtil.decline1 )
+    colValBanLst[["decline2.s2"]] <- getColValBan( workMtx ,dInfo.work ,uaUtil.decline2 )
+    colValBanLst[["rebAgain.s2"]] <- getColValBan( workMtx ,dInfo.work ,uaUtil.rebAgain )
+    colValBanLst[["rebPtn1.s2" ]] <- getColValBan( workMtx ,dInfo.work ,uaUtil.rebPtn1  )
+    colValBanLst[["rebPtn2.s2" ]] <- getColValBan( workMtx ,dInfo.work ,uaUtil.rebPtn2  )
+    colValBanLst[["rebPtn3.s2" ]] <- getColValBan( workMtx ,dInfo.work ,uaUtil.rebPtn3  )
+    colValBanLst[["rebPtn4.s2" ]] <- getColValBan( workMtx ,dInfo.work ,uaUtil.rebPtn4  )
+    colValBanLst[["symm1.s2"   ]] <- getColValBan( workMtx ,dInfo.work ,uaUtil.symm1    )
+    colValBanLst[["symm2.s2"   ]] <- getColValBan( workMtx ,dInfo.work ,uaUtil.symm2    )
+    colValBanLst[["symm3.s2"   ]] <- getColValBan( workMtx ,dInfo.work ,uaUtil.symm3    )
+    valPtnBanLst[["seqReb.s2"  ]] <- uaUtil.seqReb( workMtx ,pECol=dInfo.work$eCol      )
+    # --------------------------------------------------------------------------
+    # three step
+    rowSpan <- seq( from=(dInfo$dSize-2) ,to=1 ,by=-3 )
+    workMtx <- pMtx[sort(rowSpan),,drop=F]
+    dInfo.work <- getDInfo( pMtx=workMtx ,pECol=pECol )
+    colValBanLst[["decline1.s3"]] <- getColValBan( workMtx ,dInfo.work ,uaUtil.decline1 )
+    colValBanLst[["decline2.s3"]] <- getColValBan( workMtx ,dInfo.work ,uaUtil.decline2 )
+    colValBanLst[["rebAgain.s3"]] <- getColValBan( workMtx ,dInfo.work ,uaUtil.rebAgain )
+    colValBanLst[["rebPtn1.s3" ]] <- getColValBan( workMtx ,dInfo.work ,uaUtil.rebPtn1  )
+    colValBanLst[["rebPtn2.s3" ]] <- getColValBan( workMtx ,dInfo.work ,uaUtil.rebPtn2  )
+    colValBanLst[["rebPtn3.s3" ]] <- getColValBan( workMtx ,dInfo.work ,uaUtil.rebPtn3  )
+    colValBanLst[["rebPtn4.s3" ]] <- getColValBan( workMtx ,dInfo.work ,uaUtil.rebPtn4  )
+    colValBanLst[["symm1.s3"   ]] <- getColValBan( workMtx ,dInfo.work ,uaUtil.symm1    )
+    colValBanLst[["symm2.s3"   ]] <- getColValBan( workMtx ,dInfo.work ,uaUtil.symm2    )
+    colValBanLst[["symm3.s3"   ]] <- getColValBan( workMtx ,dInfo.work ,uaUtil.symm3    )
+    valPtnBanLst[["seqReb.s3"  ]] <- uaUtil.seqReb( workMtx ,pECol=dInfo.work$eCol      )
 
-    uAnaObj <- list( funcLst.1st=funcLst.1st ,funcLst.2nd=funcLst.2nd )
+    # ==========================================================================
+    #   fStep Data
+    colValBanLst.f <- list()
+    valPtnBanLst.f <- list()
+    # --------------------------------------------------------------------------
+    # Basic filtering
+    workMtx <- fStepMtx
+    dInfo.work <- getDInfo( pMtx=workMtx ,pECol=NULL )
+    colValBanLst.f[["decline1_F"]] <- getColValBan(  workMtx ,dInfo.work ,uaUtil.decline1 )
+    colValBanLst.f[["decline2_F"]] <- getColValBan(  workMtx ,dInfo.work ,uaUtil.decline2 )
+    colValBanLst.f[["rebAgain_F"]] <- getColValBan(  workMtx ,dInfo.work ,uaUtil.rebAgain )
+    colValBanLst.f[["rebPtn1_F" ]] <- getColValBan(  workMtx ,dInfo.work ,uaUtil.rebPtn1  )
+    colValBanLst.f[["rebPtn2_F" ]] <- getColValBan(  workMtx ,dInfo.work ,uaUtil.rebPtn2  )
+    colValBanLst.f[["rebPtn3_F" ]] <- getColValBan(  workMtx ,dInfo.work ,uaUtil.rebPtn3  )
+    colValBanLst.f[["rebPtn4_F" ]] <- getColValBan(  workMtx ,dInfo.work ,uaUtil.rebPtn4  )
+    colValBanLst.f[["symm1_F"   ]] <- getColValBan(  workMtx ,dInfo.work ,uaUtil.symm1    )
+    colValBanLst.f[["symm2_F"   ]] <- getColValBan(  workMtx ,dInfo.work ,uaUtil.symm2    )
+    colValBanLst.f[["symm3_F"   ]] <- getColValBan(  workMtx ,dInfo.work ,uaUtil.symm3    )
+    valPtnBanLst.f[["seqReb_F"  ]] <- uaUtil.seqReb( workMtx ,pECol=NULL      )
+    # --------------------------------------------------------------------------
+    # two step
+    rowSpan <- seq( from=(nrow(fStepMtx)-1) ,to=1 ,by=-2 )
+    workMtx <- fStepMtx[sort(rowSpan),,drop=F]
+    dInfo.work <- getDInfo( pMtx=workMtx ,pECol=NULL )
+    colValBanLst.f[["decline1.s2_F"]] <- getColValBan( workMtx ,dInfo.work ,uaUtil.decline1 )
+    colValBanLst.f[["decline2.s2_F"]] <- getColValBan( workMtx ,dInfo.work ,uaUtil.decline2 )
+    colValBanLst.f[["rebAgain.s2_F"]] <- getColValBan( workMtx ,dInfo.work ,uaUtil.rebAgain )
+    colValBanLst.f[["rebPtn1.s2_F" ]] <- getColValBan( workMtx ,dInfo.work ,uaUtil.rebPtn1  )
+    colValBanLst.f[["rebPtn2.s2_F" ]] <- getColValBan( workMtx ,dInfo.work ,uaUtil.rebPtn2  )
+    colValBanLst.f[["rebPtn3.s2_F" ]] <- getColValBan( workMtx ,dInfo.work ,uaUtil.rebPtn3  )
+    colValBanLst.f[["rebPtn4.s2_F" ]] <- getColValBan( workMtx ,dInfo.work ,uaUtil.rebPtn4  )
+    colValBanLst.f[["symm1.s2_F"   ]] <- getColValBan( workMtx ,dInfo.work ,uaUtil.symm1    )
+    colValBanLst.f[["symm2.s2_F"   ]] <- getColValBan( workMtx ,dInfo.work ,uaUtil.symm2    )
+    colValBanLst.f[["symm3.s2_F"   ]] <- getColValBan( workMtx ,dInfo.work ,uaUtil.symm3    )
+    valPtnBanLst.f[["seqReb.s2_F"  ]] <- uaUtil.seqReb( workMtx ,pECol=NULL      )
+    # --------------------------------------------------------------------------
+    # two step
+    rowSpan <- seq( from=(nrow(cStepMtx)-2) ,to=1 ,by=-3 )
+    workMtx <- fStepMtx[sort(rowSpan),,drop=F]
+    dInfo.work <- getDInfo( pMtx=workMtx ,pECol=NULL )
+    colValBanLst.f[["decline1.s3_F"]] <- getColValBan( workMtx ,dInfo.work ,uaUtil.decline1 )
+    colValBanLst.f[["decline2.s3_F"]] <- getColValBan( workMtx ,dInfo.work ,uaUtil.decline2 )
+    colValBanLst.f[["rebAgain.s3_F"]] <- getColValBan( workMtx ,dInfo.work ,uaUtil.rebAgain )
+    colValBanLst.f[["rebPtn1.s3_F" ]] <- getColValBan( workMtx ,dInfo.work ,uaUtil.rebPtn1  )
+    colValBanLst.f[["rebPtn2.s3_F" ]] <- getColValBan( workMtx ,dInfo.work ,uaUtil.rebPtn2  )
+    colValBanLst.f[["rebPtn3.s3_F" ]] <- getColValBan( workMtx ,dInfo.work ,uaUtil.rebPtn3  )
+    colValBanLst.f[["rebPtn4.s3_F" ]] <- getColValBan( workMtx ,dInfo.work ,uaUtil.rebPtn4  )
+    colValBanLst.f[["symm1.s3_F"   ]] <- getColValBan( workMtx ,dInfo.work ,uaUtil.symm1    )
+    colValBanLst.f[["symm2.s3_F"   ]] <- getColValBan( workMtx ,dInfo.work ,uaUtil.symm2    )
+    colValBanLst.f[["symm3.s3_F"   ]] <- getColValBan( workMtx ,dInfo.work ,uaUtil.symm3    )
+    valPtnBanLst.f[["seqReb.s3_F"  ]] <- uaUtil.seqReb( workMtx ,pECol=NULL      )
+
+    # ==========================================================================
+    #   cStep Data
+    colValBanLst.c <- list()
+    # valPtnBanLst.f <- list() 일단 사용보류.
+    # --------------------------------------------------------------------------
+    # Basic filtering
+    workMtx <- cStepMtx
+    dInfo.work <- getDInfo( pMtx=workMtx ,pECol=NULL )
+    colValBanLst.c[["decline1_C"]] <- getColValBan(  workMtx ,dInfo.work ,uaUtil.decline1 )
+    colValBanLst.c[["decline2_C"]] <- getColValBan(  workMtx ,dInfo.work ,uaUtil.decline2 )
+    colValBanLst.c[["rebAgain_C"]] <- getColValBan(  workMtx ,dInfo.work ,uaUtil.rebAgain )
+    colValBanLst.c[["rebPtn1_C" ]] <- getColValBan(  workMtx ,dInfo.work ,uaUtil.rebPtn1  )
+    colValBanLst.c[["rebPtn2_C" ]] <- getColValBan(  workMtx ,dInfo.work ,uaUtil.rebPtn2  )
+    colValBanLst.c[["rebPtn3_C" ]] <- getColValBan(  workMtx ,dInfo.work ,uaUtil.rebPtn3  )
+    colValBanLst.c[["rebPtn4_C" ]] <- getColValBan(  workMtx ,dInfo.work ,uaUtil.rebPtn4  )
+    colValBanLst.c[["symm1_C"   ]] <- getColValBan(  workMtx ,dInfo.work ,uaUtil.symm1    )
+    colValBanLst.c[["symm2_C"   ]] <- getColValBan(  workMtx ,dInfo.work ,uaUtil.symm2    )
+    colValBanLst.c[["symm3_C"   ]] <- getColValBan(  workMtx ,dInfo.work ,uaUtil.symm3    )
+    # --------------------------------------------------------------------------
+    # two step
+    rowSpan <- seq( from=(nrow(cStepMtx)-1) ,to=1 ,by=-2 )
+    workMtx <- cStepMtx[sort(rowSpan),,drop=F]
+    dInfo.work <- getDInfo( pMtx=workMtx ,pECol=NULL )
+    colValBanLst.c[["decline1.s2_C"]] <- getColValBan( workMtx ,dInfo.work ,uaUtil.decline1 )
+    colValBanLst.c[["decline2.s2_C"]] <- getColValBan( workMtx ,dInfo.work ,uaUtil.decline2 )
+    colValBanLst.c[["rebAgain.s2_C"]] <- getColValBan( workMtx ,dInfo.work ,uaUtil.rebAgain )
+    colValBanLst.c[["rebPtn1.s2_C" ]] <- getColValBan( workMtx ,dInfo.work ,uaUtil.rebPtn1  )
+    colValBanLst.c[["rebPtn2.s2_C" ]] <- getColValBan( workMtx ,dInfo.work ,uaUtil.rebPtn2  )
+    colValBanLst.c[["rebPtn3.s2_C" ]] <- getColValBan( workMtx ,dInfo.work ,uaUtil.rebPtn3  )
+    colValBanLst.c[["rebPtn4.s2_C" ]] <- getColValBan( workMtx ,dInfo.work ,uaUtil.rebPtn4  )
+    colValBanLst.c[["symm1.s2_C"   ]] <- getColValBan( workMtx ,dInfo.work ,uaUtil.symm1    )
+    colValBanLst.c[["symm2.s2_C"   ]] <- getColValBan( workMtx ,dInfo.work ,uaUtil.symm2    )
+    colValBanLst.c[["symm3.s2_C"   ]] <- getColValBan( workMtx ,dInfo.work ,uaUtil.symm3    )
+    # --------------------------------------------------------------------------
+    # three step
+    rowSpan <- seq( from=(nrow(cStepMtx)-2) ,to=1 ,by=-3 )
+    workMtx <- cStepMtx[sort(rowSpan),,drop=F]
+    dInfo.work <- getDInfo( pMtx=workMtx ,pECol=NULL )
+    colValBanLst.c[["decline1.s3_C"]] <- getColValBan( workMtx ,dInfo.work ,uaUtil.decline1 )
+    colValBanLst.c[["decline2.s3_C"]] <- getColValBan( workMtx ,dInfo.work ,uaUtil.decline2 )
+    colValBanLst.c[["rebAgain.s3_C"]] <- getColValBan( workMtx ,dInfo.work ,uaUtil.rebAgain )
+    colValBanLst.c[["rebPtn1.s3_C" ]] <- getColValBan( workMtx ,dInfo.work ,uaUtil.rebPtn1  )
+    colValBanLst.c[["rebPtn2.s3_C" ]] <- getColValBan( workMtx ,dInfo.work ,uaUtil.rebPtn2  )
+    colValBanLst.c[["rebPtn3.s3_C" ]] <- getColValBan( workMtx ,dInfo.work ,uaUtil.rebPtn3  )
+    colValBanLst.c[["rebPtn4.s3_C" ]] <- getColValBan( workMtx ,dInfo.work ,uaUtil.rebPtn4  )
+    colValBanLst.c[["symm1.s3_C"   ]] <- getColValBan( workMtx ,dInfo.work ,uaUtil.symm1    )
+    colValBanLst.c[["symm2.s3_C"   ]] <- getColValBan( workMtx ,dInfo.work ,uaUtil.symm2    )
+    colValBanLst.c[["symm3.s3_C"   ]] <- getColValBan( workMtx ,dInfo.work ,uaUtil.symm3    )
+
+
+    uAnaObj <- list( colValBanLst=colValBanLst ,valPtnBanLst=valPtnBanLst )
+    uAnaObj$colValBanLst.f <- colValBanLst.f
+    uAnaObj$valPtnBanLst.f <- valPtnBanLst.f
+    uAnaObj$colValBanLst.c <- colValBanLst.c
     uAnaObj$dInfo <- dInfo
 
     return( uAnaObj )
 
 } # getUnitAnalyzer()
 
+rptUnitAnalyze <- function( uAnaObj ,pTitle="" ,pRptFile="./report/rptUnitAnalyze" ){
+
+    log.txt <- sprintf("%s.txt",pRptFile)
+    FLog <- function( pObj ,pTime=F ,pAppend=T ,pConsole=F ){
+            if( !is.null(pRptFile) )
+                k.FLog( pObj ,pFile=log.txt ,pTime=pTime ,pAppend=pAppend ,pConsole=pConsole )
+        }
+    FLogStr <- function( pMsg ,pTime=F ,pAppend=T ,pConsole=F ){
+            if( !is.null(pRptFile) )
+                k.FLogStr( pMsg ,pFile=log.txt ,pTime=pTime ,pAppend=pAppend ,pConsole=pConsole )
+        }
+
+    FLogStr(sprintf("Report : %s",pTitle),pAppend=F,pTime=T)
+    FLogStr(sprintf("dInfo - row:%d col:%d",uAnaObj$dInfo$dSize,uAnaObj$dInfo$dWidth))
+    FLogStr("lastZoid ,fStep ,cStep")
+    FLog( uAnaObj$dInfo$dLast )
+    FLog( uAnaObj$dInfo$dFStep )
+    FLog( uAnaObj$dInfo$dCStep )
+
+    FLogStr("#--------------------------------------------------------------------------------------------------------")
+    a <- sapply( attributes(uAnaObj$colValBanLst)$names ,function( nIdx ){
+                    fndSize <- sapply( uAnaObj$colValBanLst[[nIdx]] ,length )
+                    if( 0<sum(fndSize) ){
+                        FLogStr(sprintf("<%s>",nIdx))
+                        for( idx in seq_len(length(uAnaObj$colValBanLst[[nIdx]])) ){
+                            if( 0==length(uAnaObj$colValBanLst[[nIdx]][[idx]]) ){
+                                next
+                            }
+                            FLogStr(sprintf("   %d : %s",idx,paste(uAnaObj$colValBanLst[[nIdx]][[idx]],collapse=", ")  ))
+                        }
+                    }
+                })
+
+} # rptUnitAnalyze()
+
 #   2,3,4,5(?) 순차증가/감소
-uaUtil.decline <- function( val ){
+uaUtil.decline1 <- function( val ){ # 1간격 증감
+
+    val.len <- length(val)
+    if( 2>val.len ){
+        return( NULL )
+    }
+
+    fDiff <- val[val.len] - val[val.len-1]
+    if( 1!=abs(fDiff) ){
+        return( NULL )
+    }
+
+    banVal <- val[val.len] + fDiff[1]
+    return(banVal)
+
+} # uaUtil.decline1()
+uaUtil.decline2 <- function( val ){ # 같은 간격으로 증/감 3개
 
     val.len <- length(val)
     if( 3>val.len ){
@@ -44,7 +264,7 @@ uaUtil.decline <- function( val ){
     banVal <- val[val.len] + fDiff[1]
     return(banVal)
 
-} # uaUtil.decline()
+} # uaUtil.decline2()
 
 #   2,2,3,3(?) 연속의 재발생
 uaUtil.rebAgain <- function( val ){
@@ -119,11 +339,11 @@ uaUtil.symm1 <- function( val ){
 uaUtil.symm2 <- function( val ){
     val.len <- length(val)
     if( 5<=val.len ){ # 1,2,3,3,2,(1?)
-        if( val[val.len-0:1]==val[val.len-3:2] ){
+        if( all(val[val.len-0:1]==val[val.len-3:2]) ){
             return(val[val.len-4])
         }
     } else if( 6<=val.len ){ # 1,2,3,4,3,2(1?)
-        if( val[val.len-0:1]==val[val.len-4:3] ){
+        if( all(val[val.len-0:1]==val[val.len-4:3]) ){
             return(val[val.len-5])
         }
     }
@@ -132,11 +352,11 @@ uaUtil.symm2 <- function( val ){
 uaUtil.symm3 <- function( val ){
     val.len <- length(val)
     if( 7<=val.len ){ # 1,2,3,4,4,3,2,(1?)
-        if( val[val.len-0:2]==val[val.len-5:3] ){
+        if( all(val[val.len-0:2]==val[val.len-5:3]) ){
             return(val[val.len-6])
         }
     } else if( 8<=val.len ){ # 1,2,3,4,5,4,3,2,(1?)
-        if( val[val.len-0:2]==val[val.len-6:4] ){
+        if( all(val[val.len-0:2]==val[val.len-6:4]) ){
             return(val[val.len-7])
         }
     }
@@ -151,7 +371,7 @@ uaUtil.seqReb <- function( pCodeMtx ,pECol=NULL ){
     code.len <- nrow(pCodeMtx)
     col.len <- ncol(pCodeMtx)
     if( 1>=code.len ){
-        return( NULL )
+        return( list() )
     }
 
     # 차라리 날코딩이 가독성 좋을 듯....
@@ -209,7 +429,7 @@ pCodeMtx <- rbind( pCodeMtx ,c(2,2,1,2,3,0) )
 # 같은 컬럼에서 같은 값 반복.
 get.UA0001 <- function( pMtx ,dInfo ,pOptStr="" ){
     
-    fObj <- list( idStr=sprintf("UA0001%s",pOptStr) ,dInfo=dInfo )]
+    fObj <- list( idStr=sprintf("UA0001%s",pOptStr) ,dInfo=dInfo )
     
     #   반환값 0이면 필터링 결과 없음. 1이면 교차검증 대기. 2 이상이면 단독 필터링 가능.
     fObj$filt <- function( aZoid ){
