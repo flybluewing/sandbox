@@ -184,9 +184,9 @@ finalCut <- function( gEnv ,allIdx ){
     allIdxF <- allIdxF[flag]
     cat(sprintf("allIdxF %d\n",length(allIdxF)))
 
-
-	# qqe working	0:		1:205,780
-
+	uAnaObjLst <- list()
+	# ==============================================================================
+	# rebCnt
 	rebCnt <- sapply( 1:nrow(gEnv$zhF) ,function(hIdx){
 					if(hIdx==1) return(0)
 
@@ -197,15 +197,93 @@ finalCut <- function( gEnv ,allIdx ){
 	#-------------------------------------------------------------------------------
 	# rebCnt == 0
 	zoidMtx <- gEnv$zhF[rebCnt==0,,drop=F]
-	uAnaObj <- getUnitAnalyzer( zoidMtx ,pECol=NULL )
+	uAnaObj <- getUnitAnalyzer( zoidMtx ,pECol=NULL )	;uAnaObjLst[["rebCnt0"]] <- uAnaObj
 	rptUnitAnalyze( uAnaObj ,pTitle="rebound count zero" ,pRptFile="./report/rptUA_rebCnt0" )
+	cutObj <- finalCut.rebCnt0( gEnv ,allIdxF ,uAnaObj ,localZhF=zoidMtx )
+	allIdxF <- cutObj$allIdxF
+	cat(sprintf("allIdxF %d\n",length(allIdxF)))
 
 	#-------------------------------------------------------------------------------
 	# rebCnt == 1
+	zoidMtx <- gEnv$zhF[rebCnt==1,,drop=F]
+	uAnaObj <- getUnitAnalyzer( zoidMtx ,pECol=NULL )	;uAnaObjLst[["rebCnt1"]] <- uAnaObj
+	rptUnitAnalyze( uAnaObj ,pTitle="rebound count one" ,pRptFile="./report/rptUA_rebCnt1" )
+	cutObj <- finalCut.rebCnt1( gEnv ,allIdxF ,uAnaObj ,localZhF=zoidMtx )
+	allIdxF <- cutObj$allIdxF
+	cat(sprintf("allIdxF %d\n",length(allIdxF)))
 
 	# ==============================================================================
-	# 
+	# zoid[1] :     1     2     5     7     8     9
+	#			firstColVal <- sort(unique(gEnv$allZoidMtx[allIdxF,1]))
+	zoidMtx <- gEnv$zhF[(gEnv$zhF[,1]==1),,drop=F]
+	uAnaObj <- getUnitAnalyzer( zoidMtx ,pECol=1 )		;uAnaObjLst[["1stC1"]] <- uAnaObj
+	rptUnitAnalyze( uAnaObj ,pTitle="next zWidth" ,pRptFile="./report/rptUA_1stC1" )
+	cutObj <- finalCut.1stC1( gEnv ,allIdxF ,uAnaObj ,localZhF=zoidMtx )	;table(cutObj$chkCnt)
+	allIdxF <- cutObj$allIdxF
+	cat(sprintf("allIdxF %d\n",length(allIdxF)))
 
+	zoidMtx <- gEnv$zhF[(gEnv$zhF[,1]==2),,drop=F]
+	uAnaObj <- getUnitAnalyzer( zoidMtx ,pECol=1 )		;uAnaObjLst[["1stC2"]] <- uAnaObj
+	rptUnitAnalyze( uAnaObj ,pTitle="next zWidth" ,pRptFile="./report/rptUA_1stC2" )
+	cutObj <- finalCut.1stC2( gEnv ,allIdxF ,uAnaObj ,localZhF=zoidMtx )	;table(cutObj$chkCnt)
+	allIdxF <- cutObj$allIdxF
+	cat(sprintf("allIdxF %d\n",length(allIdxF)))
+
+	zoidMtx <- gEnv$zhF[(gEnv$zhF[,1]==5),,drop=F]
+	uAnaObj <- getUnitAnalyzer( zoidMtx ,pECol=1 )		;uAnaObjLst[["1stC5"]] <- uAnaObj
+	rptUnitAnalyze( uAnaObj ,pTitle="next zWidth" ,pRptFile="./report/rptUA_1stC5" )
+	cutObj <- finalCut.1stC5( gEnv ,allIdxF ,uAnaObj ,localZhF=zoidMtx )	;table(cutObj$chkCnt)
+	allIdxF <- cutObj$allIdxF
+	cat(sprintf("allIdxF %d\n",length(allIdxF)))
+
+	zoidMtx <- gEnv$zhF[(gEnv$zhF[,1]==7),,drop=F]
+	uAnaObj <- getUnitAnalyzer( zoidMtx ,pECol=1 )		;uAnaObjLst[["1stC7"]] <- uAnaObj
+	rptUnitAnalyze( uAnaObj ,pTitle="next zWidth" ,pRptFile="./report/rptUA_1stC7" )
+	cutObj <- finalCut.1stC7( gEnv ,allIdxF ,uAnaObj ,localZhF=zoidMtx )	;table(cutObj$chkCnt)
+	allIdxF <- cutObj$allIdxF
+	cat(sprintf("allIdxF %d\n",length(allIdxF)))
+
+	zoidMtx <- gEnv$zhF[(gEnv$zhF[,1]==8),,drop=F]
+	uAnaObj <- getUnitAnalyzer( zoidMtx ,pECol=1 )		;uAnaObjLst[["1stC8"]] <- uAnaObj
+	rptUnitAnalyze( uAnaObj ,pTitle="next zWidth" ,pRptFile="./report/rptUA_1stC8" )
+	cutObj <- finalCut.1stC8( gEnv ,allIdxF ,uAnaObj ,localZhF=zoidMtx )	;table(cutObj$chkCnt)
+	allIdxF <- cutObj$allIdxF
+	cat(sprintf("allIdxF %d\n",length(allIdxF)))
+
+	zoidMtx <- gEnv$zhF[(gEnv$zhF[,1]==9),,drop=F]
+	uAnaObj <- getUnitAnalyzer( zoidMtx ,pECol=1 )		;uAnaObjLst[["1stC9"]] <- uAnaObj
+	rptUnitAnalyze( uAnaObj ,pTitle="next zWidth" ,pRptFile="./report/rptUA_1stC9" )	
+	# cutObj <- finalCut.1stC9( gEnv ,allIdxF ,uAnaObj ,localZhF=zoidMtx )	;table(cutObj$chkCnt)
+	# allIdxF <- cutObj$allIdxF
+	# cat(sprintf("allIdxF %d\n",length(allIdxF)))
+
+
+	# ==============================================================================
+	# zoid width : 현재 width 다음에 나타난 width 들의 특성.
+	idxSpan <- which( (gEnv$zhF[,6]-gEnv$zhF[,1])==(lastZoid[6]-lastZoid[1]) )
+	idxSpan <- idxSpan[1:(length(idxSpan)-1)]+1
+	zoidMtx <- gEnv$zhF[idxSpan,,drop=F]
+	uAnaObj <- getUnitAnalyzer( zoidMtx ,pECol=NULL )	;uAnaObjLst[["nextZWidth"]] <- uAnaObj
+	rptUnitAnalyze( uAnaObj ,pTitle="next zWidth" ,pRptFile="./report/rptUA_nextZWidth" )
+	cutObj <- finalCut.nextZWidth( gEnv ,allIdxF ,uAnaObj ,localZhF=zoidMtx )
+	allIdxF <- cutObj$allIdxF
+	cat(sprintf("allIdxF %d\n",length(allIdxF)))
+
+	# ==============================================================================
+	# zoid width :   41(3896)   42(4030)
+	#			firstColVal <- sort(unique(gEnv$allZoidMtx[allIdxF,6]-gEnv$allZoidMtx[allIdxF,1]))
+	zoidWidth <- gEnv$zhF[,6]-gEnv$zhF[,1]
+	zoidMtx <- gEnv$zhF[zoidWidth==41,,drop=F]
+	uAnaObj <- getUnitAnalyzer( zoidMtx ,pECol=NULL )		;uAnaObjLst[["wdth41"]] <- uAnaObj
+	rptUnitAnalyze( uAnaObj ,pTitle="wdth41" ,pRptFile="./report/rptUA_wdth41" )
+	cutObj <- finalCut.wdth41( gEnv ,allIdxF ,uAnaObj ,localZhF=zoidMtx )
+	allIdxF <- cutObj$allIdxF
+	cat(sprintf("allIdxF %d\n",length(allIdxF)))
+
+	# stdCutByUnit( gEnv ,allIdxF ,uAnaObj ,localZhF=zoidMtx )
+	#	
+
+	# qqe working	0:		1:205,780
 
 	# loose.ban.colValSeqNext() 0.05%
 	cvSeqNextObj <- loose.ban.colValSeqNext( gEnv$zhF ,gEnv$allZoidMtx[allIdxF,] ,pLevel=2 )
