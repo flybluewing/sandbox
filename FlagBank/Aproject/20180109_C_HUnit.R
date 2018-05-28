@@ -491,8 +491,8 @@ getStdCutData_UnitAnaObj <- function( uAnaObj ){
     #   Raw Value
     # colVal : colValBanLst ,orthoBanLst
     colVal <- lapply( 1:6 ,function(idx){ 
-                    if( uAnaObj$dInfo$eCol ){
-                        data.frame( fName="lastVal" ,banVal=uAnaObj$dInfo$dLast[idx] ) 
+                    if( idx %in% uAnaObj$dInfo$eCol ){
+                        data.frame( fName=character(0) ,banVal=integer(0) ) 
                     } else {
                         data.frame( fName="lastVal" ,banVal=uAnaObj$dInfo$dLast[idx] ) 
                     }
