@@ -172,7 +172,7 @@ getUnitAnalyzer <- function( pMtx ,pECol=NULL ,pWidth=TRUE ){
     colValBanLst.f[["symm1_F"   ]] <- getColValBan(  workMtx ,dInfo.work ,uaUtil.symm1    )
     colValBanLst.f[["symm2_F"   ]] <- getColValBan(  workMtx ,dInfo.work ,uaUtil.symm2    )
     colValBanLst.f[["symm3_F"   ]] <- getColValBan(  workMtx ,dInfo.work ,uaUtil.symm3    )
-    valPtnBanLst.f[["seqReb_F"  ]] <- uaUtil.seqReb( workMtx ,pECol=NULL      )
+    valPtnBanLst.f[["seqReb_F"  ]] <- uaUtil.seqReb( workMtx ,pECol=pECol      )
     # --------------------------------------------------------------------------
     # two step
     rowSpan <- seq( from=(nrow(fStepMtx)-1) ,to=1 ,by=-2 )
@@ -189,9 +189,9 @@ getUnitAnalyzer <- function( pMtx ,pECol=NULL ,pWidth=TRUE ){
     colValBanLst.f[["symm1.s2_F"   ]] <- getColValBan( workMtx ,dInfo.work ,uaUtil.symm1    )
     colValBanLst.f[["symm2.s2_F"   ]] <- getColValBan( workMtx ,dInfo.work ,uaUtil.symm2    )
     colValBanLst.f[["symm3.s2_F"   ]] <- getColValBan( workMtx ,dInfo.work ,uaUtil.symm3    )
-    valPtnBanLst.f[["seqReb.s2_F"  ]] <- uaUtil.seqReb( workMtx ,pECol=NULL      )
+    valPtnBanLst.f[["seqReb.s2_F"  ]] <- uaUtil.seqReb( workMtx ,pECol=pECol      )
     # --------------------------------------------------------------------------
-    # two step
+    # three step
     rowSpan <- seq( from=(nrow(cStepMtx)-2) ,to=1 ,by=-3 )
     workMtx <- fStepMtx[sort(rowSpan),,drop=F]
     dInfo.work <- getDInfo( pMtx=workMtx ,pECol=pECol )
@@ -206,7 +206,7 @@ getUnitAnalyzer <- function( pMtx ,pECol=NULL ,pWidth=TRUE ){
     colValBanLst.f[["symm1.s3_F"   ]] <- getColValBan( workMtx ,dInfo.work ,uaUtil.symm1    )
     colValBanLst.f[["symm2.s3_F"   ]] <- getColValBan( workMtx ,dInfo.work ,uaUtil.symm2    )
     colValBanLst.f[["symm3.s3_F"   ]] <- getColValBan( workMtx ,dInfo.work ,uaUtil.symm3    )
-    valPtnBanLst.f[["seqReb.s3_F"  ]] <- uaUtil.seqReb( workMtx ,pECol=NULL      )
+    valPtnBanLst.f[["seqReb.s3_F"  ]] <- uaUtil.seqReb( workMtx ,pECol=pECol      )
 
     # ==========================================================================
     #   cStep Data
@@ -294,54 +294,54 @@ getUnitAnalyzer <- function( pMtx ,pECol=NULL ,pWidth=TRUE ){
         # two step
         rowSpan <- seq( from=(length(zWidth)-1) ,to=1 ,by=-2 )
         workWidth <- zWidth[sort(rowSpan)]
-        banVal <- getWidthBan( zWidth ,uaUtil.lastReb )
+        banVal <- getWidthBan( workWidth ,uaUtil.lastReb )
         if( !is.null(banVal) )  widthBanLst[["lastReb.s2" ]] <- banVal
-        banVal <- getWidthBan( zWidth ,uaUtil.decline1 )
+        banVal <- getWidthBan( workWidth ,uaUtil.decline1 )
         if( !is.null(banVal) )  widthBanLst[["decline1.s2" ]] <- banVal
-        banVal <- getWidthBan( zWidth ,uaUtil.decline2 )
+        banVal <- getWidthBan( workWidth ,uaUtil.decline2 )
         if( !is.null(banVal) )  widthBanLst[["decline2.s2" ]] <- banVal
-        banVal <- getWidthBan( zWidth ,uaUtil.rebAgain )
+        banVal <- getWidthBan( workWidth ,uaUtil.rebAgain )
         if( !is.null(banVal) )  widthBanLst[["rebAgain.s2" ]] <- banVal
-        banVal <- getWidthBan( zWidth ,uaUtil.rebPtn1 )
+        banVal <- getWidthBan( workWidth ,uaUtil.rebPtn1 )
         if( !is.null(banVal) )  widthBanLst[["rebPtn1.s2" ]] <- banVal
-        banVal <- getWidthBan( zWidth ,uaUtil.rebPtn2 )
+        banVal <- getWidthBan( workWidth ,uaUtil.rebPtn2 )
         if( !is.null(banVal) )  widthBanLst[["rebPtn2.s2" ]] <- banVal
-        banVal <- getWidthBan( zWidth ,uaUtil.rebPtn3 )
+        banVal <- getWidthBan( workWidth ,uaUtil.rebPtn3 )
         if( !is.null(banVal) )  widthBanLst[["rebPtn3.s2" ]] <- banVal
-        banVal <- getWidthBan( zWidth ,uaUtil.rebPtn4 )
+        banVal <- getWidthBan( workWidth ,uaUtil.rebPtn4 )
         if( !is.null(banVal) )  widthBanLst[["rebPtn4.s2" ]] <- banVal
-        banVal <- getWidthBan( zWidth ,uaUtil.symm1 )
+        banVal <- getWidthBan( workWidth ,uaUtil.symm1 )
         if( !is.null(banVal) )  widthBanLst[["symm1.s2" ]] <- banVal
-        banVal <- getWidthBan( zWidth ,uaUtil.symm2 )
+        banVal <- getWidthBan( workWidth ,uaUtil.symm2 )
         if( !is.null(banVal) )  widthBanLst[["symm2.s2" ]] <- banVal
-        banVal <- getWidthBan( zWidth ,uaUtil.symm3 )
+        banVal <- getWidthBan( workWidth ,uaUtil.symm3 )
         if( !is.null(banVal) )  widthBanLst[["symm3.s2" ]] <- banVal
 
         # --------------------------------------------------------------------------
         # three step
         rowSpan <- seq( from=(length(zWidth)-2) ,to=1 ,by=-3 )
         workWidth <- zWidth[sort(rowSpan)]
-        banVal <- getWidthBan( zWidth ,uaUtil.lastReb )
+        banVal <- getWidthBan( workWidth ,uaUtil.lastReb )
         if( !is.null(banVal) )  widthBanLst[["lastReb.s3" ]] <- banVal
-        banVal <- getWidthBan( zWidth ,uaUtil.decline1 )
+        banVal <- getWidthBan( workWidth ,uaUtil.decline1 )
         if( !is.null(banVal) )  widthBanLst[["decline1.s3" ]] <- banVal
-        banVal <- getWidthBan( zWidth ,uaUtil.decline2 )
+        banVal <- getWidthBan( workWidth ,uaUtil.decline2 )
         if( !is.null(banVal) )  widthBanLst[["decline2.s3" ]] <- banVal
-        banVal <- getWidthBan( zWidth ,uaUtil.rebAgain )
+        banVal <- getWidthBan( workWidth ,uaUtil.rebAgain )
         if( !is.null(banVal) )  widthBanLst[["rebAgain.s3" ]] <- banVal
-        banVal <- getWidthBan( zWidth ,uaUtil.rebPtn1 )
+        banVal <- getWidthBan( workWidth ,uaUtil.rebPtn1 )
         if( !is.null(banVal) )  widthBanLst[["rebPtn1.s3" ]] <- banVal
-        banVal <- getWidthBan( zWidth ,uaUtil.rebPtn2 )
+        banVal <- getWidthBan( workWidth ,uaUtil.rebPtn2 )
         if( !is.null(banVal) )  widthBanLst[["rebPtn2.s3" ]] <- banVal
-        banVal <- getWidthBan( zWidth ,uaUtil.rebPtn3 )
+        banVal <- getWidthBan( workWidth ,uaUtil.rebPtn3 )
         if( !is.null(banVal) )  widthBanLst[["rebPtn3.s3" ]] <- banVal
-        banVal <- getWidthBan( zWidth ,uaUtil.rebPtn4 )
+        banVal <- getWidthBan( workWidth ,uaUtil.rebPtn4 )
         if( !is.null(banVal) )  widthBanLst[["rebPtn4.s3" ]] <- banVal
-        banVal <- getWidthBan( zWidth ,uaUtil.symm1 )
+        banVal <- getWidthBan( workWidth ,uaUtil.symm1 )
         if( !is.null(banVal) )  widthBanLst[["symm1.s3" ]] <- banVal
-        banVal <- getWidthBan( zWidth ,uaUtil.symm2 )
+        banVal <- getWidthBan( workWidth ,uaUtil.symm2 )
         if( !is.null(banVal) )  widthBanLst[["symm2.s3" ]] <- banVal
-        banVal <- getWidthBan( zWidth ,uaUtil.symm3 )
+        banVal <- getWidthBan( workWidth ,uaUtil.symm3 )
         if( !is.null(banVal) )  widthBanLst[["symm3.s3" ]] <- banVal
 
     } # pWidth
@@ -484,6 +484,166 @@ rptUnitAnalyze <- function( uAnaObj ,pTitle="" ,pRptFile="./report/rptUnitAnalyz
                 })
 
 } # rptUnitAnalyze()
+
+getStdCutData_UnitAnaObj <- function( uAnaObj ){
+
+    #======================================================================================
+    #   Raw Value
+    # colVal : colValBanLst ,orthoBanLst
+    colVal <- lapply( 1:6 ,function(idx){ 
+                    if( uAnaObj$dInfo$eCol ){
+                        data.frame( fName="lastVal" ,banVal=uAnaObj$dInfo$dLast[idx] ) 
+                    } else {
+                        data.frame( fName="lastVal" ,banVal=uAnaObj$dInfo$dLast[idx] ) 
+                    }
+                })
+    banLst <- uAnaObj$colValBanLst
+    for( nIdx in attributes(banLst)$names ){
+        for( cIdx in 1:length(banLst[[nIdx]]) ){
+            for( vIdx in seq_len(length(banLst[[nIdx]][[cIdx]])) ){
+                colVal[[cIdx]] <- rbind( colVal[[cIdx]] ,data.frame(fName=nIdx ,banVal=banLst[[nIdx]][[cIdx]][vIdx]) )
+            }
+        }
+    }
+    banLst <- uAnaObj$orthoBanLst
+    for( nIdx in attributes(banLst)$names ){
+        for( cIdx in 1:length(banLst[[nIdx]]) ){
+            for( vIdx in seq_len(length(banLst[[nIdx]][[cIdx]])) ){
+                colVal[[cIdx]] <- rbind( colVal[[cIdx]] ,data.frame(fName=nIdx ,banVal=banLst[[nIdx]][[cIdx]][vIdx]) )
+            }
+        }
+    }
+
+    # valPtn
+    valPtn <- list()
+    valPtn.name <- character(0)
+    banLst <- uAnaObj$valPtnBanLst
+    for( nIdx in attributes(banLst)$names ){
+        for( ptnIdx in seq_len(length(banLst[[nIdx]])) ){
+            valPtn.name[1+length(valPtn.name)] <- nIdx
+            valPtn[[1+length(valPtn)]] <- banLst[[nIdx]][[ptnIdx]]
+        }
+    }
+
+
+    #======================================================================================
+    #   fStep
+    # colVal : colValBanLst.f
+    colVal.f <- lapply( 1:6 ,function(idx){ 
+                    data.frame( fName=character(0) ,banVal=integer(0) ) 
+                })
+    banLst <- uAnaObj$colValBanLst.f
+    for( nIdx in attributes(banLst)$names ){
+        for( cIdx in 1:length(banLst[[nIdx]]) ){
+            for( vIdx in seq_len(length(banLst[[nIdx]][[cIdx]])) ){
+                colVal.f[[cIdx]] <- rbind( colVal.f[[cIdx]] ,data.frame(fName=nIdx ,banVal=banLst[[nIdx]][[cIdx]][vIdx]) )
+            }
+        }
+    }
+
+    # valPtn.f
+    valPtn.f <- list()
+    valPtn.f.name <- character(0)
+    banLst <- uAnaObj$valPtnBanLst.f
+    for( nIdx in attributes(banLst)$names ){
+        for( ptnIdx in seq_len(length(banLst[[nIdx]])) ){
+            valPtn.f.name[1+length(valPtn.f.name)] <- nIdx
+            valPtn.f[[1+length(valPtn.f)]] <- banLst[[nIdx]][[ptnIdx]]
+        }
+    }
+
+    #======================================================================================
+    #   cStep
+    # colVal : colValBanLst.c
+    colVal.c <- lapply( 1:5 ,function(idx){ 
+                    data.frame( fName=character(0) ,banVal=integer(0) )
+                })
+    banLst <- uAnaObj$colValBanLst.c
+    for( nIdx in attributes(banLst)$names ){
+        for( cIdx in 1:length(banLst[[nIdx]]) ){
+            for( vIdx in seq_len(length(banLst[[nIdx]][[cIdx]])) ){
+                colVal.c[[cIdx]] <- rbind( colVal.c[[cIdx]] ,data.frame(fName=nIdx ,banVal=banLst[[nIdx]][[cIdx]][vIdx]) )
+            }
+        }
+    }
+
+    # zWidth
+    zWidth <- list()
+    zWidth.name <- character(0)
+    banLst <- uAnaObj$widthBanLst
+    for( nIdx in attributes(banLst)$names ){
+        for( ptnIdx in seq_len(length(banLst[[nIdx]])) ){
+            zWidth.name[1+length(zWidth.name)] <- nIdx
+            zWidth[[1+length(zWidth)]] <- banLst[[nIdx]][[ptnIdx]]
+        }
+    }
+
+    cutDataObj <- list( colVal=colVal ,valPtn=valPtn )
+    cutDataObj$colVal.f <- colVal.f
+    cutDataObj$valPtn.f <- valPtn.f
+    cutDataObj$colVal.c <- colVal.c
+    cutDataObj$zWidth <- zWidth
+
+    return( cutDataObj )
+
+} # getStdCutData_UnitAnaObj( )
+
+
+# uAnaCutData <- getStdCutData_UnitAnaObj( uAnaObj )
+# aZoidMtx <- gEnv$allZoidMtx[allIdxF,]
+
+stdFltCntByUA <- function( gEnv ,uAnaCutData ,aZoidMtx ){    # aZoidMtx 는 allZoidMtx에서 이미 해당 조건을 만족시킨 그룹
+
+    cStepMtx <- aZoidMtx[,2:6] - aZoidMtx[,1:5]
+    fStepMtx <- t(apply( aZoidMtx ,1 ,function(aZoid){ aZoid-gEnv$zhF[nrow(gEnv$zhF),] }))
+
+    fltCnt <- rep( 0 ,nrow(aZoidMtx) )
+
+    # colVal ,colVal.f
+    for( aIdx in 1:nrow(aZoidMtx) ){
+        for( cIdx in 1:6 ){
+            fltCnt[aIdx] <- fltCnt[aIdx] + sum( uAnaCutData$colVal[[cIdx]]["banVal"]%in%aZoidMtx[aIdx,cIdx] )
+            fltCnt[aIdx] <- fltCnt[aIdx] + sum( uAnaCutData$colVal.f[[cIdx]]["banVal"]%in%fStepMtx[aIdx,cIdx] )
+        }
+    }
+    # colVal.c
+    for( aIdx in 1:nrow(aZoidMtx) ){
+        for( cIdx in 1:5 ){
+            fltCnt[aIdx] <- fltCnt[aIdx] + sum( uAnaCutData$colVal.c[[cIdx]]["banVal"]%in%cStepMtx[aIdx,cIdx] )
+        }
+    }
+
+    # valPtn ,valPtn.f
+    for( aIdx in 1:nrow(aZoidMtx) ){
+        # uAnaCutData$valPtn
+        for( idx in seq_len(length(uAnaCutData$valPtn)) ) {
+            matCnt <- chkHaveSeq( fStepMtx[aIdx,] ,uAnaCutData$valPtn[[idx]] )
+            if( matCnt>0 ){
+                fltCnt[aIdx] <- fltCnt[aIdx] + 1    # 사실 matCnt 갯수대로 추가해도 될 듯.
+            }
+        }
+        for( idx in seq_len(length(uAnaCutData$valPtn.f)) ) {
+            matCnt <- chkHaveSeq( fStepMtx[aIdx,] ,uAnaCutData$valPtn.f[[idx]] )
+            if( matCnt>0 ){
+                fltCnt[aIdx] <- fltCnt[aIdx] + 1    # 사실 matCnt 갯수대로 추가해도 될 듯.
+            }
+        }
+    }
+
+    # zWidth
+    for( aIdx in 1:nrow(aZoidMtx) ){
+        azWidth <- aZoidMtx[aIdx,6] - aZoidMtx[aIdx,1]
+        for( idx in seq_len(length(uAnaCutData$zWidth)) ){
+            if( azWidth %in% uAnaCutData$zWidth[[idx]] ){
+                fltCnt[aIdx] <- fltCnt[aIdx] + 1
+            }
+        }
+    }
+
+    return( fltCnt )
+
+} # stdCutByUA()
+
 
 #   2,2,2(?) 연속인데 또 연속?
 uaUtil.lastReb <- function( val ){

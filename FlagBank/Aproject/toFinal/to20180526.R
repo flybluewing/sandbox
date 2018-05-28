@@ -217,14 +217,14 @@ finalCut <- function( gEnv ,allIdx ){
 	#			firstColVal <- sort(unique(gEnv$allZoidMtx[allIdxF,1]))
 	zoidMtx <- gEnv$zhF[(gEnv$zhF[,1]==1),,drop=F]
 	uAnaObj <- getUnitAnalyzer( zoidMtx ,pECol=1 )		;uAnaObjLst[["1stC1"]] <- uAnaObj
-	rptUnitAnalyze( uAnaObj ,pTitle="next zWidth" ,pRptFile="./report/rptUA_1stC1" )
+	rptUnitAnalyze( uAnaObj ,pTitle="1stC1" ,pRptFile="./report/rptUA_1stC1" )
 	cutObj <- finalCut.1stC1( gEnv ,allIdxF ,uAnaObj ,localZhF=zoidMtx )	;table(cutObj$chkCnt)
 	allIdxF <- cutObj$allIdxF
 	cat(sprintf("allIdxF %d\n",length(allIdxF)))
 
 	zoidMtx <- gEnv$zhF[(gEnv$zhF[,1]==2),,drop=F]
 	uAnaObj <- getUnitAnalyzer( zoidMtx ,pECol=1 )		;uAnaObjLst[["1stC2"]] <- uAnaObj
-	rptUnitAnalyze( uAnaObj ,pTitle="next zWidth" ,pRptFile="./report/rptUA_1stC2" )
+	rptUnitAnalyze( uAnaObj ,pTitle="1stC2" ,pRptFile="./report/rptUA_1stC2" )
 	cutObj <- finalCut.1stC2( gEnv ,allIdxF ,uAnaObj ,localZhF=zoidMtx )	;table(cutObj$chkCnt)
 	allIdxF <- cutObj$allIdxF
 	cat(sprintf("allIdxF %d\n",length(allIdxF)))
@@ -238,14 +238,14 @@ finalCut <- function( gEnv ,allIdx ){
 
 	zoidMtx <- gEnv$zhF[(gEnv$zhF[,1]==7),,drop=F]
 	uAnaObj <- getUnitAnalyzer( zoidMtx ,pECol=1 )		;uAnaObjLst[["1stC7"]] <- uAnaObj
-	rptUnitAnalyze( uAnaObj ,pTitle="next zWidth" ,pRptFile="./report/rptUA_1stC7" )
+	rptUnitAnalyze( uAnaObj ,pTitle="1stC7" ,pRptFile="./report/rptUA_1stC7" )
 	cutObj <- finalCut.1stC7( gEnv ,allIdxF ,uAnaObj ,localZhF=zoidMtx )	;table(cutObj$chkCnt)
 	allIdxF <- cutObj$allIdxF
 	cat(sprintf("allIdxF %d\n",length(allIdxF)))
 
 	zoidMtx <- gEnv$zhF[(gEnv$zhF[,1]==8),,drop=F]
 	uAnaObj <- getUnitAnalyzer( zoidMtx ,pECol=1 )		;uAnaObjLst[["1stC8"]] <- uAnaObj
-	rptUnitAnalyze( uAnaObj ,pTitle="next zWidth" ,pRptFile="./report/rptUA_1stC8" )
+	rptUnitAnalyze( uAnaObj ,pTitle="1stC8" ,pRptFile="./report/rptUA_1stC8" )
 	cutObj <- finalCut.1stC8( gEnv ,allIdxF ,uAnaObj ,localZhF=zoidMtx )	;table(cutObj$chkCnt)
 	allIdxF <- cutObj$allIdxF
 	cat(sprintf("allIdxF %d\n",length(allIdxF)))
@@ -274,7 +274,7 @@ finalCut <- function( gEnv ,allIdx ){
 	#			firstColVal <- sort(unique(gEnv$allZoidMtx[allIdxF,6]-gEnv$allZoidMtx[allIdxF,1]))
 	zoidWidth <- gEnv$zhF[,6]-gEnv$zhF[,1]
 	zoidMtx <- gEnv$zhF[zoidWidth==41,,drop=F]
-	uAnaObj <- getUnitAnalyzer( zoidMtx ,pECol=NULL )		;uAnaObjLst[["wdth41"]] <- uAnaObj
+	uAnaObj <- getUnitAnalyzer( zoidMtx ,pECol=NULL ,pWidth=F )		;uAnaObjLst[["wdth41"]] <- uAnaObj
 	rptUnitAnalyze( uAnaObj ,pTitle="wdth41" ,pRptFile="./report/rptUA_wdth41" )
 	cutObj <- finalCut.wdth41( gEnv ,allIdxF ,uAnaObj ,localZhF=zoidMtx )
 	allIdxF <- cutObj$allIdxF
