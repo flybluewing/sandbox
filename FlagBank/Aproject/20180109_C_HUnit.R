@@ -875,6 +875,55 @@ uaUtil.seqReb <- function( pCodeMtx ,pECol=NULL ){
     return( fndLst )
 } # uaUtil.seqReb()
 
+assInterUAnaGrp <- function( gEnv ,allIdxF ,uAnaLstGrp ){
+    # getUAnaLstGrp() 변경과 연동 필요.
+
+    fltCntSum <- rep( 0 ,length(allIdxF) )
+
+    anaLst <- uAnaLstGrp$uAnaLst.rawData
+    for( uaIdx in 1:length(anaLst) ){
+        fltCnt <- anaLst[[uaIdx]]$getFltCnt( gEnv ,allIdxF )
+        fltCntSum <- fltCntSum + fltCnt
+    }
+    anaLst <- uAnaLstGrp$uAnaLst.rebCnt
+    for( uaIdx in 1:length(anaLst) ){
+        fltCnt <- anaLst[[uaIdx]]$getFltCnt( gEnv ,allIdxF )
+        fltCntSum <- fltCntSum + fltCnt
+    }
+    anaLst <- uAnaLstGrp$uAnaLst.colVal1
+    for( uaIdx in 1:length(anaLst) ){
+        fltCnt <- anaLst[[uaIdx]]$getFltCnt( gEnv ,allIdxF )
+        fltCntSum <- fltCntSum + fltCnt
+    }
+    anaLst <- uAnaLstGrp$uAnaLst.colVal3
+    for( uaIdx in 1:length(anaLst) ){
+        fltCnt <- anaLst[[uaIdx]]$getFltCnt( gEnv ,allIdxF )
+        fltCntSum <- fltCntSum + fltCnt
+    }
+    anaLst <- uAnaLstGrp$uAnaLst.colVal4
+    for( uaIdx in 1:length(anaLst) ){
+        fltCnt <- anaLst[[uaIdx]]$getFltCnt( gEnv ,allIdxF )
+        fltCntSum <- fltCntSum + fltCnt
+    }
+    anaLst <- uAnaLstGrp$uAnaLst.colVal6
+    for( uaIdx in 1:length(anaLst) ){
+        fltCnt <- anaLst[[uaIdx]]$getFltCnt( gEnv ,allIdxF )
+        fltCntSum <- fltCntSum + fltCnt
+    }
+    anaLst <- uAnaLstGrp$uAnaLst.nextZW
+    for( uaIdx in 1:length(anaLst) ){
+        fltCnt <- anaLst[[uaIdx]]$getFltCnt( gEnv ,allIdxF )
+        fltCntSum <- fltCntSum + fltCnt
+    }
+    anaLst <- uAnaLstGrp$uAnaLst.zw
+    for( uaIdx in 1:length(anaLst) ){
+        fltCnt <- anaLst[[uaIdx]]$getFltCnt( gEnv ,allIdxF )
+        fltCntSum <- fltCntSum + fltCnt
+    }
+
+    return( fltCntSum )
+
+} # assInterUAnaGrp( )
 
 getUAnaLstGrp <- function( gEnv ,allIdxF ,pDefaultCut=TRUE ){
 
@@ -911,7 +960,7 @@ getUAnaLstGrp <- function( gEnv ,allIdxF ,pDefaultCut=TRUE ){
 	# ==============================================================================
 	# colVal
 	colVal <- sort(unique(gEnv$allZoidMtx[allIdxF,1]))
-	uAnaLst.colVal1 <- getUAnaLst.colVal( gEnv ,col=1 ,colVal=colVal )
+    uAnaLst.colVal <- append( uAnaLst.colVal ,uAnaLst.colVal1 )
     if( pDefaultCut ){
         tStmp <- Sys.time()
         for( uaIdx in 1:length(uAnaLst.colVal1) ){
@@ -1006,18 +1055,18 @@ getUAnaLstGrp <- function( gEnv ,allIdxF ,pDefaultCut=TRUE ){
 
 
 
-    uAnaLstGrp <- list()
-
+    uAnaLstGrp <- list( )
     uAnaLstGrp$uAnaLst.rawData <- uAnaLst.rawData
-
     uAnaLstGrp$uAnaLst.rebCnt <- uAnaLst.rebCnt
-
     uAnaLstGrp$uAnaLst.colVal1 <- uAnaLst.colVal1
     uAnaLstGrp$uAnaLst.colVal3 <- uAnaLst.colVal3
     uAnaLstGrp$uAnaLst.colVal4 <- uAnaLst.colVal4
     uAnaLstGrp$uAnaLst.colVal6 <- uAnaLst.colVal6
-
-
+    uAnaLstGrp$uAnaLst.nextZW <- uAnaLst.nextZW
+    uAnaLstGrp$uAnaLst.zw <- uAnaLst.zw
+    if( pDefaultCut ){
+        uAnaLstGrp$allIdxF <- allIdxF
+    }
 
     return( uAnaLstGrp )
 
@@ -1202,13 +1251,17 @@ getUAna.colVal <- function( gEnv ,col ,colVal ,cutThld=2 ){
         rptUnitAnalyze( ruObj$uAnaObj ,pTitle=title ,pRptFile=rptFileName )
     } # ruObj$report()
     ruObj$getFltCnt <- function( gEnv ,allIdxF ){ # filt에 걸린 갯수 측정.
+        fltCnt <- rep( 0 ,length(allIdxF) )
+        
         awIdx <- which( gEnv$allZoidMtx[allIdxF,ruObj$col]==ruObj$colVal )
+        if( 0==length(awIdx) ){
+            return( fltCnt )    
+        }
         awZoidMtx <- gEnv$allZoidMtx[allIdxF[awIdx] ,,drop=F ]
 
         uAnaCutData <- getStdCutData_UnitAnaObj( ruObj$uAnaObj )
 
         fltCnt.aw <- stdFltCntByUA( gEnv ,uAnaCutData ,awZoidMtx )
-        fltCnt <- rep( 0 ,length(allIdxF) )
         fltCnt[awIdx] <- fltCnt.aw
         return( fltCnt )
     } # ruObj$getFltCnt()

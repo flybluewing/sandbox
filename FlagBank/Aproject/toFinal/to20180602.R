@@ -132,6 +132,13 @@ finalCut <- function( gEnv ,allIdx ){
 	allIdxF.bak <- allIdxF
 
 	# QQE working
+	tStmp <- Sys.time()
+	uAnaLstGrp <- getUAnaLstGrp( gEnv ,allIdxF ,pDefaultCut=TRUE )
+	allIdxF <-uAnaLstGrp$allIdxF
+	cat(sprintf("allIdxF %d\n",length(allIdxF)))
+	tDiff <- Sys.time() - tStmp
+
+
 
 	# ==============================================================================
 	# zoid width : 현재 width 다음에 나타난 width 들의 특성.
