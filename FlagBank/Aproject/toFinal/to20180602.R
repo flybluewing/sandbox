@@ -131,6 +131,7 @@ finalCut <- function( gEnv ,allIdx ){
 
 	allIdxF.bak <- allIdxF
 
+	# QQE working
 
 	# ==============================================================================
 	# zoid width : 현재 width 다음에 나타난 width 들의 특성.
