@@ -58,7 +58,7 @@ finalCut <- function( gEnv ,allIdx ){
     allIdxF <- allIdxF[flag]
     cat(sprintf("allIdxF %d\n",length(allIdxF)))
 
-	
+
 
 	# --------------------------------------------
 	# anaColEndPtn()
@@ -131,41 +131,20 @@ finalCut <- function( gEnv ,allIdx ){
 
 	allIdxF.bak <- allIdxF
 
-	# QQE working
 	tStmp <- Sys.time()
 	uAnaLstGrp <- getUAnaLstGrp( gEnv ,allIdxF ,pDefaultCut=TRUE )
 	allIdxF <-uAnaLstGrp$allIdxF
 	cat(sprintf("allIdxF %d\n",length(allIdxF)))
 	tDiff <- Sys.time() - tStmp
 
-
-
-	# ==============================================================================
-	# zoid width : 현재 width 다음에 나타난 width 들의 특성.
-
-	idxSpan <- which( (gEnv$zhF[,6]-gEnv$zhF[,1])==(lastZoid[6]-lastZoid[1]) )
-	idxSpan <- idxSpan[1:(length(idxSpan)-1)]+1
-	zoidMtx <- gEnv$zhF[idxSpan,,drop=F]
-	uAnaObj <- getUnitAnalyzer( zoidMtx ,pECol=NULL )	;uAnaObjLst[["nextZWidth"]] <- uAnaObj
-	rptUnitAnalyze( uAnaObj ,pTitle="next zWidth" ,pRptFile="./report/rptUA_nextZWidth" )
-	cutObj <- finalCut.nextZWidth( gEnv ,allIdxF ,uAnaObj ,localZhF=zoidMtx )
-	allIdxF <- cutObj$allIdxF
+	tStmp <- Sys.time()
+	fltCntSum <- assInterUAnaGrp( gEnv ,allIdxF ,uAnaLstGrp )
+	allIdxF <-uAnaLstGrp$allIdxF
 	cat(sprintf("allIdxF %d\n",length(allIdxF)))
+	tDiff <- Sys.time() - tStmp
 
-	# ==============================================================================
-	# zoid width :   41(3896)   42(4030)
-	#			firstColVal <- sort(unique(gEnv$allZoidMtx[allIdxF,6]-gEnv$allZoidMtx[allIdxF,1]))
-	zoidWidth <- gEnv$zhF[,6]-gEnv$zhF[,1]
-	zoidMtx <- gEnv$zhF[zoidWidth==41,,drop=F]
-	uAnaObj <- getUnitAnalyzer( zoidMtx ,pECol=NULL ,pWidth=F )		;uAnaObjLst[["wdth41"]] <- uAnaObj
-	rptUnitAnalyze( uAnaObj ,pTitle="wdth41" ,pRptFile="./report/rptUA_wdth41" )
-	cutObj <- finalCut.wdth41( gEnv ,allIdxF ,uAnaObj ,localZhF=zoidMtx )
-	allIdxF <- cutObj$allIdxF
-	cat(sprintf("allIdxF %d\n",length(allIdxF)))
 
-	# stdCutByUnit( gEnv ,allIdxF ,uAnaObj ,localZhF=zoidMtx )
-	#	
-
+	# QQE working
 	# qqe working	0:		1:205,780
 
 	# loose.ban.colValSeqNext() 0.05%

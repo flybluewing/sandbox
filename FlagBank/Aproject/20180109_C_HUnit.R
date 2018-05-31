@@ -960,7 +960,7 @@ getUAnaLstGrp <- function( gEnv ,allIdxF ,pDefaultCut=TRUE ){
 	# ==============================================================================
 	# colVal
 	colVal <- sort(unique(gEnv$allZoidMtx[allIdxF,1]))
-    uAnaLst.colVal <- append( uAnaLst.colVal ,uAnaLst.colVal1 )
+    uAnaLst.colVal1 <- getUAnaLst.colVal( gEnv ,col=1 ,colVal=colVal )
     if( pDefaultCut ){
         tStmp <- Sys.time()
         for( uaIdx in 1:length(uAnaLst.colVal1) ){
