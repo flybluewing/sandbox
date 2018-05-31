@@ -132,17 +132,19 @@ finalCut <- function( gEnv ,allIdx ){
 	allIdxF.bak <- allIdxF
 
 	tStmp <- Sys.time()
-	uAnaLstGrp <- getUAnaLstGrp( gEnv ,allIdxF ,pDefaultCut=TRUE )
+	uAnaLstGrp <- getUAnaLstGrp( gEnv ,allIdxF ,pDefaultCut=TRUE ,pReport=FALSE ) # 한번 Cut한 후 레포트 생성하자.
 	allIdxF <-uAnaLstGrp$allIdxF
 	cat(sprintf("allIdxF %d\n",length(allIdxF)))
-	tDiff <- Sys.time() - tStmp
+	# tDiff <- Sys.time() - tStmp
 
-	tStmp <- Sys.time()
+	# tStmp <- Sys.time()
 	fltCntSum <- assInterUAnaGrp( gEnv ,allIdxF ,uAnaLstGrp )
-	allIdxF <-uAnaLstGrp$allIdxF
-	cat(sprintf("allIdxF %d\n",length(allIdxF)))
+	table(fltCntSum)
 	tDiff <- Sys.time() - tStmp
 
+	# save
+	# saveObj <- list( allIdxF=allIdxF ,fltCntSum=fltCntSum )
+	# save( saveObj ,file="Obj_saveObj.save")
 
 	# QQE working
 	# qqe working	0:		1:205,780
