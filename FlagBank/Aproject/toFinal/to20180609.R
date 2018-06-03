@@ -1,5 +1,5 @@
-# to20180526.R 최종접근
-source("./toFinal/to20180602_H.R")
+# to20180609.R 최종접근
+source("./toFinal/to20180609_H.R")
 
 # allIdx <- allIdxLst$allZoid.idx0
 finalCut <- function( gEnv ,allIdx ){
@@ -28,6 +28,7 @@ finalCut <- function( gEnv ,allIdx ){
 	#   806 14,20,23,31,37,38
 	#   807  6,10,18,25,34,35
 	#   808 15 21 31 32 41 43
+	#	809  6 11 15 17 23 40
 
 	# <recycle> 2개 이상 재현은 제외시키자.
     flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
@@ -35,23 +36,6 @@ finalCut <- function( gEnv ,allIdx ){
 				})	;kIdx<-head(which(!flag))
     allIdxF <- allIdxF[flag]
     cat(sprintf("allIdxF %d\n",length(allIdxF)))
-
-	# cStep 1이 또 나오려나?
-    flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
-					cStep <- aZoid[2:6]-aZoid[1:5]
-					return( all(cStep!=1) )
-				})	;kIdx<-head(which(!flag))
-    allIdxF <- allIdxF[flag]
-    cat(sprintf("allIdxF %d\n",length(allIdxF)))
-	
-	# zoid%%10 Q1 이 너무 많았다.
-    flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
-					rem <- aZoid%%10
-					return( 1>=sum(rem==1) )
-				})	;kIdx<-head(which(!flag))
-    allIdxF <- allIdxF[flag]
-    cat(sprintf("allIdxF %d\n",length(allIdxF)))
-
 
 	# <recycle> zoid[1] 은 9 이내로 집중
     flag <- gEnv$allZoidMtx[allIdxF,1] <= 9	;kIdx<-head(which(!flag))
@@ -63,12 +47,12 @@ finalCut <- function( gEnv ,allIdx ){
 	# --------------------------------------------
 	# anaColEndPtn()
 	colPtnLst <- anaColEndPtn( gEnv$zhF ,pDebug=T )
-	# colPtnLst[[1]]$val   6 11 18 17  7
-	# colPtnLst[[2]]$val  22 14 13
-	# colPtnLst[[3]]$val  25 16 17 11 24 34 11
-	# colPtnLst[[4]]$val  33 36
-	# colPtnLst[[5]]$val  41 34
-	# colPtnLst[[6]]$val  45 39 30
+	# colPtnLst[[1]]$val  10
+	# colPtnLst[[2]]$val  19
+	# colPtnLst[[3]]$val  28 11
+	# colPtnLst[[4]]$val  35  3
+	# colPtnLst[[5]]$val  45 37 22 31
+	# colPtnLst[[6]]$val  39 45 36 42 43 45 42 44 37
 
 	# <recycle> 마지막 값이 2개 이상 일치 배제
 	banVal <- sapply( colPtnLst ,function(p){return( if(0<length(p$val)) p$val[1] else 0 )})
@@ -78,17 +62,17 @@ finalCut <- function( gEnv ,allIdx ){
 				})	;kIdx<-head(which(!flag))
     allIdxF <- allIdxF[flag]
     cat(sprintf("allIdxF %d\n",length(allIdxF)))
-	
+
 
 	# --------------------------------------------
 	# colValSeqNext()
 	cvSeqNextLst <- colValSeqNext( gEnv$zhF ,pColSize=2 )
 	#	hold point
-	#		cvSeqNextLst[[1]] zoid[1:2] -  7 18
-	#		cvSeqNextLst[[2]] zoid[2:3] - 28 34
-	#		cvSeqNextLst[[3]] zoid[3:4] - 37 38
-	#		cvSeqNextLst[[4]] zoid[4:5] - 31 44
-	#		cvSeqNextLst[[5]] zoid[5:6] - 34 44
+	#		cvSeqNextLst[[1]] zoid[1:2] - 12 19
+	#		cvSeqNextLst[[2]] zoid[2:3] - 17 20
+	#		cvSeqNextLst[[3]] zoid[3:4] - 11 16
+	#		cvSeqNextLst[[4]] zoid[4:5] -  4 10
+	#		cvSeqNextLst[[5]] zoid[5:6] - 12 24
 
 	# <recycle> 둘 중 하나라도 일치하는 게 총 3개 이상.
 	matLst <- lapply( cvSeqNextLst ,function(p){
@@ -122,9 +106,9 @@ finalCut <- function( gEnv ,allIdx ){
 
 	cvSeqNextLst <- colValSeqNext( gEnv$zhF ,pColSize=3 )
 	#	hold point
-	#		cvSeqNextLst[[2]] zoid[2:4] - 18 32 40
+	#		cvSeqNextLst[[2]] zoid[2:4] -  7 12 28
     flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
-					return( all(aZoid[2:4]!=c(18,32,40)) )
+					return( all(aZoid[2:4]!=c( 7 ,12 ,28)) )
 				})	;kIdx<-head(which(!flag))
     allIdxF <- allIdxF[flag]
     cat(sprintf("allIdxF %d\n",length(allIdxF)))

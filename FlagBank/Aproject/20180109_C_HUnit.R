@@ -399,6 +399,7 @@ getUnitAnalyzer <- function( pMtx ,pECol=NULL ,pWidth=TRUE ){
     uAnaObj$colValBanLst.f <- colValBanLst.f
     uAnaObj$valPtnBanLst.f <- valPtnBanLst.f
     uAnaObj$colValBanLst.c <- colValBanLst.c
+    uAnaObj$colValBanLst.c <- list()
     uAnaObj$widthBanLst <- widthBanLst
     uAnaObj$orthoBanLst <- orthoBanLst
     uAnaObj$dInfo <- dInfo
@@ -609,16 +610,133 @@ getStdCutData_UnitAnaObj <- function( uAnaObj ){
 
 } # getStdCutData_UnitAnaObj( )
 
+getStdCutDataGrp <- function( uAnaLstGrp ){
 
-# uAnaCutData <- getStdCutData_UnitAnaObj( uAnaObj )
-# aZoidMtx <- gEnv$allZoidMtx[allIdxF,]
+    iGetColDf <- function( valLst ,gName ){
+        tDf <- data.frame( gName=character(0) ,fName=character(0) ,col=integer(0) ,banVal=integer(0) )
+        for( idx in seq_len(length(valLst)) ){
+            if( 0==nrow(valLst[[idx]]) ){
+                next
+            }
+            df <- data.frame( gName=gName ,fName=valLst[[idx]]$fName ,col=idx ,banVal=valLst[[idx]]$banVal )
+            tDf <- rbind( tDf ,df )
+        }
+        return( tDf )
+    } # iGetColDf()
+    iGetWidthDf <- function( valLst ,gName ){
+        tDf <- data.frame( gName=character(0) ,banVal=integer(0) )
+        for( idx in seq_len(length(valLst)) ){
+            if( 0==length(valLst[[idx]]) ){
+                next
+            }
+            df <- data.frame( gName=gName ,banVal=valLst[[idx]] )
+            tDf <- rbind( tDf ,df )
+        }
+        return( tDf )
+    } # iGetWidthDf()
 
-stdFltCntByUA <- function( gEnv ,uAnaCutData ,aZoidMtx ){    # aZoidMtx 는 allZoidMtx에서 이미 해당 조건을 만족시킨 그룹
+
+    df.colVal   <- data.frame( gName=character(0) ,fName=character(0) ,col=integer() ,banVal=integer(0) )
+    df.fStep    <- data.frame( gName=character(0) ,fName=character(0) ,col=integer() ,banVal=integer(0) )
+    df.cStep    <- data.frame( gName=character(0) ,fName=character(0) ,col=integer() ,banVal=integer(0) )
+    df.width    <- data.frame( gName=character(0) ,banVal=integer(0) )
+    # valPtn은 어찌 표현할 방법이..
+
+    uAnaLst <- uAnaLstGrp$uAnaLst.rawData
+    for( idx in seq_len(length(uAnaLst)) ){
+        stdCut <- getStdCutData_UnitAnaObj( uAnaLst[[idx]]$uAnaObj )
+        # colVal
+        df.colVal   <- rbind( df.colVal,iGetColDf( stdCut$colVal,uAnaLst[[idx]]$idStr ) )
+        df.fStep    <- rbind( df.fStep ,iGetColDf( stdCut$fStep ,uAnaLst[[idx]]$idStr ) )
+        df.cStep    <- rbind( df.cStep ,iGetColDf( stdCut$cStep ,uAnaLst[[idx]]$idStr ) )
+        df.width    <- rbind( df.width ,iGetWidthDf( stdCut$zWidth ,uAnaLst[[idx]]$idStr ) )
+    }
+
+    uAnaLst <- uAnaLstGrp$uAnaLst.rebCnt
+    for( idx in seq_len(length(uAnaLst)) ){
+        stdCut <- getStdCutData_UnitAnaObj( uAnaLst[[idx]]$uAnaObj )
+        # colVal
+        df.colVal   <- rbind( df.colVal,iGetColDf( stdCut$colVal,uAnaLst[[idx]]$idStr ) )
+        df.fStep    <- rbind( df.fStep ,iGetColDf( stdCut$fStep ,uAnaLst[[idx]]$idStr ) )
+        df.cStep    <- rbind( df.cStep ,iGetColDf( stdCut$cStep ,uAnaLst[[idx]]$idStr ) )
+        df.width    <- rbind( df.width ,iGetWidthDf( stdCut$zWidth ,uAnaLst[[idx]]$idStr ) )
+    }
+
+    uAnaLst <- uAnaLstGrp$uAnaLst.colVal1
+    for( idx in seq_len(length(uAnaLst)) ){
+        stdCut <- getStdCutData_UnitAnaObj( uAnaLst[[idx]]$uAnaObj )
+        # colVal
+        df.colVal   <- rbind( df.colVal,iGetColDf( stdCut$colVal,uAnaLst[[idx]]$idStr ) )
+        df.fStep    <- rbind( df.fStep ,iGetColDf( stdCut$fStep ,uAnaLst[[idx]]$idStr ) )
+        df.cStep    <- rbind( df.cStep ,iGetColDf( stdCut$cStep ,uAnaLst[[idx]]$idStr ) )
+        df.width    <- rbind( df.width ,iGetWidthDf( stdCut$zWidth ,uAnaLst[[idx]]$idStr ) )
+    }
+
+    uAnaLst <- uAnaLstGrp$uAnaLst.colVal3
+    for( idx in seq_len(length(uAnaLst)) ){
+        stdCut <- getStdCutData_UnitAnaObj( uAnaLst[[idx]]$uAnaObj )
+        # colVal
+        df.colVal   <- rbind( df.colVal,iGetColDf( stdCut$colVal,uAnaLst[[idx]]$idStr ) )
+        df.fStep    <- rbind( df.fStep ,iGetColDf( stdCut$fStep ,uAnaLst[[idx]]$idStr ) )
+        df.cStep    <- rbind( df.cStep ,iGetColDf( stdCut$cStep ,uAnaLst[[idx]]$idStr ) )
+        df.width    <- rbind( df.width ,iGetWidthDf( stdCut$zWidth ,uAnaLst[[idx]]$idStr ) )
+    }
+
+    uAnaLst <- uAnaLstGrp$uAnaLst.colVal4
+    for( idx in seq_len(length(uAnaLst)) ){
+        stdCut <- getStdCutData_UnitAnaObj( uAnaLst[[idx]]$uAnaObj )
+        # colVal
+        df.colVal   <- rbind( df.colVal,iGetColDf( stdCut$colVal,uAnaLst[[idx]]$idStr ) )
+        df.fStep    <- rbind( df.fStep ,iGetColDf( stdCut$fStep ,uAnaLst[[idx]]$idStr ) )
+        df.cStep    <- rbind( df.cStep ,iGetColDf( stdCut$cStep ,uAnaLst[[idx]]$idStr ) )
+        df.width    <- rbind( df.width ,iGetWidthDf( stdCut$zWidth ,uAnaLst[[idx]]$idStr ) )
+    }
+
+    uAnaLst <- uAnaLstGrp$uAnaLst.colVal6
+    for( idx in seq_len(length(uAnaLst)) ){
+        stdCut <- getStdCutData_UnitAnaObj( uAnaLst[[idx]]$uAnaObj )
+        # colVal
+        df.colVal   <- rbind( df.colVal,iGetColDf( stdCut$colVal,uAnaLst[[idx]]$idStr ) )
+        df.fStep    <- rbind( df.fStep ,iGetColDf( stdCut$fStep ,uAnaLst[[idx]]$idStr ) )
+        df.cStep    <- rbind( df.cStep ,iGetColDf( stdCut$cStep ,uAnaLst[[idx]]$idStr ) )
+        df.width    <- rbind( df.width ,iGetWidthDf( stdCut$zWidth ,uAnaLst[[idx]]$idStr ) )
+    }
+
+    uAnaLst <- uAnaLstGrp$uAnaLst.nextZW
+    for( idx in seq_len(length(uAnaLst)) ){
+        stdCut <- getStdCutData_UnitAnaObj( uAnaLst[[idx]]$uAnaObj )
+        # colVal
+        df.colVal   <- rbind( df.colVal,iGetColDf( stdCut$colVal,uAnaLst[[idx]]$idStr ) )
+        df.fStep    <- rbind( df.fStep ,iGetColDf( stdCut$fStep ,uAnaLst[[idx]]$idStr ) )
+        df.cStep    <- rbind( df.cStep ,iGetColDf( stdCut$cStep ,uAnaLst[[idx]]$idStr ) )
+        df.width    <- rbind( df.width ,iGetWidthDf( stdCut$zWidth ,uAnaLst[[idx]]$idStr ) )
+    }
+
+    uAnaLst <- uAnaLstGrp$uAnaLst.zw
+    for( idx in seq_len(length(uAnaLst)) ){
+        stdCut <- getStdCutData_UnitAnaObj( uAnaLst[[idx]]$uAnaObj )
+        # colVal
+        df.colVal   <- rbind( df.colVal,iGetColDf( stdCut$colVal,uAnaLst[[idx]]$idStr ) )
+        df.fStep    <- rbind( df.fStep ,iGetColDf( stdCut$fStep ,uAnaLst[[idx]]$idStr ) )
+        df.cStep    <- rbind( df.cStep ,iGetColDf( stdCut$cStep ,uAnaLst[[idx]]$idStr ) )
+        df.width    <- rbind( df.width ,iGetWidthDf( stdCut$zWidth ,uAnaLst[[idx]]$idStr ) )
+    }
+
+    return( list(df.colVal=df.colVal ,df.fStep=df.fStep ,df.cStep=df.cStep ,df.width=df.width ) )
+
+} # getStdCutDataGrp( )
+
+stdFltCntByUA <- function( gEnv ,uAnaCutData ,aZoidMtx ,pDebugIdx=NULL ){    # aZoidMtx 는 allZoidMtx에서 이미 해당 조건을 만족시킨 그룹
 
     cStepMtx <- aZoidMtx[,2:6,drop=F] - aZoidMtx[,1:5,drop=F]
     fStepMtx <- t(apply( aZoidMtx ,1 ,function(aZoid){ aZoid-gEnv$zhF[nrow(gEnv$zhF),] }))
 
     fltCnt <- rep( 0 ,nrow(aZoidMtx) )
+
+    dbg.colVal <- integer(0)    ;dbg.colval.f <- integer(0)     ;dbg.colval.c <- integer(0)
+    dbg.valPtn <- integer(0)    ;dgb.valPtn.f <- integer(0)
+    dgb.azWidth <- integer(0)
+
 
     # colVal ,colVal.f
     for( aIdx in 1:nrow(aZoidMtx) ){
@@ -670,7 +788,6 @@ stdFltCntByUA <- function( gEnv ,uAnaCutData ,aZoidMtx ){    # aZoidMtx 는 allZo
     return( fltCnt )
 
 } # stdCutByUA()
-
 
 #   2,2,2(?) 연속인데 또 연속?
 uaUtil.lastReb <- function( val ){
@@ -1364,7 +1481,7 @@ valTest <- function( gEnv ){
         tEnv <- gEnv
         tEnv$zhF <- gEnv$zhF[1:(tIdx-1),]
         tEnv$allZoidMtx <- gEnv$zhF[tIdx,,drop=F]
-        uAnaLstGrp <- getUAnaLstGrp( tEnv ,1 ,pDefaultCut=FALSE )
+        uAnaLstGrp <- getUAnaLstGrp( tEnv ,1 ,pDefaultCut=FALSE ,pReport=F )
         fltCntSum <- assInterUAnaGrp( tEnv ,1 ,uAnaLstGrp )
         fltSum[tIdx] <- fltCntSum
     }
