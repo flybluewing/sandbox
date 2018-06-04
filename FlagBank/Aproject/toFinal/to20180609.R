@@ -69,11 +69,6 @@ finalCut <- function( gEnv ,allIdx ){
     cat(sprintf("allIdxF %d\n",length(allIdxF)))
 
 
-	# 31 ,xx ,32 ,xx ,33(?)
-	flag <- gEnv$allZoidMtx[allIdxF,4]!=33	;kIdx<-head(which(!flag))
-    allIdxF <- allIdxF[flag]
-    cat(sprintf("allIdxF %d\n",length(allIdxF)))
-
 	# <recycle> 2개 이상 재현은 제외시키자.
     flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
 					return( 2>sum(aZoid %in% lastZoid) )
