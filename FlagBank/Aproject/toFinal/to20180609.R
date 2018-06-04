@@ -30,6 +30,50 @@ finalCut <- function( gEnv ,allIdx ){
 	#   808 15 21 31 32 41 43
 	#	809  6 11 15 17 23 40
 
+	# zoid[4:6] 17+23=40.. 재발하기 어렵겠지.
+    flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+					for( cIdx in 1:4 ){
+						if( aZoid[cIdx+2]==(aZoid[cIdx]+aZoid[cIdx+1]) ){
+							return(FALSE)
+						}
+					}
+					return(TRUE)
+				})	;kIdx<-head(which(!flag))
+    allIdxF <- allIdxF[flag]
+    cat(sprintf("allIdxF %d\n",length(allIdxF)))
+
+	# 14,20 15,21.. cStep 계속 동일? (좀 과한가?)
+	banCStep <- gEnv$zhF[808,2:6] - gEnv$zhF[808,1:5]
+    flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+					cStep <- aZoid[2:6] - aZoid[1:5]
+					return( all(cStep!=banCStep) )
+				})	;kIdx<-head(which(!flag))
+    allIdxF <- allIdxF[flag]
+    cat(sprintf("allIdxF %d\n",length(allIdxF)))
+
+	# 31 ,xx ,32 ,xx ,33(?)
+	flag <- gEnv$allZoidMtx[allIdxF,4]!=33	;kIdx<-head(which(!flag))
+    allIdxF <- allIdxF[flag]
+    cat(sprintf("allIdxF %d\n",length(allIdxF)))
+
+	# 21 ,xx ,20 ,xx ,19(?)
+	flag <- gEnv$allZoidMtx[allIdxF,2]!=19	;kIdx<-head(which(!flag))
+    allIdxF <- allIdxF[flag]
+    cat(sprintf("allIdxF %d\n",length(allIdxF)))
+
+	# 
+    flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+					return( all(aZoid[1:2]!=c(6,11)) )
+				})	;kIdx<-head(which(!flag))
+    allIdxF <- allIdxF[flag]
+    cat(sprintf("allIdxF %d\n",length(allIdxF)))
+
+
+	# 31 ,xx ,32 ,xx ,33(?)
+	flag <- gEnv$allZoidMtx[allIdxF,4]!=33	;kIdx<-head(which(!flag))
+    allIdxF <- allIdxF[flag]
+    cat(sprintf("allIdxF %d\n",length(allIdxF)))
+
 	# <recycle> 2개 이상 재현은 제외시키자.
     flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
 					return( 2>sum(aZoid %in% lastZoid) )
