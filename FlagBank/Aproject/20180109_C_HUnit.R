@@ -749,7 +749,8 @@ stdFltCntByUA <- function( gEnv ,uAnaCutData ,aZoidMtx ,pDebugIdx=NULL ){    # a
                 }
             }
             if( 0<nrow(uAnaCutData$colVal.f[[cIdx]]["banVal"]) ){
-                fltCnt[aIdx] <- fltCnt[aIdx] + sum( uAnaCutData$colVal.f[[cIdx]]["banVal"]==fStepMtx[aIdx,cIdx] )
+				cnt <- sum( uAnaCutData$colVal.f[[cIdx]]["banVal"]==fStepMtx[aIdx,cIdx] )
+				fltCnt[aIdx] <- fltCnt[aIdx] + cnt
                 if( !is.null(pDebugIdx) && (aIdx==pDebugIdx) ){
                     dbg.colVal.f <- dbg.colVal.f + cnt
                 }
@@ -806,14 +807,27 @@ stdFltCntByUA <- function( gEnv ,uAnaCutData ,aZoidMtx ,pDebugIdx=NULL ){    # a
     }
 
     rObj <- list( fltCnt=fltCnt )
+	# rObj$dbg.* : pDebugIdx 가 NULL이라면 모두 0 값.
+	rObj$dbg.colVal <- dbg.colVal   ;rObj$dbg.colVal.f <- dbg.colVal.f  ;rObj$dbg.colVal.c <- dbg.colVal.c
+	rObj$dbg.valPtn <- dbg.valPtn   ;rObj$dgb.valPtn.f <- dgb.valPtn.f
+	rObj$dgb.azWidth<- dgb.azWidth
+
+    return( rObj )
+
+} # stdFltCntByUA()
+
+stdFltCntByUA.rObj.empty <- function( fltLen ){	# 텅 빈 rObj 얻기위해..
+
+    rObj <- list( fltCnt=rep(0,fltLen) )
     if( !is.null(pDebugIdx) ){
-        rObj$dbg.colVal <- dbg.colVal   ;rObj$dbg.colVal.f <- dbg.colVal.f  ;rObj$dbg.colVal.c <- dbg.colVal.c
-        rObj$dbg.valPtn <- dbg.valPtn   ;rObj$dgb.valPtn.f <- dgb.valPtn.f
-        rObj$dgb.azWidth<- dgb.azWidth
+        rObj$dbg.colVal <- 0   ;rObj$dbg.colVal.f <- 0  ;rObj$dbg.colVal.c <- 0
+        rObj$dbg.valPtn <- 0   ;rObj$dgb.valPtn.f <- 0
+        rObj$dgb.azWidth<- 0
     }
     return( rObj )
 
-} # stdCutByUA()
+} # stdFltCntByUA.rObj.empty()
+
 
 #   2,2,2(?) 연속인데 또 연속?
 uaUtil.lastReb <- function( val ){
@@ -1027,7 +1041,7 @@ assInterUAnaGrp <- function( gEnv ,allIdxF ,uAnaLstGrp ,pDebugIdx=NULL ){
     anaLst <- uAnaLstGrp$uAnaLst.rawData
     fltCnt <- 0
     for( uaIdx in seq_len(length(anaLst)) ){
-        fltCnt <- fltCnt + anaLst[[uaIdx]]$getFltCnt( gEnv ,allIdxF ,pDebugIdx )
+        fltCnt <- fltCnt + anaLst[[uaIdx]]$getFltCnt( gEnv ,allIdxF ,pDebugIdx )$fltCnt
     }
     fltCntSum <- fltCntSum + fltCnt
     dgbObj <- list( fltCnt=fltCnt )
@@ -1036,7 +1050,7 @@ assInterUAnaGrp <- function( gEnv ,allIdxF ,uAnaLstGrp ,pDebugIdx=NULL ){
     anaLst <- uAnaLstGrp$uAnaLst.rebCnt
     fltCnt <- 0
     for( uaIdx in seq_len(length(anaLst)) ){
-        fltCnt <- fltCnt + anaLst[[uaIdx]]$getFltCnt( gEnv ,allIdxF ,pDebugIdx )
+        fltCnt <- fltCnt + anaLst[[uaIdx]]$getFltCnt( gEnv ,allIdxF ,pDebugIdx )$fltCnt
     }
     fltCntSum <- fltCntSum + fltCnt
     dgbObj <- list( fltCnt=fltCnt )
@@ -1045,7 +1059,7 @@ assInterUAnaGrp <- function( gEnv ,allIdxF ,uAnaLstGrp ,pDebugIdx=NULL ){
     anaLst <- uAnaLstGrp$uAnaLst.colVal1
     fltCnt <- 0
     for( uaIdx in seq_len(length(anaLst)) ){
-        fltCnt <- fltCnt + anaLst[[uaIdx]]$getFltCnt( gEnv ,allIdxF ,pDebugIdx )
+        fltCnt <- fltCnt + anaLst[[uaIdx]]$getFltCnt( gEnv ,allIdxF ,pDebugIdx )$fltCnt
     }
     fltCntSum <- fltCntSum + fltCnt
     dgbObj <- list( fltCnt=fltCnt )
@@ -1054,7 +1068,7 @@ assInterUAnaGrp <- function( gEnv ,allIdxF ,uAnaLstGrp ,pDebugIdx=NULL ){
     anaLst <- uAnaLstGrp$uAnaLst.colVal3
     fltCnt <- 0
     for( uaIdx in seq_len(length(anaLst)) ){
-        fltCnt <- fltCnt + anaLst[[uaIdx]]$getFltCnt( gEnv ,allIdxF ,pDebugIdx )
+        fltCnt <- fltCnt + anaLst[[uaIdx]]$getFltCnt( gEnv ,allIdxF ,pDebugIdx )$fltCnt
     }
     fltCntSum <- fltCntSum + fltCnt
     dgbObj <- list( fltCnt=fltCnt )
@@ -1063,7 +1077,7 @@ assInterUAnaGrp <- function( gEnv ,allIdxF ,uAnaLstGrp ,pDebugIdx=NULL ){
     anaLst <- uAnaLstGrp$uAnaLst.colVal4
     fltCnt <- 0
     for( uaIdx in seq_len(length(anaLst)) ){
-        fltCnt <- fltCnt + anaLst[[uaIdx]]$getFltCnt( gEnv ,allIdxF ,pDebugIdx )
+        fltCnt <- fltCnt + anaLst[[uaIdx]]$getFltCnt( gEnv ,allIdxF ,pDebugIdx )$fltCnt
     }
     fltCntSum <- fltCntSum + fltCnt
     dgbObj <- list( fltCnt=fltCnt )
@@ -1072,7 +1086,7 @@ assInterUAnaGrp <- function( gEnv ,allIdxF ,uAnaLstGrp ,pDebugIdx=NULL ){
     anaLst <- uAnaLstGrp$uAnaLst.colVal6
     fltCnt <- 0
     for( uaIdx in seq_len(length(anaLst)) ){
-        fltCnt <- fltCnt + anaLst[[uaIdx]]$getFltCnt( gEnv ,allIdxF ,pDebugIdx )
+        fltCnt <- fltCnt + anaLst[[uaIdx]]$getFltCnt( gEnv ,allIdxF ,pDebugIdx )$fltCnt
     }
     fltCntSum <- fltCntSum + fltCnt
     dgbObj <- list( fltCnt=fltCnt )
@@ -1081,7 +1095,7 @@ assInterUAnaGrp <- function( gEnv ,allIdxF ,uAnaLstGrp ,pDebugIdx=NULL ){
     anaLst <- uAnaLstGrp$uAnaLst.nextZW
     fltCnt <- 0
     for( uaIdx in seq_len(length(anaLst)) ){
-        fltCnt <- fltCnt + anaLst[[uaIdx]]$getFltCnt( gEnv ,allIdxF ,pDebugIdx )
+        fltCnt <- fltCnt + anaLst[[uaIdx]]$getFltCnt( gEnv ,allIdxF ,pDebugIdx )$fltCnt
     }
     fltCntSum <- fltCntSum + fltCnt
     dgbObj <- list( fltCnt=fltCnt )
@@ -1090,7 +1104,7 @@ assInterUAnaGrp <- function( gEnv ,allIdxF ,uAnaLstGrp ,pDebugIdx=NULL ){
     anaLst <- uAnaLstGrp$uAnaLst.zw
     fltCnt <- 0
     for( uaIdx in seq_len(length(anaLst)) ){
-        fltCnt <- fltCnt + anaLst[[uaIdx]]$getFltCnt( gEnv ,allIdxF ,pDebugIdx )
+        fltCnt <- fltCnt + anaLst[[uaIdx]]$getFltCnt( gEnv ,allIdxF ,pDebugIdx )$fltCnt
     }
     fltCntSum <- fltCntSum + fltCnt
     dgbObj <- list( fltCnt=fltCnt )
@@ -1280,10 +1294,10 @@ uAna.rawData <- function( gEnv ,cutThld=2 ){ # uAnaLst.rawData() 필요할때가 있을
         uAnaCutData <- getStdCutData_UnitAnaObj( ruObj$uAnaObj )
 
         fltCutObj <- stdFltCntByUA( gEnv ,uAnaCutData ,awZoidMtx ,pDebugIdx )
-        return( fltCutObj$fltCnt )
+        return( fltCutObj )
     } # ruObj$getFltCnt()
     ruObj$defaultCut <- function( gEnv ,allIdxF ){
-        fltCnt <- ruObj$getFltCnt( gEnv ,allIdxF )
+        fltCnt <- ruObj$getFltCnt( gEnv ,allIdxF )$fltCnt
         return( allIdxF[fltCnt<ruObj$cutThld] )
     } # ruObj$defaultCut()
 
@@ -1324,11 +1338,11 @@ uAna.nextZW <- function( gEnv ,cutThld=2 ){ # uAnaLst.nextZW() 필요할때가 있을까
         awZoidMtx <- gEnv$allZoidMtx[allIdxF ,,drop=F ]
         uAnaCutData <- getStdCutData_UnitAnaObj( ruObj$uAnaObj )
 
-        fltCnt <- stdFltCntByUA( gEnv ,uAnaCutData ,awZoidMtx ,pDebugIdx )$fltCnt
-        return( fltCnt )
+        fltCutObj <- stdFltCntByUA( gEnv ,uAnaCutData ,awZoidMtx ,pDebugIdx )
+        return( fltCutObj )
     } # ruObj$getFltCnt()
     ruObj$defaultCut <- function( gEnv ,allIdxF ){
-        fltCnt <- ruObj$getFltCnt( gEnv ,allIdxF )
+        fltCnt <- ruObj$getFltCnt( gEnv ,allIdxF )$fltCnt
         return( allIdxF[fltCnt<ruObj$cutThld] )
     } # ruObj$defaultCut()
 
@@ -1365,6 +1379,7 @@ getUAna.rebCnt <- function( gEnv ,rebIdx ,cutThld=2 ){
     ruObj <- list( idStr=sprintf("rebCnt%d",rebIdx) )
     ruObj$rebIdx <- rebIdx
     ruObj$cutThld <- cutThld
+	ruObj$lastZoid <- gEnv$zhF[nrow(gEnv$zhF),]
     ruObj$getWorkHMtx <- function( gEnv ){
         hSize <- nrow(gEnv$zhF)
         rebCnt <- rep( 0 ,hSize )
@@ -1381,24 +1396,33 @@ getUAna.rebCnt <- function( gEnv ,rebIdx ,cutThld=2 ){
         rptUnitAnalyze( ruObj$uAnaObj ,pTitle=title ,pRptFile=rptFileName )
     } # ruObj$report()
     ruObj$getFltCnt <- function( gEnv ,allIdxF ,pDebugIdx=NULL ){ # filt에 걸린 갯수 측정.
-        fltCnt <- rep( 0 ,length(allIdxF) )
         rebCnt <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function(aZoid){
-                        return( sum(aZoid %in% ruObj$uAnaObj$dInfo$dLast ) )
+                        return( sum(aZoid %in% ruObj$lastZoid ) )
                     })
         awIdx <- which( rebCnt==ruObj$rebIdx )
         if( 0==length(awIdx) ){
-            return( fltCnt )
+			return( stdFltCntByUA.rObj.empty(length(allIdxF)) )
         }
+		awIdx.debug <- NULL
+		if( !is.null(pDebugIdx) ){
+			rDebugIdx <- which( awIdx==pDebugIdx )
+			if( 0<length(rDebugIdx) ){
+				awIdx.debug <- rDebugIdx
+			}
+		}
         awZoidMtx <- gEnv$allZoidMtx[allIdxF[awIdx] ,,drop=F ]
 
         uAnaCutData <- getStdCutData_UnitAnaObj( ruObj$uAnaObj )
 
-        fltCnt.aw <- stdFltCntByUA( gEnv ,uAnaCutData ,awZoidMtx ,pDebugIdx )$fltCnt
-        fltCnt[awIdx] <- fltCnt.aw
-        return( fltCnt )
+		fltCntObj <- stdFltCntByUA( gEnv ,uAnaCutData ,awZoidMtx ,pDebugIdx=awIdx.debug )
+
+		fltCnt <- rep( 0 ,length(allIdxF) )
+        fltCnt[awIdx] <- fltCntObj$fltCnt
+		fltCntObj$fltCnt <- fltCnt	# 조건에 상관없이 모든 allIdxF 에 대응하는 fltCnt이어야 하므로.
+        return( fltCntObj )
     } # ruObj$getFltCnt()
     ruObj$defaultCut <- function( gEnv ,allIdxF ){ # filt에 걸린 갯수 측정.
-        fltCnt <- ruObj$getFltCnt( gEnv ,allIdxF )
+        fltCnt <- ruObj$getFltCnt( gEnv ,allIdxF )$fltCnt
         return( allIdxF[fltCnt<ruObj$cutThld] )
     } # ruObj$defaultCut()
 
@@ -1449,22 +1473,32 @@ getUAna.colVal <- function( gEnv ,col ,colVal ,cutThld=2 ){
         rptUnitAnalyze( ruObj$uAnaObj ,pTitle=title ,pRptFile=rptFileName )
     } # ruObj$report()
     ruObj$getFltCnt <- function( gEnv ,allIdxF ,pDebugIdx=NULL ){ # filt에 걸린 갯수 측정.
-        fltCnt <- rep( 0 ,length(allIdxF) )
-        
-        awIdx <- which( gEnv$allZoidMtx[allIdxF,ruObj$col]==ruObj$colVal )
+
+		awIdx <- which( gEnv$allZoidMtx[allIdxF,ruObj$col]==ruObj$colVal )
         if( 0==length(awIdx) ){
-            return( fltCnt )    
+            return( stdFltCntByUA.rObj.empty(length(allIdxF)) )
         }
+		awIdx.debug <- NULL
+		if( !is.null(pDebugIdx) ){
+			rDebugIdx <- which( awIdx==pDebugIdx )
+			if( 0<length(rDebugIdx) ){
+				awIdx.debug <- rDebugIdx
+			}
+		}
+
         awZoidMtx <- gEnv$allZoidMtx[allIdxF[awIdx] ,,drop=F ]
 
         uAnaCutData <- getStdCutData_UnitAnaObj( ruObj$uAnaObj )
 
-        fltCnt.aw <- stdFltCntByUA( gEnv ,uAnaCutData ,awZoidMtx ,pDebugIdx )$fltCnt
-        fltCnt[awIdx] <- fltCnt.aw
-        return( fltCnt )
+		fltCntObj <- stdFltCntByUA( gEnv ,uAnaCutData ,awZoidMtx ,pDebugIdx=awIdx.debug )
+		fltCnt <- rep( 0 ,length(allIdxF) )
+        fltCnt[awIdx] <- fltCntObj$fltCnt
+		fltCntObj$fltCnt <- fltCnt	# 조건에 상관없이 모든 allIdxF 에 대응하는 fltCnt이어야 하므로.
+        return( fltCntObj )
+
     } # ruObj$getFltCnt()
     ruObj$defaultCut <- function( gEnv ,allIdxF ){ # filt에 걸린 갯수 측정.
-        fltCnt <- ruObj$getFltCnt( gEnv ,allIdxF )
+        fltCnt <- ruObj$getFltCnt( gEnv ,allIdxF )$fltCnt
         return( allIdxF[fltCnt<ruObj$cutThld] )
     } # ruObj$defaultCut()
 
@@ -1515,19 +1549,22 @@ getUAna.zw <- function( gEnv ,zwVal ,cutThld=2 ){
         rptUnitAnalyze( ruObj$uAnaObj ,pTitle=title ,pRptFile=rptFileName )
     } # ruObj$report()
     ruObj$getFltCnt <- function( gEnv ,allIdxF ,pDebugIdx=NULL ){ # filt에 걸린 갯수 측정.
-        fltCnt <- rep( 0 ,length(allIdxF) )
+
         awIdx <- which( ruObj$zwVal==(gEnv$allZoidMtx[allIdxF,6]-gEnv$allZoidMtx[allIdxF,1]) )
         if( 0==length(awIdx) ){
-            return( fltCnt )
+            return( stdFltCntByUA.rObj.empty(length(allIdxF)) )
         }
         awZoidMtx <- gEnv$allZoidMtx[allIdxF[awIdx] ,,drop=F ]
         uAnaCutData <- getStdCutData_UnitAnaObj( ruObj$uAnaObj )
-        fltCnt.aw <- stdFltCntByUA( gEnv ,uAnaCutData ,awZoidMtx ,pDebugIdx )$fltCnt
-        fltCnt[awIdx] <- fltCnt.aw
-        return( fltCnt )
+		
+		fltCntObj <- stdFltCntByUA( gEnv ,uAnaCutData ,awZoidMtx ,pDebugIdx=awIdx.debug )
+		fltCnt <- rep( 0 ,length(allIdxF) )
+        fltCnt[awIdx] <- fltCntObj$fltCnt
+		fltCntObj$fltCnt <- fltCnt	# 조건에 상관없이 모든 allIdxF 에 대응하는 fltCnt이어야 하므로.
+        return( fltCntObj )
     } # ruObj$getFltCnt()
     ruObj$defaultCut <- function( gEnv ,allIdxF ){ # filt에 걸린 갯수 측정.
-        fltCnt <- ruObj$getFltCnt( gEnv ,allIdxF )
+        fltCnt <- ruObj$getFltCnt( gEnv ,allIdxF )$fltCnt
         return( allIdxF[fltCnt<ruObj$cutThld] )
     } # ruObj$defaultCut()
 
@@ -1564,6 +1601,9 @@ valTest <- function( gEnv ){
         }
     }
     apply( fltSumMtx ,2 ,table )
+
+	saveObj <- list( fltSum=fltSum ,dbgLst=dbgLst ,allIdxF=allIdxF )
+	save( saveObj ,file="Obj_saveObj.save" )
 
 } # valTest()
 
