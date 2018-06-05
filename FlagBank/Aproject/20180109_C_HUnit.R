@@ -733,7 +733,7 @@ stdFltCntByUA <- function( gEnv ,uAnaCutData ,aZoidMtx ,pDebugIdx=NULL ){    # a
 
     fltCnt <- rep( 0 ,nrow(aZoidMtx) )
 
-    dbg.colVal  <- 0    ;dbg.colval.f <- 0     ;dbg.colval.c <- 0
+    dbg.colVal  <- 0    ;dbg.colVal.f <- 0     ;dbg.colVal.c <- 0
     dbg.valPtn  <- 0    ;dgb.valPtn.f <- 0
     dgb.azWidth <- 0
 
@@ -751,7 +751,7 @@ stdFltCntByUA <- function( gEnv ,uAnaCutData ,aZoidMtx ,pDebugIdx=NULL ){    # a
             if( 0<nrow(uAnaCutData$colVal.f[[cIdx]]["banVal"]) ){
                 fltCnt[aIdx] <- fltCnt[aIdx] + sum( uAnaCutData$colVal.f[[cIdx]]["banVal"]==fStepMtx[aIdx,cIdx] )
                 if( !is.null(pDebugIdx) && (aIdx==pDebugIdx) ){
-                    dbg.colval.f <- dbg.colval.f + cnt
+                    dbg.colVal.f <- dbg.colVal.f + cnt
                 }
             }
         }
@@ -807,7 +807,7 @@ stdFltCntByUA <- function( gEnv ,uAnaCutData ,aZoidMtx ,pDebugIdx=NULL ){    # a
 
     rObj <- list( fltCnt=fltCnt )
     if( !is.null(pDebugIdx) ){
-        rObj$dbg.colVal <- dbg.colVal   ;rObj$dbg.colval.f <- dbg.colval.f  ;rObj$dbg.colval.c <- dbg.colval.c
+        rObj$dbg.colVal <- dbg.colVal   ;rObj$dbg.colVal.f <- dbg.colVal.f  ;rObj$dbg.colVal.c <- dbg.colVal.c
         rObj$dbg.valPtn <- dbg.valPtn   ;rObj$dgb.valPtn.f <- dgb.valPtn.f
         rObj$dgb.azWidth<- dgb.azWidth
     }
@@ -1279,8 +1279,8 @@ uAna.rawData <- function( gEnv ,cutThld=2 ){ # uAnaLst.rawData() 필요할때가 있을
         awZoidMtx <- gEnv$allZoidMtx[allIdxF ,,drop=F ]
         uAnaCutData <- getStdCutData_UnitAnaObj( ruObj$uAnaObj )
 
-        fltCnt <- stdFltCntByUA( gEnv ,uAnaCutData ,awZoidMtx ,pDebugIdx )$fltCnt
-        return( fltCnt )
+        fltCutObj <- stdFltCntByUA( gEnv ,uAnaCutData ,awZoidMtx ,pDebugIdx )
+        return( fltCutObj$fltCnt )
     } # ruObj$getFltCnt()
     ruObj$defaultCut <- function( gEnv ,allIdxF ){
         fltCnt <- ruObj$getFltCnt( gEnv ,allIdxF )
