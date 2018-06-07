@@ -1609,7 +1609,7 @@ valTest <- function( gEnv ){
             fltSumMtx[rIdx,cIdx] <- dbgLst[[rIdx]][[cIdx]]$fltCnt
         }
     }
-    apply( fltSumMtx ,2 ,table )
+    apply( fltSumMtx ,2 ,table )    # apply( fltSumMtx[allIdxLst$stdFiltedCnt.n0,] ,2 ,table )
 
 	saveObj <- list( fltSum=fltSum ,dbgLst=dbgLst ,allIdxF=allIdxF )
 	save( saveObj ,file="Obj_saveObj.save" )
