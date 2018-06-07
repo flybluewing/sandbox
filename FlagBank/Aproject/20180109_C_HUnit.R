@@ -1598,11 +1598,12 @@ valTest <- function( gEnv ){
     }
     tDiff <- Sys.time() - tStmp
 
-    fltSum.testSpan <- fltSum[testSpan]
-    table( fltSum.testSpan )
+    fltSum.testSpan <- fltSum[testSpan] ;names(fltSum.testSpan) <- testSpan
+    table( fltSum.testSpan )    ;table( fltSum.testSpan[allIdxLst$stdFiltedCnt.n0] )
 
     cNames <- attributes(dbgLst[[1]])$names
-    fltSumMtx <- matrix( 0 ,nrow=length(dbgLst) ,ncol=length(cNames) ) ;colnames(fltSumMtx) <- cNames
+    fltSumMtx <- matrix( 0 ,nrow=length(dbgLst) ,ncol=length(cNames) )
+    colnames(fltSumMtx) <- cNames   ;rownames(fltSumMtx) <- testSpan
     for( rIdx in seq_len(length(dbgLst)) ){
         for( cIdx in cNames ){
             fltSumMtx[rIdx,cIdx] <- dbgLst[[rIdx]][[cIdx]]$fltCnt
