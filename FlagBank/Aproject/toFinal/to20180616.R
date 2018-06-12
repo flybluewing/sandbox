@@ -1,5 +1,5 @@
-# to20180609.R 최종접근
-source("./toFinal/to20180609_H.R")
+# to20180616.R 최종접근
+source("./toFinal/to20180616_H.R")
 
 # allIdx <- allIdxLst$allZoid.idx0
 finalCut <- function( gEnv ,allIdx ){
@@ -29,42 +29,28 @@ finalCut <- function( gEnv ,allIdx ){
 	#   807  6,10,18,25,34,35
 	#   808 15 21 31 32 41 43
 	#	809  6 11 15 17 23 40
+	#   810  5 10 13 21 39 43
 
-	# zoid[4:6] 17+23=40.. 재발하기 어렵겠지.
-    flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
-					for( cIdx in 1:4 ){
-						if( aZoid[cIdx+2]==(aZoid[cIdx]+aZoid[cIdx+1]) ){
-							return(FALSE)
-						}
-					}
-					return(TRUE)
-				})	;kIdx<-head(which(!flag))
+	# 3,6 : 3,x,6,x,6,x,3(?)
+	# 5   : 15,10,5 (?) 
+	flag <- !(gEnv$allZoidMtx[allIdxF,1] %in% c(3,5,6))	;kIdx<-head(which(!flag))
     allIdxF <- allIdxF[flag]
     cat(sprintf("allIdxF %d\n",length(allIdxF)))
 
-	# 14,20 15,21.. cStep 계속 동일? (좀 과한가?)
-	banCStep <- gEnv$zhF[808,2:6] - gEnv$zhF[808,1:5]
-    flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
-					cStep <- aZoid[2:6] - aZoid[1:5]
-					return( all(cStep!=banCStep) )
-				})	;kIdx<-head(which(!flag))
+	flag <- !(gEnv$allZoidMtx[allIdxF,2] %in% c(9,12))	;kIdx<-head(which(!flag))
     allIdxF <- allIdxF[flag]
     cat(sprintf("allIdxF %d\n",length(allIdxF)))
 
-	# 31 ,xx ,32 ,xx ,33(?)
-	flag <- gEnv$allZoidMtx[allIdxF,4]!=33	;kIdx<-head(which(!flag))
+	# 20,10 이 너무 많은 듯.
+	flag <- ( gEnv$allZoidMtx[allIdxF,2]%%10 != 0 )	;kIdx<-head(which(!flag))
     allIdxF <- allIdxF[flag]
     cat(sprintf("allIdxF %d\n",length(allIdxF)))
 
-	# 21 ,xx ,20 ,xx ,19(?)
-	flag <- gEnv$allZoidMtx[allIdxF,2]!=19	;kIdx<-head(which(!flag))
+	flag <- !(gEnv$allZoidMtx[allIdxF,4] %in% c(38))	;kIdx<-head(which(!flag))
     allIdxF <- allIdxF[flag]
     cat(sprintf("allIdxF %d\n",length(allIdxF)))
 
-	# 
-    flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
-					return( all(aZoid[1:2]!=c(6,11)) )
-				})	;kIdx<-head(which(!flag))
+	flag <- !(gEnv$allZoidMtx[allIdxF,6] %in% c(40,43,45))	;kIdx<-head(which(!flag))
     allIdxF <- allIdxF[flag]
     cat(sprintf("allIdxF %d\n",length(allIdxF)))
 
@@ -85,13 +71,13 @@ finalCut <- function( gEnv ,allIdx ){
 
 	# --------------------------------------------
 	# anaColEndPtn()
-	colPtnLst <- anaColEndPtn( gEnv$zhF ,pDebug=T )
-	# colPtnLst[[1]]$val  10
-	# colPtnLst[[2]]$val  19
-	# colPtnLst[[3]]$val  28 11
-	# colPtnLst[[4]]$val  35  3
-	# colPtnLst[[5]]$val  45 37 22 31
-	# colPtnLst[[6]]$val  39 45 36 42 43 45 42 44 37
+	colPtnLst <- anaColEndPtn( gEnv$zhF ,pDebug=F )
+	# colPtnLst[[1]]$val   8  9  2 20
+	# colPtnLst[[2]]$val  19 17 17
+	# colPtnLst[[3]]$val   7 35 10
+	# colPtnLst[[4]]$val  23
+	# colPtnLst[[5]]$val  28 23 38
+	# colPtnLst[[6]]$val  42 36 24 43 45 38 32
 
 	# <recycle> 마지막 값이 2개 이상 일치 배제
 	banVal <- sapply( colPtnLst ,function(p){return( if(0<length(p$val)) p$val[1] else 0 )})
@@ -102,16 +88,23 @@ finalCut <- function( gEnv ,allIdx ){
     allIdxF <- allIdxF[flag]
     cat(sprintf("allIdxF %d\n",length(allIdxF)))
 
+    flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+					cnt <- sum(aZoid==banVal)
+					cnt <- cnt + sum( aZoid[1:2]==c(7,17) )
+					return( 2>cnt )
+				})	;kIdx<-head(which(!flag))
+    allIdxF <- allIdxF[flag]
+    cat(sprintf("allIdxF %d\n",length(allIdxF)))
 
 	# --------------------------------------------
 	# colValSeqNext()
 	cvSeqNextLst <- colValSeqNext( gEnv$zhF ,pColSize=2 )
 	#	hold point
-	#		cvSeqNextLst[[1]] zoid[1:2] - 12 19
-	#		cvSeqNextLst[[2]] zoid[2:3] - 17 20
-	#		cvSeqNextLst[[3]] zoid[3:4] - 11 16
-	#		cvSeqNextLst[[4]] zoid[4:5] -  4 10
-	#		cvSeqNextLst[[5]] zoid[5:6] - 12 24
+	#		cvSeqNextLst[[1]] zoid[1:2] -  2 11 (14,19  x,x 15,22)
+	#		cvSeqNextLst[[2]] zoid[2:3] - 12 13
+	#		cvSeqNextLst[[3]] zoid[3:4] -  8 16
+	#		cvSeqNextLst[[4]] zoid[4:5] - 40 43
+	#		cvSeqNextLst[[5]] zoid[5:6] - 21 29
 
 	# <recycle> 둘 중 하나라도 일치하는 게 총 3개 이상.
 	matLst <- lapply( cvSeqNextLst ,function(p){
@@ -145,9 +138,9 @@ finalCut <- function( gEnv ,allIdx ){
 
 	cvSeqNextLst <- colValSeqNext( gEnv$zhF ,pColSize=3 )
 	#	hold point
-	#		cvSeqNextLst[[2]] zoid[2:4] -  7 12 28
+	#		cvSeqNextLst[[1]] zoid[1:3] -  2 11 17
     flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
-					return( all(aZoid[2:4]!=c( 7 ,12 ,28)) )
+					return( !all(aZoid[1:3]==c( 2,11,17)) )
 				})	;kIdx<-head(which(!flag))
     allIdxF <- allIdxF[flag]
     cat(sprintf("allIdxF %d\n",length(allIdxF)))
@@ -157,7 +150,18 @@ finalCut <- function( gEnv ,allIdx ){
 	tStmp <- Sys.time()
 	uAnaLstGrp <- getUAnaLstGrp( gEnv ,allIdxF ,pDefaultCut=FALSE ,pReport=F ) # 한번 Cut한 후 레포트 생성하자.
 	rstObj <- cutUAna_byGrp( uAnaLstGrp ,gEnv ,allIdxF ,thldName="allZoid.idx0" )
+	allIdxF <- rstObj$allIdxF
+	cat(sprintf("allIdxF %d\n",length(allIdxF)))
+
+	rstObj <- cutUAna_Inter( uAnaLstGrp ,gEnv ,allIdxF )
+	allIdxF <- rstObj$allIdxF
+	cat(sprintf("allIdxF %d\n",length(allIdxF)))
+
+	
+
 	tDiff <- Sys.time() - tStmp
+
+
 
 
 	tStmp <- Sys.time()

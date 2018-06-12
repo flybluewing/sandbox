@@ -819,11 +819,9 @@ stdFltCntByUA <- function( gEnv ,uAnaCutData ,aZoidMtx ,pDebugIdx=NULL ){    # a
 stdFltCntByUA.rObj.empty <- function( fltLen ){	# 텅 빈 rObj 얻기위해..
 
     rObj <- list( fltCnt=rep(0,fltLen) )
-    if( !is.null(pDebugIdx) ){
-        rObj$dbg.colVal <- 0   ;rObj$dbg.colVal.f <- 0  ;rObj$dbg.colVal.c <- 0
-        rObj$dbg.valPtn <- 0   ;rObj$dgb.valPtn.f <- 0
-        rObj$dgb.azWidth<- 0
-    }
+    rObj$dbg.colVal <- 0   ;rObj$dbg.colVal.f <- 0  ;rObj$dbg.colVal.c <- 0
+    rObj$dbg.valPtn <- 0   ;rObj$dgb.valPtn.f <- 0
+    rObj$dgb.azWidth<- 0
     return( rObj )
 
 } # stdFltCntByUA.rObj.empty()
@@ -1126,6 +1124,59 @@ assInterUAnaGrp <- function( gEnv ,allIdxF ,uAnaLstGrp ,pDebugIdx=NULL ){
     return( assRstObj )
 
 } # assInterUAnaGrp( )
+
+# "uAnaLst.rebCnt"  "uAnaLst.colVal1" "uAnaLst.colVal3" 등등 단위로 Cut
+#   thldName : "allZoid.idx0"    "allZoid.idx1"
+cutUAna_byGrp <- function( uAnaLstGrp ,gEnv ,allIdxF ,thldName="allZoid.idx0" ){
+
+    cutThldLst <- list()
+    cutThldLst[["allZoid.idx0"]] <- list( uAnaLst.rawData=3 ,uAnaLst.rebCnt=3
+                                        ,uAnaLst.colVal1=4 ,uAnaLst.colVal3=4 ,uAnaLst.colVal4=4 ,uAnaLst.colVal6=3
+                                        ,uAnaLst.nextZW=3 ,uAnaLst.zw=2 )
+    cutThldLst[["allZoid.idx1"]] <- list( uAnaLst.rawData=3 ,uAnaLst.rebCnt=4
+                                        ,uAnaLst.colVal1=4 ,uAnaLst.colVal3=4 ,uAnaLst.colVal4=4 ,uAnaLst.colVal6=3
+                                        ,uAnaLst.nextZW=3 ,uAnaLst.zw=2 )
+
+    allIdxF.left <- allIdxF
+    logStr <- character(0)
+
+    tStmp <- Sys.time()
+    grpName <- attributes(uAnaLstGrp)$names
+    for( nIdx in grpName ){
+        for( idx in seq_len(length(uAnaLstGrp[[nIdx]])) ){
+            if( 0==length(allIdxF.left) ){
+                break
+            }
+            fltCnt <- uAnaLstGrp[[nIdx]][[idx]]$getFltCnt( gEnv ,allIdxF.left )$fltCnt
+            allIdxF.left <- allIdxF.left[ fltCnt<cutThldLst[[thldName]][[nIdx]] ]
+        }
+        tDiff <- Sys.time() - tStmp
+        logStr <- c( logStr 
+                        ,sprintf("%s left:%d thld:%d  %.1f%s" ,nIdx ,length(allIdxF.left) ,cutThldLst[[thldName]][[nIdx]] 
+                                ,tDiff ,units(tDiff)
+                            ) 
+                    )
+    }
+
+
+    ana <- uAnaLstGrp[[nIdx]][[idx]]
+
+    rObj <- list( allIdxF=allIdxF.left ,logStr=logStr )
+    return( rObj )
+
+} # cutUAna_byGrp()
+
+# assInterUAnaGrp() 값 기준 Cut
+cutUAna_Inter <- function( uAnaLstGrp ,gEnv ,allIdxF ){
+
+    assRstObj <- assInterUAnaGrp( gEnv ,allIdxF ,uAnaLstGrp ,pDebugIdx=1 )
+
+    # 13개 이하. but 하나도 안 걸리는 순수한 경우 역시 거의 없다.
+    allIdxF.left <- allIdxF[ (assRstObj$fltCntSum>1) && (assRstObj$fltCntSum<13) ]
+    rObj <- list( allIdxF=allIdxF.left ,logStr=logStr )
+    return( rObj )
+
+} # cutUAna_Inter()
 
 getUAnaLstGrp <- function( gEnv ,allIdxF ,pDefaultCut=TRUE ,pReport=TRUE ){
 
