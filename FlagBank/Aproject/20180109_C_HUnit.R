@@ -1173,10 +1173,83 @@ cutUAna_Inter <- function( uAnaLstGrp ,gEnv ,allIdxF ){
 
     # 13개 이하. but 하나도 안 걸리는 순수한 경우 역시 거의 없다.
     allIdxF.left <- allIdxF[ (assRstObj$fltCntSum>1) && (assRstObj$fltCntSum<13) ]
-    rObj <- list( allIdxF=allIdxF.left ,logStr=logStr )
+    rObj <- list( allIdxF=allIdxF.left )
     return( rObj )
 
 } # cutUAna_Inter()
+
+curUAna_byDim <- function( uAnaCutDataLst.c ,uAnaLstGrp ,gEnv ,allIdxF ) {
+
+    chkBanLst <- function( banLst ){
+        banLst.f <- lapply( 1:length(banLst) ,function(idx){integer(0)})    # ban list final
+        for( idx in 1:length(banLst) ){
+            val <- sort(unique(banLst[[idx]]$banVal))
+            tbl <- table(banLst[[idx]]$banVal)
+            banVal <- val[ tbl[as.character(val)]>1 ]
+            banLst.f[[idx]] <- c( banLst.f[[idx]] ,banVal )
+        }
+        return(banLst.f)
+    } # chkBanLst()
+    chkBan <- function( aZoid ,banLst ){
+        banFnd <- 0
+        for( idx in 1:length(aZoid) ){
+            banFnd <- banFnd + sum( aZoid[idx] %in% banLst[[idx]] )
+        }
+        return(banFnd)
+    }
+    review.cutDataLst <- function( cutDataLst ){
+        fltCnt <- sapply( cutDataLst ,function(cutData){ # 대충 banVal이 어느 정도 있는 지 평가용.
+                        cnt.tot <- 0
+                        for( idx in 1:length(cutData) ){
+                            cnt <- sapply( cutData[[idx]]$colVal ,function(p){ length(p) })
+                            cnt.tot <- cnt.tot + sum(cnt)
+                        }
+                        return( cnt.tot )
+                    })
+        return( fltCnt )
+    } # review.cutDataLst()
+
+
+    # 제외조건을 추출하고,
+    cutDataLst <- list()
+    for( nIdx in attributes(uAnaCutDataLst.c)$names ){  # nIdx <- "uAnaLst.rebCnt"
+        uAnaCutData <- uAnaCutDataLst.c[[nIdx]]
+        cutData <- list()
+        for( nnIdx in attributes(uAnaCutData)$names ){  # nnIdx <- "rebCnt0" 
+            banObj <- list()
+            banObj$colVal   <- chkBanLst( uAnaCutData[[nnIdx]]$colVal   )
+            banObj$colVal.c <- chkBanLst( uAnaCutData[[nnIdx]]$colVal.c )
+            banObj$colVal.f <- chkBanLst( uAnaCutData[[nnIdx]]$colVal.f )
+            cutData[[nnIdx]] <- banObj
+        }
+        cutDataLst[[nIdx]] <- cutData
+    }
+    
+    fltCnt <- review.cutDataLst( cutDataLst )
+
+    lastZoid <- gEnv$zhF[nrow(gEnv$zhF),]
+    # 필터링
+    flag.colVal     <- rep( 0 ,length(allIdxF) )
+    flag.colVal.c   <- rep( 0 ,length(allIdxF) )
+    flag.colVal.f   <- rep( 0 ,length(allIdxF) )
+    for( aIdx in 1:length(allIdxF) ){
+        aZoid <- gEnv$allZoidMtx[allIdxF[aIdx],]
+        aZoid.c <- aZoid[2:6] - aZoid[1:5]
+        aZoid.f <- 
+        for( nIdx in attributes(uAnaLstGrp)$names ){    # nIdx <- "uAnaLst.rebCnt"
+            for( uaIdx in 1:length(uAnaLstGrp[[nIdx]]) ){   # uaIdx <- 1
+                if( !uAnaLstGrp[[nIdx]][[uaIdx]]$isTarget(aZoid) ){
+                    next
+                }
+                flag.colVal[aIdx] <- chkBan( aZoid ,cutDataLst[[nIdx]][[uaIdx]]$colVal )
+            }
+        }
+    } # fIdx
+
+
+
+    QQE
+} # curUAna_byDim()
 
 getUAnaLstGrp <- function( gEnv ,allIdxF ,pDefaultCut=TRUE ,pReport=TRUE ){
 
@@ -1338,6 +1411,9 @@ uAna.rawData <- function( gEnv ,cutThld=2 ){ # uAnaLst.rawData() 필요할때가 있을
     ruObj$getWorkHMtx <- function( gEnv ){
         return( gEnv$zhF )
     } # ruObj$workHMtx()
+    ruObj$isTarget <- function( aZoid ){
+        return( true )
+    } # ruObj$isTarget()
 
     zoidMtx <- ruObj$getWorkHMtx( gEnv )
     ruObj$uAnaObj <- getUnitAnalyzer( zoidMtx ,pECol=NULL )
@@ -1381,6 +1457,9 @@ uAna.nextZW <- function( gEnv ,cutThld=2 ){ # uAnaLst.nextZW() 필요할때가 있을까
         hIdx <- which( zWidth[1:(length(zWidth)-1)]==zWidth[length(zWidth)] )
         return( gEnv$zhF[hIdx+1,,drop=F] )
     } # ruObj$workHMtx()
+    ruObj$isTarget <- function( aZoid ){
+        return( true )
+    } # ruObj$isTarget()
 
     zoidMtx <- ruObj$getWorkHMtx( gEnv )
     ruObj$uAnaObj <- getUnitAnalyzer( zoidMtx ,pECol=NULL )
@@ -1442,6 +1521,10 @@ getUAna.rebCnt <- function( gEnv ,rebIdx ,cutThld=2 ){
         rebCnt[2:hSize] <- sapply( 2:hSize ,function(hIdx){ sum(gEnv$zhF[hIdx,]%in%gEnv$zhF[(hIdx-1),]) })
         return( gEnv$zhF[rebCnt==ruObj$rebIdx,,drop=F] )
     } # ruObj$workHMtx()
+    ruObj$isTarget <- function( aZoid ){
+        rebCnt <- sum( aZoid %in% ruObj$lastZoid )
+        return( rebCnt==ruObj$rebIdx )
+    } # ruObj$isTarget()
 
     zoidMtx <- ruObj$getWorkHMtx( gEnv )
     ruObj$uAnaObj <- getUnitAnalyzer( zoidMtx ,pECol=NULL )
@@ -1517,6 +1600,9 @@ getUAna.colVal <- function( gEnv ,col ,colVal ,cutThld=2 ){
         hSize <- nrow(gEnv$zhF)
         return( gEnv$zhF[gEnv$zhF[,col]==ruObj$colVal,,drop=F] )
     } # ruObj$workHMtx()
+    ruObj$isTarget <- function( aZoid ){
+        return( ruObj$colVal==aZoid[ruObj$col] )
+    } # ruObj$isTarget()
 
     zoidMtx <- ruObj$getWorkHMtx( gEnv )
     ruObj$uAnaObj <- getUnitAnalyzer( zoidMtx ,pECol=ruObj$col )
@@ -1590,6 +1676,9 @@ getUAna.zw <- function( gEnv ,zwVal ,cutThld=2 ){
         zw <- (gEnv$zhF[,6]-gEnv$zhF[,1])
         return( gEnv$zhF[zw==ruObj$zwVal,,drop=F] )
     } # ruObj$workHMtx()
+    ruObj$isTarget <- function( aZoid ){
+        return( ruObj$zwVal==(aZoid[6]-aZoid[1]) )
+    } # ruObj$isTarget()
 
     zoidMtx <- ruObj$getWorkHMtx( gEnv )
     ruObj$uAnaObj <- getUnitAnalyzer( zoidMtx ,pECol=c(1,6) ,pWidth=FALSE )
@@ -1667,3 +1756,31 @@ valTest <- function( gEnv ){
 
 } # valTest()
 
+
+valTest.finalFlt.Recycle <- function( gEnv ){
+
+    tStmp <- Sys.time()
+    testSpan <- 300:nrow(gEnv$zhF)
+    fltSum <- rep( 0 ,nrow(gEnv$zhF) )
+    dbgLst <- list()
+    for( tIdx in testSpan ){
+        tEnv <- gEnv
+        tEnv$zhF <- gEnv$zhF[1:(tIdx-1),]
+        tEnv$allZoidMtx <- gEnv$zhF[tIdx,,drop=F]
+        rstObj <- finalFlt.Recycle( tEnv ,1 )
+        fltSum[tIdx] <- rstObj$fltCnt
+        dbgLst[[1+length(dbgLst)]] <- rstObj$flt
+    }
+    tDiff <- Sys.time() - tStmp
+
+    fltSum.testSpan <- fltSum[testSpan] ;names(fltSum.testSpan) <- testSpan
+    table( fltSum.testSpan )
+    table( fltSum.testSpan[allIdxLst$stdFiltedCnt.n0] )
+    table( fltSum.testSpan[allIdxLst$stdFiltedCnt.n1] )
+
+    names(dbgLst) <- testSpan
+    dbgLst.w <- dbgLst[allIdxLst$stdFiltedCnt.n0]
+    indices <- which(fltSum.testSpan[allIdxLst$stdFiltedCnt.n0]==3)
+    fltComb <- sapply( dbgLst.w[indices] ,function(p){ paste(p,collapse=" ") })
+
+} # valTest.finalFlt.Recycle()

@@ -8,7 +8,7 @@ finalCut <- function( gEnv ,allIdx ){
     allIdxF <- allIdx
 	lastZoid <- gEnv$zhF[nrow(gEnv$zhF),]
 	cStep <- lastZoid[2:6] - lastZoid[1:5]
-	fStep <- gEnv$zhF[nrow(gEnv$zhF)-1,] - lastZoid
+	fStep <- lastZoid - gEnv$zhF[nrow(gEnv$zhF)-1,]
 
 	# 참고 자료 --------------------------------------------------------------------
     rebCnt <- sapply( 2:nrow(gEnv$zhF) ,function(idx){
@@ -67,6 +67,37 @@ finalCut <- function( gEnv ,allIdx ){
     allIdxF <- allIdxF[flag]
     cat(sprintf("allIdxF %d\n",length(allIdxF)))
 
+	# <recycle> cStep 반복은 2개 이하.
+    flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+					cnt <- sum( cStep==(aZoid[2:6]-aZoid[1:5]) )
+					return( 2 > cnt )
+				})	;kIdx<-head(which(!flag))
+    allIdxF <- allIdxF[flag]
+    cat(sprintf("allIdxF %d\n",length(allIdxF)))
+	
+	# <recycle> fStep 반복은 2개 이하.
+    flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+					cnt <- sum( fStep==(aZoid-lastZoid) )
+					return( 2 > cnt )
+				})	;kIdx<-head(which(!flag))
+    allIdxF <- allIdxF[flag]
+    cat(sprintf("allIdxF %d\n",length(allIdxF)))
+
+    # rem 동일 3 이상
+    zRem <- lastZoid %% 10
+    flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+                    cnt <- sum( zRem==(aZoid%%10) )
+					return( cnt<3 )
+				})	;kIdx<-head(which(!flag))
+    allIdxF <- allIdxF[flag]
+    cat(sprintf("allIdxF %d\n",length(allIdxF)))
+
+    # quotient 동일 4이상
+    flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+                    cnt <- max( table(aZoid%/%10) )
+					return( cnt<4 )
+				})	;kIdx<-head(which(!flag))
+    fltCnt[!flag] <- fltCnt[!flag] + 1
 
 
 	# --------------------------------------------
@@ -145,6 +176,11 @@ finalCut <- function( gEnv ,allIdx ){
     allIdxF <- allIdxF[flag]
     cat(sprintf("allIdxF %d\n",length(allIdxF)))
 
+ 	fltCnt <- finalFlt.Recycle( gEnv ,allIdxF )$fltCnt	# 0이 존재한다면 0도 제외
+	flag <- fltCnt<3	;kIdx<-head(which(!flag))
+    allIdxF <- allIdxF[flag]
+    cat(sprintf("allIdxF %d\n",length(allIdxF)))
+
 	allIdxF.bak <- allIdxF
 
 	tStmp <- Sys.time()
@@ -157,9 +193,33 @@ finalCut <- function( gEnv ,allIdx ){
 	allIdxF <- rstObj$allIdxF
 	cat(sprintf("allIdxF %d\n",length(allIdxF)))
 
-	
-
 	tDiff <- Sys.time() - tStmp
+
+	# uAnaLstGrp에서 uAnaCutData 수집.
+	#		- uAnaCutData.cust
+	uAnaLstGrp <- getUAnaLstGrp( gEnv ,allIdxF ,pDefaultCut=FALSE ,pReport=TRUE )
+	uAnaCutDataLst.c <- list()	# uAnaCutDataLst custom
+	for( nIdx in attributes(uAnaLstGrp)$names ){	# nIdx <- "uAnaLst.rebCnt"
+		uAnaLst <- uAnaLstGrp[[nIdx]]
+		cutDataLst <- list()
+		for( uIdx in 1:length(uAnaLst) ){
+			cutData <- list( )
+			cutData$colVal		<- uAnaLst[[uIdx]]$uAnaCutData$colVal
+			cutData$colVal.f	<- uAnaLst[[uIdx]]$uAnaCutData$colVal.f
+			cutData$colVal.c	<- uAnaLst[[uIdx]]$uAnaCutData$colVal.c
+			cutDataLst[[uAnaLst[[uIdx]]$idStr]] <- cutData
+		} # uIdx
+		uAnaCutDataLst.c[[nIdx]] <- cutDataLst
+	} # nIdx
+
+	# 상황에 맞게 제외조건 추가. to2018nnnn_H.R에서 정의
+	customizeCutData <- function( uAnaCutDataLst.c ){ return(uAnaCutDataLst.c) }
+	uAnaCutDataLst.c <- customizeCutData( uAnaCutDataLst.c )
+
+
+	#	uAnaCutData 에 대해 임의 추가
+	#	단일 uAnaCutData 내에서의 중복 제거대상 적용.
+	#	다른 uAnaCutDate 에서도 중복 제거대상 되는 것 제거.
 
 
 

@@ -3236,3 +3236,106 @@ cutEadge.banReb10RemSeq <- function( gEnv ,allIdx ,pDebug=F ){
 
 } # cutEadge.banReb10RemSeq()
 
+finalFlt.Recycle <- function( gEnv ,allIdxF ){
+
+    lastZoid <- gEnv$zhF[nrow(gEnv$zhF),]
+
+    fltCnt <- rep( 0 ,length(allIdxF) )
+    rObj <- list()
+    rObj$flt <- character(0)
+
+    # 01. 컬럼에서 같은 값 연속
+    flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+					return( all(aZoid!=lastZoid) )
+				})	;kIdx<-head(which(!flag))
+    fltCnt[!flag] <- fltCnt[!flag] + 1
+    if( !flag[1] ) rObj$flt <- c(rObj$flt,"01")
+
+    # 02. 이전 forward 연속
+    fVal <- gEnv$zhF[nrow(gEnv$zhF),] - gEnv$zhF[nrow(gEnv$zhF)-1,]
+    flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+                    cnt <- sum( fVal==(aZoid-lastZoid) )
+					return( 0==cnt )
+				})	;kIdx<-head(which(!flag))
+    fltCnt[!flag] <- fltCnt[!flag] + 1
+    if( !flag[1] ) rObj$flt <- c(rObj$flt,"02")
+
+    # 03. 동일 forward 3개 이상
+    flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+                    cnt <- max( table(aZoid-lastZoid) )
+					return( 3>cnt )
+				})	;kIdx<-head(which(!flag))
+    fltCnt[!flag] <- fltCnt[!flag] + 1
+    if( !flag[1] ) rObj$flt <- c(rObj$flt,"03")
+
+    # 04. 이전 cStep 연속
+    cStep <- lastZoid[2:6] - lastZoid[1:5]
+    flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+                    cnt <- sum( cStep==(aZoid[2:6]-aZoid[1:5]) )
+					return( cnt==0 )
+				})	;kIdx<-head(which(!flag))
+    fltCnt[!flag] <- fltCnt[!flag] + 1
+    if( !flag[1] ) rObj$flt <- c(rObj$flt,"04")
+
+    # 05. cStep 연속나열 ( 1,2,3... 5,7,9... )
+    cStep <- lastZoid[2:6] - lastZoid[1:5]
+    flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+                    acStep <- (aZoid[2:6]-aZoid[1:5])
+                    cnt <- sum(acStep[2:5]==acStep[1:4])
+					return( cnt==0 )
+				})	;kIdx<-head(which(!flag))
+    fltCnt[!flag] <- fltCnt[!flag] + 1
+    if( !flag[1] ) rObj$flt <- c(rObj$flt,"05")
+
+    # 06. 이전 quotient 동일 -- 적용취소. 효과 없는 듯.(아니면 조건을 더 엄하게 하던가.)
+    # zQuo <- lastZoid %/% 10
+    # flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+    #                 cnt <- sum( zQuo==(aZoid%/%10) )
+	# 				return( cnt==6 )
+	# 			})	;kIdx<-head(which(!flag))
+    # fltCnt[!flag] <- fltCnt[!flag] + 1
+    # if( !flag[1] ) rObj$flt <- c(rObj$flt,"06")
+
+    # 07. 이전 rem 동일 2 이상
+    zRem <- lastZoid %% 10
+    flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+                    cnt <- sum( zRem==(aZoid%%10) )
+					return( cnt<2 )
+				})	;kIdx<-head(which(!flag))
+    fltCnt[!flag] <- fltCnt[!flag] + 1
+    if( !flag[1] ) rObj$flt <- c(rObj$flt,"07")
+
+    # 08. rem 동일 3 이상
+    flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+                    cnt <- max( table(aZoid%%10) )
+					return( cnt<3 )
+				})	;kIdx<-head(which(!flag))
+    fltCnt[!flag] <- fltCnt[!flag] + 1
+    if( !flag[1] ) rObj$flt <- c(rObj$flt,"08")
+
+    # 09. zWidth 
+    zWidth <- gEnv$zhF[,6]-gEnv$zhF[,1]
+    zWidth.last <- zWidth[length(zWidth)]
+    indices <- which(zWidth[1:(length(zWidth)-1)]==zWidth.last)
+    if( 0<length(indices) ){
+        zWidth.lastNext <- zWidth[ indices[length(indices)]+1 ]
+        flag <- (gEnv$allZoidMtx[allIdxF,6] - gEnv$allZoidMtx[allIdxF,1]) != zWidth.lastNext    ;kIdx<-head(which(!flag))
+        fltCnt[!flag] <- fltCnt[!flag] + 1
+    }
+    if( !flag[1] ) rObj$flt <- c(rObj$flt,"09")
+
+    # 10. anaColEndPtn
+	colPtnLst <- anaColEndPtn( gEnv$zhF ,pDebug=F )
+	banVal <- sapply( colPtnLst ,function(p){return( if(0<length(p$val)) p$val[1] else 0 )})
+    flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+					chkFlag <- aZoid==banVal
+					return( 1>sum(chkFlag) )
+				})	;kIdx<-head(which(!flag))
+    fltCnt[!flag] <- fltCnt[!flag] + 1
+    if( !flag[1] ) rObj$flt <- c(rObj$flt,"10")
+
+    rObj$fltCnt <- fltCnt
+    return( rObj )
+
+} # finalFlt.Recycle()
+

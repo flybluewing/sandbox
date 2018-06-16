@@ -12,10 +12,10 @@ source("20180109_C_HUnit.R")
 
 tStmp <- Sys.time()
 saveId <- "Z810"
+# myObj <- load( sprintf("Obj_allIdxLst%s.save",saveId) )
 load(sprintf("./save/Obj_gEnv%s.save",saveId))
 load(sprintf("./save/Obj_fRstLst%s.save",saveId))
 load(sprintf("./save/Obj_remLst%s.save",saveId))
-# myObj <- load( sprintf("Obj_allIdxLst%s.save",saveId) )
 
 stdFiltedCnt <- sapply( fRstLst ,length )   ;names(stdFiltedCnt) <- ( nrow(gEnv$zhF)-length(stdFiltedCnt)+1 ):nrow(gEnv$zhF)
 stdFilted.tbl <- table(stdFiltedCnt)
