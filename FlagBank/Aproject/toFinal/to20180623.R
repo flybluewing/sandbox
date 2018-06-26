@@ -389,4 +389,147 @@ finalCut <- function( gEnv ,allIdx ){
 
 
 
+table(gEnv$allZoidMtx[allIdxF,1])
+allIdxF <- allIdxF[gEnv$allZoidMtx[allIdxF,1]%in%c(4,7)]
+
+uAnaLstGrp <- getUAnaLstGrp( gEnv ,allIdxF ,pDefaultCut=FALSE ,pReport=TRUE )
+	# uAnaLstGrp에서 uAnaCutData 수집.
+	uAnaCutDataLst.c <- list()	# uAnaCutDataLst custom
+	for( nIdx in attributes(uAnaLstGrp)$names ){	# nIdx <- "uAnaLst.rebCnt"
+		uAnaLst <- uAnaLstGrp[[nIdx]]
+		cutDataLst <- list()
+		for( uIdx in 1:length(uAnaLst) ){
+			cutData <- list( )
+			cutData$colVal		<- uAnaLst[[uIdx]]$uAnaCutData$colVal
+			cutData$colVal.f	<- uAnaLst[[uIdx]]$uAnaCutData$colVal.f
+			cutData$colVal.c	<- uAnaLst[[uIdx]]$uAnaCutData$colVal.c
+			cutDataLst[[uAnaLst[[uIdx]]$idStr]] <- cutData
+		} # uIdx
+		uAnaCutDataLst.c[[nIdx]] <- cutDataLst
+	} # nIdx
+
+	# 상황에 맞게 제외조건 추가. to2018nnnn_H.R에서 정의
+	customizeCutData <- function( uAnaCutDataLst.c ){ return(uAnaCutDataLst.c) }
+	uAnaCutDataLst.c <- customizeCutData( uAnaCutDataLst.c )
+
+
+uAnaCut.inter <- function( allIdxF ,uAnaCutDataLst.c ,uAnaLstGrp ,pPhase="colVal" ,pWorkSpan=NULL ){
+
+	if( is.null(pWorkSpan) ){
+		pWorkSpan <- attributes(uAnaCutDataLst.c)$names
+	}
+
+	initValLst <- function( banLst ){
+		valLst <- lapply( banLst ,function(banMtx){
+							val <- sort(unique(banMtx[,"banVal"]))
+							tbl <- table(banMtx[,"banVal"])[as.character(val)]
+							return( cbind(val,tbl) )
+						})
+		return( valLst )
+	} # initValLst()
+	mergeValLst <- function( valLst ,banLst ){
+		valLst.work <- initValLst( banLst )
+		valLst.f <- lapply( 1:length(valLst) ,function(vIdx){
+						vMtx <- valLst[[vIdx]]
+						vMtx.work <- valLst.work[[vIdx]]
+						dupVal <- intersect( vMtx.work[,"val"] ,vMtx[,"val"] )
+						if( 0<length(dupVal) ){
+							vMtx[vMtx[,"val"]%in%dupVal ,"tbl"] <- 
+								vMtx[vMtx[,"val"]%in%dupVal ,"tbl"] + vMtx.work[vMtx.work[,"val"]%in%dupVal ,"tbl"]
+						}
+						vMtx.f <- rbind( vMtx ,vMtx.work[!vMtx.work[,"val"]%in%vMtx[,"val"] ,] )
+						return(vMtx.f)
+					})
+		return( valLst.f )
+	} # mergeValLst()
+
+	oldLst <- NULL
+	grpAccumLst <- NULL
+	for( gnIdx in pWorkSpan ) {
+		unitLst <- uAnaCutDataLst.c[[gnIdx]]
+		if( is.null(oldLst) ){
+			grpAccumLst <- list()
+			for( unIdx in attributes(unitLst)$names ){
+				unitObj <- list( idStr=sprintf("%s %s",gnIdx,unIdx) )
+				unitObj$valLst <- initValLst(unitLst[[unIdx]][[pPhase]])
+				grpAccumLst[[1+length(grpAccumLst)]] <- unitObj
+			} # for(unIdx)
+		} else {
+			grpAccumLst <- list()
+			for( oldIdx in seq_len(length(oldLst)) ){
+				for( unIdx in attributes(unitLst)$names ){
+					unitObj <- list( idStr=c( oldLst[[oldIdx]]$idStr ,sprintf("%s %s",gnIdx,unIdx)) )
+					unitObj$valLst <- mergeValLst( oldLst[[oldIdx]]$valLst ,unitLst[[unIdx]][[pPhase]] )
+					grpAccumLst[[1+length(grpAccumLst)]] <- unitObj
+				} # for(unIdx)
+			}
+		} # if()
+		oldLst <- grpAccumLst
+	} # for(gnIdx)
+	rm(oldLst)
+
+
+
+
+
+} # uAnaCut.inter()
+
+
+
+
+grpAccumLst <- NULL
+for( grpIdx in 2:3 ) {
+
+} # for(gnIdx)
+
+
+fltCnt <- rep( 0 ,length(allIdxF) )
+
+# pastBanLst 에 해당하는 allIdxF 파트를 전달받고, 또 전달해주도록 해야 한다.
+# global : allIdxF ,uAnaCutDataLst.c ,uAnaLstGrp ,pPhase
+banValScan.grp <- function( fltCnt ,pastBanLst=NULL ,grpIdx ){
+
+	if( grpIdx > length(uAnaCutDataLst.c) ){
+		return( list(fltCnt=fltCnt) )
+	}
+
+	for( uIdx in 1:length(uAnaCutDataLst.c[[grpIdx]]) ){
+
+		banMtxLst <- NULL
+		if( is.null(pastBanLst) ){
+			banMtxLst <- initValLst( uAnaCutDataLst.c[[grpIdx]][[uIdx]][[pPhase]] )
+		} else {
+			banMtxLst <- mergeValLst( banMtxLst ,uAnaCutDataLst.c[[grpIdx]][[uIdx]][[pPhase]] )
+		}
+
+		# 
+		fltCnt <- banValScan.unit( fltCnt ,banMtxLst ,grpIdx ,unitIdx )
+	}
+
+	rObj <- list( fltCnt=fltCnt )
+	return( rObj )
+
+} # banValScan()
+
+banValScan.unit <- function( fltCnt ,banLst=NULL ,grpIdx ,unitIdx ){
+
+	update fltCnt with banLst.
+	for( aIdx in 1:length(allIdxF) ){
+		flag <- sapply( 1:length(banLst) ,function( banIdx ){
+						banFlag <- banLst[[banIdx]][,"tbl"]>1
+						banVal <- banLst[[banIdx]][banFlag,"val"]
+						return( gEnv$allZoidMtx[allIdxF,banIdx]%in%banVal  )
+					})
+		fltCnt[aIdx] <- 1 + fltCnt[aIdx]
+	}
+
+	fltCnt <- banValScan.grp( fltCnt ,pastBanLst=NULL ,(grpIdx+1) )$fltCnt
+
+} # banValScan()
+
+
+
+
+
+
 
