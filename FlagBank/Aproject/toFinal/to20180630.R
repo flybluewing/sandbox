@@ -159,3 +159,101 @@ uAnaCutDataLst.c <- customizeCutData( uAnaCutDataLst.c )
 
 
 
+
+
+# pastBanLst 에 해당하는 allIdxF 파트를 전달받고, 또 전달해주도록 해야 한다.
+# global : uAnaCutDataLst.c ,uAnaLstGrp ,pPhase
+pPhase <- "colVal"
+grpIdx <- 2	;uIdx <- 1
+pBanLst <- initValLst( uAnaCutDataLst.c[[grpIdx-1]][[uIdx]][[pPhase]] )
+pAllIdxF <- allIdxF
+
+# grpIdx.bak<-grpIdx;uIdx.bak<-uIdx;pBanLst.bak<-pBanLst;pAllIdxF.bak<-pAllIdxF;fltPos.bak<-fltPos
+
+banValScan.grp <- function( pAllIdxF ,pBanLst=NULL ,grpIdx ,pPhase="colVal" ) {
+
+	initValLst <- function( banLst ){
+		valLst <- lapply( banLst ,function(banMtx){
+							val <- sort(unique(banMtx[,"banVal"]))
+							tbl <- table(banMtx[,"banVal"])[as.character(val)]
+							return( cbind(val,tbl) )
+						})
+		return( valLst )
+	} # initValLst()
+	mergeValLst <- function( valLst ,banLst ){
+		valLst.work <- initValLst( banLst )
+		valLst.f <- lapply( 1:length(valLst) ,function(vIdx){
+						vMtx <- valLst[[vIdx]]
+						vMtx.work <- valLst.work[[vIdx]]
+						dupVal <- intersect( vMtx.work[,"val"] ,vMtx[,"val"] )
+						if( 0<length(dupVal) ){
+							vMtx[vMtx[,"val"]%in%dupVal ,"tbl"] <- 
+								vMtx[vMtx[,"val"]%in%dupVal ,"tbl"] + vMtx.work[vMtx.work[,"val"]%in%dupVal ,"tbl"]
+						}
+						vMtx.f <- rbind( vMtx ,vMtx.work[!vMtx.work[,"val"]%in%vMtx[,"val"] ,] )
+						return(vMtx.f)
+					})
+		return( valLst.f )
+	} # mergeValLst()
+
+	#==========================================================================
+	fltPos <- rep( 0 ,length(pAllIdxF) )	;names(fltPos) <- pAllIdxF
+	if( grpIdx > length(uAnaCutDataLst.c) ){
+		return( list(fltPos=fltPos) )
+	}
+
+	for( uIdx in 1:length(uAnaCutDataLst.c[[grpIdx]]) ){
+
+		banMtxLst <- NULL
+		if( is.null(pBanLst) ){
+			banMtxLst <- initValLst( uAnaCutDataLst.c[[grpIdx]][[uIdx]][[pPhase]] )
+		} else {
+			banMtxLst <- mergeValLst( pBanLst ,uAnaCutDataLst.c[[grpIdx]][[uIdx]][[pPhase]] )
+		}
+
+		banValLst <- lapply( banMtxLst ,function(banMtx){
+							if( 0==nrow(banMtx) ){ return( integer(0) )
+							} else {
+								return(banMtx[banMtx[,"tbl"]>1 ,"val"])
+							}
+						})
+
+		# uIdx에 해당하는 pAllIdxF 부분 추출
+		flag.u <- apply( gEnv$allZoidMtx[pAllIdxF,,drop=F] ,1 ,function(aZoid){
+						uAnaLstGrp[[grpIdx]][[uIdx]]$isTarget( aZoid )
+					})
+
+		flag <- apply( gEnv$allZoidMtx[pAllIdxF[flag.u],,drop=F] ,1 ,function(aZoid){
+						for( idx in 1:6 ){
+							if( aZoid[idx]%in%banValLst[[idx]] ){
+								return( TRUE )
+							}
+						}
+						return( FALSE )
+					})
+
+		idx.target <- which(flag.u)
+		if( length(idx.target[flag])>0 ){
+			fltPos[idx.target[flag]] <- grpIdx
+			#	cat(sprintf("uIdx:%d %d\n",uIdx,sum(fltPos!=0)))
+		}
+
+		# banValScan.unit 투입 및 적용.
+		#	아직 필터링 안된 대상 추출.
+		idx.undone <- idx.target[!flag]
+		if( 0<length(idx.undone) ){
+			fltPos.next <- banValScan.grp( pAllIdxF[idx.undone] ,banMtxLst ,grpIdx+1 )$fltPos
+			fltPos[idx.undone] <- ifelse( fltPos[idx.undone]==0 ,fltPos.next ,fltPos[idx.undone] )
+			# cat(sprintf("uIdx:%d %d\n",uIdx,sum(fltPos!=0)))
+		}
+
+	}
+
+	rObj <- list( fltPos=fltPos )
+	return( rObj )
+
+} # banValScan()
+
+
+
+pAllIdxF=1 ;pBanLst=NULL ;grpIdx=1 ;pPhase="colVal"

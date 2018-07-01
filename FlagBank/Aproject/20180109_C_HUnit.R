@@ -1412,7 +1412,7 @@ uAna.rawData <- function( gEnv ,cutThld=2 ){ # uAnaLst.rawData() 필요할때가 있을
         return( gEnv$zhF )
     } # ruObj$workHMtx()
     ruObj$isTarget <- function( aZoid ){
-        return( true )
+        return( TRUE )
     } # ruObj$isTarget()
 
     zoidMtx <- ruObj$getWorkHMtx( gEnv )

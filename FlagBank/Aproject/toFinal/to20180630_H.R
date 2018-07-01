@@ -35,6 +35,9 @@
 
 fCut.colValSeqNext <- function( gEnv ,allIdxF ){
 
+	stdIdx <- 6796699	;stdZoid <- c( 11, 30,34,35,42,44)
+	allIdxF <- stdIdx
+
 	lastZoid <- gEnv$zhF[nrow(gEnv$zhF),]
 
 	# =========================================================
@@ -54,7 +57,7 @@ fCut.colValSeqNext <- function( gEnv ,allIdxF ){
 	banVal.idx <- which( !is.na(banVal) )
 	banVal <- banVal[banVal.idx]
 
-	flag <- apply( gEnv$allZoidMtx[allIdxF,] ,1 ,function( aZoid ){
+	flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
 					return( !any(aZoid[banVal.idx]==banVal) )
 				})	;kIdx <- c(head(which(!flag)),tail(which(!flag)))
     allIdxF <- allIdxF[flag]
@@ -62,7 +65,7 @@ fCut.colValSeqNext <- function( gEnv ,allIdxF ){
 
 	# <recycle>
 	banVal.rem <- banVal%%10
-	flag <- apply( gEnv$allZoidMtx[allIdxF,] ,1 ,function( aZoid ){
+	flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
 					aCode <- aZoid[banVal.idx] %% 10
 					cnt <- sum( aCode==banVal.rem )
 					return( cnt<2 )
@@ -71,7 +74,7 @@ fCut.colValSeqNext <- function( gEnv ,allIdxF ){
     cat(sprintf("allIdxF %d\n",length(allIdxF)))
 
 	#
-	flag <- apply( gEnv$allZoidMtx[allIdxF,] ,1 ,function( aZoid ){
+	flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
 					cnt <- 0
 					cnt <- ifelse( aZoid[1]%in%c(15,10, 1, 6) 
 									,cnt+1 ,cnt )
@@ -98,7 +101,7 @@ fCut.colValSeqNext <- function( gEnv ,allIdxF ){
 	banCode.span <- which( sapply( banCodeLst ,function(p){length(p)>0}) )
 
 	# <recycle>
-	flag <- apply( gEnv$allZoidMtx[allIdxF,]%%10 ,1 ,function( aCode ){
+	flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F]%%10 ,1 ,function( aCode ){
 					cnt <- 0
 					for( cIdx in banCode.span ){
 						cnt <- ifelse( all(aCode[cIdx:(cIdx+1)]==banCodeLst[[cIdx]]) 
@@ -110,7 +113,7 @@ fCut.colValSeqNext <- function( gEnv ,allIdxF ){
     cat(sprintf("allIdxF %d\n",length(allIdxF)))
 
 	# <recycle>
-	flag <- apply( gEnv$allZoidMtx[allIdxF,]%%10 ,1 ,function( aCode ){
+	flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F]%%10 ,1 ,function( aCode ){
 					cnt <- 0
 					for( cIdx in banCode.span ){
 						cnt <- ifelse( all(aCode[cIdx:(cIdx+1)]==banCodeLst[[cIdx]]) 
@@ -122,7 +125,7 @@ fCut.colValSeqNext <- function( gEnv ,allIdxF ){
     cat(sprintf("allIdxF %d\n",length(allIdxF)))
 
 	# <recycle>
-	flag <- apply( gEnv$allZoidMtx[allIdxF,]%%10 ,1 ,function( aCode ){
+	flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F]%%10 ,1 ,function( aCode ){
 					cnt <- 0
 					for( cIdx in banCode.span ){
 						cnt <- cnt + sum(aCode[cIdx:(cIdx+1)]==banCodeLst[[cIdx]])
@@ -133,7 +136,7 @@ fCut.colValSeqNext <- function( gEnv ,allIdxF ){
     cat(sprintf("allIdxF %d\n",length(allIdxF)))
 
 	# <recycle> 과거 패턴은 재발되지 않는 듯 하다..
-	flag <- apply( gEnv$allZoidMtx[allIdxF,] ,1 ,function( aCode ){
+	flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aCode ){
 					for( cIdx in banCode.span ){
 						for( rIdx in 1:nrow(cvSeqNextLst[[cIdx]]$fndMtx) ){
 							if( all(aCode[cIdx:(cIdx+1)]==cvSeqNextLst[[cIdx]]$fndMtx[rIdx,]) ){
@@ -159,18 +162,19 @@ fCut.colValSeqNext <- function( gEnv ,allIdxF ){
 	banCode <- lapply( cvSeqNextLst, function(p){ 
 						if( 0<nrow(p$fndMtx) ) (p$fndMtx[1,2]-p$fndMtx[1,1]) else integer(0)
 					})
-	flag <- apply( gEnv$allZoidMtx[allIdxF,] ,1 ,function( aCode ){
+	flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aCode ){
+					cnt <- 0
 					for( cIdx in banCode.span ){
 						if( banCode[cIdx]==(aCode[cIdx+1]-aCode[cIdx]) ){
-							return( FALSE )
+							cnt <- cnt+1
 						}
 					}
-					return( TRUE )
+					return( cnt<2 )
 				})	;kIdx <- c(head(which(!flag)),tail(which(!flag)))
     allIdxF <- allIdxF[flag]
     cat(sprintf("allIdxF %d\n",length(allIdxF)))
 
-	flag <- apply( gEnv$allZoidMtx[allIdxF,] ,1 ,function( aZoid ){
+	flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
 					aCode <- aZoid[2:6]-aZoid[1:5]
 					cnt <- 0
 					cnt <- ifelse( aCode[1]==5 ,cnt+1 ,cnt )	# 5(?) ,21 ,5 ,x ,5
@@ -180,7 +184,7 @@ fCut.colValSeqNext <- function( gEnv ,allIdxF ){
     allIdxF <- allIdxF[flag]
     cat(sprintf("allIdxF %d\n",length(allIdxF)))
 
-	flag <- apply( gEnv$allZoidMtx[allIdxF,] ,1 ,function( aZoid ){
+	flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
 					aCode <- aZoid[2:6]-aZoid[1:5]
 					if( all(aCode[1:4]==c( 5, 8, 9, 8)) ) return( FALSE )
 					if( all(aCode[1:4]==c( 3, 2,10,20)) ) return( FALSE )
@@ -197,7 +201,7 @@ fCut.colValSeqNext <- function( gEnv ,allIdxF ){
 	cvSeqNextLst <- colValSeqNext( gEnv$zhF ,pColSize=3 )
 	#	[1]  3  8 16
 	#	[2]  1  3 21	
-	flag <- apply( gEnv$allZoidMtx[allIdxF,] ,1 ,function( aZoid ){
+	flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
 					aCode <- aZoid%%10
 					if( all(aCode[1:3]==c( 3, 8, 6)) ) return( FALSE )
 					if( all(aCode[2:4]==c( 1, 3, 1)) ) return( FALSE )
@@ -377,3 +381,36 @@ finalFlt.cust <- function( gEnv ,allIdxF ){
 	rObj <- list( fltCnt=fltCnt )
 	return( rObj )
 } # finalFlt.cust()
+
+
+testFunc <- function(){
+
+	testSpan <- 400:nrow(gEnv$zhF)
+
+	tEnv <- gEnv
+	for( tIdx in testSpan ){
+		tEnv$zhF <- gEnv$zhF[1:(tIdx-1),]
+		tEnv$allZoidMtx <- gEnv$zhF[tIdx,,drop=F]
+
+		uAnaLstGrp <- getUAnaLstGrp( tEnv ,1 ,pDefaultCut=FALSE ,pReport=F )
+
+		uAnaCutDataLst.c <- list()	# uAnaCutDataLst custom
+		for( nIdx in attributes(uAnaLstGrp)$names ){	# nIdx <- "uAnaLst.rebCnt"
+			uAnaLst <- uAnaLstGrp[[nIdx]]
+			cutDataLst <- list()
+			for( uIdx in 1:length(uAnaLst) ){
+				cutData <- list( )
+				cutData$colVal		<- uAnaLst[[uIdx]]$uAnaCutData$colVal
+				cutData$colVal.f	<- uAnaLst[[uIdx]]$uAnaCutData$colVal.f
+				cutData$colVal.c	<- uAnaLst[[uIdx]]$uAnaCutData$colVal.c
+				cutDataLst[[uAnaLst[[uIdx]]$idStr]] <- cutData
+			} # uIdx
+			uAnaCutDataLst.c[[nIdx]] <- cutDataLst
+		} # nIdx
+		# uAnaCutDataLst.c <- customizeCutData( uAnaCutDataLst.c )
+
+		rObj <- banValScan.grp( 1 ,pBanLst=NULL ,1 )
+
+	}
+
+} # testFunc()
