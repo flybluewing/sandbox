@@ -388,6 +388,7 @@ testFunc <- function(){
 	testSpan <- 400:nrow(gEnv$zhF)
 
 	tEnv <- gEnv
+	rstLst <- list()
 	for( tIdx in testSpan ){
 		tEnv$zhF <- gEnv$zhF[1:(tIdx-1),]
 		tEnv$allZoidMtx <- gEnv$zhF[tIdx,,drop=F]
@@ -410,7 +411,7 @@ testFunc <- function(){
 		# uAnaCutDataLst.c <- customizeCutData( uAnaCutDataLst.c )
 
 		rObj <- banValScan.grp( 1 ,pBanLst=NULL ,1 )
-
+		rstLst[[1+length(rstLst)]] <- rObj
 	}
 
 } # testFunc()
