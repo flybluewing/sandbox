@@ -1,4 +1,4 @@
-# to20180630_H.R 최종접근
+# to20180707_H.R 최종접근
 
 	# 	799 12 17 23 34 42 45
 	# 	800  1  4 10 12 28 45
@@ -14,6 +14,7 @@
 	#   810  5 10 13 21 39 43
 	#	811  8 11 19 21 36 45
     #   812  1  3 12 14 16 43
+	#	813 11 30 34 35 42 44
 
 	# colValSeqNext( ,pColSize=2 )
 	# 765  9 30   14 20    1  2    7 11
@@ -414,10 +415,11 @@ testFunc <- function(){
 							,tIdx ,paste(tEnv$allZoidMtx[1,],collapse=",") 
 				))
 
-		rObj <- banValScan.grp( tAllIdxF ,pBanLst=NULL ,1 ,pLog=T )
+		rObj <- banValScan.grp( pAllIdxF=tAllIdxF ,pBanLst=NULL ,grpIdx=1 ,pPhase="colVal" ,pLog=T ,gEnv=tEnv )
 		rstLst[[1+length(rstLst)]] <- rObj
 	}
 
 	fltPos <- sapply( rstLst ,function(p){p$fltPos[1]})
 
 } # testFunc()
+

@@ -1,7 +1,7 @@
 # to20180630.R 최종접근
-source("./toFinal/to20180630_H.R")
+source("./toFinal/to20180707_H.R")
 
-# allIdx <- allIdxLst$allZoid.idx0
+# allIdx <- allIdxLst$allZoid.idx0	# 1022909
 finalCut <- function( gEnv ,allIdx ){
     # cutEadge.getBanPtnColVal() 에서 1~2개 발생 탈락값들에 대한 검토 권장.
 
@@ -32,6 +32,7 @@ finalCut <- function( gEnv ,allIdx ){
 	#   810  5 10 13 21 39 43
 	#	811  8 11 19 21 36 45
     #   812  1  3 12 14 16 43
+	#	813 11 30 34 35 42 44
 
 	allIdxF <- fCut.colValSeqNext( gEnv ,allIdxF )
 
@@ -170,7 +171,7 @@ pAllIdxF <- allIdxF
 
 # grpIdx.bak<-grpIdx;uIdx.bak<-uIdx;pBanLst.bak<-pBanLst;pAllIdxF.bak<-pAllIdxF;fltPos.bak<-fltPos
 
-banValScan.grp <- function( pAllIdxF ,pBanLst=NULL ,grpIdx ,pPhase="colVal" ,pLog=F ) {
+banValScan.grp <- function( pAllIdxF ,pBanLst=NULL ,grpIdx ,pPhase="colVal" ,pLog=F ,gEnv ) {
 
 	initValLst <- function( banLst ){
 		valLst <- lapply( banLst ,function(banMtx){
@@ -251,7 +252,7 @@ banValScan.grp <- function( pAllIdxF ,pBanLst=NULL ,grpIdx ,pPhase="colVal" ,pLo
 		#	아직 필터링 안된 대상 추출.
 		idx.undone <- idx.target[!flag]
 		if( 0<length(idx.undone) ){
-			fltPos.next <- banValScan.grp( pAllIdxF[idx.undone] ,banMtxLst ,grpIdx+1 ,pLog )$fltPos
+			fltPos.next <- banValScan.grp( pAllIdxF=pAllIdxF[idx.undone] ,pBanLst=banMtxLst ,grpIdx=grpIdx+1 ,pLog=pLog ,gEnv=gEnv )$fltPos
 			fltPos[idx.undone] <- ifelse( fltPos[idx.undone]==0 ,fltPos.next ,fltPos[idx.undone] )
 			# cat(sprintf("uIdx:%d %d\n",uIdx,sum(fltPos!=0)))
 		}

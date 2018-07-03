@@ -1458,7 +1458,7 @@ uAna.nextZW <- function( gEnv ,cutThld=2 ){ # uAnaLst.nextZW() 필요할때가 있을까
         return( gEnv$zhF[hIdx+1,,drop=F] )
     } # ruObj$workHMtx()
     ruObj$isTarget <- function( aZoid ){
-        return( true )
+        return( TRUE )
     } # ruObj$isTarget()
 
     zoidMtx <- ruObj$getWorkHMtx( gEnv )
