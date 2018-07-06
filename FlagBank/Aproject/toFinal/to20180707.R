@@ -1,7 +1,12 @@
 # to20180630.R 최종접근
 source("./toFinal/to20180707_H.R")
 
-# allIdx <- allIdxLst$allZoid.idx0	# 1022909
+saveId <- "Z813"
+load( sprintf("Obj_allIdxLst%s.save",saveId) )
+load(sprintf("./save/Obj_gEnv%s.save",saveId))
+
+allIdx <- allIdxLst$allZoid.idx0	# 1022909
+
 finalCut <- function( gEnv ,allIdx ){
     # cutEadge.getBanPtnColVal() 에서 1~2개 발생 탈락값들에 대한 검토 권장.
 
@@ -35,6 +40,11 @@ finalCut <- function( gEnv ,allIdx ){
     #   812  1  3 12 14 16 43
 	#	813 11 30 34 35 42 44
 
+
+	rstObj <- fCut.seqRebCnt( gEnv$zhF[1:(hIdx-1),] ,stdZoid ,pRowLen=20 ,pLen=3 )
+
+
+	tStmp <- Sys.time()
 	allIdxF <- fCut.customStatic( gEnv ,allIdxF )
 	allIdxF <- fCut.colValSeqNext( gEnv ,allIdxF )
 	allIdxFObj$allIdxF.fCut <- allIdxF
@@ -53,6 +63,11 @@ finalCut <- function( gEnv ,allIdx ){
     allIdxF <- allIdxF[flag]
     cat(sprintf("allIdxF %d\n",length(allIdxF)))
 
+	flgCnt <- fCutCnt.colValSeqNext.cStep( gEnv ,allIdxF )
+	flag <- flgCnt<2	;table(flag)
+    allIdxF <- allIdxF[flag]
+    cat(sprintf("allIdxF %d\n",length(allIdxF)))
+
 	allIdxFObj$allIdxF.fCutCnt <- allIdxF
 	
 	# multiple fCutCnt.**
@@ -61,14 +76,15 @@ finalCut <- function( gEnv ,allIdx ){
 	flgCnt <- rep( 0 ,length(allIdxF) )
 	flgCnt <- flgCnt + fCutCnt.customCnt( gEnv ,allIdxF )
 	flgCnt <- flgCnt + fCutCnt.colValSeqNext( gEnv ,allIdxF )
+	flgCnt <- flgCnt + fCutCnt.colValSeqNext.cStep( gEnv ,allIdxF )
 	table(flgCnt)
 	flag <- (0<flgCnt)&(flgCnt<3)	# 하나도 안 걸릴 수는 없겠지.
     allIdxF <- allIdxF[flag]
     cat(sprintf("allIdxF %d\n",length(allIdxF)))
+	allIdxFObj$allIdxF.fCutCnt.m <- allIdxF
 
-
-
-
+	tDiff <- Sys.time() - tStmp
+	save( allIdxFObj ,file="Obj_allIdxFObj.save" )
 
 	QQE
 

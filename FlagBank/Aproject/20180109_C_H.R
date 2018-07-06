@@ -143,18 +143,19 @@ cutEadge <- function( gEnv ,allIdx ){
 
 anaColEndPtn <- function( pZhF ,pDebug=F ){	# pZhF <- gEnv$zhF
 
+    colLen <- ncol(pZhF)
 	rowLen <- nrow(pZhF)
 	if( 3>rowLen ){
 		return(NULL)
 	}
 
 	rstLst <- list()
-	for( colIdx in 1:6 ){
+	for( colIdx in 1:colLen ){
 		cObj <- list( code=pZhF[rowLen:(rowLen-1),colIdx] )
 		dbgLst <- list()
 		valLst <- list()
 		for( rowIdx in (rowLen-1):2 ){
-			for( cIdx in 1:6 ){
+			for( cIdx in 1:colLen ){
 				code <- pZhF[rowIdx:(rowIdx-1),cIdx]
 				if( all(cObj$code==code) ){
 					valLst[[1+length(valLst)]] <- pZhF[rowIdx+1,cIdx]
@@ -181,17 +182,17 @@ anaColEndPtn <- function( pZhF ,pDebug=F ){	# pZhF <- gEnv$zhF
 
 #	pZhF<-gEnv$zhF	;pColSize=2	;pDebug=T
 colValSeqNext <- function( pZhF ,pColSize=2 ,pDebug=F ){
-
+    colLen <- ncol(pZhF)
 	rowLen <- nrow( pZhF )
 	lastZoid <- pZhF[rowLen,]
 
 	cvSeqLst <- list()
-	for( cIdx in 1:(6-pColSize+1) ){
+	for( cIdx in 1:(colLen-pColSize+1) ){
 		colSpan <- cIdx + (1:pColSize-1)
 		seqObj <- list( colSpan=colSpan ,code=lastZoid[colSpan] )
 		fndLst <- list()	;dbgLst<-list()
 		for( hIdx in (rowLen-1):1 ){
-			for( cIdx.bk in 1:(6-pColSize+1) ){
+			for( cIdx.bk in 1:(colLen-pColSize+1) ){
 				colSpan.bk <- cIdx.bk + (1:pColSize-1)
 				if( all(seqObj$code==pZhF[hIdx,colSpan.bk]) ){
 					fndLst[[1+length(fndLst)]] <- pZhF[hIdx+1,colSpan.bk]
