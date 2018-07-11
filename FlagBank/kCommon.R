@@ -560,3 +560,25 @@ k.str.mlpOption <- function( pObj ){
 
 			return( paste(rStr,collapse="\n") )
 	}
+
+kLog.getPerStr <- function( frag ,tot ,pUseName=TRUE ,pLong=FALSE ) {
+    perVal <- frag*100/tot
+	perStr <- sapply( 1:length(frag) ,function(idx){
+						if( pUseName && !is.null(names(frag)) ){
+							if( pLong ){
+								sprintf("%s:%.1f%%(%d/%d)",names(frag)[idx],perVal[idx],frag[idx],tot)
+							} else {
+								sprintf("%s:%.1f%%",names(frag)[idx],perVal[idx])
+							}
+						} else {
+							if( pLong ){
+								sprintf("%.1f%%(%d/%d)",perVal[idx],frag[idx],tot)
+							} else {
+								sprintf("%.1f%%",perVal[idx])
+							}
+						}
+					})
+	return( perStr )
+} # kLog.getPerStr()
+
+

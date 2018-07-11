@@ -42,10 +42,19 @@ finalCut <- function( gEnv ,allIdx ){
 	tStmp <- Sys.time()
 	allIdxF <- fCut.customStatic( gEnv ,allIdxF )
 	allIdxF <- fCut.colValSeqNext( gEnv ,allIdxF )
+	allIdxF <- fCut.colValSeqNext.cStep( gEnv ,allIdxF )
+	allIdxF <- fCut.cust.nextZW( gEnv ,allIdxF )
+	allIdxF <- fCut.cust.NextQuo10( gEnv ,allIdxF )
 	allIdxFObj$allIdxF.fCut <- allIdxF
 
-	apply( gEnv$allZoidMtx[allIdxF,] ,2 ,function(p){sort(unique(p))})
-	
+	# colValLst
+	colValLst <- apply( gEnv$allZoidMtx[allIdxF,] ,2 ,function(p){sort(unique(p))})
+	# rebNum
+	rebNum <- sapply( 2:nrow(gEnv$zhF) ,function(hIdx){ sum(gEnv$zhF[(hIdx-1),] %in% gEnv$zhF[hIdx,]) })
+	rebNum <- c( 0 ,rebNum )
+	# rebNumTbl
+	rebNumTbl <- table(apply( gEnv$allZoidMtx[allIdxF,] ,1 ,function(aZoid){ sum(lastZoid%in%aZoid) }))
+
 	# ------------------------------------------------------------------
 	# fCutCnt.**
 	#		각 파트에서 2 이상씩은 잘라낸 후,
@@ -65,6 +74,16 @@ finalCut <- function( gEnv ,allIdx ){
     allIdxF <- allIdxF[flag]
     cat(sprintf("allIdxF %d\n",length(allIdxF)))
 
+	flgCnt <- fCutCnt.cust.nextZW( gEnv ,allIdxF )
+	flag <- flgCnt<2	;table(flag)
+    allIdxF <- allIdxF[flag]
+    cat(sprintf("allIdxF %d\n",length(allIdxF)))
+
+	flgCnt <- fCutCnt.cust.NextQuo10( gEnv ,allIdxF )
+	flag <- flgCnt<2	;table(flag)
+    allIdxF <- allIdxF[flag]
+    cat(sprintf("allIdxF %d\n",length(allIdxF)))
+
 	allIdxFObj$allIdxF.fCutCnt <- allIdxF
 	
 	# multiple fCutCnt.**
@@ -74,6 +93,8 @@ finalCut <- function( gEnv ,allIdx ){
 	flgCnt <- flgCnt + fCutCnt.customCnt( gEnv ,allIdxF )
 	flgCnt <- flgCnt + fCutCnt.colValSeqNext( gEnv ,allIdxF )
 	flgCnt <- flgCnt + fCutCnt.colValSeqNext.cStep( gEnv ,allIdxF )
+	flgCnt <- flgCnt + fCutCnt.cust.nextZW( gEnv ,allIdxF )
+	flgCnt <- flgCnt + fCutCnt.cust.NextQuo10( gEnv ,allIdxF )
 	table(flgCnt)
 	flag <- (0<flgCnt)&(flgCnt<3)	# 하나도 안 걸릴 수는 없겠지.
     allIdxF <- allIdxF[flag]
@@ -81,6 +102,7 @@ finalCut <- function( gEnv ,allIdx ){
 	allIdxFObj$allIdxF.fCutCnt.m <- allIdxF
 
 	tDiff <- Sys.time() - tStmp
+	allIdxFObj$timeCost <- tDiff
 	save( allIdxFObj ,file="Obj_allIdxFObj.save" )
 
 	QQE
@@ -88,5 +110,6 @@ finalCut <- function( gEnv ,allIdx ){
     return( rObj )
 
 } # finalCut()
+
 
 
