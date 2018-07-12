@@ -1395,7 +1395,8 @@ fCutCnt.cust.colval1_03 <- function( gEnv ,allIdxF ){ # < official >
     flag <- apply( gEnv$allZoidMtx[allIdxT,,drop=F] ,1 ,function( aZoid ){
 					return( 1>sum(aZoid[2:6]==lastZoid[2:6]) )
 				})	;kIdx<-anaFlagFnd(!flag)
-	flgCnt[!flag] <- flgCnt[!flag] + 1	# 필수이다 싶으면 2 증가시키자.
+	flgCnt[!flag] <- flgCnt[!flag] + 1
+
 	#
 	lastRem <- lastZoid %% 10
     flag <- apply( gEnv$allZoidMtx[allIdxT,,drop=F] ,1 ,function( aZoid ){
@@ -1403,12 +1404,33 @@ fCutCnt.cust.colval1_03 <- function( gEnv ,allIdxF ){ # < official >
 					return( 3>sum(aRem[2:6]==lastRem[2:6]) )
 				})	;kIdx<-anaFlagFnd(!flag)
 	flgCnt[!flag] <- flgCnt[!flag] + 1
+
 	#
 	lastQuo <- table(lastZoid%/%10)
     flag <- apply( gEnv$allZoidMtx[allIdxT,,drop=F] ,1 ,function( aZoid ){
 					aQuoTbl <- table(aZoid%/%10)
 					if( length(lastQuo)!=length(aQuoTbl) ) return( TRUE )
 					return( !all(lastQuo==aQuoTbl) )
+				})	;kIdx<-anaFlagFnd(!flag)
+	flgCnt[!flag] <- flgCnt[!flag] + 1
+
+	# cStep 3 이상 일치.
+    flag <- apply( gEnv$allZoidMtx[allIdxT,,drop=F] ,1 ,function( aZoid ){
+					aCStep <- aZoid[2:6] - aZoid[1:5]
+					return( 3>sum(cStep==aCStep) )
+				})	;kIdx<-anaFlagFnd(!flag)
+	flgCnt[!flag] <- flgCnt[!flag] + 1
+
+    # val ptn 재현 2이상 - hIdx-1:1 에서
+	hSpan <- nrow(zMtx) - 1:1
+    flag <- apply( gEnv$allZoidMtx[allIdxT,,drop=F] ,1 ,function( aZoid ){
+					for( hIdx in hSpan ){
+						for( cIdx in 2:5 ){
+							fnd <- fCutU.hasPtn( zMtx[hIdx,][cIdx+0:1] ,aZoid )
+							if( fnd ) return( FALSE )
+						}
+					}
+					return( TRUE )
 				})	;kIdx<-anaFlagFnd(!flag)
 	flgCnt[!flag] <- flgCnt[!flag] + 1
 
@@ -1430,21 +1452,28 @@ fCutCnt.cust.colval1_03 <- function( gEnv ,allIdxF ){ # < official >
 				})	;kIdx<-anaFlagFnd(!flag)
 	flgCnt[!flag] <- flgCnt[!flag] + 1
 
+	#  1,11, 2,-> 3  fStep 1	;tail(gEnv$zhF[,1])
+	#	fStep 1이 한번에 3개 나오지는 않겠지.
+	banVal <- lastZoid[2:6]+1
+    flag <- apply( gEnv$allZoidMtx[allIdxT,,drop=F] ,1 ,function( aZoid ){
+					return( 2>sum(aZoid[2:6]==banVal) )
+				})	;kIdx<-anaFlagFnd(!flag)
+	flgCnt[!flag] <- flgCnt[!flag] + 1
+
+
+	QQE
+	# 
+
 	# allIdxF <- setdiff( allIdxF ,allIdxT[flgCnt>0] )
 	flgCnt.all <- rep( 0 ,length(allIdxF) )
 	return( allIdxF )
 
 } # fCutCnt.cust.colval1_03( )
 
-cnt <- sapply( 2:nrow(zMtx) ,function(hIdx){
-			rem.p <- zMtx[(hIdx-1),] %% 10
-			rem.f <- zMtx[hIdx,] %% 10
-			return( sum(rem.p==rem.f) )
-		})
-
 
 QQE binary rem 으로 fCut 추가.
-
+	lastZoid[c(2,5)] 일치값에 대한 fCut 추가.
+	cStep 3개, fStep 3개 일치값에 대한 fCut 추가.(컬럼고정)
 
 finalFlt.cust <- function( gEnv ,allIdxF ){
 	
