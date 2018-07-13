@@ -172,12 +172,16 @@ finalCut <- function( gEnv ,allIdx ){
 		cat(sprintf("zWidth:%d\n",zWidth))
 	}
 
-
 	table(flgCnt)
 	flag <- (0<flgCnt)&(flgCnt<3)	# 하나도 안 걸릴 수는 없겠지.
     allIdxF <- allIdxF[flag]
     cat(sprintf("allIdxF %d\n",length(allIdxF)))
 	allIdxFObj$allIdxF.fCutCnt.m <- allIdxF
+
+	mCnt <- fCut.fltQuoTbl( gEnv ,allIdxF )
+	flag <- mCnt < 3
+    allIdxF <- allIdxF[flag]
+    cat(sprintf("allIdxF %d\n",length(allIdxF)))
 
 	tDiff <- Sys.time() - tStmp
 	allIdxFObj$timeCost <- tDiff
@@ -189,79 +193,6 @@ finalCut <- function( gEnv ,allIdx ){
 
 } # finalCut()
 
-
-fCut.fltQuoTbl <- function( gEnv ,allIdxF ){
-
-	getQVal <- function( zoid ){
-		quo <- zoid%/%10
-		quoVal <- sort(unique(quo))
-		valLst <- list()
-		for( qIdx in quoVal ){
-			valLst[[as.character(qIdx)]] <- zoid[quo==qIdx]
-		}
-		return( valLst )
-	}
-
-	zQuoTblLst <- fCutU.getQuoTblLst( gEnv$zhF )
-	zQuoStr <- sapply( zQuoTblLst ,function(zQuo){zQuo$idStr})
-
-	aQuoTblLst <- fCutU.getQuoTblLst( gEnv$allZoidMtx[allIdxF,] )
-	aQuoStr <- sapply( aQuoTblLst ,function(aQuo){aQuo$idStr})
-	aQuoStr <- sort(unique(aQuoStr))
-
-	# 과거 동향 확인.
-	mtxLst <- list()
-	for( idx in 1:length(aQuoStr) ){
-		indices <- which(zQuoStr==aQuoStr[idx])
-		if( 0==length(indices) ){
-			mtxLst[[1+length(mtxLst)]] <- matrix(0,nrow=0,ncol=6)
-		} else {
-			mtxLst[[1+length(mtxLst)]] <- gEnv$zhF[indices,,drop=F]
-		}
-	}
-
-	chkNRow <- sapply( mtxLst ,nrow )
-
-	# 과거 동향으로부터 ban 정보 정리.
-	banLst <- list()
-	for( idx in 1:length(aQuoStr) ){
-		rowLen <- nrow(mtxLst[[idx]])
-		mtx <- mtxLst[[idx]]
-		if( 0==rowLen ) next
-
-		lastZoid=mtx[rowLen,]
-		obj <- list( idStr=aQuoStr[idx] ,lastZoid=lastZoid )
-		obj$tbl <- table(lastZoid%/%10)
-		obj$qVal <- getQVal( lastZoid )
-
-		banLst[[ aQuoStr[idx] ]] <- obj
-	}
-
-	# level 1 : 거의 불가.
-	# 크기 3개 이상 블럭의 값이 일치하거나.
-	# 값이 일치하는 블럭의 길이 총 합이 3이상이거나.
-	# hIdx-1, hIdx-3 에서 2개 이상 일치.
-
-	# level 2 : 이따금 발생.
-	# 크기 3개 이상 블럭 일치값 2개.
-	# 일치하는 블럭의 길이 총합이 3 이상.(길이 1 블럭 2개 일치나, 길이 2 블럭 하나 일치.)
-
-	assRst <- rep( 0 ,length(aQuoTblLst) )
-	for( aIdx in 1:length(aQuoTblLst) ){
-		banObj <- banLst[[ aQuoTblLst[[aIdx]]$idStr ]]
-		aZoid <- gEnv$allZoidMtx[allIdxF,][aIdx,]
-		aQVal <- getQVal( aZoid )
-
-		matchFlg <- sapply( 1:length(aQVal) ,function(qIdx){ all(aQVal[[qIdx]]==banObj$qVal[[qIdx]]) })
-		if( 0==sum(matchFlg) ) next
-
-		assRst[aIdx] <- sum(matchFlg)
-	}
-
-	assRst1.idx <- which( assRst==1 )
-	assRst2.idx <- which( assRst==2 )
-
-} # fCut.fltQuoTbl()
 
 
 
