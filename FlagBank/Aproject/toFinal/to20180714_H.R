@@ -41,6 +41,22 @@ fCutU.seqRebCnt <- function( pZh ,pZoid ,pRowLen=10 ,pLen=2 ){ # < official >
 
 } # fCut.seqRebCnt()
 
+fCutU.getQuoTblLst <- function( zhF ){ # < official >
+
+	hLen <- nrow( zhF )
+
+	quoLst <- apply( zhF%/%10 ,1 ,function(zCode){
+					obj <- list( tbl=table(zCode) )
+					obj$valStr <- paste(obj$tbl,collapse=" ")
+					obj$quoStr <- paste(names(obj$tbl),collapse=" ")
+					obj$idStr <- sprintf("V:%s Q:%s",obj$valStr,obj$quoStr)
+					return(obj)
+				})
+
+	return( quoLst )
+
+} # fCutU.getQuoTblLst()
+
 fCutU.getNextZW <- function( gEnv ){ # < official >
 
 	hLen <- nrow( gEnv$zhF )
@@ -94,7 +110,6 @@ fCutU.getRebNum <- function( gEnv ,rebNum=0 ){ # < official >
 	return( rObj )
 
 } # fCutU.getNextZW()
-
 
 fCutU.hist.banValScan.grp <- function( gEnv ){ # < official >
 
