@@ -111,6 +111,24 @@ fCutU.getRebNum <- function( gEnv ,rebNum=0 ){ # < official >
 
 } # fCutU.getNextZW()
 
+fCutU.getNextRebNumPtn <- function( gEnv ,numPtn ){	# <official>
+	rebNum <- sapply( 2:nrow(gEnv$zhF) ,function(hIdx){ sum(gEnv$zhF[(hIdx-1),]%in%gEnv$zhF[hIdx,]) } )
+	rebNum <- c( 0 ,rebNum )	;names(rebNum) <- 1:length(rebNum)
+	rebNumLen <- length(rebNum)
+	numPtnLen <- length(numPtn)
+
+	span <- (numPtnLen-1):0
+	flag <- rep( FALSE ,rebNumLen )
+	for( hIdx in numPtnLen:(rebNumLen-1) ){
+		flag[hIdx] <- all( rebNum[hIdx-span]==numPtn )
+	}
+
+	indices <- which(flag)+1	;indices.last <- indices[length(indices)]
+	lastRebMtx <- gEnv$zhF[indices.last-6:0,]	# 마지막 재발정보를 비교할 수 있도록...
+	rObj <- list( zMtx=gEnv$zhF[indices,,drop=F] ,rebNum=rebNum ,lastRebMtx=lastRebMtx  )
+	return( rObj )
+}	# fCutU.getNextRebNumPtn()
+
 fCutU.hist.banValScan.grp <- function( gEnv ){ # < official >
 
 	testSpan <- 400:nrow(gEnv$zhF)
@@ -1215,7 +1233,7 @@ fCutCnt.cust.nextZW <- function( gEnv ,allIdxF ){ # < official >
 	# 732  2  4  5 17 27 32
 	# 790  3  8 19 27 30 41
 
-	# conditional : 5, 17, 27, 32 에서의 앞뒤 rem 3개 패턴.
+	#
 	stdQuo <- table( lastZoid %/% 10 )
     flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
 					aQuo <- table( aZoid%/%10 )
@@ -1261,6 +1279,10 @@ fCutCnt.cust.nextZW <- function( gEnv ,allIdxF ){ # < official >
 	flag <- !(gEnv$allZoidMtx[allIdxF,4] %in% c(32) )	;kIdx<-anaFlagFnd(!flag)
 	flgCnt[!flag] <- flgCnt[!flag] + 1
 	cat(sprintf("flaged %d(%.1f%%)\n",sum(!flag),100*sum(!flag)/length(flag)))
+	# conditional : zoid[4]은  30 아님 27~27 ,30~?
+	flag <- !(gEnv$allZoidMtx[allIdxF,4] %in% c(30) )	;kIdx<-anaFlagFnd(!flag)
+	flgCnt[!flag] <- flgCnt[!flag] + 1
+	cat(sprintf("flaged %d(%.1f%%)\n",sum(!flag),100*sum(!flag)/length(flag)))
 
 	# conditional : 10=7+3 관계가 또 재발? (10,xx,xx,7,xx,xx,3)
 	banVal <- c( 10 ,10 ,16 ,13 ,12 ,11 )
@@ -1271,8 +1293,8 @@ fCutCnt.cust.nextZW <- function( gEnv ,allIdxF ){ # < official >
 	cat(sprintf("flaged %d(%.1f%%)\n",sum(!flag),100*sum(!flag)/length(flag)))
 
 
-	# conditional : zoid[3]은 27 아님. 31,27,27,?
-	flag <- !(gEnv$allZoidMtx[allIdxF,3] %in% c(27) )	;kIdx<-anaFlagFnd(!flag)
+	# conditional : zoid[3]은 27,31 아님. 31,27,27,?
+	flag <- !(gEnv$allZoidMtx[allIdxF,3] %in% c(27,31) )	;kIdx<-anaFlagFnd(!flag)
 	flgCnt[!flag] <- flgCnt[!flag] + 1
 	cat(sprintf("flaged %d(%.1f%%)\n",sum(!flag),100*sum(!flag)/length(flag)))
 
@@ -1320,7 +1342,6 @@ fCutCnt.cust.nextZW <- function( gEnv ,allIdxF ){ # < official >
 				})	;kIdx<-anaFlagFnd(!flag)
 	flgCnt[!flag] <- flgCnt[!flag] + 1
 	cat(sprintf("flaged %d(%.1f%%)\n",sum(!flag),100*sum(!flag)/length(flag)))
-
 
 	#
 	lastZoid.zw <- lastZoid[6] - lastZoid[1]
@@ -1415,7 +1436,7 @@ fCutCnt.cust.NextQuo10 <- function( gEnv ,allIdxF ){ # < official >
 	stdQuoTbl <- table(lastZoid%/%10)
     flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
 					aQuoTbl <- table(aZoid%/%10)
-					if( length(stdQuoTbl)!=length(aQuoTbl) ) return(FALSE)
+					if( length(stdQuoTbl)!=length(aQuoTbl) ) return(TRUE)
 
 					return( !all(stdQuoTbl==aQuoTbl) )
 				})	;kIdx<-anaFlagFnd(!flag)
@@ -1488,7 +1509,7 @@ fCutCnt.cust.getNextBin <- function( gEnv ,allIdxF ){ # < official >
 	stdQuoTbl <- table(lastZoid%/%10)
     flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
 					aQuoTbl <- table(aZoid%/%10)
-					if( length(stdQuoTbl)!=length(aQuoTbl) ) return(FALSE)
+					if( length(stdQuoTbl)!=length(aQuoTbl) ) return(TRUE)
 
 					return( !all(stdQuoTbl==aQuoTbl) )
 				})	;kIdx<-anaFlagFnd(!flag)
@@ -1536,6 +1557,126 @@ fCutCnt.cust.getNextBin <- function( gEnv ,allIdxF ){ # < official >
 
 } # fCutCnt.cust.getNextBin( )
 
+#========================================================================
+# fCutU.getNextRebNumPtn
+#		lastZoid가 반복되지 않기 위해, rebNum이 0,0,1 패턴 다음의 hZoid들을 수집
+#	done
+fCutCnt.cust.getNextRebNum <- function( gEnv ,allIdxF ,numPtn=c(0,0,1) ){	# < half official >
+
+	lastZoid.std <- gEnv$zhF[nrow(gEnv$zhF),]
+	flgCnt <- rep( 0 ,length(allIdxF) )
+
+	rebObj <- fCutU.getNextRebNumPtn( gEnv ,numPtn )
+	zMtx <- rebObj$zMtx	# rptObj<-anaQuoTbl( zMtx )
+	lastZoid <- zMtx[nrow(zMtx),]
+	cStep <- lastZoid[2:6] - lastZoid[1:5]
+	fStep <- lastZoid - zMtx[nrow(zMtx)-1,]
+	zCodeMtx <- t(apply(zMtx,1,function(aZoid){aZoid[2:6]-aZoid[1:5]}))
+
+	# <recycle> 동일 컬럼 값 재발생 (2개 이상)
+    flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+					return( 2>sum(aZoid==lastZoid) )
+				})	;kIdx<-anaFlagFnd(!flag)
+	flgCnt[!flag] <- flgCnt[!flag] + 2
+
+	# <recycle> 동일 컬럼 값 재발생
+    flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+					return( 1>sum(aZoid==lastZoid) )
+				})	;kIdx<-anaFlagFnd(!flag)
+	flgCnt[!flag] <- flgCnt[!flag] + 1
+	# conditinoal Quo10 tbl 동일
+	stdQuoTbl <- table(lastZoid%/%10)
+    flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+					aQuoTbl <- table(aZoid%/%10)
+					if( length(stdQuoTbl)!=length(aQuoTbl) ) return(TRUE)
+
+					return( !all(stdQuoTbl==aQuoTbl) )
+				})	;kIdx<-anaFlagFnd(!flag)
+	flgCnt[!flag] <- flgCnt[!flag] + 1
+	# quoTbl 뒷부분 1,1 이 너무 오래 나왔다.
+    flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+					aQuoTbl <- table(aZoid%/%10)
+					chkSpan <- length(aQuoTbl)-1:0
+					return( !all(aQuoTbl[chkSpan]==c(1,1)) )
+				})	;kIdx<-anaFlagFnd(!flag)
+	flgCnt[!flag] <- flgCnt[!flag] + 1
+	# ZW
+	lastZW <- lastZoid[6]-lastZoid[1]	# ... 25  34  31  24  30  38 
+    flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+					aZW <- aZoid[6]-aZoid[1]
+					return( !(aZW%in%c(38,29)) )
+				})	;kIdx<-anaFlagFnd(!flag)
+	flgCnt[!flag] <- flgCnt[!flag] + 1
+	# cStep 동일반복 3이상
+    flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+					aCStep <- aZoid[2:6] - aZoid[1:5]
+					return( 3>sum(aCStep==cStep) )
+				})	;kIdx<-anaFlagFnd(!flag)
+	flgCnt[!flag] <- flgCnt[!flag] + 1
+
+	# 647  5 16 21 23 24 30
+	# 709 10 18 30 36 39 44
+	# 722 12 14 21 30 39 43
+	# 727  7  8 10 19 21 31
+	# 732  2  4  5 17 27 32
+	# 790  3  8 19 27 30 41
+	# 2,3,4?  7+3=c+?
+	flag <- !(gEnv$allZoidMtx[allIdxF,1] %in% c(4,8) )	;kIdx<-anaFlagFnd(!flag)
+	flgCnt[!flag] <- flgCnt[!flag] + 1
+	# 14,8,4,8,?
+	flag <- !(gEnv$allZoidMtx[allIdxF,2] %in% c(4,14) )	;kIdx<-anaFlagFnd(!flag)
+	flgCnt[!flag] <- flgCnt[!flag] + 1
+	# 27,27
+	flag <- !(gEnv$allZoidMtx[allIdxF,3] %in% c(27) )	;kIdx<-anaFlagFnd(!flag)
+	flgCnt[!flag] <- flgCnt[!flag] + 1
+	# 27~27 ,30~30?
+	flag <- !(gEnv$allZoidMtx[allIdxF,4] %in% c(30) )	;kIdx<-anaFlagFnd(!flag)
+	flgCnt[!flag] <- flgCnt[!flag] + 1
+	#
+    flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+					aRem <- aZoid%%10
+					return( !all(aRem[1:2]==c(2,4)) )
+				})	;kIdx<-anaFlagFnd(!flag)
+	flgCnt[!flag] <- flgCnt[!flag] + 1
+	#
+    flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+					aRem <- aZoid%%10
+					return( !all(aRem[4:5]==c(7,7)) )
+				})	;kIdx<-anaFlagFnd(!flag)
+	flgCnt[!flag] <- flgCnt[!flag] + 1
+
+	#
+    flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+					cnt <- 0
+					aRem <- aZoid%%10
+					if( aRem[2]%in%c(4  ) ) cnt <- cnt+1
+					if( aRem[3]%in%c(7,1) ) cnt <- cnt+1
+					if( aRem[4]%in%c(7,9) ) cnt <- cnt+1
+					if( aRem[6]%in%c(2,3) ) cnt <- cnt+1
+					return( cnt<2 )
+				})	;kIdx<-anaFlagFnd(!flag)
+	flgCnt[!flag] <- flgCnt[!flag] + 1
+
+	# 733 13  8  1  2  5
+	# 751  1 12  4  8 16
+	# 768 20  2  1  8  6
+	# 787  1  7  3 11  1
+	# 805  9  1  5 13  1
+	# 810  5  3  8 18  4
+    flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+					cnt <- 0
+					aCstep <- aZoid[2:6]-aZoid[1:5]
+					if( aCstep[1]==8 ) cnt <- cnt+1
+					if( aCstep[5]==4 ) cnt <- cnt+1
+
+					if( aCstep[3]==sum(aCstep[1:2]) ) cnt <- cnt+1
+					return( cnt<2 )
+				})	;kIdx<-anaFlagFnd(!flag)
+	flgCnt[!flag] <- flgCnt[!flag] + 1
+
+	return( flgCnt )
+
+} # fCutCnt.cust.getNextRebNum()
 
 #========================================================================
 # zoid[1] - 3,5,7,9

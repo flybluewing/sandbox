@@ -89,6 +89,11 @@ finalCut <- function( gEnv ,allIdx ){
     allIdxF <- allIdxF[flag]
     cat(sprintf("allIdxF %d\n",length(allIdxF)))
 
+	flgCnt <- fCutCnt.cust.getNextRebNum( gEnv ,allIdxF )
+	flag <- flgCnt<2	;table(flag)
+    allIdxF <- allIdxF[flag]
+    cat(sprintf("allIdxF %d\n",length(allIdxF)))
+
 	flgCnt <- fCutCnt.cust.colval1_03( gEnv ,allIdxF )
 	flag <- flgCnt<2	;table(flag)
     allIdxF <- allIdxF[flag]
@@ -152,6 +157,7 @@ finalCut <- function( gEnv ,allIdx ){
 	flgCnt <- flgCnt + fCutCnt.cust.colval1_05( gEnv ,allIdxF )
 	flgCnt <- flgCnt + fCutCnt.cust.colval1_07( gEnv ,allIdxF )
 	flgCnt <- flgCnt + fCutCnt.cust.colval1_09( gEnv ,allIdxF )
+	flgCnt <- flgCnt + fCutCnt.cust.getNextRebNum( gEnv ,allIdxF )
 
 	cutCol.idx <- 3
 	cutCol.val.span <- sort(unique(gEnv$allZoidMtx[allIdxF,cutCol.idx]))
