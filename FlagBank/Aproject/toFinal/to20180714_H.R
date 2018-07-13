@@ -171,16 +171,6 @@ fCutU.hist.banValScan.grp <- function( gEnv ){ # < official >
 
 fCut.fltQuoTbl <- function( gEnv ,allIdxF ){	# < official >
 
-	getQVal <- function( zoid ){
-		quo <- zoid%/%10
-		quoVal <- sort(unique(quo))
-		valLst <- list()
-		for( qIdx in quoVal ){
-			valLst[[as.character(qIdx)]] <- zoid[quo==qIdx]
-		}
-		return( valLst )
-	}
-
 	zQuoTblLst <- fCutU.getQuoTblLst( gEnv$zhF )
 	zQuoStr <- sapply( zQuoTblLst ,function(zQuo){zQuo$idStr})
 
