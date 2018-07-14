@@ -1,9 +1,9 @@
 # 20180109_D_H.R final approach
 
-anaFlagFnd <- function( flag ){
+anaFlagFnd <- function( flag ,report=TRUE ){
     kIdx <- head(which(flag))
     logStr <- kLog.getPerStr( sum(flag) ,length(flag) ,pLong=T )
-    cat(sprintf("    filted    %s\n",logStr))
+    if( report ) cat(sprintf("    filted    %s\n",logStr))
     return( kIdx )
 } # anaFlagFnd( )
 
