@@ -1,6 +1,7 @@
 # to20180707_H.R 최종접근
 
-# 일단 코딩(기능확인 요)
+# 공용
+# done.
 fCut.default <- function( gEnv ,allIdxF ,rpt=FALSE ){
 
 	zMtx <- gEnv$zhF	;zMtxLen <- nrow(zMtx)
@@ -83,6 +84,12 @@ fCut.default <- function( gEnv ,allIdxF ,rpt=FALSE ){
 				})	;kIdx<-anaFlagFnd(!flag,rpt)
     allIdxF <- allIdxF[flag]
 
+	# quo 4개 이상은 제외(사실 기본 필터에 포함되어있다.)
+    flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+					return( 4>max(table(aZoid%/%10)) )
+				})	;kIdx<-anaFlagFnd(!flag,rpt)
+    allIdxF <- allIdxF[flag]
+
 	return( allIdxF )
 } # fCut.default()
 # 일단 코딩(기능확인 요)
@@ -111,19 +118,63 @@ fCutCnt.default <- function( gEnv ,allIdxF ,rpt=FALSE ){
 fCut.basic <- function( gEnv ,allIdxF ,rpt=FALSE ){
 
 	zMtx <- gEnv$zhF
-	lastZoid <- zMtx[nrow(zMtx),]
-	cStep <- lastZoid[2:6] - lastZoid[1:5]
-	fStep <- lastZoid - zMtx[nrow(zMtx)-1,]
+	stdMI <- fCutU.getMtxInfo( zMtx )
+		# mtxLen lastZoid rem quo10 cStep fStep rawTail cStepTail
 
+
+	# 810  5 10 13 21 39 43
+	# 811  8 11 19 21 36 45
+	# 812  1  3 12 14 16 43
+	# 813 11 30 34 35 42 44
+	# 814  2 21 28 38 42 45
+	# 815 17 21 25 26 27 36
 	# 동일 컬럼에 같은 값 재현은 제외.
     flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
-					return( !any(aZoid==lastZoid) )
+					return( !any(aZoid==stdMI$lastZoid) )
+				})	;kIdx<-anaFlagFnd(!flag,rpt)
+    allIdxF <- allIdxF[flag]
+	#	1,xx,2,xx,?
+	flag <- !(gEnv$allZoidMtx[allIdxF,1] %in% c(3))	;kIdx<-anaFlagFnd(!flag,rpt)
+    allIdxF <- allIdxF[flag]
+	#	30,21,21,?
+	flag <- !(gEnv$allZoidMtx[allIdxF,2] %in% c(21,30))	;kIdx<-anaFlagFnd(!flag,rpt)
+    allIdxF <- allIdxF[flag]
+
+	# 810  5  3  8 18  4
+	# 811  3  8  2 15  9
+	# 812  2  9  2  2 27
+	# 813 19  4  1  7  2
+	# 814 19  7 10  4  3
+	# 815  4  4  1  1  9
+	#
+    flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+					aCStep <- aZoid[2:6]-aZoid[1:5]
+					if( 1<sum(aCStep==1) ) return(FALSE)
+					if( any(aCStep[2:5]==aCStep[1:4]) ) return(FALSE)
+					if( sum(aCStep[c(1,2,3)])==aCStep[5] ) return( FALSE )
+					if( sum(aCStep[c(1,2,4)])==aCStep[5] ) return( FALSE )
+					return( TRUE )
 				})	;kIdx<-anaFlagFnd(!flag,rpt)
     allIdxF <- allIdxF[flag]
 
-	#	813 11 30 34 35 42 44
-	#	814  2 21 28 38 42 45
+	# QuoTbl : 이전 패턴 반복은 제외.(H814 tbl)
+	# 1Quo가 17 하나 뿐이거나, 3Quo가 36 하나 뿐인 것 제외.
+	banQuo <- fCutU.getQuoObj( gEnv$zhF["814",] )
+    flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+					aQuoVal <- aZoid%/%10
+					aQuoTbl <- table(aQuoVal)
+					if( banQuo$sameTbl(aQuoTbl) ) return( FALSE )
 
+					quoSeg <- aZoid[aQuoVal==1]
+					if( 1==length(quoSeg) && quoSeg==17 ) return( FALSE )
+					quoSeg <- aZoid[aQuoVal==3]
+					if( 1==length(quoSeg) && quoSeg==36 ) return( FALSE )
+
+					return( TRUE )
+				})	;kIdx<-anaFlagFnd(!flag,rpt)
+    allIdxF <- allIdxF[flag]
+
+	return( allIdxF )
 
 } # fCut.basic()
 

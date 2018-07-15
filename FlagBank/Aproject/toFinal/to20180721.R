@@ -2,11 +2,11 @@
 source("./toFianl/fCutU_H.R")
 source("./toFinal/to20180714_H.R")
 
-saveId <- "Z814"
+saveId <- "Z815"
 load( sprintf("Obj_allIdxLst%s.save",saveId) )
 load(sprintf("./save/Obj_gEnv%s.save",saveId))
 
-allZoidGrpName <-"allZoid.idx0"	# 525364
+allZoidGrpName <-"allZoid.idx0"	# 660671
 allIdx <- allIdxLst[[allZoidGrpName]]
 
 finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
@@ -14,10 +14,8 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 
     allIdxF <- allIdx
 	allIdxFObj <- list()
-	lastZoid <- gEnv$zhF[nrow(gEnv$zhF),]
-	cStep <- lastZoid[2:6] - lastZoid[1:5]
-	fStep <- lastZoid - gEnv$zhF[nrow(gEnv$zhF)-1,]
-
+	stdMI <- fCutU.getMtxInfo( gEnv$zhF )	# matrix info
+		# mtxLen lastZoid rem quo10 cStep fStep rawTail cStepTail
 	# 참고 자료 --------------------------------------------------------------------
     rebCnt <- sapply( 2:nrow(gEnv$zhF) ,function(idx){
                     cnt <- sum( gEnv$zhF[idx-1,] %in% gEnv$zhF[idx,] )
@@ -339,24 +337,16 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 
 } # finalCut()
 
-
-zoidMtx <- gEnv$allZoidMtx[allIdxF,]	;logId="allZoid.idx1"
-logAllZoidMtx <- function( zoidMtx ,logId ){
-
-	fileName <- sprintf("./report/%s.txt",logId)
-    FLogStr <- function( pMsg ,pTime=F ,pAppend=T ,pConsole=F ){
-                k.FLogStr( pMsg ,pFile=fileName ,pTime=pTime ,pAppend=pAppend ,pConsole=pConsole )
-    }
-	FLogStr( sprintf("allZoidMtx :%s",logId),pAppend=F)
-	for( rIdx in 1:nrow(zoidMtx) ){
-		dnaStr <- sprintf("%2d",zoidMtx[rIdx,])
-		dnaStr <- paste( dnaStr ,collapse=" " )
-		FLogStr(sprintf("%3d  %s",rIdx,dnaStr))
-		if( 0==(rIdx%%5) ){
-			FLogStr(sprintf("      "))
-		}
-	}
-	return( fileName )
-} # logAllZoidMtx()
-
+finalCut.test <- function(){
+	# 1 2 3 / 1 4 1	<- lastZoid quo
+	quoLst <- apply( gEnv$zhF ,1 ,fCutU.getQuoObj )
+	quoFlag <- sapply( quoLst ,function( quoObj ){
+					return( quoObj$sameTbl(c(1,4,1)) )
+				})
+	qIdx <- which(quoFlag)
+	qIdx <- setdiff( qIdx ,length(quoLst) )
+	preTbl <- sapply( quoLst[qIdx-1] ,function(quoObj){ paste(quoObj$tbl,collapse=" " )})
+	postTbl <- sapply( quoLst[qIdx+1] ,function(quoObj){ paste(quoObj$tbl,collapse=" " )})
+	cbind( preTbl ,postTbl )
+} # finalCut.test()
 

@@ -192,6 +192,19 @@ fCutU.getQuoObj <- function( zoid ){
 	rObj <- list( tbl=table(zoid%/%10) )
 	rObj$size <- rep(0,5)	;names(rObj$size) <- 0:(length(rObj$size)-1)
 	rObj$size[names(rObj$tbl)] <- rObj$tbl
+
+	rObj$sameTbl <- function( tbl ,fullMatch=FALSE ){
+		if( length(rObj$tbl)!=length(tbl) ) return( FALSE )
+
+		if( all(rObj$tbl==tbl) ){
+			if( fullMatch ){
+				if( all(names(rObj$tbl)==names(tbl)) ) return(FALSE)
+			}
+			return( TRUE )
+		}
+		return( FALSE )
+	} # rObj$sameTbl()
+
 	return( rObj )
 } # fCutU.getQuoObj()
 
@@ -202,10 +215,7 @@ fCutU.getMtxInfo <- function( zMtx ){
 	rObj$lastZoid <- lastZoid
 	rObj$rem <- lastZoid%%10
 
-	quo10 <- fCutU.getQuoObj(lastZoid)
-	rObj$quoTbl <- quo10$tbl
-	rObj$quoSize <- quo10$size
-
+	rObj$quo10 <- fCutU.getQuoObj(lastZoid)
 	rObj$cStep <- lastZoid[2:6]-lastZoid[1:5]
 	rObj$fStep <- lastZoid-zMtx[rObj$mtxLen-1,]
 	rObj$rawTail <- tail(zMtx)
@@ -219,3 +229,42 @@ fCutU.getMtxInfo <- function( zMtx ){
 
 	return( rObj )
 } # fCutU.getMtxInfo
+
+fCutU.logAllZoidMtx <- function( zoidMtx ,logId  ){
+
+	fileName <- sprintf("./report/%s.txt",logId)
+    FLogStr <- function( pMsg ,pTime=F ,pAppend=T ,pConsole=F ){
+                k.FLogStr( pMsg ,pFile=fileName ,pTime=pTime ,pAppend=pAppend ,pConsole=pConsole )
+    }
+	FLogStr( sprintf("allZoidMtx :%s",logId),pAppend=F)
+	for( rIdx in 1:nrow(zoidMtx) ){
+		dnaStr <- sprintf("%2d",zoidMtx[rIdx,])
+		dnaStr <- paste( dnaStr ,collapse=" " )
+		FLogStr(sprintf("%3d  %s",rIdx,dnaStr))
+		if( 0==(rIdx%%5) ){
+			FLogStr(sprintf("      "))
+		}
+	}
+	return( fileName )
+
+} # fCutU.logAllZoidMtx( )
+
+# 정리되면 지울 것.
+# zoidMtx <- gEnv$allZoidMtx[allIdxF,]	;logId="allZoid.idx1"
+logAllZoidMtx <- function( zoidMtx ,logId ){
+
+	fileName <- sprintf("./report/%s.txt",logId)
+    FLogStr <- function( pMsg ,pTime=F ,pAppend=T ,pConsole=F ){
+                k.FLogStr( pMsg ,pFile=fileName ,pTime=pTime ,pAppend=pAppend ,pConsole=pConsole )
+    }
+	FLogStr( sprintf("allZoidMtx :%s",logId),pAppend=F)
+	for( rIdx in 1:nrow(zoidMtx) ){
+		dnaStr <- sprintf("%2d",zoidMtx[rIdx,])
+		dnaStr <- paste( dnaStr ,collapse=" " )
+		FLogStr(sprintf("%3d  %s",rIdx,dnaStr))
+		if( 0==(rIdx%%5) ){
+			FLogStr(sprintf("      "))
+		}
+	}
+	return( fileName )
+} # logAllZoidMtx()
