@@ -92,11 +92,13 @@ fCut.default <- function( gEnv ,allIdxF ,rpt=FALSE ){
 
 	return( allIdxF )
 } # fCut.default()
-# 일단 코딩(기능확인 요)
+# QQE working
 fCutCnt.default <- function( gEnv ,allIdxF ,rpt=FALSE ){
 
 	fltCnt <- rep( 0 ,length(allIdxF) )
 
+	zMtx <- gEnv$zhF
+	stdMI <- fCutU.getMtxInfo( zMtx )
 
 	# cStep 2,4,6,8 같은 식의 증가 감소(11% 정도라 불안하긴 한데..)
     flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
@@ -108,13 +110,23 @@ fCutCnt.default <- function( gEnv ,allIdxF ,rpt=FALSE ){
 					}
 					return( TRUE )
 				})	;kIdx<-anaFlagFnd(!flag,rpt)
-    allIdxF <- allIdxF[flag]
+    flgCnt[!flag] <- flgCnt[!flag] + 1
+
+	# fStep :  15 ,14 ,-5 , 3 , 4  처럼 연속증가/감소 2개 이상.
+    flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+					aFStep <- aZoid - stdMI$lastZoid
+					cnt <- 0
+					aFStep.cStep <- aFStep[2:6]-aFStep[1:5]
+					if( 1<sum(abs(aFStep.cStep)==1) ) cnt <- cnt + 1
+					return( cnt<1 )
+				})	;kIdx<-anaFlagFnd(!flag,rpt)
+	flgCnt[!flag] <- flgCnt[!flag] + 1
 
 	return( fltCnt )
 
 } # fCutCnt.default()
 
-# 
+# done
 fCut.basic <- function( gEnv ,allIdxF ,rpt=FALSE ){
 
 	zMtx <- gEnv$zhF
@@ -150,6 +162,7 @@ fCut.basic <- function( gEnv ,allIdxF ,rpt=FALSE ){
     flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
 					aCStep <- aZoid[2:6]-aZoid[1:5]
 					if( 1<sum(aCStep==1) ) return(FALSE)
+					if( 1<sum(aCStep==4) ) return(FALSE)
 					if( any(aCStep[2:5]==aCStep[1:4]) ) return(FALSE)
 					if( sum(aCStep[c(1,2,3)])==aCStep[5] ) return( FALSE )
 					if( sum(aCStep[c(1,2,4)])==aCStep[5] ) return( FALSE )
@@ -174,18 +187,95 @@ fCut.basic <- function( gEnv ,allIdxF ,rpt=FALSE ){
 				})	;kIdx<-anaFlagFnd(!flag,rpt)
     allIdxF <- allIdxF[flag]
 
+	# 현재의 특이한(1,4,1) Quo 마지막 재발 패턴이 반복되긴 어렵겠지.(딱 한번 있긴 했다..)
+	stdQuoLst <- apply( gEnv$zhF ,1 ,fCutU.getQuoObj)
+	quoMatFlag <- sapply( stdQuoLst ,function(quo){
+						stdMI$quo10$sameTbl( quo$tbl )
+					})
+	quoMatIdx <- which(quoMatFlag)
+	lastQuoIdx <- quoMatIdx[length(quoMatIdx)-1]
+	nextQuo <- stdQuoLst[[ lastQuoIdx+1 ]]
+    flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+					aQuoTbl <- table( aZoid%/%10 )
+					return( !nextQuo$sameTbl(aQuoTbl) )
+				})	;kIdx<-anaFlagFnd(!flag,rpt)
+    allIdxF <- allIdxF[flag]
+
+	# cStep 과 fStep 관계가 있다... 둘 다 1,9로 끝났음.
+	#	44,45,36(1,-9)    26,37,36(1,9)	 다만, fStep 값은 abs()로 하자.
+    flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+					aCStep <- aZoid[2:6]-aZoid[1:5]
+					aFStep <- aZoid - stdMI$lastZoid
+					cnt <- 0
+					if( aCStep[5]==abs(aFStep[6]) ) return( FALSE )
+					if( aCStep[4]==abs(-9) ) return( FALSE )
+					return( cnt<2 )
+				})	;kIdx<-anaFlagFnd(!flag,rpt)
+	allIdxF <- allIdxF[flag]
+
+
+
 	return( allIdxF )
 
 } # fCut.basic()
 
 #
-fCutCnt.basic <- function( gEnv ,allIdxF ,report=FALSE ){
+fCutCnt.basic <- function( gEnv ,allIdxF ,rpt=FALSE ){
 
 	zMtx <- gEnv$zhF
-	lastZoid <- gEnv$zhF[nrow(gEnv$zhF),]
-	cStep <- lastZoid[2:6] - lastZoid[1:5]
-	fStep <- lastZoid - gEnv$zhF[nrow(gEnv$zhF)-1,]
+	stdMI <- fCutU.getMtxInfo( zMtx )
 
+	# 810  5 10 13 21 39 43
+	# 811  8 11 19 21 36 45
+	# 812  1  3 12 14 16 43
+	# 813 11 30 34 35 42 44
+	# 814  2 21 28 38 42 45
+	# 815 17 21 25 26 27 36
+
+	flag <- apply( gEnv$allZoidMtx[allIdxF,] ,1 ,function( aZoid ){
+				aRem <- aZoid%%10
+				cnt <- 0
+				if( aRem[1]%in%c(3  ) ) cnt <- cnt+1
+				if( aRem[2]%in%c(1,0) ) cnt <- cnt+1
+				if( aRem[6]%in%c(7  ) ) cnt <- cnt+1
+
+				if( aRem[3]%in%c(0  ) ) cnt <- cnt+1
+				if( aRem[4]%in%c(5  ) ) cnt <- cnt+1
+				if( aRem[6]%in%c(6  ) ) cnt <- cnt+1
+
+				if( aRem[1]==aRem[5] ) cnt <- cnt+1
+				if( aRem[4]==aRem[6] ) cnt <- cnt+1
+				return( cnt<2 )
+			})	;kIdx<-anaFlagFnd(!flag,rpt)
+	flgCnt[!flag] <- flgCnt[!flag] + 1
+
+	# 810  5  3  8 18  4
+	# 811  3  8  2 15  9
+	# 812  2  9  2  2 27
+	# 813 19  4  1  7  2
+	# 814 19  7 10  4  3
+	# 815  4  4  1  1  9
+    flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+					aCStep <- aZoid[2:6]-aZoid[1:5]
+					cnt <- 0
+					if( aCStep[1]%in%c( 4   ) ) cnt <- cnt+1
+					if( aCStep[2]%in%c( 7   ) ) cnt <- cnt+1
+					if( aCStep[3]%in%c(10   ) ) cnt <- cnt+1
+					if( 1<sum(aCStep==c(4,4,1,1,9)) ) cnt <- cnt+1
+					return( cnt<2 )
+				})	;kIdx<-anaFlagFnd(!flag,rpt)
+	flgCnt[!flag] <- flgCnt[!flag] + 1
+
+	# fStep :  15   0  -3 -12 -15  -9  ( gEnv$zhF[815,] - gEnv$zhF[814,] )
+    flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+					aFStep <- aZoid - stdMI$lastZoid
+					cnt <- 0
+					if( aFStep[1]==(-aFStep[5]) ) cnt <- cnt + 1
+					return( cnt<1 )
+				})	;kIdx<-anaFlagFnd(!flag,rpt)
+	flgCnt[!flag] <- flgCnt[!flag] + 1
+
+	return( flgCnt )
 
 } # fCutCnt.basic()
 
