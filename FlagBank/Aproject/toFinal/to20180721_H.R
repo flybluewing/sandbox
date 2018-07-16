@@ -122,6 +122,14 @@ fCutCnt.default <- function( gEnv ,allIdxF ,rpt=FALSE ){
 				})	;kIdx<-anaFlagFnd(!flag,rpt)
 	flgCnt[!flag] <- flgCnt[!flag] + 1
 
+	# lastZW 가 19라서... allIdxF 상에 존재하지도 않는다..
+	lastZW <- stdMI$lastZoid[6] - stdMI$lastZoid[1]
+    # flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+	# 				return( ... )
+	# 			})	;kIdx<-anaFlagFnd(!flag,rpt)
+	# flgCnt[!flag] <- flgCnt[!flag] + 1
+
+
 	return( flgCnt )
 
 } # fCutCnt.default()

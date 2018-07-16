@@ -8,7 +8,8 @@ load(sprintf("./save/Obj_gEnv%s.save",saveId))
 allZoidGrpName <-"allZoid.idx0"	# 660671 ,1531865
 allIdx <- allIdxLst[[allZoidGrpName]]
 
-save( allIdxF ,file="Obj_allIdxF.save" )	# 임시성 저장.
+	# save( allIdxF ,file="Obj_allIdxF.save" )	# 임시성 저장.
+	# load("Obj_allIdxFObj.save")
 
 finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
     # cutEadge.getBanPtnColVal() 에서 1~2개 발생 탈락값들에 대한 검토 권장.
