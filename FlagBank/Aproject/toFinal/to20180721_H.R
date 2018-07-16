@@ -95,7 +95,7 @@ fCut.default <- function( gEnv ,allIdxF ,rpt=FALSE ){
 # QQE working
 fCutCnt.default <- function( gEnv ,allIdxF ,rpt=FALSE ){
 
-	fltCnt <- rep( 0 ,length(allIdxF) )
+	flgCnt <- rep( 0 ,length(allIdxF) )
 
 	zMtx <- gEnv$zhF
 	stdMI <- fCutU.getMtxInfo( zMtx )
@@ -122,7 +122,7 @@ fCutCnt.default <- function( gEnv ,allIdxF ,rpt=FALSE ){
 				})	;kIdx<-anaFlagFnd(!flag,rpt)
 	flgCnt[!flag] <- flgCnt[!flag] + 1
 
-	return( fltCnt )
+	return( flgCnt )
 
 } # fCutCnt.default()
 
@@ -222,6 +222,7 @@ fCut.basic <- function( gEnv ,allIdxF ,rpt=FALSE ){
 #
 fCutCnt.basic <- function( gEnv ,allIdxF ,rpt=FALSE ){
 
+	flgCnt <- rep( 0 ,length(allIdxF) )
 	zMtx <- gEnv$zhF
 	stdMI <- fCutU.getMtxInfo( zMtx )
 
@@ -279,6 +280,209 @@ fCutCnt.basic <- function( gEnv ,allIdxF ,rpt=FALSE ){
 
 } # fCutCnt.basic()
 
+# done
+fCutCnt.colValSeqNext <- function( gEnv ,allIdxF ,rpt=FALSE ){
+
+	flgCnt <- rep( 0 ,length(allIdxF) )
+	zMtx <- gEnv$zhF
+	stdMI <- fCutU.getMtxInfo( zMtx )
+		# mtxLen lastZoid rem quo10 cStep fStep rawTail cStepTail
+
+	# =========================================================
+	# anaColEndPtn()
+	colPtnLst <- anaColEndPtn( gEnv$zhF ,pDebug=T )
+	banVal <- sapply( colPtnLst ,function( p ){
+					return( if(length(p$val)>0) p$val[1] else 0 )
+				})
+	banVal.idx <- which( banVal!=0 )
+	banVal <- banVal[banVal.idx]
+
+	# <remove>
+    flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+					return( 2>sum(aZoid[banVal.idx]==banVal) )
+				})	;kIdx<-anaFlagFnd(!flag,rpt)
+    flgCnt[!flag] <- flgCnt[!flag] + 2
+
+	# -- conditional
+    flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+					return( 1>sum(aZoid[banVal.idx]==banVal) )
+				})	;kIdx<-anaFlagFnd(!flag,rpt)
+    flgCnt[!flag] <- flgCnt[!flag] + 1
+	# -- conditional
+    flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+					aRem <- aZoid %% 10
+					cnt <- 0
+					if( 1<sum(aRem[banVal.idx]==c(4,3,1,5,5)) ) cnt <- cnt + 1
+					return( 1>cnt )
+				})	;kIdx<-anaFlagFnd(!flag,rpt)
+    flgCnt[!flag] <- flgCnt[!flag] + 1
+	# -- conditional
+    flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+					return( !( aZoid[5]%in%c(35) ) )
+				})	;kIdx<-anaFlagFnd(!flag,rpt)
+    flgCnt[!flag] <- flgCnt[!flag] + 1
+
+	# =========================================================
+	# colValSeqNext( ,pColSize=2 )
+	cvSeqNextLst <- colValSeqNext( gEnv$zhF ,pColSize=2 )
+	banCodeLst <- lapply( cvSeqNextLst, function(p){ 
+						if( 0<nrow(p$fndMtx) ) p$fndMtx[1,]%%10 else integer(0)
+					})
+	banCode.span <- which( sapply( banCodeLst ,function(p){length(p)>0}) )
+	# <remove>
+    flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+					aRem <- aZoid %% 10
+					for( cIdx in banCode.span ){
+						if( all(aRem[cIdx+0:1]==banCodeLst[[cIdx]]) ) return(FALSE)
+					}
+					return( TRUE )
+				})	;kIdx<-anaFlagFnd(!flag,rpt)
+    flgCnt[!flag] <- flgCnt[!flag] + 2
+	# <remove>
+    flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+					cnt <- 0
+					for( cIdx in banCode.span ){
+						fndMtx <- cvSeqNextLst[[cIdx]]$fndMtx
+						for( rIdx in 1:nrow(fndMtx) ){
+							if( all(aZoid[cIdx+0:1]==fndMtx[rIdx,]) ){
+								cnt <- cnt+1
+								break	# 다수 발생된 패턴의 중복 체크 피하기 위해.
+							}
+						}
+					}
+					return( cnt<2 )
+				})	;kIdx<-anaFlagFnd(!flag,rpt)
+    flgCnt[!flag] <- flgCnt[!flag] + 2
+	# <remove>
+    flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+					aCStep <- aZoid[2:6]-aZoid[1:5]
+					return( 3>sum(aCStep==c(1,1,4,3,13)) )
+				})	;kIdx<-anaFlagFnd(!flag,rpt)
+    flgCnt[!flag] <- flgCnt[!flag] + 2
+
+	# -- conditional rem과 val의 조건이 겹치기 때문에 한 군데에서 처리.
+    flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+
+				# rem : 한 개 그룹에서 완전 일치는 아니지만, 전체 일치 수가 2이상
+					aRem <- aZoid %% 10
+					cnt <- 0
+					for( cIdx in banCode.span ){
+						cnt <- cnt + sum(aRem[cIdx+0:1]==banCodeLst[[cIdx]])
+					}
+					if( cnt>2 ) return(FALSE)
+
+				# fndMtx 내에서 일치가 1개 이상.
+					cnt <- 0
+					for( cIdx in banCode.span ){
+						fndMtx <- cvSeqNextLst[[cIdx]]$fndMtx
+						for( rIdx in 1:nrow(fndMtx) ){
+							if( all(aZoid[cIdx+0:1]==fndMtx[rIdx,]) ){
+								cnt <- cnt+1
+							}
+						}
+					}
+					if( cnt>0 ) return( FALSE )
+
+				# 한 개 그룹에서 완전 일치는 아니지만, 전체 일치 수가 2이상
+					cnt <- 0
+					for( cIdx in banCode.span ){
+						fndVal <- cvSeqNextLst[[cIdx]]$fndMtx[1,]
+						if( all(aZoid[cIdx+0:1]==fndVal) ) next
+
+						cnt <- cnt + sum(aZoid[cIdx+0:1]==fndVal)
+					}
+					if( cnt>1 ) return( FALSE )
+
+					return( TRUE )
+				})	;kIdx<-anaFlagFnd(!flag,rpt)
+    flgCnt[!flag] <- flgCnt[!flag] + 1
+
+	# -- conditional
+    flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+					cnt <- 0
+					aRem <- aZoid %% 10
+					if( aRem[1]%in%c(0  ) ) cnt <- cnt+1	#
+					if( aRem[2]%in%c(6,2) ) cnt <- cnt+1
+					if( aRem[2]%in%c(8  ) ) cnt <- cnt+1	#
+					if( aRem[3]%in%c(9  ) ) cnt <- cnt+1
+					if( aRem[3]%in%c(4  ) ) cnt <- cnt+1	#
+					if( aRem[4]%in%c(6  ) ) cnt <- cnt+1	#
+					if( aRem[5]%in%c(3,6) ) cnt <- cnt+1
+					if( aRem[5]%in%c(2,3,5,8) ) cnt <- cnt+1	#
+					return( cnt<2 )
+				})	;kIdx<-anaFlagFnd(!flag,rpt)
+    flgCnt[!flag] <- flgCnt[!flag] + 1
+
+	# -- conditional
+	flag <- !(gEnv$allZoidMtx[allIdxF,2]%in%c( 8))	;kIdx<-anaFlagFnd(!flag,rpt)
+    flgCnt[!flag] <- flgCnt[!flag] + 1
+	flag <- !(gEnv$allZoidMtx[allIdxF,3]%in%c(14))	;kIdx<-anaFlagFnd(!flag,rpt)
+    flgCnt[!flag] <- flgCnt[!flag] + 1
+	flag <- !(gEnv$allZoidMtx[allIdxF,5]%in%c(20,26,38))	;kIdx<-anaFlagFnd(!flag,rpt)
+    flgCnt[!flag] <- flgCnt[!flag] + 1
+
+	#  1   4   2   3   1  13  13   5   4 
+	#  1   2   7  12   6   2   9  12   2 
+	#  4   1   3  16   9   7   3   1   7   5   3 
+	#  3   5   1  12   5  13   6   2   2   2   3   5   6  12  11   3   9 
+	# 13   1   3   2   3 
+	# -- conditional
+    flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+					aCStep <- aZoid[2:6]-aZoid[1:5]
+					return( 2>sum(aCStep==c(1,1,4,3,13)) )
+				})	;kIdx<-anaFlagFnd(!flag,rpt)
+    flgCnt[!flag] <- flgCnt[!flag] + 1
+    flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+					aCStep <- aZoid[2:6]-aZoid[1:5]
+					cnt <- 0
+					if( aCStep[1]%in%c(1,5) ) cnt <- cnt+1
+					if( aCStep[4]%in%c(4  ) ) cnt <- cnt+1
+					if( all(aCStep[c(3,5)]==c(4,13)) ) cnt <- cnt+1
+					return( cnt<1 )
+				})	;kIdx<-anaFlagFnd(!flag,rpt)
+    flgCnt[!flag] <- flgCnt[!flag] + 1
+
+
+	# =========================================================
+	# colValSeqNext( ,pColSize=3 )
+	cvSeqNextLst <- colValSeqNext( gEnv$zhF ,pColSize=3 )
+	banCodeLst <- lapply( cvSeqNextLst, function(p){ 
+						if( 0<nrow(p$fndMtx) ) p$fndMtx[1,]%%10 else integer(0)
+					})
+	banCode.span <- which( sapply( banCodeLst ,function(p){length(p)>0}) )
+	# <remove>
+    flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+					aRem <- aZoid %% 10
+					for( cIdx in banCode.span ){
+						if( 1<sum(aRem[cIdx+0:2]==banCodeLst[[cIdx]]) ) return(FALSE)
+					}
+					return( TRUE )
+				})	;kIdx<-anaFlagFnd(!flag,rpt)
+    flgCnt[!flag] <- flgCnt[!flag] + 2
+    flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+					cnt <- 0
+					for( cIdx in banCode.span ){
+						cnt <- cnt + sum(aZoid[cIdx+0:2]==cvSeqNextLst[[cIdx]]$fndMtx[1,])
+					}
+					return( cnt<2 )
+				})	;kIdx<-anaFlagFnd(!flag,rpt)
+    flgCnt[!flag] <- flgCnt[!flag] + 2
+
+	# -- conditional
+    flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+					aRem <- aZoid %% 10
+					for( cIdx in banCode.span ){
+						remFlag <- 1 < sum(aRem[cIdx+0:2]==banCodeLst[[cIdx]])
+						valFlag <- 0 < sum(aZoid[cIdx+0:2]==cvSeqNextLst[[cIdx]]$fndMtx[1,])
+						
+						if( remFlag && valFlag ) return( FALSE )
+					}
+					return( TRUE )
+				})	;kIdx<-anaFlagFnd(!flag,rpt)
+    flgCnt[!flag] <- flgCnt[!flag] + 1
+
+	return( flgCnt )
+}
 
 #------------------------------------------------------------------------
 #------------------------------------------------------------------------

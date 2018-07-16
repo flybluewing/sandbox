@@ -1,12 +1,11 @@
 # to20180714.R 최종접근
-source("./toFinal/fCutU_H.R")
-source("./toFinal/to20180714_H.R")
+source("./toFinal/to20180721_H.R")
 
-saveId <- "Z815"
+saveId <- "Z815"	;rpt=TRUE
 load( sprintf("Obj_allIdxLst%s.save",saveId) )
 load(sprintf("./save/Obj_gEnv%s.save",saveId))
 
-allZoidGrpName <-"allZoid.idx0"	# 660671
+allZoidGrpName <-"allZoid.idx0"	# 660671 ,1531865
 allIdx <- allIdxLst[[allZoidGrpName]]
 
 save( allIdxF ,file="Obj_allIdxF.save" )	# 임시성 저장.
@@ -18,29 +17,63 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 	allIdxFObj <- list()
 	stdMI <- fCutU.getMtxInfo( gEnv$zhF )	# matrix info
 		# mtxLen lastZoid rem quo10 cStep fStep rawTail cStepTail
-	# 참고 자료 --------------------------------------------------------------------
-    rebCnt <- sapply( 2:nrow(gEnv$zhF) ,function(idx){
-                    cnt <- sum( gEnv$zhF[idx-1,] %in% gEnv$zhF[idx,] )
-                    return(cnt)
-                })
-    azColValLst <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,2 ,function(p){sort(unique(p))})
-    cat(sprintf("allIdxF %d\n",length(allIdxF)))
 
-	# 기본제거 --------------------------------------------------------------------	
-	allIdxF <- fCut.default( gEnv ,allIdxF )
-	cat(sprintf("allIdxF %d\n",length(allIdxF)))
-
-	QQE
-	#   807  6,10,18,25,34,35
-	#   808 15 21 31 32 41 43
-	#	809  6 11 15 17 23 40
-	#   810  5 10 13 21 39 43
-	#	811  8 11 19 21 36 45
-    #   812  1  3 12 14 16 43
-	#	813 11 30 34 35 42 44
-	#	814  2 21 28 38 42 45
+	# 참고 자료 --------------------------------------------------------------------	
+	fCutU.rptColValSeqNext( gEnv ,allIdxF ,"to20180721")
 
 	tStmp <- Sys.time()
+	# 기본제거 --------------------------------------------------------------------	
+	allIdxF <- fCut.default( gEnv ,allIdxF )
+	allIdxF <- fCut.basic( gEnv ,allIdxF )
+	cat(sprintf("allIdxF %d\n",length(allIdxF)))
+	allIdxFObj$allIdxF.fCut <- allIdxF
+
+	# ------------------------------------------------------------------
+	# fCutCnt.**
+	#		각 파트에서 2 이상씩은 잘라낸 후,
+	#		전체 파트에서 하나도 안 걸린 것들은 제외시키자.
+	flgCnt <- fCutCnt.default( gEnv ,allIdxF )
+	flag <- flgCnt<2	;table(flag)
+    allIdxF <- allIdxF[flag]
+    cat(sprintf("allIdxF %d\n",length(allIdxF)))
+
+	flgCnt <- fCutCnt.basic( gEnv ,allIdxF )
+	flag <- flgCnt<2	;table(flag)
+    allIdxF <- allIdxF[flag]
+    cat(sprintf("allIdxF %d\n",length(allIdxF)))
+
+	flgCnt <- fCutCnt.colValSeqNext( gEnv ,allIdxF )
+	flag <- flgCnt<2	;table(flag)
+    allIdxF <- allIdxF[flag]
+    cat(sprintf("allIdxF %d\n",length(allIdxF)))
+
+	allIdxFObj$allIdxF.fCutCnt <- allIdxF
+	
+	# ------------------------------------------------------------------
+	# multiple fCutCnt.**
+	# flgCnt <- flgCnt + fCutCnt.**( gEnv ,allIdxF )
+	#	allIdxF <- allIdxFObj$allIdxF.fCutCnt
+	flgCnt <- rep( 0 ,length(allIdxF) )
+	flgCnt <- flgCnt + fCutCnt.default( gEnv ,allIdxF )
+	flgCnt <- flgCnt + fCutCnt.basic( gEnv ,allIdxF )
+	flgCnt <- flgCnt + fCutCnt.colValSeqNext( gEnv ,allIdxF )
+
+	table(flgCnt)
+	flag <- (0<flgCnt)&(flgCnt<3)	# 하나도 안 걸릴 수는 없겠지.
+    allIdxF <- allIdxF[flag]
+    cat(sprintf("allIdxF %d\n",length(allIdxF)))
+	allIdxFObj$allIdxF.fCutCnt.m <- allIdxF
+
+	tDiff <- Sys.time() - tStmp
+	allIdxFObj$timeCost <- tDiff
+	save( allIdxFObj ,file="Obj_allIdxFObj.save" )
+
+	allIdxF.bak <- allIdxF
+
+
+	================================================================================
+	QQE ----------------------------------------------------------------------------
+
 	allIdxF <- fCut.customStatic( gEnv ,allIdxF )
 	allIdxF <- fCut.colValSeqNext( gEnv ,allIdxF )
 	allIdxF <- fCut.colValSeqNext.cStep( gEnv ,allIdxF )
