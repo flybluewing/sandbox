@@ -9,13 +9,14 @@ allZoidGrpName <-"allZoid.idx0"	# 660671 ,1531865
 allIdx <- allIdxLst[[allZoidGrpName]]
 
 	# save( allIdxF ,file="Obj_allIdxF.save" )	# 임시성 저장.
-	# load("Obj_allIdxFObj.save")
+	# load("Obj_allIdxFObj.save")	;allIdxF <- allIdxFObj$allIdxF.fCutCnt.m
+
 
 finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
     # cutEadge.getBanPtnColVal() 에서 1~2개 발생 탈락값들에 대한 검토 권장.
+	allIdxFObj <- list()
 
     allIdxF <- allIdx
-	allIdxFObj <- list()
 	stdMI <- fCutU.getMtxInfo( gEnv$zhF )	# matrix info
 		# mtxLen lastZoid rem quo10 cStep fStep rawTail cStepTail
 
@@ -37,13 +38,23 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 	flag <- flgCnt<2	;table(flag)
     allIdxF <- allIdxF[flag]
     cat(sprintf("allIdxF %d\n",length(allIdxF)))
-
 	flgCnt <- fCutCnt.basic( gEnv ,allIdxF )
 	flag <- flgCnt<2	;table(flag)
     allIdxF <- allIdxF[flag]
     cat(sprintf("allIdxF %d\n",length(allIdxF)))
-
 	flgCnt <- fCutCnt.colValSeqNext( gEnv ,allIdxF )
+	flag <- flgCnt<2	;table(flag)
+    allIdxF <- allIdxF[flag]
+    cat(sprintf("allIdxF %d\n",length(allIdxF)))
+	flgCnt <- fCutCnt.nextZW( gEnv ,allIdxF )
+	flag <- flgCnt<2	;table(flag)
+    allIdxF <- allIdxF[flag]
+    cat(sprintf("allIdxF %d\n",length(allIdxF)))
+	flgCnt <- fCutCnt.nextQuo10( gEnv ,allIdxF )
+	flag <- flgCnt<2	;table(flag)
+    allIdxF <- allIdxF[flag]
+    cat(sprintf("allIdxF %d\n",length(allIdxF)))
+	flgCnt <- fCutCnt.nextBin( gEnv ,allIdxF )
 	flag <- flgCnt<2	;table(flag)
     allIdxF <- allIdxF[flag]
     cat(sprintf("allIdxF %d\n",length(allIdxF)))
@@ -58,6 +69,9 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 	flgCnt <- flgCnt + fCutCnt.default( gEnv ,allIdxF )
 	flgCnt <- flgCnt + fCutCnt.basic( gEnv ,allIdxF )
 	flgCnt <- flgCnt + fCutCnt.colValSeqNext( gEnv ,allIdxF )
+	flgCnt <- flgCnt + fCutCnt.nextZW( gEnv ,allIdxF )
+	flgCnt <- flgCnt + fCutCnt.nextQuo10( gEnv ,allIdxF )
+	flgCnt <- flgCnt + fCutCnt.nextBin( gEnv ,allIdxF )
 
 	table(flgCnt)
 	flag <- (0<flgCnt)&(flgCnt<3)	# 하나도 안 걸릴 수는 없겠지.
