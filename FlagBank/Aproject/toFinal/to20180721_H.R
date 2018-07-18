@@ -925,7 +925,7 @@ fCutCnt.colValStd <- function( gEnv ,allIdxF ,cutCol.idx ,cutCol.val ,rpt=FALSE 
 	allIdxT <- allIdxF[applyFlag]
 	flgCnt <- rep( 0 ,length(allIdxT) )
 
-	zMtx <- gEnv$zhF[gEnv$zhF[,cutCol.idx]==cutCol.val,]	# rptObj<-anaQuoTbl( zMtx )
+	zMtx <- gEnv$zhF[gEnv$zhF[,cutCol.idx]==cutCol.val,,drop=F]	# rptObj<-anaQuoTbl( zMtx )
 	stdMI <- fCutU.getMtxInfo( zMtx )
 		# mtxLen lastZoid rem quo10 cStep fStep rawTail cStepTail
 
@@ -995,7 +995,7 @@ fCutCnt.zWidthStd <- function( gEnv ,allIdxF ,zWidth ,rpt=FALSE ){
 	allIdxT <- allIdxF[applyFlag]
 	flgCnt <- rep( 0 ,length(allIdxT) )
 
-	zMtx <- gEnv$zhF[zWidth==(gEnv$zhF[,6]-gEnv$zhF[,1]), ]	# rptObj<-anaQuoTbl( zMtx )
+	zMtx <- gEnv$zhF[zWidth==(gEnv$zhF[,6]-gEnv$zhF[,1]), ,drop=F]	# rptObj<-anaQuoTbl( zMtx )
 	stdMI <- fCutU.getMtxInfo( zMtx )
 		# mtxLen lastZoid rem quo10 cStep fStep rawTail cStepTail
 

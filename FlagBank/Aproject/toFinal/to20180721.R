@@ -11,6 +11,8 @@ allIdx <- allIdxLst[[allZoidGrpName]]
 	# save( allIdxF ,file="Obj_allIdxF.save" )	# 임시성 저장.
 	# load("Obj_allIdxFObj.save")	;allIdxF <- allIdxFObj$allIdxF.fCutCnt.m
 
+	# QQE
+	# flter count 0인 경우에 대한 추가
 
 finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
     # cutEadge.getBanPtnColVal() 에서 1~2개 발생 탈락값들에 대한 검토 권장.
@@ -61,7 +63,7 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 	flgCnt <- fCutCnt.nextRebNum( gEnv ,allIdxF )
 	flag <- flgCnt<2	;table(flag)
     allIdxF <- allIdxF[flag]
-    cat(sprintf("allIdxF %d\n",length(allIdxF)))
+    cat(sprintf("allIdxF %d\n",length(allIdxF)))	
 
 	for( cutCol.idx in c(1,3,6) ){
 		cutCol.val.span <- sort(unique(gEnv$allZoidMtx[allIdxF,cutCol.idx]))
