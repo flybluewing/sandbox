@@ -48,6 +48,10 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 	flag <- flgCnt<2	;table(flag)
     allIdxF <- allIdxF[flag]
     cat(sprintf("allIdxF %d\n",length(allIdxF)))
+	flgCnt <- fCutCnt.colValSeqNext.cStep( gEnv ,allIdxF )
+	flag <- flgCnt<2	;table(flag)
+    allIdxF <- allIdxF[flag]
+    cat(sprintf("allIdxF %d\n",length(allIdxF)))
 	flgCnt <- fCutCnt.nextZW( gEnv ,allIdxF )
 	flag <- flgCnt<2	;table(flag)
     allIdxF <- allIdxF[flag]
@@ -63,7 +67,11 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 	flgCnt <- fCutCnt.nextRebNum( gEnv ,allIdxF )
 	flag <- flgCnt<2	;table(flag)
     allIdxF <- allIdxF[flag]
-    cat(sprintf("allIdxF %d\n",length(allIdxF)))	
+    cat(sprintf("allIdxF %d\n",length(allIdxF)))
+	flgCnt <- fCutCnt.nextCStepBin( gEnv ,allIdxF )
+	flag <- flgCnt<2	;table(flag)
+    allIdxF <- allIdxF[flag]
+    cat(sprintf("allIdxF %d\n",length(allIdxF)))
 
 	for( cutCol.idx in c(1,3,6) ){
 		cutCol.val.span <- sort(unique(gEnv$allZoidMtx[allIdxF,cutCol.idx]))
@@ -94,10 +102,12 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 	flgCnt <- flgCnt + fCutCnt.default( gEnv ,allIdxF )
 	flgCnt <- flgCnt + fCutCnt.basic( gEnv ,allIdxF )
 	flgCnt <- flgCnt + fCutCnt.colValSeqNext( gEnv ,allIdxF )
+	flgCnt <- flgCnt + fCutCnt.colValSeqNext.cStep( gEnv ,allIdxF )
 	flgCnt <- flgCnt + fCutCnt.nextZW( gEnv ,allIdxF )
 	flgCnt <- flgCnt + fCutCnt.nextQuo10( gEnv ,allIdxF )
 	flgCnt <- flgCnt + fCutCnt.nextBin( gEnv ,allIdxF )
 	flgCnt <- flgCnt + fCutCnt.nextRebNum( gEnv ,allIdxF )
+	flgCnt <- flgCnt + fCutCnt.nextCStepBin( gEnv ,allIdxF )
 
 	for( cutCol.idx in c(1,3,6) ){
 		cutCol.val.span <- sort(unique(gEnv$allZoidMtx[allIdxF,cutCol.idx]))

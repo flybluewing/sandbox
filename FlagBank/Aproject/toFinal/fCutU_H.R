@@ -98,6 +98,18 @@ fCutU.getNextBin <- function( gEnv ){ # < official >
 	return( rObj )
 } # fCutU.getNextZW()
 
+fCutU.getNextCStepBin <- function( gEnv ){ # < official >
+	hLen <- nrow( gEnv$zhF )
+	cStepMtx <- t( apply(gEnv$zhF ,1 ,function(zoid){(zoid[2:6]-zoid[1:5])}) )
+	lastBin <- cStepMtx[hLen,] %% 2
+
+	flag <- sapply( 1:(hLen-1) ,function( hIdx ){ all((cStepMtx[hIdx,]%%2)==lastBin) })
+	flag.idx <- which( flag )+1
+
+	rObj <- list( zMtx=gEnv$zhF[flag.idx,] ,lastBin=lastBin )
+	return( rObj )
+} # fCutU.getNextZW()
+
 fCutU.getRebNum <- function( gEnv ,rebNum=0 ){ # < official >
 
 	hLen <- nrow( gEnv$zhF )
@@ -275,29 +287,6 @@ fCutU.rptColValSeqNext <- function( gEnv ,allIdxF ,logId ){
     FLogStr <- function( pMsg ,pTime=F ,pAppend=T ,pConsole=F ){
                 k.FLogStr( pMsg ,pFile=fileName ,pTime=pTime ,pAppend=pAppend ,pConsole=pConsole )
     }
-
-	FLogStr(sprintf("logId:%s",logId),pAppend=F)
-
-	FLogStr("# =========================================================")
-	FLogStr("# anaColEndPtn()")
-	colPtnLst <- anaColEndPtn( gEnv$zhF ,pDebug=T )
-	for( idx in 1:length(colPtnLst) ){
-		valStr <- sprintf("%2d",colPtnLst[[idx]]$val)
-
-		rebFlag <- FALSE
-		if( 1<length(valStr) ){
-			rebFlag <- any( valStr[2:length(valStr)]==valStr[1:(length(valStr)-1)] )
-		}
-
-		valStr <- paste( valStr ,collapse=" ")
-		FLogStr(sprintf("    [%d]%s  %s",idx,ifelse(rebFlag,"*"," "),valStr))
-	}
-	FLogStr("                         ")
-
-
-
-
-
 	rptSameRow <- function( fndMtx ){
 		if( 2>nrow(fndMtx) ) return( "Val :  ,    Rem :  ,      (SameRow,Rebind)" )
 
@@ -322,6 +311,29 @@ fCutU.rptColValSeqNext <- function( gEnv ,allIdxF ,logId ){
 					)
 		return( rptStr )
 	}
+
+	FLogStr(sprintf("logId:%s",logId),pAppend=F)
+
+	FLogStr("# =========================================================")
+	FLogStr("#	Raw Value                                              =")
+	FLogStr("# =========================================================")
+	FLogStr("                                                           ")
+	FLogStr("# =========================================================")
+	FLogStr("# anaColEndPtn()")
+	colPtnLst <- anaColEndPtn( gEnv$zhF ,pDebug=T )
+	for( idx in 1:length(colPtnLst) ){
+		valStr <- sprintf("%2d",colPtnLst[[idx]]$val)
+
+		rebFlag <- FALSE
+		if( 1<length(valStr) ){
+			rebFlag <- any( valStr[2:length(valStr)]==valStr[1:(length(valStr)-1)] )
+		}
+
+		valStr <- paste( valStr ,collapse=" ")
+		FLogStr(sprintf("    [%d]%s  %s",idx,ifelse(rebFlag,"*"," "),valStr))
+	}
+	FLogStr("                         ")
+
 
 	colSize <- 2
 	FLogStr("# =========================================================")
@@ -373,6 +385,82 @@ fCutU.rptColValSeqNext <- function( gEnv ,allIdxF ,logId ){
 		FLogStr(sprintf("    [%3d] %s",rIdx,paste( rValStr ,collapse="    ")))
 	}
 	FLogStr("                         ")
+
+
+	FLogStr("# =========================================================")
+	FLogStr("#	cStep                                                  =")
+	FLogStr("# =========================================================")
+	FLogStr("                                                           ")
+
+	zMtx <- t( apply(gEnv$zhF ,1 ,function(zoid){zoid[2:6]-zoid[1:5]}) )
+
+	FLogStr("# =========================================================")
+	FLogStr("# anaColEndPtn()")
+	colPtnLst <- anaColEndPtn( zMtx ,pDebug=T )
+	for( idx in 1:length(colPtnLst) ){
+		valStr <- sprintf("%2d",colPtnLst[[idx]]$val)
+
+		rebFlag <- FALSE
+		if( 1<length(valStr) ){
+			rebFlag <- any( valStr[2:length(valStr)]==valStr[1:(length(valStr)-1)] )
+		}
+
+		valStr <- paste( valStr ,collapse=" ")
+		FLogStr(sprintf("    [%d]%s  %s",idx,ifelse(rebFlag,"*"," "),valStr))
+	}
+	FLogStr("                         ")
+
+	colSize <- 2
+	FLogStr("# =========================================================")
+	FLogStr(sprintf("# colValSeqNext( ,pColSize=%d )",colSize))
+	cvSeqNextLst <- colValSeqNext( zMtx ,pColSize=colSize )
+	lstSize <- length(cvSeqNextLst)
+	fndSize <- sapply( cvSeqNextLst ,function(cv){nrow(cv$fndMtx)})
+	for( lIdx in 1:lstSize ){
+		rptStr <- rptSameRow( cvSeqNextLst[[lIdx]]$fndMtx )
+		FLogStr(sprintf("    <%d> %s",lIdx,rptStr))
+	}
+
+	for( rIdx in seq_len(max(fndSize)) ){
+		rValStr <- NULL
+		for( lIdx in 1:lstSize ){
+			valStr <- NULL
+			for( cIdx in 1:colSize ){
+				if( rIdx>fndSize[lIdx] ) { valStr[cIdx] <- "  "
+				} else { valStr[cIdx] <- sprintf("%2d",cvSeqNextLst[[lIdx]]$fndMtx[rIdx,cIdx])	}
+			}
+			rValStr[lIdx] <- paste( valStr ,collapse=" " )
+		}
+		FLogStr(sprintf("    [%3d] %s",rIdx,paste( rValStr ,collapse="    ")))
+	}
+	FLogStr("                         ")
+
+	colSize <- 3
+	FLogStr("# =========================================================")
+	FLogStr(sprintf("# colValSeqNext( ,pColSize=%d )",colSize))
+	cvSeqNextLst <- colValSeqNext( zMtx ,pColSize=colSize )
+	lstSize <- length(cvSeqNextLst)
+	fndSize <- sapply( cvSeqNextLst ,function(cv){nrow(cv$fndMtx)})
+	for( lIdx in 1:lstSize ){
+		rptStr <- rptSameRow( cvSeqNextLst[[lIdx]]$fndMtx )
+		FLogStr(sprintf("    <%d> %s",lIdx,rptStr))
+	}
+
+	for( rIdx in seq_len(max(fndSize)) ){
+		rValStr <- NULL
+		for( lIdx in 1:lstSize ){
+			valStr <- NULL
+			for( cIdx in 1:colSize ){
+				if( rIdx>fndSize[lIdx] ) { valStr[cIdx] <- "  "
+				} else { valStr[cIdx] <- sprintf("%2d",cvSeqNextLst[[lIdx]]$fndMtx[rIdx,cIdx])	}
+			}
+			rValStr[lIdx] <- paste( valStr ,collapse=" " )
+		}
+		FLogStr(sprintf("    [%3d] %s",rIdx,paste( rValStr ,collapse="    ")))
+	}
+	FLogStr("                         ")
+
+
 
 	return( fileName )
 
