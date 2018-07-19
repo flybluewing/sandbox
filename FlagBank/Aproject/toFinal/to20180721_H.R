@@ -661,7 +661,7 @@ fCutCnt.nextZW <- function( gEnv ,allIdxF ,rpt=FALSE ){
     flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
 					cnt <- 0
 					if( aZoid[2]%in%c(17,20) ) cnt <- cnt + 1
-					if( aZoid[4]%in%c(20,28) ) cnt <- cnt + 1	# * 28
+					if( aZoid[4]%in%c(20,28,34,35) ) cnt <- cnt + 1	# * 28
 					if( aZoid[5]%in%c(37   ) ) cnt <- cnt + 1
 					if( aZoid[6]%in%c(37,22) ) cnt <- cnt + 1	# * 37
 					return( 2>cnt )
@@ -772,6 +772,7 @@ fCutCnt.nextQuo10 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 					cnt <- 0
 					if( aZoid[1]%in%c( 5   ) ) cnt <- cnt + 1
 					if( aZoid[2]%in%c( 2,15) ) cnt <- cnt + 1
+					if( aZoid[3]%in%c(32   ) ) cnt <- cnt + 1
 					if( aZoid[5]%in%c(41   ) ) cnt <- cnt + 1
 					if( aZoid[6]%in%c(45,34,33) ) cnt <- cnt + 1
 					if( fCutU.hasPtn(c(42,43),aZoid) ) cnt <- cnt+1
@@ -896,7 +897,7 @@ fCutCnt.nextBin <- function( gEnv ,allIdxF ,rpt=FALSE ){
 					cnt <- 0
 					if( aZoid[1]%in%c( 3   ) ) cnt <- cnt + 1
 					if( aZoid[2]%in%c(15   ) ) cnt <- cnt + 1
-					if( aZoid[3]%in%c(26   ) ) cnt <- cnt + 1
+					if( aZoid[3]%in%c(26,34) ) cnt <- cnt + 1
 					if( fCutU.hasPtn(c(16,19),aZoid) ) cnt <- cnt + 1
 					return( 2>cnt )
 				})	;kIdx<-anaFlagFnd(!flag,rpt)

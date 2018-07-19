@@ -151,6 +151,39 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
     cat(sprintf("allIdxF %d\n",length(allIdxF)))
 	allIdxFObj$allIdxF.fCutCnt.m <- allIdxF
 
+	#=<Final Approach>=======================================================
+	# 	<Total Ban Value>
+	# 		[1] 3(1/0)~5(/5)~3(/0)
+	# 		[2] 21(1/0),30(1/0),14(*/0)~17(/1),20(/1)~2(/4),15(/0)~15(/0)~16(/65)
+	# 		[3] 32(/6)~26(/29),34(/0)~16(/73)~
+	# 		[4] 20(/4),28(*/115),34(/29),35(/18)~39(/12),11(/0),38(/12)~12(/4),41(/0)
+	# 		[5] 37(*/25)~41(/0)~35(/0),43(/0/)
+	# 		[6] 37(*/5),22(/0)~45(/0),34(/52),33(/37)~43(/0),38(/21)
+	# 		ptn : (37,39)~(42,43)(37,40)~(16,19)~(37,38),(32,37)~(37,41),(32,41 <3,4>)
+
+	flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+					cnt <- 0
+					if( aZoid[1]%in%c( 3, 5 ) )	cnt <- cnt+1						#  3(2)
+					if( aZoid[2]%in%c(21,30,14,17,20, 2,15,16) )	cnt <- cnt+1	# 15(2)
+					if( aZoid[3]%in%c(32,26,34,16) )	cnt <- cnt+1
+					if( aZoid[4]%in%c(20,28,34,35,39,11,38,12,41) )	cnt <- cnt+1
+					if( aZoid[5]%in%c(37,41,35,43) )	cnt <- cnt+1
+					if( aZoid[6]%in%c(37,22,45,34,33,43,38) )	cnt <- cnt+1
+
+					if( fCutU.hasPtn( c(37,39) ,aZoid ) )	cnt <- cnt+1
+					if( fCutU.hasPtn( c(42,43) ,aZoid ) )	cnt <- cnt+1
+					if( fCutU.hasPtn( c(37,40) ,aZoid ) )	cnt <- cnt+1
+					if( fCutU.hasPtn( c(16,19) ,aZoid ) )	cnt <- cnt+1
+					if( fCutU.hasPtn( c(37,38) ,aZoid ) )	cnt <- cnt+1
+					if( fCutU.hasPtn( c(32,37) ,aZoid ) )	cnt <- cnt+1
+					if( fCutU.hasPtn( c(37,41) ,aZoid ) )	cnt <- cnt+1
+					if( all(aZoid[c(3,4)]==c(32,41)) )	cnt <- cnt+1
+
+					return( 2>cnt )
+				})	;kIdx<-anaFlagFnd(!flag,rpt)
+    allIdxF <- allIdxF[flag]
+
+
 	tDiff <- Sys.time() - tStmp
 	allIdxFObj$timeCost <- tDiff
 	save( allIdxFObj ,file=sprintf("Obj_allIdxFObj_%s.save",allZoidGrpName) )
@@ -167,6 +200,11 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 	# colValLst
 	colValLst <- apply( gEnv$allZoidMtx[allIdxF,] ,2 ,function(p){sort(unique(p))})
 	colVal <- gEnv$allZoidMtx[allIdxF,1]	;table(colVal)
+	colValTblLst.raw <- apply( gEnv$allZoidMtx[allIdxF,] ,2 ,function(p){table(p)})
+	colValTblLst.rem <- apply( gEnv$allZoidMtx[allIdxF,] ,2 ,function(p){table(p%%10)})
+	cStepMtx <- t(apply(gEnv$allZoidMtx[allIdxF,] ,1 ,function(zoid){zoid[2:6]-zoid[1:5]}))
+	colValTblLst.cStep <- apply( cStepMtx ,2 ,function(p){table(p)})
+
 	# rebNum
 	rebNum <- sapply( 2:nrow(gEnv$zhF) ,function(hIdx){ sum(gEnv$zhF[(hIdx-1),] %in% gEnv$zhF[hIdx,]) })
 	rebNum <- c( 0 ,rebNum )
