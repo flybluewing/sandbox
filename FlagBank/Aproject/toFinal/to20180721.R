@@ -144,6 +144,7 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 		cat(sprintf("tblStr:%s\n",tblStr))
 	}
 
+	flgCnt <- flgCnt + fCutCnt.colVal_1_x( gEnv ,allIdxF )
 
 	table(flgCnt)
 	flag <- (0<flgCnt)&(flgCnt<3)	# 하나도 안 걸릴 수는 없겠지.
