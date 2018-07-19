@@ -204,6 +204,8 @@ fCutU.getQuoObj <- function( zoid ){
 	rObj <- list( tbl=table(zoid%/%10) )
 	rObj$size <- rep(0,5)	;names(rObj$size) <- 0:(length(rObj$size)-1)
 	rObj$size[names(rObj$tbl)] <- rObj$tbl
+	rObj$valStr <- paste( rObj$tbl ,collapse=" " )
+	rObj$idStr <- sprintf("V:%s Q:%s",rObj$valStr,paste(names(rObj$tbl),collapse=" "))
 
 	rObj$sameTbl <- function( tbl ,fullMatch=FALSE ){
 		if( length(rObj$tbl)!=length(tbl) ) return( FALSE )
