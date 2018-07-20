@@ -145,7 +145,12 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 	}
 
 	flgCnt <- flgCnt + fCutCnt.colVal_1_x( gEnv ,allIdxF )
+	flgCnt <- flgCnt + fCutCnt.colVal_3_x( gEnv ,allIdxF )
+	flgCnt <- flgCnt + fCutCnt.colVal_5_x( gEnv ,allIdxF )
 	flgCnt <- flgCnt + fCutCnt.colVal_6_x( gEnv ,allIdxF )
+	flgCnt <- flgCnt + fCutCnt.zWidth( gEnv ,allIdxF )
+	flgCnt <- flgCnt + fCutCnt.quoTbl( gEnv ,allIdxF )
+	
 
 	table(flgCnt)
 	flag <- (0<flgCnt)&(flgCnt<3)	# 하나도 안 걸릴 수는 없겠지.
@@ -206,6 +211,11 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 	colValTblLst.rem <- apply( gEnv$allZoidMtx[allIdxF,] ,2 ,function(p){table(p%%10)})
 	cStepMtx <- t(apply(gEnv$allZoidMtx[allIdxF,] ,1 ,function(zoid){zoid[2:6]-zoid[1:5]}))
 	colValTblLst.cStep <- apply( cStepMtx ,2 ,function(p){table(p)})
+	zw <- apply( gEnv$allZoidMtx[allIdxF,] ,1 ,function(zoid){zoid[6]-zoid[1]})	;sort(table(zw))
+
+	# quoTbl
+	quoTblLst <- fCutU.getQuoTblLst( gEnv$allZoidMtx[allIdxF,] )
+	quoTblStr <- sapply( quoTblLst ,function(quoTbl){quoTbl$valStr})	# sort( table(quoTblStr) )
 
 	# rebNum
 	rebNum <- sapply( 2:nrow(gEnv$zhF) ,function(hIdx){ sum(gEnv$zhF[(hIdx-1),] %in% gEnv$zhF[hIdx,]) })
