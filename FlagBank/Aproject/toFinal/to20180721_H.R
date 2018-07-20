@@ -162,6 +162,8 @@ fCut.basic <- function( gEnv ,allIdxF ,rpt=FALSE ){
 	#	col 21,21,14 가 또 재발?
 	flag <- !(gEnv$allZoidMtx[allIdxF,2] %in% c(14))	;kIdx<-anaFlagFnd(!flag,rpt)
     allIdxF <- allIdxF[flag]
+	flag <- !(gEnv$allZoidMtx[allIdxF,3] %in% c(16))	;kIdx<-anaFlagFnd(!flag,rpt)
+    allIdxF <- allIdxF[flag]
 
 	# 810  5  3  8 18  4
 	# 811  3  8  2 15  9
@@ -237,6 +239,14 @@ fCutCnt.basic <- function( gEnv ,allIdxF ,rpt=FALSE ){
 	zMtx <- gEnv$zhF
 	stdMI <- fCutU.getMtxInfo( zMtx )
 
+
+	# 810  5 10 13 21 39 43
+	# 811  8 11 19 21 36 45
+	# 812  1  3 12 14 16 43
+	# 813 11 30 34 35 42 44
+	# 814  2 21 28 38 42 45
+	# 815 17 21 25 26 27 36
+
 	flag <- apply( gEnv$allZoidMtx[allIdxF,] ,1 ,function( aZoid ){
 				aRem <- aZoid%%10
 				cnt <- 0
@@ -263,9 +273,11 @@ fCutCnt.basic <- function( gEnv ,allIdxF ,rpt=FALSE ){
     flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
 					aCStep <- aZoid[2:6]-aZoid[1:5]
 					cnt <- 0
-					if( aCStep[1]%in%c( 4   ) ) cnt <- cnt+1
-					if( aCStep[2]%in%c( 7   ) ) cnt <- cnt+1
+					if( aCStep[1]%in%c( 4 ,1   ) ) cnt <- cnt+1
+					if( aCStep[2]%in%c( 7 ,1   ) ) cnt <- cnt+1
 					if( aCStep[3]%in%c(10   ) ) cnt <- cnt+1
+					if( aCStep[4]%in%c(10   ) ) cnt <- cnt+1
+					if( aCStep[5]%in%c( 4   ) ) cnt <- cnt+1
 					if( 1<sum(aCStep==c(4,4,1,1,9)) ) cnt <- cnt+1
 					return( cnt<2 )
 				})	;kIdx<-anaFlagFnd(!flag,rpt)
@@ -652,7 +664,7 @@ fCutCnt.nextZW <- function( gEnv ,allIdxF ,rpt=FALSE ){
 				})	;kIdx<-anaFlagFnd(!flag,rpt)
     flgCnt[!flag] <- flgCnt[!flag] + 1
 
-	# -- conditional
+	# -- conditional	
     flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
 					# 37,39 패턴이 2번이나 나왔다.
 					return( !fCutU.hasPtn(c(37,39),aZoid) )
@@ -661,12 +673,16 @@ fCutCnt.nextZW <- function( gEnv ,allIdxF ,rpt=FALSE ){
     flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
 					cnt <- 0
 					if( aZoid[2]%in%c(17,20) ) cnt <- cnt + 1
-					if( aZoid[4]%in%c(20,28,34,35) ) cnt <- cnt + 1	# * 28
-					if( aZoid[5]%in%c(37   ) ) cnt <- cnt + 1
+					if( aZoid[3]%in%c(37,17) ) cnt <- cnt + 1
+					if( aZoid[4]%in%c(20,28,34,35) ) cnt <- cnt + 1	# ** 28
+					if( aZoid[5]%in%c(37,21) ) cnt <- cnt + 1	# * 37
 					if( aZoid[6]%in%c(37,22) ) cnt <- cnt + 1	# * 37
+
+					if( fCutU.hasPtn(c(37,39),aZoid) ) cnt <- cnt + 1	# *
 					return( 2>cnt )
 				})	;kIdx<-anaFlagFnd(!flag,rpt)
     flgCnt[!flag] <- flgCnt[!flag] + 1
+
     flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
 					cnt <- 0
 					aRem <- aZoid%%10
@@ -767,16 +783,25 @@ fCutCnt.nextQuo10 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 				})	;kIdx<-anaFlagFnd(!flag,rpt)
     flgCnt[!flag] <- flgCnt[!flag] + 1
 
+	# 141  8 12 29 31 42 43
+	# 235 21 22 26 27 31 37
+	# 373 15 26 37 42 43 45
+	# 724  2  8 33 35 37 41
+	# 731  2  7 13 25 42 45
+	# 767  5 15 20 31 34 42
 	# -- conditional
     flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
 					cnt <- 0
 					if( aZoid[1]%in%c( 5   ) ) cnt <- cnt + 1
-					if( aZoid[2]%in%c( 2,15) ) cnt <- cnt + 1
+					if( aZoid[2]%in%c( 2,15) ) cnt <- cnt + 1 # *2
 					if( aZoid[3]%in%c(32   ) ) cnt <- cnt + 1
+					if( aZoid[4]%in%c(43   ) ) cnt <- cnt + 1
 					if( aZoid[5]%in%c(41   ) ) cnt <- cnt + 1
-					if( aZoid[6]%in%c(45,34,33) ) cnt <- cnt + 1
-					if( fCutU.hasPtn(c(42,43),aZoid) ) cnt <- cnt+1
-					if( fCutU.hasPtn(c(37,40),aZoid) ) cnt <- cnt+1
+					if( aZoid[6]%in%c(45,34,33) ) cnt <- cnt + 1	# *33
+					if( fCutU.hasPtn(c(41,45),aZoid) ) cnt <- cnt+1 # *
+					if( fCutU.hasPtn(c(42,43),aZoid) ) cnt <- cnt+1	# *
+					if( fCutU.hasPtn(c(37,40),aZoid) ) cnt <- cnt+1 # *
+					# 26,r7
 					return( 2>cnt )
 				})	;kIdx<-anaFlagFnd(!flag,rpt)
     flgCnt[!flag] <- flgCnt[!flag] + 1
@@ -891,14 +916,23 @@ fCutCnt.nextBin <- function( gEnv ,allIdxF ,rpt=FALSE ){
 				})	;kIdx<-anaFlagFnd(!flag,rpt)
     flgCnt[!flag] <- flgCnt[!flag] + 1
 
-
+	# 330  3  4 16 17 19 20
+	# 372  8 11 14 16 18 21
+	# 424 10 11 26 31 34 44
+	# 569  3  6 13 23 24 35
+	# 653  5  6 26 27 38 39
+	# 744 10 15 18 21 34 41
 	# -- conditional
     flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
 					cnt <- 0
 					if( aZoid[1]%in%c( 3   ) ) cnt <- cnt + 1
 					if( aZoid[2]%in%c(15   ) ) cnt <- cnt + 1
 					if( aZoid[3]%in%c(26,34) ) cnt <- cnt + 1
+					if( fCutU.hasPtn(c(14,18),aZoid) ) cnt <- cnt + 1 # **
+					if( fCutU.hasPtn(c(24,16),aZoid) ) cnt <- cnt + 1
 					if( fCutU.hasPtn(c(16,19),aZoid) ) cnt <- cnt + 1
+					if( fCutU.hasPtn(c(18,21),aZoid) ) cnt <- cnt + 1 # **
+					#	c(14,18,21) # ******
 					return( 2>cnt )
 				})	;kIdx<-anaFlagFnd(!flag,rpt)
     flgCnt[!flag] <- flgCnt[!flag] + 1
@@ -994,11 +1028,20 @@ fCutCnt.nextRebNum <- function( gEnv ,allIdxF ,numPtn=c(0,0,1,1) ,rpt=FALSE ){	#
 				})	;kIdx<-anaFlagFnd(!flag,rpt)
     flgCnt[!flag] <- flgCnt[!flag] + 1
 
+	# 605  1  2  7  9 10 38
+	# 632 15 18 21 32 35 44
+	# 648 13 19 28 37 38 43
+	# 692  3 11 14 15 32 36
+	# 734  6 16 37 38 41 45
+	# 788  2 10 11 19 35 39
 	# -- conditional
     flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
 					cnt <- 0
-					if( aZoid[3]%in%c(16   ) ) cnt <- cnt + 1
-					if( aZoid[4]%in%c(39,11,38) ) cnt <- cnt + 1
+					if( aZoid[2]%in%c( 6       ) ) cnt <- cnt + 1
+					if( aZoid[3]%in%c(16, 3   ) ) cnt <- cnt + 1
+					if( aZoid[4]%in%c(37,11,25,39) ) cnt <- cnt + 1 # *37
+					if( aZoid[5]%in%c(14,38) ) cnt <- cnt + 1
+					if( aZoid[6]%in%c(43) ) cnt <- cnt + 1
 					if( fCutU.hasPtn(c(37,38),aZoid) ) cnt <- cnt + 1	# 32,37,38
 					if( fCutU.hasPtn(c(32,37),aZoid) ) cnt <- cnt + 1
 					return( 2>cnt )
@@ -1064,15 +1107,24 @@ fCutCnt.nextCStepBin <- function( gEnv ,allIdxF ,rpt=FALSE ){
     flgCnt[!flag] <- flgCnt[!flag] + 1
 
 	# -- conditional
+	# 599  5 12 17 29 34 35
+	# 653  5  6 26 27 38 39
+	# 709 10 18 30 36 39 44
+	# 744 10 15 18 21 34 41
+	# 753  2 17 19 24 37 41
+	# 808 15 21 31 32 41 43
     flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
 					cnt <- 0
-					if( aZoid[2]%in%c(16   ) ) cnt <- cnt + 1
-					if( aZoid[4]%in%c(12,41) ) cnt <- cnt + 1
-					if( aZoid[5]%in%c(35,43) ) cnt <- cnt + 1
-					if( aZoid[6]%in%c(43,38) ) cnt <- cnt + 1
+					if( aZoid[2]%in%c(24,21,16   ) ) cnt <- cnt + 1
+					if( aZoid[3]%in%c(37,19   ) ) cnt <- cnt + 1
+					if( aZoid[4]%in%c(41) ) cnt <- cnt + 1
+					if( aZoid[5]%in%c(41,43,34) ) cnt <- cnt + 1
+					if( aZoid[6]%in%c(43) ) cnt <- cnt + 1
 
 					if( all(aZoid[3:4]==c(32,41)) ) cnt <- cnt + 1
+					if( all(aZoid[4:5]==c(41,43)) ) cnt <- cnt + 1
 					if( fCutU.hasPtn(c(37,41),aZoid) ) cnt <- cnt + 1
+					# ** c( r2,17,r9 )
 					return( 2>cnt )
 				})	;kIdx<-anaFlagFnd(!flag,rpt)
     flgCnt[!flag] <- flgCnt[!flag] + 1
