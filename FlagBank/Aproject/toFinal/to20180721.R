@@ -104,6 +104,12 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 		cat(sprintf("tblStr %s  allIdxF %d\n",tblStr,length(allIdxF)))
 	}
 
+	#=<Final Approach>=======================================================
+	#	원래는 맨 마지막이어야 하나, table(flgCnt) 동향파악을 위해 앞으로 옮긴다.
+	allIdxF <- fCut.finalApproach( gEnv ,allIdxF )
+	cat(sprintf("allIdxF %d\n",length(allIdxF)))
+
+
 	allIdxFObj$allIdxF.fCutCnt <- allIdxF
 	
 	# ------------------------------------------------------------------
@@ -151,14 +157,16 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 	flgCnt <- flgCnt + fCutCnt.zWidth( gEnv ,allIdxF )
 	flgCnt <- flgCnt + fCutCnt.quoTbl( gEnv ,allIdxF )
 	
-
+	allIdxFObj$flgCnt <- flgCnt
 	table(flgCnt)
+	# length( allIdxFObj$flgCnt )
+	
+
 	flag <- (0<flgCnt)&(flgCnt<3)	# 하나도 안 걸릴 수는 없겠지.
     allIdxF <- allIdxF[flag]
     cat(sprintf("allIdxF %d\n",length(allIdxF)))
 	allIdxFObj$allIdxF.fCutCnt.m <- allIdxF
 
-	#=<Final Approach>=======================================================
 
 	tDiff <- Sys.time() - tStmp
 	allIdxFObj$timeCost <- tDiff
@@ -166,10 +174,13 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 
 	allIdxF.bak <- allIdxF
 
-
-
-	logAllZoidMtx( gEnv$allZoidMtx[allIdxFObj$finalIdx,] 
-					,logId=sprintf("finalZoid_%d",length(allIdx)) 
+	selIdx <- allIdxFObj$allIdxF.fCutCnt[ allIdxFObj$flgCnt==0 ]
+	fCutU.logAllZoidMtx( gEnv$allZoidMtx[selIdx,,drop=F] 
+					,logId=sprintf("finalZoid20180721_0") 
+				)
+	selIdx <- allIdxFObj$allIdxF.fCutCnt[ allIdxFObj$flgCnt==1 ]
+	fCutU.logAllZoidMtx( gEnv$allZoidMtx[selIdx,,drop=F] 
+					,logId=sprintf("finalZoid20180721_1") 
 				)
 
 	#---------------------------------------------------------------------------------------
