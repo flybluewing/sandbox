@@ -145,6 +145,7 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 	}
 
 	flgCnt <- flgCnt + fCutCnt.colVal_1_x( gEnv ,allIdxF )
+	flgCnt <- flgCnt + fCutCnt.colVal_6_x( gEnv ,allIdxF )
 
 	table(flgCnt)
 	flag <- (0<flgCnt)&(flgCnt<3)	# 하나도 안 걸릴 수는 없겠지.
@@ -180,7 +181,7 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 					if( fCutU.hasPtn( c(37,41) ,aZoid ) )	cnt <- cnt+1
 					if( all(aZoid[c(3,4)]==c(32,41)) )	cnt <- cnt+1
 
-					return( 2>cnt )
+					return( 3>cnt )
 				})	;kIdx<-anaFlagFnd(!flag,rpt)
     allIdxF <- allIdxF[flag]
 
