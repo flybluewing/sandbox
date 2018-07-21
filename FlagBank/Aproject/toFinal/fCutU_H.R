@@ -241,6 +241,9 @@ fCutU.getMtxInfo <- function( zMtx ){
 
 	rObj$cStepTail <- tail(rObj$getCStepMtx(zMtx))
 
+	rObj$quoTail <- t(apply( rObj$rawTail ,1 ,function(zoid){ fCutU.getQuoObj(zoid)$size }))
+
+
 	return( rObj )
 } # fCutU.getMtxInfo
 
