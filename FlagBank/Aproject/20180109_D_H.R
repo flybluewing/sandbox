@@ -7,6 +7,14 @@ anaFlagFnd <- function( flag ,report=TRUE ){
     return( kIdx )
 } # anaFlagFnd( )
 
+anaFltCnt <- function( fltCnt ,dbgThld=1 ,report=TRUE ){
+    kIdx <- head(which(fltCnt>=dbgThld))
+    tbl <- table(fltCnt)    ;names(tbl) <- sprintf("cnt %s ",names(tbl))
+    logStr <- kLog.getPerStr( tbl ,length(fltCnt) ,pLong=T )
+    if( report ) cat(sprintf("    filted    %s\n",paste(logStr,collapse="   ")))
+    return( kIdx )
+} # anaFlagFnd( )
+
 anaQuoTbl <- function( zMtx ){
 
     rObj <- list()
@@ -42,5 +50,39 @@ anaQuoTbl <- function( zMtx ){
     return( rObj )
 
 } # anaQuoTbl( )
+
+anaMtx <- function( zMtx ){
+    cat("    Raw value(reb)         cStep            QuoSize     QuoTbl \n")
+    rObj <- sapply( seq_len(nrow(zMtx)) ,function( zIdx ){
+                    valStr <- paste(sprintf("%2d",zMtx[zIdx,]) ,collapse=" " )
+                    rebCnt <- 0
+                    if( zIdx>1 ){
+                        rebCnt <- sum(zMtx[zIdx,] %in% zMtx[(zIdx-1),])
+                    }
+
+                    cStepStr <- paste(sprintf("%2d",zMtx[zIdx,2:6]-zMtx[zIdx,1:5]) 
+                                    ,collapse=" " )
+
+                    quoObj <- fCutU.getQuoObj( zMtx[zIdx,]  )
+                    quoTblStr <- paste( quoObj$tbl ,collapse=" " )
+                    quoSizeStr <- paste( quoObj$size ,collapse=" " )
+
+                    cat(sprintf("    %s%s   %s   %s   %s\n"
+                            ,valStr
+                            ,ifelse(rebCnt>0,sprintf("(%d)",rebCnt),"   ")
+                            ,cStepStr ,quoSizeStr ,quoTblStr
+                        ))
+                })
+
+    dupValCnt <- table(as.vector(zMtx))
+    dupValCnt <- dupValCnt[dupValCnt>1]
+    dupValStr <- paste( names(dupValCnt) ,dupValCnt ,sep=":" )
+    cat(sprintf("  dup number  %s\n",paste(dupValStr,collapse="   ") ))
+    cat("\n")
+
+    rObj <- list( quoTbl=anaQuoTbl(zMtx) )
+    return(NULL)
+} # anaMtx()
+
 
 
