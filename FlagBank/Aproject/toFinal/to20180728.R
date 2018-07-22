@@ -1,11 +1,11 @@
 # to20180714.R 최종접근
 source("./toFinal/to20180728_H.R")
 
-saveId <- "Z815"	;rpt=TRUE
+saveId <- "Z816"	;rpt=TRUE
 load( sprintf("Obj_allIdxLst%s.save",saveId) )
 load(sprintf("./save/Obj_gEnv%s.save",saveId))
 
-allZoidGrpName <-"allZoid.idx0"	# 660671 ,1531865
+allZoidGrpName <-"allZoid.idx0"	# 806866 ,1640147
 allIdx <- allIdxLst[[allZoidGrpName]]
 
 	# save( allIdxF ,file="Obj_allIdxF.save" )	# 임시성 저장.

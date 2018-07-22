@@ -242,7 +242,7 @@ fCutU.getMtxInfo <- function( zMtx ){
 	rObj$cStepTail <- tail(rObj$getCStepMtx(zMtx))
 
 	rObj$quoTail <- t(apply( rObj$rawTail ,1 ,function(zoid){ fCutU.getQuoObj(zoid)$size }))
-
+	rObj$quoRebPtn <- fCutU.chkRowPtnReb( rObj$quoTail )
 
 	return( rObj )
 } # fCutU.getMtxInfo
@@ -451,6 +451,64 @@ fCutU.rptColValSeqNext <- function( gEnv ,allIdxF ,logId ){
 
 } # fCutU.rptColValSeqNext( )
 
+fCutU.chkRowPtnReb <- function( quoMtx ){
+	# quotion값에서 2연속으로 동일 컬럼 동일 값 나타나는 것은 2개 미만이다.
+	#	하지만 다른 곳에서도 응용할 수 있을 듯.
+
+	rObj <- list( fnd=FALSE ,rebNum=0 )
+	mtxLen <- nrow(quoMtx)
+
+	matFlagMtx <- matrix( F ,nrow=3 ,ncol=ncol(quoMtx) )
+	matValMtx <- matrix( NA ,nrow=3 ,ncol=ncol(quoMtx) )
+	rownames(matFlagMtx) <- c("0-1","1-3","2-5")
+	rownames(matValMtx) <- rownames(matFlagMtx)
+
+	if( 2<=mtxLen ){
+		rn <- "0-1" 	# row name
+		matFlagMtx[rn,] <- quoMtx[(mtxLen-0),]==quoMtx[(mtxLen-1),]
+		matValMtx[ rn ,matFlagMtx[rn,] ] <- quoMtx[(mtxLen-0) ,matFlagMtx[rn,] ]
+	}
+	if( 4<=mtxLen ){
+		rn <- "1-3" 	# row name
+		matFlagMtx[rn,] <- quoMtx[(mtxLen-1),]==quoMtx[(mtxLen-3),]
+		matValMtx[ rn ,matFlagMtx[rn,] ] <- quoMtx[(mtxLen-1) ,matFlagMtx[rn,] ]
+	}
+	if( 6<=mtxLen ){
+		rn <- "2-5" 	# row name
+		matFlagMtx[rn,] <- quoMtx[(mtxLen-2),]==quoMtx[(mtxLen-5),]
+		matValMtx[ rn ,matFlagMtx[rn,] ] <- quoMtx[(mtxLen-2) ,matFlagMtx[rn,] ]
+	}
+	rObj$matFlagMtx <- matFlagMtx
+	rObj$matValMtx <- matValMtx
+
+	rObj$filt <- function( quoVal ){	# quoVal <- c(2,1,1,2,3)
+			matMtx <- matrix(F,nrow=nrow(rObj$matValMtx),ncol=ncol(rObj$matValMtx))
+			rownames(matMtx) <- rownames(rObj$matValMtx)
+			for( rIdx in 1:nrow(rObj$matValMtx) ){
+				idx <- which( quoVal==rObj$matValMtx[rIdx,] )
+				matMtx[rIdx,idx] <- TRUE
+			}
+			thld <- apply(rObj$matFlagMtx,1,sum)-1
+			thld[thld<1] <- 1
+			
+			fltObj <- list( matMtx=matMtx )
+			fltObj$filted <- FALSE
+			for( rIdx in 1:nrow(matMtx) ){
+				if( thld[rIdx] < sum(matMtx[rIdx,]) ){
+					fltObj$filted <- TRUE
+					break
+				}
+			}	
+			if( !fltObj$filted ){
+				fltObj$filted <- any(apply(matMtx,2,sum)>2)
+			}
+			return(fltObj)
+		}
+
+	return( rObj )
+
+} # fCutU.chkRowPtnReb()
+
 fCutU.commonCutCnt <- function( gEnv, allIdxF ,zMtx
 						,pZWidth=TRUE	,pQuoTbl=TRUE	,pRebTwo=TRUE
 						,rpt=FALSE
@@ -472,6 +530,12 @@ fCutU.commonCutCnt <- function( gEnv, allIdxF ,zMtx
 		flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
 						quoTbl <- table(aZoid%/%10)
 						return( !stdMI$quo10$sameTbl(quoTbl) )
+					})	;kIdx<-anaFlagFnd(!flag,rpt)
+		flgCnt[!flag] <- flgCnt[!flag] + 1
+		stdQuo <- fCutU.chkRowPtnReb(stdMI$quoTail)
+		flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+						quoSize <- fCutU.getQuoObj(aZoid)$size
+						return( !stdQuo$filt(quoSize)$filted )
 					})	;kIdx<-anaFlagFnd(!flag,rpt)
 		flgCnt[!flag] <- flgCnt[!flag] + 1
 	}
