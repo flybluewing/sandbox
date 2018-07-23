@@ -1,5 +1,27 @@
 # u0_H.R unit model zero
 
+zMtx <- tail(gEnv$allZoidMtx)
+
+# 1,1,1 / 1,2,3 / 2,4,6
+u0.srchStep_std <- function( pMtx , ){
+
+} # u0.srchStep_std
+
+# 1,2,3,2,1 / 1,2,2,1
+u0.srchStep_symm <- function( pMtx , ){
+
+} # u0.srchStep_std
+
+# 1,2,1,2,1,2
+u0.srchStep_ptnReb <- function( pMtx , ){
+
+} # u0.srchStep_std
+
+# 1,2,2,2,1
+u0.srchStep_seq <- function( pMtx , ){
+
+} # u0.srchStep_std
+
 
 u0.getChkIdx_std <- function( pMaxLen=6 ){
 
