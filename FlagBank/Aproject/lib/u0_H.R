@@ -1,12 +1,113 @@
 # u0_H.R unit model zero
 
-zMtx <- tail(gEnv$allZoidMtx)	;rownames(zMtx) <- NULL
+zoidMtx_ana <- function( pMtx ){
 
-pVal <- zMtx[,1]	#  39 39 39 39 39 40
-pCordLst <- lapply( 1:6 ,function(idx){ c(idx,1) })
+    banLst <- list()
+    pMtxLen <- nrow( pMtx )
 
-pVal <- c( 1,7,5,1,7,3 )
+    # ana by col
+    for( cIdx in 1:6 ){
+        lst <- u0.srchStep_std( pMtx[pMtxLen:1,cIdx] )
+        for( lIdx in seq_len(length(lst)) ){
+            lst[[lIdx]]$tgt.col <- cIdx
+            lst[[lIdx]]$tgt.dir <- "col"
+        }
+        banLst <- c( banLst ,lst )
 
+        lst <- u0.srchStep_symm( pMtx[pMtxLen:1,cIdx] )
+        for( lIdx in seq_len(length(lst)) ){
+            lst[[lIdx]]$tgt.col <- cIdx
+            lst[[lIdx]]$tgt.dir <- "col"
+        }
+        banLst <- c( banLst ,lst )
+
+        lst <- u0.srchStep_ptnReb( pMtx[pMtxLen:1,cIdx] )
+        for( lIdx in seq_len(length(lst)) ){
+            lst[[lIdx]]$tgt.col <- cIdx
+            lst[[lIdx]]$tgt.dir <- "col"
+        }
+        banLst <- c( banLst ,lst )
+
+    }
+
+    # ana left slide /
+    for( cIdx in 1:4 ){
+        val <- integer(0)
+        for( dIdx in 1:5 ){
+            dRIdx <- pMtxLen - (dIdx-1)
+            dCIdx <- cIdx+dIdx            
+            # cat(sprintf("%d %d\n",dRIdx,dCIdx))
+            if( (dCIdx>6)||(dRIdx<1) ) break
+
+            val <- c( val ,pMtx[dRIdx,dCIdx] )
+        }
+
+        lst <- u0.srchStep_std( val )
+        for( lIdx in seq_len(length(lst)) ){
+            lst[[lIdx]]$tgt.col <- cIdx
+            lst[[lIdx]]$tgt.dir <- "Slide/"
+        }
+        banLst <- c( banLst ,lst )
+
+        lst <- u0.srchStep_symm( val )
+        for( lIdx in seq_len(length(lst)) ){
+            lst[[lIdx]]$tgt.col <- cIdx
+            lst[[lIdx]]$tgt.dir <- "Slide/"
+        }
+        banLst <- c( banLst ,lst )
+
+        lst <- u0.srchStep_ptnReb( val )
+        for( lIdx in seq_len(length(lst)) ){
+            lst[[lIdx]]$tgt.col <- cIdx
+            lst[[lIdx]]$tgt.dir <- "Slide/"
+        }
+        banLst <- c( banLst ,lst )
+    }
+
+    # ana right slide \
+    for( cIdx in 3:6 ){
+        val <- integer(0)
+        for( dIdx in 1:5 ){
+            dRIdx <- pMtxLen - (dIdx-1)
+            dCIdx <- cIdx-dIdx            
+            # cat(sprintf("%d %d\n",dRIdx,dCIdx))
+            if( (dCIdx<1)||(dRIdx<1) ) break
+
+            val <- c( val ,pMtx[dRIdx,dCIdx] )
+        }
+
+        lst <- u0.srchStep_std( val )
+        for( lIdx in seq_len(length(lst)) ){
+            lst[[lIdx]]$tgt.col <- cIdx
+            lst[[lIdx]]$tgt.dir <- "Slide\\"
+        }
+        banLst <- c( banLst ,lst )
+
+        lst <- u0.srchStep_symm( val )
+        for( lIdx in seq_len(length(lst)) ){
+            lst[[lIdx]]$tgt.col <- cIdx
+            lst[[lIdx]]$tgt.dir <- "Slide\\"
+        }
+        banLst <- c( banLst ,lst )
+
+        lst <- u0.srchStep_ptnReb( val )
+        for( lIdx in seq_len(length(lst)) ){
+            lst[[lIdx]]$tgt.col <- cIdx
+            lst[[lIdx]]$tgt.dir <- "Slide\\"
+        }
+        banLst <- c( banLst ,lst )
+    }
+
+    banDF <- do.call( rbind ,lapply(banLst,function(ban){
+                    data.frame( tgt.col=ban$tgt.col ,banVal=ban$banVal 
+                                    ,descript=ban$descript
+                                    ,tgt.dir=ban$tgt.dir
+                                )
+                }))
+
+    return( banDF )
+
+} # zoidMtx_ana( )
 
 # 1,1,1 / 1,2,3 / 2,4,6
 u0.srchStep_std <- function( pVal ,pCordLst=NULL ){
@@ -19,7 +120,7 @@ u0.srchStep_std <- function( pVal ,pCordLst=NULL ){
 
     banLst <- list()
     # same
-    for( fIdx in seq_len(idxFlagLst) ){
+    for( fIdx in seq_len(length(idxFlagLst)) ){
         srcVal <- pVal[ idxFlagLst[[fIdx]] ]
         srcVal.len <- length(srcVal)
         if( 2>srcVal.len ) next
@@ -48,7 +149,7 @@ u0.srchStep_std <- function( pVal ,pCordLst=NULL ){
     } # same for()
     
     # desc1
-    for( fIdx in seq_len(idxFlagLst) ){
+    for( fIdx in seq_len(length(idxFlagLst)) ){
 		srcVal <- pVal[ idxFlagLst[[fIdx]] ]
         srcVal.len <- length(srcVal)
         if( 2>srcVal.len ) next
@@ -70,7 +171,7 @@ u0.srchStep_std <- function( pVal ,pCordLst=NULL ){
     } # desc1 for()
 
     # descN
-    for( fIdx in seq_len(idxFlagLst) ){
+    for( fIdx in seq_len(length(idxFlagLst)) ){
 		srcVal <- pVal[ idxFlagLst[[fIdx]] ]
         srcVal.len <- length(srcVal)
         if( 3>srcVal.len ) next	# desc N 이면 최소한 3연속어야 의미있음.
@@ -106,7 +207,7 @@ u0.srchStep_symm <- function( pVal ){
     cordStr <- sapply( pCordLst ,function(cord){ paste(cord,collapse=",") })
 
     banLst <- list()
-	for( fIdx in seq_len(idxFlagLst) ){
+	for( fIdx in seq_len(length(idxFlagLst)) ){
 		chkIdx <- idxFlagLst[[fIdx]]
 		if( !all(pVal[chkIdx$chk1]==pVal[chkIdx$chk2]) ) next
 		if( all(pVal[chkIdx$coverArea[1]]==pVal[chkIdx$coverArea]) ) next # 한가지 값으로만 도배되어있다면..
@@ -134,14 +235,14 @@ u0.srchStep_ptnReb <- function( pVal ){
     cordStr <- sapply( pCordLst ,function(cord){ paste(cord,collapse=",") })
 
     banLst <- list()
-	for( fIdx in seq_len(idxFlagLst) ){
+	for( fIdx in seq_len(length(idxFlagLst)) ){
 		chkIdx <- idxFlagLst[[fIdx]]
 		if( !all(pVal[chkIdx$chk1]==pVal[chkIdx$chk2]) ) next
 		if( all(pVal[chkIdx$coverArea[1]]==pVal[chkIdx$coverArea]) ) next # 한가지 값으로만 도배되어있다면..
 
         banObj <- list( banVal=pVal[chkIdx$ban] ,coverArea=chkIdx$coverArea )
-        banObj$cordLst=pCordLst[ coverArea ]
-        banObj$cordStr=cordStr[  coverArea ]
+        banObj$cordLst=pCordLst[ chkIdx$coverArea ]
+        banObj$cordStr=cordStr[  chkIdx$coverArea ]
         banObj$descript <- u0.getDescript_ptnReb( banObj ,pVal )
 		banLst[[1+length(banLst)]] <- banObj
 		
@@ -170,7 +271,6 @@ u0.getChkIdx_std <- function( pMaxLen=6 ){
 
     return(idxFlagLst)
 } # u0.getChkIdx4std()
-
 u0.getChkIdx_symm <- function( pMaxLen=6 ){
 
     idxFlagLst <- list()
@@ -191,7 +291,6 @@ u0.getChkIdx_symm <- function( pMaxLen=6 ){
     return(idxFlagLst)
 
 } # u0.getChkIdx_symm()
-
 u0.getChkIdx_ptn <- function( pMaxLen=6 ){
     idxFlagLst <- list()
     maxLen <- 6
@@ -205,10 +304,9 @@ u0.getChkIdx_ptn <- function( pMaxLen=6 ){
     return(idxFlagLst)
 } # u0.getChkIdx_ptn()
 
-
 # rawVal<-pVal	;idxFlag<-idxFlagLst[[fIdx]]
 u0.getDescript_same <- function( banObj ,rawVal ,idxFlag ){
-	valStr <- sprintf("%2d",rawVal)	;valStr[!idxFlag] <- "xx"
+	valStr <- sprintf("%2d",rawVal)	;valStr[!idxFlag] <- " ."
 	endIdx <- max(which(idxFlag)[1:(banObj$certSize+1)])
 	valStr <- valStr[1:endIdx]	;valStr <- paste(valStr,collapse=",")
 	descStr <- sprintf("[same    ] %2d(?),%s",banObj$banVal,valStr)
