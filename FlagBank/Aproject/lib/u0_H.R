@@ -2,23 +2,64 @@
 
 zMtx <- tail(gEnv$allZoidMtx)
 
+pVal <- zMtx[,4]
+pCordLst <- lapply( 1:6 ,function(idx){ c(idx,1) })
 # 1,1,1 / 1,2,3 / 2,4,6
-u0.srchStep_std <- function( pMtx , ){
+u0.srchStep_std <- function( pVal ,pCordLst=NULL ){
+
+    idxFlagLst <- u0.getChkIdx_std( length(pVal) )
+    if( is.null(pCordLst) ){
+        pCordLst <- lapply( 1:length(pVal) ,function(idx){idx} )
+    }
+    cordStr <- sapply( pCordLst ,function(cord){ paste(cord,collapse=",") })
+
+    banLst <- list()
+    # same
+    for( fIdx in seq_len(idxFlagLst) ){
+        srcVal <- pVal[ idxFlagLst[[fIdx]] ]
+        srcVal.len <- length(srcVal)
+        if( 2>srcVal.len ) next
+
+        matCnt <- 0 # 연속이 몇 번 발생중인지.
+        for( idx in 2:srcVal.len ){
+            if( srcVal[idx]!=srcVal[1] ) break
+
+            matCnt <- matCnt+1
+        }
+        if( matCnt==0 ) next
+
+        banObj <- list( banVal=srcVal[1] ,certSize=matCnt )
+        banObj$cordLst=pCordLst[ idxFlagLst[[fIdx]] ][1:(matCnt+1)]
+        banObj$cordStr=cordStr[  idxFlagLst[[fIdx]] ][1:(matCnt+1)]
+        banObj$descript <- u0.getDescript_same( banObj ,idxFlagLst[[fIdx]] )
+        banLst[[1+length(banLst)]] <- banObj
+
+        if( (matCnt+1)<srcVal.len ){   # 끝자락 값은 대칭 방지를 위해 추가...
+            banObj <- list( banVal=srcVal[matCnt+2] ,certSize=matCnt )
+            banObj$cordLst=pCordLst[ idxFlagLst[[fIdx]] ][1:(matCnt+1+1)]
+            banObj$cordStr=cordStr[  idxFlagLst[[fIdx]] ][1:(matCnt+1+1)]
+            banObj$descript <- u0.getDescript_sameEnd( banObj ,idxFlagLst[[fIdx]] )
+            banLst[[1+length(banLst)]] <- banObj
+        }
+    } # same for()
+    
+
+    return( banLst )
 
 } # u0.srchStep_std
 
 # 1,2,3,2,1 / 1,2,2,1
-u0.srchStep_symm <- function( pMtx , ){
+u0.srchStep_symm <- function( pVal ){
 
 } # u0.srchStep_std
 
 # 1,2,1,2,1,2
-u0.srchStep_ptnReb <- function( pMtx , ){
+u0.srchStep_ptnReb <- function( pVal ){
 
 } # u0.srchStep_std
 
 # 1,2,2,2,1
-u0.srchStep_seq <- function( pMtx , ){
+u0.srchStep_seq <- function( pVal ){
 
 } # u0.srchStep_std
 
@@ -73,3 +114,9 @@ u0.getChkIdx_symm <- function( pMaxLen=6 ){
 
 } # u0.getChkIdx_symm()
 
+u0.getDescript_same <- function( banObj ,idxFlag ){
+    return("QQE work u0.getDescript_same")
+}
+u0.getDescript_sameEnd <- function( banObj ,idxFlag ){
+    return("QQE work u0.getDescript_sameEnd")
+}
