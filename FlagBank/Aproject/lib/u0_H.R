@@ -1,6 +1,6 @@
 # u0_H.R unit model zero
 
-zoidMtx_ana <- function( pMtx ){
+u0.zoidMtx_ana <- function( pMtx ){
 
     banLst <- list()
     pMtxLen <- nrow( pMtx )
@@ -8,6 +8,13 @@ zoidMtx_ana <- function( pMtx ){
     # ana by col
     for( cIdx in 1:6 ){
         lst <- u0.srchStep_std( pMtx[pMtxLen:1,cIdx] )
+        for( lIdx in seq_len(length(lst)) ){
+            lst[[lIdx]]$tgt.col <- cIdx
+            lst[[lIdx]]$tgt.dir <- "col"
+        }
+        banLst <- c( banLst ,lst )
+
+        lst <- u0.srchStep_seqReb( pMtx[pMtxLen:1,cIdx] )
         for( lIdx in seq_len(length(lst)) ){
             lst[[lIdx]]$tgt.col <- cIdx
             lst[[lIdx]]$tgt.dir <- "col"
@@ -49,6 +56,13 @@ zoidMtx_ana <- function( pMtx ){
         }
         banLst <- c( banLst ,lst )
 
+        lst <- u0.srchStep_seqReb( val )
+        for( lIdx in seq_len(length(lst)) ){
+            lst[[lIdx]]$tgt.col <- cIdx
+            lst[[lIdx]]$tgt.dir <- "Slide/"
+        }
+        banLst <- c( banLst ,lst )
+
         lst <- u0.srchStep_symm( val )
         for( lIdx in seq_len(length(lst)) ){
             lst[[lIdx]]$tgt.col <- cIdx
@@ -83,6 +97,13 @@ zoidMtx_ana <- function( pMtx ){
         }
         banLst <- c( banLst ,lst )
 
+        lst <- u0.srchStep_seqReb( val )
+        for( lIdx in seq_len(length(lst)) ){
+            lst[[lIdx]]$tgt.col <- cIdx
+            lst[[lIdx]]$tgt.dir <- "Slide\\"
+        }
+        banLst <- c( banLst ,lst )
+
         lst <- u0.srchStep_symm( val )
         for( lIdx in seq_len(length(lst)) ){
             lst[[lIdx]]$tgt.col <- cIdx
@@ -107,7 +128,7 @@ zoidMtx_ana <- function( pMtx ){
 
     return( banDF )
 
-} # zoidMtx_ana( )
+} # u0.zoidMtx_ana( )
 
 # 1,1,1 / 1,2,3 / 2,4,6
 u0.srchStep_std <- function( pVal ,pCordLst=NULL ){
@@ -198,7 +219,7 @@ u0.srchStep_std <- function( pVal ,pCordLst=NULL ){
 } # u0.srchStep_std
 
 # 1,2,3,2,1 / 1,2,2,1
-u0.srchStep_symm <- function( pVal ){
+u0.srchStep_symm <- function( pVal ,pCordLst=NULL ){
 
     idxFlagLst <- u0.getChkIdx_symm( length(pVal) )
     if( is.null(pCordLst) ){
@@ -226,7 +247,7 @@ u0.srchStep_symm <- function( pVal ){
 } # u0.srchStep_std
 
 # 1,2,7,2,1,...
-u0.srchStep_ptnReb <- function( pVal ){
+u0.srchStep_ptnReb <- function( pVal ,pCordLst=NULL ){
 
     idxFlagLst <- u0.getChkIdx_ptn( length(pVal) )
     if( is.null(pCordLst) ){
@@ -251,6 +272,46 @@ u0.srchStep_ptnReb <- function( pVal ){
 	return( banLst )
 
 } # u0.srchStep_std
+
+# 1(?),1,2,2,...
+u0.srchStep_seqReb <- function( pVal ,pCordLst=NULL ){
+
+    # idxFlagLst <- u0.getChkIdx_std( length(pVal) )
+    if( is.null(pCordLst) ){
+        pCordLst <- lapply( 1:length(pVal) ,function(idx){idx} )
+    }
+    cordStr <- sapply( pCordLst ,function(cord){ paste(cord,collapse=",") })
+
+    banLst <- list()
+
+    # 1(?) ,1 ,2 ,2 ...
+    srcVal <- pVal  ;srcVal.len <- length(srcVal)
+    if( (3<=srcVal.len) && (srcVal[2]==srcVal[3]) ){
+        banObj <- list( banVal=srcVal[1] )
+        banObj$cordLst=pCordLst[ 1:3 ]
+        banObj$cordStr=cordStr[  1:3 ]
+        banObj$descript <- sprintf("[seqReb  ] %2d(?),%2d,%2d,%2d,..."
+                                    ,srcVal[1],srcVal[1],srcVal[2],srcVal[2]
+                                )
+		banLst[[1+length(banLst)]] <- banObj
+    }
+
+    # 1(?) ,x ,1 ,x ,2 ,x ,2 ...
+    pVal.len <- length(pVal)
+    if( (6<=pVal.len) && (pVal[4]==pVal[6]) ){
+        banObj <- list( banVal=pVal[2] )
+        banObj$cordLst=pCordLst[ c(2,4,6) ]
+        banObj$cordStr=cordStr[  c(2,4,6) ]
+        banObj$descript <- sprintf("[seqReb  ] %2d(?), .,%2d, .,%2d, .,%2d,..."
+                                    ,pVal[2],pVal[2],pVal[4],pVal[6]
+                                )
+		banLst[[1+length(banLst)]] <- banObj
+    }
+
+	return( banLst )
+
+} # u0.srchStep_seqReb
+
 
 
 u0.getChkIdx_std <- function( pMaxLen=6 ){
@@ -345,6 +406,3 @@ u0.getDescript_ptnReb <- function( banObj ,rawVal ){
 	descStr <- sprintf("[ptnReb   ] %2d(?),%s",banObj$banVal,valStr)
     return(descStr)
 }
-
-
-

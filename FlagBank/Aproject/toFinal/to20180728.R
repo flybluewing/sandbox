@@ -45,64 +45,64 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 	flag <- flgCnt<2	;table(flag)
     allIdxF <- allIdxF[flag]
     cat(sprintf("allIdxF %d\n",length(allIdxF)))
-	flgCnt <- fCutCnt.colValSeqNext( gEnv ,allIdxF )
-	flag <- flgCnt<2	;table(flag)
-    allIdxF <- allIdxF[flag]
-    cat(sprintf("allIdxF %d\n",length(allIdxF)))
-	flgCnt <- fCutCnt.colValSeqNext.cStep( gEnv ,allIdxF )
-	flag <- flgCnt<2	;table(flag)
-    allIdxF <- allIdxF[flag]
-    cat(sprintf("allIdxF %d\n",length(allIdxF)))
-	flgCnt <- fCutCnt.nextZW( gEnv ,allIdxF )
-	flag <- flgCnt<2	;table(flag)
-    allIdxF <- allIdxF[flag]
-    cat(sprintf("allIdxF %d\n",length(allIdxF)))
-	flgCnt <- fCutCnt.nextQuo10( gEnv ,allIdxF )
-	flag <- flgCnt<2	;table(flag)
-    allIdxF <- allIdxF[flag]
-    cat(sprintf("allIdxF %d\n",length(allIdxF)))
-	flgCnt <- fCutCnt.nextBin( gEnv ,allIdxF )
-	flag <- flgCnt<2	;table(flag)
-    allIdxF <- allIdxF[flag]
-    cat(sprintf("allIdxF %d\n",length(allIdxF)))
-	flgCnt <- fCutCnt.nextRebNum( gEnv ,allIdxF )
-	flag <- flgCnt<2	;table(flag)
-    allIdxF <- allIdxF[flag]
-    cat(sprintf("allIdxF %d\n",length(allIdxF)))
-	flgCnt <- fCutCnt.nextCStepBin( gEnv ,allIdxF )
-	flag <- flgCnt<2	;table(flag)
-    allIdxF <- allIdxF[flag]
-    cat(sprintf("allIdxF %d\n",length(allIdxF)))
+	# flgCnt <- fCutCnt.colValSeqNext( gEnv ,allIdxF )
+	# flag <- flgCnt<2	;table(flag)
+    # allIdxF <- allIdxF[flag]
+    # cat(sprintf("allIdxF %d\n",length(allIdxF)))
+	# flgCnt <- fCutCnt.colValSeqNext.cStep( gEnv ,allIdxF )
+	# flag <- flgCnt<2	;table(flag)
+    # allIdxF <- allIdxF[flag]
+    # cat(sprintf("allIdxF %d\n",length(allIdxF)))
+	# flgCnt <- fCutCnt.nextZW( gEnv ,allIdxF )
+	# flag <- flgCnt<2	;table(flag)
+    # allIdxF <- allIdxF[flag]
+    # cat(sprintf("allIdxF %d\n",length(allIdxF)))
+	# flgCnt <- fCutCnt.nextQuo10( gEnv ,allIdxF )
+	# flag <- flgCnt<2	;table(flag)
+    # allIdxF <- allIdxF[flag]
+    # cat(sprintf("allIdxF %d\n",length(allIdxF)))
+	# flgCnt <- fCutCnt.nextBin( gEnv ,allIdxF )
+	# flag <- flgCnt<2	;table(flag)
+    # allIdxF <- allIdxF[flag]
+    # cat(sprintf("allIdxF %d\n",length(allIdxF)))
+	# flgCnt <- fCutCnt.nextRebNum( gEnv ,allIdxF )
+	# flag <- flgCnt<2	;table(flag)
+    # allIdxF <- allIdxF[flag]
+    # cat(sprintf("allIdxF %d\n",length(allIdxF)))
+	# flgCnt <- fCutCnt.nextCStepBin( gEnv ,allIdxF )
+	# flag <- flgCnt<2	;table(flag)
+    # allIdxF <- allIdxF[flag]
+    # cat(sprintf("allIdxF %d\n",length(allIdxF)))
 
-	for( cutCol.idx in c(1,3,6) ){
-		cutCol.val.span <- sort(unique(gEnv$allZoidMtx[allIdxF,cutCol.idx]))
-		cutCol.val.span <- setdiff( cutCol.val.span ,stdMI$lastZoid[cutCol.idx] )
-		for( cutCol.val in cutCol.val.span ){
-			flgCnt <- fCutCnt.colValStd( gEnv ,allIdxF ,cutCol.idx ,cutCol.val )
-			flag <- flgCnt<2	;table(flag)
-			allIdxF <- allIdxF[flag]
-			cat(sprintf("colVal %d(col %d)  allIdxF %d\n",cutCol.val,cutCol.idx,length(allIdxF)))
-		}
-	}
-	zWidth.span <- sort(unique(gEnv$allZoidMtx[allIdxF,6]-gEnv$allZoidMtx[allIdxF,1]))
-	zWidth.span <- setdiff( zWidth.span ,stdMI$lastZoid[6]-stdMI$lastZoid[1])
-	for( zWidth in zWidth.span ){
-		flgCnt <- fCutCnt.zWidthStd( gEnv ,allIdxF ,zWidth )
-		flag <- flgCnt<2	;table(flag)
-		allIdxF <- allIdxF[flag]
-		cat(sprintf("zWidth %d  allIdxF %d\n",zWidth,length(allIdxF)))
-	}
+	# for( cutCol.idx in c(1,3,6) ){
+	# 	cutCol.val.span <- sort(unique(gEnv$allZoidMtx[allIdxF,cutCol.idx]))
+	# 	cutCol.val.span <- setdiff( cutCol.val.span ,stdMI$lastZoid[cutCol.idx] )
+	# 	for( cutCol.val in cutCol.val.span ){
+	# 		flgCnt <- fCutCnt.colValStd( gEnv ,allIdxF ,cutCol.idx ,cutCol.val )
+	# 		flag <- flgCnt<2	;table(flag)
+	# 		allIdxF <- allIdxF[flag]
+	# 		cat(sprintf("colVal %d(col %d)  allIdxF %d\n",cutCol.val,cutCol.idx,length(allIdxF)))
+	# 	}
+	# }
+	# zWidth.span <- sort(unique(gEnv$allZoidMtx[allIdxF,6]-gEnv$allZoidMtx[allIdxF,1]))
+	# zWidth.span <- setdiff( zWidth.span ,stdMI$lastZoid[6]-stdMI$lastZoid[1])
+	# for( zWidth in zWidth.span ){
+	# 	flgCnt <- fCutCnt.zWidthStd( gEnv ,allIdxF ,zWidth )
+	# 	flag <- flgCnt<2	;table(flag)
+	# 	allIdxF <- allIdxF[flag]
+	# 	cat(sprintf("zWidth %d  allIdxF %d\n",zWidth,length(allIdxF)))
+	# }
 
-	aQuoTblObjLst <- fCutU.getQuoTblLst( gEnv$allZoidMtx[allIdxF,,drop=F] )	# tbl valStr quoStr idStr
-	aQuoTblStr <- sapply( aQuoTblObjLst ,function(quoTbl){quoTbl$valStr})
-	aQuoTblSpan <- sort(unique(aQuoTblStr))	#	table(aQuoTblStr)
-	aQuoTblSpan <- aQuoTblSpan[aQuoTblSpan!=stdMI$quo10$valStr]
-	for( tblStr in aQuoTblSpan ){
-		flgCnt <- fCutCnt.quoTblStd( gEnv ,allIdxF ,tblStr )
-		flag <- flgCnt<2	;table(flag)
-		allIdxF <- allIdxF[flag]
-		cat(sprintf("tblStr %s  allIdxF %d\n",tblStr,length(allIdxF)))
-	}
+	# aQuoTblObjLst <- fCutU.getQuoTblLst( gEnv$allZoidMtx[allIdxF,,drop=F] )	# tbl valStr quoStr idStr
+	# aQuoTblStr <- sapply( aQuoTblObjLst ,function(quoTbl){quoTbl$valStr})
+	# aQuoTblSpan <- sort(unique(aQuoTblStr))	#	table(aQuoTblStr)
+	# aQuoTblSpan <- aQuoTblSpan[aQuoTblSpan!=stdMI$quo10$valStr]
+	# for( tblStr in aQuoTblSpan ){
+	# 	flgCnt <- fCutCnt.quoTblStd( gEnv ,allIdxF ,tblStr )
+	# 	flag <- flgCnt<2	;table(flag)
+	# 	allIdxF <- allIdxF[flag]
+	# 	cat(sprintf("tblStr %s  allIdxF %d\n",tblStr,length(allIdxF)))
+	# }
 
 	#=<Final Approach>=======================================================
 	#	원래는 맨 마지막이어야 하나, table(flgCnt) 동향파악을 위해 앞으로 옮긴다.
