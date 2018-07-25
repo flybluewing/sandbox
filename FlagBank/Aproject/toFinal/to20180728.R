@@ -103,14 +103,13 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 	# 	allIdxF <- allIdxF[flag]
 	# 	cat(sprintf("tblStr %s  allIdxF %d\n",tblStr,length(allIdxF)))
 	# }
+	
+	allIdxFObj$allIdxF.fCutCnt <- allIdxF
 
 	#=<Final Approach>=======================================================
 	#	원래는 맨 마지막이어야 하나, table(flgCnt) 동향파악을 위해 앞으로 옮긴다.
 	allIdxF <- fCut.finalApproach( gEnv ,allIdxF )
 	cat(sprintf("allIdxF %d\n",length(allIdxF)))
-
-
-	allIdxFObj$allIdxF.fCutCnt <- allIdxF
 	
 	# ------------------------------------------------------------------
 	# multiple fCutCnt.**

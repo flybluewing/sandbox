@@ -78,7 +78,9 @@ anaMtx <- function( zMtx ){
     dupValCnt <- dupValCnt[dupValCnt>1]
     dupValStr <- paste( names(dupValCnt) ,dupValCnt ,sep=":" )
     cat(sprintf("  dup number  %s\n",paste(dupValStr,collapse="   ") ))
-    cat("\n")
+    
+    zw <- zMtx[,6]-zMtx[,1]
+    cat(sprintf("  zoid width  %s\n",paste(zw,collapse="   ") ))
 
     rObj <- list( quoTbl=anaQuoTbl(zMtx) )
     return(NULL)
