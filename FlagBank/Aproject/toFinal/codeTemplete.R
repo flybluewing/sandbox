@@ -18,6 +18,10 @@ fCutCnt.nextXXX <- function( gEnv ,allIdxF ,rpt=FALSE ){
     fltCnt.raw <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
 					cnt <- 0
 					if( aZoid[ ]%in%c(     ) ) cnt<-cnt+1
+
+					if( fCutU.hasPtn(c(xx,  ),aZoid) ) cnt<-cnt+1	# <xx>
+					cnt <- cnt + sum( aZoid[ : ]==c(  ,xx,  ) )
+
 					return( cnt )
 				})	;kIdx<-anaFltCnt(fltCnt.raw,rpt)
     fltCnt.rem <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
