@@ -23,8 +23,10 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 	# aQuoTblStr <- sapply( aQuoTblLst ,function(quoTbl){quoTbl$valStr})	;table(aQuoTblStr)
 
     allIdxF <- allIdx
-	stdMI <- fCutU.getMtxInfo( gEnv$zhF )	# matrix info
-		# mtxLen lastZoid rem quo10 cStep fStep rawTail cStepTail
+	stdMI <- fCutU.getMtxInfo( gEnv$zhF )	#	rptObj<-anaMtx( stdMI$rawTail )	# u0.zoidMtx_ana( stdMI$rawTail )
+	# mtxLen  lastZoid    rem quo10   cStep   fStep   rawTail cStepTail   quoTail quoRebPtn
+
+
 
 	tStmp <- Sys.time()
 	# 기본제거 --------------------------------------------------------------------	
@@ -45,17 +47,17 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 	flag <- flgCnt<2	;table(flag)
     allIdxF <- allIdxF[flag]
     cat(sprintf("allIdxF %d\n",length(allIdxF)))
-	# flgCnt <- fCutCnt.colValSeqNext( gEnv ,allIdxF )
-	# flag <- flgCnt<2	;table(flag)
-    # allIdxF <- allIdxF[flag]
-    # cat(sprintf("allIdxF %d\n",length(allIdxF)))
-	# flgCnt <- fCutCnt.colValSeqNext.cStep( gEnv ,allIdxF )
-	# flag <- flgCnt<2	;table(flag)
-    # allIdxF <- allIdxF[flag]
-    # cat(sprintf("allIdxF %d\n",length(allIdxF)))
-	# flgCnt <- fCutCnt.nextZW( gEnv ,allIdxF )
-	# flag <- flgCnt<2	;table(flag)
-    # allIdxF <- allIdxF[flag]
+	flgCnt <- fCutCnt.colValSeqNext( gEnv ,allIdxF )
+	flag <- flgCnt<2	;table(flag)
+    allIdxF <- allIdxF[flag]
+    cat(sprintf("allIdxF %d\n",length(allIdxF)))
+	flgCnt <- fCutCnt.colValSeqNext.cStep( gEnv ,allIdxF )
+	flag <- flgCnt<2	;table(flag)
+    allIdxF <- allIdxF[flag]
+    cat(sprintf("allIdxF %d\n",length(allIdxF)))
+	flgCnt <- fCutCnt.nextZW( gEnv ,allIdxF )
+	flag <- flgCnt<2	;table(flag)
+    allIdxF <- allIdxF[flag]
     # cat(sprintf("allIdxF %d\n",length(allIdxF)))
 	# flgCnt <- fCutCnt.nextQuo10( gEnv ,allIdxF )
 	# flag <- flgCnt<2	;table(flag)
@@ -103,7 +105,8 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 	# 	allIdxF <- allIdxF[flag]
 	# 	cat(sprintf("tblStr %s  allIdxF %d\n",tblStr,length(allIdxF)))
 	# }
-	
+
+	tDiff <- Sys.time() - tStmp	
 	allIdxFObj$allIdxF.fCutCnt <- allIdxF
 
 	#=<Final Approach>=======================================================
