@@ -29,13 +29,13 @@ fCutCnt.nextXXX <- function( gEnv ,allIdxF ,rpt=FALSE ){
 					aRem <- aZoid%%10
 					if( aRem[ ]%in%c(     ) ) cnt<-cnt+1
 					return( cnt )
-				})	;kIdx<-anaFltCnt(fltCnt.raw,rpt)
+				})	;kIdx<-anaFltCnt(fltCnt.rem,rpt)
     fltCnt.cStep <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
 					cnt <- 0
 					aCStep <- aZoid[2:6]-aZoid[1:5]
 					if( aCStep[ ]%in%c(  ) ) cnt<-cnt+1
 					return( cnt )
-				})	;kIdx<-anaFltCnt(fltCnt.raw,rpt)
+				})	;kIdx<-anaFltCnt(fltCnt.cStep,rpt)
 
 	score <- sapply( 1:length(flgCnt) ,function( idx ){
 					if( fltCnt.raw[idx]>2 )		return( 2 )

@@ -192,7 +192,7 @@ fCutCnt.basic <- function( gEnv ,allIdxF ,rpt=FALSE ){
 
 				if( all(aZoid[5:6]==c(14,16)) ) cnt <- cnt+1	# rebVal36
 				return( cnt )
-			})	;kIdx<-anaFltCnt(!flag,rpt)
+			})	;kIdx<-anaFltCnt(fltCnt.raw,rpt)
 	#	rptObj<-anaMtx( stdMI$rawTail %% 10 )
 	fltCnt.rem <- apply( gEnv$allZoidMtx[allIdxF,] ,1 ,function( aZoid ){
 				aRem <- aZoid %% 10
@@ -209,7 +209,7 @@ fCutCnt.basic <- function( gEnv ,allIdxF ,rpt=FALSE ){
 				if( aRem[2]%in%c(1) ) cnt <- cnt+1	# (21\78\2?,)
 				if( aRem[4]==aRem[6] ) cnt <- cnt+1		# *
 				return( cnt )
-			})	;kIdx<-anaFltCnt(!flag,rpt)
+			})	;kIdx<-anaFltCnt(fltCnt.rem,rpt)
     fltCnt.cStep <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
 				aCStep <- aZoid[2:6]-aZoid[1:5]
 				cnt <- 0
@@ -221,7 +221,7 @@ fCutCnt.basic <- function( gEnv ,allIdxF ,rpt=FALSE ){
 
 				if( aCStep[3]%in%c(1) ) cnt<-cnt+1	# (129-?29)
 				return( cnt )
-			})	;kIdx<-anaFltCnt(!flag,rpt)
+			})	;kIdx<-anaFltCnt(fltCnt.cStep,rpt)
 
 	# fStep : -5 -3 -6  3  4  3  ( gEnv$zhF[816,] - gEnv$zhF[815,] )
     fltCnt.fStep <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
@@ -230,7 +230,7 @@ fCutCnt.basic <- function( gEnv ,allIdxF ,rpt=FALSE ){
 				if( aFStep[4]==aFStep[6] ) cnt<-cnt+1
 				if( (-aFStep[3])==(aFStep[4]+aFStep[6]) ) cnt<-cnt+1
 				return( cnt )
-			})	;kIdx<-anaFltCnt(!flag,rpt)
+			})	;kIdx<-anaFltCnt(fltCnt.fStep,rpt)
 
 	score <- sapply( 1:length(flgCnt) ,function( idx ){
 					if( fltCnt.raw[idx]>2 )		return( 2 )
@@ -600,7 +600,7 @@ fCutCnt.nextZW <- function( gEnv ,allIdxF ,rpt=FALSE ){
 					if( aRem[5]%in%c(4,9    ) ) cnt <- cnt + 1
 					if( aRem[6]%in%c(9      ) ) cnt <- cnt + 1
 					return( cnt )
-				})	;kIdx<-anaFltCnt(fltCnt.raw,rpt)
+				})	;kIdx<-anaFltCnt(fltCnt.rem,rpt)
     fltCnt.cStep <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
 					cnt <- 0
 					aCStep <- aZoid[2:6]-aZoid[1:5]
@@ -611,7 +611,7 @@ fCutCnt.nextZW <- function( gEnv ,allIdxF ,rpt=FALSE ){
 					if( aCStep[1]==aCStep[2] ) cnt<-cnt+1	# *
 					if( all(aCStep[1:2]==c(7,5)) ) cnt<-cnt+1	#
 					return( cnt )
-				})	;kIdx<-anaFltCnt(fltCnt.raw,rpt)
+				})	;kIdx<-anaFltCnt(fltCnt.cStep,rpt)
 
 	score <- sapply( 1:length(flgCnt) ,function( idx ){
 					if( fltCnt.raw[idx]>2 )		return( 2 )
@@ -684,7 +684,7 @@ fCutCnt.nextQuo10 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 					aRem <- aZoid%%10
 					# if( aRem[6]%in%c(9      ) ) cnt<-cnt+1
 					return( cnt )
-				})	;kIdx<-anaFltCnt(fltCnt.raw,rpt)
+				})	;kIdx<-anaFltCnt(fltCnt.rem,rpt)
     fltCnt.cStep <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
 					cnt <- 0
 					aCStep <- aZoid[2:6]-aZoid[1:5]
@@ -695,7 +695,7 @@ fCutCnt.nextQuo10 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 					if( aCStep[2]==aCStep[4] ) cnt<-cnt+1
 					if( all(aCStep[2:4]==c(7,4,1)) ) cnt<-cnt+2	# *
 					return( cnt )
-				})	;kIdx<-anaFltCnt(fltCnt.raw,rpt)
+				})	;kIdx<-anaFltCnt(fltCnt.cStep,rpt)
 
 	score <- sapply( 1:length(flgCnt) ,function( idx ){
 					if( fltCnt.raw[idx]>2 )		return( 2 )
@@ -727,8 +727,6 @@ fCutCnt.nextBin <- function( gEnv ,allIdxF ,rpt=FALSE ){
 	flgCnt <- flgCnt + fCutU.commonCutCnt( gEnv ,allIdxF ,zMtx )
 
 	# -- conditional
-	# 	if( fCutU.hasPtn(c(,),aXxxx) ) cnt<-cnt+1
-	# 	if( all(aXxxx[c(,)]==c(,)) ) cnt<-cnt+1
     fltCnt.raw <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
 					cnt <- 0
 					if( aZoid[1]%in%c( 7, 6 ) ) cnt<-cnt+1
@@ -752,12 +750,12 @@ fCutCnt.nextBin <- function( gEnv ,allIdxF ,rpt=FALSE ){
 					cnt <- cnt + sum( aZoid[5:6]==c(19,45) )		# <38>
 
 					return( cnt )
-				})	;kIdx<-anaFlagFnd(fltCnt.raw)
+				})	;kIdx<-anaFltCnt(fltCnt.raw,rpt)
     fltCnt.rem <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
 					cnt <- 0
 					aRem <- aZoid%%10
 					return( cnt )
-				})	;kIdx<-anaFlagFnd(fltCnt.rem)
+				})	;kIdx<-anaFltCnt(fltCnt.rem,rpt)
     fltCnt.cStep <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
 					cnt <- 0
 					aCStep <- aZoid[2:6]-aZoid[1:5]
@@ -766,7 +764,7 @@ fCutCnt.nextBin <- function( gEnv ,allIdxF ,rpt=FALSE ){
 					if( aCStep[3]%in%c( 2, 6 ) ) cnt<-cnt+1
 					if( aCStep[5]%in%c( 9    ) ) cnt<-cnt+1
 					return( cnt )
-				})	;kIdx<-anaFlagFnd(fltCnt.cStep)
+				})	;kIdx<-anaFltCnt(fltCnt.cStep,rpt)
 
 	score <- sapply( 1:length(flgCnt) ,function( idx ){
 					if( fltCnt.raw[idx]>2 )		return( 2 )
