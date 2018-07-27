@@ -818,7 +818,7 @@ fCutCnt.nextRebNum <- function( gEnv ,allIdxF ,numPtn=c(0,1,1,0) ,rpt=FALSE ){	#
 					if( aZoid[4]%in%c(35      ) ) cnt<-cnt+1
 					if( aZoid[6]%in%c(40,42,45) ) cnt<-cnt+1
 
-					cnt <- cnt + sum( aZoid[2:3]==c(5,10,13) )		# < 7>
+					cnt <- cnt + sum( aZoid[2:4]==c(5,10,13) )		# < 7>
 					if( fCutU.hasPtn(c(22,33),aZoid) ) cnt<-cnt+1	# <22>
 					cnt <- cnt + sum( aZoid[2:4]==c(30,34,35) )
 					cnt <- cnt + sum( aZoid[3:5]==c(30,34,35) )		# <27>
@@ -828,13 +828,13 @@ fCutCnt.nextRebNum <- function( gEnv ,allIdxF ,numPtn=c(0,1,1,0) ,rpt=FALSE ){	#
 					cnt <- cnt + sum( aZoid[4:6]==c(12,19,45) )
 
 					return( cnt )
-				})	;kIdx<-anaFlagFnd(fltCnt.raw)
+				})	;kIdx<-anaFltCnt(fltCnt.raw,rpt)
     fltCnt.rem <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
 					cnt <- 0
 					aRem <- aZoid%%10
-					if( aRen[5]%in%c( 9      ) ) cnt<-cnt+1
+					if( aRem[5]%in%c( 9      ) ) cnt<-cnt+1
 					return( cnt )
-				})	;kIdx<-anaFlagFnd(fltCnt.rem)
+				})	;kIdx<-anaFltCnt(fltCnt.rem,rpt)
     fltCnt.cStep <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
 					cnt <- 0
 					aCStep <- aZoid[2:6]-aZoid[1:5]
@@ -845,7 +845,7 @@ fCutCnt.nextRebNum <- function( gEnv ,allIdxF ,numPtn=c(0,1,1,0) ,rpt=FALSE ){	#
 					if( aCStep[5]%in%c( 1    ) ) cnt<-cnt+1
 					if( 1<sum(aCStep[2:4]==c(21,4,1)) ) cnt<-cnt+1	# <5>
 					return( cnt )
-				})	;kIdx<-anaFlagFnd(fltCnt.cStep)
+				})	;kIdx<-anaFltCnt(fltCnt.cStep,rpt)
 
 	score <- sapply( 1:length(flgCnt) ,function( idx ){
 					if( fltCnt.raw[idx]>2 )		return( 2 )
@@ -873,6 +873,8 @@ fCutCnt.nextCStepBin <- function( gEnv ,allIdxF ,rpt=FALSE ){
 	# rawVal, cStep 모두 특이하다. 주의할 것.
 	stdMI <- fCutU.getMtxInfo( zMtx )	#	rptObj<-anaMtx( stdMI$rawTail )	;u0.zoidMtx_ana( stdMI$rawTail )
 	# mtxLen  lastZoid    rem quo10   cStep   fStep   rawTail cStepTail   quoTail quoRebPtn
+	
+	flgCnt <- flgCnt + fCutU.commonCutCnt( gEnv ,allIdxF ,zMtx )
 
 	# -- conditional
     fltCnt.raw <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
