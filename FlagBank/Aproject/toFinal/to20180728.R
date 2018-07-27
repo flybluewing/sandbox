@@ -58,17 +58,17 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 	flgCnt <- fCutCnt.nextZW( gEnv ,allIdxF )
 	flag <- flgCnt<2	;table(flag)
     allIdxF <- allIdxF[flag]
-    # cat(sprintf("allIdxF %d\n",length(allIdxF)))
-	# flgCnt <- fCutCnt.nextQuo10( gEnv ,allIdxF )
-	# flag <- flgCnt<2	;table(flag)
-    # allIdxF <- allIdxF[flag]
-    # cat(sprintf("allIdxF %d\n",length(allIdxF)))
-	# flgCnt <- fCutCnt.nextBin( gEnv ,allIdxF )
-	# flag <- flgCnt<2	;table(flag)
-    # allIdxF <- allIdxF[flag]
-    # cat(sprintf("allIdxF %d\n",length(allIdxF)))
-	# flgCnt <- fCutCnt.nextRebNum( gEnv ,allIdxF )
-	# flag <- flgCnt<2	;table(flag)
+    cat(sprintf("allIdxF %d\n",length(allIdxF)))
+	flgCnt <- fCutCnt.nextQuo10( gEnv ,allIdxF )
+	flag <- flgCnt<2	;table(flag)
+    allIdxF <- allIdxF[flag]
+    cat(sprintf("allIdxF %d\n",length(allIdxF)))
+	flgCnt <- fCutCnt.nextBin( gEnv ,allIdxF )
+	flag <- flgCnt<2	;table(flag)
+    allIdxF <- allIdxF[flag]
+    cat(sprintf("allIdxF %d\n",length(allIdxF)))
+	flgCnt <- fCutCnt.nextRebNum( gEnv ,allIdxF )
+	flag <- flgCnt<2	;table(flag)
     # allIdxF <- allIdxF[flag]
     # cat(sprintf("allIdxF %d\n",length(allIdxF)))
 	# flgCnt <- fCutCnt.nextCStepBin( gEnv ,allIdxF )
