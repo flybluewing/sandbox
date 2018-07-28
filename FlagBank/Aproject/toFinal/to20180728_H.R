@@ -184,7 +184,7 @@ fCutCnt.basic <- function( gEnv ,allIdxF ,rpt=FALSE ){
 				})	;kIdx<-anaFlagFnd(!flag,rpt)
     flgCnt[!flag] <- flgCnt[!flag] + 1
 
-	fltCnt.raw <- apply( gEnv$allZoidMtx[allIdxF,] ,1 ,function( aZoid ){
+	fltCnt.raw <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
 				cnt <- 0
 				if( aZoid[2]%in%c( 3) ) cnt <- cnt+1	# rebVal19
 				if( aZoid[3]%in%c(12) ) cnt <- cnt+1	# rebVal19
@@ -194,7 +194,7 @@ fCutCnt.basic <- function( gEnv ,allIdxF ,rpt=FALSE ){
 				return( cnt )
 			})	;kIdx<-anaFltCnt(fltCnt.raw,rpt)
 	#	rptObj<-anaMtx( stdMI$rawTail %% 10 )
-	fltCnt.rem <- apply( gEnv$allZoidMtx[allIdxF,] ,1 ,function( aZoid ){
+	fltCnt.rem <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
 				aRem <- aZoid %% 10
 				aRem.cStep <- aRem[2:6]-aRem[1:5]
 				cnt <- 0
@@ -241,7 +241,7 @@ fCutCnt.basic <- function( gEnv ,allIdxF ,rpt=FALSE ){
 					if( fltCnt.raw[idx]==2 )	return( 1 )
 					if( fltCnt.rem[idx]==2 )	return( 1 )
 					if( fltCnt.cStep[idx]==2 )	return( 1 )
-					if( fltCnt.fStep[idx]==2 )	return( 2 )
+					if( fltCnt.fStep[idx]==2 )	return( 1 )
 
 					if( fltCnt.raw[idx]>0 
 							&& (fltCnt.rem[idx]>0 || fltCnt.cStep[idx]>0 || fltCnt.fStep[idx]>0 )
