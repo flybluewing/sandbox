@@ -558,7 +558,7 @@ fCutCnt.nextZW <- function( gEnv ,allIdxF ,rpt=FALSE ){
 
 	stdMI <- fCutU.getMtxInfo( zMtx )	#	rptObj<-anaMtx( stdMI$rawTail )	# u0.zoidMtx_ana( stdMI$rawTail )
 	# mtxLen  lastZoid    rem quo10   cStep   fStep   rawTail cStepTail   quoTail quoRebPtn
-	
+
 	flgCnt <- flgCnt + fCutU.commonCutCnt( gEnv ,allIdxF ,zMtx )
 
 	# -- conditional
@@ -1000,7 +1000,7 @@ fCutCnt.colValStd <- function( gEnv ,allIdxF ,cutCol.idx ,cutCol.val ,rpt=FALSE 
 	stdMI <- fCutU.getMtxInfo( zMtx )	#	rptObj<-anaMtx( stdMI$rawTail )	;u0.zoidMtx_ana( stdMI$rawTail )
 	# mtxLen  lastZoid    rem quo10   cStep   fStep   rawTail cStepTail   quoTail quoRebPtn
 
-	flgCnt <- flgCnt + fCutU.commonCutCnt( gEnv ,allIdxT ,zMtx ,pRebThld=3 )
+	flgCnt <- flgCnt + fCutU.commonCutCnt( gEnv ,allIdxT ,zMtx ,pRebThld=4 )
 
 	flgCnt.all <- rep( 0 ,length(allIdxF) )
 	flgCnt.all[applyFlag] <- flgCnt

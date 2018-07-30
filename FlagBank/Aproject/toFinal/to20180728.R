@@ -12,7 +12,7 @@ allIdx <- allIdxLst[[allZoidGrpName]]
 	# load(sprintf("Obj_allIdxFObj_%s.save",allZoidGrpName))	;allIdxF <- allIdxFObj$allIdxF.fCutCnt.m
 
 	# 817 : stdZoid <- c( 3, 9, 12,13,25,43)
-	#		stdIdx <- 2476210
+	#		stdIdx <- 2476210	;allIdxF <- stdIdx
 
 finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
     # cutEadge.getBanPtnColVal() 에서 1~2개 발생 탈락값들에 대한 검토 권장.
@@ -76,7 +76,7 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
     allIdxF <- allIdxF[flag]
     cat(sprintf("allIdxF %d\n",length(allIdxF)))
 
-	for( cutCol.idx in c(1,3,6) ){	# fltCnt 1,2,1
+	for( cutCol.idx in c(1,3,6) ){	# fltCnt 2,0,3
 		cutCol.val.span <- sort(unique(gEnv$allZoidMtx[allIdxF,cutCol.idx]))
 		cutCol.val.span <- setdiff( cutCol.val.span ,stdMI$lastZoid[cutCol.idx] )
 		for( cutCol.val in cutCol.val.span ){	# cutCol.val <- cutCol.val.span[1]
