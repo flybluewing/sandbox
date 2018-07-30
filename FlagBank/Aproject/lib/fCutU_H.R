@@ -123,10 +123,13 @@ fCutU.getRebNum <- function( gEnv ,rebNum=0 ){ # < official >
 
 } # fCutU.getNextZW()
 
-fCutU.getNextRebNumPtn <- function( gEnv ,numPtn ){	# <official>
+fCutU.getNextRebNumPtn <- function( gEnv ,numPtn=NULL ){	# <official>
 	rebNum <- sapply( 2:nrow(gEnv$zhF) ,function(hIdx){ sum(gEnv$zhF[(hIdx-1),]%in%gEnv$zhF[hIdx,]) } )
 	rebNum <- c( 0 ,rebNum )	;names(rebNum) <- 1:length(rebNum)
 	rebNumLen <- length(rebNum)
+	if( is.null(numPtn) ){
+		numPtn <- rebNum[(rebNumLen-3):rebNumLen]
+	}
 	numPtnLen <- length(numPtn)
 
 	span <- (numPtnLen-1):0
@@ -510,21 +513,22 @@ fCutU.chkRowPtnReb <- function( quoMtx ){
 } # fCutU.chkRowPtnReb()
 
 fCutU.commonCutCnt <- function( gEnv, allIdxF ,zMtx
-						,pZWidth=TRUE	,pQuoTbl=TRUE	,pRebTwo=TRUE
+						,pZWidth=TRUE	,pQuoTbl=TRUE	,pRebThld=2
 						,rpt=FALSE
 					 ) {
-
+	#	pZWidth=TRUE	;pQuoTbl=TRUE	;pRebThld=2
 	flgCnt <- rep( 0 ,length(allIdxF) )
 	stdMI <- fCutU.getMtxInfo( zMtx )
 		# mtxLen lastZoid rem quo10 cStep fStep rawTail cStepTail
 
-	if(pRebTwo){
-		# <remove>
-		flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
-						return( 2>sum(stdMI$lastZoid%in%aZoid) )
-					})	;kIdx<-anaFlagFnd(!flag,rpt)
-		flgCnt[!flag] <- flgCnt[!flag] + 2
-	}
+	flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+					return( pRebThld>sum(stdMI$lastZoid%in%aZoid) )
+				})	;kIdx<-anaFlagFnd(!flag,rpt)
+	flgCnt[!flag] <- flgCnt[!flag] + 2
+    flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+					return( (pRebThld-1)>sum(stdMI$lastZoid==aZoid) )
+				})	;kIdx<-anaFlagFnd(!flag,rpt)
+    flgCnt[!flag] <- flgCnt[!flag] + 1
 
 	if( pQuoTbl ){
 		flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
@@ -547,10 +551,6 @@ fCutU.commonCutCnt <- function( gEnv, allIdxF ,zMtx
 		flgCnt[!flag] <- flgCnt[!flag] + 1
 	}
 
-    flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
-					return( 1>sum(stdMI$lastZoid==aZoid) )
-				})	;kIdx<-anaFlagFnd(!flag,rpt)
-    flgCnt[!flag] <- flgCnt[!flag] + 1
     flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
 					aCode <- aZoid%%10
 					for( cIdx in 1:4 ){		# rem ptn 재현 3이상

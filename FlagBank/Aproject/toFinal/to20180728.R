@@ -76,10 +76,10 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
     allIdxF <- allIdxF[flag]
     cat(sprintf("allIdxF %d\n",length(allIdxF)))
 
-	for( cutCol.idx in c(1,3,6) ){	# fltCnt 1,12, 1
+	for( cutCol.idx in c(1,3,6) ){	# fltCnt 1,2,1
 		cutCol.val.span <- sort(unique(gEnv$allZoidMtx[allIdxF,cutCol.idx]))
 		cutCol.val.span <- setdiff( cutCol.val.span ,stdMI$lastZoid[cutCol.idx] )
-		for( cutCol.val in cutCol.val.span ){
+		for( cutCol.val in cutCol.val.span ){	# cutCol.val <- cutCol.val.span[1]
 			flgCnt <- fCutCnt.colValStd( gEnv ,allIdxF ,cutCol.idx ,cutCol.val )
 			flag <- flgCnt<2	;table(flag)
 			allIdxF <- allIdxF[flag]
@@ -88,7 +88,7 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 	}
 	zWidth.span <- sort(unique(gEnv$allZoidMtx[allIdxF,6]-gEnv$allZoidMtx[allIdxF,1]))
 	zWidth.span <- setdiff( zWidth.span ,stdMI$lastZoid[6]-stdMI$lastZoid[1])
-	for( zWidth in zWidth.span ){	# fltCnt 1
+	for( zWidth in zWidth.span ){	# zWidth <- zWidth.span[1]	# fltCnt 0
 		flgCnt <- fCutCnt.zWidthStd( gEnv ,allIdxF ,zWidth )
 		flag <- flgCnt<2	;table(flag)
 		allIdxF <- allIdxF[flag]

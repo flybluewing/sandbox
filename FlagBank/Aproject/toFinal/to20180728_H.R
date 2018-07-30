@@ -784,7 +784,7 @@ fCutCnt.nextBin <- function( gEnv ,allIdxF ,rpt=FALSE ){
 } # fCutCnt.nextBin()
 
 # done
-fCutCnt.nextRebNum <- function( gEnv ,allIdxF ,numPtn=c(0,1,1,0) ,rpt=FALSE ){	# < half official >
+fCutCnt.nextRebNum <- function( gEnv ,allIdxF ,numPtn=NULL ,rpt=FALSE ){
 
 	flgCnt <- rep( 0 ,length(allIdxF) )
 	rebObj <- fCutU.getNextRebNumPtn( gEnv ,numPtn )
@@ -1000,7 +1000,7 @@ fCutCnt.colValStd <- function( gEnv ,allIdxF ,cutCol.idx ,cutCol.val ,rpt=FALSE 
 	stdMI <- fCutU.getMtxInfo( zMtx )	#	rptObj<-anaMtx( stdMI$rawTail )	;u0.zoidMtx_ana( stdMI$rawTail )
 	# mtxLen  lastZoid    rem quo10   cStep   fStep   rawTail cStepTail   quoTail quoRebPtn
 
-	flgCnt <- flgCnt + fCutU.commonCutCnt( gEnv ,allIdxT ,zMtx ,pRebTwo=F )
+	flgCnt <- flgCnt + fCutU.commonCutCnt( gEnv ,allIdxT ,zMtx ,pRebThld=3 )
 
 	flgCnt.all <- rep( 0 ,length(allIdxF) )
 	flgCnt.all[applyFlag] <- flgCnt

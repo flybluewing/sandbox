@@ -31,7 +31,6 @@ for( nIdx in attributes(remLst)$name ){
     }
 }
 
-
 allZoid.fltCnt <- getAllZoidIdx.FltCnt( gEnv ,remLst )
 # allZoidMtx <- gEnv$allZoidMtx[(allZoid.fltCnt==0),]
 
@@ -74,11 +73,18 @@ flag <- sapply( allZoid.lst[allZoid.idx2] ,function(p){
                 })
 allZoid.idx2 <- allZoid.idx2[flag]
 
+
+# rebCnt
+rebCnt <- sapply( 2:nrow(gEnv$zhF) ,function(hIdx){ sum(gEnv$zhF[hIdx,] %in% gEnv$zhF[(hIdx-1),]) } )
+rebCnt <- c( 0 ,rebCnt )    ;names(rebCnt) <- 1:nrow(gEnv$zhF)
+
 allIdxLst <- list( allZoid.idx0=allZoid.idx0 ,allZoid.idx1=allZoid.idx1 ,allZoid.idx2=allZoid.idx2 )
 allIdxLst$saveId <- saveId
 allIdxLst$stdFiltedCnt <- stdFiltedCnt
 allIdxLst$stdFiltedCnt.n0 <- names(stdFiltedCnt)[stdFiltedCnt==0]
 allIdxLst$stdFiltedCnt.n1 <- names(stdFiltedCnt)[stdFiltedCnt==1]
+allIdxLst$infoMtx <- cbind( stdFiltedCnt ,rebCnt[names(stdFiltedCnt)] )
+colnames( allIdxLst$infoMtx ) <- c("stdFiltedCnt","rebCnt")
 
 save( allIdxLst, file=sprintf("Obj_allIdxLst%s.save",saveId) )
 
