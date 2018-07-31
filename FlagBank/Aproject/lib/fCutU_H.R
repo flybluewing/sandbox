@@ -1,11 +1,18 @@
 # fCutU_H.R 최종접근
 
-fCutU.hasPtn <- function( src ,tgt ){ # < official >
+fCutU.hasPtn <- function( src ,tgt ,thld=NULL ){ # < official >
+
+	if( is.null(thld) ){
+		thld <- sum(!is.na(src))
+	} else if( thld>sum(!is.na(src)) ){
+		return( FALSE )
+	}
 
 	src.len <- length(src)	;tgt.len <- length(tgt)
 	colSpan <- 1:src.len - 1
 	for( cIdx in 1:(tgt.len-src.len+1) ){
-		if( all(tgt[cIdx+colSpan]==src) ){
+		matFlag <- tgt[cIdx+colSpan]==src
+		if( thld<=sum(matFlag,na.rm=T) ){
 			return( TRUE )
 		}
 	}

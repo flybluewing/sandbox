@@ -1,5 +1,25 @@
 # u0_H.R unit model zero
 
+u0.zoidInc_ana <- function( zoid1 ,zoid2 ){
+    # zoid1=c(6,18,31,34,38,45);zoid2=c(14,15,16,17,38,45)
+    # u0.zoidInc_ana( zoid1 ,zoid2 )
+    zoid1.str <- paste( sprintf("%2d",zoid1) ,collapse=" " )
+    zoid2.str <- paste( sprintf("%2d",zoid2) ,collapse=" " )
+    zoid.inc <- paste( sprintf("%2d",zoid2+(zoid2-zoid1)) ,collapse=" " )
+    cat(sprintf("   zoid1 %s \n", zoid1.str))
+    cat(sprintf("   zoid2 %s \n", zoid2.str))
+    cat(sprintf("   next  %s \n", zoid.inc ))
+    return("")
+} # u0.zoidInc_ana()
+
+
+u0.zoidMtx_ana.rpt <- function( pMtx ){
+    # u0.zoidMtx_ana.rpt( pMtx )
+    dfStr <- capture.output( u0.zoidMtx_ana(pMtx) )
+    cat(sprintf("%s\n",dfStr))
+    # QQE working
+} # u0.zoidMtx_ana.rpt()
+
 u0.zoidMtx_ana <- function( pMtx ){
 
     banLst <- list()

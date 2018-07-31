@@ -51,9 +51,10 @@ anaQuoTbl <- function( zMtx ){
 
 } # anaQuoTbl( )
 
-anaMtx <- function( zMtx ){
-    cat("    Raw value(reb)         cStep            QuoSize     QuoTbl \n")
-    rObj <- sapply( seq_len(nrow(zMtx)) ,function( zIdx ){
+anaMtx <- function( zMtx ,stdZoid=NULL ){
+    # rObj <- anaMtx( stdMI$rawTail ,stdZoid )
+    cat("    Raw value(reb)       |cStep          |fStep                   |QuoSize   |QuoTbl \n")
+    dummy <- sapply( seq_len(nrow(zMtx)) ,function( zIdx ){
                     valStr <- paste(sprintf("%2d",zMtx[zIdx,]) ,collapse=" " )
                     rebCnt <- 0
                     if( zIdx>1 ){
@@ -62,17 +63,47 @@ anaMtx <- function( zMtx ){
 
                     cStepStr <- paste(sprintf("%2d",zMtx[zIdx,2:6]-zMtx[zIdx,1:5]) 
                                     ,collapse=" " )
+                    fStepStr <- if( zIdx>1 ){
+                                    paste(sprintf("%3d" ,zMtx[zIdx,]-zMtx[(zIdx-1),])
+                                        ,collapse=" " )
+                                } else { "                       " }
 
                     quoObj <- fCutU.getQuoObj( zMtx[zIdx,]  )
                     quoTblStr <- paste( quoObj$tbl ,collapse=" " )
                     quoSizeStr <- paste( quoObj$size ,collapse=" " )
 
-                    cat(sprintf("    %s%s   %s   %s   %s\n"
+                    cat(sprintf("    %s%s |%s |%s |%s |%s\n"
                             ,valStr
                             ,ifelse(rebCnt>0,sprintf("(%d)",rebCnt),"   ")
-                            ,cStepStr ,quoSizeStr ,quoTblStr
+                            ,cStepStr ,fStepStr ,quoSizeStr ,quoTblStr
                         ))
                 })
+    if( !is.null(stdZoid) ){
+        cat("-<standard zoid>---------------------------------------------------------------------\n")
+                    lastZoid <- zMtx[nrow(zMtx),]
+                    valStr <- paste(sprintf("%2d",stdZoid) ,collapse=" " )
+                    rebCnt <- 0
+                    if( zIdx>1 ){
+                        rebCnt <- sum(stdZoid %in% lastZoid)
+                    }
+
+                    cStepStr <- paste(sprintf("%2d",stdZoid[2:6]-stdZoid[1:5]) 
+                                    ,collapse=" " )
+                    fStepStr <- if( zIdx>1 ){
+                                    paste(sprintf("%3d" ,stdZoid-lastZoid)
+                                        ,collapse=" " )
+                                } else { "                       " }
+
+                    quoObj <- fCutU.getQuoObj( stdZoid )
+                    quoTblStr <- paste( quoObj$tbl ,collapse=" " )
+                    quoSizeStr <- paste( quoObj$size ,collapse=" " )
+
+                    cat(sprintf("    %s%s |%s |%s |%s |%s\n"
+                            ,valStr
+                            ,ifelse(rebCnt>0,sprintf("(%d)",rebCnt),"   ")
+                            ,cStepStr ,fStepStr ,quoSizeStr ,quoTblStr
+                        ))
+    }
 
     dupValCnt <- table(as.vector(zMtx))
     dupValCnt <- dupValCnt[dupValCnt>1]

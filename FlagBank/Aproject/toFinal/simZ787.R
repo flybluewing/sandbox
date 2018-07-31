@@ -5,15 +5,17 @@ saveId <- "Z817"	;rpt=TRUE
 load( sprintf("Obj_allIdxLst%s.save",saveId) )
 load(sprintf("./save/Obj_gEnv%s.save",saveId))
 
-stdIdx <- 787
-stdZoid <- gEnv$zhF[stdIdx,]
-gEnv$zhF <- gEnv$zhF[1:(stdIdx-1),]
+simulIdx <- 787	# c( 5, 6,13,16,27,28 )
+aZoid <- stdZoid <- gEnv$zhF[simulIdx,]
+allIdxF <- allIdx <- stdIdx <- which(apply(gEnv$allZoidMtx,1,function(zoid){all(zoid==stdZoid)}))
+
+gEnv$zhF <- gEnv$zhF[1:(simulIdx-1),]
 
 finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
     # cutEadge.getBanPtnColVal() 에서 1~2개 발생 탈락값들에 대한 검토 권장.
 	allIdxFObj <- list()
 	# 참고 자료 --------------------------------------------------------------------	
-	fCutU.rptColValSeqNext( gEnv ,allIdxF ,"to20180728")
+	fCutU.rptColValSeqNext( gEnv ,allIdxF ,"z787")
 	# aQuoTblLst <- fCutU.getQuoTblLst( gEnv$allZoidMtx[allIdxF,] )
 	# aQuoTblStr <- sapply( aQuoTblLst ,function(quoTbl){quoTbl$valStr})	;table(aQuoTblStr)
 
@@ -38,7 +40,7 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 	flag <- flgCnt<2	;table(flag)
     allIdxF <- allIdxF[flag]
     cat(sprintf("allIdxF %d\n",length(allIdxF)))
-	flgCnt <- fCutCnt.basic( gEnv ,allIdxF )			# fltCnt 1
+	flgCnt <- fCutCnt.basic( gEnv ,allIdxF )
 	flag <- flgCnt<2	;table(flag)
     allIdxF <- allIdxF[flag]
     cat(sprintf("allIdxF %d\n",length(allIdxF)))
