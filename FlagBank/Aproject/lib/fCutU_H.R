@@ -1,7 +1,8 @@
 # fCutU_H.R 최종접근
 
-fCutU.hasPtn <- function( src ,tgt ,thld=NULL ){ # < official >
-
+fCutU.hasPtn <- function( src ,tgt ,thld=NULL ,fixIdx=NULL ){ # < official >
+	# thld : 이거 이상 매치되어야 함.
+	# fixIdx : src[fixIdx] 는 반드시 포함되어야 함.
 	if( is.null(thld) ){
 		thld <- sum(!is.na(src))
 	} else if( thld>sum(!is.na(src)) ){
@@ -13,6 +14,9 @@ fCutU.hasPtn <- function( src ,tgt ,thld=NULL ){ # < official >
 	for( cIdx in 1:(tgt.len-src.len+1) ){
 		matFlag <- tgt[cIdx+colSpan]==src
 		if( thld<=sum(matFlag,na.rm=T) ){
+			if( !is.null(fixIdx) && !matFlag[fixIdx] ){
+				next	
+			}
 			return( TRUE )
 		}
 	}

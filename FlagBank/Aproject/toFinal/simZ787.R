@@ -44,15 +44,15 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 	flag <- flgCnt<2	;table(flag)
     allIdxF <- allIdxF[flag]
     cat(sprintf("allIdxF %d\n",length(allIdxF)))
-	flgCnt <- fCutCnt.colValSeqNext( gEnv ,allIdxF )	# fltCnt 1
+	flgCnt <- fCutCnt.colValSeqNext( gEnv ,allIdxF )
 	flag <- flgCnt<2	;table(flag)
     allIdxF <- allIdxF[flag]
     cat(sprintf("allIdxF %d\n",length(allIdxF)))
-	flgCnt <- fCutCnt.colValSeqNext.cStep( gEnv ,allIdxF )	# fltcnt 1
+	flgCnt <- fCutCnt.colValSeqNext.cStep( gEnv ,allIdxF )
 	flag <- flgCnt<2	;table(flag)
     allIdxF <- allIdxF[flag]
     cat(sprintf("allIdxF %d\n",length(allIdxF)))
-	flgCnt <- fCutCnt.nextZW( gEnv ,allIdxF )			# fltCnt 2
+	flgCnt <- fCutCnt.nextZW( gEnv ,allIdxF )			# fltCnt 2	# rem은 기준을 3 이상으로 올리는게..
 	flag <- flgCnt<2	;table(flag)
     allIdxF <- allIdxF[flag]
     cat(sprintf("allIdxF %d\n",length(allIdxF)))

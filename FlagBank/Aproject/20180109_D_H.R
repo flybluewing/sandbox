@@ -82,17 +82,10 @@ anaMtx <- function( zMtx ,stdZoid=NULL ){
         cat("-<standard zoid>---------------------------------------------------------------------\n")
                     lastZoid <- zMtx[nrow(zMtx),]
                     valStr <- paste(sprintf("%2d",stdZoid) ,collapse=" " )
-                    rebCnt <- 0
-                    if( zIdx>1 ){
-                        rebCnt <- sum(stdZoid %in% lastZoid)
-                    }
+                    rebCnt <- sum(stdZoid %in% lastZoid)
 
-                    cStepStr <- paste(sprintf("%2d",stdZoid[2:6]-stdZoid[1:5]) 
-                                    ,collapse=" " )
-                    fStepStr <- if( zIdx>1 ){
-                                    paste(sprintf("%3d" ,stdZoid-lastZoid)
-                                        ,collapse=" " )
-                                } else { "                       " }
+                    cStepStr <- paste(sprintf("%2d",stdZoid[2:6]-stdZoid[1:5]) ,collapse=" " )
+                    fStepStr <- paste(sprintf("%3d" ,stdZoid-lastZoid) ,collapse=" " )
 
                     quoObj <- fCutU.getQuoObj( stdZoid )
                     quoTblStr <- paste( quoObj$tbl ,collapse=" " )
@@ -111,7 +104,7 @@ anaMtx <- function( zMtx ,stdZoid=NULL ){
     cat(sprintf("  dup number  %s\n",paste(dupValStr,collapse="   ") ))
     
     zw <- zMtx[,6]-zMtx[,1]
-    cat(sprintf("  zoid width  %s\n",paste(zw,collapse="   ") ))
+    cat(sprintf("  zoid width  ... %s and ?\n",paste(zw,collapse="   ") ))
 
     rObj <- list( quoTbl=anaQuoTbl(zMtx) )
     return(NULL)
