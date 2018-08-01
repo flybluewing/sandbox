@@ -266,7 +266,7 @@ u0.srchStep_symm <- function( pVal ,pCordLst=NULL ){
 	return( banLst )
 } # u0.srchStep_std
 
-# 1,2,7,2,1,...
+# 7(?),1,2,7,1,2,...
 u0.srchStep_ptnReb <- function( pVal ,pCordLst=NULL ){
 
     idxFlagLst <- u0.getChkIdx_ptn( length(pVal) )
@@ -378,7 +378,7 @@ u0.getChkIdx_ptn <- function( pMaxLen=6 ){
     maxLen <- ifelse( maxLen>pMaxLen ,pMaxLen ,maxLen )
 
     # 로직보다는 차라리, 알아보기 쉽게 직관적인 날코딩을 하자.
-    if( 4<=maxLen ){
+    if( 5<=maxLen ){
         idxFlagLst[[1]] <- list( chk1=1:2 ,ban=3 ,chk2=4:5 ,coverArea=1:5 )
     }
 

@@ -211,7 +211,7 @@ fCutCnt.basic <- function( gEnv ,allIdxF ,rpt=FALSE ){
 				return( cnt )
 			})	;kIdx<-anaFltCnt(cntMtx[,"raw"],rpt)
 	cntMtx[,"rem"] <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
-				# rptObj<-anaMtx( stdMI$rawTail )	;u0.zoidMtx_ana( stdMI$rawTail%%10 )
+				# rptObj<-anaMtx( stdMI$rawTail )	;u0.zoidMtx_ana.rpt( stdMI$rawTail%%10 )
 				aRem <- aZoid %% 10
 				aRem.cStep <- aRem[2:6]-aRem[1:5]
 				cnt <- 0
@@ -611,7 +611,7 @@ fCutCnt.nextZW <- function( gEnv ,allIdxF ,rpt=FALSE ){
 					return( cnt )
 				})	;kIdx<-anaFltCnt(cntMtx[,"raw"],rpt)
     cntMtx[,"rem"] <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
-					# rptObj<-anaMtx( stdMI$rawTail )	;u0.zoidMtx_ana( stdMI$rawTail%%10 )
+					# rptObj<-anaMtx( stdMI$rawTail )	;u0.zoidMtx_ana.rpt( stdMI$rawTail%%10 )
 					cnt <- 0
 					aRem <- aZoid%%10
 					if( aRem[1]%in%c(      3,7 ) ) cnt<-cnt+1
@@ -669,7 +669,7 @@ fCutCnt.nextQuo10 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 	zMtx <- fCutU.getNextQuo10( gEnv )$zMtx	# rptObj<-anaQuoTbl( zMtx )
 	if( 0==nrow(zMtx) ) return( rep(0,length(allIdxF)) )
 
-	stdMI <- fCutU.getMtxInfo( zMtx )	#	rptObj<-anaMtx(stdMI$rawTail,stdZoid);u0.zoidMtx_ana.rpt( stdMI$rawTail )
+	stdMI <- fCutU.getMtxInfo( zMtx )	# rptObj<-anaMtx(stdMI$rawTail,stdZoid);u0.zoidMtx_ana.rpt( stdMI$rawTail )
 	# mtxLen  lastZoid    rem quo10   cStep   fStep   rawTail cStepTail   quoTail quoRebPtn
 
 	flgCnt <- flgCnt + fCutU.commonCutCnt( gEnv ,allIdxF ,zMtx )
@@ -711,9 +711,15 @@ fCutCnt.nextQuo10 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 					return( cnt )
 				})	;kIdx<-anaFltCnt(cntMtx[,"raw"],rpt)
 
-	QQE 
+	#     Raw value(reb)       |cStep          |fStep                   |QuoSize   |QuoTbl 
+	#      3  5  8 19 38 42    | 2  3 11 19  4 |                        |3 1 0 1 1 |3 1 1 1
+	#     15 17 25 37 42 43(1) | 2  8 12  5  1 | 12  12  17  18   4   1 |0 2 1 1 2 |2 1 1 2
+	#      7  8 20 29 33 38    | 1 12  9  4  5 | -8  -9  -5  -8  -9  -5 |2 0 2 2 0 |2 2 2
+	#     11 15 24 35 37 45    | 4  9 11  2  8 |  4   7   4   6   4   7 |0 2 1 2 1 |2 1 2 1
+	#     23 27 28 38 42 43    | 4  1 10  4  1 | 12  12   4   3   5  -2 |0 0 3 1 2 |3 1 2
+	#     11 16 18 19 24 39    | 5  2  1  5 15 |-12 -11 -10 -19 -18  -4 |0 4 1 1 0 |4 1 1
     cntMtx[,"rem"] <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
-					# rptObj<-anaMtx( stdMI$rawTail )	;u0.zoidMtx_ana( stdMI$rawTail%%10 )
+					# rptObj<-anaMtx( stdMI$rawTail )	;u0.zoidMtx_ana.rpt( stdMI$rawTail%%10 )
 					cnt <- 0
 					aRem <- aZoid%%10
 					if( aRem[1]%in%c( ) ) cnt<-cnt+1
