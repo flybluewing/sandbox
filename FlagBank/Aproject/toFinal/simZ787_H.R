@@ -419,6 +419,8 @@ fCutCnt.colValSeqNext <- function( gEnv ,allIdxF ,rpt=FALSE ){
 					aRem <- aZoid %% 10	# 한 개 그룹에서 2개 이상 rem 일치
 					for( cIdx in banCode.span ){
 						fndMtx <- cvSeqNextLst[[cIdx]]$fndMtx
+						if( 2>nrow(fndMtx) ) next
+
 						for( rIdx in 2:nrow(fndMtx) ){
 							if( 1<sum(aRem[cIdx+0:2]==(fndMtx[rIdx,]%%10) ) ) return(FALSE)
 						}
@@ -499,6 +501,8 @@ fCutCnt.colValSeqNext.cStep <- function( gEnv ,allIdxF ,rpt=FALSE ){
 					cnt <- 0	# fndMtx 일치가 2개 이상 발생.
 					for( cIdx in banCode.span ){
 						fndMtx <- cvSeqNextLst[[cIdx]]$fndMtx
+						if( 2>nrow(fndMtx) ) next
+
 						for( rIdx in 2:nrow(fndMtx) ){
 							if( all(aCStep[cIdx+0:1]==banCodeLst[[cIdx]]) ) {
 								cnt <- cnt+1

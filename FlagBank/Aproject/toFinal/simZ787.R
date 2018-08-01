@@ -2,7 +2,7 @@
 source("./toFinal/simZ787_H.R")
 
 saveId <- "Z817"	;rpt=TRUE
-load( sprintf("Obj_allIdxLst%s.save",saveId) )
+# load( sprintf("Obj_allIdxLst%s.save",saveId) )
 load(sprintf("./save/Obj_gEnv%s.save",saveId))
 
 simulIdx <- 787	# c( 5, 6,13,16,27,28 )
