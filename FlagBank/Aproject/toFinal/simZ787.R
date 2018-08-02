@@ -64,16 +64,16 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 	flag <- flgCnt<2	;table(flag)
     allIdxF <- allIdxF[flag]
     cat(sprintf("allIdxF %d\n",length(allIdxF)))
-	flgCnt <- fCutCnt.nextRebNum( gEnv ,allIdxF )		# fltCnt 2
+	flgCnt <- fCutCnt.nextRebNum( gEnv ,allIdxF )		# fltCnt 1
 	flag <- flgCnt<2	;table(flag)
     allIdxF <- allIdxF[flag]
     cat(sprintf("allIdxF %d\n",length(allIdxF)))
-	flgCnt <- fCutCnt.nextCStepBin( gEnv ,allIdxF )		# fltCnt 1
+	flgCnt <- fCutCnt.nextCStepBin( gEnv ,allIdxF )
 	flag <- flgCnt<2	;table(flag)
     allIdxF <- allIdxF[flag]
     cat(sprintf("allIdxF %d\n",length(allIdxF)))
 
-	for( cutCol.idx in c(1,3,6) ){	# fltCnt 1,12, 1
+	for( cutCol.idx in c(1,3,6) ){	# fltCnt 2,1,4
 		cutCol.val.span <- sort(unique(gEnv$allZoidMtx[allIdxF,cutCol.idx]))
 		cutCol.val.span <- setdiff( cutCol.val.span ,stdMI$lastZoid[cutCol.idx] )
 		for( cutCol.val in cutCol.val.span ){
@@ -96,7 +96,7 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 	aQuoTblStr <- sapply( aQuoTblObjLst ,function(quoTbl){quoTbl$valStr})
 	aQuoTblSpan <- sort(unique(aQuoTblStr))	#	table(aQuoTblStr)
 	aQuoTblSpan <- aQuoTblSpan[aQuoTblSpan!=stdMI$quo10$valStr]
-	for( tblStr in aQuoTblSpan ){	# fltCnt 1
+	for( tblStr in aQuoTblSpan ){	# fltCnt 3
 		flgCnt <- fCutCnt.quoTblStd( gEnv ,allIdxF ,tblStr )
 		flag <- flgCnt<2	;table(flag)
 		allIdxF <- allIdxF[flag]
