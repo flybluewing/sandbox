@@ -28,7 +28,7 @@ fCutCnt.nextXXX <- function( gEnv ,allIdxF ,rpt=FALSE ){
 					# u0.zoidInc_ana(stdMI$rawTail[n,],stdMI$rawTail[m,])
 					if( fCutU.hasPtn(c(  ,  ),aZoid) ) cnt<-cnt+1	# < >
 					if( 1<sum(aZoid[ : ]==c( , , )) ) cnt<-cnt+1
-					
+
 					return( cnt )
 				})	;kIdx<-anaFltCnt(cntMtx[,"raw"],rpt)
     cntMtx[,"rem"] <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
