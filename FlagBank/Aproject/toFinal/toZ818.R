@@ -1,7 +1,7 @@
 # Z818
 source("./toFinal/toZ818_H.R")
 
-saveId <- "Z817"	;rpt=TRUE
+saveId <- "Z818"	;rpt=TRUE
 load( sprintf("Obj_allIdxLst%s.save",saveId) )
 load(sprintf("./save/Obj_gEnv%s.save",saveId))
 allZoidGrpName <-"allZoid.idx0"	# 800151 ,1696555 ,1348295
