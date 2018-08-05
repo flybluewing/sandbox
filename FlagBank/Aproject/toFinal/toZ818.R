@@ -7,10 +7,10 @@ load(sprintf("./save/Obj_gEnv%s.save",saveId))
 allZoidGrpName <-"allZoid.idx0"	# 800151 ,1696555 ,1348295
 allIdx <- allIdxLst[[allZoidGrpName]]
 
-# simulIdx <- 787	# c( 5, 6,13,16,27,28 )
+simulIdx <- 818	# c(14,15,25,28,29,30)
 stdZoid <- NULL
-# aZoid <- stdZoid <- gEnv$zhF[simulIdx,]
-# allIdxF <- allIdx <- stdIdx <- which(apply(gEnv$allZoidMtx,1,function(zoid){all(zoid==stdZoid)}))
+aZoid <- stdZoid <- gEnv$zhF[simulIdx,]
+allIdxF <- allIdx <- stdIdx <- which(apply(gEnv$allZoidMtx,1,function(zoid){all(zoid==stdZoid)}))
 
 # gEnv$zhF <- gEnv$zhF[1:(simulIdx-1),]
 
