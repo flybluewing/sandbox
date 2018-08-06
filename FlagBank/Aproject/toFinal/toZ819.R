@@ -17,7 +17,7 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
     # cutEadge.getBanPtnColVal() 에서 1~2개 발생 탈락값들에 대한 검토 권장.
 	allIdxFObj <- list()
 	# 참고 자료 --------------------------------------------------------------------	
-	fCutU.rptColValSeqNext( gEnv ,allIdxF ,saveId)
+	fCutU.rptColValSeqNext( gEnv ,allIdxF ,sprintf("toZ%d",nrow(gEnv$zhF)+1) )
 	# aQuoTblLst <- fCutU.getQuoTblLst( gEnv$allZoidMtx[allIdxF,] )
 	# aQuoTblStr <- sapply( aQuoTblLst ,function(quoTbl){quoTbl$valStr})	;table(aQuoTblStr)
 
