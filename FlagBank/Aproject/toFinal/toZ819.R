@@ -1,21 +1,15 @@
-# Z818
+# Z819
 source("./toFinal/toZ818_H.R")
 
-saveId <- "Z817"	;rpt=TRUE
+saveId <- "Z818"	;rpt=TRUE
 load( sprintf("Obj_allIdxLst%s.save",saveId) )
 load(sprintf("./save/Obj_gEnv%s.save",saveId))
-allZoidGrpName <-"allZoid.idx0"	# 800151 ,1696555 ,1348295
+allZoidGrpName <-"allZoid.idx0"	# 692424 ,1691861 ,1585029
 allIdx <- allIdxLst[[allZoidGrpName]]
+stdIdx <- NULL
 
 # simMode start ----------------------------------------------------
-saveId <- "Z817"	;rpt=TRUE
-load( sprintf("Obj_allIdxLst%s.save",saveId) )
-load(sprintf("./save/Obj_gEnv%s.save",saveId))
-allZoidGrpName <-"allZoid.idx0"	# 800151 ,1696555 ,1348295
-allIdx <- allIdxLst[[allZoidGrpName]]
-
-simulIdx <- 818
-aZoid <- stdZoid <- c(14,15,25,28,29,30)
+aZoid <- stdZoid <- c( ) # ZH 819를 채워넣을 것.
 allIdxF <- allIdx <- stdIdx <- which(apply(gEnv$allZoidMtx,1,function(zoid){all(zoid==stdZoid)}))
 # simMode end   ----------------------------------------------------
 
@@ -23,7 +17,7 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
     # cutEadge.getBanPtnColVal() 에서 1~2개 발생 탈락값들에 대한 검토 권장.
 	allIdxFObj <- list()
 	# 참고 자료 --------------------------------------------------------------------	
-	fCutU.rptColValSeqNext( gEnv ,allIdxF ,"z817")
+	fCutU.rptColValSeqNext( gEnv ,allIdxF ,saveId)
 	# aQuoTblLst <- fCutU.getQuoTblLst( gEnv$allZoidMtx[allIdxF,] )
 	# aQuoTblStr <- sapply( aQuoTblLst ,function(quoTbl){quoTbl$valStr})	;table(aQuoTblStr)
 
@@ -72,11 +66,11 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 	flag <- flgCnt<2	;table(flag)
     allIdxF <- allIdxF[flag]
     cat(sprintf("allIdxF %d\n",length(allIdxF)))
-	flgCnt <- fCutCnt.nextRebNum( gEnv ,allIdxF )		# fltCnt 2
+	flgCnt <- fCutCnt.nextRebNum( gEnv ,allIdxF )
 	flag <- flgCnt<2	;table(flag)
     allIdxF <- allIdxF[flag]
     cat(sprintf("allIdxF %d\n",length(allIdxF)))
-	flgCnt <- fCutCnt.nextCStepBin( gEnv ,allIdxF )		# fltCnt 1
+	flgCnt <- fCutCnt.nextCStepBin( gEnv ,allIdxF )
 	flag <- flgCnt<2	;table(flag)
     allIdxF <- allIdxF[flag]
     cat(sprintf("allIdxF %d\n",length(allIdxF)))
