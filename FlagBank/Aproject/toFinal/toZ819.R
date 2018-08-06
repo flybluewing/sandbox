@@ -6,7 +6,7 @@ load( sprintf("Obj_allIdxLst%s.save",saveId) )
 load(sprintf("./save/Obj_gEnv%s.save",saveId))
 allZoidGrpName <-"allZoid.idx0"	# 692424 ,1691861 ,1585029
 allIdx <- allIdxLst[[allZoidGrpName]]
-stdIdx <- NULL
+stdZoid <- NULL
 
 # simMode start ----------------------------------------------------
 aZoid <- stdZoid <- c( ) # ZH 819를 채워넣을 것.
