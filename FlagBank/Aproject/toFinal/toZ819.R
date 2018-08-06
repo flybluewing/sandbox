@@ -9,8 +9,8 @@ allIdx <- allIdxLst[[allZoidGrpName]]
 stdZoid <- NULL
 
 # simMode start ----------------------------------------------------
-aZoid <- stdZoid <- c( ) # ZH 819를 채워넣을 것.
-allIdxF <- allIdx <- stdIdx <- which(apply(gEnv$allZoidMtx,1,function(zoid){all(zoid==stdZoid)}))
+	aZoid <- stdZoid <- c( ) # ZH 819를 채워넣을 것.
+	allIdxF <- allIdx <- stdIdx <- which(apply(gEnv$allZoidMtx,1,function(zoid){all(zoid==stdZoid)}))
 # simMode end   ----------------------------------------------------
 
 finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
