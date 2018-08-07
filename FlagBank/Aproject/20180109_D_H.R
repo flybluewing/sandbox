@@ -127,6 +127,9 @@ anaMtx_ColVal <- function( zMtx ){
         cat(sprintf("col:%d \n",cIdx))
         colValTbl <- table(zMtx[,cIdx])
         colValSpan <- as.integer( names(colValTbl[colValTbl>1]) )
+        if( 0==length(colValSpan) ){
+            next
+        }
         colValLst <- list()
         for( colVal in colValSpan ){
             colValLst[[as.character(colVal)]] <- zMtx[zMtx[,cIdx]==colVal ,]

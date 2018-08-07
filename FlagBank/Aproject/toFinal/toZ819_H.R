@@ -158,7 +158,9 @@ fCut.basic <- function( gEnv ,allIdxF ,rpt=FALSE ){
 	#     14 15 25 28 29 30(1) | 1 10  3  1  1 | 11   6  13  15   4 -13 |0 2 3 1 0 |2 3 1
 	flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
 					aCStep <- aZoid[2:6]-aZoid[1:5]
-					return( aCStep[3]!= 1 )
+					if( aCStep[5]==1 ) return( FALSE )
+					if( 1<sum(aCStep==1) ) return( FALSE )
+					return( TRUE )
 				})	;kIdx<-anaFlagFnd(!flag,rpt)
     allIdxF <- allIdxF[flag]
 
