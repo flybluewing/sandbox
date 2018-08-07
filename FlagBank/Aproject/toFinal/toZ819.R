@@ -1,5 +1,5 @@
 # Z819
-source("./toFinal/toZ818_H.R")
+source("./toFinal/toZ819_H.R")
 
 saveId <- "Z818"	;rpt=TRUE
 load( sprintf("Obj_allIdxLst%s.save",saveId) )
@@ -74,6 +74,7 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 	flag <- flgCnt<2	;table(flag)
     allIdxF <- allIdxF[flag]
     cat(sprintf("allIdxF %d\n",length(allIdxF)))
+	tDiff <- Sys.time() - tStmp
 
 	for( cutCol.idx in c(1,3,6) ){	# fltCnt 1,12, 1
 		cutCol.val.span <- sort(unique(gEnv$allZoidMtx[allIdxF,cutCol.idx]))
