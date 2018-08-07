@@ -38,6 +38,11 @@ logId:toZ819
     [ 17]  4 25                                    
     [ 18]  3  8                                    
     [ 19]  2  9                                    
+    anaMtx_ColVal( cvSeqNextLst[[1]]$fndMtx )
+    anaMtx_ColVal( cvSeqNextLst[[2]]$fndMtx )
+    anaMtx_ColVal( cvSeqNextLst[[3]]$fndMtx )
+    anaMtx_ColVal( cvSeqNextLst[[4]]$fndMtx )
+    anaMtx_ColVal( cvSeqNextLst[[5]]$fndMtx )
                          
 # =========================================================
 # colValSeqNext( ,pColSize=3 )

@@ -110,5 +110,32 @@ anaMtx <- function( zMtx ,stdZoid=NULL ){
     return(NULL)
 } # anaMtx()
 
+anaMtx_ColVal <- function( zMtx ){
+    # idx<-3	;zMtx <-cvSeqNextLst[[idx]]$fndMtx
+    getRowStr <- function( rowIdx ,mtxLst ){
+        rowStr <- sapply( mtxLst ,function( mtx ){
+                        if( rowIdx>nrow(mtx) ){
+                            return( paste(rep("  ",ncol(mtx)),collapse=" ") )
+                        } else {
+                            return( paste(sprintf("%2d",mtx[rowIdx,]),collapse=" ") )
+                        }
+                    })
+        return( paste(rowStr,collapse="    ") )
+    } # getRowStr()
 
+    for( cIdx in 1:ncol(zMtx)){
+        cat(sprintf("col:%d \n",cIdx))
+        colValTbl <- table(zMtx[,cIdx])
+        colValSpan <- as.integer( names(colValTbl[colValTbl>1]) )
+        colValLst <- list()
+        for( colVal in colValSpan ){
+            colValLst[[as.character(colVal)]] <- zMtx[zMtx[,cIdx]==colVal ,]
+        }
+        maxRow <- max( sapply(colValLst,nrow) )
+        for( rIdx in 1:maxRow ){
+            cat( sprintf("    %s\n",getRowStr(rIdx,colValLst)) )
+        }
+    } # cIdx
+
+} # anaMtx_ColVal()
 

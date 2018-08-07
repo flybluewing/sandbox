@@ -357,8 +357,12 @@ fCutU.rptColValSeqNext <- function( gEnv ,allIdxF ,logId ){
 		}
 		FLogStr(sprintf("    [%3d] %s",rIdx,paste( rValStr ,collapse="    ")))
 	}
+	FLogStr("    anaMtx_ColVal( cvSeqNextLst[[1]]$fndMtx )")
+	FLogStr("    anaMtx_ColVal( cvSeqNextLst[[2]]$fndMtx )")
+	FLogStr("    anaMtx_ColVal( cvSeqNextLst[[3]]$fndMtx )")
+	FLogStr("    anaMtx_ColVal( cvSeqNextLst[[4]]$fndMtx )")
+	FLogStr("    anaMtx_ColVal( cvSeqNextLst[[5]]$fndMtx )")
 	FLogStr("                         ")
-
 
 	colSize <- 3
 	FLogStr("# =========================================================")
