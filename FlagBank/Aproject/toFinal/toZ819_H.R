@@ -655,7 +655,7 @@ fCutCnt.nextZW <- function( gEnv ,allIdxF ,rpt=FALSE ){
 					quoSize <- fCutU.getQuoObj( aZoid )$size
 					cnt <- 0
 					if( all(quoSize[2:4]==c(0,1,3)) ) cnt<-cnt+1	# next rebind of revers 2,0,1
-					return( cnt>1 )
+					return( cnt<1 )
 				})	;kIdx<-anaFlagFnd(!flag,rpt)
     flgCnt[!flag] <- flgCnt[!flag] + 1
 
