@@ -22,9 +22,8 @@ fCutCnt.nextXXX <- function( gEnv ,allIdxF ,rpt=FALSE ){
     flgCnt[!flag] <- flgCnt[!flag] + 1	
     flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
 					quoSize <- fCutU.getQuoObj( aZoid )$size
-					cnt <- 0
-					# if( all(quoSize[2:4]==c(1,0,1)) ) cnt<-cnt+1	# next rebind of 2,1,2
-					return( cnt<1 )
+					# if( all(quoSize[2:4]==c(1,0,1)) ) return(FALSE)	# next rebind of 2,1,2
+					return( TRUE )
 				})	;kIdx<-anaFlagFnd(!flag,rpt)
     flgCnt[!flag] <- flgCnt[!flag] + 1
 
@@ -79,6 +78,7 @@ fCutCnt.nextXXX <- function( gEnv ,allIdxF ,rpt=FALSE ){
 					if( aFStep[5]%in%c(         ) ) cnt<-cnt+1
 					if( aFStep[6]%in%c(         ) ) cnt<-cnt+1
 
+					if( 1<sum(aFStep[1:3+0]==c( , , )) ) cnt<-cnt+1 # n
 					return( cnt )
 				})	;kIdx<-anaFltCnt(cntMtx[,"fStep"],rpt)
 	score <- sapply( 1:length(flgCnt) ,function( idx ){
