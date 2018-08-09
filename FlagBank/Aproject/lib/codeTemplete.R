@@ -22,7 +22,7 @@ fCutCnt.nextXXX <- function( gEnv ,allIdxF ,rpt=FALSE ){
     flgCnt[!flag] <- flgCnt[!flag] + 1	
     flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
 					quoSize <- fCutU.getQuoObj( aZoid )$size
-					# if( all(quoSize[2:4]==c(1,0,1)) ) return(FALSE)	# next rebind of 2,1,2
+					# if( all(quoSize[1:3+0]==c(1,0,1)) ) return(FALSE)	# next rebind of 2,1,2
 					return( TRUE )
 				})	;kIdx<-anaFlagFnd(!flag,rpt)
     flgCnt[!flag] <- flgCnt[!flag] + 1
