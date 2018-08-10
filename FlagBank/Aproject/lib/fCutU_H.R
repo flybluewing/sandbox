@@ -7,6 +7,35 @@ fCutU.remFilt <- function( srcVal ,banRem ,excVal=NULL ){
 
 } # fCutU.remFilt( )
 
+fCutU.spanMatch <- function( src ,tgt ,posDiff ,size=3 ){
+	# tgt : aZoid
+	# src : 검색값 (src와 tgt의 길이는 동일)
+	# posDiff : src와 tgt의 어긋남 정도. tgt에 비해 src가 왼쪽으로 이동하면 -1
+	#	( 0이면 src[1]과 tgt[1]이 동일하며, -1이면 src[2]가 tgt[1]과 동일하다. )
+	#	sample : tgt<-c(1,3,4,5,5,6)	;src<-1:6	;posDiff<--1	;size<-3
+	#		return value : 4
+	idx.src <- 1:length(src)
+	idx.tgt <- 1:length(tgt)
+	if( posDiff>0 ){
+		if( length(src) < (posDiff+size) ) return( 0 )
+
+		idx.src <- idx.src[ 1:(length(idx.src)-posDiff) ]
+		idx.tgt <- idx.tgt[ (posDiff+1):length(idx.tgt)     ]
+	} else if( posDiff<0 ) {
+		if( (length(src)+posDiff) < size ) return( 0 )
+
+		idx.src <- idx.src[ (-posDiff+1):length(idx.src)     ]
+		idx.tgt <- idx.tgt[ 1:(length(idx.tgt)+ posDiff) ]
+	}
+
+	score <- 0
+	for( idx in 1:(length(idx.src)-size+1) ){
+		cnt <- sum( src[ idx.src[idx:(idx+size-1)] ] == tgt[ idx.tgt[idx:(idx+size-1)] ] )
+		score <- score + ifelse( cnt>1 ,cnt-1 ,0 )
+	}
+	return( score )
+} # fCutU.spanMatch()
+
 fCutU.hasPtn <- function( src ,tgt ,thld=NULL ,fixIdx=NULL ){ # < official >
 	# thld : 이거 이상 매치되어야 함.
 	# fixIdx : src[fixIdx] 는 반드시 포함되어야 함.
