@@ -797,7 +797,7 @@ fCutCnt.nextQuo10 <- function( gEnv ,allIdxF ,rpt=FALSE ){
     cntMtx[,"rem"] <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
 					# u0.zoidMtx_ana( stdMI$rawTail%%10 )	;u0.zoidMtx_ana( stdMI$rawTail )
 					cnt <- 0
-					if( fCutU.remFilt(aZoid[1],c(3,     ),c(16   )) ) cnt<-cnt+1
+					if( fCutU.remFilt(aZoid[1],c(3      ),c(16   )) ) cnt<-cnt+1
 					if( fCutU.remFilt(aZoid[2],c(7,0    ),c( 7,30)) ) cnt<-cnt+1
 					if( fCutU.remFilt(aZoid[3],c(9,5    ),c(     )) ) cnt<-cnt+1
 					if( fCutU.remFilt(aZoid[4],c(1      ),c(41   )) ) cnt<-cnt+1
