@@ -654,16 +654,6 @@ fCutCnt.nextZW <- function( gEnv ,allIdxF ,rpt=FALSE ){
 	flgCnt <- flgCnt + fCutU.commonCutCnt( gEnv ,allIdxF ,zMtx )
 
 	# -- conditional
-    flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
-					quoSize <- fCutU.getQuoObj( aZoid )$size
-					cnt <- 0
-					# if( all(quoSize[2:4]==c(1,0,1)) ) cnt<-cnt+1	# next rebind of 2,1,2
-					# if( all(quoSize[1:3]==c(0,3,2)) ) cnt<-cnt+1	# next rebind of revers 1,2,0
-					return( cnt<1 )
-				})	;kIdx<-anaFlagFnd(!flag,rpt)
-    flgCnt[!flag] <- flgCnt[!flag] + 1
-
-	# -- conditional
 	cNames <- c("raw","rem","cStep","fStep")
 	cntMtx <- matrix( 0 ,nrow=length(allIdxF) ,ncol=length(cNames) )	;colnames(cntMtx)=cNames
 

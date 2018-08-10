@@ -6,40 +6,77 @@
     fCutCnt.colValSeqNext
     fCutCnt.colValSeqNext.cStep
     fCutCnt.nextZW
+        fCutU.commonCutCnt:
         width:          quoStr:
         raw:    rem:    cStep:  fStep: 
     fCutCnt.nextQuo10
+        fCutU.commonCutCnt:
         width:          quoStr:
         raw:    rem:    cStep:  fStep: 
     fCutCnt.nextBin
+        fCutU.commonCutCnt:
         width:          quoStr:
         raw:    rem:    cStep:  fStep: 
     fCutCnt.nextRebNum
+        fCutU.commonCutCnt:
         width:          quoStr:
         raw:    rem:    cStep:  fStep: 
     fCutCnt.nextCStepBin
+        fCutU.commonCutCnt:
         width:          quoStr:
         raw:    rem:    cStep:  fStep: 
 
-<toZ817> ------------------------------------------------------------------------------
+<toZ818> ------------------------------------------------------------------------------
     fCutCnt.basic
         width:          quoStr:
-        raw:    rem:    cStep:  fStep: 
+        raw:0    rem:1    cStep:2  fStep:0 
     fCutCnt.colValSeqNext
     fCutCnt.colValSeqNext.cStep
     fCutCnt.nextZW
-        width:          quoStr:
-        raw:    rem:    cStep:  fStep: 
+        fCutU.commonCutCnt:0
+        width:0         quoStr:0
+        raw:0    rem:1    cStep:0  fStep:0 
     fCutCnt.nextQuo10
-        width:          quoStr:
-        raw:    rem:    cStep:  fStep: 
+        fCutU.commonCutCnt:2
+        width:0          quoStr:0
+        raw:0    rem:0    cStep:1  fStep:0 
     fCutCnt.nextBin
+        fCutU.commonCutCnt:0
         width:          quoStr:
-        raw:    rem:    cStep:  fStep: 
+        raw:0    rem:0    cStep:1  fStep:0 
     fCutCnt.nextRebNum
-        width:          quoStr:
-        raw:    rem:    cStep:  fStep: 
+        fCutU.commonCutCnt:0
+        width:0          quoStr:0
+        raw:0    rem:3    cStep:0  fStep:0 
     fCutCnt.nextCStepBin
+        fCutU.commonCutCnt:0
+        width:          quoStr:
+        raw:0    rem:0    cStep:0  fStep:0 
+
+<toZ817> ------------------------------------------------------------------------------
+    fCutCnt.basic
+        width:          quoStr:0
+        raw:0    rem:0    cStep:1  fStep:0 
+    fCutCnt.colValSeqNext
+    fCutCnt.colValSeqNext.cStep
+    fCutCnt.nextZW
+        fCutU.commonCutCnt:1
+        width:          quoStr:
+        raw:0    rem:0    cStep:0  fStep:0 
+    fCutCnt.nextQuo10
+        fCutU.commonCutCnt:0
+        width:          quoStr:
+        raw:0    rem:0    cStep:0  fStep:0 
+    fCutCnt.nextBin
+        fCutU.commonCutCnt:0
+        width:          quoStr:0
+        raw:0    rem:0    cStep:0  fStep:1 
+    fCutCnt.nextRebNum
+        fCutU.commonCutCnt:0
+        width:          quoStr:0
+        raw:0    rem:0    cStep:1  fStep:0 
+    fCutCnt.nextCStepBin
+        fCutU.commonCutCnt:
         width:          quoStr:
         raw:    rem:    cStep:  fStep: 
 
@@ -50,18 +87,23 @@
     fCutCnt.colValSeqNext
     fCutCnt.colValSeqNext.cStep
     fCutCnt.nextZW
+        fCutU.commonCutCnt:
         width:          quoStr:
         raw:    rem:    cStep:  fStep: 
     fCutCnt.nextQuo10
+        fCutU.commonCutCnt:
         width:          quoStr:
         raw:    rem:    cStep:  fStep: 
     fCutCnt.nextBin
+        fCutU.commonCutCnt:
         width:          quoStr:
         raw:    rem:    cStep:  fStep: 
     fCutCnt.nextRebNum
+        fCutU.commonCutCnt:
         width:          quoStr:
         raw:    rem:    cStep:  fStep: 
     fCutCnt.nextCStepBin
+        fCutU.commonCutCnt:
         width:          quoStr:
         raw:    rem:    cStep:  fStep: 
 
@@ -72,18 +114,23 @@
     fCutCnt.colValSeqNext
     fCutCnt.colValSeqNext.cStep
     fCutCnt.nextZW
+        fCutU.commonCutCnt:
         width:          quoStr:
         raw:    rem:    cStep:  fStep: 
     fCutCnt.nextQuo10
+        fCutU.commonCutCnt:
         width:          quoStr:
         raw:    rem:    cStep:  fStep: 
     fCutCnt.nextBin
+        fCutU.commonCutCnt:
         width:          quoStr:
         raw:    rem:    cStep:  fStep: 
     fCutCnt.nextRebNum
+        fCutU.commonCutCnt:
         width:          quoStr:
         raw:    rem:    cStep:  fStep: 
     fCutCnt.nextCStepBin
+        fCutU.commonCutCnt:
         width:          quoStr:
         raw:    rem:    cStep:  fStep: 
 
@@ -94,18 +141,23 @@
     fCutCnt.colValSeqNext
     fCutCnt.colValSeqNext.cStep
     fCutCnt.nextZW
+        fCutU.commonCutCnt:
         width:          quoStr:
         raw:    rem:    cStep:  fStep: 
     fCutCnt.nextQuo10
+        fCutU.commonCutCnt:
         width:          quoStr:
         raw:    rem:    cStep:  fStep: 
     fCutCnt.nextBin
+        fCutU.commonCutCnt:
         width:          quoStr:
         raw:    rem:    cStep:  fStep: 
     fCutCnt.nextRebNum
+        fCutU.commonCutCnt:
         width:          quoStr:
         raw:    rem:    cStep:  fStep: 
     fCutCnt.nextCStepBin
+        fCutU.commonCutCnt:
         width:          quoStr:
         raw:    rem:    cStep:  fStep: 
 
@@ -116,18 +168,23 @@
     fCutCnt.colValSeqNext
     fCutCnt.colValSeqNext.cStep
     fCutCnt.nextZW
+        fCutU.commonCutCnt:
         width:          quoStr:
         raw:    rem:    cStep:  fStep: 
     fCutCnt.nextQuo10
+        fCutU.commonCutCnt:
         width:          quoStr:
         raw:    rem:    cStep:  fStep: 
     fCutCnt.nextBin
+        fCutU.commonCutCnt:
         width:          quoStr:
         raw:    rem:    cStep:  fStep: 
     fCutCnt.nextRebNum
+        fCutU.commonCutCnt:
         width:          quoStr:
         raw:    rem:    cStep:  fStep: 
     fCutCnt.nextCStepBin
+        fCutU.commonCutCnt:
         width:          quoStr:
         raw:    rem:    cStep:  fStep: 
 
@@ -138,18 +195,23 @@
     fCutCnt.colValSeqNext
     fCutCnt.colValSeqNext.cStep
     fCutCnt.nextZW
+        fCutU.commonCutCnt:
         width:          quoStr:
         raw:    rem:    cStep:  fStep: 
     fCutCnt.nextQuo10
+        fCutU.commonCutCnt:
         width:          quoStr:
         raw:    rem:    cStep:  fStep: 
     fCutCnt.nextBin
+        fCutU.commonCutCnt:
         width:          quoStr:
         raw:    rem:    cStep:  fStep: 
     fCutCnt.nextRebNum
+        fCutU.commonCutCnt:
         width:          quoStr:
         raw:    rem:    cStep:  fStep: 
     fCutCnt.nextCStepBin
+        fCutU.commonCutCnt:
         width:          quoStr:
         raw:    rem:    cStep:  fStep: 
 
@@ -160,18 +222,23 @@
     fCutCnt.colValSeqNext
     fCutCnt.colValSeqNext.cStep
     fCutCnt.nextZW
+        fCutU.commonCutCnt:
         width:          quoStr:
         raw:    rem:    cStep:  fStep: 
     fCutCnt.nextQuo10
+        fCutU.commonCutCnt:
         width:          quoStr:
         raw:    rem:    cStep:  fStep: 
     fCutCnt.nextBin
+        fCutU.commonCutCnt:
         width:          quoStr:
         raw:    rem:    cStep:  fStep: 
     fCutCnt.nextRebNum
+        fCutU.commonCutCnt:
         width:          quoStr:
         raw:    rem:    cStep:  fStep: 
     fCutCnt.nextCStepBin
+        fCutU.commonCutCnt:
         width:          quoStr:
         raw:    rem:    cStep:  fStep: 
 
