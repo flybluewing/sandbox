@@ -45,15 +45,14 @@ fCutCnt.nextXXX <- function( gEnv ,allIdxF ,rpt=FALSE ){
 					return( cnt )
 				})	;kIdx<-anaFltCnt(cntMtx[,"raw"],rpt)
     cntMtx[,"rem"] <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
-					# rptObj<-anaMtx( stdMI$rawTail ) ;u0.zoidMtx_ana.rpt( stdMI$rawTail%%10 )
+					# u0.zoidMtx_ana( stdMI$rawTail%%10 )	;u0.zoidMtx_ana( stdMI$rawTail )
 					cnt <- 0
-					aRem <- aZoid%%10
-					if( aRem[1]%in%c(   ) ) cnt<-cnt+1
-					if( aRem[2]%in%c(   ) ) cnt<-cnt+1
-					if( aRem[3]%in%c(   ) ) cnt<-cnt+1
-					if( aRem[4]%in%c(   ) ) cnt<-cnt+1
-					if( aRem[5]%in%c(   ) ) cnt<-cnt+1
-					if( aRem[6]%in%c(   ) ) cnt<-cnt+1
+					if( fCutU.remFilt(aZoid[1],c(     ),c(     )) ) cnt<-cnt+1 # 1
+					if( fCutU.remFilt(aZoid[2],c(     ),c(     )) ) cnt<-cnt+1 # 2
+					if( fCutU.remFilt(aZoid[3],c(     ),c(     )) ) cnt<-cnt+1 # 3
+					if( fCutU.remFilt(aZoid[4],c(     ),c(     )) ) cnt<-cnt+1 # 4
+					if( fCutU.remFilt(aZoid[5],c(     ),c(     )) ) cnt<-cnt+1 # 5
+					if( fCutU.remFilt(aZoid[6],c(     ),c(     )) ) cnt<-cnt+1 # 6
 					return( cnt )
 				})	;kIdx<-anaFltCnt(cntMtx[,"rem"],rpt)
     cntMtx[,"cStep"] <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){

@@ -1,4 +1,11 @@
 # fCutU_H.R 최종접근
+fCutU.remFilt <- function( srcVal ,banRem ,excVal=NULL ){
+	# srcVal<-12	;banRem=c( 2, 3, 4) ;excVal<-NULL
+	if( !is.null(excVal) && (srcVal%in%excVal) )	return( FALSE )
+
+	return( (srcVal%%10) %in% banRem )
+
+} # fCutU.remFilt( )
 
 fCutU.hasPtn <- function( src ,tgt ,thld=NULL ,fixIdx=NULL ){ # < official >
 	# thld : 이거 이상 매치되어야 함.
