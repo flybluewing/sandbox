@@ -9,7 +9,7 @@ allIdx <- allIdxLst[[allZoidGrpName]]
 stdZoid <- NULL
 
 # simMode start ----------------------------------------------------
-	aZoid <- stdZoid <- c( ) # ZH 819를 채워넣을 것.
+	aZoid <- stdZoid <- c(16,25,33,38,40,45) # ZH 819를 채워넣을 것.
 	allIdxF <- allIdx <- stdIdx <- which(apply(gEnv$allZoidMtx,1,function(zoid){all(zoid==stdZoid)}))
 # simMode end   ----------------------------------------------------
 
@@ -42,7 +42,7 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 	flag <- flgCnt<2	;table(flag)
     allIdxF <- allIdxF[flag]
     cat(sprintf("allIdxF %d\n",length(allIdxF)))
-	flgCnt <- fCutCnt.basic( gEnv ,allIdxF )
+	flgCnt <- fCutCnt.basic( gEnv ,allIdxF )$flgCnt
 	flag <- flgCnt<2	;table(flag)
     allIdxF <- allIdxF[flag]
     cat(sprintf("allIdxF %d\n",length(allIdxF)))
@@ -54,23 +54,23 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 	flag <- flgCnt<2	;table(flag)
     allIdxF <- allIdxF[flag]
     cat(sprintf("allIdxF %d\n",length(allIdxF)))
-	flgCnt <- fCutCnt.nextZW( gEnv ,allIdxF )
+	flgCnt <- fCutCnt.nextZW( gEnv ,allIdxF )$flgCnt
 	flag <- flgCnt<2	;table(flag)
     allIdxF <- allIdxF[flag]
     cat(sprintf("allIdxF %d\n",length(allIdxF)))
-	flgCnt <- fCutCnt.nextQuo10( gEnv ,allIdxF )
+	flgCnt <- fCutCnt.nextQuo10( gEnv ,allIdxF )$flgCnt
 	flag <- flgCnt<2	;table(flag)
     allIdxF <- allIdxF[flag]
     cat(sprintf("allIdxF %d\n",length(allIdxF)))
-	flgCnt <- fCutCnt.nextBin( gEnv ,allIdxF )
+	flgCnt <- fCutCnt.nextBin( gEnv ,allIdxF )$flgCnt
 	flag <- flgCnt<2	;table(flag)
     allIdxF <- allIdxF[flag]
     cat(sprintf("allIdxF %d\n",length(allIdxF)))
-	flgCnt <- fCutCnt.nextRebNum( gEnv ,allIdxF )
+	flgCnt <- fCutCnt.nextRebNum( gEnv ,allIdxF )$flgCnt
 	flag <- flgCnt<2	;table(flag)
     allIdxF <- allIdxF[flag]
     cat(sprintf("allIdxF %d\n",length(allIdxF)))
-	flgCnt <- fCutCnt.nextCStepBin( gEnv ,allIdxF )
+	flgCnt <- fCutCnt.nextCStepBin( gEnv ,allIdxF )$flgCnt
 	flag <- flgCnt<2	;table(flag)
     allIdxF <- allIdxF[flag]
     cat(sprintf("allIdxF %d\n",length(allIdxF)))
@@ -120,14 +120,14 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 	#	allIdxF <- allIdxFObj$allIdxF.fCutCnt
 	flgCnt <- rep( 0 ,length(allIdxF) )
 	flgCnt <- flgCnt + fCutCnt.default( gEnv ,allIdxF )
-	flgCnt <- flgCnt + fCutCnt.basic( gEnv ,allIdxF )
-	flgCnt <- flgCnt + fCutCnt.colValSeqNext( gEnv ,allIdxF )
-	flgCnt <- flgCnt + fCutCnt.colValSeqNext.cStep( gEnv ,allIdxF )
-	flgCnt <- flgCnt + fCutCnt.nextZW( gEnv ,allIdxF )
-	flgCnt <- flgCnt + fCutCnt.nextQuo10( gEnv ,allIdxF )
-	flgCnt <- flgCnt + fCutCnt.nextBin( gEnv ,allIdxF )
-	flgCnt <- flgCnt + fCutCnt.nextRebNum( gEnv ,allIdxF )
-	flgCnt <- flgCnt + fCutCnt.nextCStepBin( gEnv ,allIdxF )
+	flgCnt <- flgCnt + fCutCnt.basic( gEnv ,allIdxF )$flgCnt
+	flgCnt <- flgCnt + fCutCnt.colValSeqNext( gEnv ,allIdxF )$flgCnt
+	flgCnt <- flgCnt + fCutCnt.colValSeqNext.cStep( gEnv ,allIdxF )$flgCnt
+	flgCnt <- flgCnt + fCutCnt.nextZW( gEnv ,allIdxF )$flgCnt
+	flgCnt <- flgCnt + fCutCnt.nextQuo10( gEnv ,allIdxF )$flgCnt
+	flgCnt <- flgCnt + fCutCnt.nextBin( gEnv ,allIdxF )$flgCnt
+	flgCnt <- flgCnt + fCutCnt.nextRebNum( gEnv ,allIdxF )$flgCnt
+	flgCnt <- flgCnt + fCutCnt.nextCStepBin( gEnv ,allIdxF )$flgCnt
 
 	for( cutCol.idx in c(1,3,6) ){
 		cutCol.val.span <- sort(unique(gEnv$allZoidMtx[allIdxF,cutCol.idx]))
@@ -168,6 +168,17 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
     allIdxF <- allIdxF[flag]
     cat(sprintf("allIdxF %d\n",length(allIdxF)))
 	allIdxFObj$allIdxF.fCutCnt.m <- allIdxF
+
+	# ------------------------------------------------------------------
+	# fCutCnt.**  ... cntMtx, auxCntMtx
+	# flgCnt <- flgCnt + fCutCnt.basic( gEnv ,allIdxF )$flgCnt
+	# flgCnt <- flgCnt + fCutCnt.colValSeqNext( gEnv ,allIdxF )$flgCnt
+	# flgCnt <- flgCnt + fCutCnt.colValSeqNext.cStep( gEnv ,allIdxF )$flgCnt
+	# flgCnt <- flgCnt + fCutCnt.nextZW( gEnv ,allIdxF )$flgCnt
+	# flgCnt <- flgCnt + fCutCnt.nextQuo10( gEnv ,allIdxF )$flgCnt
+	# flgCnt <- flgCnt + fCutCnt.nextBin( gEnv ,allIdxF )$flgCnt
+	# flgCnt <- flgCnt + fCutCnt.nextRebNum( gEnv ,allIdxF )$flgCnt
+	# flgCnt <- flgCnt + fCutCnt.nextCStepBin( gEnv ,allIdxF )$flgCnt
 
 
 	tDiff <- Sys.time() - tStmp
