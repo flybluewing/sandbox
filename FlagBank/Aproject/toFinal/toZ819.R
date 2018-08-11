@@ -158,11 +158,11 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 	# flgCnt <- flgCnt + fCutCnt.colVal_6_x( gEnv ,allIdxF )
 	# flgCnt <- flgCnt + fCutCnt.zWidth( gEnv ,allIdxF )
 	# flgCnt <- flgCnt + fCutCnt.quoTbl( gEnv ,allIdxF )
-	
+
 	allIdxFObj$flgCnt <- flgCnt
 	table(flgCnt)
 	# length( allIdxFObj$flgCnt )
-	
+
 
 	flag <- (0<flgCnt)&(flgCnt<3)	# 하나도 안 걸릴 수는 없겠지.
     allIdxF <- allIdxF[flag]
@@ -171,15 +171,29 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 
 	# ------------------------------------------------------------------
 	# fCutCnt.**  ... cntMtx, auxCntMtx
-	# flgCnt <- flgCnt + fCutCnt.basic( gEnv ,allIdxF )$flgCnt
-	# flgCnt <- flgCnt + fCutCnt.colValSeqNext( gEnv ,allIdxF )$flgCnt
-	# flgCnt <- flgCnt + fCutCnt.colValSeqNext.cStep( gEnv ,allIdxF )$flgCnt
-	# flgCnt <- flgCnt + fCutCnt.nextZW( gEnv ,allIdxF )$flgCnt
-	# flgCnt <- flgCnt + fCutCnt.nextQuo10( gEnv ,allIdxF )$flgCnt
-	# flgCnt <- flgCnt + fCutCnt.nextBin( gEnv ,allIdxF )$flgCnt
-	# flgCnt <- flgCnt + fCutCnt.nextRebNum( gEnv ,allIdxF )$flgCnt
-	# flgCnt <- flgCnt + fCutCnt.nextCStepBin( gEnv ,allIdxF )$flgCnt
+	cntMtxLst <- list()
+	cntMtxLst[["fCutCnt.basic"]] <- fCutCnt.basic( gEnv ,allIdxF )$cntMtx
+	cntMtxLst[["fCutCnt.nextZW"]] <- fCutCnt.nextZW( gEnv ,allIdxF )$cntMtx
+	cntMtxLst[["fCutCnt.nextQuo10"]] <- fCutCnt.nextQuo10( gEnv ,allIdxF )$cntMtx
+	cntMtxLst[["fCutCnt.nextBin"]] <- fCutCnt.nextBin( gEnv ,allIdxF )$cntMtx
+	cntMtxLst[["fCutCnt.nextRebNum"]] <- fCutCnt.nextRebNum( gEnv ,allIdxF )$cntMtx
+	cntMtxLst[["fCutCnt.nextCStepBin"]] <- fCutCnt.nextCStepBin( gEnv ,allIdxF )$cntMtx
 
+	cntMtx <- do.call( cbind ,lapply( cntMtxLst ,function(mtx){mtx[,"raw"]}) )
+	cntSum <- apply( cntMtx ,1 ,sum )
+	# cut 기준을 어떻게 잡아야 할 까...
+
+	auxCntMtxLst <- list()
+	auxCntMtxLst[["fCutCnt.basic"]] <- fCutCnt.basic( gEnv ,allIdxF )$auxCntMtx
+	auxCntMtxLst[["fCutCnt.nextZW"]] <- fCutCnt.nextZW( gEnv ,allIdxF )$auxCntMtx
+	auxCntMtxLst[["fCutCnt.nextQuo10"]] <- fCutCnt.nextQuo10( gEnv ,allIdxF )$auxCntMtx
+	auxCntMtxLst[["fCutCnt.nextBin"]] <- fCutCnt.nextBin( gEnv ,allIdxF )$auxCntMtx
+	auxCntMtxLst[["fCutCnt.nextRebNum"]] <- fCutCnt.nextRebNum( gEnv ,allIdxF )$auxCntMtx
+	auxCntMtxLst[["fCutCnt.nextCStepBin"]] <- fCutCnt.nextCStepBin( gEnv ,allIdxF )$auxCntMtx
+
+	cntMtx <- do.call( cbind ,lapply( auxCntMtxLst ,function(mtx){mtx[,"auxQuo"]}) )
+	cntSum <- apply( cntMtx ,1 ,sum )
+	# cut 기준을 어떻게 잡아야 할 까...
 
 	tDiff <- Sys.time() - tStmp
 	allIdxFObj$timeCost <- tDiff
