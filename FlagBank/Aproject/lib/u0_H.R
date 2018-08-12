@@ -145,6 +145,12 @@ u0.zoidMtx_ana <- function( pMtx ){
                                     ,tgt.dir=ban$tgt.dir
                                 )
                 }))
+    if( 0==length(banLst) ){
+        banDF <- data.frame( tgt.col=integer(0) ,banVal=integer(0)
+                                ,descript=character(0)
+                                ,tgt.dir=character(0)
+                            )
+    }
 
     return( banDF )
 
