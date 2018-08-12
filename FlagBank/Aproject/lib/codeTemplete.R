@@ -45,7 +45,7 @@ fCutCnt.nextXXX <- function( gEnv ,allIdxF ,rpt=FALSE ){
 					cnt <- cnt + fCutU.spanMatch(stdMI$rawTail[ ,],aZoid,posDiff= )	# < >
 					if( fCutU.hasPtn(c(  ,  ),aZoid) ) cnt<-cnt+1
 					# u0.zoidInc_ana(stdMI$rawTail[n,],stdMI$rawTail[m,])
-
+					# if( aZoid[c( , , )]==c(  ,  ,  ) ) cnt<-cnt+1
 					#	if( 1<sum(aZoid[1:3+0]==c( , , )) ) cnt<-cnt+1
 					return( cnt )
 				})	;kIdx<-anaFltCnt(cntMtx[,"raw"],rpt)
