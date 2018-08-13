@@ -2,29 +2,29 @@
 <toZ819> ------------------------------------------------------------------------------
     fCutCnt.basic
         width:          quoStr:
-        raw:    rem:    cStep:  fStep: 
+        raw:0    rem:1    cStep:0  fStep:0
     fCutCnt.colValSeqNext
     fCutCnt.colValSeqNext.cStep
     fCutCnt.nextZW
-        fCutU.commonCutCnt:
-        width:          quoStr:
-        raw:    rem:    cStep:  fStep: 
+        fCutU.commonCutCnt:0
+        width:          quoStr:0
+        raw:0    rem:0    cStep:1  fStep:0
     fCutCnt.nextQuo10
-        fCutU.commonCutCnt:
+        fCutU.commonCutCnt:1
         width:          quoStr:
-        raw:    rem:    cStep:  fStep: 
+        raw:2    rem:0    cStep:0  fStep:1
     fCutCnt.nextBin
-        fCutU.commonCutCnt:
+        fCutU.commonCutCnt:3
         width:          quoStr:
-        raw:    rem:    cStep:  fStep: 
+        raw:1    rem:1    cStep:0  fStep:0 
     fCutCnt.nextRebNum
-        fCutU.commonCutCnt:
-        width:          quoStr:
-        raw:    rem:    cStep:  fStep: 
+        fCutU.commonCutCnt:1
+        width:          quoStr:0
+        raw:0    rem:0    cStep:0  fStep:0 
     fCutCnt.nextCStepBin
-        fCutU.commonCutCnt:
-        width:          quoStr:
-        raw:    rem:    cStep:  fStep: 
+        fCutU.commonCutCnt:3
+        width:          quoStr:0
+        raw:1    rem:1    cStep:1  fStep:0
 
 <toZ818> ------------------------------------------------------------------------------
     fCutCnt.basic
