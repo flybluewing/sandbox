@@ -1,5 +1,5 @@
 
-<toZ819> ------------------------------------------------------------------------------
+<toZ819(2)> * ------------------------------------------------------------------------------
     fCutCnt.basic
         width:          quoStr:
         raw:0    rem:1    cStep:0  fStep:0
@@ -26,7 +26,7 @@
         width:          quoStr:0
         raw:1    rem:1    cStep:1  fStep:0
 
-<toZ818> ------------------------------------------------------------------------------
+<toZ818(2)> * ------------------------------------------------------------------------------
     fCutCnt.basic
         width:          quoStr:
         raw:0    rem:1    cStep:2  fStep:0 
@@ -53,7 +53,7 @@
         width:          quoStr:
         raw:0    rem:0    cStep:0  fStep:0 
 
-<toZ817> ------------------------------------------------------------------------------
+<toZ817(3)> ------------------------------------------------------------------------------
     fCutCnt.basic
         width:          quoStr:0
         raw:0    rem:0    cStep:1  fStep:0 
@@ -80,7 +80,7 @@
         width:          quoStr:
         raw:    rem:    cStep:  fStep: 
 
-<toZ816> ------------------------------------------------------------------------------
+<toZ816(0)> ------------------------------------------------------------------------------
     fCutCnt.basic
         width:          quoStr:
         raw:    rem:    cStep:  fStep: 
@@ -107,7 +107,7 @@
         width:          quoStr:
         raw:    rem:    cStep:  fStep: 
 
-<toZ815> ------------------------------------------------------------------------------
+<toZ815(3)> ------------------------------------------------------------------------------
     fCutCnt.basic
         width:          quoStr:
         raw:    rem:    cStep:  fStep: 
@@ -134,7 +134,7 @@
         width:          quoStr:
         raw:    rem:    cStep:  fStep: 
 
-<toZ814> ------------------------------------------------------------------------------
+<toZ814(1)> ------------------------------------------------------------------------------
     fCutCnt.basic
         width:          quoStr:
         raw:    rem:    cStep:  fStep: 
@@ -161,7 +161,7 @@
         width:          quoStr:
         raw:    rem:    cStep:  fStep: 
 
-<toZ813> ------------------------------------------------------------------------------
+<toZ813(3)> ------------------------------------------------------------------------------
     fCutCnt.basic
         width:          quoStr:
         raw:    rem:    cStep:  fStep: 
@@ -188,7 +188,7 @@
         width:          quoStr:
         raw:    rem:    cStep:  fStep: 
 
-<toZ812> ------------------------------------------------------------------------------
+<toZ812(2)> ------------------------------------------------------------------------------
     fCutCnt.basic
         width:          quoStr:
         raw:    rem:    cStep:  fStep: 
@@ -215,7 +215,7 @@
         width:          quoStr:
         raw:    rem:    cStep:  fStep: 
 
-<toZ811> ------------------------------------------------------------------------------
+<toZ811(5)> ------------------------------------------------------------------------------
     fCutCnt.basic
         width:          quoStr:
         raw:    rem:    cStep:  fStep: 
@@ -241,4 +241,84 @@
         fCutU.commonCutCnt:
         width:          quoStr:
         raw:    rem:    cStep:  fStep: 
+<toZ810(5)> *------------------------------------------------------------------------------
+    fCutCnt.basic
+        width:          quoStr:
+        raw:    rem:    cStep:  fStep: 
+    fCutCnt.colValSeqNext
+    fCutCnt.colValSeqNext.cStep
+    fCutCnt.nextZW
+        fCutU.commonCutCnt:
+        width:          quoStr:
+        raw:    rem:    cStep:  fStep: 
+    fCutCnt.nextQuo10
+        fCutU.commonCutCnt:
+        width:          quoStr:
+        raw:    rem:    cStep:  fStep: 
+    fCutCnt.nextBin
+        fCutU.commonCutCnt:
+        width:          quoStr:
+        raw:    rem:    cStep:  fStep: 
+    fCutCnt.nextRebNum
+        fCutU.commonCutCnt:
+        width:          quoStr:
+        raw:    rem:    cStep:  fStep: 
+    fCutCnt.nextCStepBin
+        fCutU.commonCutCnt:
+        width:          quoStr:
+        raw:    rem:    cStep:  fStep: 
+<toZ809(1)> *------------------------------------------------------------------------------
+    fCutCnt.basic
+        width:          quoStr:
+        raw:    rem:    cStep:  fStep: 
+    fCutCnt.colValSeqNext
+    fCutCnt.colValSeqNext.cStep
+    fCutCnt.nextZW
+        fCutU.commonCutCnt:
+        width:          quoStr:
+        raw:    rem:    cStep:  fStep: 
+    fCutCnt.nextQuo10
+        fCutU.commonCutCnt:
+        width:          quoStr:
+        raw:    rem:    cStep:  fStep: 
+    fCutCnt.nextBin
+        fCutU.commonCutCnt:
+        width:          quoStr:
+        raw:    rem:    cStep:  fStep: 
+    fCutCnt.nextRebNum
+        fCutU.commonCutCnt:
+        width:          quoStr:
+        raw:    rem:    cStep:  fStep: 
+    fCutCnt.nextCStepBin
+        fCutU.commonCutCnt:
+        width:          quoStr:
+        raw:    rem:    cStep:  fStep: 
+<toZ808(2)> ------------------------------------------------------------------------------
+    fCutCnt.basic
+        width:          quoStr:
+        raw:    rem:    cStep:  fStep: 
+    fCutCnt.colValSeqNext
+    fCutCnt.colValSeqNext.cStep
+    fCutCnt.nextZW
+        fCutU.commonCutCnt:
+        width:          quoStr:
+        raw:    rem:    cStep:  fStep: 
+    fCutCnt.nextQuo10
+        fCutU.commonCutCnt:
+        width:          quoStr:
+        raw:    rem:    cStep:  fStep: 
+    fCutCnt.nextBin
+        fCutU.commonCutCnt:
+        width:          quoStr:
+        raw:    rem:    cStep:  fStep: 
+    fCutCnt.nextRebNum
+        fCutU.commonCutCnt:
+        width:          quoStr:
+        raw:    rem:    cStep:  fStep: 
+    fCutCnt.nextCStepBin
+        fCutU.commonCutCnt:
+        width:          quoStr:
+        raw:    rem:    cStep:  fStep: 
+
+        
 

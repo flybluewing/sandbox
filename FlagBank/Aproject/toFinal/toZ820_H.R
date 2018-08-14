@@ -939,6 +939,9 @@ fCutCnt.nextBin <- function( gEnv ,allIdxF ,rpt=FALSE ){
 
 } # fCutCnt.nextBin()
 
+QQE fCutCnt.nextBin cStep
+QQE fCutCnt.nextBin fStep
+
 # undone
 fCutCnt.nextRebNum <- function( gEnv ,allIdxF ,rpt=FALSE ){
 
