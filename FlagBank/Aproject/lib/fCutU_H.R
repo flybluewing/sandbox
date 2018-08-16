@@ -143,7 +143,7 @@ fCutU.getNextBin <- function( gEnv ){ # < official >
 
 	rObj <- list( zMtx=gEnv$zhF[flag.idx,] ,lastBin=lastBin )
 	return( rObj )
-} # fCutU.getNextZW()
+} # fCutU.getNextBin()
 
 fCutU.getNextCStepBin <- function( gEnv ){ # < official >
 	hLen <- nrow( gEnv$zhF )
@@ -155,7 +155,17 @@ fCutU.getNextCStepBin <- function( gEnv ){ # < official >
 
 	rObj <- list( zMtx=gEnv$zhF[flag.idx,] ,lastBin=lastBin )
 	return( rObj )
-} # fCutU.getNextZW()
+} # fCutU.getNextCStepBin()
+
+fCutU.getNextFStepBin <- function( gEnv ){ # < official >
+	hLen <- nrow( gEnv$zhF )
+	fStepMtx <- do.call( rbind ,lapply( 2:hLen ,function(hIdx){ gEnv$zhF[hIdx,]-gEnv$zhF[(hIdx-1),] }) )
+	fStepBinMtx <- rbind( c(0,0,0,0,0,0) ,abs(fStepMtx)%%2 )
+	rownames( fStepBinMtx ) <- 1:hLen
+
+	rObj <- list( zMtx=gEnv$zhF[flag.idx,] ,lastBin=lastBin )
+	return( rObj )
+} # fCutU.getNextFStepBin()
 
 fCutU.getRebNum <- function( gEnv ,rebNum=0 ){ # < official >
 
