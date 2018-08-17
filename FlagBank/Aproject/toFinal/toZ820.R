@@ -74,6 +74,11 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 	flag <- flgCnt<2	;table(flag)
     allIdxF <- allIdxF[flag]
     cat(sprintf("allIdxF %d\n",length(allIdxF)))
+	flgCnt <- fCutCnt.nextFStepBin( gEnv ,allIdxF )$flgCnt
+	flag <- flgCnt<2	;table(flag)
+    allIdxF <- allIdxF[flag]
+    cat(sprintf("allIdxF %d\n",length(allIdxF)))
+
 	tDiff <- Sys.time() - tStmp
 
 	for( cutCol.idx in c(1,3,6) ){	# fltCnt 1,12, 1
@@ -121,13 +126,14 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 	flgCnt <- rep( 0 ,length(allIdxF) )
 	flgCnt <- flgCnt + fCutCnt.default( gEnv ,allIdxF )
 	flgCnt <- flgCnt + fCutCnt.basic( gEnv ,allIdxF )$flgCnt
-	flgCnt <- flgCnt + fCutCnt.colValSeqNext( gEnv ,allIdxF )$flgCnt
-	flgCnt <- flgCnt + fCutCnt.colValSeqNext.cStep( gEnv ,allIdxF )$flgCnt
+	flgCnt <- flgCnt + fCutCnt.colValSeqNext( gEnv ,allIdxF )
+	flgCnt <- flgCnt + fCutCnt.colValSeqNext.cStep( gEnv ,allIdxF )
 	flgCnt <- flgCnt + fCutCnt.nextZW( gEnv ,allIdxF )$flgCnt
 	flgCnt <- flgCnt + fCutCnt.nextQuo10( gEnv ,allIdxF )$flgCnt
 	flgCnt <- flgCnt + fCutCnt.nextBin( gEnv ,allIdxF )$flgCnt
 	flgCnt <- flgCnt + fCutCnt.nextRebNum( gEnv ,allIdxF )$flgCnt
 	flgCnt <- flgCnt + fCutCnt.nextCStepBin( gEnv ,allIdxF )$flgCnt
+	flgCnt <- flgCnt + fCutCnt.nextFStepBin( gEnv ,allIdxF )$flgCnt
 
 	for( cutCol.idx in c(1,3,6) ){
 		cutCol.val.span <- sort(unique(gEnv$allZoidMtx[allIdxF,cutCol.idx]))
@@ -178,6 +184,7 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 	cntMtxLst[["fCutCnt.nextBin"]] <- fCutCnt.nextBin( gEnv ,allIdxF )$cntMtx
 	cntMtxLst[["fCutCnt.nextRebNum"]] <- fCutCnt.nextRebNum( gEnv ,allIdxF )$cntMtx
 	cntMtxLst[["fCutCnt.nextCStepBin"]] <- fCutCnt.nextCStepBin( gEnv ,allIdxF )$cntMtx
+	cntMtxLst[["fCutCnt.nextFStepBin"]] <- fCutCnt.nextFStepBin( gEnv ,allIdxF )$cntMtx
 
 	cntMtx <- do.call( cbind ,lapply( cntMtxLst ,function(mtx){mtx[,"raw"]}) )
 	cntSum <- apply( cntMtx ,1 ,sum )
@@ -190,6 +197,7 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 	auxCntMtxLst[["fCutCnt.nextBin"]] <- fCutCnt.nextBin( gEnv ,allIdxF )$auxCntMtx
 	auxCntMtxLst[["fCutCnt.nextRebNum"]] <- fCutCnt.nextRebNum( gEnv ,allIdxF )$auxCntMtx
 	auxCntMtxLst[["fCutCnt.nextCStepBin"]] <- fCutCnt.nextCStepBin( gEnv ,allIdxF )$auxCntMtx
+	auxCntMtxLst[["fCutCnt.nextFStepBin"]] <- fCutCnt.nextFStepBin( gEnv ,allIdxF )$auxCntMtx
 
 	cntMtx <- do.call( cbind ,lapply( auxCntMtxLst ,function(mtx){mtx[,"auxQuo"]}) )
 	cntSum <- apply( cntMtx ,1 ,sum )

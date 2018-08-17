@@ -162,6 +162,10 @@ fCutU.getNextFStepBin <- function( gEnv ){ # < official >
 	fStepMtx <- do.call( rbind ,lapply( 2:hLen ,function(hIdx){ gEnv$zhF[hIdx,]-gEnv$zhF[(hIdx-1),] }) )
 	fStepBinMtx <- rbind( c(0,0,0,0,0,0) ,abs(fStepMtx)%%2 )
 	rownames( fStepBinMtx ) <- 1:hLen
+	lastBin <- fStepBinMtx[hLen,] %% 2
+
+	flag <- sapply( 1:(hLen-1) ,function( hIdx ){ all((fStepBinMtx[hIdx,]%%2)==lastBin) })
+	flag.idx <- which( flag )+1
 
 	rObj <- list( zMtx=gEnv$zhF[flag.idx,] ,lastBin=lastBin )
 	return( rObj )
