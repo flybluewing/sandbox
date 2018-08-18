@@ -36,6 +36,53 @@ fCutU.spanMatch <- function( src ,tgt ,posDiff ,size=3 ){
 	return( score )
 } # fCutU.spanMatch()
 
+fCutU.neighborMatch <- function( neighborLst ,aZoid ){
+	# neighborLst <- fCutU.neighborLst()
+	cat("QQE working fCutU.neighborMatch()")
+	return( score )
+} # fCutU.neighborMatch()
+
+fCutU.neighborLst <- function( pMtx ){
+
+	getSpanLst <- function( idx ){
+		spanLst <- list()
+		for( dIdx in 2:0 ){
+			lEnd <- idx-dIdx
+			rEnd <- idx-dIdx+2
+			if( lEnd>0 && rEnd<=6 ){
+				spanLst[[1+length(spanLst)]] <- lEnd:rEnd
+			}
+		}
+		return( spanLst )
+	} #getSpanLst()
+
+	if( 2>nrow(pMtx) ){
+		return( list() )
+	}
+
+	vals <- sort(unique(as.vector(pMtx)))
+	freqVals <- vals[ table(pMtx)>1 ]
+
+	neighborLst <- list()
+	for( rIdx in 1:(nrow(pMtx)-1)){
+		for( fVal in freqVals ){
+			f.idx <- which(pMtx[rIdx]==fVal)
+			if( 0==length(f.idx) )	next
+
+			spanLst <- getSpanLst( f.idx )
+			for( lIdx in 1:length(spanLst) ){
+				neighborLst[[1+length(neighborLst)]] <- pMtx[ rIdx, spanLst[[lIdx]] ]
+			}
+			debug
+		}
+	}
+
+	cat("QQE working fCutU.neighborMatch()")
+
+	return( neighborLst )
+
+} # fCutU.neighborLst()
+
 fCutU.hasPtn <- function( src ,tgt ,thld=NULL ,fixIdx=NULL ){ # < official >
 	# thld : 이거 이상 매치되어야 함.
 	# fixIdx : src[fixIdx] 는 반드시 포함되어야 함.
