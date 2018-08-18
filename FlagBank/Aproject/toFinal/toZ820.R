@@ -9,7 +9,7 @@ allIdx <- allIdxLst[[allZoidGrpName]]	# 908523, 1703788, 1465803
 stdZoid <- NULL
 
 # simMode start ----------------------------------------------------
-	aZoid <- stdZoid <- c( , ) # ZH 820 채워넣을 것.
+	aZoid <- stdZoid <- c(10,21,22,30,35,42) # ZH 820 채워넣을 것.
 	allIdxF <- allIdx <- stdIdx <- which(apply(gEnv$allZoidMtx,1,function(zoid){all(zoid==stdZoid)}))
 # simMode end   ----------------------------------------------------
 

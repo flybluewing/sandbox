@@ -1459,6 +1459,7 @@ fCutCnt.nextFStepBin <- function( gEnv ,allIdxF ,rpt=FALSE ){
 	# -- conditional
 	cntMtx <- matrix( 0 ,nrow=length(allIdxF) ,ncol=length(cntThld) )	;colnames(cntMtx)=names(cntThld)
 
+	neighborObj <- fCutU.neighborObj( stdMI$rawTail )
     cntMtx[,"raw"] <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
 					cnt <- 0
 					if( aZoid[1]%in%c(  7    ) ) cnt<-cnt+1
@@ -1467,6 +1468,8 @@ fCutCnt.nextFStepBin <- function( gEnv ,allIdxF ,rpt=FALSE ){
 					if( aZoid[4]%in%c(       ) ) cnt<-cnt+1
 					if( aZoid[5]%in%c(       ) ) cnt<-cnt+1
 					if( aZoid[6]%in%c( 43,38 ) ) cnt<-cnt+1
+
+					cnt <- cnt + neighborObj$matchCnt( aZoid )
 
 					cnt <- cnt + fCutU.spanMatch(stdMI$rawTail[5,],aZoid,posDiff=0 )	# < 6>
 					if( fCutU.hasPtn(c( 6,7 ),aZoid) ) cnt<-cnt+1

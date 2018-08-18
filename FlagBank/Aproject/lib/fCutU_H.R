@@ -36,13 +36,7 @@ fCutU.spanMatch <- function( src ,tgt ,posDiff ,size=3 ){
 	return( score )
 } # fCutU.spanMatch()
 
-fCutU.neighborMatch <- function( neighborLst ,aZoid ){
-	# neighborLst <- fCutU.neighborLst()
-	cat("QQE working fCutU.neighborMatch()")
-	return( score )
-} # fCutU.neighborMatch()
-
-fCutU.neighborLst <- function( pMtx ){
+fCutU.neighborObj <- function( pMtx ){
 
 	getSpanLst <- function( idx ){
 		spanLst <- list()
@@ -62,24 +56,48 @@ fCutU.neighborLst <- function( pMtx ){
 
 	vals <- sort(unique(as.vector(pMtx)))
 	freqVals <- vals[ table(pMtx)>1 ]
+	names( freqVals ) <- freqVals
 
 	neighborLst <- list()
-	for( rIdx in 1:(nrow(pMtx)-1)){
-		for( fVal in freqVals ){
-			f.idx <- which(pMtx[rIdx]==fVal)
+	for( fVal in freqVals ){
+		fndLst <- list()
+		for( rIdx in 1:(nrow(pMtx)-1)){
+			f.idx <- which(pMtx[rIdx,]==fVal)
 			if( 0==length(f.idx) )	next
 
 			spanLst <- getSpanLst( f.idx )
 			for( lIdx in 1:length(spanLst) ){
-				neighborLst[[1+length(neighborLst)]] <- pMtx[ rIdx, spanLst[[lIdx]] ]
+				fndLst[[1+length(fndLst)]] <- pMtx[ rIdx, spanLst[[lIdx]] ]
 			}
-			debug
+		}
+		if( 0<length(fndLst) ){
+			neighborLst[[as.character(fVal)]] <- fndLst
 		}
 	}
 
-	cat("QQE working fCutU.neighborMatch()")
+	rObj <- list( neighborLst=neighborLst ,freqVals=freqVals )
+	rObj$matchCnt <- function( aZoid ){
+		srchValIdx <- which( rObj$freqVals%in%aZoid )
+		if( 0==length(srchValIdx) ) return( 0 )
 
-	return( neighborLst )
+		score <- 0
+		for( sIdx in srchValIdx ){
+			banPtnLst <- rObj$neighborLst[[sIdx]]
+			for( idx in 1:length(banPtnLst) ){
+				banVal <- banPtnLst[[idx]]
+				for( cIdx in 1:4 ){
+					if( all(banVal==aZoid[0:2+cIdx]) ){
+						cat(sprintf("sIdx:%d idx:%d %s \n",sIdx,idx,paste(banVal,collapse=",") ))
+						score <- score + 1
+					}
+				} # cIdx
+			} # idx
+		} # sIdx
+
+		return( score )
+	} # rObj$matchCnt( )
+
+	return( rObj )
 
 } # fCutU.neighborLst()
 
