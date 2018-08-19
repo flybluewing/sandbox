@@ -147,21 +147,21 @@ anaMtx.freqVal <- function( rawTail ){
 
 		baseIdx <- which(zoid1st.code==fVal)
 		zoidBan.str[baseIdx] <- sprintf("%3d*",fVal)
-		zoidBan.str[zoidBan<1 | zoidBan>45] <- "    "
+		zoidBan.str[zoidBan<1 | zoidBan>45] <- " NA  "
 		if( 1<baseIdx ){
 			idxSpan <- 1:(baseIdx-1)
-			zoidBan.str[idxSpan] <- ifelse( zoidBan[idxSpan]>=fVal ,"    " ,zoidBan.str[idxSpan] )
+			zoidBan.str[idxSpan] <- ifelse( zoidBan[idxSpan]>=fVal ," NA " ,zoidBan.str[idxSpan] )
 		}
 		if( baseIdx<length(zoidBan) ){
 			idxSpan <- (baseIdx+1):length(zoidBan)
-			zoidBan.str[idxSpan] <- ifelse( zoidBan[idxSpan]<=fVal ,"    " ,zoidBan.str[idxSpan] )
+			zoidBan.str[idxSpan] <- ifelse( zoidBan[idxSpan]<=fVal ," NA " ,zoidBan.str[idxSpan] )
 		}
 
-		zoid1st.str <- paste( sprintf("%3d ",zoid1st.code) ,collapse=" " )
-		zoid2nd.str <- paste( sprintf("%3d ",zoid2nd.code) ,collapse=" " )
-		cat(sprintf("    <%3d>  %s\n",fVal,zoid1st.str))
-		cat(sprintf("           %s\n",zoid2nd.str))
-		cat(sprintf("       --> %s\n",paste(zoidBan.str,collapse=" ") ))
+		zoid1st.str <- paste( sprintf("%3d ",zoid1st.code) ,collapse="," )
+		zoid2nd.str <- paste( sprintf("%3d ",zoid2nd.code) ,collapse="," )
+		cat(sprintf("    <%3d> %3d    %s\n",fVal,posDiff,zoid1st.str))
+		cat(sprintf("                 %s\n",zoid2nd.str))
+		cat(sprintf("             --> %s\n",paste(zoidBan.str,collapse=",") ))
     }
 
 	return("")

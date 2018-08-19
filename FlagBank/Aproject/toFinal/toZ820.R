@@ -78,38 +78,31 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 	flag <- flgCnt<2	;table(flag)
     allIdxF <- allIdxF[flag]
     cat(sprintf("allIdxF %d\n",length(allIdxF)))
+	flgCnt <- fCutCnt.nextColVal_1( gEnv ,allIdxF )$flgCnt
+	flag <- flgCnt<2	;table(flag)
+    allIdxF <- allIdxF[flag]
+    cat(sprintf("allIdxF %d\n",length(allIdxF)))
+	flgCnt <- fCutCnt.nextColVal_2( gEnv ,allIdxF )$flgCnt
+	flag <- flgCnt<2	;table(flag)
+    allIdxF <- allIdxF[flag]
+    cat(sprintf("allIdxF %d\n",length(allIdxF)))
+	flgCnt <- fCutCnt.nextColVal_3( gEnv ,allIdxF )$flgCnt
+	flag <- flgCnt<2	;table(flag)
+    allIdxF <- allIdxF[flag]
+    cat(sprintf("allIdxF %d\n",length(allIdxF)))
+	flgCnt <- fCutCnt.nextColVal_4( gEnv ,allIdxF )$flgCnt
+	flag <- flgCnt<2	;table(flag)
+    allIdxF <- allIdxF[flag]
+    cat(sprintf("allIdxF %d\n",length(allIdxF)))
+	flgCnt <- fCutCnt.nextColVal_5( gEnv ,allIdxF )$flgCnt
+	flag <- flgCnt<2	;table(flag)
+    allIdxF <- allIdxF[flag]
+    cat(sprintf("allIdxF %d\n",length(allIdxF)))
+	flgCnt <- fCutCnt.nextColVal_6( gEnv ,allIdxF )$flgCnt
+	flag <- flgCnt<2	;table(flag)
+    allIdxF <- allIdxF[flag]
+    cat(sprintf("allIdxF %d\n",length(allIdxF)))
 
-	tDiff <- Sys.time() - tStmp
-
-	for( cutCol.idx in c(1,3,6) ){	# fltCnt 1,12, 1
-		cutCol.val.span <- sort(unique(gEnv$allZoidMtx[allIdxF,cutCol.idx]))
-		cutCol.val.span <- setdiff( cutCol.val.span ,stdMI$lastZoid[cutCol.idx] )
-		for( cutCol.val in cutCol.val.span ){
-			flgCnt <- fCutCnt.colValStd( gEnv ,allIdxF ,cutCol.idx ,cutCol.val )
-			flag <- flgCnt<2	;table(flag)
-			allIdxF <- allIdxF[flag]
-			cat(sprintf("colVal %d(col %d)  allIdxF %d\n",cutCol.val,cutCol.idx,length(allIdxF)))
-		}
-	}
-	zWidth.span <- sort(unique(gEnv$allZoidMtx[allIdxF,6]-gEnv$allZoidMtx[allIdxF,1]))
-	zWidth.span <- setdiff( zWidth.span ,stdMI$lastZoid[6]-stdMI$lastZoid[1])
-	for( zWidth in zWidth.span ){	# fltCnt 1
-		flgCnt <- fCutCnt.zWidthStd( gEnv ,allIdxF ,zWidth )
-		flag <- flgCnt<2	;table(flag)
-		allIdxF <- allIdxF[flag]
-		cat(sprintf("zWidth %d  allIdxF %d\n",zWidth,length(allIdxF)))
-	}
-
-	aQuoTblObjLst <- fCutU.getQuoTblLst( gEnv$allZoidMtx[allIdxF,,drop=F] )	# tbl valStr quoStr idStr
-	aQuoTblStr <- sapply( aQuoTblObjLst ,function(quoTbl){quoTbl$valStr})
-	aQuoTblSpan <- sort(unique(aQuoTblStr))	#	table(aQuoTblStr)
-	aQuoTblSpan <- aQuoTblSpan[aQuoTblSpan!=stdMI$quo10$valStr]
-	for( tblStr in aQuoTblSpan ){	# fltCnt 1
-		flgCnt <- fCutCnt.quoTblStd( gEnv ,allIdxF ,tblStr )
-		flag <- flgCnt<2	;table(flag)
-		allIdxF <- allIdxF[flag]
-		cat(sprintf("tblStr %s  allIdxF %d\n",tblStr,length(allIdxF)))
-	}
 
 	tDiff <- Sys.time() - tStmp	
 	allIdxFObj$allIdxF.fCutCnt <- allIdxF
@@ -134,36 +127,12 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 	flgCnt <- flgCnt + fCutCnt.nextRebNum( gEnv ,allIdxF )$flgCnt
 	flgCnt <- flgCnt + fCutCnt.nextCStepBin( gEnv ,allIdxF )$flgCnt
 	flgCnt <- flgCnt + fCutCnt.nextFStepBin( gEnv ,allIdxF )$flgCnt
-
-	for( cutCol.idx in c(1,3,6) ){
-		cutCol.val.span <- sort(unique(gEnv$allZoidMtx[allIdxF,cutCol.idx]))
-		cutCol.val.span <- setdiff( cutCol.val.span ,stdMI$lastZoid[cutCol.idx] )
-		for( cutCol.val in cutCol.val.span ){
-			flgCnt <- flgCnt + fCutCnt.colValStd( gEnv ,allIdxF ,cutCol.idx ,cutCol.val )
-		}
-	}
-	zWidth.span <- sort(unique(gEnv$allZoidMtx[allIdxF,6]-gEnv$allZoidMtx[allIdxF,1]))
-	zWidth.span <- setdiff( zWidth.span ,stdMI$lastZoid[6]-stdMI$lastZoid[1])
-	for( zWidth in zWidth.span ){
-		flgCnt <- flgCnt + fCutCnt.zWidthStd( gEnv ,allIdxF ,zWidth )
-		cat(sprintf("zWidth:%d\n",zWidth))
-	}
-
-	aQuoTblObjLst <- fCutU.getQuoTblLst( gEnv$allZoidMtx[allIdxF,,drop=F] )	# tbl valStr quoStr idStr
-	aQuoTblStr <- sapply( aQuoTblObjLst ,function(quoTbl){quoTbl$valStr})
-	aQuoTblSpan <- sort(unique(aQuoTblStr))	#	table(aQuoTblStr)
-	aQuoTblSpan <- aQuoTblSpan[aQuoTblSpan!=stdMI$quo10$valStr]
-	for( tblStr in aQuoTblSpan ){
-		flgCnt <- flgCnt + fCutCnt.quoTblStd( gEnv ,allIdxF ,tblStr )
-		cat(sprintf("tblStr:%s\n",tblStr))
-	}
-
-	# flgCnt <- flgCnt + fCutCnt.colVal_1_x( gEnv ,allIdxF )
-	# flgCnt <- flgCnt + fCutCnt.colVal_3_x( gEnv ,allIdxF )
-	# flgCnt <- flgCnt + fCutCnt.colVal_5_x( gEnv ,allIdxF )
-	# flgCnt <- flgCnt + fCutCnt.colVal_6_x( gEnv ,allIdxF )
-	# flgCnt <- flgCnt + fCutCnt.zWidth( gEnv ,allIdxF )
-	# flgCnt <- flgCnt + fCutCnt.quoTbl( gEnv ,allIdxF )
+	flgCnt <- flgCnt + fCutCnt.nextColVal_1( gEnv ,allIdxF )$flgCnt
+	flgCnt <- flgCnt + fCutCnt.nextColVal_2( gEnv ,allIdxF )$flgCnt
+	flgCnt <- flgCnt + fCutCnt.nextColVal_3( gEnv ,allIdxF )$flgCnt
+	flgCnt <- flgCnt + fCutCnt.nextColVal_4( gEnv ,allIdxF )$flgCnt
+	flgCnt <- flgCnt + fCutCnt.nextColVal_5( gEnv ,allIdxF )$flgCnt
+	flgCnt <- flgCnt + fCutCnt.nextColVal_6( gEnv ,allIdxF )$flgCnt
 
 	allIdxFObj$flgCnt <- flgCnt
 	table(flgCnt)
@@ -185,6 +154,12 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 	cntMtxLst[["fCutCnt.nextRebNum"]] <- fCutCnt.nextRebNum( gEnv ,allIdxF )$cntMtx
 	cntMtxLst[["fCutCnt.nextCStepBin"]] <- fCutCnt.nextCStepBin( gEnv ,allIdxF )$cntMtx
 	cntMtxLst[["fCutCnt.nextFStepBin"]] <- fCutCnt.nextFStepBin( gEnv ,allIdxF )$cntMtx
+	cntMtxLst[["fCutCnt.nextColVal_1"]] <- fCutCnt.nextColVal_1( gEnv ,allIdxF )$cntMtx
+	cntMtxLst[["fCutCnt.nextColVal_2"]] <- fCutCnt.nextColVal_2( gEnv ,allIdxF )$cntMtx
+	cntMtxLst[["fCutCnt.nextColVal_3"]] <- fCutCnt.nextColVal_3( gEnv ,allIdxF )$cntMtx
+	cntMtxLst[["fCutCnt.nextColVal_4"]] <- fCutCnt.nextColVal_4( gEnv ,allIdxF )$cntMtx
+	cntMtxLst[["fCutCnt.nextColVal_5"]] <- fCutCnt.nextColVal_5( gEnv ,allIdxF )$cntMtx
+	cntMtxLst[["fCutCnt.nextColVal_6"]] <- fCutCnt.nextColVal_6( gEnv ,allIdxF )$cntMtx
 
 	cntMtx <- do.call( cbind ,lapply( cntMtxLst ,function(mtx){mtx[,"raw"]}) )
 	cntSum <- apply( cntMtx ,1 ,sum )
@@ -198,6 +173,12 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 	auxCntMtxLst[["fCutCnt.nextRebNum"]] <- fCutCnt.nextRebNum( gEnv ,allIdxF )$auxCntMtx
 	auxCntMtxLst[["fCutCnt.nextCStepBin"]] <- fCutCnt.nextCStepBin( gEnv ,allIdxF )$auxCntMtx
 	auxCntMtxLst[["fCutCnt.nextFStepBin"]] <- fCutCnt.nextFStepBin( gEnv ,allIdxF )$auxCntMtx
+	auxCntMtxLst[["fCutCnt.nextColVal_1"]] <- fCutCnt.nextColVal_1( gEnv ,allIdxF )$auxCntMtx
+	auxCntMtxLst[["fCutCnt.nextColVal_2"]] <- fCutCnt.nextColVal_2( gEnv ,allIdxF )$auxCntMtx
+	auxCntMtxLst[["fCutCnt.nextColVal_3"]] <- fCutCnt.nextColVal_3( gEnv ,allIdxF )$auxCntMtx
+	auxCntMtxLst[["fCutCnt.nextColVal_4"]] <- fCutCnt.nextColVal_4( gEnv ,allIdxF )$auxCntMtx
+	auxCntMtxLst[["fCutCnt.nextColVal_5"]] <- fCutCnt.nextColVal_5( gEnv ,allIdxF )$auxCntMtx
+	auxCntMtxLst[["fCutCnt.nextColVal_6"]] <- fCutCnt.nextColVal_6( gEnv ,allIdxF )$auxCntMtx
 
 	cntMtx <- do.call( cbind ,lapply( auxCntMtxLst ,function(mtx){mtx[,"auxQuo"]}) )
 	cntSum <- apply( cntMtx ,1 ,sum )

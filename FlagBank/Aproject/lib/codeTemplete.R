@@ -1,15 +1,22 @@
-cntThld <- c(2,3,2,2)	;names(cntThld) <- c("raw","rem","cStep","fStep")
+cntThld <- c(2,2,3,2,2)	;names(cntThld) <- c("raw","rawFV","rem","cStep","fStep")
+
+	# stdMI <- fCutU.getMtxInfo( zMtx )
+	# 	mtxLen  lastZoid    rem quo10   cStep   fStep   rawTail cStepTail   quoTail quoRebPtn
+    # cntMtx[,"rawFV"] <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+	# 				# u0.zoidInc_ana(stdMI$rawTail[n,],stdMI$rawTail[m,])
+	# 				# if( aZoid[c( , , )]==c(  ,  ,  ) ) cnt<-cnt+1
+	# 				#	if( 1<sum(aZoid[1:3+0]==c( , , )) ) cnt<-cnt+1
+	# 			})	;kIdx<-anaFltCnt(cntMtx[,"rawFV"],rpt)
 
 
 # done
 fCutCnt.nextXXX <- function( gEnv ,allIdxF ,rpt=FALSE ){
 
 	flgCnt <- rep( 0 ,length(allIdxF) )
-	# zMtx <- fCutU.getNextQuo10( gEnv )$zMtx	# rptObj<-anaQuoTbl( zMtx )
+	zMtx <- fCutU.getXXXX( gEnv )$zMtx	# rptObj<-anaQuoTbl( zMtx )
 	if( 0==nrow(zMtx) ) return( rep(0,length(allIdxF)) )
 
 	stdMI <- fCutU.getMtxInfo( zMtx )
-	# mtxLen  lastZoid    rem quo10   cStep   fStep   rawTail cStepTail   quoTail quoRebPtn
 	# rptObj<-anaMtx(stdMI$rawTail,stdZoid);u0.zoidMtx_ana.rpt( stdMI$rawTail )
 
 	flgCnt <- flgCnt + fCutU.commonCutCnt( gEnv ,allIdxF ,zMtx )
@@ -42,17 +49,18 @@ fCutCnt.nextXXX <- function( gEnv ,allIdxF ,rpt=FALSE ){
 					if( aZoid[4]%in%c(   ) ) cnt<-cnt+1
 					if( aZoid[5]%in%c(   ) ) cnt<-cnt+1
 					if( aZoid[6]%in%c(   ) ) cnt<-cnt+1
-
-					cnt <- cnt + neighborObj$matchCnt( aZoid )
-					
-					# anaMtx.freqVal( stdMI$rawTail )
-					cnt <- cnt + fCutU.spanMatch(stdMI$rawTail[ ,],aZoid,posDiff= )	# < >
-					if( fCutU.hasPtn(c(  ,  ),aZoid) ) cnt<-cnt+1
-					# u0.zoidInc_ana(stdMI$rawTail[n,],stdMI$rawTail[m,])
-					# if( aZoid[c( , , )]==c(  ,  ,  ) ) cnt<-cnt+1
-					#	if( 1<sum(aZoid[1:3+0]==c( , , )) ) cnt<-cnt+1
 					return( cnt )
 				})	;kIdx<-anaFltCnt(cntMtx[,"raw"],rpt)
+    cntMtx[,"rawFV"] <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+					# anaMtx.freqVal( stdMI$rawTail )
+					cnt <- 0
+					cnt <- cnt + neighborObj$matchCnt( aZoid )
+					
+					cnt <- cnt + fCutU.spanMatch(stdMI$rawTail[ ,],aZoid,posDiff= )	# < >
+					if( fCutU.hasPtn(c(  ,  ),aZoid) ) cnt<-cnt+1
+
+					return( cnt )
+				})	;kIdx<-anaFltCnt(cntMtx[,"rawFV"],rpt)
     cntMtx[,"rem"] <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
 					# u0.zoidMtx_ana( stdMI$rawTail%%10 )
 					cnt <- 0
@@ -73,7 +81,14 @@ fCutCnt.nextXXX <- function( gEnv ,allIdxF ,rpt=FALSE ){
 					if( aCStep[4]%in%c(   ) ) cnt<-cnt+1
 					if( aCStep[5]%in%c(   ) ) cnt<-cnt+1
 
-					if( 1<sum(aCStep[1:3+ ]==c(  , ,  )) ) cnt<-cnt+1	# n
+					if( 1<sum(aCStep[1:3+ ]==c(  , ,  )) ) cnt<-cnt+1	# 
+					if( 1<sum(aCStep[1:3+ ]==c(  , ,  )) ) cnt<-cnt+1	# 
+					if( 1<sum(aCStep[1:3+ ]==c(  , ,  )) ) cnt<-cnt+1	# 
+					if( 1<sum(aCStep[1:3+ ]==c(  , ,  )) ) cnt<-cnt+1	# 
+					if( 1<sum(aCStep[1:3+ ]==c(  , ,  )) ) cnt<-cnt+1	# 
+
+					if( fCutU.hasPtn(c( , ),aCStep) ) cnt<-cnt+1
+					if( all(aCStep[1:2+ ]==c( , )) ) cnt<-cnt+1
 					return( cnt )
 				})	;kIdx<-anaFltCnt(cntMtx[,"cStep"],rpt)
     cntMtx[,"fStep"] <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
@@ -86,13 +101,18 @@ fCutCnt.nextXXX <- function( gEnv ,allIdxF ,rpt=FALSE ){
 					if( aFStep[5]%in%c(         ) ) cnt<-cnt+1
 					if( aFStep[6]%in%c(         ) ) cnt<-cnt+1
 
-					if( 1<sum(aFStep[1:3+ ]==c( , , )) ) cnt<-cnt+1 # n
+					if( 1<sum(aFStep[1:3+ ]==c( , , )) ) cnt<-cnt+1 # 
+					if( 1<sum(aFStep[1:3+ ]==c( , , )) ) cnt<-cnt+1 # 
+					if( 1<sum(aFStep[1:3+ ]==c( , , )) ) cnt<-cnt+1 # 
+					if( 1<sum(aFStep[1:3+ ]==c( , , )) ) cnt<-cnt+1 # 
+					if( 1<sum(aFStep[1:3+ ]==c( , , )) ) cnt<-cnt+1 # 
+					if( 1<sum(aFStep[1:3+ ]==c( , , )) ) cnt<-cnt+1 # 
 					return( cnt )
 				})	;kIdx<-anaFltCnt(cntMtx[,"fStep"],rpt)
 	score <- sapply( 1:length(flgCnt) ,function( idx ){
 					if( any(cntMtx[idx,] >cntThld ) )	return( 2 )
 					if( any(cntMtx[idx,]==cntThld ) )	return( sum(cntMtx[idx,]==2) )
-					if( 0<cntMtx[idx,"raw"]){
+					if( 0<sum(cntMtx[idx,c("raw","rawFV")]) ){
 						cnt <- sum(cntMtx[idx,c("rem","cStep","fStep")])
 						if( cnt>1 )	return( 1 )
 					}
