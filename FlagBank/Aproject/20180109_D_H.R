@@ -110,6 +110,17 @@ anaMtx <- function( zMtx ,stdZoid=NULL ){
     return(NULL)
 } # anaMtx()
 
+anaMtx.freqVal <- function( rawTail ){
+
+    vals <- sort(unique(as.vector(rawTail)))
+    freqVals <- vals[ table(rawTail)>1 ]
+
+    for( fVal in freqVals ){
+        # qqe working        
+    }
+
+} # anaMtx.freqVal()
+
 anaMtx_ColVal <- function( zMtx ){
     # idx<-3	;zMtx <-cvSeqNextLst[[idx]]$fndMtx
     getRowStr <- function( rowIdx ,mtxLst ){
