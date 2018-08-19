@@ -270,6 +270,18 @@ fCutU.getNextRebNumPtn <- function( gEnv ,numPtn=NULL ){	# <official>
 	return( rObj )
 }	# fCutU.getNextRebNumPtn()
 
+fCutU.getNextColVal <- function( gEnv ,colIdx ){	# <official>
+	hLen <- nrow( gEnv$zhF )
+	lastVal <- gEnv$zhF[hLen,colIdx]
+
+	flag <- sapply( 1:(hLen-1) ,function( hIdx ){ all(gEnv$zhF[hIdx,colIdx]==lastVal) })
+	flag.idx <- which( flag )+1
+
+	rObj <- list( zMtx=gEnv$zhF[flag.idx,] ,lastVal=lastVal ,colIdx=colIdx )
+	return( rObj )
+}	# fCutU.getNextColVal()
+
+
 fCutU.hist.banValScan.grp <- function( gEnv ){ # < official >
 
 	testSpan <- 400:nrow(gEnv$zhF)

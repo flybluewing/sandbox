@@ -1589,6 +1589,27 @@ fCutCnt.nextFStepBin <- function( gEnv ,allIdxF ,rpt=FALSE ){
 }	# fCutCnt.nextFStepBin( )
 
 
+fCutCnt.nextColVal_1 <- function( gEnv ,allIdxF ,rpt=FALSE ){
+	# 경고 : 동일 컬럼 동일 값 반복 상태인 경우 신중할 것.
+	flgCnt <- rep( 0 ,length(allIdxF) )
+	zMtx <- fCutU.getNextColVal( gEnv ,1 )$zMtx	# rptObj<-anaQuoTbl( zMtx )
+	if( 0==nrow(zMtx) ) return( rep(0,length(allIdxF)) )
+
+	stdMI <- fCutU.getMtxInfo( zMtx )
+	# mtxLen  lastZoid    rem quo10   cStep   fStep   rawTail cStepTail   quoTail quoRebPtn
+	# rptObj<-anaMtx(stdMI$rawTail,stdZoid);u0.zoidMtx_ana.rpt( stdMI$rawTail )
+	
+	cat("QQE working fCutCnt.nextColVal.1() ")
+
+} # fCutCnt.nextColVal_1()
+
+	# fCutCnt.nextColVal_2
+	# fCutCnt.nextColVal_3
+	# fCutCnt.nextColVal_4
+	# fCutCnt.nextColVal_5
+	# fCutCnt.nextColVal_6
+
+
 # 이번 시점에서는 보류 allIdxLst$stdFiltedCnt : ...  3 1 3 0 
 fCutCnt.stdFiltedCnt_0 <- function( gEnv ,allIdxF ,stdFiltedCnt ,fCnt ,rpt=FALSE ){
 	# stdFiltedCnt <- allIdxLst$stdFiltedCnt	;fCnt <- 0
