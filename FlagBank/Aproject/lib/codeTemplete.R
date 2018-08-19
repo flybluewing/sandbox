@@ -44,7 +44,8 @@ fCutCnt.nextXXX <- function( gEnv ,allIdxF ,rpt=FALSE ){
 					if( aZoid[6]%in%c(   ) ) cnt<-cnt+1
 
 					cnt <- cnt + neighborObj$matchCnt( aZoid )
-
+					
+					# anaMtx.freqVal( stdMI$rawTail )
 					cnt <- cnt + fCutU.spanMatch(stdMI$rawTail[ ,],aZoid,posDiff= )	# < >
 					if( fCutU.hasPtn(c(  ,  ),aZoid) ) cnt<-cnt+1
 					# u0.zoidInc_ana(stdMI$rawTail[n,],stdMI$rawTail[m,])

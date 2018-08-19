@@ -111,14 +111,60 @@ anaMtx <- function( zMtx ,stdZoid=NULL ){
 } # anaMtx()
 
 anaMtx.freqVal <- function( rawTail ){
-
+	# rawTail <- stdMI$rawTail
+	if( 2>nrow(rawTail) )	return("")
+	
     vals <- sort(unique(as.vector(rawTail)))
     freqVals <- vals[ table(rawTail)>1 ]
 
     for( fVal in freqVals ){
-        # qqe working        
+		zoid1st <- NULL
+		zoid2nd <- NULL
+		for( rIdx in nrow(rawTail):1 ){
+			if( !any(rawTail[rIdx,]==fVal) ) next
+			
+			if( is.null(zoid2nd) ){
+				zoid2nd <- rawTail[rIdx,]
+			} else {
+				zoid1st <- rawTail[rIdx,]
+				break
+			}
+		}	# rIdx
+
+		posDiff <- which( zoid2nd==fVal ) - which( zoid1st==fVal )
+		if( 0==posDiff ){
+			zoid1st.code <- zoid1st
+			zoid2nd.code <- zoid2nd
+		} else {
+			zoid1st.code <- if(posDiff>0) zoid1st[1:(6-posDiff)] else zoid1st[(1-posDiff):6]
+			zoid2nd.code <- if(posDiff>0) zoid2nd[(1+posDiff):6] else zoid2nd[1:(6+posDiff)]
+		}
+		zoidBan <- zoid2nd.code + (zoid2nd.code-zoid1st.code)
+		diffEvt <- 2>abs(zoid2nd.code-zoid1st.code)	# diff event
+		zoidBan.str <- sprintf("%3d",zoidBan)
+		zoidBan.str[diffEvt] <- sprintf("%s!",zoidBan.str[diffEvt])
+		zoidBan.str[!diffEvt] <- sprintf("%s ",zoidBan.str[!diffEvt])
+
+		baseIdx <- which(zoid1st.code==fVal)
+		zoidBan.str[baseIdx] <- sprintf("%3d*",fVal)
+		zoidBan.str[zoidBan<1 | zoidBan>45] <- "    "
+		if( 1<baseIdx ){
+			idxSpan <- 1:(baseIdx-1)
+			zoidBan.str[idxSpan] <- ifelse( zoidBan[idxSpan]>=fVal ,"    " ,zoidBan.str[idxSpan] )
+		}
+		if( baseIdx<length(zoidBan) ){
+			idxSpan <- (baseIdx+1):length(zoidBan)
+			zoidBan.str[idxSpan] <- ifelse( zoidBan[idxSpan]<=fVal ,"    " ,zoidBan.str[idxSpan] )
+		}
+
+		zoid1st.str <- paste( sprintf("%3d ",zoid1st.code) ,collapse=" " )
+		zoid2nd.str <- paste( sprintf("%3d ",zoid2nd.code) ,collapse=" " )
+		cat(sprintf("    <%3d>  %s\n",fVal,zoid1st.str))
+		cat(sprintf("           %s\n",zoid2nd.str))
+		cat(sprintf("       --> %s\n",paste(zoidBan.str,collapse=" ") ))
     }
 
+	return("")
 } # anaMtx.freqVal()
 
 anaMtx_ColVal <- function( zMtx ){
