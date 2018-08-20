@@ -175,14 +175,13 @@ fCut.basic <- function( gEnv ,allIdxF ,rpt=FALSE ){
 
 } # fCut.basic()
 
-# undone
+# done
 fCutCnt.basic <- function( gEnv ,allIdxF ,rpt=FALSE ){
 
 	flgCnt <- rep( 0 ,length(allIdxF) )
 	zMtx <- gEnv$zhF					# rptObj<-anaQuoTbl( zMtx )
 
 	stdMI <- fCutU.getMtxInfo( zMtx )
-	# mtxLen  lastZoid    rem quo10   cStep   fStep   rawTail cStepTail   quoTail quoRebPtn
 	# rptObj<-anaMtx(stdMI$rawTail,stdZoid);u0.zoidMtx_ana.rpt( stdMI$rawTail )
 
 	# -- conditional
@@ -196,8 +195,8 @@ fCutCnt.basic <- function( gEnv ,allIdxF ,rpt=FALSE ){
     flgCnt[!flag] <- flgCnt[!flag] + 1
 
 	# -- conditional
-	cNames <- c("raw","rem","cStep","fStep")
-	cntMtx <- matrix( 0 ,nrow=length(allIdxF) ,ncol=length(cNames) )	;colnames(cntMtx)=cNames
+	cntMtx <- matrix( 0 ,nrow=length(allIdxF) ,ncol=length(cntThld) )	;colnames(cntMtx)=cntThld
+	neighborObj <- fCutU.neighborObj( stdMI$rawTail )
 	cntMtx[,"raw"] <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
 					cnt <- 0	# fCut.basic() 의 내용과 조율할 것.
 					if( aZoid[1]%in%c( 4,25,13 ) ) cnt<-cnt+1
@@ -209,28 +208,28 @@ fCutCnt.basic <- function( gEnv ,allIdxF ,rpt=FALSE ){
 
 					if( aZoid[3]%in%c(33       ) ) cnt<-cnt+1
 					if( all(aZoid[3:5]==c(12,14,26)) ) cnt<-cnt+1	# 25 28 29 / 25 26 27
-
-					cnt <- cnt + fCutU.spanMatch(stdMI$rawTail[6,],aZoid,posDiff=2 )	# <12>
-					if( fCutU.hasPtn(c( 9,12,13),aZoid) ) cnt<-cnt+1	#  --
-					cnt <- cnt + fCutU.spanMatch(stdMI$rawTail[6,],aZoid,posDiff=0 )	# <21>
-					if( fCutU.hasPtn(c(21,22,NA,NA,27 ),aZoid) ) cnt<-cnt+1
-					cnt <- cnt + fCutU.spanMatch(stdMI$rawTail[6,],aZoid,posDiff=-1 )	# <25>
-					if( fCutU.hasPtn(c(17,25),aZoid) ) cnt<-cnt+1
-					if( fCutU.hasPtn(c(15,25,28),aZoid) ) cnt<-cnt+1	#  --
-					if( fCutU.hasPtn(c(13,25,43),aZoid) ) cnt<-cnt+1	#  --
-					if( fCutU.hasPtn(c(21,25,26),aZoid) ) cnt<-cnt+1	#  --
-					cnt <- cnt + fCutU.spanMatch(stdMI$rawTail[3,],aZoid,posDiff=1 )	# <28>
-					if( fCutU.hasPtn(c(25,28,29),aZoid) ) cnt<-cnt+1	#  --
-					cnt <- cnt + fCutU.spanMatch(stdMI$rawTail[5,],aZoid,posDiff=1 )	# <29>
-					if( fCutU.hasPtn(c(28,29,30),aZoid) ) cnt<-cnt+1	#  --
-					cnt <- cnt + fCutU.spanMatch(stdMI$rawTail[2,],aZoid,posDiff=0 )	# <38>
-					if( fCutU.hasPtn(c(38,NA,45),aZoid) ) cnt<-cnt+1
-					if( fCutU.hasPtn(c(28,38,42),aZoid) ) cnt<-cnt+1	#  --
-					cnt <- cnt + fCutU.spanMatch(stdMI$rawTail[2,],aZoid,posDiff=0 )	# <45>
-					if( fCutU.hasPtn(c(38,42,45),aZoid) ) cnt<-cnt+1
-					# u0.zoidInc_ana(stdMI$rawTail[n,],stdMI$rawTail[m,])
 					return( cnt )
 			})	;kIdx<-anaFltCnt(cntMtx[,"raw"],rpt)
+    cntMtx[,"rawFV"] <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+					# anaMtx.freqVal( stdMI$rawTail )
+					cnt <- 0
+					cnt <- cnt + neighborObj$matchCnt( aZoid )
+					
+					cnt <- cnt + fCutU.spanMatch(stdMI$rawTail[6,],aZoid,posDiff=2 )	# <12>
+					cnt <- cnt + fCutU.spanMatch(stdMI$rawTail[6,],aZoid,posDiff=0 )	# <21>
+					if( fCutU.hasPtn(c(21,22,NA,NA,27),aZoid) ) cnt<-cnt+1
+					cnt <- cnt + fCutU.spanMatch(stdMI$rawTail[6,],aZoid,posDiff=-1 )	# <25>
+					if( fCutU.hasPtn(c(17,25),aZoid) ) cnt<-cnt+1
+					cnt <- cnt + fCutU.spanMatch(stdMI$rawTail[3,],aZoid,posDiff=1 )	# <28>
+					cnt <- cnt + fCutU.spanMatch(stdMI$rawTail[5,],aZoid,posDiff=1 )	# <29>
+					cnt <- cnt + fCutU.spanMatch(stdMI$rawTail[2,],aZoid,posDiff=0 )	# <38>
+					if( fCutU.hasPtn(c(38,NA,45),aZoid) ) cnt<-cnt+1
+					cnt <- cnt + fCutU.spanMatch(stdMI$rawTail[2,],aZoid,posDiff=0 )	# <45>
+					if( fCutU.hasPtn(c(38,NA,45),aZoid) ) cnt<-cnt+1
+					if( fCutU.hasPtn(c(30,29,38,NA,38,45),aZoid,thld=3,fixIdx=6) ) cnt<-cnt+1
+
+					return( cnt )
+				})	;kIdx<-anaFltCnt(cntMtx[,"rawFV"],rpt)
     cntMtx[,"rem"] <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
 					# u0.zoidMtx_ana( stdMI$rawTail%%10 )	;u0.zoidMtx_ana( stdMI$rawTail )
 					cnt <- 0
@@ -287,7 +286,7 @@ fCutCnt.basic <- function( gEnv ,allIdxF ,rpt=FALSE ){
 	score <- sapply( 1:length(flgCnt) ,function( idx ){
 					if( any(cntMtx[idx,] >cntThld ) )	return( 2 )
 					if( any(cntMtx[idx,]==cntThld ) )	return( sum(cntMtx[idx,]==2) )
-					if( 0<cntMtx[idx,"raw"]){
+					if( 0<sum(cntMtx[idx,c("raw","rawFV")]) ){
 						cnt <- sum(cntMtx[idx,c("rem","cStep","fStep")])
 						if( cnt>1 )	return( 1 )
 					}
@@ -740,7 +739,7 @@ fCutCnt.colValSeqNext.cStep <- function( gEnv ,allIdxF ,rpt=FALSE ){
 
 } # fCutCnt.colValSeqNext.cStep()
 
-# undone
+# done
 fCutCnt.nextZW <- function( gEnv ,allIdxF ,rpt=FALSE ){
 
 	flgCnt <- rep( 0 ,length(allIdxF) )
@@ -748,7 +747,6 @@ fCutCnt.nextZW <- function( gEnv ,allIdxF ,rpt=FALSE ){
 	if( 0==nrow(zMtx) ) return( rep(0,length(allIdxF)) )
 
 	stdMI <- fCutU.getMtxInfo( zMtx )
-	# mtxLen  lastZoid    rem quo10   cStep   fStep   rawTail cStepTail   quoTail quoRebPtn
 	# rptObj<-anaMtx(stdMI$rawTail,stdZoid);u0.zoidMtx_ana.rpt( stdMI$rawTail )
 
 	flgCnt <- flgCnt + fCutU.commonCutCnt( gEnv ,allIdxF ,zMtx )
@@ -765,9 +763,9 @@ fCutCnt.nextZW <- function( gEnv ,allIdxF ,rpt=FALSE ){
     flgCnt[!flag] <- flgCnt[!flag] + 1
 
 	# -- conditional
-	cNames <- c("raw","rem","cStep","fStep")
-	cntMtx <- matrix( 0 ,nrow=length(allIdxF) ,ncol=length(cNames) )	;colnames(cntMtx)=cNames
+	cntMtx <- matrix( 0 ,nrow=length(allIdxF) ,ncol=length(cntThld) )	;colnames(cntMtx)=cntThld
 
+	neighborObj <- fCutU.neighborObj( stdMI$rawTail )
     cntMtx[,"raw"] <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
 					cnt <- 0
 					if( aZoid[1]%in%c(12,16      ) ) cnt<-cnt+1
@@ -776,39 +774,36 @@ fCutCnt.nextZW <- function( gEnv ,allIdxF ,rpt=FALSE ){
 					if( aZoid[4]%in%c(33         ) ) cnt<-cnt+1
 					if( aZoid[5]%in%c(           ) ) cnt<-cnt+1
 					if( aZoid[6]%in%c(           ) ) cnt<-cnt+1
-
-					cnt <- cnt + fCutU.spanMatch(stdMI$rawTail[6,],aZoid,posDiff=-3 )	# <12>
-					if( fCutU.hasPtn(c(12,15,16),aZoid) ) cnt<-cnt+1	# ++
-					cnt <- cnt + fCutU.spanMatch(stdMI$rawTail[4,],aZoid,posDiff=-1 )	# <14>
-					if( fCutU.hasPtn(c(14,NA,NA,32   ),aZoid) ) cnt<-cnt+1
-					if( fCutU.hasPtn(c(14,NA,NA,NA,38),aZoid) ) cnt<-cnt+1
-					if( fCutU.hasPtn(c(14,20,23),aZoid) ) cnt<-cnt+1	# ++
-					cnt <- cnt + fCutU.spanMatch(stdMI$rawTail[5,],aZoid,posDiff=-1 )	# <15>
-					if( fCutU.hasPtn(c(15,26,42,40),aZoid,thld=3,fixIdx=1) ) cnt<-cnt+1
-					if( fCutU.hasPtn(c(12,15,16),aZoid) ) cnt<-cnt+1	# ++
-					cnt <- cnt + fCutU.spanMatch(stdMI$rawTail[5,],aZoid,posDiff=-2 )	# <20>
-					if( fCutU.hasPtn(c(20,22   ),aZoid) ) cnt<-cnt+1
-					if( fCutU.hasPtn(c(20,NA,32),aZoid) ) cnt<-cnt+1
-					if( fCutU.hasPtn(c(14,20,23),aZoid) ) cnt<-cnt+1	# ++
-					cnt <- cnt + fCutU.spanMatch(stdMI$rawTail[4,],aZoid,posDiff=2 )	# <24>
-					if( fCutU.hasPtn(c(20,NA,24,34),aZoid) ) cnt<-cnt+1
-					if( fCutU.hasPtn(c(20,24,30),aZoid) ) cnt<-cnt+1	# ++
-					cnt <- cnt + fCutU.spanMatch(stdMI$rawTail[6,],aZoid,posDiff=-1 )	# <26>
-					if( fCutU.hasPtn(c(12,NA,26),aZoid) ) cnt<-cnt+1
-					if( fCutU.hasPtn(c(14,26,28),aZoid) ) cnt<-cnt+1	# ++
-					cnt <- cnt + fCutU.spanMatch(stdMI$rawTail[5,],aZoid,posDiff=1 )	# <30>
-					if( fCutU.hasPtn(c(17,18,14,20,30),aZoid,thld=3,fixIdx=5) ) cnt<-cnt+1
-					if( fCutU.hasPtn(c(20,24,30),aZoid) ) cnt<-cnt+1	# ++
-					cnt <- cnt + fCutU.spanMatch(stdMI$rawTail[6,],aZoid,posDiff=-1 )	# <31>
-					if( fCutU.hasPtn(c(10,19,31,NA,44),aZoid,thld=3,fixIdx=3) ) cnt<-cnt+1
-					if( fCutU.hasPtn(c(23,31,37),aZoid) ) cnt<-cnt+1	# ++
-					cnt <- cnt + fCutU.spanMatch(stdMI$rawTail[4,],aZoid,posDiff=0 )	# <43>
-					if( fCutU.hasPtn(c(40,43),aZoid) ) cnt<-cnt+1
-					if( fCutU.hasPtn(c(12,42,43),aZoid) ) cnt<-cnt+1	# ++
-					# u0.zoidInc_ana(stdMI$rawTail[n,],stdMI$rawTail[m,])
-
 					return( cnt )
 				})	;kIdx<-anaFltCnt(cntMtx[,"raw"],rpt)
+    cntMtx[,"rawFV"] <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+					# anaMtx.freqVal( stdMI$rawTail )
+					cnt <- 0
+					cnt <- cnt + neighborObj$matchCnt( aZoid )
+					
+					cnt <- cnt + fCutU.spanMatch(stdMI$rawTail[6,],aZoid,posDiff=-3 )	# <12>
+					cnt <- cnt + fCutU.spanMatch(stdMI$rawTail[3,],aZoid,posDiff=-1 )	# <14>
+					if( fCutU.hasPtn(c(14,NA,NA,32   ),aZoid) ) cnt<-cnt+1
+					if( fCutU.hasPtn(c(14,NA,NA,NA,38),aZoid) ) cnt<-cnt+1
+					cnt <- cnt + fCutU.spanMatch(stdMI$rawTail[5,],aZoid,posDiff=-1 )	# <15>
+					if( fCutU.hasPtn(c(15,26,42,40),aZoid,thld=3,fixIdx=1) ) cnt<-cnt+1
+					cnt <- cnt + fCutU.spanMatch(stdMI$rawTail[6,],aZoid,posDiff=-2 )	# <20>
+					if( fCutU.hasPtn(c(20,22   ),aZoid) ) cnt<-cnt+1
+					if( fCutU.hasPtn(c(20,NA,32),aZoid) ) cnt<-cnt+1
+					cnt <- cnt + fCutU.spanMatch(stdMI$rawTail[4,],aZoid,posDiff=2 )	# <24>
+					if( fCutU.hasPtn(c(20,NA,24,34),aZoid) ) cnt<-cnt+1
+					cnt <- cnt + fCutU.spanMatch(stdMI$rawTail[6,],aZoid,posDiff=-1 )	# <26>
+					if( fCutU.hasPtn(c(12,NA,26),aZoid) ) cnt<-cnt+1
+					cnt <- cnt + fCutU.spanMatch(stdMI$rawTail[5,],aZoid,posDiff= 1)	# <30>
+					if( fCutU.hasPtn(c(17,18,14,20,30),aZoid,thld=3,fixIdx=5) ) cnt<-cnt+1
+					cnt <- cnt + fCutU.spanMatch(stdMI$rawTail[6,],aZoid,posDiff=-1 )	# <31>
+					if( fCutU.hasPtn(c(10,19,31,NA,44),aZoid,thld=3,fixIdx=3) ) cnt<-cnt+1
+					cnt <- cnt + fCutU.spanMatch(stdMI$rawTail[4,],aZoid,posDiff=0 )	# <43>
+					if( fCutU.hasPtn(c(40,43),aZoid) ) cnt<-cnt+1
+					if( fCutU.hasPtn(c(29,39,NA,NA,NA,43),aZoid) ) cnt<-cnt+1
+
+					return( cnt )
+				})	;kIdx<-anaFltCnt(cntMtx[,"rawFV"],rpt)
     cntMtx[,"rem"] <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
 					# u0.zoidMtx_ana( stdMI$rawTail%%10 )
 					cnt <- 0
@@ -867,7 +862,7 @@ fCutCnt.nextZW <- function( gEnv ,allIdxF ,rpt=FALSE ){
 	score <- sapply( 1:length(flgCnt) ,function( idx ){
 					if( any(cntMtx[idx,] >cntThld ) )	return( 2 )
 					if( any(cntMtx[idx,]==cntThld ) )	return( sum(cntMtx[idx,]==2) )
-					if( 0<cntMtx[idx,"raw"]){
+					if( 0<sum(cntMtx[idx,c("raw","rawFV")]) ){
 						cnt <- sum(cntMtx[idx,c("rem","cStep","fStep")])
 						if( cnt>1 )	return( 1 )
 					}
@@ -880,7 +875,7 @@ fCutCnt.nextZW <- function( gEnv ,allIdxF ,rpt=FALSE ){
 
 } # fCutCnt.nextZW()
 
-# undone
+# done
 fCutCnt.nextQuo10 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 
 	flgCnt <- rep( 0 ,length(allIdxF) )
@@ -888,7 +883,6 @@ fCutCnt.nextQuo10 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 	if( 0==nrow(zMtx) ) return( rep(0,length(allIdxF)) )
 
 	stdMI <- fCutU.getMtxInfo( zMtx )
-	# mtxLen  lastZoid    rem quo10   cStep   fStep   rawTail cStepTail   quoTail quoRebPtn
 	# rptObj<-anaMtx(stdMI$rawTail,stdZoid);u0.zoidMtx_ana.rpt( stdMI$rawTail )
 
 	flgCnt <- flgCnt + fCutU.commonCutCnt( gEnv ,allIdxF ,zMtx )
@@ -906,6 +900,7 @@ fCutCnt.nextQuo10 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 	# -- conditional
 	cntMtx <- matrix( 0 ,nrow=length(allIdxF) ,ncol=length(cntThld) )	;colnames(cntMtx)=names(cntThld)
 
+	neighborObj <- fCutU.neighborObj( stdMI$rawTail )
     cntMtx[,"raw"] <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
 					cnt <- 0
 					if( aZoid[1]%in%c( 3   ) ) cnt<-cnt+1
@@ -914,36 +909,33 @@ fCutCnt.nextQuo10 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 					if( aZoid[4]%in%c(     ) ) cnt<-cnt+1
 					if( aZoid[5]%in%c(37   ) ) cnt<-cnt+1
 					if( aZoid[6]%in%c(     ) ) cnt<-cnt+1
-
-					cnt <- cnt + fCutU.spanMatch(stdMI$rawTail[4,],aZoid,posDiff=0 )	# < 4>
-					if( fCutU.hasPtn(c( 4, 8 ),aZoid) ) cnt<-cnt+1
-					if( fCutU.hasPtn(c( 4,NA,17,31,32,23 ),aZoid,thld=3,fixIdx=1) ) cnt<-cnt+1
-					if( fCutU.hasPtn(c( 4, 6,15),aZoid) ) cnt<-cnt+1	# ++
-					cnt <- cnt + fCutU.spanMatch(stdMI$rawTail[6,],aZoid,posDiff=-1 )	# < 6>
-					if( fCutU.hasPtn(c( 6, 7,NA,NA,13 ),aZoid) ) cnt<-cnt+1
-					if( fCutU.hasPtn(c( 4, 6,15),aZoid) ) cnt<-cnt+1	# ++
-					cnt <- cnt + fCutU.spanMatch(stdMI$rawTail[6,],aZoid,posDiff=-1 )	# < 8>
-					if( fCutU.hasPtn(c( 4, 8 ),aZoid) ) cnt<-cnt+1
-					if( fCutU.hasPtn(c( 8,13,19),aZoid) ) cnt<-cnt+1	# ++
-					cnt <- cnt + fCutU.spanMatch(stdMI$rawTail[6,],aZoid,posDiff=0 )	# <13>
-					if( fCutU.hasPtn(c( 6,NA,13 ),aZoid) ) cnt<-cnt+1
-					if( fCutU.hasPtn(c(   12,13,15,NA,39 ),aZoid,thld=3,fixIdx=2 ) ) cnt<-cnt+1
-					if( fCutU.hasPtn(c(10,13,27),aZoid) ) cnt<-cnt+1	# ++
-					cnt <- cnt + fCutU.spanMatch(stdMI$rawTail[6,],aZoid,posDiff=0 )	# <15>
-					if( fCutU.hasPtn(c( 8,16,15,NA,20),aZoid,thld=3,fixIdx=3) ) cnt<-cnt+1
-					if( fCutU.hasPtn(c( 6,15,25),aZoid) ) cnt<-cnt+1	# ++
-					cnt <- cnt + fCutU.spanMatch(stdMI$rawTail[5,],aZoid,posDiff=0 )	# <23>
-					if( fCutU.hasPtn(c( 5,NA,NA,NA,23 ),aZoid) ) cnt<-cnt+1
-					if( fCutU.hasPtn(c(   13,17,20,23 ),aZoid,thld=3,fixIdx=4) ) cnt<-cnt+1
-					if( fCutU.hasPtn(c( 8,23,33),aZoid) ) cnt<-cnt+1	# ++
-					if( fCutU.hasPtn(c(14,23,28),aZoid) ) cnt<-cnt+1	# ++
-					cnt <- cnt + fCutU.spanMatch(stdMI$rawTail[3,],aZoid,posDiff=1 )	# <33>
-					if( fCutU.hasPtn(c( 11,26,NA,29,33 ),aZoid,thld=3,fixIdx=5) ) cnt<-cnt+1
-					if( fCutU.hasPtn(c(25,26,33),aZoid) ) cnt<-cnt+1	# ++
-					# u0.zoidInc_ana(stdMI$rawTail[n,],stdMI$rawTail[m,])
-
 					return( cnt )
 				})	;kIdx<-anaFltCnt(cntMtx[,"raw"],rpt)
+    cntMtx[,"rawFV"] <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+					# anaMtx.freqVal( stdMI$rawTail )
+					cnt <- 0
+					cnt <- cnt + neighborObj$matchCnt( aZoid )
+					
+					cnt <- cnt + fCutU.spanMatch(stdMI$rawTail[4,],aZoid,posDiff=0 )	# < 4>
+					if( fCutU.hasPtn(c( 4,NA,17,31,32,23),aZoid,thld=3,fixIdx=1) ) cnt<-cnt+1
+					if( fCutU.hasPtn(c( 4, 8),aZoid) ) cnt<-cnt+1
+					cnt <- cnt + fCutU.spanMatch(stdMI$rawTail[4,],aZoid,posDiff=-1 )	# < 6>
+					if( fCutU.hasPtn(c( 6, 7,NA,NA,13),aZoid) ) cnt<-cnt+1
+					cnt <- cnt + fCutU.spanMatch(stdMI$rawTail[6,],aZoid,posDiff=-1 )	# < 8>
+					if( fCutU.hasPtn(c( 4, 8),aZoid) ) cnt<-cnt+1
+					cnt <- cnt + fCutU.spanMatch(stdMI$rawTail[6,],aZoid,posDiff=0 )	# <13>
+					if( fCutU.hasPtn(c( 6,NA,13         ),aZoid) ) cnt<-cnt+1
+					if( fCutU.hasPtn(c(   12,13,35,NA,39),aZoid,thld=3,fixIdx=2) ) cnt<-cnt+1
+					cnt <- cnt + fCutU.spanMatch(stdMI$rawTail[6,],aZoid,posDiff=0 )	# <15>
+					if( fCutU.hasPtn(c( 8,NA,15,NA,20),aZoid) ) cnt<-cnt+1
+					cnt <- cnt + fCutU.spanMatch(stdMI$rawTail[5,],aZoid,posDiff=0 )	# <23>
+					if( fCutU.hasPtn(c( 5,NA,NA,NA,23),aZoid) ) cnt<-cnt+1
+					if( fCutU.hasPtn(c(   13,18,20,23),aZoid,thld=3,fixIdx=4) ) cnt<-cnt+1
+					cnt <- cnt + fCutU.spanMatch(stdMI$rawTail[3,],aZoid,posDiff=1 )	# <33>
+					if( fCutU.hasPtn(c(11,26,NA,29,33),aZoid,thld=3,fixIdx=5) ) cnt<-cnt+1
+
+					return( cnt )
+				})	;kIdx<-anaFltCnt(cntMtx[,"rawFV"],rpt)
     cntMtx[,"rem"] <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
 					# u0.zoidMtx_ana( stdMI$rawTail%%10 )
 					cnt <- 0
@@ -953,7 +945,6 @@ fCutCnt.nextQuo10 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 					if( fCutU.remFilt(aZoid[4],c(5,3,4),c(     )) ) cnt<-cnt+1 # 4
 					if( fCutU.remFilt(aZoid[5],c(3,5,7),c(37   )) ) cnt<-cnt+1 # 5
 					if( fCutU.remFilt(aZoid[6],c(     ),c(     )) ) cnt<-cnt+1 # 6
-
 					return( cnt )
 				})	;kIdx<-anaFltCnt(cntMtx[,"rem"],rpt)
     cntMtx[,"cStep"] <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
@@ -1004,7 +995,7 @@ fCutCnt.nextQuo10 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 	score <- sapply( 1:length(flgCnt) ,function( idx ){
 					if( any(cntMtx[idx,] >cntThld ) )	return( 2 )
 					if( any(cntMtx[idx,]==cntThld ) )	return( sum(cntMtx[idx,]==2) )
-					if( 0<cntMtx[idx,"raw"]){
+					if( 0<sum(cntMtx[idx,c("raw","rawFV")]) ){
 						cnt <- sum(cntMtx[idx,c("rem","cStep","fStep")])
 						if( cnt>1 )	return( 1 )
 					}
@@ -1016,7 +1007,7 @@ fCutCnt.nextQuo10 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 
 } # fCutCnt.nextQuo10()
 
-# undone
+# done
 fCutCnt.nextBin <- function( gEnv ,allIdxF ,rpt=FALSE ){
 
 	flgCnt <- rep( 0 ,length(allIdxF) )
@@ -1024,7 +1015,6 @@ fCutCnt.nextBin <- function( gEnv ,allIdxF ,rpt=FALSE ){
 	if( 0==nrow(zMtx) ) return( rep(0,length(allIdxF)) )
 
 	stdMI <- fCutU.getMtxInfo( zMtx )
-	# mtxLen  lastZoid    rem quo10   cStep   fStep   rawTail cStepTail   quoTail quoRebPtn
 	# rptObj<-anaMtx(stdMI$rawTail,stdZoid);u0.zoidMtx_ana.rpt( stdMI$rawTail )
 
 	flgCnt <- flgCnt + fCutU.commonCutCnt( gEnv ,allIdxF ,zMtx )
@@ -1046,6 +1036,7 @@ fCutCnt.nextBin <- function( gEnv ,allIdxF ,rpt=FALSE ){
     flgCnt[!flag] <- flgCnt[!flag] + 1
 
 	# -- conditional
+	neighborObj <- fCutU.neighborObj( stdMI$rawTail )
 	cntMtx <- matrix( 0 ,nrow=length(allIdxF) ,ncol=length(cntThld) )	;colnames(cntMtx)=names(cntThld)
     cntMtx[,"raw"] <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
 					cnt <- 0
@@ -1055,36 +1046,35 @@ fCutCnt.nextBin <- function( gEnv ,allIdxF ,rpt=FALSE ){
 					if( aZoid[4]%in%c(        ) ) cnt<-cnt+1
 					if( aZoid[5]%in%c(42,12,27) ) cnt<-cnt+1
 					if( aZoid[6]%in%c(45,44   ) ) cnt<-cnt+1
-
-					cnt <- cnt + fCutU.spanMatch(stdMI$rawTail[6,],aZoid,posDiff=0 )	# < 1>
-					if( fCutU.hasPtn(c( 1, 5 ),aZoid) ) cnt<-cnt+1
-					if( fCutU.hasPtn(c( 1,NA, 8,NA,30 ),aZoid) ) cnt<-cnt+1
-					if( fCutU.hasPtn(c( 1, 3,12),aZoid) ) cnt<-cnt+1	# ++
-					cnt <- cnt + fCutU.spanMatch(stdMI$rawTail[5,],aZoid,posDiff=1 )	# < 3>
-					if( fCutU.hasPtn(c( 3,NA,20       ),aZoid) ) cnt<-cnt+1
-					if( fCutU.hasPtn(c( 3, 8,NA,15,44 ),aZoid,thld=3,fixIdx=1) ) cnt<-cnt+1
-					if( fCutU.hasPtn(c( 1, 3,12),aZoid) ) cnt<-cnt+1	# ++
-					cnt <- cnt + fCutU.spanMatch(stdMI$rawTail[6,],aZoid,posDiff=1 )	# <12>
-					if( fCutU.hasPtn(c( 5,17,12,35 ),aZoid,thld=3,fixIdx=3) ) cnt<-cnt+1
-					if( fCutU.hasPtn(c( 3,12,21),aZoid) ) cnt<-cnt+1	# ++
-					cnt <- cnt + fCutU.spanMatch(stdMI$rawTail[6,],aZoid,posDiff=0 )	# <16>
-					if( fCutU.hasPtn(c( 16,19,44,34,45 ),aZoid,thld=3,fixIdx=1) ) cnt<-cnt+1
-					if( fCutU.hasPtn(c( 3,16,22),aZoid) ) cnt<-cnt+1	# ++
-					cnt <- cnt + fCutU.spanMatch(stdMI$rawTail[6,],aZoid,posDiff=0 )	# <25>
-					if( fCutU.hasPtn(c( 5,20,25,28,40,41 ),aZoid,thld=3,fixIdx=1) ) cnt<-cnt+1
-					if( fCutU.hasPtn(c(16,25,30),aZoid) ) cnt<-cnt+1	# ++
-					cnt <- cnt + fCutU.spanMatch(stdMI$rawTail[5,],aZoid,posDiff=-1 )	# <43>
-					if( fCutU.hasPtn(c(14,NA,NA,NA,43),aZoid) ) cnt<-cnt+1
-					if( fCutU.hasPtn(c(   29,36,28,43),aZoid,thld=3,fixIdx=4) ) cnt<-cnt+1
-					if( fCutU.hasPtn(c(35,43,45),aZoid) ) cnt<-cnt+1	# ++
-					cnt <- cnt + fCutU.spanMatch(stdMI$rawTail[5,],aZoid,posDiff=1 )	# <44>
-					if( fCutU.hasPtn(c(21,32,NA,NA,44),aZoid) ) cnt<-cnt+1
-					if( fCutU.hasPtn(c(37,38,44),aZoid) ) cnt<-cnt+1	# ++
-					cnt <- cnt + fCutU.spanMatch(stdMI$rawTail[5,],aZoid,posDiff=0 )	# <45>
-					if( fCutU.hasPtn(c(35,43,45),aZoid) ) cnt<-cnt+1	# ++
-					# u0.zoidInc_ana(stdMI$rawTail[n,],stdMI$rawTail[m,])
 					return( cnt )
 				})	;kIdx<-anaFltCnt(cntMtx[,"raw"],rpt)
+    cntMtx[,"rawFV"] <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+					# anaMtx.freqVal( stdMI$rawTail )
+					cnt <- 0
+					cnt <- cnt + neighborObj$matchCnt( aZoid )
+					
+					cnt <- cnt + fCutU.spanMatch(stdMI$rawTail[6,],aZoid,posDiff=0 )	# < 1>
+					if( fCutU.hasPtn(c( 1, 5),aZoid) ) cnt<-cnt+1
+					if( fCutU.hasPtn(c( 1,NA, 8,NA,30),aZoid) ) cnt<-cnt+1
+					cnt <- cnt + fCutU.spanMatch(stdMI$rawTail[5,],aZoid,posDiff=1 )	# < 3>
+					if( fCutU.hasPtn(c( 3,NA,20),aZoid) ) cnt<-cnt+1
+					if( fCutU.hasPtn(c( 3, 8,NA,15,44),aZoid,thld=3,fixIdx=1) ) cnt<-cnt+1
+					cnt <- cnt + fCutU.spanMatch(stdMI$rawTail[6,],aZoid,posDiff=1 )	# <12>
+					if( fCutU.hasPtn(c( 7,NA,12,35),aZoid) ) cnt<-cnt+1
+					cnt <- cnt + fCutU.spanMatch(stdMI$rawTail[6,],aZoid,posDiff=0 )	# <16>
+					if( fCutU.hasPtn(c(16,NA,NA,NA,45),aZoid) ) cnt<-cnt+1
+					if( fCutU.hasPtn(c(16,19,44,34   ),aZoid,thld=3,fixIdx=1) ) cnt<-cnt+1
+					cnt <- cnt + fCutU.spanMatch(stdMI$rawTail[6,],aZoid,posDiff=0 )	# <25>
+					if( fCutU.hasPtn(c( 5,20,25,28,40,41),aZoid,thld=3,fixIdx=3) ) cnt<-cnt+1
+					cnt <- cnt + fCutU.spanMatch(stdMI$rawTail[5,],aZoid,posDiff=-1 )	# <43>
+					if( fCutU.hasPtn(c(14,NA,NA,NA,43),aZoid) ) cnt<-cnt+1
+					if( fCutU.hasPtn(c(   29,36,NA,43),aZoid) ) cnt<-cnt+1
+					cnt <- cnt + fCutU.spanMatch(stdMI$rawTail[5,],aZoid,posDiff=1 )	# <44>
+					if( fCutU.hasPtn(c(21,32,NA,NA,44),aZoid) ) cnt<-cnt+1
+					cnt <- cnt + fCutU.spanMatch(stdMI$rawTail[5,],aZoid,posDiff=0 )	# <45>
+
+					return( cnt )
+				})	;kIdx<-anaFltCnt(cntMtx[,"rawFV"],rpt)
     cntMtx[,"rem"] <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
 					# u0.zoidMtx_ana( stdMI$rawTail%%10 )
 					cnt <- 0
@@ -1139,7 +1129,7 @@ fCutCnt.nextBin <- function( gEnv ,allIdxF ,rpt=FALSE ){
 	score <- sapply( 1:length(flgCnt) ,function( idx ){
 					if( any(cntMtx[idx,] >cntThld ) )	return( 2 )
 					if( any(cntMtx[idx,]==cntThld ) )	return( sum(cntMtx[idx,]==2) )
-					if( 0<cntMtx[idx,"raw"]){
+					if( 0<sum(cntMtx[idx,c("raw","rawFV")]) ){
 						cnt <- sum(cntMtx[idx,c("rem","cStep","fStep")])
 						if( cnt>1 )	return( 1 )
 					}
@@ -1151,7 +1141,7 @@ fCutCnt.nextBin <- function( gEnv ,allIdxF ,rpt=FALSE ){
 
 } # fCutCnt.nextBin()
 
-# undone
+# done
 fCutCnt.nextRebNum <- function( gEnv ,allIdxF ,rpt=FALSE ){
 
 	flgCnt <- rep( 0 ,length(allIdxF) )
@@ -1160,7 +1150,6 @@ fCutCnt.nextRebNum <- function( gEnv ,allIdxF ,rpt=FALSE ){
 	if( 0==nrow(zMtx) ) return( rep(0,length(allIdxF)) )
 
 	stdMI <- fCutU.getMtxInfo( zMtx )
-	# mtxLen  lastZoid    rem quo10   cStep   fStep   rawTail cStepTail   quoTail quoRebPtn
 	# rptObj<-anaMtx(stdMI$rawTail,stdZoid);u0.zoidMtx_ana.rpt( stdMI$rawTail )
 
 	flgCnt <- flgCnt + fCutU.commonCutCnt( gEnv ,allIdxF ,zMtx )
@@ -1193,35 +1182,32 @@ fCutCnt.nextRebNum <- function( gEnv ,allIdxF ,rpt=FALSE ){
 					if( aZoid[5]%in%c( 31 ) ) cnt<-cnt+1
 					if( aZoid[6]%in%c(    ) ) cnt<-cnt+1
 
+					return( cnt )
+				})	;kIdx<-anaFltCnt(cntMtx[,"raw"],rpt)				
+	neighborObj <- fCutU.neighborObj( stdMI$rawTail )
+    cntMtx[,"rawFV"] <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+					# anaMtx.freqVal( stdMI$rawTail )
+					cnt <- 0
+					cnt <- cnt + neighborObj$matchCnt( aZoid )
+					
 					cnt <- cnt + fCutU.spanMatch(stdMI$rawTail[5,],aZoid,posDiff=0 )	# < 1>
 					if( fCutU.hasPtn(c( 1, 7 ),aZoid) ) cnt<-cnt+1
-					if( fCutU.hasPtn(c( 1,NA,16,42,NA,45 ),aZoid,thld=3,fixIdx=1) ) cnt<-cnt+1
-					if( fCutU.hasPtn(c( 1, 5, 6),aZoid) ) cnt<-cnt+1	# ++
-					if( fCutU.hasPtn(c( 1, 6,11),aZoid) ) cnt<-cnt+1	# ++
+					if( fCutU.hasPtn(c( 1,NA,16,42,NA,45),aZoid,thld=3,fixIdx=1) ) cnt<-cnt+1
 					cnt <- cnt + fCutU.spanMatch(stdMI$rawTail[3,],aZoid,posDiff=-1 )	# < 5>
-					if( fCutU.hasPtn(c( 5,NA,NA,NA,39 ),aZoid) ) cnt<-cnt+1
-					if( fCutU.hasPtn(c( 5,38,NA,44    ),aZoid) ) cnt<-cnt+1
-					if( fCutU.hasPtn(c( 5,NA,14),aZoid) ) cnt<-cnt+1
+					if( fCutU.hasPtn(c( 5,NA,NA,NA,39),aZoid) ) cnt<-cnt+1
+					if( fCutU.hasPtn(c( 5,38,NA,44   ),aZoid) ) cnt<-cnt+1
 					cnt <- cnt + fCutU.spanMatch(stdMI$rawTail[5,],aZoid,posDiff=-1 )	# < 6>
-					if( fCutU.hasPtn(c( 6, 8,36,29 ),aZoid,thld=3,fixIdx=1) ) cnt<-cnt+1
-					if( fCutU.hasPtn(c( 1, 6,11),aZoid) ) cnt<-cnt+1	# ++
-					cnt <- cnt + fCutU.spanMatch(stdMI$rawTail[4,],aZoid,posDiff=1 )	# <11>
-					if( fCutU.hasPtn(c( 7,11 ),aZoid) ) cnt<-cnt+1
-					if( fCutU.hasPtn(c( 5,11,14),aZoid) ) cnt<-cnt+1	# ++
-					if( fCutU.hasPtn(c( 6,11,28),aZoid) ) cnt<-cnt+1	# ++
-					cnt <- cnt + fCutU.spanMatch(stdMI$rawTail[6,],aZoid,posDiff=3 )	# <14>
-					if( fCutU.hasPtn(c(11,14,27),aZoid) ) cnt<-cnt+1	# ++
-					if( fCutU.hasPtn(c( 6,14,20),aZoid) ) cnt<-cnt+1	# ++
-					if( fCutU.hasPtn(c(14,15,18),aZoid) ) cnt<-cnt+1	# ++
+					if( fCutU.hasPtn(c(  6, 8,36,29),aZoid,thld=3,fixIdx=1) ) cnt<-cnt+1
+					cnt <- cnt + fCutU.spanMatch(stdMI$rawTail[3,],aZoid,posDiff=1 )	# <11>
+					if( fCutU.hasPtn(c( 7,11      ),aZoid) ) cnt<-cnt+1
+					if( fCutU.hasPtn(c(   11,42,41),aZoid) ) cnt<-cnt+1
+					cnt <- cnt + fCutU.spanMatch(stdMI$rawTail[6,],aZoid,posDiff=-3 )	# <14>
 					cnt <- cnt + fCutU.spanMatch(stdMI$rawTail[5,],aZoid,posDiff=-2 )	# <35>
-					if( fCutU.hasPtn(c(21,26,35),aZoid) ) cnt<-cnt+1	# ++
-					if( fCutU.hasPtn(c(33,35,37),aZoid) ) cnt<-cnt+1	# ++
 					cnt <- cnt + fCutU.spanMatch(stdMI$rawTail[3,],aZoid,posDiff=-1 )	# <39>
-					if( fCutU.hasPtn(c( 5,NA,NA,NA,39 ),aZoid) ) cnt<-cnt+1
-					if( fCutU.hasPtn(c(14,20,39),aZoid) ) cnt<-cnt+1	# ++
-					# u0.zoidInc_ana(stdMI$rawTail[n,],stdMI$rawTail[m,])
+					if( fCutU.hasPtn(c( 5,NA,NA,NA,39),aZoid) ) cnt<-cnt+1
+
 					return( cnt )
-				})	;kIdx<-anaFltCnt(cntMtx[,"raw"],rpt)
+				})	;kIdx<-anaFltCnt(cntMtx[,"rawFV"],rpt)
     cntMtx[,"rem"] <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
 					# u0.zoidMtx_ana( stdMI$rawTail%%10 )
 					cnt <- 0
@@ -1278,7 +1264,7 @@ fCutCnt.nextRebNum <- function( gEnv ,allIdxF ,rpt=FALSE ){
 	score <- sapply( 1:length(flgCnt) ,function( idx ){
 					if( any(cntMtx[idx,] >cntThld ) )	return( 2 )
 					if( any(cntMtx[idx,]==cntThld ) )	return( sum(cntMtx[idx,]==2) )
-					if( 0<cntMtx[idx,"raw"]){
+					if( 0<sum(cntMtx[idx,c("raw","rawFV")]) ){
 						cnt <- sum(cntMtx[idx,c("rem","cStep","fStep")])
 						if( cnt>1 )	return( 1 )
 					}
@@ -1291,7 +1277,7 @@ fCutCnt.nextRebNum <- function( gEnv ,allIdxF ,rpt=FALSE ){
 
 } # fCutCnt.nextRebNum()
 
-# undone
+# done
 fCutCnt.nextCStepBin <- function( gEnv ,allIdxF ,rpt=FALSE ){
 
 	flgCnt <- rep( 0 ,length(allIdxF) )
@@ -1300,7 +1286,6 @@ fCutCnt.nextCStepBin <- function( gEnv ,allIdxF ,rpt=FALSE ){
 
 	# rawVal, cStep 모두 특이하다. 주의할 것.
 	stdMI <- fCutU.getMtxInfo( zMtx )
-	# mtxLen  lastZoid    rem quo10   cStep   fStep   rawTail cStepTail   quoTail quoRebPtn
 	# rptObj<-anaMtx(stdMI$rawTail,stdZoid);u0.zoidMtx_ana.rpt( stdMI$rawTail )
 	
 	flgCnt <- flgCnt + fCutU.commonCutCnt( gEnv ,allIdxF ,zMtx )
@@ -1326,46 +1311,37 @@ fCutCnt.nextCStepBin <- function( gEnv ,allIdxF ,rpt=FALSE ){
 					if( aZoid[4]%in%c( 20       ) ) cnt<-cnt+1
 					if( aZoid[5]%in%c( 42,12,16 ) ) cnt<-cnt+1
 					if( aZoid[6]%in%c( 45       ) ) cnt<-cnt+1
-
-					cnt <- cnt + fCutU.spanMatch(stdMI$rawTail[6,],aZoid,posDiff=0 )	# < 1>
-					if( fCutU.hasPtn(c( 1,NA,NA,NA,NA,45 ),aZoid) ) cnt<-cnt+1
-					if( fCutU.hasPtn(c( 1, 5 ),aZoid) ) cnt<-cnt+1
-					if( fCutU.hasPtn(c( 1,NA, 8,NA,30 ),aZoid) ) cnt<-cnt+1
-					if( fCutU.hasPtn(c( 1, 3,12),aZoid) ) cnt<-cnt+1	# ++
-					if( fCutU.hasPtn(c( 1, 6,17),aZoid) ) cnt<-cnt+1	# ++
-					cnt <- cnt + fCutU.spanMatch(stdMI$rawTail[6,],aZoid,posDiff=-1 )	# < 6>
-					if( fCutU.hasPtn(c( 6,15 ),aZoid) ) cnt<-cnt+1
-					if( fCutU.hasPtn(c( 6,17,22),aZoid) ) cnt<-cnt+1	# ++
-					if( fCutU.hasPtn(c( 6,16,37),aZoid) ) cnt<-cnt+1	# ++
-					cnt <- cnt + fCutU.spanMatch(stdMI$rawTail[6,],aZoid,posDiff=1 )	# <12>
-					if( fCutU.hasPtn(c( 7,NA,12,35 ),aZoid) ) cnt<-cnt+1
-					if( fCutU.hasPtn(c( 3,12,21),aZoid) ) cnt<-cnt+1	# ++
-					cnt <- cnt + fCutU.spanMatch(stdMI$rawTail[3,],aZoid,posDiff=2 )	# <26>
-					if( fCutU.hasPtn(c( 13,NA,26 ),aZoid) ) cnt<-cnt+1
-					if( fCutU.hasPtn(c(21,26,41),aZoid) ) cnt<-cnt+1	# ++
-					if( fCutU.hasPtn(c(18,26,27),aZoid) ) cnt<-cnt+1	# ++
-					cnt <- cnt + fCutU.spanMatch(stdMI$rawTail[6,],aZoid,posDiff=-2 )	# <27>
-					if( fCutU.hasPtn(c(26,27,40),aZoid) ) cnt<-cnt+1	# ++
-					if( fCutU.hasPtn(c(15,27,33),aZoid) ) cnt<-cnt+1	# ++
-					cnt <- cnt + fCutU.spanMatch(stdMI$rawTail[4,],aZoid,posDiff=0 )	# <28>
-					if( fCutU.hasPtn(c( 28,45 ),aZoid) ) cnt<-cnt+1
-					if( fCutU.hasPtn(c(22,28,45),aZoid) ) cnt<-cnt+1	# ++
-					cnt <- cnt + fCutU.spanMatch(stdMI$rawTail[6,],aZoid,posDiff=1 )	# <41>
-					if( fCutU.hasPtn(c( 8, 5,14,41 ),aZoid,thld=3,fixIdx=4) ) cnt<-cnt+1
-					if( fCutU.hasPtn(c(27,40,41),aZoid) ) cnt<-cnt+1	# ++
-					if( fCutU.hasPtn(c(38,41,45),aZoid) ) cnt<-cnt+1	# ++
-					if( fCutU.hasPtn(c(21,26,41),aZoid) ) cnt<-cnt+1	# ++
-					cnt <- cnt + fCutU.spanMatch(stdMI$rawTail[5,],aZoid,posDiff=0 )	# <45>
-					if( fCutU.hasPtn(c( 1,NA,NA,NA,NA,45 ),aZoid) ) cnt<-cnt+1
-					if( fCutU.hasPtn(c(    8, 3,15,45),aZoid,thld=3,fixIdx=4) ) cnt<-cnt+1
-					if( fCutU.hasPtn(c( 5,NA,NA,NA,45),aZoid) ) cnt<-cnt+1
-					if( fCutU.hasPtn(c(35,43,45),aZoid) ) cnt<-cnt+1	# ++
-					if( fCutU.hasPtn(c(22,28,45),aZoid) ) cnt<-cnt+1	# ++
-					if( fCutU.hasPtn(c(38,41,45),aZoid) ) cnt<-cnt+1	# ++
-					# u0.zoidInc_ana(stdMI$rawTail[n,],stdMI$rawTail[m,])
-
 					return( cnt )
 				})	;kIdx<-anaFltCnt(cntMtx[,"raw"],rpt)
+	neighborObj <- fCutU.neighborObj( stdMI$rawTail )
+    cntMtx[,"rawFV"] <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+					# anaMtx.freqVal( stdMI$rawTail )
+					cnt <- 0
+					cnt <- cnt + neighborObj$matchCnt( aZoid )
+					
+					cnt <- cnt + fCutU.spanMatch(stdMI$rawTail[6,],aZoid,posDiff=0 )	# < 1>
+					if( fCutU.hasPtn(c( 1, 5         ),aZoid) ) cnt<-cnt+1
+					if( fCutU.hasPtn(c( 1,NA, 8,NA,30),aZoid,thld=3,fixIdx=1) ) cnt<-cnt+1
+					if( fCutU.hasPtn(c( 1,NA,NA,NA,28   ),aZoid) ) cnt<-cnt+1
+					cnt <- cnt + fCutU.spanMatch(stdMI$rawTail[6,],aZoid,posDiff=-1 )	# < 6>
+					if( fCutU.hasPtn(c( 6,15),aZoid) ) cnt<-cnt+1
+					cnt <- cnt + fCutU.spanMatch(stdMI$rawTail[6,],aZoid,posDiff=1 )	# <12>
+					if( fCutU.hasPtn(c( 7,NA,12,35),aZoid) ) cnt<-cnt+1
+					cnt <- cnt + fCutU.spanMatch(stdMI$rawTail[3,],aZoid,posDiff=2 )	# <26>
+					if( fCutU.hasPtn(c(13,NA,26),aZoid) ) cnt<-cnt+1
+					cnt <- cnt + fCutU.spanMatch(stdMI$rawTail[6,],aZoid,posDiff=-2 )	# <27>
+					if( fCutU.hasPtn(c( 4,27,NA,29),aZoid) ) cnt<-cnt+1
+					cnt <- cnt + fCutU.spanMatch(stdMI$rawTail[4,],aZoid,posDiff=0 )	# <28>
+					if( fCutU.hasPtn(c( 1,NA,NA,NA,28   ),aZoid) ) cnt<-cnt+1
+					if( fCutU.hasPtn(c(            28,45),aZoid) ) cnt<-cnt+1
+					if( fCutU.hasPtn(c(    2, 3,NA,28   ),aZoid) ) cnt<-cnt+1
+					cnt <- cnt + fCutU.spanMatch(stdMI$rawTail[6,],aZoid,posDiff=1 )	# <41>
+					if( fCutU.hasPtn(c(  8, 5,14,41),aZoid,thld=3,fixIdx=4) ) cnt<-cnt+1
+					cnt <- cnt + fCutU.spanMatch(stdMI$rawTail[5,],aZoid,posDiff=0 )	# <45>
+					if( fCutU.hasPtn(c(            28,45),aZoid) ) cnt<-cnt+1
+
+					return( cnt )
+				})	;kIdx<-anaFltCnt(cntMtx[,"rawFV"],rpt)
     cntMtx[,"rem"] <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
 					# u0.zoidMtx_ana( stdMI$rawTail%%10 )
 					cnt <- 0
@@ -1417,7 +1393,7 @@ fCutCnt.nextCStepBin <- function( gEnv ,allIdxF ,rpt=FALSE ){
 	score <- sapply( 1:length(flgCnt) ,function( idx ){
 					if( any(cntMtx[idx,] >cntThld ) )	return( 2 )
 					if( any(cntMtx[idx,]==cntThld ) )	return( sum(cntMtx[idx,]==2) )
-					if( 0<cntMtx[idx,"raw"]){
+					if( 0<sum(cntMtx[idx,c("raw","rawFV")]) ){
 						cnt <- sum(cntMtx[idx,c("rem","cStep","fStep")])
 						if( cnt>1 )	return( 1 )
 					}
@@ -1430,7 +1406,7 @@ fCutCnt.nextCStepBin <- function( gEnv ,allIdxF ,rpt=FALSE ){
 
 } # fCutCnt.nextCStepBin()
 
-# undone
+# done
 fCutCnt.nextFStepBin <- function( gEnv ,allIdxF ,rpt=FALSE ){
 
 	flgCnt <- rep( 0 ,length(allIdxF) )
@@ -1438,7 +1414,6 @@ fCutCnt.nextFStepBin <- function( gEnv ,allIdxF ,rpt=FALSE ){
 	if( 0==nrow(zMtx) ) return( rep(0,length(allIdxF)) )
 
 	stdMI <- fCutU.getMtxInfo( zMtx )
-	# mtxLen  lastZoid    rem quo10   cStep   fStep   rawTail cStepTail   quoTail quoRebPtn
 	# rptObj<-anaMtx(stdMI$rawTail,stdZoid);u0.zoidMtx_ana.rpt( stdMI$rawTail )
 
 	flgCnt <- flgCnt + fCutU.commonCutCnt( gEnv ,allIdxF ,zMtx )
@@ -1468,54 +1443,43 @@ fCutCnt.nextFStepBin <- function( gEnv ,allIdxF ,rpt=FALSE ){
 					if( aZoid[4]%in%c(       ) ) cnt<-cnt+1
 					if( aZoid[5]%in%c(       ) ) cnt<-cnt+1
 					if( aZoid[6]%in%c( 43,38 ) ) cnt<-cnt+1
-
+					return( cnt )
+				})	;kIdx<-anaFltCnt(cntMtx[,"raw"],rpt)
+	neighborObj <- fCutU.neighborObj( stdMI$rawTail )
+    cntMtx[,"rawFV"] <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+					# anaMtx.freqVal( stdMI$rawTail )
+					cnt <- 0
 					cnt <- cnt + neighborObj$matchCnt( aZoid )
 
 					cnt <- cnt + fCutU.spanMatch(stdMI$rawTail[5,],aZoid,posDiff=0 )	# < 6>
-					if( fCutU.hasPtn(c( 6,7 ),aZoid) ) cnt<-cnt+1
-					if( fCutU.hasPtn(c( 6,NA,17 ),aZoid) ) cnt<-cnt+1
-					if( fCutU.hasPtn(c( 6,NA,NA,17,19,33 ),aZoid,thld=3,fixIdx=1) ) cnt<-cnt+1
+					if( fCutU.hasPtn(c(  6, 7 ),aZoid) ) cnt<-cnt+1
+					if( fCutU.hasPtn(c(  6,NA,17 ),aZoid) ) cnt<-cnt+1
+					if( fCutU.hasPtn(c(  6,NA,NA,17,19,33 ),aZoid,thld=3,fixIdx=1) ) cnt<-cnt+1
 					cnt <- cnt + fCutU.spanMatch(stdMI$rawTail[5,],aZoid,posDiff=0 )	# < 7>
-					if( fCutU.hasPtn(c( 6,7 ),aZoid) ) cnt<-cnt+1
-					if( fCutU.hasPtn(c(    7,NA,NA,41 ),aZoid) ) cnt<-cnt+1
-					if( fCutU.hasPtn(c( 7,17 ),aZoid) ) cnt<-cnt+1
-					if( fCutU.hasPtn(c( 7,NA,17,19,33 ),aZoid,thld=3,fixIdx=1) ) cnt<-cnt+1
-					if( fCutU.hasPtn(c( 7, 9,10 ),aZoid) ) cnt<-cnt+1	# ++
-					if( fCutU.hasPtn(c( 4, 7,11 ),aZoid) ) cnt<-cnt+1	# ++
+					if( fCutU.hasPtn(c(  6, 7 ),aZoid) ) cnt<-cnt+1
+					if( fCutU.hasPtn(c(  7,17 ),aZoid) ) cnt<-cnt+1
+					if( fCutU.hasPtn(c(  7,NA,17,19,33),aZoid) ) cnt<-cnt+1
 					cnt <- cnt + fCutU.spanMatch(stdMI$rawTail[5,],aZoid,posDiff=0 )	# < 9>
-					if( fCutU.hasPtn(c( 9,14,33 ),aZoid) ) cnt<-cnt+1
-					if( fCutU.hasPtn(c( 7, 9,10 ),aZoid) ) cnt<-cnt+1	# ++
-					if( fCutU.hasPtn(c( 1, 9,12 ),aZoid) ) cnt<-cnt+1	# ++
+					if( fCutU.hasPtn(c( 9,14,33),aZoid) ) cnt<-cnt+1
 					cnt <- cnt + fCutU.spanMatch(stdMI$rawTail[6,],aZoid,posDiff=3 )	# <11>
-					if( fCutU.hasPtn(c( 11,18,21 ),aZoid) ) cnt<-cnt+1	# ++
-					if( fCutU.hasPtn(c(  7,11,31 ),aZoid) ) cnt<-cnt+1	# ++
 					cnt <- cnt + fCutU.spanMatch(stdMI$rawTail[2,],aZoid,posDiff=1 )	# <18>
-					if( fCutU.hasPtn(c(   18,NA,NA,39 ),aZoid) ) cnt<-cnt+1
-					if( fCutU.hasPtn(c( 3,18,NA,24    ),aZoid) ) cnt<-cnt+1
-					if( fCutU.hasPtn(c( 11,18,21 ),aZoid) ) cnt<-cnt+1	# ++
+					if( fCutU.hasPtn(c(   18,NA,NA,39),aZoid) ) cnt<-cnt+1
+					if( fCutU.hasPtn(c( 3,18,NA,24   ),aZoid) ) cnt<-cnt+1
 					cnt <- cnt + fCutU.spanMatch(stdMI$rawTail[5,],aZoid,posDiff=1 )	# <19>
-					if( fCutU.hasPtn(c( 8,NA,19 ),aZoid) ) cnt<-cnt+1
-					if( fCutU.hasPtn(c( 7,19,21),aZoid) ) cnt<-cnt+1	# ++
+					if( fCutU.hasPtn(c( 8,NA,19      ),aZoid) ) cnt<-cnt+1
+					if( fCutU.hasPtn(c(      19,39,35),aZoid) ) cnt<-cnt+1
 					cnt <- cnt + fCutU.spanMatch(stdMI$rawTail[4,],aZoid,posDiff=1 )	# <21>
-					if( fCutU.hasPtn(c( 20,21 ),aZoid) ) cnt<-cnt+1
-					if( fCutU.hasPtn(c(18,21,36),aZoid) ) cnt<-cnt+1	# ++
-					if( fCutU.hasPtn(c(19,21,41),aZoid) ) cnt<-cnt+1	# ++
+					if( fCutU.hasPtn(c(20,21),aZoid) ) cnt<-cnt+1
 					cnt <- cnt + fCutU.spanMatch(stdMI$rawTail[6,],aZoid,posDiff=0 )	# <31>
-					if( fCutU.hasPtn(c( 11,14,13,15,31 ),aZoid,thld=3,fixIdx=5) ) cnt<-cnt+1
-					if( fCutU.hasPtn(c( 11,31,41 ),aZoid) ) cnt<-cnt+1	# ++
-					if( fCutU.hasPtn(c( 13,31,35 ),aZoid) ) cnt<-cnt+1	# ++
+					if( fCutU.hasPtn(c(11,14,13,15,31),aZoid,thld=3,fixIdx=5) ) cnt<-cnt+1
 					cnt <- cnt + fCutU.spanMatch(stdMI$rawTail[5,],aZoid,posDiff=-1 )	# <41>
-					if( fCutU.hasPtn(c(    7,NA,NA,41 ),aZoid) ) cnt<-cnt+1
-					if( fCutU.hasPtn(c( 8, 7,27,11,41 ),aZoid) ) cnt<-cnt+1
-					if( fCutU.hasPtn(c( 11,31,41 ),aZoid) ) cnt<-cnt+1	# ++
-					if( fCutU.hasPtn(c( 21,41,43 ),aZoid) ) cnt<-cnt+1	# ++
+					if( fCutU.hasPtn(c(    7,NA,NA,41),aZoid) ) cnt<-cnt+1
+					if( fCutU.hasPtn(c( 8,NA,27,11,41),aZoid,thld=3,fixIdx=5) ) cnt<-cnt+1
 					cnt <- cnt + fCutU.spanMatch(stdMI$rawTail[6,],aZoid,posDiff=0 )	# <43>
-					if( fCutU.hasPtn(c( 11, 5,25,37,43 ),aZoid,thld=3,fixIdx=5) ) cnt<-cnt+1
-					if( fCutU.hasPtn(c( 36,37,43 ),aZoid) ) cnt<-cnt+1	# ++
-					if( fCutU.hasPtn(c( 21,41,43 ),aZoid) ) cnt<-cnt+1	# ++
-					if( fCutU.hasPtn(c( 23,39,43 ),aZoid) ) cnt<-cnt+1	# ++
+					if( fCutU.hasPtn(c(11, 5,25,37,43),aZoid,thld=3,fixIdx=5) ) cnt<-cnt+1
+
 					return( cnt )
-				})	;kIdx<-anaFltCnt(cntMtx[,"raw"],rpt)
+				})	;kIdx<-anaFltCnt(cntMtx[,"rawFV"],rpt)
     cntMtx[,"rem"] <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
 					# u0.zoidMtx_ana( stdMI$rawTail%%10 )
 					cnt <- 0
@@ -1576,7 +1540,7 @@ fCutCnt.nextFStepBin <- function( gEnv ,allIdxF ,rpt=FALSE ){
 	score <- sapply( 1:length(flgCnt) ,function( idx ){
 					if( any(cntMtx[idx,] >cntThld ) )	return( 2 )
 					if( any(cntMtx[idx,]==cntThld ) )	return( sum(cntMtx[idx,]==2) )
-					if( 0<cntMtx[idx,"raw"]){
+					if( 0<sum(cntMtx[idx,c("raw","rawFV")]) ){
 						cnt <- sum(cntMtx[idx,c("rem","cStep","fStep")])
 						if( cnt>1 )	return( 1 )
 					}
@@ -1935,7 +1899,7 @@ fCutCnt.nextColVal_3 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 					if( aCStep[5]%in%c(         ) ) cnt<-cnt+1
 
 					if( 1<sum(aCStep[1:3+0]==c( 2, 9, 5)) ) cnt<-cnt+1	# 2
-					if( 1<sum(aCStep[1:3+ ]==c( 6,25, 2)) ) cnt<-cnt+1	# 3
+					if( 1<sum(aCStep[1:3+0]==c( 6,25, 2)) ) cnt<-cnt+1	# 3
 					if( 1<sum(aCStep[1:3+1]==c(12, 2,20)) ) cnt<-cnt+1	# 2
 					if( 1<sum(aCStep[1:2+3]==c(12, 6,  )) ) cnt<-cnt+1	# 5
 
@@ -2031,7 +1995,7 @@ fCutCnt.nextColVal_4 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 					cnt <- cnt + neighborObj$matchCnt( aZoid )
 					
 					cnt <- cnt + fCutU.spanMatch(stdMI$rawTail[3,],aZoid,posDiff=-1 )	# < 7>
-					if( fCutU.hasPtn(c( 7,NA,NA,32!),aZoid) ) cnt<-cnt+1
+					if( fCutU.hasPtn(c( 7,NA,NA,32),aZoid) ) cnt<-cnt+1
 					if( fCutU.hasPtn(c( 7,30,38),aZoid) ) cnt<-cnt+1
 					cnt <- cnt + fCutU.spanMatch(stdMI$rawTail[6,],aZoid,posDiff=0 )	# < 8>
 					if( fCutU.hasPtn(c( 8,21,28,18,16,23),aZoid,thld=3,fixIdx=1) ) cnt<-cnt+1
@@ -2102,10 +2066,10 @@ fCutCnt.nextColVal_4 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 					if( aFStep[5]%in%c(   0     ) ) cnt<-cnt+1
 					if( aFStep[6]%in%c(         ) ) cnt<-cnt+1
 
-					if( 1<sum(aFStep[1:2+0]==c( -3  -6    )) ) cnt<-cnt+1 # 10
-					if( 1<sum(aFStep[1:3+1]==c(  3   7   8)) ) cnt<-cnt+1 # -4
-					if( 1<sum(aFStep[1:3+2]==c(  2  12  16)) ) cnt<-cnt+1 # -7
-					if( 1<sum(aFStep[1:3+3]==c(  2  12  16)) ) cnt<-cnt+1 # -7
+					if( 1<sum(aFStep[1:2+0]==c( -3, -6    )) ) cnt<-cnt+1 # 10
+					if( 1<sum(aFStep[1:3+1]==c(  3,  7,  8)) ) cnt<-cnt+1 # -4
+					if( 1<sum(aFStep[1:3+2]==c(  2, 12, 16)) ) cnt<-cnt+1 # -7
+					if( 1<sum(aFStep[1:3+3]==c(  2, 12, 16)) ) cnt<-cnt+1 # -7
 
 					return( cnt )
 				})	;kIdx<-anaFltCnt(cntMtx[,"fStep"],rpt)
@@ -2124,7 +2088,7 @@ fCutCnt.nextColVal_4 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 
 } # fCutCnt.nextColVal_4()
 
-# undone
+# done
 fCutCnt.nextColVal_5 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 	# 경고 : 동일 컬럼 동일 값 반복 상태인 경우 신중할 것.
 	flgCnt <- rep( 0 ,length(allIdxF) )
@@ -2146,8 +2110,8 @@ fCutCnt.nextColVal_5 <- function( gEnv ,allIdxF ,rpt=FALSE ){
     flgCnt[!flag] <- flgCnt[!flag] + 1	
     flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
 					quoSize <- fCutU.getQuoObj( aZoid )$size
-					if( all(quoSize[1:3+ ]==c(1,3,1)) ) return(FALSE)	# next rebind of 2,2,0 
-					if( all(quoSize[1:3+ ]==c(1,2,1)) ) return(FALSE)	# next rebind of 2,1,1 
+					if( all(quoSize[1:3+2]==c(1,3,1)) ) return(FALSE)	# next rebind of 2,2,0 
+					if( all(quoSize[1:3+1]==c(1,2,1)) ) return(FALSE)	# next rebind of 2,1,1 
 					return( TRUE )
 				})	;kIdx<-anaFlagFnd(!flag,rpt)
 	auxCntMtx[,"auxQuo"] <- !flag
@@ -2261,7 +2225,7 @@ fCutCnt.nextColVal_5 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 
 } # fCutCnt.nextColVal_5()
 
-# undone
+# done
 fCutCnt.nextColVal_6 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 	# 경고 : 동일 컬럼 동일 값 반복 상태인 경우 신중할 것.
 	flgCnt <- rep( 0 ,length(allIdxF) )
