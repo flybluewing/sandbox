@@ -1,6 +1,6 @@
 # simZ787_H.R 최종접근
 
-cntThld <- c(2,3,2,2)	;names(cntThld) <- c("raw","rem","cStep","fStep")
+cntThld <- c(2,2,3,2,2)	;names(cntThld) <- c("raw","rawFV","rem","cStep","fStep")
 
 # 공용
 # done
@@ -248,7 +248,7 @@ fCutCnt.basic <- function( gEnv ,allIdxF ,rpt=FALSE ){
 	score <- sapply( 1:length(flgCnt) ,function( idx ){
 					if( any(cntMtx[idx,] >cntThld ) )	return( 2 )
 					if( any(cntMtx[idx,]==cntThld ) )	return( sum(cntMtx[idx,]==2) )
-					if( 0<cntMtx[idx,"raw"]){
+					if( 0<sum(cntMtx[idx,c("raw","rawFV")]) ){
 						cnt <- sum(cntMtx[idx,c("rem","cStep","fStep")])
 						if( cnt>1 )	return( 1 )
 					}
@@ -650,7 +650,7 @@ fCutCnt.nextZW <- function( gEnv ,allIdxF ,rpt=FALSE ){
 	score <- sapply( 1:length(flgCnt) ,function( idx ){
 					if( any(cntMtx[idx,] >cntThld ) )	return( 2 )
 					if( any(cntMtx[idx,]==cntThld ) )	return( sum(cntMtx[idx,]==2) )
-					if( 0<cntMtx[idx,"raw"]){
+					if( 0<sum(cntMtx[idx,c("raw","rawFV")]) ){
 						cnt <- sum(cntMtx[idx,c("rem","cStep","fStep")])
 						if( cnt>1 )	return( 1 )
 					}
@@ -748,7 +748,7 @@ fCutCnt.nextQuo10 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 	score <- sapply( 1:length(flgCnt) ,function( idx ){
 					if( any(cntMtx[idx,] >cntThld ) )	return( 2 )
 					if( any(cntMtx[idx,]==cntThld ) )	return( sum(cntMtx[idx,]==2) )
-					if( 0<cntMtx[idx,"raw"]){
+					if( 0<sum(cntMtx[idx,c("raw","rawFV")]) ){
 						cnt <- sum(cntMtx[idx,c("rem","cStep","fStep")])
 						if( cnt>1 )	return( 1 )
 					}
@@ -845,7 +845,7 @@ fCutCnt.nextBin <- function( gEnv ,allIdxF ,rpt=FALSE ){
 	score <- sapply( 1:length(flgCnt) ,function( idx ){
 					if( any(cntMtx[idx,] >cntThld ) )	return( 2 )
 					if( any(cntMtx[idx,]==cntThld ) )	return( sum(cntMtx[idx,]==2) )
-					if( 0<cntMtx[idx,"raw"]){
+					if( 0<sum(cntMtx[idx,c("raw","rawFV")]) ){
 						cnt <- sum(cntMtx[idx,c("rem","cStep","fStep")])
 						if( cnt>1 )	return( 1 )
 					}
@@ -946,7 +946,7 @@ fCutCnt.nextRebNum <- function( gEnv ,allIdxF ,numPtn=NULL ,rpt=FALSE ){
 	score <- sapply( 1:length(flgCnt) ,function( idx ){
 					if( any(cntMtx[idx,] >cntThld ) )	return( 2 )
 					if( any(cntMtx[idx,]==cntThld ) )	return( sum(cntMtx[idx,]==2) )
-					if( 0<cntMtx[idx,"raw"]){
+					if( 0<sum(cntMtx[idx,c("raw","rawFV")]) ){
 						cnt <- sum(cntMtx[idx,c("rem","cStep","fStep")])
 						if( cnt>1 )	return( 1 )
 					}
@@ -1039,7 +1039,7 @@ fCutCnt.nextCStepBin <- function( gEnv ,allIdxF ,rpt=FALSE ){
 	score <- sapply( 1:length(flgCnt) ,function( idx ){
 					if( any(cntMtx[idx,] >cntThld ) )	return( 2 )
 					if( any(cntMtx[idx,]==cntThld ) )	return( sum(cntMtx[idx,]==2) )
-					if( 0<cntMtx[idx,"raw"]){
+					if( 0<sum(cntMtx[idx,c("raw","rawFV")]) ){
 						cnt <- sum(cntMtx[idx,c("rem","cStep","fStep")])
 						if( cnt>1 )	return( 1 )
 					}
