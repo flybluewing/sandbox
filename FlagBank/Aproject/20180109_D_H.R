@@ -147,7 +147,7 @@ anaMtx.freqVal <- function( rawTail ){
 
 		baseIdx <- which(zoid1st.code==fVal)
 		zoidBan.str[baseIdx] <- sprintf("%3d*",fVal)
-		zoidBan.str[zoidBan<1 | zoidBan>45] <- " NA  "
+		zoidBan.str[zoidBan<1 | zoidBan>45] <- " NA "
 		if( 1<baseIdx ){
 			idxSpan <- 1:(baseIdx-1)
 			zoidBan.str[idxSpan] <- ifelse( zoidBan[idxSpan]>=fVal ," NA " ,zoidBan.str[idxSpan] )
