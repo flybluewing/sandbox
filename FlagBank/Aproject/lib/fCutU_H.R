@@ -87,7 +87,7 @@ fCutU.neighborObj <- function( pMtx ){
 				banVal <- banPtnLst[[idx]]
 				for( cIdx in 1:4 ){
 					if( all(banVal==aZoid[0:2+cIdx]) ){
-						cat(sprintf("sIdx:%d idx:%d %s \n",sIdx,idx,paste(banVal,collapse=",") ))
+						# cat(sprintf("sIdx:%d idx:%d %s \n",sIdx,idx,paste(banVal,collapse=",") ))
 						score <- score + 1
 					}
 				} # cIdx
