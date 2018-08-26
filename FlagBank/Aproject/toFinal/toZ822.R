@@ -1,15 +1,15 @@
-# Z821
-source("./toFinal/toZ821_H.R")
+# Z822
+source("./toFinal/toZ822_H.R")
 
-saveId <- "Z820"	;rpt=TRUE
+saveId <- "Z821"	;rpt=TRUE
 load( sprintf("Obj_allIdxLst%s.save",saveId) )
 load(sprintf("./save/Obj_gEnv%s.save",saveId))
 allZoidGrpName <-"allZoid.idx0"	# 
-allIdx <- allIdxLst[[allZoidGrpName]]	# 908523, 1703788, 1465803
+allIdx <- allIdxLst[[allZoidGrpName]]	# 
 stdZoid <- NULL
 
 # simMode start ----------------------------------------------------
-	aZoid <- stdZoid <- c( 1,12,13,24,29,44) # ZH 821 채워넣을 것.
+	aZoid <- stdZoid <- c( ,,,,, ) # ZH 822 채워넣을 것.
 	allIdxF <- allIdx <- stdIdx <- which(apply(gEnv$allZoidMtx,1,function(zoid){all(zoid==stdZoid)}))
 # simMode end   ----------------------------------------------------
 
