@@ -5,7 +5,7 @@ saveId <- "Z821"	;rpt=TRUE
 load( sprintf("Obj_allIdxLst%s.save",saveId) )
 load(sprintf("./save/Obj_gEnv%s.save",saveId))
 allZoidGrpName <-"allZoid.idx0"	# 
-allIdx <- allIdxLst[[allZoidGrpName]]	# 
+allIdx <- allIdxLst[[allZoidGrpName]]	# 658689  1474454
 stdZoid <- NULL
 
 # simMode start ----------------------------------------------------
