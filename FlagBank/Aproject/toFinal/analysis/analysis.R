@@ -1,3 +1,25 @@
+#	rpt.analyLst( analyLst[["toZ821"]] )
+rpt.analyLst <- function( analy ){
+	#	analy <- analyLst[["toZ821"]]
+	cat( sprintf( "* stdFltCnt:%d \n" ,analy$stdFltCnt )  )
+	cat( sprintf( "    colValSeqNext:%d \n" ,analy$fCutCnt.colValSeqNext )  )
+	cat( sprintf( "    colValSeqNext.cStep:%d \n",analy$fCutCnt.colValSeqNext.cStep	) )
+
+	phaseNm <- attributes(analy)$names
+	phaseNm <- phaseNm[-grep("colValSeqNext",phaseNm)]
+	phaseNm <- phaseNm[-grep("^stdFltCnt$",phaseNm)]
+	scoreMtx <- do.call( rbind, 
+							lapply(phaseNm,function(nm){
+										do.call( c ,analy[[nm]] )
+									})
+						)
+	rownames(scoreMtx) <- gsub("^fCutCnt\\.","",phaseNm)
+	rptStr <- sprintf("    %s",capture.output(scoreMtx))
+	cat( sprintf("%s \n",paste(rptStr,collapse="\n")) )
+
+} # rpt.analyLst()
+
+
 analyLst <- list()
 
 analyLst[["toZ809"]] <- list(	stdFltCnt = 1
@@ -349,26 +371,5 @@ analyLst[["toZ821"]] <- list(	stdFltCnt = 1
 					,rem =2	,cStep =0	,fStep =0
 				)
 ) # analyLst[["toZ821"]]
-
-#	rpt.analyLst( analyLst[["toZ821"]] )
-rpt.analyLst <- function( analy ){
-	#	analy <- analyLst[["toZ821"]]
-	cat( sprintf( "* stdFltCnt:%d \n" ,analy$stdFltCnt )  )
-	cat( sprintf( "    colValSeqNext:%d \n" ,analy$fCutCnt.colValSeqNext )  )
-	cat( sprintf( "    colValSeqNext.cStep:%d \n",analy$fCutCnt.colValSeqNext.cStep	) )
-
-	phaseNm <- attributes(analy)$names
-	phaseNm <- phaseNm[-grep("colValSeqNext",phaseNm)]
-	phaseNm <- phaseNm[-grep("^stdFltCnt$",phaseNm)]
-	scoreMtx <- do.call( rbind, 
-							lapply(phaseNm,function(nm){
-										do.call( c ,analy[[nm]] )
-									})
-						)
-	rownames(scoreMtx) <- gsub("^fCutCnt\\.","",phaseNm)
-	rptStr <- sprintf("    %s",capture.output(scoreMtx))
-	cat( sprintf("%s \n",paste(rptStr,collapse="\n")) )
-
-} # rpt.analyLst()
 
 
