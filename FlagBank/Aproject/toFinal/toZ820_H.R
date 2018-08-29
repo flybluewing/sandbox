@@ -1560,7 +1560,6 @@ fCutCnt.nextColVal_1 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 	if( 0==nrow(zMtx) ) return( rep(0,length(allIdxF)) )
 
 	stdMI <- fCutU.getMtxInfo( zMtx )
-	# mtxLen  lastZoid    rem quo10   cStep   fStep   rawTail cStepTail   quoTail quoRebPtn
 	# rptObj<-anaMtx(stdMI$rawTail,stdZoid);u0.zoidMtx_ana.rpt( stdMI$rawTail )
 
 
@@ -1682,7 +1681,6 @@ fCutCnt.nextColVal_2 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 	flgCnt <- rep( 0 ,length(allIdxF) )
 	zMtx <- fCutU.getNextColVal( gEnv ,2 )$zMtx	# rptObj<-anaQuoTbl( zMtx )
 	if( 0==nrow(zMtx) ) return( rep(0,length(allIdxF)) )
-
 
 	stdMI <- fCutU.getMtxInfo( zMtx )
 	# rptObj<-anaMtx(stdMI$rawTail,stdZoid);u0.zoidMtx_ana.rpt( stdMI$rawTail )
@@ -1901,7 +1899,7 @@ fCutCnt.nextColVal_3 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 					if( 1<sum(aCStep[1:3+0]==c( 2, 9, 5)) ) cnt<-cnt+1	# 2
 					if( 1<sum(aCStep[1:3+0]==c( 6,25, 2)) ) cnt<-cnt+1	# 3
 					if( 1<sum(aCStep[1:3+1]==c(12, 2,20)) ) cnt<-cnt+1	# 2
-					if( 1<sum(aCStep[1:2+3]==c(12, 6,  )) ) cnt<-cnt+1	# 5
+					if( 1<sum(aCStep[1:2+3]==c(12, 6   )) ) cnt<-cnt+1	# 5
 
 					if( fCutU.hasPtn(c(3,3),aCStep) ) cnt<-cnt+1
 					return( cnt )
@@ -1927,7 +1925,7 @@ fCutCnt.nextColVal_3 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 					if( aFStep[6]%in%c(         ) ) cnt<-cnt+1
 
 					if( 1<sum(aFStep[1:3+0]==c( -2,  7,  7)) ) cnt<-cnt+1 #  1
-					if( 1<sum(aFStep[1:3+0]==c(-18,-15    )) ) cnt<-cnt+1 #  2
+					if( 1<sum(aFStep[1:2+0]==c(-18,-15    )) ) cnt<-cnt+1 #  2
 					if( 1<sum(aFStep[1:3+3]==c( 19, 20, 11)) ) cnt<-cnt+1 #-18
 
 					return( cnt )
