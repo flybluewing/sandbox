@@ -162,7 +162,7 @@ analyLst[["toZ814"]] <- list(	stdFltCnt = 1
 				)
 ) # analyLst[["toZ814"]]
 
-analyLst[["toZ816"]] <- list(	stdFltCnt =0
+analyLst[["toZ816"]] <- list(	stdFltCnt = 0
 	,fCutCnt.basic = list(	commonCutCnt=0
 					,auxZW=0	,auxQuo=0
 					,raw =0	,rawFV =0
@@ -232,7 +232,77 @@ analyLst[["toZ816"]] <- list(	stdFltCnt =0
 				)
 ) # analyLst[["toZ816"]]
 
-analyLst[["toZ820"]] <- list(	stdFltCnt = 1
+analyLst[["toZ819"]] <- list(	stdFltCnt =2
+	,fCutCnt.basic = list(	commonCutCnt=NA
+					,auxZW=NA	,auxQuo=NA
+					,raw =NA	,rawFV =NA
+					,rem =NA	,cStep =NA	,fStep =NA
+				)
+	,fCutCnt.colValSeqNext =NA
+	,fCutCnt.colValSeqNext.cStep =NA
+	,fCutCnt.nextZW = list(	commonCutCnt=NA
+					,auxZW=NA	,auxQuo=NA
+					,raw =NA	,rawFV =NA
+					,rem =NA	,cStep =NA	,fStep =NA
+				)
+	,fCutCnt.nextBin = list(	commonCutCnt=NA
+					,auxZW=NA	,auxQuo=NA
+					,raw =NA	,rawFV =NA
+					,rem =NA	,cStep =NA	,fStep =NA
+				)
+	,fCutCnt.nextQuo10 = list(	commonCutCnt=NA
+					,auxZW=NA	,auxQuo=NA
+					,raw =NA	,rawFV =NA
+					,rem =NA	,cStep =NA	,fStep =NA
+				)
+	,fCutCnt.nextRebNum = list(	commonCutCnt=NA
+					,auxZW=NA	,auxQuo=NA
+					,raw =NA	,rawFV =NA
+					,rem =NA	,cStep =NA	,fStep =NA
+				)
+	,fCutCnt.nextCStepBin = list(	commonCutCnt=NA
+					,auxZW=NA	,auxQuo=NA
+					,raw =NA	,rawFV =NA
+					,rem =NA	,cStep =NA	,fStep =NA
+				)
+	,fCutCnt.nextFStepBin = list(	commonCutCnt=NA
+					,auxZW=NA	,auxQuo=NA
+					,raw =NA	,rawFV =NA
+					,rem =NA	,cStep =NA	,fStep =NA
+				)
+	,fCutCnt.nextColVal_1 = list(	commonCutCnt=NA
+					,auxZW=NA	,auxQuo=NA
+					,raw =NA	,rawFV =NA
+					,rem =NA	,cStep =NA	,fStep =NA
+				)
+	,fCutCnt.nextColVal_2 = list(	commonCutCnt=NA
+					,auxZW=NA	,auxQuo=NA
+					,raw =NA	,rawFV =NA
+					,rem =NA	,cStep =NA	,fStep =NA
+				)
+	,fCutCnt.nextColVal_3 = list(	commonCutCnt=NA
+					,auxZW=NA	,auxQuo=NA
+					,raw =NA	,rawFV =NA
+					,rem =NA	,cStep =NA	,fStep =NA
+				)
+	,fCutCnt.nextColVal_4 = list(	commonCutCnt=NA
+					,auxZW=NA	,auxQuo=NA
+					,raw =NA	,rawFV =NA
+					,rem =NA	,cStep =NA	,fStep =NA
+				)
+	,fCutCnt.nextColVal_5 = list(	commonCutCnt=NA
+					,auxZW=NA	,auxQuo=NA
+					,raw =NA	,rawFV =NA
+					,rem =NA	,cStep =NA	,fStep =NA
+				)
+	,fCutCnt.nextColVal_6 = list(	commonCutCnt=NA
+					,auxZW=NA	,auxQuo=NA
+					,raw =NA	,rawFV =NA
+					,rem =NA	,cStep =NA	,fStep =NA
+				)
+) # analyLst[["toZ819"]]
+
+analyLst[["toZ820"]] <- list(	stdFltCnt = 2
 	,fCutCnt.basic = list(	commonCutCnt=0
 					,auxZW=0	,auxQuo=0
 					,raw =0	,rawFV =0
@@ -302,7 +372,7 @@ analyLst[["toZ820"]] <- list(	stdFltCnt = 1
 				)
 ) # analyLst[["toZ820"]]
 
-analyLst[["toZ821"]] <- list(	stdFltCnt = 1
+analyLst[["toZ821"]] <- list(	stdFltCnt = 3
 	,fCutCnt.basic = list(	commonCutCnt=0
 					,auxZW=0	,auxQuo=0
 					,raw =0	,rawFV =0
