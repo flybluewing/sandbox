@@ -735,7 +735,7 @@ fCutU.commonCutCnt <- function( gEnv, allIdxF ,zMtx
 						,pZWidth=TRUE	,pQuoTbl=TRUE	,pRebThld=2
 						,pScoreMtx=TRUE	,rpt=FALSE
 					 ) {
-	#	pZWidth=TRUE	;pQuoTbl=TRUE	;pRebThld=2
+	#	pZWidth=TRUE	;pQuoTbl=TRUE	;pRebThld=2	;pScoreMtx=TRUE	;rpt=FALSE
 	flgCnt <- rep( 0 ,length(allIdxF) )
 	stdMI <- fCutU.getMtxInfo( zMtx )
 	scoreMtx <- NULL

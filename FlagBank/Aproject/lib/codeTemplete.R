@@ -53,13 +53,10 @@ fCutCnt.nextXXX <- function( gEnv ,allIdxF ,rpt=FALSE ){
 					if( aZoid[6]%in%c(    ) ) cnt<-cnt+1
 					return( cnt )
 				})	;kIdx<-anaFltCnt(cntMtx[,"raw"],rpt)
-	neighborObj <- fCutU.neighborObj( stdMI$rawTail )
     cntMtx[,"rawFV"] <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
 					# anaMtx.freqVal( stdMI$rawTail )
 					cnt <- 0
-					cnt <- cnt + neighborObj$matchCnt( aZoid )
-					
-					cnt <- cnt + fCutU.spanMatch(stdMI$rawTail[ ,],aZoid,posDiff= )	# < >
+					# < >
 					if( fCutU.hasPtn(c(  ,  ),aZoid) ) cnt<-cnt+1
 
 					return( cnt )
