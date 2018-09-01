@@ -193,7 +193,6 @@ fCutCnt.basic <- function( gEnv ,allIdxF ,rpt=FALSE ){
 	auxCntMtx[,"auxZW"] <- !flag
     flgCnt[!flag] <- flgCnt[!flag] + 1
 
-
 	# -- conditional
 	cntMtx <- matrix( 0 ,nrow=length(allIdxF) ,ncol=length(cntThld) )	;colnames(cntMtx)=names(cntThld)
 	cntMtx[,"raw"] <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
