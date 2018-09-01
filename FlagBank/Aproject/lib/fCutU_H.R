@@ -654,34 +654,125 @@ fCutU.chkRowPtnReb <- function( quoMtx ){
 
 } # fCutU.chkRowPtnReb()
 
+fCutU.getSpanMatchObj <- function( rawTail ,rpt=FALSE ){
+	# rawTail <- stdMI$rawTail
+
+	rObj <- list()
+
+	dataSize <- nrow(rawTail)
+	if( 2>dataSize ){
+		rObj$matchCnt <- function( aZoid ){ return(0) }
+		return( rObj )
+	}
+	
+    vals <- sort(unique(as.vector(rawTail)))
+    freqVals <- vals[ table(rawTail)>1 ]
+
+	fndLst <- list()
+	fndInfo.name <- c("fVal","srchRow","posDiff","1st.rIdx","2nd.rIdx")
+    for( fVal in freqVals ){
+		zoid1st <- NULL	;zoid1st.rIdx <- 0
+		zoid2nd <- NULL	;zoid2nd.rIdx <- 0
+		for( rIdx in nrow(rawTail):1 ){
+			if( !any(rawTail[rIdx,]==fVal) ) next
+			
+			if( is.null(zoid2nd) ){
+				zoid2nd <- rawTail[rIdx,]
+				zoid2nd.rIdx <- rIdx
+			} else {
+				zoid1st <- rawTail[rIdx,]
+				zoid1st.rIdx <- rIdx
+				break
+			}
+		}	# rIdx
+
+		srchRow <- zoid1st.rIdx + 1 + (dataSize-zoid2nd.rIdx)
+		posDiff <- which( zoid2nd==fVal ) - which( zoid1st==fVal )
+		fndInfo <- c( fVal, srchRow, posDiff ,zoid1st.rIdx ,zoid2nd.rIdx )
+		names(fndInfo) <- fndInfo.name
+		fndLst[[sprintf("fv:%2d",fVal)]] <- fndInfo
+    }
+
+	fndMtx <- do.call( rbind ,fndLst )
+	if( rpt ){
+		mtxStr <- sprintf("   %s",capture.output(fndMtx))
+		cat( sprintf("%s\n",paste(mtxStr,collapse="\n")) )
+	}
+
+	srchLst <- list()
+	srchLst[[1]] <- fndMtx[1,c("srchRow","posDiff")]
+	if( 1 < nrow(fndMtx) ){
+		for( rIdx in 2:nrow(fndMtx) ){
+			fndVal <- fndMtx[rIdx,c("srchRow","posDiff")]
+			matFlag <- apply( fndMtx[1:(rIdx-1),c("srchRow","posDiff"),drop=F] ,1 
+								,function(val){ all(fndVal==val) }
+							)
+
+			if( all(!matFlag) ){
+				srchLst[[1+length(srchLst)]] <- fndVal
+			}
+		}
+	}
+
+	rObj$srchLst <- srchLst
+	rObj$rawTail <- rawTail
+	rObj$matchCnt <- function( azoid ){
+		score <- sapply( rObj$srchLst ,function( srchInfo ){
+						mCnt <- fCutU.spanMatch( rObj$rawTail[ srchInfo["srchRow"] ,]
+										,aZoid
+										,posDiff = srchInfo["posDiff"]
+									)
+						return( mCnt )
+					})
+		return( sum(score) )
+	}
+
+	return( rObj )
+
+} # fCutU.getSpanMatchObj()
+
 fCutU.commonCutCnt <- function( gEnv, allIdxF ,zMtx
 						,pZWidth=TRUE	,pQuoTbl=TRUE	,pRebThld=2
-						,rpt=FALSE
+						,pScoreMtx=TRUE	,rpt=FALSE
 					 ) {
 	#	pZWidth=TRUE	;pQuoTbl=TRUE	;pRebThld=2
 	flgCnt <- rep( 0 ,length(allIdxF) )
 	stdMI <- fCutU.getMtxInfo( zMtx )
-		# mtxLen lastZoid rem quo10 cStep fStep rawTail cStepTail
-	
 	scoreMtx <- NULL
-	if( rpt ){
-		cName <- c("reb2","rebCol","quoAll","quoPtn","zw"
+	if( pScoreMtx ){
+		cName <- c("reb","nbor","spanM"
+						,"quoAll","quoPtn","zw"
 						,"remH0","remH1","cStep2","cStep3"
 					)
 		scoreMtx <- matrix( 0, nrow=length(allIdxF) ,ncol=length(cName) )
 		colnames(scoreMtx) <-cName
 	}
 
-	flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
-					return( pRebThld>sum(stdMI$lastZoid%in%aZoid) )
-				})	;kIdx<-anaFlagFnd(!flag,rpt)
-	flgCnt[!flag] <- flgCnt[!flag] + 2
-	if( rpt ) scoreMtx[,"reb2"] <- !flag
-    flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
-					return( (pRebThld-1)>sum(stdMI$lastZoid==aZoid) )
-				})	;kIdx<-anaFlagFnd(!flag,rpt)
-    flgCnt[!flag] <- flgCnt[!flag] + 1
-	if( rpt ) scoreMtx[,"rebCol"] <- !flag
+	fltCnt <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+					cnt <- 0
+					if( pRebThld<=sum(stdMI$lastZoid%in%aZoid) ) cnt<-cnt+1
+					if( (pRebThld-1)<=sum(stdMI$lastZoid==aZoid) ) cnt<-cnt+1
+					return( cnt )
+				})	;kIdx<-anaFltCnt(fltCnt,rpt)
+	flag <- fltCnt==0	# 양쪽 다 나온 경우도 빈번해서. 그냥 둘 중 하나만 나와도 flag처리.
+	flgCnt[!flag] <- flgCnt[!flag] + 1
+	if( pScoreMtx ) scoreMtx[,"reb"] <- !flag
+
+	neighborObj <- fCutU.neighborObj( stdMI$rawTail )
+	fltCnt <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+					return( neighborObj$matchCnt(aZoid) )
+				})	;kIdx<-anaFltCnt(fltCnt,rpt)
+	flag <- fltCnt==0	# 양쪽 다 나온 경우도 빈번해서. 그냥 둘 중 하나만 나와도 flag처리.
+	flgCnt[!flag] <- flgCnt[!flag] + 1
+	if( pScoreMtx ) scoreMtx[,"nbor"] <- fltCnt
+
+	spanMatchObj <- fCutU.getSpanMatchObj( stdMI$rawTail )
+	fltCnt <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+					return( spanMatchObj$matchCnt(aZoid) )
+				})	;kIdx<-anaFltCnt(fltCnt,rpt)
+	flag <- fltCnt==0	# 양쪽 다 나온 경우도 빈번해서. 그냥 둘 중 하나만 나와도 flag처리.
+	flgCnt[!flag] <- flgCnt[!flag] + 1
+	if( pScoreMtx ) scoreMtx[,"spanM"] <- fltCnt
 
 	if( pQuoTbl ){
 		flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
@@ -689,14 +780,14 @@ fCutU.commonCutCnt <- function( gEnv, allIdxF ,zMtx
 						return( !stdMI$quo10$sameTbl(quoTbl) )
 					})	;kIdx<-anaFlagFnd(!flag,rpt)
 		flgCnt[!flag] <- flgCnt[!flag] + 1
-		if( rpt ) scoreMtx[,"quoAll"] <- !flag
+		if( pScoreMtx ) scoreMtx[,"quoAll"] <- !flag
 		stdQuo <- fCutU.chkRowPtnReb(stdMI$quoTail)
 		flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
 						quoSize <- fCutU.getQuoObj(aZoid)$size
 						return( !stdQuo$filt(quoSize)$filted )
 					})	;kIdx<-anaFlagFnd(!flag,rpt)
 		flgCnt[!flag] <- flgCnt[!flag] + 1
-		if( rpt ) scoreMtx[,"quoPtn"] <- !flag
+		if( pScoreMtx ) scoreMtx[,"quoPtn"] <- !flag
 	}
 	if( pZWidth ){
 		lastZW <- stdMI$lastZoid[6] - stdMI$lastZoid[1]
@@ -704,7 +795,7 @@ fCutU.commonCutCnt <- function( gEnv, allIdxF ,zMtx
 						return( lastZW!=(aZoid[6]-aZoid[1]) )
 					})	;kIdx<-anaFlagFnd(!flag,rpt)
 		flgCnt[!flag] <- flgCnt[!flag] + 1
-		if( rpt ) scoreMtx[,"zw"] <- !flag
+		if( pScoreMtx ) scoreMtx[,"zw"] <- !flag
 	}
 
     flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
@@ -716,7 +807,7 @@ fCutU.commonCutCnt <- function( gEnv, allIdxF ,zMtx
 					return( TRUE )
 				})	;kIdx<-anaFlagFnd(!flag,rpt)
     flgCnt[!flag] <- flgCnt[!flag] + 1
-	if( rpt ) scoreMtx[,"remH0"] <- !flag
+	if( pScoreMtx ) scoreMtx[,"remH0"] <- !flag
 
 	if( 1<stdMI$mtxLen ){
 		tgtZoidRem <- zMtx[stdMI$mtxLen-1,] %% 10	# rem ptn 재현 4이상 - hIdx-1 에서.
@@ -729,7 +820,7 @@ fCutU.commonCutCnt <- function( gEnv, allIdxF ,zMtx
 						return( TRUE )
 					})	;kIdx<-anaFlagFnd(!flag,rpt)
 		flgCnt[!flag] <- flgCnt[!flag] + 1
-		if( rpt ) scoreMtx[,"remH1"] <- !flag
+		if( pScoreMtx ) scoreMtx[,"remH1"] <- !flag
 	}
     flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
 					aCode <- aZoid[2:6] - aZoid[1:5]
@@ -740,19 +831,15 @@ fCutU.commonCutCnt <- function( gEnv, allIdxF ,zMtx
 					return( TRUE )
 				})	;kIdx<-anaFlagFnd(!flag,rpt)
     flgCnt[!flag] <- flgCnt[!flag] + 1
-	if( rpt ) scoreMtx[,"cStep2"] <- !flag
+	if( pScoreMtx ) scoreMtx[,"cStep2"] <- !flag
     flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
 					cnt <- sum( stdMI$cStep==(aZoid[2:6]-aZoid[1:5]) )
 					return( 3 > cnt )	# cStep 반복 전체갯수는 3개 이하.(2가 너무 많다보니 변경.)
 				})	;kIdx<-anaFlagFnd(!flag,rpt)
     flgCnt[!flag] <- flgCnt[!flag] + 1
-	if( rpt ) scoreMtx[,"cStep3"] <- !flag
+	if( pScoreMtx ) scoreMtx[,"cStep3"] <- !flag
 
-	if( rpt ){
-		return( scoreMtx )
-	} else {
-		return( flgCnt )
-	}
+	return( list( flgCnt=flgCnt ,scoreMtx=scoreMtx ) )
 
 } #	fCutU.commonCutCnt( )
 

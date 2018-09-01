@@ -7,11 +7,11 @@ anaFlagFnd <- function( flag ,report=TRUE ){
     return( kIdx )
 } # anaFlagFnd( )
 
-anaFltCnt <- function( fltCnt ,dbgThld=1 ,report=TRUE ){
+anaFltCnt <- function( fltCnt ,dbgThld=1 ,rpt=TRUE ){
     kIdx <- head(which(fltCnt>=dbgThld))
     tbl <- table(fltCnt)    ;names(tbl) <- sprintf("cnt %s ",names(tbl))
     logStr <- kLog.getPerStr( tbl ,length(fltCnt) ,pLong=T )
-    if( report ) cat(sprintf("    filted    %s\n",paste(logStr,collapse="   ")))
+    if( rpt ) cat(sprintf("    filted    %s\n",paste(logStr,collapse="   ")))
     return( kIdx )
 } # anaFlagFnd( )
 
