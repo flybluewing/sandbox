@@ -762,7 +762,7 @@ fCutU.commonCutCnt <- function( gEnv, allIdxF ,zMtx
 	fltCnt <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
 					return( neighborObj$matchCnt(aZoid) )
 				})	;kIdx<-anaFltCnt(fltCnt,rpt)
-	flag <- fltCnt==0	# 양쪽 다 나온 경우도 빈번해서. 그냥 둘 중 하나만 나와도 flag처리.
+	flag <- fltCnt==0
 	flgCnt[!flag] <- flgCnt[!flag] + 1
 	if( pScoreMtx ) scoreMtx[,"nbor"] <- fltCnt
 
@@ -770,7 +770,7 @@ fCutU.commonCutCnt <- function( gEnv, allIdxF ,zMtx
 	fltCnt <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
 					return( spanMatchObj$matchCnt(aZoid) )
 				})	;kIdx<-anaFltCnt(fltCnt,rpt)
-	flag <- fltCnt==0	# 양쪽 다 나온 경우도 빈번해서. 그냥 둘 중 하나만 나와도 flag처리.
+	flag <- fltCnt==0
 	flgCnt[!flag] <- flgCnt[!flag] + 1
 	if( pScoreMtx ) scoreMtx[,"spanM"] <- fltCnt
 
