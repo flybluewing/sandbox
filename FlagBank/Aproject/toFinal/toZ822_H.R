@@ -986,9 +986,7 @@ fCutCnt.nextQuo10 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 				})
     flgCnt <- flgCnt + score
 
-
-
-		return( list(flgCnt=flgCnt ,cntMtx=cntMtx ,auxCntMtx=auxCntMtx ,cccMtx=cccObj$scoreMtx ) )
+	return( list(flgCnt=flgCnt ,cntMtx=cntMtx ,auxCntMtx=auxCntMtx ,cccMtx=cccObj$scoreMtx ) )
 
 } # fCutCnt.nextQuo10()
 

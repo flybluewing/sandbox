@@ -205,8 +205,6 @@ fCutCnt.basic <- function( gEnv ,allIdxF ,rpt=FALSE ){
     cntMtx[,"rawFV"] <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
 					# anaMtx.freqVal( stdMI$rawTail )
 					cnt <- 0
-
-					
 					# <12>
 					# <21>
 					if( fCutU.hasPtn(c(21,22,NA,NA,27),aZoid) ) cnt<-cnt+1
@@ -246,6 +244,15 @@ fCutCnt.basic <- function( gEnv ,allIdxF ,rpt=FALSE ){
 					if( 1<sum(aCStep[1:3+0]==c( 1,10, 3)) ) cnt<-cnt+1	# 3
 					return( cnt )
 				})	;kIdx<-anaFltCnt(cntMtx[,"cStep"],rpt)
+				#     Raw value(reb)       |cStep          |fStep                   |QuoSize   |QuoTbl 
+				#     11 30 34 35 42 44    |19  4  1  7  2 |                        |0 1 0 3 2 |1 3 2
+				#      2 21 28 38 42 45(1) |19  7 10  4  3 | -9  -9  -6   3   0   1 |1 0 2 1 2 |1 2 1 2
+				#     17 21 25 26 27 36(1) | 4  4  1  1  9 | 15   0  -3 -12 -15  -9 |0 1 4 1 0 |1 4 1
+				#     12 18 19 29 31 39    | 6  1 10  2  8 | -5  -3  -6   3   4   3 |0 3 1 2 0 |3 1 2
+				#      3  9 12 13 25 43(1) | 6  3  1 12 18 | -9  -9  -7 -16  -6   4 |2 2 1 0 1 |2 2 1 1
+				#     14 15 25 28 29 30(1) | 1 10  3  1  1 | 11   6  13  15   4 -13 |0 2 3 1 0 |2 3 1
+				# -<standard zoid>---------------------------------------------------------------------
+				#     16 25 33 38 40 45(1) | 9  8  5  2  5 |  2  10   8  10  11  15 |0 1 1 2 2 |1 1 2 2
     cntMtx[,"fStep"] <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
 					cnt <- 0
 					aFStep <- aZoid - stdMI$lastZoid
