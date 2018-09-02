@@ -37,6 +37,7 @@ rpt.analyLst <- function( analy ){
 
 
 analyLst <- list()
+#	toZ800	: 0		toZ801	: 0		toZ806	: 1
 
 analyLst[["toZ809"]] <- list(	stdFltCnt = 1
 	,fCutCnt.basic = list(	commonCutCnt=0
@@ -464,8 +465,8 @@ analyLst[["toZ822"]] <- list(	stdFltCnt = 3
 					,raw =0	,rawFV =0
 					,rem =0	,cStep =1	,fStep =0
 				)
-	,fCutCnt.colValSeqNext =NA
-	,fCutCnt.colValSeqNext.cStep =NA
+	,fCutCnt.colValSeqNext =1
+	,fCutCnt.colValSeqNext.cStep =3
 	,fCutCnt.nextZW = list(	commonCutCnt=3	# reb spanM quoPtn 
 					,auxZW=0	,auxQuo=0
 					,raw =1	,rawFV =0
