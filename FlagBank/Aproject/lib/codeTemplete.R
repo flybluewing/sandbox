@@ -90,7 +90,8 @@ fCutCnt.nextXXX <- function( gEnv ,allIdxF ,rpt=FALSE ){
 					if( fCutU.hasPtn(c( , ),aCStep) ) cnt<-cnt+1
 					if( all(aCStep[1:2+ ]==c( , )) ) cnt<-cnt+1
 
-					if( (aCStep[]==aCStep[]) ) cnt<-cnt+1
+					# if( (aCStep[]==aCStep[]) ) cnt<-cnt+1
+					# if( aCStep[ ]==sum(aCStep[c( , )]) ) cnt<-cnt+1
 
 					return( cnt )
 				})	;kIdx<-anaFltCnt(cntMtx[,"cStep"],rpt)
@@ -111,7 +112,8 @@ fCutCnt.nextXXX <- function( gEnv ,allIdxF ,rpt=FALSE ){
 					if( 1<sum(aFStep[1:3+ ]==c( , , )) ) cnt<-cnt+1 # 
 					if( 1<sum(aFStep[1:3+ ]==c( , , )) ) cnt<-cnt+1 # 
 
-					if( (aFStep[]==aFStep[]) ) cnt<-cnt+1
+					# if( (aFStep[]==aFStep[]) ) cnt<-cnt+1
+					# if( aFStep[ ]==sum(aFStep[c( , )]) ) cnt<-cnt+1
 
 					return( cnt )
 				})	;kIdx<-anaFltCnt(cntMtx[,"fStep"],rpt)
