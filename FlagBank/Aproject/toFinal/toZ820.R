@@ -10,7 +10,8 @@ stdZoid <- NULL
 
 # simMode start ----------------------------------------------------
 	aZoid <- stdZoid <- c(10,21,22,30,35,42) # ZH 820 채워넣을 것.
-	allIdxF <- allIdx <- stdIdx <- which(apply(gEnv$allZoidMtx,1,function(zoid){all(zoid==stdZoid)}))
+	allIdxF <- allIdx <- stdIdx <- 6470038
+		# which(apply(gEnv$allZoidMtx,1,function(zoid){all(zoid==stdZoid)}))
 # simMode end   ----------------------------------------------------
 
 finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){

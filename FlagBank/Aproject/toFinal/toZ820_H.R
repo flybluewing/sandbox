@@ -1762,7 +1762,6 @@ fCutCnt.nextColVal_2 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 	# -- conditional
 	cntMtx <- matrix( 0 ,nrow=length(allIdxF) ,ncol=length(cntThld) )	;colnames(cntMtx)=names(cntThld)
 
-
     cntMtx[,"raw"] <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
 					cnt <- 0
 					if( aZoid[1]%in%c( 11) ) cnt<-cnt+1

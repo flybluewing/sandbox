@@ -262,15 +262,15 @@ analyLst[["toZ819"]] <- list(	stdFltCnt =2
 					,raw =0	,rawFV =0
 					,rem =0	,cStep =1	,fStep =0
 				)
-	,fCutCnt.nextQuo10 = list(	commonCutCnt=2	# reb spanM
-					,auxZW=0	,auxQuo=0
-					,raw =0	,rawFV =0
-					,rem =1	,cStep =0	,fStep =0
-				)
-	,fCutCnt.nextBin = list(	commonCutCnt=1	# quoPtn
+	,fCutCnt.nextQuo10 = list(	commonCutCnt=1	# quoPtn
 					,auxZW=0	,auxQuo=0
 					,raw =2	,rawFV =0
 					,rem =0	,cStep =0	,fStep =1
+				)
+	,fCutCnt.nextBin = list(	commonCutCnt=2	# reb spanM
+					,auxZW=0	,auxQuo=0
+					,raw =0	,rawFV =0
+					,rem =1	,cStep =0	,fStep =0
 				)
 	,fCutCnt.nextRebNum = list(	commonCutCnt=1	# reb
 					,auxZW=0	,auxQuo=0
@@ -362,10 +362,10 @@ analyLst[["toZ820"]] <- list(	stdFltCnt = 2
 					,raw =0	,rawFV =0
 					,rem =0	,cStep =1	,fStep =0
 				)
-	,fCutCnt.nextColVal_2 = list(	commonCutCnt=3	# reb zw remH0
+	,fCutCnt.nextColVal_2 = list(	commonCutCnt=3	# reb zw remH1
 					,auxZW=0	,auxQuo=0
 					,raw =0	,rawFV =0
-					,rem =1	,cStep =0	,fStep =0
+					,rem =1	,cStep =0	,fStep =1	# fStep(1/2)
 				)
 	,fCutCnt.nextColVal_3 = list(	commonCutCnt=0
 					,auxZW=0	,auxQuo=0

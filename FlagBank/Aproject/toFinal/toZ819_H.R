@@ -735,7 +735,7 @@ fCutCnt.nextZW <- function( gEnv ,allIdxF ,rpt=FALSE ){
 
 					if( 1<sum(aCStep[1:3+1]==c( 4, 5,24)) ) cnt<-cnt+1	# 5
 
-					if( aCStep[3]==sum(aCStep[c(1,6)]) ) cnt<-cnt+1
+					if( aCStep[3]==sum(aCStep[c(1,5)]) ) cnt<-cnt+1
 
 					return( cnt )
 				})	;kIdx<-anaFltCnt(cntMtx[,"cStep"],rpt)
@@ -806,7 +806,6 @@ fCutCnt.nextQuo10 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 					# anaMtx.freqVal( stdMI$rawTail )
 					cnt <- 0
 
-					
 					# < 1>
 					if( fCutU.hasPtn(c( 1, 6            ),aZoid) ) cnt<-cnt+1
 					if( fCutU.hasPtn(c( 1,NA,NA,32      ),aZoid) ) cnt<-cnt+1
@@ -818,7 +817,6 @@ fCutCnt.nextQuo10 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 					if( fCutU.hasPtn(c( 6, 7      ),aZoid) ) cnt<-cnt+1
 					if( fCutU.hasPtn(c( 7,16, 9,45),aZoid,thld=3,fixIdx=1) ) cnt<-cnt+1
 					# <33>
-					if( fCutU.hasPtn(c(  ,  ),aZoid) ) cnt<-cnt+1
 					# <34>
 					if( fCutU.hasPtn(c(14,NA,34,NA,39),aZoid) ) cnt<-cnt+1
 
