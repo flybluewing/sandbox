@@ -120,7 +120,7 @@ analyLst[["toZ814"]] <- list(	stdFltCnt = 1
 	,fCutCnt.nextZW = list(	commonCutCnt=2	#  reb spanM
 					,auxZW=0	,auxQuo=0
 					,raw =0	,rawFV =0	# fCutU.spanMatch(stdMI$rawTail[4,],aZoid,posDiff=0 )
-					,rem =1	,cStep =0	,fStep =0
+					,rem =1	,cStep =0	,fStep =0	# fStep(1/2)
 				)
 	,fCutCnt.nextQuo10 = list(	commonCutCnt=0
 					,auxZW=0	,auxQuo=0
@@ -157,7 +157,7 @@ analyLst[["toZ814"]] <- list(	stdFltCnt = 1
 					,raw =0	,rawFV =0
 					,rem =0	,cStep =1	,fStep =0
 				)
-	,fCutCnt.nextColVal_3 = list(	commonCutCnt=1
+	,fCutCnt.nextColVal_3 = list(	commonCutCnt=1	# nbor
 					,auxZW=0	,auxQuo=0
 					,raw =0	,rawFV =0
 					,rem =1	,cStep =0	,fStep =0
@@ -200,7 +200,7 @@ analyLst[["toZ816"]] <- list(	stdFltCnt = 0
 	,fCutCnt.nextBin = list(	commonCutCnt=0
 					,auxZW=0	,auxQuo=0
 					,raw =0	,rawFV =0
-					,rem =1	,cStep =0	,fStep =0
+					,rem =1	,cStep =0	,fStep =1
 				)
 	,fCutCnt.nextRebNum = list(	commonCutCnt=1	# reb
 					,auxZW=0	,auxQuo=0
