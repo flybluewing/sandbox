@@ -716,7 +716,7 @@ fCutU.getSpanMatchObj <- function( rawTail ,rpt=FALSE ){
 
 	rObj$srchLst <- srchLst
 	rObj$rawTail <- rawTail
-	rObj$matchCnt <- function( azoid ){
+	rObj$matchCnt <- function( aZoid ){
 		score <- sapply( rObj$srchLst ,function( srchInfo ){
 						mCnt <- fCutU.spanMatch( rObj$rawTail[ srchInfo["srchRow"] ,]
 										,aZoid
