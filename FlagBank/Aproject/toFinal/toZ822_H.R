@@ -257,6 +257,9 @@ fCutCnt.basic <- function( gEnv ,allIdxF ,rpt=FALSE ){
 					if( fCutU.hasPtn(c(  3, 1 ),aCStep) ) cnt<-cnt+1
 
 					if( all(aCStep[1:2+2]==c( 1,11 )) ) cnt<-cnt+1
+
+					if( all(aCStep[c(3,5)]== (aCStep[c(2,4)]+10) ) ) cnt<-cnt+1
+
 					return( cnt )
 				})	;kIdx<-anaFltCnt(cntMtx[,"cStep"],rpt)
 				#     Raw value(reb)       |cStep          |fStep                   |QuoSize   |QuoTbl 
@@ -281,6 +284,8 @@ fCutCnt.basic <- function( gEnv ,allIdxF ,rpt=FALSE ){
 					if( 1<sum(aFStep[1:3+1]==c( 11,   6,  13 )) ) cnt<-cnt+1 # -9
 					if( 1<sum(aFStep[1:3+3]==c( -9,  -9,  -9 )) ) cnt<-cnt+1 # -6
 					if( 1<sum(aFStep[1:2+4]==c( -9,  -9      )) ) cnt<-cnt+1 # -6
+
+					if( (aFStep[1]==aFStep[2]) && (aFStep[1]==aFStep[3]) ) cnt<-cnt+1
 
 					return( cnt )
 				})	;kIdx<-anaFltCnt(cntMtx[,"fStep"],rpt)
@@ -839,6 +844,10 @@ fCutCnt.nextZW <- function( gEnv ,allIdxF ,rpt=FALSE ){
 					if( 1<sum(aFStep[1:3+1]==c(-11, -18, -12)) ) cnt<-cnt+1 # -1
 					if( 1<sum(aFStep[1:3+3]==c(  1,   3,   5)) ) cnt<-cnt+1 # -3
 					if( 1<sum(aFStep[1:3+3]==c(  1,   4,  14)) ) cnt<-cnt+1 # -5
+
+					if( aFStep[2]==sum(aFStep[c(1,4)]) ) cnt<-cnt+1
+					if( aFStep[3]==sum(aFStep[c(1,5,6)]) ) cnt<-cnt+1
+
 					return( cnt )
 				})	;kIdx<-anaFltCnt(cntMtx[,"fStep"],rpt)
 	score <- sapply( 1:length(flgCnt) ,function( idx ){
@@ -950,6 +959,8 @@ fCutCnt.nextQuo10 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 					if( 1<sum(aCStep[1:3+2]==c(12,  6,  4)) ) cnt<-cnt+1	#  5
 					if( 1<sum(aCStep[1:3+2]==c( 9,  3,  9)) ) cnt<-cnt+1	# 15
 
+					if( all(aCStep[c(3,5)]== (aCStep[c(2,4)]+10) ) ) cnt<-cnt+1
+
 					return( cnt )
 				})	;kIdx<-anaFltCnt(cntMtx[,"cStep"],rpt)
 				#     Raw value(reb)       |cStep          |fStep                   |QuoSize   |QuoTbl 
@@ -973,6 +984,9 @@ fCutCnt.nextQuo10 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 					if( 1<sum(aFStep[1:3+2]==c( 12,  10,  18)) ) cnt<-cnt+1 # -1
 					if( 1<sum(aFStep[1:3+3]==c( -1,   5,  -6)) ) cnt<-cnt+1 #  0
 					if( 1<sum(aFStep[1:3+3]==c( -1,   5,  -6)) ) cnt<-cnt+1 #  8
+
+					if( aFStep[6]==sum(aFStep[c(1,3,4)]) ) cnt<-cnt+1
+
 					return( cnt )
 				})	;kIdx<-anaFltCnt(cntMtx[,"fStep"],rpt)
 	score <- sapply( 1:length(flgCnt) ,function( idx ){
@@ -1088,6 +1102,10 @@ fCutCnt.nextBin <- function( gEnv ,allIdxF ,rpt=FALSE ){
 
 					if( fCutU.hasPtn(c( 3, 9),aCStep) ) cnt<-cnt+1
 
+					if( all(aCStep[c(1,5)]== aCStep[2]*c(2,2)) ) cnt<-cnt+1
+					if( sum(aCStep[c(3,5)])==sum(aCStep[c(1,2)]) ) cnt<-cnt+1
+					if( sum(aCStep[c(3,5)])==sum(aCStep[c(4,2)]) ) cnt<-cnt+1
+
 					return( cnt )
 				})	;kIdx<-anaFltCnt(cntMtx[,"cStep"],rpt)
 				#     Raw value(reb)       |cStep          |fStep                   |QuoSize   |QuoTbl 
@@ -1115,6 +1133,11 @@ fCutCnt.nextBin <- function( gEnv ,allIdxF ,rpt=FALSE ){
 					if( 1<sum(aFStep[1:2+4]==c(-10,  -4     )) ) cnt<-cnt+1 # -1
 
 					if( fCutU.hasPtn(c(12,10),aFStep) ) cnt<-cnt+1
+
+					if( aFStep[1]==sum(aFStep[c(2,5)]) ) cnt<-cnt+1
+					if( aFStep[3]==sum(aFStep[c(2,5)]) ) cnt<-cnt+1
+					if( aFStep[4]==sum(aFStep[c(2,5)]) ) cnt<-cnt+1
+					if( (aFStep[1]==aFStep[3]) && (aFStep[1]==aFStep[4]) ) cnt<-cnt+1
 
 					return( cnt )
 				})	;kIdx<-anaFltCnt(cntMtx[,"fStep"],rpt)
@@ -1233,6 +1256,9 @@ fCutCnt.nextRebNum <- function( gEnv ,allIdxF ,rpt=FALSE ){
 
 					if( fCutU.hasPtn(c( 1, 3),aCStep) ) cnt<-cnt+1
 
+					if( aCStep[5]==sum(aCStep[c(2,4)]) ) cnt<-cnt+1
+					if( aCStep[3]==sum(aCStep[c(4,5)]) ) cnt<-cnt+1
+
 					return( cnt )
 				})	;kIdx<-anaFltCnt(cntMtx[,"cStep"],rpt)
 				#     Raw value(reb)       |cStep          |fStep                   |QuoSize   |QuoTbl 
@@ -1256,6 +1282,9 @@ fCutCnt.nextRebNum <- function( gEnv ,allIdxF ,rpt=FALSE ){
 					if( 1<sum(aFStep[1:3+0]==c( -7,  -6,   8)) ) cnt<-cnt+1 # 8
 					if( 1<sum(aFStep[1:3+3]==c(  7,   6,  -8)) ) cnt<-cnt+1 #-8
 					if( 1<sum(aFStep[1:2+4]==c( -5,  -2     )) ) cnt<-cnt+1 #-3
+
+					if( all(aFStep[c(1,2)]== -aFStep[c(6,5)]) ) cnt<-cnt+1
+
 					return( cnt )
 				})	;kIdx<-anaFltCnt(cntMtx[,"fStep"],rpt)
 	score <- sapply( 1:length(flgCnt) ,function( idx ){
@@ -1376,6 +1405,10 @@ fCutCnt.nextCStepBin <- function( gEnv ,allIdxF ,rpt=FALSE ){
 					if( fCutU.hasPtn(c( 6, 3),aCStep) ) cnt<-cnt+1
 					if( fCutU.hasPtn(c( 6, 1),aCStep) ) cnt<-cnt+1
 
+					if( all(aCStep[c(1,4)]== aCStep[2]*c(2,2) ) ) cnt<-cnt+1
+					if( sum(aCStep[c(3,5)])==sum(aCStep[c(1,2)]) ) cnt<-cnt+1
+					if( sum(aCStep[c(3,5)])==sum(aCStep[c(4,2)]) ) cnt<-cnt+1
+
 					return( cnt )
 				})	;kIdx<-anaFltCnt(cntMtx[,"cStep"],rpt)
 				#     Raw value(reb)       |cStep          |fStep                   |QuoSize   |QuoTbl 
@@ -1402,6 +1435,12 @@ fCutCnt.nextCStepBin <- function( gEnv ,allIdxF ,rpt=FALSE ){
 					if( 1<sum(aFStep[1:3+2]==c( -9,  -4,  -1)) ) cnt<-cnt+1 # 12
 					if( 1<sum(aFStep[1:3+3]==c( 12,   5,  -4)) ) cnt<-cnt+1 #  2
 					if( 1<sum(aFStep[1:3+3]==c( -1,   0, -12)) ) cnt<-cnt+1 # -1
+
+					if( (aFStep[1]==aFStep[3]) && (aFStep[1]==aFStep[4]) ) cnt<-cnt+1
+					if( aFStep[1]==sum(aFStep[c(2,5)]) ) cnt<-cnt+1
+					if( aFStep[3]==sum(aFStep[c(2,5)]) ) cnt<-cnt+1
+					if( aFStep[4]==sum(aFStep[c(2,5)]) ) cnt<-cnt+1
+					if( sum(aFStep[c(1,2,4)])==sum(aFStep[c(3,4)]) ) cnt<-cnt+1
 
 					return( cnt )
 				})	;kIdx<-anaFltCnt(cntMtx[,"fStep"],rpt)
@@ -1509,6 +1548,10 @@ fCutCnt.nextFStepBin <- function( gEnv ,allIdxF ,rpt=FALSE ){
 
 					if( fCutU.hasPtn(c( 1, 1),aCStep) ) cnt<-cnt+1
 					if( all(aCStep[1:2+3]==c( 3, 6)) ) cnt<-cnt+1
+
+					if( (aCStep[1]==aCStep[4]) && (aCStep[1]==aCStep[5]) ) cnt<-cnt+1
+					if( aCStep[3]==sum(aCStep[c(1,4,5)]) ) cnt<-cnt+1
+
 					return( cnt )
 				})	;kIdx<-anaFltCnt(cntMtx[,"cStep"],rpt)
 				#     Raw value(reb)       |cStep          |fStep                   |QuoSize   |QuoTbl 
@@ -1531,6 +1574,9 @@ fCutCnt.nextFStepBin <- function( gEnv ,allIdxF ,rpt=FALSE ){
 					if( 1<sum(aFStep[1:3+0]==c(-11, -13, -11)) ) cnt<-cnt+1 # -3
 					if( 1<sum(aFStep[1:3+2]==c(-11, -13, -11)) ) cnt<-cnt+1 # -3
 					if( 1<sum(aFStep[1:3+2]==c( -9, -14, -14)) ) cnt<-cnt+1 # -9
+
+					if( (aFStep[1]==aFStep[3]) && (aFStep[5]==aFStep[6]) ) cnt<-cnt+1
+					if( all(aFStep[3:4]== aFStep[1]*c(1,3) ) ) cnt<-cnt+1
 
 					return( cnt )
 				})	;kIdx<-anaFltCnt(cntMtx[,"fStep"],rpt)
@@ -1643,6 +1689,8 @@ fCutCnt.nextColVal_1 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 					if( all(aCStep[1:2+0]==c( 1, 5)) ) cnt<-cnt+1
 					if( all(aCStep[1:2+1]==c( 7, 1)) ) cnt<-cnt+1
 
+					if( aCStep[4]==sum(aCStep[c(2,3,5)]) ) cnt<-cnt+1
+
 					return( cnt )
 				})	;kIdx<-anaFltCnt(cntMtx[,"cStep"],rpt)
 				#     Raw value(reb)       |cStep          |fStep                   |QuoSize   |QuoTbl 
@@ -1666,6 +1714,9 @@ fCutCnt.nextColVal_1 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 					if( 1<sum(aFStep[1:3+2]==c(-12, -14, -14)) ) cnt<-cnt+1 # 17
 					if( 1<sum(aFStep[1:3+2]==c(-14, -14, -18)) ) cnt<-cnt+1 # 17
 					if( 1<sum(aFStep[1:2+4]==c( 12,   3     )) ) cnt<-cnt+1 # 12
+
+					if( sum(aFStep[c(1,3)])==sum(aFStep[c(4,6)]) ) cnt<-cnt+1
+
 					return( cnt )
 				})	;kIdx<-anaFltCnt(cntMtx[,"fStep"],rpt)
 	score <- sapply( 1:length(flgCnt) ,function( idx ){
@@ -1779,6 +1830,9 @@ fCutCnt.nextColVal_2 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 
 					if( fCutU.hasPtn(c( 3, 9),aCStep) ) cnt<-cnt+1
 
+					if( sum(aCStep[c(3,5)])==sum(aCStep[c(1,2)]) ) cnt<-cnt+1
+					if( sum(aCStep[c(3,5)])==sum(aCStep[c(4,2)]) ) cnt<-cnt+1
+
 					return( cnt )
 				})	;kIdx<-anaFltCnt(cntMtx[,"cStep"],rpt)
 				#     Raw value(reb)       |cStep          |fStep                   |QuoSize   |QuoTbl 
@@ -1802,6 +1856,9 @@ fCutCnt.nextColVal_2 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 					if( 1<sum(aFStep[1:3+2]==c(-10, -10,   7)) ) cnt<-cnt+1 # 10
 					if( 1<sum(aFStep[1:3+3]==c(-10, -10,   7)) ) cnt<-cnt+1 # 10
 					if( 1<sum(aFStep[1:3+3]==c( 12,  17,  15)) ) cnt<-cnt+1 # -7
+
+					if( aFStep[2]==sum(aFStep[c(1,3)]) ) cnt<-cnt+1
+					if( aFStep[3]==sum(aFStep[c(2,6)]) ) cnt<-cnt+1
 
 					return( cnt )
 				})	;kIdx<-anaFltCnt(cntMtx[,"fStep"],rpt)
@@ -1908,6 +1965,7 @@ fCutCnt.nextColVal_3 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 					if( 1<sum(aCStep[1:3+1]==c( 1,  8, 16)) ) cnt<-cnt+1	#  2
 
 					if( fCutU.hasPtn(c( 3, 8),aCStep) ) cnt<-cnt+1
+					if( sum(aCStep[c(1,2)])==sum(aCStep[c(3,5)]) ) cnt<-cnt+1
 
 					return( cnt )
 				})	;kIdx<-anaFltCnt(cntMtx[,"cStep"],rpt)
@@ -1933,6 +1991,10 @@ fCutCnt.nextColVal_3 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 					if( 1<sum(aFStep[1:3+3]==c( -1,  11,  15)) ) cnt<-cnt+1 #-10
 					if( 1<sum(aFStep[1:2+4]==c(  2,  -9     )) ) cnt<-cnt+1 # -1
 					if( 1<sum(aFStep[1:3+3]==c(-11, -15, -17)) ) cnt<-cnt+1 #  7
+
+					if( aFStep[4]==sum(aFStep[c(2,5)]) ) cnt<-cnt+1
+					if( aFStep[4]==sum(aFStep[c(1,3)]) ) cnt<-cnt+1
+
 					return( cnt )
 				})	;kIdx<-anaFltCnt(cntMtx[,"fStep"],rpt)
 	score <- sapply( 1:length(flgCnt) ,function( idx ){
@@ -2042,6 +2104,9 @@ fCutCnt.nextColVal_4 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 					if( fCutU.hasPtn(c( 2,11),aCStep) ) cnt<-cnt+1
 					if( fCutU.hasPtn(c( 2, 6),aCStep) ) cnt<-cnt+1
 
+					if( aCStep[3]==sum(aCStep[c(2,4)]) ) cnt<-cnt+1
+					if( aCStep[3]==sum(aCStep[c(1,4,5)]) ) cnt<-cnt+1
+
 					return( cnt )
 				})	;kIdx<-anaFltCnt(cntMtx[,"cStep"],rpt)
 				#     Raw value(reb)       |cStep          |fStep                   |QuoSize   |QuoTbl 
@@ -2067,6 +2132,7 @@ fCutCnt.nextColVal_4 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 					if( 1<sum(aFStep[1:3+1]==c(  4,  -1, -12)) ) cnt<-cnt+1 #   4
 					if( 1<sum(aFStep[1:3+2]==c( -4,   1,  12)) ) cnt<-cnt+1 #  -1
 					if( 1<sum(aFStep[1:3+3]==c(  4,   1,   5)) ) cnt<-cnt+1 # -12
+
 					return( cnt )
 				})	;kIdx<-anaFltCnt(cntMtx[,"fStep"],rpt)
 	score <- sapply( 1:length(flgCnt) ,function( idx ){
@@ -2180,6 +2246,8 @@ fCutCnt.nextColVal_5 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 					if( all(aCStep[1:2+3]==c( 2, 4)) ) cnt<-cnt+1
 					if( all(aCStep[1:2+3]==c( 3, 6)) ) cnt<-cnt+1
 
+					if( sum(aCStep[c(2,4)])==sum(aCStep[c(3,5)]) ) cnt<-cnt+1
+
 					return( cnt )
 				})	;kIdx<-anaFltCnt(cntMtx[,"cStep"],rpt)
 				#     Raw value(reb)       |cStep          |fStep                   |QuoSize   |QuoTbl 
@@ -2204,6 +2272,12 @@ fCutCnt.nextColVal_5 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 					if( 1<sum(aFStep[1:3+3]==c(  7,   8,   7)) ) cnt<-cnt+1 #  2
 					if( 1<sum(aFStep[1:2+4]==c(  7,   8     )) ) cnt<-cnt+1 #  2
 
+					if( aFStep[3]==sum(aFStep[c(2,5)]) ) cnt<-cnt+1
+					if( aFStep[3]==sum(aFStep[c(2,6)]) ) cnt<-cnt+1
+					if( aFStep[2]==sum(aFStep[c(1,5,6)]) ) cnt<-cnt+1
+					if( (aFStep[c(1,3)]== aFStep[4]*c(2,4) ) ) cnt<-cnt+1
+					if( aFStep[3]==(aFStep[4]*sum(aFStep[5:6]) ) ) cnt<-cnt+1
+
 					return( cnt )
 				})	;kIdx<-anaFltCnt(cntMtx[,"fStep"],rpt)
 	score <- sapply( 1:length(flgCnt) ,function( idx ){
@@ -2217,7 +2291,7 @@ fCutCnt.nextColVal_5 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 				})
     flgCnt <- flgCnt + score
 
-		return( list(flgCnt=flgCnt ,cntMtx=cntMtx ,auxCntMtx=auxCntMtx ,cccMtx=cccObj$scoreMtx ) )
+	return( list(flgCnt=flgCnt ,cntMtx=cntMtx ,auxCntMtx=auxCntMtx ,cccMtx=cccObj$scoreMtx ) )
 
 } # fCutCnt.nextColVal_5()
 
@@ -2318,6 +2392,8 @@ fCutCnt.nextColVal_6 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 
 					if( all(aCStep[1:2+3]==c( 2, 4)) ) cnt<-cnt+1
 
+					if( aCStep[3]==sum(aCStep[c(4,5)]) ) cnt<-cnt+1
+
 					return( cnt )
 				})	;kIdx<-anaFltCnt(cntMtx[,"cStep"],rpt)
 				#     Raw value(reb)       |cStep          |fStep                   |QuoSize   |QuoTbl 
@@ -2339,6 +2415,8 @@ fCutCnt.nextColVal_6 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 
 					if( 1<sum(aFStep[1:3+0]==c( -1, -14,   2)) ) cnt<-cnt+1 #  -8
 					if( 1<sum(aFStep[1:3+3]==c(-20, -18,  -3)) ) cnt<-cnt+1 #   3
+
+					if( aFStep[2]==sum(aFStep[c(1,5)]) ) cnt<-cnt+1
 
 					return( cnt )
 				})	;kIdx<-anaFltCnt(cntMtx[,"fStep"],rpt)
