@@ -500,7 +500,7 @@ analyLst[["toZ822"]] <- list(	stdFltCnt = 3
 	,fCutCnt.nextColVal_1 = list(	commonCutCnt=0
 					,auxZW=0	,auxQuo=0
 					,raw =0	,rawFV =0
-					,rem =1	,cStep =N2,fStep =0
+					,rem =1	,cStep =2,fStep =0
 				)
 	,fCutCnt.nextColVal_2 = list(	commonCutCnt=0
 					,auxZW=0	,auxQuo=0
