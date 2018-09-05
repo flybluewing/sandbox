@@ -13,6 +13,38 @@ stdZoid <- NULL
 	allIdxF <- allIdx <- stdIdx <- which(apply(gEnv$allZoidMtx,1,function(zoid){all(zoid==stdZoid)}))
 # simMode end   ----------------------------------------------------
 
+cutCC <- function( ccObj ,allIdxF ){
+	#  cntMtx	auxCntMtx	cccMtx
+
+	surFlag <- rep( TRUE ,length(allIdxF) )
+
+	flag <- apply( ccObj$auxCntMtx, 1, function( cntVal ){
+					# auxZW auxQuo
+					if( all(cntVal>0) ) return( FALSE )
+					return( TRUE )
+				})	;kIdx<-anaFlagFnd(!flag,F)
+	surFlag[ !flag ] <- FALSE
+
+	# flag <- apply( ccObj$cccMtx, 1, function( cntVal ){
+	# 				# reb nbor spanM quoAll quoPtn zw remH0 remH1 cStep2 cStep3
+	# 			})	;kIdx<-anaFlagFnd(!flag,F)
+	# surFlag[ !flag ] <- FALSE
+
+	ccc <- apply( ccObj$cccMtx ,1 ,function(cccVal){ sum(cccVal>0) })
+	cntMtx <- cbind( ccc, ccObj$cntMtx )
+	cName <- c( "ccc", "raw", "rawFV", "rem", "cStep", "fStep" )
+	thld <- c( 2, 2, 2, 3, 2, 2 )	;names(thld) <- cName
+	flag <- apply( cntMtx, 1, function( cntVal ){
+					# ccc   raw rawFV rem cStep fStep
+					if( 1 < sum(cntVal>=thld) ) return( FALSE )
+					return( TRUE )
+				})	;kIdx<-anaFlagFnd(!flag,F)
+	surFlag[ !flag ] <- FALSE
+
+	return( surFlag )
+
+} # cutCC()
+
 finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
     # cutEadge.getBanPtnColVal() 에서 1~2개 발생 탈락값들에 대한 검토 권장.
 	allIdxFObj <- list()
@@ -37,151 +69,113 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 	# fCutCnt.**
 	#		각 파트에서 2 이상씩은 잘라낸 후,
 	#		전체 파트에서 하나도 안 걸린 것들은 제외시키자.
-	flgCnt <- fCutCnt.default( gEnv ,allIdxF )
-	flag <- flgCnt<2	;table(flag)
-    allIdxF <- allIdxF[flag]
+	# ccObj <- fCutCnt.default( gEnv ,allIdxF )
+	ccObj <- fCutCnt.basic( gEnv ,allIdxF )
+	allIdxF <- allIdxF[ cutCC( ccObj ,allIdxF ) ]
     cat(sprintf("allIdxF %d\n",length(allIdxF)))
-	flgCnt <- fCutCnt.basic( gEnv ,allIdxF )$flgCnt
-	flag <- flgCnt<2	;table(flag)
-    allIdxF <- allIdxF[flag]
-    cat(sprintf("allIdxF %d\n",length(allIdxF)))
-	flgCnt <- fCutCnt.colValSeqNext( gEnv ,allIdxF )
-	flag <- flgCnt<2	;table(flag)
-    allIdxF <- allIdxF[flag]
-    cat(sprintf("allIdxF %d\n",length(allIdxF)))
-	flgCnt <- fCutCnt.colValSeqNext.cStep( gEnv ,allIdxF )
-	flag <- flgCnt<2	;table(flag)
-    allIdxF <- allIdxF[flag]
-    cat(sprintf("allIdxF %d\n",length(allIdxF)))
-	flgCnt <- fCutCnt.nextZW( gEnv ,allIdxF )$flgCnt
-	flag <- flgCnt<2	;table(flag)
-    allIdxF <- allIdxF[flag]
-    cat(sprintf("allIdxF %d\n",length(allIdxF)))
-	flgCnt <- fCutCnt.nextQuo10( gEnv ,allIdxF )$flgCnt
-	flag <- flgCnt<2	;table(flag)
-    allIdxF <- allIdxF[flag]
-    cat(sprintf("allIdxF %d\n",length(allIdxF)))
-	flgCnt <- fCutCnt.nextBin( gEnv ,allIdxF )$flgCnt
-	flag <- flgCnt<2	;table(flag)
-    allIdxF <- allIdxF[flag]
-    cat(sprintf("allIdxF %d\n",length(allIdxF)))
-	flgCnt <- fCutCnt.nextRebNum( gEnv ,allIdxF )$flgCnt
-	flag <- flgCnt<2	;table(flag)
-    allIdxF <- allIdxF[flag]
-    cat(sprintf("allIdxF %d\n",length(allIdxF)))
-	flgCnt <- fCutCnt.nextCStepBin( gEnv ,allIdxF )$flgCnt
-	flag <- flgCnt<2	;table(flag)
-    allIdxF <- allIdxF[flag]
-    cat(sprintf("allIdxF %d\n",length(allIdxF)))
-	flgCnt <- fCutCnt.nextFStepBin( gEnv ,allIdxF )$flgCnt
-	flag <- flgCnt<2	;table(flag)
-    allIdxF <- allIdxF[flag]
-    cat(sprintf("allIdxF %d\n",length(allIdxF)))
-	flgCnt <- fCutCnt.nextColVal_1( gEnv ,allIdxF )$flgCnt
-	flag <- flgCnt<2	;table(flag)
-    allIdxF <- allIdxF[flag]
-    cat(sprintf("allIdxF %d\n",length(allIdxF)))
-	flgCnt <- fCutCnt.nextColVal_2( gEnv ,allIdxF )$flgCnt
-	flag <- flgCnt<2	;table(flag)
-    allIdxF <- allIdxF[flag]
-    cat(sprintf("allIdxF %d\n",length(allIdxF)))
-	flgCnt <- fCutCnt.nextColVal_3( gEnv ,allIdxF )$flgCnt
-	flag <- flgCnt<2	;table(flag)
-    allIdxF <- allIdxF[flag]
-    cat(sprintf("allIdxF %d\n",length(allIdxF)))
-	flgCnt <- fCutCnt.nextColVal_4( gEnv ,allIdxF )$flgCnt
-	flag <- flgCnt<2	;table(flag)
-    allIdxF <- allIdxF[flag]
-    cat(sprintf("allIdxF %d\n",length(allIdxF)))
-	flgCnt <- fCutCnt.nextColVal_5( gEnv ,allIdxF )$flgCnt
-	flag <- flgCnt<2	;table(flag)
-    allIdxF <- allIdxF[flag]
-    cat(sprintf("allIdxF %d\n",length(allIdxF)))
-	flgCnt <- fCutCnt.nextColVal_6( gEnv ,allIdxF )$flgCnt
-	flag <- flgCnt<2	;table(flag)
-    allIdxF <- allIdxF[flag]
-    cat(sprintf("allIdxF %d\n",length(allIdxF)))
-
+	ccObj <- fCutCnt.nextZW( gEnv ,allIdxF )
+	allIdxF <- allIdxF[ cutCC( ccObj ,allIdxF ) ]
+	cat(sprintf("allIdxF %d\n",length(allIdxF)))
+	ccObj <- fCutCnt.nextQuo10( gEnv ,allIdxF )
+	allIdxF <- allIdxF[ cutCC( ccObj ,allIdxF ) ]
+	cat(sprintf("allIdxF %d\n",length(allIdxF)))
+	ccObj <- fCutCnt.nextBin( gEnv ,allIdxF )
+	allIdxF <- allIdxF[ cutCC( ccObj ,allIdxF ) ]
+	cat(sprintf("allIdxF %d\n",length(allIdxF)))
+	ccObj <- fCutCnt.nextRebNum( gEnv ,allIdxF )
+	allIdxF <- allIdxF[ cutCC( ccObj ,allIdxF ) ]
+	cat(sprintf("allIdxF %d\n",length(allIdxF)))
+	ccObj <- fCutCnt.nextCStepBin( gEnv ,allIdxF )
+	allIdxF <- allIdxF[ cutCC( ccObj ,allIdxF ) ]
+	cat(sprintf("allIdxF %d\n",length(allIdxF)))
+	ccObj <- fCutCnt.nextFStepBin( gEnv ,allIdxF )
+	allIdxF <- allIdxF[ cutCC( ccObj ,allIdxF ) ]
+	cat(sprintf("allIdxF %d\n",length(allIdxF)))
+	ccObj <- fCutCnt.nextColVal_1( gEnv ,allIdxF )
+	allIdxF <- allIdxF[ cutCC( ccObj ,allIdxF ) ]
+	cat(sprintf("allIdxF %d\n",length(allIdxF)))
+	ccObj <- fCutCnt.nextColVal_2( gEnv ,allIdxF )
+	allIdxF <- allIdxF[ cutCC( ccObj ,allIdxF ) ]
+	cat(sprintf("allIdxF %d\n",length(allIdxF)))
+	ccObj <- fCutCnt.nextColVal_3( gEnv ,allIdxF )
+	allIdxF <- allIdxF[ cutCC( ccObj ,allIdxF ) ]
+	cat(sprintf("allIdxF %d\n",length(allIdxF)))
+	ccObj <- fCutCnt.nextColVal_4( gEnv ,allIdxF )
+	allIdxF <- allIdxF[ cutCC( ccObj ,allIdxF ) ]
+	cat(sprintf("allIdxF %d\n",length(allIdxF)))
+	ccObj <- fCutCnt.nextColVal_5( gEnv ,allIdxF )
+	allIdxF <- allIdxF[ cutCC( ccObj ,allIdxF ) ]
+	cat(sprintf("allIdxF %d\n",length(allIdxF)))
+	ccObj <- fCutCnt.nextColVal_6( gEnv ,allIdxF )
+	allIdxF <- allIdxF[ cutCC( ccObj ,allIdxF ) ]
+	cat(sprintf("allIdxF %d\n",length(allIdxF)))
+	save( allIdxF ,file="Obj_allIdxF.save" )
 
 	tDiff <- Sys.time() - tStmp	
 	allIdxFObj$allIdxF.fCutCnt <- allIdxF
 
-	#=<Final Approach>=======================================================
-	#	원래는 맨 마지막이어야 하나, table(flgCnt) 동향파악을 위해 앞으로 옮긴다.
-	# allIdxF <- fCut.finalApproach( gEnv ,allIdxF )
-	# cat(sprintf("allIdxF %d\n",length(allIdxF)))
-	
-	# ------------------------------------------------------------------
-	# multiple fCutCnt.**
-	# flgCnt <- flgCnt + fCutCnt.**( gEnv ,allIdxF )
-	#	allIdxF <- allIdxFObj$allIdxF.fCutCnt
-	flgCnt <- rep( 0 ,length(allIdxF) )
-	flgCnt <- flgCnt + fCutCnt.default( gEnv ,allIdxF )
-	flgCnt <- flgCnt + fCutCnt.basic( gEnv ,allIdxF )$flgCnt
-	flgCnt <- flgCnt + fCutCnt.colValSeqNext( gEnv ,allIdxF )
-	flgCnt <- flgCnt + fCutCnt.colValSeqNext.cStep( gEnv ,allIdxF )
-	flgCnt <- flgCnt + fCutCnt.nextZW( gEnv ,allIdxF )$flgCnt
-	flgCnt <- flgCnt + fCutCnt.nextQuo10( gEnv ,allIdxF )$flgCnt
-	flgCnt <- flgCnt + fCutCnt.nextBin( gEnv ,allIdxF )$flgCnt
-	flgCnt <- flgCnt + fCutCnt.nextRebNum( gEnv ,allIdxF )$flgCnt
-	flgCnt <- flgCnt + fCutCnt.nextCStepBin( gEnv ,allIdxF )$flgCnt
-	flgCnt <- flgCnt + fCutCnt.nextFStepBin( gEnv ,allIdxF )$flgCnt
-	flgCnt <- flgCnt + fCutCnt.nextColVal_1( gEnv ,allIdxF )$flgCnt
-	flgCnt <- flgCnt + fCutCnt.nextColVal_2( gEnv ,allIdxF )$flgCnt
-	flgCnt <- flgCnt + fCutCnt.nextColVal_3( gEnv ,allIdxF )$flgCnt
-	flgCnt <- flgCnt + fCutCnt.nextColVal_4( gEnv ,allIdxF )$flgCnt
-	flgCnt <- flgCnt + fCutCnt.nextColVal_5( gEnv ,allIdxF )$flgCnt
-	flgCnt <- flgCnt + fCutCnt.nextColVal_6( gEnv ,allIdxF )$flgCnt
+	ccObjLst <- list()
+	ccObjLst[["basic"		]] <- fCutCnt.basic( 		gEnv ,allIdxF )
+	ccObjLst[["nextZW"		]] <- fCutCnt.nextZW( 		gEnv ,allIdxF )
+	ccObjLst[["nextQuo10"	]] <- fCutCnt.nextQuo10( 	gEnv ,allIdxF )
+	ccObjLst[["nextBin"		]] <- fCutCnt.nextBin( 		gEnv ,allIdxF )
+	ccObjLst[["nextRebNum"	]] <- fCutCnt.nextRebNum( 	gEnv ,allIdxF )
+	ccObjLst[["nextCStepBin"]] <- fCutCnt.nextCStepBin( gEnv ,allIdxF )
+	ccObjLst[["nextFStepBin"]] <- fCutCnt.nextFStepBin( gEnv ,allIdxF )
+	ccObjLst[["nextColVal_1"]] <- fCutCnt.nextColVal_1( gEnv ,allIdxF )
+	ccObjLst[["nextColVal_2"]] <- fCutCnt.nextColVal_2( gEnv ,allIdxF )
+	ccObjLst[["nextColVal_3"]] <- fCutCnt.nextColVal_3( gEnv ,allIdxF )
+	ccObjLst[["nextColVal_4"]] <- fCutCnt.nextColVal_4( gEnv ,allIdxF )
+	ccObjLst[["nextColVal_5"]] <- fCutCnt.nextColVal_5( gEnv ,allIdxF )
+	ccObjLst[["nextColVal_6"]] <- fCutCnt.nextColVal_6( gEnv ,allIdxF )
 
-	allIdxFObj$flgCnt <- flgCnt
-	table(flgCnt)
-	# length( allIdxFObj$flgCnt )
+	fName <- attributes(ccObjLst)$names
+
+	tStmp2 <- Sys.time()
+	# surFlag
+	surFlag <- rep( TRUE ,length(allIdxF) )
+	cName <- c( "ccc", "auxZW", "auxQuo", "raw", "rawFV", "rem", "cStep", "fStep" )
+	scoreMtx <- matrix( 0 ,nrow=length(ccObjLst) ,ncol=length(cName) )
+	rownames(scoreMtx) <- fName		;colnames(scoreMtx) <- cName
+	cccReb <- rep( 0 ,length(fName) )	;names(cccReb) <- fName
+	for( aIdx in 1:length(allIdxF) ){
+		cccReb[] <- 0	;scoreMtx[,] <- 0
+		for( nIdx in fName ){
+			cccReb[ nIdx ] <- ccObjLst[[nIdx]]$cccMtx[aIdx,"reb"]
+
+			scoreMtx[nIdx,"ccc"] <- sum( 0<ccObjLst[[nIdx]]$cccMtx[aIdx,] )
+			scoreMtx[nIdx,c("auxZW", "auxQuo")] <- ccObjLst[[nIdx]]$auxCntMtx[aIdx,c("auxZW", "auxQuo")]
+			scoreMtx[nIdx,c("raw", "rawFV", "rem", "cStep", "fStep")] <-
+				ccObjLst[[nIdx]]$cntMtx[aIdx,c("raw", "rawFV", "rem", "cStep", "fStep")]
+		}
+
+		# ccc - reb (late)
+		chkFN <- c( "basic", "nextZW", "nextQuo10", "nextRebNum" )
+		if( 2 <= sum(0<cccReb[chkFN]) ) surFlag[aIdx] <- FALSE
+		# ccc - reb (gold)
+		chkFN <- c( "nextRebNum", "nextFStepBin"
+						, "nextColVal_1", "nextColVal_3" ,"nextColVal_4" ,"nextColVal_5" ,"nextColVal_6")
+		if( 2 <= sum(0<cccReb[chkFN]) ) surFlag[aIdx] <- FALSE
+
+			# ccc cnt - 2이상 값 발생위치 재발이 2개 이상. (late+gold)
+		chkFN <- c( "nextZW", "nextColVal_3" )
+		if( 2 <= sum(2<=scoreMtx[chkFN,"ccc"]) ) surFlag[aIdx] <- FALSE
+			# ccc cnt - 3이상은 최대 1 개.
+		if( 2 <= sum(3<=scoreMtx[,"ccc"]) ) surFlag[aIdx] <- FALSE
+		if( 7 > sum(scoreMtx[,"ccc"]) ) surFlag[aIdx] <- FALSE
+
+		# raw(late) - 1이상 값의 재발은 1개 이하.
+		chkFN <- c( "nextZW", "nextColVal_2" )
+		if( 2 <= sum(0<scoreMtx[chkFN,"raw"]) ) surFlag[aIdx] <- FALSE
+		# raw(gold) - 1이상 값의 재발은 1개 이하.
+		chkFN <- c( "nextCStepBin", "nextColVal_2", "nextColVal_5" )
+		if( 2 <= sum(0<scoreMtx[chkFN,"raw"]) ) surFlag[aIdx] <- FALSE
 
 
-	flag <- (0<flgCnt)&(flgCnt<3)	# 하나도 안 걸릴 수는 없겠지.
-    allIdxF <- allIdxF[flag]
-    cat(sprintf("allIdxF %d\n",length(allIdxF)))
-	allIdxFObj$allIdxF.fCutCnt.m <- allIdxF
+	} # aIdx
+	tDiff2 <- Sys.time() - tStmp2
 
-	# ------------------------------------------------------------------
-	# fCutCnt.**  ... cntMtx, auxCntMtx
-	cntMtxLst <- list()
-	cntMtxLst[["fCutCnt.basic"]] <- fCutCnt.basic( gEnv ,allIdxF )$cntMtx
-	cntMtxLst[["fCutCnt.nextZW"]] <- fCutCnt.nextZW( gEnv ,allIdxF )$cntMtx
-	cntMtxLst[["fCutCnt.nextQuo10"]] <- fCutCnt.nextQuo10( gEnv ,allIdxF )$cntMtx
-	cntMtxLst[["fCutCnt.nextBin"]] <- fCutCnt.nextBin( gEnv ,allIdxF )$cntMtx
-	cntMtxLst[["fCutCnt.nextRebNum"]] <- fCutCnt.nextRebNum( gEnv ,allIdxF )$cntMtx
-	cntMtxLst[["fCutCnt.nextCStepBin"]] <- fCutCnt.nextCStepBin( gEnv ,allIdxF )$cntMtx
-	cntMtxLst[["fCutCnt.nextFStepBin"]] <- fCutCnt.nextFStepBin( gEnv ,allIdxF )$cntMtx
-	cntMtxLst[["fCutCnt.nextColVal_1"]] <- fCutCnt.nextColVal_1( gEnv ,allIdxF )$cntMtx
-	cntMtxLst[["fCutCnt.nextColVal_2"]] <- fCutCnt.nextColVal_2( gEnv ,allIdxF )$cntMtx
-	cntMtxLst[["fCutCnt.nextColVal_3"]] <- fCutCnt.nextColVal_3( gEnv ,allIdxF )$cntMtx
-	cntMtxLst[["fCutCnt.nextColVal_4"]] <- fCutCnt.nextColVal_4( gEnv ,allIdxF )$cntMtx
-	cntMtxLst[["fCutCnt.nextColVal_5"]] <- fCutCnt.nextColVal_5( gEnv ,allIdxF )$cntMtx
-	cntMtxLst[["fCutCnt.nextColVal_6"]] <- fCutCnt.nextColVal_6( gEnv ,allIdxF )$cntMtx
-
-	cntMtx <- do.call( cbind ,lapply( cntMtxLst ,function(mtx){mtx[,"raw"]}) )
-	cntSum <- apply( cntMtx ,1 ,sum )
-	# cut 기준을 어떻게 잡아야 할 까...
-
-	auxCntMtxLst <- list()
-	auxCntMtxLst[["fCutCnt.basic"]] <- fCutCnt.basic( gEnv ,allIdxF )$auxCntMtx
-	auxCntMtxLst[["fCutCnt.nextZW"]] <- fCutCnt.nextZW( gEnv ,allIdxF )$auxCntMtx
-	auxCntMtxLst[["fCutCnt.nextQuo10"]] <- fCutCnt.nextQuo10( gEnv ,allIdxF )$auxCntMtx
-	auxCntMtxLst[["fCutCnt.nextBin"]] <- fCutCnt.nextBin( gEnv ,allIdxF )$auxCntMtx
-	auxCntMtxLst[["fCutCnt.nextRebNum"]] <- fCutCnt.nextRebNum( gEnv ,allIdxF )$auxCntMtx
-	auxCntMtxLst[["fCutCnt.nextCStepBin"]] <- fCutCnt.nextCStepBin( gEnv ,allIdxF )$auxCntMtx
-	auxCntMtxLst[["fCutCnt.nextFStepBin"]] <- fCutCnt.nextFStepBin( gEnv ,allIdxF )$auxCntMtx
-	auxCntMtxLst[["fCutCnt.nextColVal_1"]] <- fCutCnt.nextColVal_1( gEnv ,allIdxF )$auxCntMtx
-	auxCntMtxLst[["fCutCnt.nextColVal_2"]] <- fCutCnt.nextColVal_2( gEnv ,allIdxF )$auxCntMtx
-	auxCntMtxLst[["fCutCnt.nextColVal_3"]] <- fCutCnt.nextColVal_3( gEnv ,allIdxF )$auxCntMtx
-	auxCntMtxLst[["fCutCnt.nextColVal_4"]] <- fCutCnt.nextColVal_4( gEnv ,allIdxF )$auxCntMtx
-	auxCntMtxLst[["fCutCnt.nextColVal_5"]] <- fCutCnt.nextColVal_5( gEnv ,allIdxF )$auxCntMtx
-	auxCntMtxLst[["fCutCnt.nextColVal_6"]] <- fCutCnt.nextColVal_6( gEnv ,allIdxF )$auxCntMtx
-
-	cntMtx <- do.call( cbind ,lapply( auxCntMtxLst ,function(mtx){mtx[,"auxQuo"]}) )
-	cntSum <- apply( cntMtx ,1 ,sum )
-	# cut 기준을 어떻게 잡아야 할 까...
+	# table(surFlag)	;kIdx <- head(which(!surFlag))
 
 	tDiff <- Sys.time() - tStmp
 	allIdxFObj$timeCost <- tDiff

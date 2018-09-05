@@ -135,7 +135,7 @@ fCutCnt.default <- function( gEnv ,allIdxF ,rpt=FALSE ){
 
 } # fCutCnt.default()
 
-# undone working
+# done
 fCut.basic <- function( gEnv ,allIdxF ,rpt=FALSE ){
 
 	#=====================================================================================
@@ -1941,7 +1941,7 @@ fCutCnt.nextFStepBin <- function( gEnv ,allIdxF ,rpt=FALSE ){
 					# < 5>
 					# <12>
 					if( fCutU.hasPtn(c(   12,20      ),aZoid) ) cnt<-cnt+1
-					if( fCutU.hasPtn(c( 3,12,NA,31,32),aZoid,thld=3,fixIdx2) ) cnt<-cnt+1
+					if( fCutU.hasPtn(c( 3,12,NA,31,32),aZoid,thld=3,fixIdx=2) ) cnt<-cnt+1
 					# <13>
 					if( fCutU.hasPtn(c(13,NA,29),aZoid) ) cnt<-cnt+1
 					# <20>
