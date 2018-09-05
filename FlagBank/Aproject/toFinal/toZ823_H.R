@@ -7,7 +7,6 @@ fCut.default <- function( gEnv ,allIdxF ,rpt=FALSE ){
 
 	zMtx <- gEnv$zhF	;zMtxLen <- nrow(zMtx)	# rptObj<-anaQuoTbl( zMtx )
 	stdMI <- fCutU.getMtxInfo( zMtx )	;rptObj<-anaMtx( stdMI$rawTail )
-	# mtxLen  lastZoid    rem quo10   cStep   fStep   rawTail cStepTail   quoTail quoRebPtn
 
 	# col[1] 은 1~9
 	flag <- gEnv$allZoidMtx[allIdxF,1]<10	;kIdx<-anaFlagFnd(!flag,rpt)
@@ -39,6 +38,7 @@ fCut.default <- function( gEnv ,allIdxF ,rpt=FALSE ){
 					return( cnt<2 )
 				})	;kIdx<-anaFlagFnd(!flag,rpt)
     allIdxF <- allIdxF[flag]
+
     # rem ptn 재현 3이상
     flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
 					aCode <- aZoid%%10
@@ -140,29 +140,52 @@ fCut.basic <- function( gEnv ,allIdxF ,rpt=FALSE ){
 
 	zMtx <- gEnv$zhF					# rptObj<-anaQuoTbl( zMtx )
 	stdMI <- fCutU.getMtxInfo( zMtx )
-	# mtxLen  lastZoid    rem quo10   cStep   fStep   rawTail cStepTail   quoTail quoRebPtn
 	# rptObj<-anaMtx(stdMI$rawTail,stdZoid);u0.zoidMtx_ana.rpt( stdMI$rawTail )
 
-	# 동일 컬럼에 같은 값 재현은 제외.
-    # flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
-	# 				return( !any(aZoid==stdMI$lastZoid) )
-	# 			})	;kIdx<-anaFlagFnd(!flag,rpt)
-    # allIdxF <- allIdxF[flag]
-
-	flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
-					aCStep <- aZoid[2:6]-aZoid[1:5]
-					if( aCStep[5]==1 ) return( FALSE )
-					if( 1<sum(aCStep==1) ) return( FALSE )
+	# raw
+    flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+					if( any(aZoid==stdMI$lastZoid) ) return(FALSE)
+					if( 1<sum(aZoid==stdMI$lastZoid) ) return(FALSE)
+					if( 1<sum(aZoid[c(2,5,6)]== aZoid[1]*c(2,3,4) )) return( FALSE )
 					return( TRUE )
 				})	;kIdx<-anaFlagFnd(!flag,rpt)
     allIdxF <- allIdxF[flag]
 
-	stdQuo <- fCutU.chkRowPtnReb(stdMI$quoTail)	# stdQuo$matValMtx
-	flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
-					quoSize <- fCutU.getQuoObj(aZoid)$size
-					return( !stdQuo$filt(quoSize)$filted )
+	# cStep 패턴
+    flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+					cnt <- 0
+					aCStep <- aZoid[2:6]-aZoid[1:5]
+
+					if( fCutU.hasPtn(c( 2, 3 ),aCStep) ) cnt<-cnt+1
+					if( fCutU.hasPtn(c( 3, 1 ),aCStep) ) cnt<-cnt+1
+					if( fCutU.hasPtn(c(11, 1 ),aCStep) ) cnt<-cnt+1
+					if( fCutU.hasPtn(c( 8, 5 ),aCStep) ) cnt<-cnt+1
+
+					if( all(aCStep[1:2+0]==c( 9, 2)) ) cnt<-cnt+1
+					if( all(aCStep[1:2+2]==c( 2, 4)) ) cnt<-cnt+1
+
+					if( aCStep[1]==sum(aCStep[2:4]) ) cnt<-cnt+10
+					if( aCStep[5]==sum(aCStep[2:4]) ) cnt<-cnt+10
+					if( all(aCStep[c(1,5)]== aCStep[4]*c(3,3) ) ) cnt<-cnt+10
+
+					return( 2>cnt )
 				})	;kIdx<-anaFlagFnd(!flag,rpt)
     allIdxF <- allIdxF[flag]
+
+	# fStep 패턴
+    flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+					cnt <- 0
+					aFStep <- aZoid - stdMI$lastZoid
+
+					if( aFStep[4]==sum(aFStep[c(1,6)]) ) cnt<-cnt+10
+					if( aFStep[2]==sum(aFStep[c(1,5)]) ) cnt<-cnt+10
+					if( aFStep[5]==sum(aFStep[c(2,6)]) ) cnt<-cnt+10
+
+					return( 2>cnt )
+				})	;kIdx<-anaFlagFnd(!flag,rpt)
+    allIdxF <- allIdxF[flag]
+
+	save( allIdxF ,file="Obj_fCut.basic.save" )
 
 	return( allIdxF )
 

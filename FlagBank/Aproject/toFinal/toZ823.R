@@ -23,8 +23,6 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 
     allIdxF <- allIdx
 	stdMI <- fCutU.getMtxInfo( gEnv$zhF )	#	rptObj<-anaMtx( stdMI$rawTail )	# u0.zoidMtx_ana( stdMI$rawTail )
-	# mtxLen  lastZoid    rem quo10   cStep   fStep   rawTail cStepTail   quoTail quoRebPtn
-
 
 
 	tStmp <- Sys.time()

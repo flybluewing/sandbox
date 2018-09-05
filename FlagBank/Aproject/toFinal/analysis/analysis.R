@@ -20,7 +20,7 @@ rpt.analyLst <- function( analy ){
 } # rpt.analyLst()
 
 
-# 	mtxLst <- lapply( c("toZ819","toZ820","toZ821") 
+# 	mtxLst <- lapply( c("toZ819","toZ820","toZ821","toZ822") 
 # 						,function(nm){ rpt.analyLst( analyLst[[nm]] ) }
 # 					)
 # 	for( nIdx in colnames( mtxLst[[1]] ) ){
@@ -29,16 +29,18 @@ rpt.analyLst <- function( analy ){
 # 		rptStr <- sprintf("  %s",capture.output(mtx))
 # 		cat( sprintf("%s \n",paste(rptStr,collapse="\n")) )
 # 	}
+
 # 	fCutU.commonCutCnt( gEnv ,allIdxF ,zMtx ,rpt=T )
-	# stdMI$rawTail
-	# fCutU.commonCutCnt( gEnv ,allIdxF ,zMtx )
-	# auxCntMtx
-	# cntMtx
+
+# 	stdMI$rawTail
+# 	fCutU.commonCutCnt( gEnv ,allIdxF ,zMtx )
+# 	auxCntMtx
+# 	cntMtx
 
 
 analyLst <- list()
+# [gold] ---------------------------------------
 #	toZ800	: 0		toZ801	: 0		toZ806	: 1
-
 analyLst[["toZ809"]] <- list(	stdFltCnt = 1
 	,fCutCnt.basic = list(	commonCutCnt=0
 					,auxZW=0	,auxQuo=0
@@ -119,8 +121,8 @@ analyLst[["toZ814"]] <- list(	stdFltCnt = 1
 	,fCutCnt.colValSeqNext.cStep =NA
 	,fCutCnt.nextZW = list(	commonCutCnt=2	#  reb spanM
 					,auxZW=0	,auxQuo=0
-					,raw =0	,rawFV =0	# fCutU.spanMatch(stdMI$rawTail[4,],aZoid,posDiff=0 )
-					,rem =1	,cStep =0	,fStep =0	# fStep(1/2)
+					,raw =0	,rawFV =0
+					,rem =1	,cStep =0	,fStep =1	# fStep(1/2)
 				)
 	,fCutCnt.nextQuo10 = list(	commonCutCnt=0
 					,auxZW=0	,auxQuo=0
@@ -147,7 +149,7 @@ analyLst[["toZ814"]] <- list(	stdFltCnt = 1
 					,raw =0	,rawFV =0
 					,rem =0	,cStep =1	,fStep =0
 				)
-	,fCutCnt.nextColVal_1 = list(	commonCutCnt=1	#  reb
+	,fCutCnt.nextColVal_1 = list(	commonCutCnt=1	# reb
 					,auxZW=0	,auxQuo=0
 					,raw =0	,rawFV =0
 					,rem =2	,cStep =0	,fStep =0
@@ -167,7 +169,7 @@ analyLst[["toZ814"]] <- list(	stdFltCnt = 1
 					,raw =1	,rawFV =0
 					,rem =1	,cStep =1	,fStep =0
 				)
-	,fCutCnt.nextColVal_5 = list(	commonCutCnt=1	#  reb
+	,fCutCnt.nextColVal_5 = list(	commonCutCnt=1	# reb
 					,auxZW=0	,auxQuo=0
 					,raw =1	,rawFV =0
 					,rem =0	,cStep =0	,fStep =0
@@ -249,6 +251,7 @@ analyLst[["toZ816"]] <- list(	stdFltCnt = 0
 				)
 ) # analyLst[["toZ816"]]
 
+# [late] ---------------------------------------
 analyLst[["toZ819"]] <- list(	stdFltCnt =2
 	,fCutCnt.basic = list(	commonCutCnt=0
 					,auxZW=0	,auxQuo=0
@@ -327,7 +330,7 @@ analyLst[["toZ820"]] <- list(	stdFltCnt = 2
 				)
 	,fCutCnt.colValSeqNext = 0
 	,fCutCnt.colValSeqNext.cStep = 0
-	,fCutCnt.nextZW = list(	commonCutCnt=2	#  reb quoPtn
+	,fCutCnt.nextZW = list(	commonCutCnt=2	# reb quoPtn
 					,auxZW=0	,auxQuo=0
 					,raw =0	,rawFV =0
 					,rem =2	,cStep =1	,fStep =0

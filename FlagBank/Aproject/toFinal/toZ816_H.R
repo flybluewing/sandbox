@@ -1868,7 +1868,6 @@ fCutCnt.nextColVal_3 <- function( gEnv ,allIdxF ,rpt=FALSE ){
     cntMtx[,"rawFV"] <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
 					# anaMtx.freqVal( stdMI$rawTail )
 					cnt <- 0
-
 					
 					# < 6>
 					if( fCutU.hasPtn(c( 6,NA,17,NA,NA,22),aZoid) ) cnt<-cnt+1
@@ -2308,7 +2307,6 @@ fCutCnt.nextColVal_6 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 					# anaMtx.freqVal( stdMI$rawTail )
 					cnt <- 0
 
-					
 					# < 3>
 					if( fCutU.hasPtn(c( 3,NA,14     ),aZoid) ) cnt<-cnt+1
 					if( fCutU.hasPtn(c( 3,16,NA,NA,19),aZoid) ) cnt<-cnt+1
