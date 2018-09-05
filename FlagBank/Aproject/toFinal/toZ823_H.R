@@ -135,55 +135,504 @@ fCutCnt.default <- function( gEnv ,allIdxF ,rpt=FALSE ){
 
 } # fCutCnt.default()
 
-# undone
+# undone working
 fCut.basic <- function( gEnv ,allIdxF ,rpt=FALSE ){
 
+	#=====================================================================================
+	#	fCutCnt.basic() 에서 정책적으로 자르기.
 	zMtx <- gEnv$zhF					# rptObj<-anaQuoTbl( zMtx )
-	stdMI <- fCutU.getMtxInfo( zMtx )
-	# rptObj<-anaMtx(stdMI$rawTail,stdZoid);u0.zoidMtx_ana.rpt( stdMI$rawTail )
+	if( TRUE ){	# 소스코드 접을 수 있으려고..
+		stdMI <- fCutU.getMtxInfo( zMtx )
+		# rptObj<-anaMtx(stdMI$rawTail,stdZoid);u0.zoidMtx_ana.rpt( stdMI$rawTail )
 
-	# raw
-    flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
-					if( any(aZoid==stdMI$lastZoid) ) return(FALSE)
-					if( 1<sum(aZoid==stdMI$lastZoid) ) return(FALSE)
-					if( 1<sum(aZoid[c(2,5,6)]== aZoid[1]*c(2,3,4) )) return( FALSE )
-					return( TRUE )
-				})	;kIdx<-anaFlagFnd(!flag,rpt)
-    allIdxF <- allIdxF[flag]
+		# raw
+		flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+						if( any(aZoid==stdMI$lastZoid) ) return(FALSE)
+						if( 1<sum(aZoid==stdMI$lastZoid) ) return(FALSE)
+						if( 1<sum(aZoid[c(2,5,6)]== aZoid[1]*c(2,3,4) )) return( FALSE )
+						return( TRUE )
+					})	;kIdx<-anaFlagFnd(!flag,rpt)
+		allIdxF <- allIdxF[flag]
 
-	# cStep 패턴
-    flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
-					cnt <- 0
-					aCStep <- aZoid[2:6]-aZoid[1:5]
+		# cStep 패턴
+		flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+						cnt <- 0
+						aCStep <- aZoid[2:6]-aZoid[1:5]
 
-					if( fCutU.hasPtn(c( 2, 3 ),aCStep) ) cnt<-cnt+1
-					if( fCutU.hasPtn(c( 3, 1 ),aCStep) ) cnt<-cnt+1
-					if( fCutU.hasPtn(c(11, 1 ),aCStep) ) cnt<-cnt+1
-					if( fCutU.hasPtn(c( 8, 5 ),aCStep) ) cnt<-cnt+1
+						if( fCutU.hasPtn(c( 2, 3 ),aCStep) ) cnt<-cnt+1
+						if( fCutU.hasPtn(c( 3, 1 ),aCStep) ) cnt<-cnt+1
+						if( fCutU.hasPtn(c(11, 1 ),aCStep) ) cnt<-cnt+1
+						if( fCutU.hasPtn(c( 8, 5 ),aCStep) ) cnt<-cnt+1
 
-					if( all(aCStep[1:2+0]==c( 9, 2)) ) cnt<-cnt+1
-					if( all(aCStep[1:2+2]==c( 2, 4)) ) cnt<-cnt+1
+						if( all(aCStep[1:2+0]==c( 9, 2)) ) cnt<-cnt+1
+						if( all(aCStep[1:2+2]==c( 2, 4)) ) cnt<-cnt+1
 
-					if( aCStep[1]==sum(aCStep[2:4]) ) cnt<-cnt+10
-					if( aCStep[5]==sum(aCStep[2:4]) ) cnt<-cnt+10
-					if( all(aCStep[c(1,5)]== aCStep[4]*c(3,3) ) ) cnt<-cnt+10
+						if( aCStep[1]==sum(aCStep[2:4]) ) cnt<-cnt+10
+						if( aCStep[5]==sum(aCStep[2:4]) ) cnt<-cnt+10
+						if( all(aCStep[c(1,5)]== aCStep[4]*c(3,3) ) ) cnt<-cnt+10
 
-					return( 2>cnt )
-				})	;kIdx<-anaFlagFnd(!flag,rpt)
-    allIdxF <- allIdxF[flag]
+						return( 2>cnt )
+					})	;kIdx<-anaFlagFnd(!flag,rpt)
+		allIdxF <- allIdxF[flag]
 
-	# fStep 패턴
-    flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
-					cnt <- 0
-					aFStep <- aZoid - stdMI$lastZoid
+		# fStep 패턴
+		flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+						cnt <- 0
+						aFStep <- aZoid - stdMI$lastZoid
 
-					if( aFStep[4]==sum(aFStep[c(1,6)]) ) cnt<-cnt+10
-					if( aFStep[2]==sum(aFStep[c(1,5)]) ) cnt<-cnt+10
-					if( aFStep[5]==sum(aFStep[c(2,6)]) ) cnt<-cnt+10
+						if( aFStep[4]==sum(aFStep[c(1,6)]) ) cnt<-cnt+10
+						if( aFStep[2]==sum(aFStep[c(1,5)]) ) cnt<-cnt+10
+						if( aFStep[5]==sum(aFStep[c(2,6)]) ) cnt<-cnt+10
 
-					return( 2>cnt )
-				})	;kIdx<-anaFlagFnd(!flag,rpt)
-    allIdxF <- allIdxF[flag]
+						return( 2>cnt )
+					})	;kIdx<-anaFlagFnd(!flag,rpt)
+		allIdxF <- allIdxF[flag]
+
+		# auxZW, auxQuo
+		flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+						quoSize <- fCutU.getQuoObj( aZoid )$size
+						if( all(quoSize[1:3+2]==c(1,2,2)) ) return(FALSE)	# next rebind of 3,1,0
+						if( all(quoSize[1:3+0]==c(2,0,1)) ) return(FALSE)	# next rebind of 1,2,2
+						return( TRUE )
+					})	;kIdx<-anaFlagFnd(!flag,rpt)
+		allIdxF <- allIdxF[flag]
+
+		cccObj <- fCutU.commonCutCnt( gEnv ,allIdxF ,zMtx )
+		flag <- apply( cccObj$scoreMtx ,1 ,function( score ){
+						score.r <- score[names(score)!="reb"]
+						if( 3 < sum(score>0) ) return( FALSE )
+						if( 0 < score["quoAll"] ) return( FALSE )
+						return( TRUE )
+					})	;kIdx<-anaFlagFnd(!flag,rpt)
+		allIdxF <- allIdxF[flag]
+
+		k.FLogStr(sprintf("fCut.basic allIdxF %d\n",length(allIdxF)))
+	}
+
+	#=====================================================================================
+	#	fCutCnt.nextZW() 에서 정책적으로 자르기.
+	flgCnt <- rep( 0 ,length(allIdxF) )
+	zMtx <- fCutU.getNextZW( gEnv )$zMtx	# rptObj<-anaQuoTbl( zMtx )	
+	if( 0<nrow(zMtx) ){
+		stdMI <- fCutU.getMtxInfo( zMtx )
+
+		# auxZW, auxQuo
+		flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+						quoSize <- fCutU.getQuoObj( aZoid )$size
+						if( all(quoSize[1:3+2]==c(1,0,1)) ) return(FALSE)	# next rebind of 1,0,1
+						return( TRUE )
+					})	;kIdx<-anaFlagFnd(!flag,rpt)
+		allIdxF <- allIdxF[flag]
+
+		cccObj <- fCutU.commonCutCnt( gEnv ,allIdxF ,zMtx )
+		flag <- apply( cccObj$scoreMtx ,1 ,function( score ){
+						score.r <- score[names(score)!="reb"]
+						if( 3 < sum(score>0) ) return( FALSE )	# 표준
+						if( 2 < sum(score>0) ) return( FALSE )
+						if( 0 < sum(score[c("spanM","quoPtn")]) ) return( FALSE )
+						
+						return( TRUE )
+					})	;kIdx<-anaFlagFnd(!flag,rpt)
+		allIdxF <- allIdxF[flag]
+
+		k.FLogStr(sprintf("fCut.basic allIdxF %d\n",length(allIdxF)))
+	} # fCutU.getNextZW( gEnv )$zMtx
+
+	#=====================================================================================
+	#	fCutCnt.nextQuo10() 에서 정책적으로 자르기.
+	zMtx <- fCutU.getNextQuo10( gEnv )$zMtx	# rptObj<-anaQuoTbl( zMtx )
+	if( 0<nrow(zMtx) ){
+		stdMI <- fCutU.getMtxInfo( zMtx )
+
+		cccObj <- fCutU.commonCutCnt( gEnv ,allIdxF ,zMtx )
+		flag <- apply( cccObj$scoreMtx ,1 ,function( score ){
+						score.r <- score[names(score)!="reb"]
+						if( 3 < sum(score>0) ) return( FALSE )
+						# if( 0 < score["quoAll"] ) return( FALSE )
+						return( TRUE )
+					})	;kIdx<-anaFlagFnd(!flag,rpt)
+		allIdxF <- allIdxF[flag]
+
+		k.FLogStr(sprintf("fCut.basic allIdxF %d\n",length(allIdxF)))
+	} # fCutU.nextQuo10( gEnv )$zMtx
+	
+	#=====================================================================================
+	#	fCutCnt.nextBin() 에서 정책적으로 자르기.
+	zMtx <- fCutU.getNextBin( gEnv )$zMtx	# rptObj<-anaQuoTbl( zMtx )
+	if( 0<nrow(zMtx) ){
+		stdMI <- fCutU.getMtxInfo( zMtx )
+		cccObj <- fCutU.commonCutCnt( gEnv ,allIdxF ,zMtx )
+
+		flag <- apply( cccObj$scoreMtx ,1 ,function( score ){
+						score.r <- score[names(score)!="reb"]
+						if( 3 < sum(score>0) ) return( FALSE )
+						if( 0 < score["quoPtn"] ) return( FALSE )
+						return( TRUE )
+					})	;kIdx<-anaFlagFnd(!flag,rpt)
+		allIdxF <- allIdxF[flag]
+
+		k.FLogStr(sprintf("fCut.basic allIdxF %d\n",length(allIdxF)))
+	} # fCutU.nextBin( gEnv )$zMtx
+
+	#=====================================================================================
+	#	fCutCnt.nextRebNum() 에서 정책적으로 자르기.
+	flgCnt <- rep( 0 ,length(allIdxF) )
+	rebObj <- fCutU.getNextRebNumPtn( gEnv ,numPtn=NULL )
+	zMtx <- rebObj$zMtx	# rptObj<-anaQuoTbl( zMtx )
+	if( 0<nrow(zMtx) ){
+		stdMI <- fCutU.getMtxInfo( zMtx )
+
+		# auxZW, auxQuo
+		flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+						if( (aZoid[6]-aZoid[1]) %in% c( 39 ) ) return( FALSE )
+						return( TRUE )
+					})	;kIdx<-anaFlagFnd(!flag,rpt)
+		allIdxF <- allIdxF[flag]
+
+		# rawFV
+		flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+						# anaMtx.freqVal( stdMI$rawTail )
+						cnt <- 0
+						# < 3>
+						if( fCutU.hasPtn(c( 3,20,10,16,34,20),aZoid,thld=3,fixIdx=1) ) cnt<-cnt+1
+						# < 5>
+						# <13>
+						if( fCutU.hasPtn(c( 7, 8,13,24),aZoid,thld=3,fixIdx=3) ) cnt<-cnt+1
+						# <16>
+						if( fCutU.hasPtn(c( 3,16   ),aZoid) ) cnt<-cnt+1
+						if( fCutU.hasPtn(c(   16,19),aZoid) ) cnt<-cnt+1
+						# <21>					# <27>					# <30>
+						# <44>
+						if( fCutU.hasPtn(c(11,NA,NA,40,NA,44),aZoid) ) cnt<-cnt+1
+
+						return( 0==cnt )
+					})	;kIdx<-anaFltCnt(flag,rpt)
+		allIdxF <- allIdxF[flag]
+
+		cccObj <- fCutU.commonCutCnt( gEnv ,allIdxF ,zMtx )
+		flag <- apply( cccObj$scoreMtx ,1 ,function( score ){
+						score.r <- score[names(score)!="reb"]
+						if( 3 < sum(score>0) ) return( FALSE )
+						# if( 0 < score["quoAll"] ) return( FALSE )
+						return( TRUE )
+					})	;kIdx<-anaFlagFnd(!flag,rpt)
+		allIdxF <- allIdxF[flag]
+
+		k.FLogStr(sprintf("fCut.basic allIdxF %d\n",length(allIdxF)))
+	} # fCutU.nextRebNum( gEnv )$zMtx
+
+	#=====================================================================================
+	#	fCutCnt.nextCStepBin() 에서 정책적으로 자르기.
+	zMtx <- fCutU.getNextCStepBin( gEnv )$zMtx	# rptObj<-anaQuoTbl( zMtx )
+	if( 0<nrow(zMtx) ){
+		stdMI <- fCutU.getMtxInfo( zMtx )
+
+		# aFStep
+		flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+						cnt <- 0
+						aFStep <- aZoid - stdMI$lastZoid
+						if( aFStep[1]%in%c(      ) ) cnt<-cnt+1
+						if( aFStep[2]%in%c(      ) ) cnt<-cnt+1
+						if( aFStep[3]%in%c(      ) ) cnt<-cnt+1
+						if( aFStep[4]%in%c(      ) ) cnt<-cnt+1
+						if( aFStep[5]%in%c(      ) ) cnt<-cnt+1
+						if( aFStep[6]%in%c(   4  ) ) cnt<-cnt+1
+
+						if( 1<sum(aFStep[1:3+1]==c(  5,   4,   6)) ) cnt<-cnt+1 # -4
+						if( 1<sum(aFStep[1:3+0]==c(  5,  14,  -5)) ) cnt<-cnt+1 # -6
+						if( 1<sum(aFStep[1:3+3]==c(  2,   3,   6)) ) cnt<-cnt+1 #-14
+
+						if( (aFStep[1]==aFStep[4]) && (aFStep[4]==-aFStep[6]) ) cnt<-cnt+1
+						if( aFStep[5]==sum(aFStep[c(1,2,4)]) ) cnt<-cnt+1
+						if( aFStep[1]==sum(aFStep[c(2,3,6)]) ) cnt<-cnt+1
+						if( aFStep[4]==sum(aFStep[c(2,3,6)]) ) cnt<-cnt+1
+
+						return( 2>cnt )
+					})	;kIdx<-anaFltCnt(flag,rpt)
+		allIdxF <- allIdxF[flag]			
+
+		cccObj <- fCutU.commonCutCnt( gEnv ,allIdxF ,zMtx )
+		flag <- apply( cccObj$scoreMtx ,1 ,function( score ){
+						score.r <- score[names(score)!="reb"]
+						if( 3 < sum(score>0) ) return( FALSE )
+						if( 0 < score["quoAll"] ) return( FALSE )
+						return( TRUE )
+					})	;kIdx<-anaFlagFnd(!flag,rpt)
+		allIdxF <- allIdxF[flag]
+
+		k.FLogStr(sprintf("fCut.basic allIdxF %d\n",length(allIdxF)))
+	} # fCutU.nextCStepBin( gEnv )$zMtx
+
+	#=====================================================================================
+	#	fCutCnt.nextFStepBin() 에서 정책적으로 자르기.
+	zMtx <- fCutU.getNextFStepBin( gEnv )$zMtx	# rptObj<-anaQuoTbl( zMtx )
+	if( 0<nrow(zMtx) ){
+		stdMI <- fCutU.getMtxInfo( zMtx )
+
+		cccObj <- fCutU.commonCutCnt( gEnv ,allIdxF ,zMtx )
+		flag <- apply( cccObj$scoreMtx ,1 ,function( score ){
+						score.r <- score[names(score)!="reb"]
+						if( 3 < sum(score>0) ) return( FALSE )
+						# if( 0 < score["quoAll"] ) return( FALSE )
+						return( TRUE )
+					})	;kIdx<-anaFlagFnd(!flag,rpt)
+		allIdxF <- allIdxF[flag]
+
+		k.FLogStr(sprintf("fCut.basic allIdxF %d\n",length(allIdxF)))
+	} # fCutU.nextFStepBin( gEnv )$zMtx
+
+	#=====================================================================================
+	#	fCutCnt.nextColVal_1() 에서 정책적으로 자르기.
+	flgCnt <- rep( 0 ,length(allIdxF) )
+	zMtx <- fCutU.getNextColVal( gEnv ,1 )$zMtx	# rptObj<-anaQuoTbl( zMtx )
+	if( 0<nrow(zMtx) ){
+		stdMI <- fCutU.getMtxInfo( zMtx )
+
+		cccObj <- fCutU.commonCutCnt( gEnv ,allIdxF ,zMtx )
+		flag <- apply( cccObj$scoreMtx ,1 ,function( score ){
+						score.r <- score[names(score)!="reb"]
+						if( 3 < sum(score>0) ) return( FALSE )
+						# if( 0 < score["quoAll"] ) return( FALSE )
+						return( TRUE )
+					})	;kIdx<-anaFlagFnd(!flag,rpt)
+		allIdxF <- allIdxF[flag]
+
+		k.FLogStr(sprintf("fCut.basic allIdxF %d\n",length(allIdxF)))
+	} # fCutU.nextColVal_1( gEnv )$zMtx
+
+	#=====================================================================================
+	#	fCutCnt.nextColVal_2() 에서 정책적으로 자르기.
+	flgCnt <- rep( 0 ,length(allIdxF) )
+	zMtx <- fCutU.getNextColVal( gEnv ,2 )$zMtx	# rptObj<-anaQuoTbl( zMtx )
+	if( 0<nrow(zMtx) ){
+		stdMI <- fCutU.getMtxInfo( zMtx )
+
+		# aFStep(*)
+		flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+						cnt <- 0
+						aFStep <- aZoid - stdMI$lastZoid
+						if( aFStep[5]==sum(aFStep[c(1,6)]) ) cnt<-cnt+1
+						if( aFStep[2]==sum(aFStep[c(3,6)]) ) cnt<-cnt+1
+						if( aFStep[2]==sum(aFStep[c(4,6)]) ) cnt<-cnt+1
+						if( sum(aFStep[c(2,5)])==sum(aFStep[c(1,3,4)]) ) cnt<-cnt+1
+						return( 0==cnt )
+					})	;kIdx<-anaFltCnt(flag,rpt)
+		allIdxF <- allIdxF[flag]
+
+		cccObj <- fCutU.commonCutCnt( gEnv ,allIdxF ,zMtx )
+		flag <- apply( cccObj$scoreMtx ,1 ,function( score ){
+						score.r <- score[names(score)!="reb"]
+						if( 3 < sum(score>0) ) return( FALSE )
+						if( 0 < sum(score[c("nbor","zw","remH0","remH1")]) ) return( FALSE )
+						return( TRUE )
+					})	;kIdx<-anaFlagFnd(!flag,rpt)
+		allIdxF <- allIdxF[flag]
+
+		k.FLogStr(sprintf("fCut.basic allIdxF %d\n",length(allIdxF)))
+	} # fCutU.nextColVal_2( gEnv )$zMtx
+
+	#=====================================================================================
+	#	fCutCnt.nextColVal_3() 에서 정책적으로 자르기.
+	flgCnt <- rep( 0 ,length(allIdxF) )
+	zMtx <- fCutU.getNextColVal( gEnv ,3 )$zMtx	# rptObj<-anaQuoTbl( zMtx )
+	if( 0<nrow(zMtx) ){
+		stdMI <- fCutU.getMtxInfo( zMtx )
+
+		# auxZW, auxQuo
+		flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+						if( (aZoid[6]-aZoid[1]) %in% c( 37 ) ) return( FALSE )
+						return( TRUE )
+					})	;kIdx<-anaFlagFnd(!flag,rpt)
+		allIdxF <- allIdxF[flag]					
+		flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+						quoSize <- fCutU.getQuoObj( aZoid )$size
+						if( all(quoSize[1:3+1]==c(1,1,3)) ) return(FALSE)	# next rebind of 0,2,2 REVERSE
+						if( all(quoSize[1:3+2]==c(1,0,2)) ) return(FALSE)	# next rebind of 2,2,1
+						if( all(quoSize[1:3+2]==c(1,2,1)) ) return(FALSE)	# next rebind of 1,1,1
+						return( TRUE )
+					})	;kIdx<-anaFlagFnd(!flag,rpt)
+		allIdxF <- allIdxF[flag]
+
+		# rawFV
+		flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+						# anaMtx.freqVal( stdMI$rawTail )
+						cnt <- 0
+						# < 4>
+						# <11>
+						if( fCutU.hasPtn(c(11,12,NA,23,38),aZoid,thld=3,fixIdx=1) ) cnt<-cnt+1
+						# <17>
+						# <18>
+						if( fCutU.hasPtn(c(18,26         ),aZoid) ) cnt<-cnt+1
+						if( fCutU.hasPtn(c(18,NA,39,28,35),aZoid,thld=3,fixIdx=1) ) cnt<-cnt+1
+						# <19>
+						if( fCutU.hasPtn(c(19,28,31),aZoid) ) cnt<-cnt+1
+						# <26>
+						if( fCutU.hasPtn(c(18,26         ),aZoid) ) cnt<-cnt+1
+						if( fCutU.hasPtn(c(   26,39,28,35),aZoid,thld=3,fixIdx=1) ) cnt<-cnt+1
+						# <27>
+						# <38>
+						if( fCutU.hasPtn(c(28,NA,NA,38),aZoid) ) cnt<-cnt+1
+						if( fCutU.hasPtn(c(   25,26,38),aZoid) ) cnt<-cnt+1
+						# <41>
+						if( fCutU.hasPtn(c(16,NA,NA,NA,41),aZoid) ) cnt<-cnt+1
+						if( fCutU.hasPtn(c(   12,21,34,41),aZoid,thld=3,fixIdx=4) ) cnt<-cnt+1
+
+						return( 0==cnt )
+					})	;kIdx<-anaFltCnt( flag,rpt)
+		allIdxF <- allIdxF[flag]
+		# aCStep
+		flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+						cnt <- 0
+						aCStep <- aZoid[2:6]-aZoid[1:5]
+						if( aCStep[1]%in%c( 16, 6    ) ) cnt<-cnt+1
+						if( aCStep[2]%in%c(  2, 5    ) ) cnt<-cnt+1
+						if( aCStep[3]%in%c(          ) ) cnt<-cnt+1
+						if( aCStep[4]%in%c(  1       ) ) cnt<-cnt+1
+						if( aCStep[5]%in%c(  4, 1, 8 ) ) cnt<-cnt+1
+
+						if( 1<sum(aCStep[1:3+0]==c( 20,  2,  1 )) ) cnt<-cnt+1	#  2
+						if( 1<sum(aCStep[1:3+1]==c(  5, 13,  4 )) ) cnt<-cnt+1	#  1
+						if( 1<sum(aCStep[1:3+2]==c(  4,  5,  6 )) ) cnt<-cnt+1	#  8
+						if( 1<sum(aCStep[1:3+2]==c( 15,  2,  5 )) ) cnt<-cnt+1	#  6
+
+						if( fCutU.hasPtn(c( 8, 5 ),aCStep) ) cnt<-cnt+1
+
+						if( aCStep[4]==sum(aCStep[c(2,5)]) ) cnt<-cnt+1
+						if( aCStep[1]== 2*sum(aCStep[c(2,4)]) ) cnt<-cnt+1
+
+						return( 3>cnt )
+					})	;kIdx<-anaFltCnt(flag,rpt)
+		allIdxF <- allIdxF[flag]
+
+		cccObj <- fCutU.commonCutCnt( gEnv ,allIdxF ,zMtx )
+		flag <- apply( cccObj$scoreMtx ,1 ,function( score ){
+						score.r <- score[names(score)!="reb"]
+						if( 3 < sum(score>0) ) return( FALSE )
+						if( 0 < sum(score[c("nbor","zw","spanM")]) ) return( FALSE )
+						return( TRUE )
+					})	;kIdx<-anaFlagFnd(!flag,rpt)
+		allIdxF <- allIdxF[flag]
+
+		k.FLogStr(sprintf("fCut.basic allIdxF %d\n",length(allIdxF)))
+	} # fCutU.nextColVal_3( gEnv )$zMtx
+
+	#=====================================================================================
+	#	fCutCnt.nextColVal_4() 에서 정책적으로 자르기.
+	flgCnt <- rep( 0 ,length(allIdxF) )
+	zMtx <- fCutU.getNextColVal( gEnv ,4 )$zMtx	# rptObj<-anaQuoTbl( zMtx )
+	if( 0<nrow(zMtx) ){
+		stdMI <- fCutU.getMtxInfo( zMtx )
+
+		# aFStep
+		flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+						cnt <- 0
+						aFStep <- aZoid - stdMI$lastZoid
+						if( aFStep[1]%in%c( -10     ) ) cnt<-cnt+1
+						if( aFStep[2]%in%c( -11, 6  ) ) cnt<-cnt+1
+						if( aFStep[3]%in%c(  -1, 4  ) ) cnt<-cnt+1
+						if( aFStep[4]%in%c(         ) ) cnt<-cnt+1
+						if( aFStep[5]%in%c(  -4     ) ) cnt<-cnt+1
+						if( aFStep[6]%in%c(         ) ) cnt<-cnt+1
+
+						if( 1<sum(aFStep[1:3+1]==c( -14, -14,  -7 )) ) cnt<-cnt+1 # 12
+						if( 1<sum(aFStep[1:3+0]==c(   0,   1,   4 )) ) cnt<-cnt+1 #  5
+						if( 1<sum(aFStep[1:3+2]==c(  -1,   1,   3 )) ) cnt<-cnt+1 # -1
+						if( 1<sum(aFStep[1:3+3]==c(   4,  -1, -12 )) ) cnt<-cnt+1 #  1
+
+						if( aFStep[2]==sum(aFStep[c(1,3,4,6)]) ) cnt<-cnt+1
+						if( sum(aFStep[c(1,4)])==sum(aFStep[c(5,6)]) ) cnt<-cnt+1
+						if( sum(aFStep[c(3,4)])==sum(aFStep[c(5,6)]) ) cnt<-cnt+1
+
+						return( 2>cnt )
+					})	;kIdx<-anaFltCnt(flag,rpt)
+		allIdxF <- allIdxF[flag]
+
+		cccObj <- fCutU.commonCutCnt( gEnv ,allIdxF ,zMtx )
+		flag <- apply( cccObj$scoreMtx ,1 ,function( score ){
+						score.r <- score[names(score)!="reb"]
+						if( 3 < sum(score>0) ) return( FALSE )
+						if( 0 < sum(score[c("zw")]) ) return( FALSE )
+						return( TRUE )
+					})	;kIdx<-anaFlagFnd(!flag,rpt)
+		allIdxF <- allIdxF[flag]
+
+		k.FLogStr(sprintf("fCut.basic allIdxF %d\n",length(allIdxF)))
+	} # fCutU.nextColVal_4( gEnv )$zMtx
+
+	#=====================================================================================
+	#	fCutCnt.nextColVal_5() 에서 정책적으로 자르기.
+	flgCnt <- rep( 0 ,length(allIdxF) )
+	zMtx <- fCutU.getNextColVal( gEnv ,5 )$zMtx	# rptObj<-anaQuoTbl( zMtx )
+	if( 0<nrow(zMtx) ){
+		stdMI <- fCutU.getMtxInfo( zMtx )
+
+		# rem
+		flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+						# u0.zoidMtx_ana( stdMI$rawTail%%10 )
+						cnt <- 0
+						if( fCutU.remFilt(aZoid[1],c( 2,1  ),c( 11    )) ) cnt<-cnt+1 # 1
+						if( fCutU.remFilt(aZoid[2],c( 9,4  ),c( 19,24 )) ) cnt<-cnt+1 # 2
+						if( fCutU.remFilt(aZoid[3],c( 1,2  ),c( 11,32 )) ) cnt<-cnt+1 # 3
+						if( fCutU.remFilt(aZoid[4],c( 9,7  ),c( 29    )) ) cnt<-cnt+1 # 4
+						if( fCutU.remFilt(aZoid[5],c( 3    ),c(       )) ) cnt<-cnt+1 # 5
+						if( fCutU.remFilt(aZoid[6],c( 9,4  ),c( 39    )) ) cnt<-cnt+1 # 6
+						return( 3>cnt )
+					})	;kIdx<-anaFltCnt(flag,rpt)
+		allIdxF <- allIdxF[flag]
+		# aCStep
+		flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+						cnt <- 0
+						aCStep <- aZoid[2:6]-aZoid[1:5]
+						if( aCStep[1]%in%c(      ) ) cnt<-cnt+1
+						if( aCStep[2]%in%c( 1, 2 ) ) cnt<-cnt+1
+						if( aCStep[3]%in%c( 1    ) ) cnt<-cnt+1
+						if( aCStep[4]%in%c(16, 2 ) ) cnt<-cnt+1
+						if( aCStep[5]%in%c( 1    ) ) cnt<-cnt+1
+
+						if( 1<sum(aCStep[1:3+0]==c( 1,  5, 15)) ) cnt<-cnt+1	#  6
+						if( 1<sum(aCStep[1:3+0]==c( 6,  1, 10)) ) cnt<-cnt+1	#  1
+						if( 1<sum(aCStep[1:3+1]==c( 4,  6, 16)) ) cnt<-cnt+1	# 10
+						if( 1<sum(aCStep[1:3+2]==c( 8,  1,  8)) ) cnt<-cnt+1	#  2
+						if( 1<sum(aCStep[1:3+2]==c( 6,  1, 10)) ) cnt<-cnt+1	#  8
+
+						if( all(aCStep[c(1,5)]==(aCStep[4]*3:4)) ) cnt<-cnt+1
+						if( aCStep[3]==sum(aCStep[c(4,5)]) ) cnt<-cnt+1
+
+						return( 3>cnt )
+					})	;kIdx<-anaFltCnt(flag,rpt)
+		allIdxF <- allIdxF[flag]
+
+		cccObj <- fCutU.commonCutCnt( gEnv ,allIdxF ,zMtx )
+		flag <- apply( cccObj$scoreMtx ,1 ,function( score ){
+						score.r <- score[names(score)!="reb"]
+						if( 3 < sum(score>0) ) return( FALSE )
+						# if( 0 < score["quoAll"] ) return( FALSE )
+						return( TRUE )
+					})	;kIdx<-anaFlagFnd(!flag,rpt)
+		allIdxF <- allIdxF[flag]
+
+		k.FLogStr(sprintf("fCut.basic allIdxF %d\n",length(allIdxF)))
+	} # fCutU.nextColVal_5( gEnv )$zMtx
+
+	#=====================================================================================
+	#	fCutCnt.nextColVal_6() 에서 정책적으로 자르기.
+	flgCnt <- rep( 0 ,length(allIdxF) )
+	zMtx <- fCutU.getNextColVal( gEnv ,6 )$zMtx	# rptObj<-anaQuoTbl( zMtx )
+	if( 0<nrow(zMtx) ){
+		stdMI <- fCutU.getMtxInfo( zMtx )
+
+		cccObj <- fCutU.commonCutCnt( gEnv ,allIdxF ,zMtx )
+		flag <- apply( cccObj$scoreMtx ,1 ,function( score ){
+						score.r <- score[names(score)!="reb"]
+						if( 3 < sum(score>0) ) return( FALSE )
+						if( 0 < sum(score[c("cStep2","cStep3")]) ) return( FALSE )
+						return( TRUE )
+					})	;kIdx<-anaFlagFnd(!flag,rpt)
+		allIdxF <- allIdxF[flag]
+
+		k.FLogStr(sprintf("fCut.basic allIdxF %d\n",length(allIdxF)))
+	} # fCutU.nextColVal_6( gEnv )$zMtx
+
 
 	save( allIdxF ,file="Obj_fCut.basic.save" )
 
@@ -2283,7 +2732,7 @@ fCutCnt.nextColVal_5 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 
 } # fCutCnt.nextColVal_5()
 
-# undone
+# done
 fCutCnt.nextColVal_6 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 	# 경고 : 동일 컬럼 동일 값 반복 상태인 경우 신중할 것.
 	flgCnt <- rep( 0 ,length(allIdxF) )
