@@ -731,6 +731,46 @@ fCutU.getSpanMatchObj <- function( rawTail ,rpt=FALSE ){
 
 } # fCutU.getSpanMatchObj()
 
+#	toZnnn.R 에서의 finalCut() 함수에서 사용.
+#		주의 : NA 은 미발생 허용을 의미.
+#			   0  은 미발생을 허용치 않겠다는 의미이다.
+fCutU.cutScore <- function( score ,pMinMaxSum=c(NA,NA) ,pMinMaxHpn=c(NA,NA) ,pMinMaxEvent=c(2,NA,NA) ){
+	#	적용치 않을 Min, Max는 NA를 입력
+	#     score <- c( 1, 0, 0, 1, 0, 1, 1, 0, 2, 0, 2, 0 ) # 1 --  8(2)
+	#		pMinMaxSum=c(7,12)	;pMinMaxHpn=c(5,8) ;pMinMaxEvent=c(2,1,3)
+
+	cName <- c( "min.sum", "max.sum", "min.hpn", "max.hpn", "min.evt", "max.evt" )
+	cutRst <- rep( NA ,length(cName) )		;names(cutRst) <- cName
+
+	scoreSum <- sum( score )
+	if( !is.na(pMinMaxSum[1]) ){	# min of sum
+		cutRst["min.sum"] <- (scoreSum <= pMinMaxSum[1])
+	}
+	if( !is.na(pMinMaxSum[2]) ){	# max of sum
+		cutRst["max.sum"] <- (scoreSum >= pMinMaxSum[2])
+	}
+
+	scoreHpn <- sum( score>0 )
+	if( !is.na(pMinMaxHpn[1]) ){	# min of happen
+		cutRst["min.hpn"] <- (scoreHpn <= pMinMaxHpn[1])
+	}
+	if( !is.na(pMinMaxHpn[2]) ){	# max of happen
+		cutRst["max.hpn"] <- (scoreHpn >= pMinMaxHpn[2])
+	}
+
+	scoreEvent <- sum( score>=pMinMaxEvent[1] )
+	if( !is.na(pMinMaxEvent[2]) ){	# min of event
+		cutRst["min.evt"] <- (scoreEvent <= pMinMaxEvent[2])
+	}
+	if( !is.na(pMinMaxEvent[3]) ){	# max of event
+		cutRst["max.evt"] <- (scoreEvent >= pMinMaxEvent[3])
+	}
+
+	return( cutRst )
+
+} # fCutU.cutScore()
+
+
 fCutU.commonCutCnt <- function( gEnv, allIdxF ,zMtx
 						,pZWidth=TRUE	,pQuoTbl=TRUE	,pRebThld=2
 						,pScoreMtx=TRUE	,rpt=FALSE

@@ -109,7 +109,7 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 	ccObj <- fCutCnt.nextColVal_6( gEnv ,allIdxF )
 	allIdxF <- allIdxF[ cutCC( ccObj ,allIdxF ) ]
 	cat(sprintf("allIdxF %d\n",length(allIdxF)))
-	save( allIdxF ,file="Obj_allIdxF.save" )
+	# save( allIdxF ,file="Obj_allIdxF.save" )
 
 	tDiff <- Sys.time() - tStmp	
 	allIdxFObj$allIdxF.fCutCnt <- allIdxF
@@ -129,11 +129,12 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 	ccObjLst[["nextColVal_5"]] <- fCutCnt.nextColVal_5( gEnv ,allIdxF )
 	ccObjLst[["nextColVal_6"]] <- fCutCnt.nextColVal_6( gEnv ,allIdxF )
 
-	fName <- attributes(ccObjLst)$names
+	
 
 	tStmp2 <- Sys.time()
 	# surFlag
 	surFlag <- rep( TRUE ,length(allIdxF) )
+	fName <- attributes(ccObjLst)$names
 	cName <- c( "ccc", "auxZW", "auxQuo", "raw", "rawFV", "rem", "cStep", "fStep" )
 	scoreMtx <- matrix( 0 ,nrow=length(ccObjLst) ,ncol=length(cName) )
 	rownames(scoreMtx) <- fName		;colnames(scoreMtx) <- cName
@@ -150,42 +151,62 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 		}
 
 		#=[ccc]========================================================================================
-		# # <reb> - reb (late)
-		# chkFN <- c( "basic", "nextZW", "nextQuo10", "nextRebNum" )
-		# if( 2 <= sum(0<cccReb[chkFN]) ) surFlag[aIdx] <- FALSE
-		# # <reb> - reb (gold)
-		# chkFN <- c( "nextRebNum", "nextFStepBin"
-		# 				, "nextColVal_1", "nextColVal_3" ,"nextColVal_4" ,"nextColVal_5" ,"nextColVal_6")
-		# if( 2 <= sum(0<cccReb[chkFN]) ) surFlag[aIdx] <- FALSE
+		scoreCut <- fCutU.cutScore( scoreMtx[,"ccc"]
+									,pMinMaxSum=c( 7,12) ,pMinMaxHpn=c( 5,11) ,pMinMaxEvent=c(2,0,4) 
+								)
+		if( 0 < sum(scoreCut,na.rm=T) ) surFlag[aIdx] <- FALSE
 
-		# # <reb> cnt - 2이상 값 발생위치 재발이 2개 이상. (late+gold)
-		# chkFN <- c( "nextZW", "nextColVal_3" )
-		# if( 2 <= sum(2<=scoreMtx[chkFN,"ccc"]) ) surFlag[aIdx] <- FALSE
-		# # <reb> cnt - 3이상은 최대 1 개.
-		# if( 2 <= sum(3<=scoreMtx[,"ccc"]) ) surFlag[aIdx] <- FALSE
+		# <reb> - reb (late)
+		chkFN <- c( "basic", "nextZW", "nextQuo10", "nextRebNum" )
+		if( 2 <= sum(0<cccReb[chkFN]) ) surFlag[aIdx] <- FALSE
+		# <reb> - reb (gold)
+		chkFN <- c( "nextRebNum", "nextFStepBin"
+						, "nextColVal_1", "nextColVal_3" ,"nextColVal_4" ,"nextColVal_5" ,"nextColVal_6")
+		if( 2 <= sum(0<cccReb[chkFN]) ) surFlag[aIdx] <- FALSE
 
-		# <min>
-		# if( 7 > sum(scoreMtx[,"ccc"]) ) surFlag[aIdx] <- FALSE
+		# <reb> cnt - 2이상 값 발생위치 재발이 2개 이상. (late+gold)
+		chkFN <- c( "nextZW", "nextColVal_3" )
+		if( 2 <= sum(2<=scoreMtx[chkFN,"ccc"]) ) surFlag[aIdx] <- FALSE
+		# <reb> cnt - 3이상은 최대 1 개.
+		if( 2 <= sum(3<=scoreMtx[,"ccc"]) ) surFlag[aIdx] <- FALSE
+
 
 		#=[raw]========================================================================================
-		# # <reb> - late : 1이상 값의 재발은 1개 이하.
-		# chkFN <- c( "nextZW", "nextColVal_2" )
-		# if( 2 <= sum(0<scoreMtx[chkFN,"raw"]) ) surFlag[aIdx] <- FALSE
-		# # <reb> - gold : 1이상 값의 재발은 1개 이하.
-		# chkFN <- c( "nextCStepBin", "nextColVal_2", "nextColVal_5" )
-		# if( 2 <= sum(0<scoreMtx[chkFN,"raw"]) ) surFlag[aIdx] <- FALSE
-		# <min-event>
-		if( 2 <= sum(2<=scoreMtx[,"raw"]) ) surFlag[aIdx] <- FALSE
-		# <max-happen>
-		if( 8 >= sum(0<=scoreMtx[,"raw"]) ) surFlag[aIdx] <- FALSE
+		scoreCut <- fCutU.cutScore( scoreMtx[,"raw"]
+									,pMinMaxSum=c(NA, 8) ,pMinMaxHpn=c(NA, 8) ,pMinMaxEvent=c(2,NA,2) 
+								)
+		if( 0 < sum(scoreCut,na.rm=T) ) surFlag[aIdx] <- FALSE
+
+		# <reb> - late : 1이상 값의 재발연속은 1개 이하.
+		chkFN <- c( "nextZW", "nextColVal_2" )
+		if( 2 <= sum(0<scoreMtx[chkFN,"raw"]) ) surFlag[aIdx] <- FALSE
+		# <reb> - gold : 1이상 값의 재발연속은 1개 이하.
+		chkFN <- c( "nextCStepBin", "nextColVal_2", "nextColVal_5" )
+		if( 2 <= sum(0<scoreMtx[chkFN,"raw"]) ) surFlag[aIdx] <- FALSE
 
 		#=[rawFV]======================================================================================
-		if( 2 <= sum(1<=scoreMtx[,"rawFV"]) ) surFlag[aIdx] <- FALSE
+		scoreCut <- fCutU.cutScore( scoreMtx[,"rawFV"]
+									,pMinMaxSum=c(NA, 3) ,pMinMaxHpn=c(NA, 2) ,pMinMaxEvent=c(2,NA,2) 
+								)
+		if( 0 < sum(scoreCut,na.rm=T) ) surFlag[aIdx] <- FALSE
 
 		#=[rem]========================================================================================
-		#=[cStep]======================================================================================
-		#=[fStep]======================================================================================
+		scoreCut <- fCutU.cutScore( scoreMtx[,"rem"]
+									,pMinMaxSum=c( 8,15) ,pMinMaxHpn=c(6,11) ,pMinMaxEvent=c(2,1,5) 
+								)
+		if( 0 < sum(scoreCut,na.rm=T) ) surFlag[aIdx] <- FALSE
 
+		#=[cStep]======================================================================================
+		scoreCut <- fCutU.cutScore( scoreMtx[,"cStep"]
+									,pMinMaxSum=c( 4,14) ,pMinMaxHpn=c(4,10) ,pMinMaxEvent=c(2,NA,5) 
+								)
+		if( 0 < sum(scoreCut,na.rm=T) ) surFlag[aIdx] <- FALSE
+
+		#=[fStep]======================================================================================
+		scoreCut <- fCutU.cutScore( scoreMtx[,"fStep"]
+									,pMinMaxSum=c( 0, 4) ,pMinMaxHpn=c( 0, 3) ,pMinMaxEvent=c(2,NA,2) 
+								)
+		if( 0 < sum(scoreCut,na.rm=T) ) surFlag[aIdx] <- FALSE
 
 	} # aIdx
 	tDiff2 <- Sys.time() - tStmp2
