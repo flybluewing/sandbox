@@ -335,7 +335,7 @@ fCutCnt.colValSeqNext <- function( gEnv ,allIdxF ,rpt=FALSE ){
     flgCnt[!flag] <- flgCnt[!flag] + 1
 
 	# -- conditional
-    score <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+    flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
 					cnt <- 0
 					if( 1<sum(aZoid[c(1,2,3  ,5,6)]==c( 3,17,26,   41,45)) ) cnt<-cnt+1
 					if( 1<sum(aZoid[c(1,2,3  ,5,6)]==c( 1, 8,24,   36,43)) ) cnt<-cnt+1
@@ -345,8 +345,8 @@ fCutCnt.colValSeqNext <- function( gEnv ,allIdxF ,rpt=FALSE ){
 					if( 1<sum(aZoid[c(1,        6)]==c( 9,            38)) ) cnt<-cnt+1
 
 					return( 1>cnt )
-				})	;kIdx<-anaFltCnt(score,rpt)
-    flgCnt <- flgCnt + score
+				})	;kIdx<-anaFltCnt(flag,rpt)
+    flgCnt[!flag] <- flgCnt[!flag] + 1
 
 	# =========================================================
 	# colValSeqNext( ,pColSize=2 )

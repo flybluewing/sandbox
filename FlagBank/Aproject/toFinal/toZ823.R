@@ -131,8 +131,7 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 
 	
 
-	tStmp2 <- Sys.time()
-	# surFlag
+	# surFlag(scoreMtx) ------------------------------------------------------
 	surFlag <- rep( TRUE ,length(allIdxF) )
 	fName <- attributes(ccObjLst)$names
 	cName <- c( "ccc", "auxZW", "auxQuo", "raw", "rawFV", "rem", "cStep", "fStep" )
@@ -156,19 +155,20 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 								)
 		if( 0 < sum(scoreCut,na.rm=T) ) surFlag[aIdx] <- FALSE
 
-		# <reb> - reb (late)
-		chkFN <- c( "basic", "nextZW", "nextQuo10", "nextRebNum" )
-		if( 2 <= sum(0<cccReb[chkFN]) ) surFlag[aIdx] <- FALSE
-		# <reb> - reb (gold)
-		chkFN <- c( "nextRebNum", "nextFStepBin"
-						, "nextColVal_1", "nextColVal_3" ,"nextColVal_4" ,"nextColVal_5" ,"nextColVal_6")
-		if( 2 <= sum(0<cccReb[chkFN]) ) surFlag[aIdx] <- FALSE
+			# <reb> - late : reb (미발생도 제한할까?)
+			chkFN <- c( "basic", "nextZW", "nextQuo10", "nextRebNum" )
+			if( 3 <= sum(0<cccReb[chkFN]) ) surFlag[aIdx] <- FALSE
+			# <reb> - gold : reb (미발생도 제한할까?)
+			chkFN <- c( "nextRebNum", "nextFStepBin"
+							, "nextColVal_1", "nextColVal_3" ,"nextColVal_4" 
+							,"nextColVal_5" ,"nextColVal_6")
+			if( 3 <= sum(0<cccReb[chkFN]) ) surFlag[aIdx] <- FALSE
 
-		# <reb> cnt - 2이상 값 발생위치 재발이 2개 이상. (late+gold)
-		chkFN <- c( "nextZW", "nextColVal_3" )
-		if( 2 <= sum(2<=scoreMtx[chkFN,"ccc"]) ) surFlag[aIdx] <- FALSE
-		# <reb> cnt - 3이상은 최대 1 개.
-		if( 2 <= sum(3<=scoreMtx[,"ccc"]) ) surFlag[aIdx] <- FALSE
+			# <reb> cnt - 2이상 값 재발연속은 최대 1개 (late+gold)
+			chkFN <- c( "nextZW", "nextColVal_3" )
+			if( 2 <= sum(2<=scoreMtx[chkFN,"ccc"]) ) surFlag[aIdx] <- FALSE
+			# <reb> cnt - 3이상 값 재발연속은 최대 1 개.
+			if( 2 <= sum(3<=scoreMtx[,"ccc"]) ) surFlag[aIdx] <- FALSE
 
 
 		#=[raw]========================================================================================
@@ -177,12 +177,12 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 								)
 		if( 0 < sum(scoreCut,na.rm=T) ) surFlag[aIdx] <- FALSE
 
-		# <reb> - late : 1이상 값의 재발연속은 1개 이하.
-		chkFN <- c( "nextZW", "nextColVal_2" )
-		if( 2 <= sum(0<scoreMtx[chkFN,"raw"]) ) surFlag[aIdx] <- FALSE
-		# <reb> - gold : 1이상 값의 재발연속은 1개 이하.
-		chkFN <- c( "nextCStepBin", "nextColVal_2", "nextColVal_5" )
-		if( 2 <= sum(0<scoreMtx[chkFN,"raw"]) ) surFlag[aIdx] <- FALSE
+			# <reb> - late : Event 재발연속은 1개 이하.
+			chkFN <- c( "nextZW", "nextColVal_2" )
+			if( 2 <= sum(0<scoreMtx[chkFN,"raw"]) ) surFlag[aIdx] <- FALSE
+			# <reb> - gold : Event 재발연속은 1개 이하.
+			chkFN <- c( "nextCStepBin", "nextColVal_2", "nextColVal_5" )
+			if( 2 <= sum(0<scoreMtx[chkFN,"raw"]) ) surFlag[aIdx] <- FALSE
 
 		#=[rawFV]======================================================================================
 		scoreCut <- fCutU.cutScore( scoreMtx[,"rawFV"]
@@ -196,11 +196,24 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 								)
 		if( 0 < sum(scoreCut,na.rm=T) ) surFlag[aIdx] <- FALSE
 
+			# <reb> - late : event 재발연속은 1개 이하
+			chkFN <- c( "nextZW" ,"nextColVal_2" )
+			if( 2 <= sum(1<scoreMtx[chkFN,"rem"]) ) surFlag[aIdx] <- FALSE
+			# <reb> - gold : event 재발연속은 1개 이하
+			chkFN <- c( "nextQuo10" ,"nextFStepBin" ,"nextColVal_5" )
+			if( 2 <= sum(1<scoreMtx[chkFN,"rem"]) ) surFlag[aIdx] <- FALSE
+
+
 		#=[cStep]======================================================================================
 		scoreCut <- fCutU.cutScore( scoreMtx[,"cStep"]
 									,pMinMaxSum=c( 4,14) ,pMinMaxHpn=c(4,10) ,pMinMaxEvent=c(2,NA,5) 
 								)
 		if( 0 < sum(scoreCut,na.rm=T) ) surFlag[aIdx] <- FALSE
+
+			# <reb> - late : event 재발연속은 1개 이하
+			chkFN <- c( "nextBin" ,"nextFStepBin" ,"nextColVal_1" ,"nextColVal_2" )
+			if( 2 <= sum(1<scoreMtx[chkFN,"cStep"]) ) surFlag[aIdx] <- FALSE
+
 
 		#=[fStep]======================================================================================
 		scoreCut <- fCutU.cutScore( scoreMtx[,"fStep"]
@@ -208,10 +221,31 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 								)
 		if( 0 < sum(scoreCut,na.rm=T) ) surFlag[aIdx] <- FALSE
 
-	} # aIdx
-	tDiff2 <- Sys.time() - tStmp2
+			# <reb> - (late+gold) : 재발연속은 1개 이하
+			chkFN <- c( "nextBin" ,"nextColVal_4" )
+			if( 2 <= sum(0<scoreMtx[chkFN,"fStep"]) ) surFlag[aIdx] <- FALSE
 
-	# table(surFlag)	;kIdx <- head(which(!surFlag))
+		#=[total score]======================================================================================
+		QQE working
+		- event 발생 총합
+		- event 연속 발생은 최대 1 개.
+
+	}  # aIdx
+
+	table(surFlag)	;kIdx <- head(which(!surFlag))
+	allIdxF <- allIdxF[ surFlag ]
+	cat(sprintf("allIdxF %d\n",length(allIdxF)))
+	# save( allIdxF ,file="Obj_allIdxF.save" )
+
+	# colValSeqNext ------------------------------------------------------
+	flgCnt <- fCutCnt.colValSeqNext( gEnv ,allIdxF ) 
+	flgCnt <- flgCnt + fCutCnt.colValSeqNext.cStep( gEnv ,allIdxF )
+	flag <- flgCnt<2	;table(flag)
+    allIdxF <- allIdxF[flag]
+	cat(sprintf("allIdxF %d\n",length(allIdxF)))
+
+	
+
 
 	tDiff <- Sys.time() - tStmp
 	allIdxFObj$timeCost <- tDiff

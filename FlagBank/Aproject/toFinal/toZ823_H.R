@@ -789,42 +789,42 @@ fCutCnt.colValSeqNext <- function( gEnv ,allIdxF ,rpt=FALSE ){
 	stdMI <- fCutU.getMtxInfo( zMtx )
 
 	# =========================================================
-	# anaColEndPtn()
-	colPtnLst <- anaColEndPtn( gEnv$zhF ,pDebug=T )
-	banVal <- sapply( colPtnLst ,function( p ){
-					return( if(length(p$val)>0) p$val[1] else 0 )
-				})
-	banVal.idx <- which( banVal!=0 )
-	banVal <- banVal[banVal.idx]
+	# anaColEndPtn() - 문제 많다. 개량필요.
+	# colPtnLst <- anaColEndPtn( gEnv$zhF ,pDebug=T )
+	# banVal <- sapply( colPtnLst ,function( p ){
+	# 				return( if(length(p$val)>0) p$val[1] else 0 )
+	# 			})
+	# banVal.idx <- which( banVal!=0 )
+	# banVal <- banVal[banVal.idx]
 
-	# <remove>
-    score <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
-					cnt <- sum(aZoid[banVal.idx]==banVal)
-					return( ifelse(cnt>=2,2,cnt) )
-				})	;kIdx<-anaFltCnt(score,rpt)
-    flgCnt <- flgCnt + score
-	# -- conditional
-    flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
-					aRem <- aZoid %% 10
-					cnt <- 0
-					if( 1<sum(aRem[banVal.idx]==(banVal%%10)) ) cnt <- cnt + 1
-					return( 1>cnt )
-				})	;kIdx<-anaFlagFnd(!flag,rpt)
-    flgCnt[!flag] <- flgCnt[!flag] + 1
+	# # <remove>
+    # score <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+	# 				cnt <- sum(aZoid[banVal.idx]==banVal)
+	# 				return( ifelse(cnt>=2,2,cnt) )
+	# 			})	;kIdx<-anaFltCnt(score,rpt)
+    # flgCnt <- flgCnt + score
+	# # -- conditional
+    # flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+	# 				aRem <- aZoid %% 10
+	# 				cnt <- 0
+	# 				if( 1<sum(aRem[banVal.idx]==(banVal%%10)) ) cnt <- cnt + 1
+	# 				return( 1>cnt )
+	# 			})	;kIdx<-anaFlagFnd(!flag,rpt)
+    # flgCnt[!flag] <- flgCnt[!flag] + 1
 
-	# -- conditional custom
-    score <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
-					cnt <- 0
-					if( 1<sum(aZoid[c(1,2,3,4,5,6)]==c( 5,13,14,28,13,25)) ) cnt<-cnt+1
-					if( 1<sum(aZoid[c(1,2,3,4,5,6)]==c( 7,10,19,25,31,32)) ) cnt<-cnt+1
-					if( 1<sum(aZoid[c(1,2,3,4,5  )]==c(14, 7,11,29,21   )) ) cnt<-cnt+1
-					if( 1<sum(aZoid[c(1,  3,4,5  )]==c( 6,   17,34,25   )) ) cnt<-cnt+1
-					if( 1<sum(aZoid[c(1,  3,4    )]==c( 1,   18,24      )) ) cnt<-cnt+1
-					if( 1<sum(aZoid[c(1,  3,4    )]==c( 3,   18,11      )) ) cnt<-cnt+1
+	# # -- conditional custom
+    # flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+	# 				cnt <- 0
+	# 				if( 1<sum(aZoid[c(1,2,3,4,5,6)]==c( 5,13,14,28,13,25)) ) cnt<-cnt+1
+	# 				if( 1<sum(aZoid[c(1,2,3,4,5,6)]==c( 7,10,19,25,31,32)) ) cnt<-cnt+1
+	# 				if( 1<sum(aZoid[c(1,2,3,4,5  )]==c(14, 7,11,29,21   )) ) cnt<-cnt+1
+	# 				if( 1<sum(aZoid[c(1,  3,4,5  )]==c( 6,   17,34,25   )) ) cnt<-cnt+1
+	# 				if( 1<sum(aZoid[c(1,  3,4    )]==c( 1,   18,24      )) ) cnt<-cnt+1
+	# 				if( 1<sum(aZoid[c(1,  3,4    )]==c( 3,   18,11      )) ) cnt<-cnt+1
 
-					return( 1>cnt )
-				})	;kIdx<-anaFltCnt(score,rpt)
-    flgCnt <- flgCnt + score
+	# 				return( 1>cnt )
+	# 			})	;kIdx<-anaFltCnt(flag,rpt)
+    # flgCnt[!flag] <- flgCnt[!flag] + 1
 
 	# =========================================================
 	# colValSeqNext( ,pColSize=2 )
@@ -1059,51 +1059,51 @@ fCutCnt.colValSeqNext.cStep <- function( gEnv ,allIdxF ,rpt=FALSE ){
 	stdMI <- fCutU.getMtxInfo( zMtx )
 
 	# =========================================================
-	# anaColEndPtn()
-	colPtnLst <- anaColEndPtn( zMtx ,pDebug=T )
-	banVal <- sapply( colPtnLst ,function( p ){
-					return( if(length(p$val)>0) p$val[1] else 0 )
-				})
-	banVal.idx <- which( banVal!=0 )
-	banVal <- banVal[banVal.idx]
-	#	<remove>
-    flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
-					cnt <- 0
-					aCStep <- aZoid[2:6]-aZoid[1:5]
-					return( 2>sum(aCStep[banVal.idx]==banVal) )
-				})	;kIdx<-anaFlagFnd(!flag,rpt)
-    flgCnt[!flag] <- flgCnt[!flag] + 2
+	# anaColEndPtn() - 문제 많다. 개량필요.
+	# colPtnLst <- anaColEndPtn( zMtx ,pDebug=T )
+	# banVal <- sapply( colPtnLst ,function( p ){
+	# 				return( if(length(p$val)>0) p$val[1] else 0 )
+	# 			})
+	# banVal.idx <- which( banVal!=0 )
+	# banVal <- banVal[banVal.idx]
+	# #	<remove>
+    # flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+	# 				cnt <- 0
+	# 				aCStep <- aZoid[2:6]-aZoid[1:5]
+	# 				return( 2>sum(aCStep[banVal.idx]==banVal) )
+	# 			})	;kIdx<-anaFlagFnd(!flag,rpt)
+    # flgCnt[!flag] <- flgCnt[!flag] + 2
 
-	# -- conditional custom
-    flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
-					cnt <- 0
-					aCStep <- aZoid[2:6]-aZoid[1:5]
+	# # -- conditional custom
+    # flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+	# 				cnt <- 0
+	# 				aCStep <- aZoid[2:6]-aZoid[1:5]
 
-					tCnt <- 0
-						if( aCStep[1]%in%c( 1    ) ) tCnt<-tCnt+1	# 마지막 값 연속도 포함.
-						if( aCStep[2]%in%c( 1, 4 ) ) tCnt<-tCnt+1
-						if( aCStep[3]%in%c( 1    ) ) tCnt<-tCnt+1
-						if( aCStep[4]%in%c( 3    ) ) tCnt<-tCnt+1
-						if( aCStep[5]%in%c( 1    ) ) tCnt<-tCnt+1
-					cnt <- cnt + ifelse( tCnt>1 ,tCnt-1 ,0 )
+	# 				tCnt <- 0
+	# 					if( aCStep[1]%in%c( 1    ) ) tCnt<-tCnt+1	# 마지막 값 연속도 포함.
+	# 					if( aCStep[2]%in%c( 1, 4 ) ) tCnt<-tCnt+1
+	# 					if( aCStep[3]%in%c( 1    ) ) tCnt<-tCnt+1
+	# 					if( aCStep[4]%in%c( 3    ) ) tCnt<-tCnt+1
+	# 					if( aCStep[5]%in%c( 1    ) ) tCnt<-tCnt+1
+	# 				cnt <- cnt + ifelse( tCnt>1 ,tCnt-1 ,0 )
 
-					# [1]    7  1  4  1  6 13 12  8
-					# [2]*   5 12  8 17  8  1 20  2  2  8  1  4  1  6  9  2 10 20  6  8 12  2  2  3  6  5  2  5  8  5  7 24 13  1  9  3  7 11  1  8  6 14  1  5  8  3  8 12 11  8 15  1  1  1 11 16  3  1  1 10  4 10  5  3  1 14  1 11  2  1 15  6  1  5  1  1  1 14
-					# [3]    1 17 27 10  5 16  5 15 14 10  4  2 13  3
-					# [4]*   2  1  8  6  2  4  8  4  1  6  3  1  8  2 14  1  8 25  6  1  7 26  5  1  1  1  1  1  4  1  3
-					# [5]    2  3  4 21  1
-					matCnt<-sum(aCStep==c( 7, 5, 1, 2, 2),na.rm=T)	;cnt<-cnt+ifelse(matCnt>2,1,0)
-					matCnt<-sum(aCStep==c( 1,12,17, 1, 3),na.rm=T)	;cnt<-cnt+ifelse(matCnt>2,1,0)
-					matCnt<-sum(aCStep==c( 4, 8,27, 8, 4),na.rm=T)	;cnt<-cnt+ifelse(matCnt>2,1,0)
-					matCnt<-sum(aCStep==c( 1,17,10, 6,21),na.rm=T)	;cnt<-cnt+ifelse(matCnt>2,1,0)
-					matCnt<-sum(aCStep==c( 6, 8, 5, 2, 1),na.rm=T)	;cnt<-cnt+ifelse(matCnt>2,1,0)
-					matCnt<-sum(aCStep==c(13, 1,16, 4,NA),na.rm=T)	;cnt<-cnt+ifelse(matCnt>2,1,0)
-					matCnt<-sum(aCStep==c(12,20, 5, 8,NA),na.rm=T)	;cnt<-cnt+ifelse(matCnt>2,1,0)
-					matCnt<-sum(aCStep==c( 8, 2,15, 4,NA),na.rm=T)	;cnt<-cnt+ifelse(matCnt>2,1,0)
+	# 				# [1]    7  1  4  1  6 13 12  8
+	# 				# [2]*   5 12  8 17  8  1 20  2  2  8  1  4  1  6  9  2 10 20  6  8 12  2  2  3  6  5  2  5  8  5  7 24 13  1  9  3  7 11  1  8  6 14  1  5  8  3  8 12 11  8 15  1  1  1 11 16  3  1  1 10  4 10  5  3  1 14  1 11  2  1 15  6  1  5  1  1  1 14
+	# 				# [3]    1 17 27 10  5 16  5 15 14 10  4  2 13  3
+	# 				# [4]*   2  1  8  6  2  4  8  4  1  6  3  1  8  2 14  1  8 25  6  1  7 26  5  1  1  1  1  1  4  1  3
+	# 				# [5]    2  3  4 21  1
+	# 				matCnt<-sum(aCStep==c( 7, 5, 1, 2, 2),na.rm=T)	;cnt<-cnt+ifelse(matCnt>2,1,0)
+	# 				matCnt<-sum(aCStep==c( 1,12,17, 1, 3),na.rm=T)	;cnt<-cnt+ifelse(matCnt>2,1,0)
+	# 				matCnt<-sum(aCStep==c( 4, 8,27, 8, 4),na.rm=T)	;cnt<-cnt+ifelse(matCnt>2,1,0)
+	# 				matCnt<-sum(aCStep==c( 1,17,10, 6,21),na.rm=T)	;cnt<-cnt+ifelse(matCnt>2,1,0)
+	# 				matCnt<-sum(aCStep==c( 6, 8, 5, 2, 1),na.rm=T)	;cnt<-cnt+ifelse(matCnt>2,1,0)
+	# 				matCnt<-sum(aCStep==c(13, 1,16, 4,NA),na.rm=T)	;cnt<-cnt+ifelse(matCnt>2,1,0)
+	# 				matCnt<-sum(aCStep==c(12,20, 5, 8,NA),na.rm=T)	;cnt<-cnt+ifelse(matCnt>2,1,0)
+	# 				matCnt<-sum(aCStep==c( 8, 2,15, 4,NA),na.rm=T)	;cnt<-cnt+ifelse(matCnt>2,1,0)
 
-					return( 2>cnt )
-				})	;kIdx<-anaFlagFnd(!flag,rpt)
-    flgCnt[!flag] <- flgCnt[!flag] + 1
+	# 				return( 2>cnt )
+	# 			})	;kIdx<-anaFlagFnd(!flag,rpt)
+    # flgCnt[!flag] <- flgCnt[!flag] + 1
 
 	# =========================================================
 	# colValSeqNext( ,pColSize=2 )
