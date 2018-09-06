@@ -149,27 +149,42 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 				ccObjLst[[nIdx]]$cntMtx[aIdx,c("raw", "rawFV", "rem", "cStep", "fStep")]
 		}
 
-		# ccc - reb (late)
-		chkFN <- c( "basic", "nextZW", "nextQuo10", "nextRebNum" )
-		if( 2 <= sum(0<cccReb[chkFN]) ) surFlag[aIdx] <- FALSE
-		# ccc - reb (gold)
-		chkFN <- c( "nextRebNum", "nextFStepBin"
-						, "nextColVal_1", "nextColVal_3" ,"nextColVal_4" ,"nextColVal_5" ,"nextColVal_6")
-		if( 2 <= sum(0<cccReb[chkFN]) ) surFlag[aIdx] <- FALSE
+		#=[ccc]========================================================================================
+		# # <reb> - reb (late)
+		# chkFN <- c( "basic", "nextZW", "nextQuo10", "nextRebNum" )
+		# if( 2 <= sum(0<cccReb[chkFN]) ) surFlag[aIdx] <- FALSE
+		# # <reb> - reb (gold)
+		# chkFN <- c( "nextRebNum", "nextFStepBin"
+		# 				, "nextColVal_1", "nextColVal_3" ,"nextColVal_4" ,"nextColVal_5" ,"nextColVal_6")
+		# if( 2 <= sum(0<cccReb[chkFN]) ) surFlag[aIdx] <- FALSE
 
-			# ccc cnt - 2이상 값 발생위치 재발이 2개 이상. (late+gold)
-		chkFN <- c( "nextZW", "nextColVal_3" )
-		if( 2 <= sum(2<=scoreMtx[chkFN,"ccc"]) ) surFlag[aIdx] <- FALSE
-			# ccc cnt - 3이상은 최대 1 개.
-		if( 2 <= sum(3<=scoreMtx[,"ccc"]) ) surFlag[aIdx] <- FALSE
-		if( 7 > sum(scoreMtx[,"ccc"]) ) surFlag[aIdx] <- FALSE
+		# # <reb> cnt - 2이상 값 발생위치 재발이 2개 이상. (late+gold)
+		# chkFN <- c( "nextZW", "nextColVal_3" )
+		# if( 2 <= sum(2<=scoreMtx[chkFN,"ccc"]) ) surFlag[aIdx] <- FALSE
+		# # <reb> cnt - 3이상은 최대 1 개.
+		# if( 2 <= sum(3<=scoreMtx[,"ccc"]) ) surFlag[aIdx] <- FALSE
 
-		# raw(late) - 1이상 값의 재발은 1개 이하.
-		chkFN <- c( "nextZW", "nextColVal_2" )
-		if( 2 <= sum(0<scoreMtx[chkFN,"raw"]) ) surFlag[aIdx] <- FALSE
-		# raw(gold) - 1이상 값의 재발은 1개 이하.
-		chkFN <- c( "nextCStepBin", "nextColVal_2", "nextColVal_5" )
-		if( 2 <= sum(0<scoreMtx[chkFN,"raw"]) ) surFlag[aIdx] <- FALSE
+		# <min>
+		# if( 7 > sum(scoreMtx[,"ccc"]) ) surFlag[aIdx] <- FALSE
+
+		#=[raw]========================================================================================
+		# # <reb> - late : 1이상 값의 재발은 1개 이하.
+		# chkFN <- c( "nextZW", "nextColVal_2" )
+		# if( 2 <= sum(0<scoreMtx[chkFN,"raw"]) ) surFlag[aIdx] <- FALSE
+		# # <reb> - gold : 1이상 값의 재발은 1개 이하.
+		# chkFN <- c( "nextCStepBin", "nextColVal_2", "nextColVal_5" )
+		# if( 2 <= sum(0<scoreMtx[chkFN,"raw"]) ) surFlag[aIdx] <- FALSE
+		# <min-event>
+		if( 2 <= sum(2<=scoreMtx[,"raw"]) ) surFlag[aIdx] <- FALSE
+		# <max-happen>
+		if( 8 >= sum(0<=scoreMtx[,"raw"]) ) surFlag[aIdx] <- FALSE
+
+		#=[rawFV]======================================================================================
+		if( 2 <= sum(1<=scoreMtx[,"rawFV"]) ) surFlag[aIdx] <- FALSE
+
+		#=[rem]========================================================================================
+		#=[cStep]======================================================================================
+		#=[fStep]======================================================================================
 
 
 	} # aIdx
