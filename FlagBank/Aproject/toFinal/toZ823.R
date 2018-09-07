@@ -159,7 +159,6 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 			scoreMtx[nIdx,c("raw", "rawFV", "rem", "cStep", "fStep")] <-
 				ccObjLst[[nIdx]]$cntMtx[aIdx,c("raw", "rawFV", "rem", "cStep", "fStep")]
 
-			
 			if( thld["ccc"] <= sum(cccVal[names(cccVal)!="reb"]) ){
 				evtSum[nIdx] <- evtSum[nIdx] + 1
 			}
@@ -308,8 +307,8 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 			chkFN <- c( "nextColVal_3" )
 			if( 1 <= sum(0<evtSum[chkFN]) ) surFlag[aIdx] <- FALSE
 
-			# - event 연속 발생(scoreMtx 내 다음 row)
 			ccc.reb.idx <- which( colnames(cccMtx)=="reb" )
+			# - event 연속 발생(scoreMtx 내 다음 row)
 			for( rIdx in 2:nrow(scoreMtx) ){
 				score.pre	<- scoreMtx[(rIdx-1),]
 				score.next	<- scoreMtx[rIdx	,]
@@ -322,12 +321,23 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 				}
 			} # for
 
+			# - event 연속 발생(cccMtx 내 다음 row)
+			for( rIdx in 2:nrow(cccMtx) ){
+				ccc.pre		<- cccMtx[(rIdx-1),-ccc.reb.idx]
+				ccc.next	<- cccMtx[rIdx	  ,-ccc.reb.idx]
+				seqSum <- sum( (ccc.pre>=1) & (ccc.next>=1) )
+				if( 2 <= seqSum ){	# gold 기준.
+					surFlag[aIdx] <- FALSE
+					break
+				}
+			} # for
 		}
 
 	}  # aIdx
 
 	table(surFlag)	;kIdx <- head(which(!surFlag))
 	allIdxF <- allIdxF[ surFlag ]
+	allIdxFObj$allIdxF.surFlag <- allIdxF
 	cat(sprintf("allIdxF %d\n",length(allIdxF)))
 	# save( allIdxF ,file="Obj_allIdxF.save" )
 
@@ -336,46 +346,19 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 	flgCnt <- flgCnt + fCutCnt.colValSeqNext.cStep( gEnv ,allIdxF )
 	flag <- flgCnt<2	;table(flag)
     allIdxF <- allIdxF[flag]
+	allIdxF.bak <- allIdxF
+	allIdxFObj$allIdxF.colValSeqNext <- allIdxF
 	cat(sprintf("allIdxF %d\n",length(allIdxF)))
-
-	
-
 
 	tDiff <- Sys.time() - tStmp
 	allIdxFObj$timeCost <- tDiff
+	allIdxFObj$allIdxF.final <- allIdxF
 	save( allIdxFObj ,file=sprintf("Obj_allIdxFObj_%s.save",allZoidGrpName) )
 
-	allIdxF.bak <- allIdxF
 
-	selIdx <- allIdxFObj$allIdxF.fCutCnt[ allIdxFObj$flgCnt==0 ]
-	fCutU.logAllZoidMtx( gEnv$allZoidMtx[selIdx,,drop=F] 
-					,logId=sprintf("finalZoid20180728_0") 
+	fCutU.logAllZoidMtx( gEnv$allZoidMtx[ allIdxFObj$allIdxF.final ,,drop=F] 
+					,logId=sprintf("final_nextOf%s_%s",saveId,allZoidGrpName) 
 				)
-	selIdx <- allIdxFObj$allIdxF.fCutCnt[ allIdxFObj$flgCnt==1 ]
-	fCutU.logAllZoidMtx( gEnv$allZoidMtx[selIdx,,drop=F] 
-					,logId=sprintf("finalZoid20180728_1") 
-				)
-
-	#---------------------------------------------------------------------------------------
-	# colValLst
-	colValLst <- apply( gEnv$allZoidMtx[allIdxF,] ,2 ,function(p){sort(unique(p))})
-	colVal <- gEnv$allZoidMtx[allIdxF,1]	;table(colVal)
-	colValTblLst.raw <- apply( gEnv$allZoidMtx[allIdxF,] ,2 ,function(p){table(p)})
-	colValTblLst.rem <- apply( gEnv$allZoidMtx[allIdxF,] ,2 ,function(p){table(p%%10)})
-	cStepMtx <- t(apply(gEnv$allZoidMtx[allIdxF,] ,1 ,function(zoid){zoid[2:6]-zoid[1:5]}))
-	colValTblLst.cStep <- apply( cStepMtx ,2 ,function(p){table(p)})
-	zw <- apply( gEnv$allZoidMtx[allIdxF,] ,1 ,function(zoid){zoid[6]-zoid[1]})	;sort(table(zw))
-
-	# quoTbl
-	quoTblLst <- fCutU.getQuoTblLst( gEnv$allZoidMtx[allIdxF,] )
-	quoTblStr <- sapply( quoTblLst ,function(quoTbl){quoTbl$valStr})	# sort( table(quoTblStr) )
-
-	# rebNum
-	rebNum <- sapply( 2:nrow(gEnv$zhF) ,function(hIdx){ sum(gEnv$zhF[(hIdx-1),] %in% gEnv$zhF[hIdx,]) })
-	rebNum <- c( 0 ,rebNum )
-	# rebNumTbl
-	rebNumTbl <- table(apply( gEnv$allZoidMtx[allIdxF,] ,1 ,function(aZoid){ sum(lastZoid%in%aZoid) }))
-
 
 
     return( rObj )
