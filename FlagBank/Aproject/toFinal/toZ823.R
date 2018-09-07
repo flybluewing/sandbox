@@ -111,7 +111,7 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 	ccObj <- fCutCnt.nextColVal_6( gEnv ,allIdxF )
 	allIdxF <- allIdxF[ cutCC( ccObj ,allIdxF ) ]
 	cat(sprintf("allIdxF %d\n",length(allIdxF)))
-	# save( allIdxF ,file="Obj_allIdxF.save" )
+	save( allIdxF ,file="Obj_allIdxF.save" )
 
 	tDiff <- Sys.time() - tStmp	
 	allIdxFObj$allIdxF.fCutCnt <- allIdxF
@@ -131,7 +131,6 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 	ccObjLst[["nextColVal_5"]] <- fCutCnt.nextColVal_5( gEnv ,allIdxF )
 	ccObjLst[["nextColVal_6"]] <- fCutCnt.nextColVal_6( gEnv ,allIdxF )
 
-	
 
 	# surFlag(scoreMtx) ------------------------------------------------------
 	surFlag <- rep( TRUE ,length(allIdxF) )
@@ -167,8 +166,6 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 			cntVal <- ccObjLst[[nIdx]]$cntMtx[aIdx,c("raw", "rawFV", "rem", "cStep", "fStep")]
 			evtSum[nIdx] <- evtSum[nIdx] + 
 					sum( cntVal>=thld[c("raw", "rawFV", "rem", "cStep", "fStep")] )
-
-			# custom
 
 		} # for(nIdx)
 
@@ -296,9 +293,35 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 
 		#=[evtSum : total score]========================================================================
 		if( TRUE ){ # 코드 접기용.
-			# QQE working 
 			# - event 발생 총합 : evtSum 활용.
-			# - event 연속 발생은 최대 1 개.
+			# gold 영역에서는 총 합이 2 이하였다. late 에서는 2~6
+			scoreCut <- fCutU.cutScore( evtSum
+										,pMinMaxSum=c( 0, 3) ,pMinMaxHpn=c(NA,NA) ,pMinMaxEvent=c(2,NA,NA) 
+									)
+			if( 0 < sum(scoreCut,na.rm=T) ) surFlag[aIdx] <- FALSE
+
+			# - event 연속 발생 (이전 history와의 비교.)
+			# <reb> - late : reb
+			chkFN <- c( "nextZW", "nextBin", "nextFStepBin", "nextColVal_1", "nextColVal_2" ,"nextColVal_4" )
+			if( 2 <= sum(0<evtSum[chkFN]) ) surFlag[aIdx] <- FALSE
+			# <reb> - gold : reb
+			chkFN <- c( "nextColVal_3" )
+			if( 1 <= sum(0<evtSum[chkFN]) ) surFlag[aIdx] <- FALSE
+
+			# - event 연속 발생(scoreMtx 내 다음 row)
+			ccc.reb.idx <- which( colnames(cccMtx)=="reb" )
+			for( rIdx in 2:nrow(scoreMtx) ){
+				score.pre	<- scoreMtx[(rIdx-1),]
+				score.next	<- scoreMtx[rIdx	,]
+				score.pre["ccc"]	<- sum( cccMtx[(rIdx-1)	, -ccc.reb.idx] )
+				score.next["ccc"]	<- sum( cccMtx[rIdx		, -ccc.reb.idx] )
+				seqSum <- sum( (score.pre>=thld) & (score.next>=thld) )
+				if( 1 <= seqSum ){	# gold 기준.
+					surFlag[aIdx] <- FALSE
+					break
+				}
+			} # for
+
 		}
 
 	}  # aIdx
