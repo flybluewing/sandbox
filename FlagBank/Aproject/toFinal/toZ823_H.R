@@ -148,7 +148,7 @@ fCut.basic <- function( gEnv ,allIdxF ,rpt=FALSE ){
 		# raw
 		flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
 						if( any(aZoid==stdMI$lastZoid) ) return(FALSE)
-						if( 1<sum(aZoid==stdMI$lastZoid) ) return(FALSE)
+						if( 1<sum(aZoid%in%stdMI$lastZoid) ) return(FALSE)
 						if( 1<sum(aZoid[c(2,5,6)]== aZoid[1]*c(2,3,4) )) return( FALSE )
 						return( TRUE )
 					})	;kIdx<-anaFlagFnd(!flag,rpt)
@@ -200,7 +200,7 @@ fCut.basic <- function( gEnv ,allIdxF ,rpt=FALSE ){
 		cccObj <- fCutU.commonCutCnt( gEnv ,allIdxF ,zMtx )
 		flag <- apply( cccObj$scoreMtx ,1 ,function( score ){
 						score.r <- score[names(score)!="reb"]
-						if( 3 < sum(score>0) ) return( FALSE )
+						if( 2<sum(score.r>0) ) return( FALSE )	# std
 						if( 0 < score["quoAll"] ) return( FALSE )
 						return( TRUE )
 					})	;kIdx<-anaFlagFnd(!flag,rpt)
@@ -227,7 +227,7 @@ fCut.basic <- function( gEnv ,allIdxF ,rpt=FALSE ){
 		cccObj <- fCutU.commonCutCnt( gEnv ,allIdxF ,zMtx )
 		flag <- apply( cccObj$scoreMtx ,1 ,function( score ){
 						score.r <- score[names(score)!="reb"]
-						if( 3 < sum(score>0) ) return( FALSE )	# วฅมุ
+						if( 2<sum(score.r>0) ) return( FALSE )	# std
 						if( 2 < sum(score>0) ) return( FALSE )
 						if( 0 < sum(score[c("spanM","quoPtn")]) ) return( FALSE )
 						
@@ -247,7 +247,7 @@ fCut.basic <- function( gEnv ,allIdxF ,rpt=FALSE ){
 		cccObj <- fCutU.commonCutCnt( gEnv ,allIdxF ,zMtx )
 		flag <- apply( cccObj$scoreMtx ,1 ,function( score ){
 						score.r <- score[names(score)!="reb"]
-						if( 3 < sum(score>0) ) return( FALSE )
+						if( 2<sum(score.r>0) ) return( FALSE )	# std
 						# if( 0 < score["quoAll"] ) return( FALSE )
 						return( TRUE )
 					})	;kIdx<-anaFlagFnd(!flag,rpt)
@@ -265,7 +265,7 @@ fCut.basic <- function( gEnv ,allIdxF ,rpt=FALSE ){
 
 		flag <- apply( cccObj$scoreMtx ,1 ,function( score ){
 						score.r <- score[names(score)!="reb"]
-						if( 3 < sum(score>0) ) return( FALSE )
+						if( 2<sum(score.r>0) ) return( FALSE )	# std
 						if( 0 < score["quoPtn"] ) return( FALSE )
 						return( TRUE )
 					})	;kIdx<-anaFlagFnd(!flag,rpt)
@@ -312,7 +312,7 @@ fCut.basic <- function( gEnv ,allIdxF ,rpt=FALSE ){
 		cccObj <- fCutU.commonCutCnt( gEnv ,allIdxF ,zMtx )
 		flag <- apply( cccObj$scoreMtx ,1 ,function( score ){
 						score.r <- score[names(score)!="reb"]
-						if( 3 < sum(score>0) ) return( FALSE )
+						if( 2<sum(score.r>0) ) return( FALSE )	# std
 						# if( 0 < score["quoAll"] ) return( FALSE )
 						return( TRUE )
 					})	;kIdx<-anaFlagFnd(!flag,rpt)
@@ -354,7 +354,7 @@ fCut.basic <- function( gEnv ,allIdxF ,rpt=FALSE ){
 		cccObj <- fCutU.commonCutCnt( gEnv ,allIdxF ,zMtx )
 		flag <- apply( cccObj$scoreMtx ,1 ,function( score ){
 						score.r <- score[names(score)!="reb"]
-						if( 3 < sum(score>0) ) return( FALSE )
+						if( 2<sum(score.r>0) ) return( FALSE )	# std
 						if( 0 < score["quoAll"] ) return( FALSE )
 						return( TRUE )
 					})	;kIdx<-anaFlagFnd(!flag,rpt)
@@ -372,7 +372,7 @@ fCut.basic <- function( gEnv ,allIdxF ,rpt=FALSE ){
 		cccObj <- fCutU.commonCutCnt( gEnv ,allIdxF ,zMtx )
 		flag <- apply( cccObj$scoreMtx ,1 ,function( score ){
 						score.r <- score[names(score)!="reb"]
-						if( 3 < sum(score>0) ) return( FALSE )
+						if( 2<sum(score.r>0) ) return( FALSE )	# std
 						# if( 0 < score["quoAll"] ) return( FALSE )
 						return( TRUE )
 					})	;kIdx<-anaFlagFnd(!flag,rpt)
@@ -391,7 +391,7 @@ fCut.basic <- function( gEnv ,allIdxF ,rpt=FALSE ){
 		cccObj <- fCutU.commonCutCnt( gEnv ,allIdxF ,zMtx )
 		flag <- apply( cccObj$scoreMtx ,1 ,function( score ){
 						score.r <- score[names(score)!="reb"]
-						if( 3 < sum(score>0) ) return( FALSE )
+						if( 2<sum(score.r>0) ) return( FALSE )	# std
 						# if( 0 < score["quoAll"] ) return( FALSE )
 						return( TRUE )
 					})	;kIdx<-anaFlagFnd(!flag,rpt)
@@ -422,7 +422,7 @@ fCut.basic <- function( gEnv ,allIdxF ,rpt=FALSE ){
 		cccObj <- fCutU.commonCutCnt( gEnv ,allIdxF ,zMtx )
 		flag <- apply( cccObj$scoreMtx ,1 ,function( score ){
 						score.r <- score[names(score)!="reb"]
-						if( 3 < sum(score>0) ) return( FALSE )
+						if( 2<sum(score.r>0) ) return( FALSE )	# std
 						if( 0 < sum(score[c("nbor","zw","remH0","remH1")]) ) return( FALSE )
 						return( TRUE )
 					})	;kIdx<-anaFlagFnd(!flag,rpt)
@@ -507,7 +507,7 @@ fCut.basic <- function( gEnv ,allIdxF ,rpt=FALSE ){
 		cccObj <- fCutU.commonCutCnt( gEnv ,allIdxF ,zMtx )
 		flag <- apply( cccObj$scoreMtx ,1 ,function( score ){
 						score.r <- score[names(score)!="reb"]
-						if( 3 < sum(score>0) ) return( FALSE )
+						if( 2<sum(score.r>0) ) return( FALSE )	# std
 						if( 0 < sum(score[c("nbor","zw","spanM")]) ) return( FALSE )
 						return( TRUE )
 					})	;kIdx<-anaFlagFnd(!flag,rpt)
@@ -550,7 +550,7 @@ fCut.basic <- function( gEnv ,allIdxF ,rpt=FALSE ){
 		cccObj <- fCutU.commonCutCnt( gEnv ,allIdxF ,zMtx )
 		flag <- apply( cccObj$scoreMtx ,1 ,function( score ){
 						score.r <- score[names(score)!="reb"]
-						if( 3 < sum(score>0) ) return( FALSE )
+						if( 2<sum(score.r>0) ) return( FALSE )	# std
 						if( 0 < sum(score[c("zw")]) ) return( FALSE )
 						return( TRUE )
 					})	;kIdx<-anaFlagFnd(!flag,rpt)
@@ -605,7 +605,7 @@ fCut.basic <- function( gEnv ,allIdxF ,rpt=FALSE ){
 		cccObj <- fCutU.commonCutCnt( gEnv ,allIdxF ,zMtx )
 		flag <- apply( cccObj$scoreMtx ,1 ,function( score ){
 						score.r <- score[names(score)!="reb"]
-						if( 3 < sum(score>0) ) return( FALSE )
+						if( 2<sum(score.r>0) ) return( FALSE )	# std
 						# if( 0 < score["quoAll"] ) return( FALSE )
 						return( TRUE )
 					})	;kIdx<-anaFlagFnd(!flag,rpt)
@@ -624,7 +624,7 @@ fCut.basic <- function( gEnv ,allIdxF ,rpt=FALSE ){
 		cccObj <- fCutU.commonCutCnt( gEnv ,allIdxF ,zMtx )
 		flag <- apply( cccObj$scoreMtx ,1 ,function( score ){
 						score.r <- score[names(score)!="reb"]
-						if( 3 < sum(score>0) ) return( FALSE )
+						if( 2<sum(score.r>0) ) return( FALSE )	# std
 						if( 0 < sum(score[c("cStep2","cStep3")]) ) return( FALSE )
 						return( TRUE )
 					})	;kIdx<-anaFlagFnd(!flag,rpt)

@@ -30,7 +30,9 @@ cutCC <- function( ccObj ,allIdxF ){
 	# 			})	;kIdx<-anaFlagFnd(!flag,F)
 	# surFlag[ !flag ] <- FALSE
 
-	ccc <- apply( ccObj$cccMtx ,1 ,function(cccVal){ sum(cccVal>0) })
+	cccMtx <- ccObj$cccMtx
+	cccMtx <- cccMtx[,-which(colnames(cccMtx)=="reb")]
+	ccc <- apply( cccMtx ,1 ,function(cccVal){ sum(cccVal>0) })
 	cntMtx <- cbind( ccc, ccObj$cntMtx )
 	cName <- c( "ccc", "raw", "rawFV", "rem", "cStep", "fStep" )
 	thld <- c( 2, 2, 2, 3, 2, 2 )	;names(thld) <- cName
@@ -133,32 +135,87 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 
 	# surFlag(scoreMtx) ------------------------------------------------------
 	surFlag <- rep( TRUE ,length(allIdxF) )
-	fName <- attributes(ccObjLst)$names
-	cName <- c( "ccc", "auxZW", "auxQuo", "raw", "rawFV", "rem", "cStep", "fStep" )
-	scoreMtx <- matrix( 0 ,nrow=length(ccObjLst) ,ncol=length(cName) )
-	rownames(scoreMtx) <- fName		;colnames(scoreMtx) <- cName
-	cccReb <- rep( 0 ,length(fName) )	;names(cccReb) <- fName
-	for( aIdx in 1:length(allIdxF) ){
-		cccReb[] <- 0	;scoreMtx[,] <- 0
-		for( nIdx in fName ){
-			cccReb[ nIdx ] <- ccObjLst[[nIdx]]$cccMtx[aIdx,"reb"]
 
-			scoreMtx[nIdx,"ccc"] <- sum( 0<ccObjLst[[nIdx]]$cccMtx[aIdx,] )
+	cName <- c( "ccc", "auxZW", "auxQuo", "raw", "rawFV", "rem", "cStep", "fStep" )
+	thld <- c( 2, 2, 2, 2, 2, 3, 2, 2 )	;names(thld) <- cName
+
+	fName <- attributes(ccObjLst)$names
+	scoreMtx <- matrix( 0 ,nrow=length(ccObjLst) ,ncol=length(thld) )
+	rownames(scoreMtx) <- fName		;colnames(scoreMtx) <- names(thld)
+	cName <- c( "reb",  "nbor", "spanM", "quoAll", "quoPtn", "zw",  "remH0", "remH1", "cStep2", "cStep3" )
+	cccMtx <- matrix( 0 ,nrow=length(ccObjLst) ,ncol=length(cName) )
+	rownames(cccMtx) <- fName		;colnames(cccMtx) <- cName
+	cccReb <- rep( 0 ,length(fName) )	;names(cccReb) <- fName
+	evtSum <- rep( 0, length(fName) )	;names(evtSum) <- fName
+	for( aIdx in 1:length(allIdxF) ){
+		cccReb[] <- 0	;scoreMtx[,] <- 0	;cccMtx[,] <- 0		;evtSum[] <- 0
+		for( nIdx in fName ){
+			cccVal <- ccObjLst[[nIdx]]$cccMtx[aIdx,]
+			cccReb[ nIdx ] <- cccVal["reb"]
+
+			cccMtx[nIdx,] <- ccObjLst[[nIdx]]$cccMtx[aIdx,]
+
+			scoreMtx[nIdx,"ccc"] <- sum( 0 < cccVal )
 			scoreMtx[nIdx,c("auxZW", "auxQuo")] <- ccObjLst[[nIdx]]$auxCntMtx[aIdx,c("auxZW", "auxQuo")]
 			scoreMtx[nIdx,c("raw", "rawFV", "rem", "cStep", "fStep")] <-
 				ccObjLst[[nIdx]]$cntMtx[aIdx,c("raw", "rawFV", "rem", "cStep", "fStep")]
-		}
+
+			
+			if( thld["ccc"] <= sum(cccVal[names(cccVal)!="reb"]) ){
+				evtSum[nIdx] <- evtSum[nIdx] + 1
+			}
+			cntVal <- ccObjLst[[nIdx]]$cntMtx[aIdx,c("raw", "rawFV", "rem", "cStep", "fStep")]
+			evtSum[nIdx] <- evtSum[nIdx] + 
+					sum( cntVal>=thld[c("raw", "rawFV", "rem", "cStep", "fStep")] )
+
+			# custom
+
+		} # for(nIdx)
 
 		#=[ccc]========================================================================================
-		scoreCut <- fCutU.cutScore( scoreMtx[,"ccc"]
-									,pMinMaxSum=c( 7,12) ,pMinMaxHpn=c( 5,11) ,pMinMaxEvent=c(2,0,4) 
-								)
-		if( 0 < sum(scoreCut,na.rm=T) ) surFlag[aIdx] <- FALSE
+		if( TRUE ){ # 코드접기용.
+			scoreCut <- fCutU.cutScore( scoreMtx[,"ccc"]
+										,pMinMaxSum=c( 7,12) ,pMinMaxHpn=c( 5,11) ,pMinMaxEvent=c(2,0,4) 
+									)
+			if( 0 < sum(scoreCut,na.rm=T) ) surFlag[aIdx] <- FALSE
+			scoreCut <- fCutU.cutScore( cccMtx[,"reb"]
+										,pMinMaxSum=c(NA,NA) ,pMinMaxHpn=c( 2, 8) ,pMinMaxEvent=c(2,NA,NA) 
+									)
+			if( 0 < sum(scoreCut,na.rm=T) ) surFlag[aIdx] <- FALSE
+			scoreCut <- fCutU.cutScore( cccMtx[,"nbor"]
+										,pMinMaxSum=c(NA,NA) ,pMinMaxHpn=c(NA, 3) ,pMinMaxEvent=c(2,NA,NA) 
+									)
+			scoreCut <- fCutU.cutScore( cccMtx[,"spanM"]
+										,pMinMaxSum=c(NA,NA) ,pMinMaxHpn=c(NA, 4) ,pMinMaxEvent=c(2,NA,NA) 
+									)
+			scoreCut <- fCutU.cutScore( cccMtx[,"quoAll"]
+										,pMinMaxSum=c(NA,NA) ,pMinMaxHpn=c(NA, 3) ,pMinMaxEvent=c(2,NA,NA) 
+									)
+			scoreCut <- fCutU.cutScore( cccMtx[,"quoPtn"]
+										,pMinMaxSum=c(NA,NA) ,pMinMaxHpn=c(NA, 4) ,pMinMaxEvent=c(2,NA,NA) 
+									)
+			scoreCut <- fCutU.cutScore( cccMtx[,"zw"]
+										,pMinMaxSum=c(NA,NA) ,pMinMaxHpn=c(NA, 3) ,pMinMaxEvent=c(2,NA,NA) 
+									)
+			scoreCut <- fCutU.cutScore( cccMtx[,"remH0"]
+										,pMinMaxSum=c(NA,NA) ,pMinMaxHpn=c(NA, 2) ,pMinMaxEvent=c(2,NA,NA) 
+									)
+			scoreCut <- fCutU.cutScore( cccMtx[,"remH1"]
+										,pMinMaxSum=c(NA,NA) ,pMinMaxHpn=c(NA, 2) ,pMinMaxEvent=c(2,NA,NA) 
+									)
+			scoreCut <- fCutU.cutScore( cccMtx[,"cStep2"]
+										,pMinMaxSum=c(NA,NA) ,pMinMaxHpn=c(NA, 3) ,pMinMaxEvent=c(2,NA,NA) 
+									)
+			scoreCut <- fCutU.cutScore( cccMtx[,"cStep3"]
+										,pMinMaxSum=c(NA,NA) ,pMinMaxHpn=c(NA, 3) ,pMinMaxEvent=c(2,NA,NA) 
+									)
 
-			# <reb> - late : reb (미발생도 제한할까?)
+			if( 0 < sum(scoreCut,na.rm=T) ) surFlag[aIdx] <- FALSE
+
+			# <reb> - late : reb
 			chkFN <- c( "basic", "nextZW", "nextQuo10", "nextRebNum" )
 			if( 3 <= sum(0<cccReb[chkFN]) ) surFlag[aIdx] <- FALSE
-			# <reb> - gold : reb (미발생도 제한할까?)
+			# <reb> - gold : reb
 			chkFN <- c( "nextRebNum", "nextFStepBin"
 							, "nextColVal_1", "nextColVal_3" ,"nextColVal_4" 
 							,"nextColVal_5" ,"nextColVal_6")
@@ -170,12 +227,14 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 			# <reb> cnt - 3이상 값 재발연속은 최대 1 개.
 			if( 2 <= sum(3<=scoreMtx[,"ccc"]) ) surFlag[aIdx] <- FALSE
 
+		}
 
 		#=[raw]========================================================================================
-		scoreCut <- fCutU.cutScore( scoreMtx[,"raw"]
-									,pMinMaxSum=c(NA, 8) ,pMinMaxHpn=c(NA, 8) ,pMinMaxEvent=c(2,NA,2) 
-								)
-		if( 0 < sum(scoreCut,na.rm=T) ) surFlag[aIdx] <- FALSE
+		if( TRUE ){ # 코드 접기용.
+			scoreCut <- fCutU.cutScore( scoreMtx[,"raw"]
+										,pMinMaxSum=c(NA, 8) ,pMinMaxHpn=c(NA, 8) ,pMinMaxEvent=c(2,NA,2) 
+									)
+			if( 0 < sum(scoreCut,na.rm=T) ) surFlag[aIdx] <- FALSE
 
 			# <reb> - late : Event 재발연속은 1개 이하.
 			chkFN <- c( "nextZW", "nextColVal_2" )
@@ -184,17 +243,22 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 			chkFN <- c( "nextCStepBin", "nextColVal_2", "nextColVal_5" )
 			if( 2 <= sum(0<scoreMtx[chkFN,"raw"]) ) surFlag[aIdx] <- FALSE
 
+		}
+
 		#=[rawFV]======================================================================================
-		scoreCut <- fCutU.cutScore( scoreMtx[,"rawFV"]
-									,pMinMaxSum=c(NA, 3) ,pMinMaxHpn=c(NA, 2) ,pMinMaxEvent=c(2,NA,2) 
-								)
-		if( 0 < sum(scoreCut,na.rm=T) ) surFlag[aIdx] <- FALSE
+		if( TRUE ){ # 코드 접기용.
+			scoreCut <- fCutU.cutScore( scoreMtx[,"rawFV"]
+										,pMinMaxSum=c(NA, 3) ,pMinMaxHpn=c(NA, 2) ,pMinMaxEvent=c(2,NA,2) 
+									)
+			if( 0 < sum(scoreCut,na.rm=T) ) surFlag[aIdx] <- FALSE
+		}
 
 		#=[rem]========================================================================================
-		scoreCut <- fCutU.cutScore( scoreMtx[,"rem"]
-									,pMinMaxSum=c( 8,15) ,pMinMaxHpn=c(6,11) ,pMinMaxEvent=c(2,1,5) 
-								)
-		if( 0 < sum(scoreCut,na.rm=T) ) surFlag[aIdx] <- FALSE
+		if( TRUE ){ # 코드 접기용.
+			scoreCut <- fCutU.cutScore( scoreMtx[,"rem"]
+										,pMinMaxSum=c( 8,15) ,pMinMaxHpn=c(6,11) ,pMinMaxEvent=c(2,1,5) 
+									)
+			if( 0 < sum(scoreCut,na.rm=T) ) surFlag[aIdx] <- FALSE
 
 			# <reb> - late : event 재발연속은 1개 이하
 			chkFN <- c( "nextZW" ,"nextColVal_2" )
@@ -202,33 +266,40 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 			# <reb> - gold : event 재발연속은 1개 이하
 			chkFN <- c( "nextQuo10" ,"nextFStepBin" ,"nextColVal_5" )
 			if( 2 <= sum(1<scoreMtx[chkFN,"rem"]) ) surFlag[aIdx] <- FALSE
-
+		}
 
 		#=[cStep]======================================================================================
-		scoreCut <- fCutU.cutScore( scoreMtx[,"cStep"]
-									,pMinMaxSum=c( 4,14) ,pMinMaxHpn=c(4,10) ,pMinMaxEvent=c(2,NA,5) 
-								)
-		if( 0 < sum(scoreCut,na.rm=T) ) surFlag[aIdx] <- FALSE
+		if( TRUE ){ # 코드 접기용.
+			scoreCut <- fCutU.cutScore( scoreMtx[,"cStep"]
+										,pMinMaxSum=c( 4,14) ,pMinMaxHpn=c(4,10) ,pMinMaxEvent=c(2,NA,5) 
+									)
+			if( 0 < sum(scoreCut,na.rm=T) ) surFlag[aIdx] <- FALSE
 
 			# <reb> - late : event 재발연속은 1개 이하
 			chkFN <- c( "nextBin" ,"nextFStepBin" ,"nextColVal_1" ,"nextColVal_2" )
 			if( 2 <= sum(1<scoreMtx[chkFN,"cStep"]) ) surFlag[aIdx] <- FALSE
 
+		}
 
 		#=[fStep]======================================================================================
-		scoreCut <- fCutU.cutScore( scoreMtx[,"fStep"]
-									,pMinMaxSum=c( 0, 4) ,pMinMaxHpn=c( 0, 3) ,pMinMaxEvent=c(2,NA,2) 
-								)
-		if( 0 < sum(scoreCut,na.rm=T) ) surFlag[aIdx] <- FALSE
+		if( TRUE ){ # 코드 접기용.
+			scoreCut <- fCutU.cutScore( scoreMtx[,"fStep"]
+										,pMinMaxSum=c( 0, 4) ,pMinMaxHpn=c( 0, 3) ,pMinMaxEvent=c(2,NA,2) 
+									)
+			if( 0 < sum(scoreCut,na.rm=T) ) surFlag[aIdx] <- FALSE
 
 			# <reb> - (late+gold) : 재발연속은 1개 이하
 			chkFN <- c( "nextBin" ,"nextColVal_4" )
 			if( 2 <= sum(0<scoreMtx[chkFN,"fStep"]) ) surFlag[aIdx] <- FALSE
+		}
 
-		#=[total score]======================================================================================
-		QQE working
-		- event 발생 총합
-		- event 연속 발생은 최대 1 개.
+
+		#=[evtSum : total score]========================================================================
+		if( TRUE ){ # 코드 접기용.
+			# QQE working 
+			# - event 발생 총합 : evtSum 활용.
+			# - event 연속 발생은 최대 1 개.
+		}
 
 	}  # aIdx
 
