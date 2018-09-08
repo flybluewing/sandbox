@@ -19,6 +19,11 @@ load(sprintf("./save/Obj_gEnv%s.save",saveId))
 
 load(sprintf("./save/Obj_fRstLst%s.save",saveId))
 load(sprintf("./save/Obj_remLst%s.save",saveId))
+
+# A0110.A 의 효율이 안 좋은 듯 해서 테스트.
+fRstLst <- lapply( fRstLst ,function(fRst){ return(fRst[fRst!="A0110.A"]) })
+remLst[["A0110.A"]] <- integer(0)
+
 stdFiltedCnt <- sapply( fRstLst ,length )   ;names(stdFiltedCnt) <- ( nrow(gEnv$zhF)-length(stdFiltedCnt)+1 ):nrow(gEnv$zhF)
 stdFilted.tbl <- table(stdFiltedCnt)
 stdFilted.per <- sprintf( "%.1f" ,100*stdFilted.tbl / length(fRstLst) )

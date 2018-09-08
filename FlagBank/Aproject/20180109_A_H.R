@@ -502,7 +502,8 @@ filt_A0110.A <- function( pEnv ){
 	flag <- rep( TRUE ,nrow(allCodeMtx) )
 	for( nextJump in 1:2 ){
 		filtGrp <- getPtnRebGrp2( stdCodeMtx ,pNextJump=nextJump )
-		filtRst <- filtGrp$filt( allCodeMtx )
+		#	filtRst <- filtGrp$filt( allCodeMtx )	# 너무 효율이 안 좋다.
+		filtRst <- filtGrp$filt( allCodeMtx ,pSurviveLimit=1 )
 		rstFlag <- sapply(filtRst ,function(p){p$survive})
 		flag <- flag & rstFlag
 		tDiff <- Sys.time() - tStmp
