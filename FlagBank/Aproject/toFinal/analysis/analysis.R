@@ -322,7 +322,7 @@ analyLst[["toZ819"]] <- list(	stdFltCnt =2
 				)
 ) # analyLst[["toZ819"]] check
 
-analyLst[["toZ820"]] <- list(	stdFltCnt = 2
+analyLst[["toZ820"]] <- list(	stdFltCnt = 1	# (A0110.A 필터 제외)
 	,fCutCnt.basic = list(	commonCutCnt=1	# cStep2
 					,auxZW=0	,auxQuo=0
 					,raw =0	,rawFV =0
@@ -531,4 +531,77 @@ analyLst[["toZ822"]] <- list(	stdFltCnt = 3
 					,rem =1	,cStep =1	,fStep =0
 				)
 ) # analyLst[["toZ822"]]
+
+analyLst[["toZ823"]] <- list(	stdFltCnt =1
+	,fCutCnt.default =0
+	,fCutCnt.basic = list(	commonCutCnt=1	# reb
+					,auxZW=0	,auxQuo=0
+					,raw =0	,rawFV =0
+					,rem =0	,cStep =0	,fStep =0
+				)
+
+
+	,fCutCnt.colValSeqNext =0
+	,fCutCnt.colValSeqNext.cStep =0
+	,fCutCnt.nextZW = list(	commonCutCnt=2	# nbor quoAll
+					,auxZW=0	,auxQuo=0
+					,raw =0	,rawFV =1	# fCutU.hasPtn(c(12,NA,24),aZoid)
+					,rem =0	,cStep =0	,fStep =0
+				)
+	,fCutCnt.nextQuo10 = list(	commonCutCnt=1	# spanM
+					,auxZW=0	,auxQuo=0
+					,raw =0	,rawFV =0
+					,rem =1	,cStep =1	,fStep =0
+				)
+	,fCutCnt.nextBin = list(	commonCutCnt=0
+					,auxZW=0	,auxQuo=0
+					,raw =0	,rawFV =0
+					,rem =0	,cStep =3	,fStep =0
+				)
+	,fCutCnt.nextRebNum = list(	commonCutCnt=1	# reb
+					,auxZW=0	,auxQuo=0
+					,raw =0	,rawFV =0
+					,rem =0	,cStep =0	,fStep =0
+				)
+	,fCutCnt.nextCStepBin = list(	commonCutCnt=0
+					,auxZW=0	,auxQuo=0
+					,raw =0	,rawFV =0
+					,rem =1	,cStep =0	,fStep =0
+				)
+	,fCutCnt.nextFStepBin = list(	commonCutCnt=1	# cStep2
+					,auxZW=0	,auxQuo=0
+					,raw =0	,rawFV =0
+					,rem =2	,cStep =0	,fStep =0
+				)
+	,fCutCnt.nextColVal_1 = list(	commonCutCnt=0
+					,auxZW=0	,auxQuo=0
+					,raw =0	,rawFV =0
+					,rem =1	,cStep =1,fStep =0
+				)
+	,fCutCnt.nextColVal_2 = list(	commonCutCnt=1	# quoAll
+					,auxZW=0	,auxQuo=0
+					,raw =0	,rawFV =0
+					,rem =2	,cStep =1	,fStep =1
+				)
+	,fCutCnt.nextColVal_3 = list(	commonCutCnt=0
+					,auxZW=0	,auxQuo=0
+					,raw =1	,rawFV =0
+					,rem =1	,cStep =2	,fStep =0
+				)
+	,fCutCnt.nextColVal_4 = list(	commonCutCnt=1	# reb
+					,auxZW=0	,auxQuo=0
+					,raw =0	,rawFV =0
+					,rem =1	,cStep =1	,fStep =1
+				)
+	,fCutCnt.nextColVal_5 = list(	commonCutCnt=2	# reb spanM
+					,auxZW=0	,auxQuo=0
+					,raw =0	,rawFV =0
+					,rem =1	,cStep =1	,fStep =0
+				)
+	,fCutCnt.nextColVal_6 = list(	commonCutCnt=2	# reb spanM
+					,auxZW=0	,auxQuo=0
+					,raw =0	,rawFV =0
+					,rem =0	,cStep =2	,fStep =0
+				)
+) # analyLst[["toZ823"]]
 

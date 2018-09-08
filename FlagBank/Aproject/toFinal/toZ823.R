@@ -10,7 +10,8 @@ stdZoid <- NULL
 
 # simMode start ----------------------------------------------------
 	aZoid <- stdZoid <- c( 12,18,24,26,39,40 ) # ZH 823 채워넣을 것.
-	allIdxF <- allIdx <- stdIdx <- which(apply(gEnv$allZoidMtx,1,function(zoid){all(zoid==stdZoid)}))
+	allIdxF <- allIdx <- stdIdx <- 6949788
+		# which(apply(gEnv$allZoidMtx,1,function(zoid){all(zoid==stdZoid)}))
 # simMode end   ----------------------------------------------------
 
 cutCC <- function( ccObj ,allIdxF ){
@@ -353,6 +354,12 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 	tDiff <- Sys.time() - tStmp
 	allIdxFObj$timeCost <- tDiff
 	allIdxFObj$allIdxF.final <- allIdxF
+
+	ccObj <- fCutCnt.default( gEnv ,allIdxF )
+
+	QQE 최종 결과와 fCutCnt.default() 적용결과 비교.
+
+
 	save( allIdxFObj ,file=sprintf("Obj_allIdxFObj_%s.save",allZoidGrpName) )
 
 

@@ -87,7 +87,7 @@ fCut.default <- function( gEnv ,allIdxF ,rpt=FALSE ){
 
 	return( allIdxF )
 } # fCut.default()
-# undone
+# done
 fCutCnt.default <- function( gEnv ,allIdxF ,rpt=FALSE ){
 
 	flgCnt <- rep( 0 ,length(allIdxF) )
@@ -779,7 +779,7 @@ fCutCnt.basic <- function( gEnv ,allIdxF ,rpt=FALSE ){
     flgCnt <- flgCnt + score
 
 
-		return( list(flgCnt=flgCnt ,cntMtx=cntMtx ,auxCntMtx=auxCntMtx ,cccMtx=cccObj$scoreMtx ) )
+	return( list(flgCnt=flgCnt ,cntMtx=cntMtx ,auxCntMtx=auxCntMtx ,cccMtx=cccObj$scoreMtx ) )
 } # fCutCnt.basic()
 
 # done
@@ -801,7 +801,7 @@ fCutCnt.colValSeqNext <- function( gEnv ,allIdxF ,rpt=FALSE ){
 	# <remove>
     flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
 					cnt <- sum(aZoid[banVal.idx]==banVal)
-					return( cnt>1 )
+					return( cnt<2 )
 				})	;kIdx<-anaFltCnt(flag,rpt)
     flgCnt[!flag] <- flgCnt[!flag] + 1
 	# # -- conditional
@@ -1240,7 +1240,7 @@ fCutCnt.colValSeqNext.cStep <- function( gEnv ,allIdxF ,rpt=FALSE ){
 					if( aCStep[4]%in%c(      ) ) cnt<-cnt+1
 					if( aCStep[5]%in%c(      ) ) cnt<-cnt+1
 
-					return( cnt<1 )
+					return( cnt<2 )
 				})	;kIdx<-anaFlagFnd(!flag,rpt)
     flgCnt[!flag] <- flgCnt[!flag] + 1
 
