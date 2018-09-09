@@ -345,6 +345,7 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 	# colValSeqNext ------------------------------------------------------
 	flgCnt <- fCutCnt.colValSeqNext( gEnv ,allIdxF ) 
 	flgCnt <- flgCnt + fCutCnt.colValSeqNext.cStep( gEnv ,allIdxF )
+	flgCnt <- flgCnt + fCutCnt.default( gEnv ,allIdxF )	# 효율이 의문시된다.
 	flag <- flgCnt<2	;table(flag)
     allIdxF <- allIdxF[flag]
 	allIdxF.bak <- allIdxF
@@ -355,10 +356,7 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 	allIdxFObj$timeCost <- tDiff
 	allIdxFObj$allIdxF.final <- allIdxF
 
-	ccObj <- fCutCnt.default( gEnv ,allIdxF )
-
-	QQE 최종 결과와 fCutCnt.default() 적용결과 비교.
-
+	flgCnt <- cutRawFV3( gEnv ,allIdxF )	# 개쓸모 없...
 
 	save( allIdxFObj ,file=sprintf("Obj_allIdxFObj_%s.save",allZoidGrpName) )
 
@@ -371,6 +369,215 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
     return( rObj )
 
 } # finalCut()
+
+cutRawFV3 <- function( gEnv ,allIdxF ,rpt=FALSE ){
+	#	3개 이상에 대한 패턴은 걸리는 게 없는 것 같아 별도 필터로 모은다.
+	#	"rawFV" 에 대한 복사가 아닌, 전면 재작성할 것. (이전 부분은 2개 이상은 의미가 없어 잘려나가는 값들이 많다.)
+
+	cntMtx <- matrix( 0 ,nrow=length(allIdxF) ,ncol=length(cntThld) )	;colnames(cntMtx)=names(cntThld)
+
+    cntMtx[,"rawFV"] <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+					# anaMtx.freqVal( stdMI$rawTail )
+					cnt <- 0
+					# < 9>
+					if( fCutU.hasPtn(c( 9,24,27,23),aZoid,thld=3,fixIdx=1) ) cnt<-cnt+1
+					# <12>
+					# <13>
+					if( fCutU.hasPtn(c(12,13,23),aZoid) ) cnt<-cnt+1
+					# <24>
+					if( fCutU.hasPtn(c(17,NA,NA,24,25,28),aZoid,thld=3,fixIdx=4) ) cnt<-cnt+1
+					# <25>
+					# <29>
+					if( fCutU.hasPtn(c( 9, 1,20,29),aZoid,thld=3,fixIdx=4) ) cnt<-cnt+1
+					# <30>
+					if( fCutU.hasPtn(c(14,15,30),aZoid) ) cnt<-cnt+1
+
+					# <12>
+					if( fCutU.hasPtn(c( 12,NA,26,44),aZoid) ) cnt<-cnt+1
+					# <15>
+					if( fCutU.hasPtn(c(15,NA,33,43),aZoid) ) cnt<-cnt+1
+					# <18>
+					if( fCutU.hasPtn(c(10, 9,18,20),aZoid,thld=3,fixIdx=3) ) cnt<-cnt+1
+					# <24>
+					if( fCutU.hasPtn(c(20,12,17,24,45),aZoid,thld=3,fixIdx=4) ) cnt<-cnt+1
+					# <25>
+					if( fCutU.hasPtn(c( 2, 3,25),aZoid) ) cnt<-cnt+1
+					# <39>
+					if( fCutU.hasPtn(c( 1,10,39),aZoid) ) cnt<-cnt+1
+					# <42>
+					if( fCutU.hasPtn(c( 8, 7, 6, 8,14,42),aZoid,thld=3,fixIdx=6) ) cnt<-cnt+1
+					# <44>
+
+					# < 2>
+					if( fCutU.hasPtn(c( 2,15,13,26,45),aZoid,thld=3,fixIdx=1) ) cnt<-cnt+1
+					# < 6>
+					if( fCutU.hasPtn(c( 6, 8,NA,10,27,37),aZoid,thld=3,fixIdx=1) ) cnt<-cnt+1
+					# <14>					# <15>
+					# <16>
+					# <17>
+					# <19>
+					# <38>
+					# <41>
+					if( fCutU.hasPtn(c(18,22,11,30,41),aZoid,thld=3,fixIdx=5) ) cnt<-cnt+1
+					# <45>
+					if( fCutU.hasPtn(c(22,14,NA,NA,35,45),aZoid,thld=3,fixIdx=6) ) cnt<-cnt+1
+
+					#	fCutCnt.nextBin
+					# <15>
+					# <17>
+					if( fCutU.hasPtn(c( 9,17,31,27,39),aZoid,thld=3,fixIdx=2) ) cnt<-cnt+1
+					# <25>
+					# <28>
+					if( fCutU.hasPtn(c(25,25,28,39),aZoid,thld=3,fixIdx=3) ) cnt<-cnt+1
+					# <32>
+					# <39>
+					if( fCutU.hasPtn(c( 9,17,31,27,39),aZoid,thld=3,fixIdx=5) ) cnt<-cnt+1
+					# <40>
+
+					# fCutCnt.nextRebNum
+					# < 3>
+					if( fCutU.hasPtn(c( 3,20,10,16,34,20),aZoid,thld=3,fixIdx=1) ) cnt<-cnt+1
+					# < 5>
+					# <13>
+					if( fCutU.hasPtn(c( 7, 8,13,24),aZoid,thld=3,fixIdx=3) ) cnt<-cnt+1
+					# <16>
+					if( fCutU.hasPtn(c( 3,16,19),aZoid) ) cnt<-cnt+1
+					# <21>					# <27>					# <30>
+					# <44>
+					if( fCutU.hasPtn(c(11,NA,NA,40,NA,44),aZoid) ) cnt<-cnt+1
+
+					#	fCutCnt.nextCStepBin
+					cnt <- 0
+					# < 3>
+					if( fCutU.hasPtn(c( 3,11,13),aZoid) ) cnt<-cnt+1
+					# < 6>
+					if( fCutU.hasPtn(c( 6,NA,14,15,35,44),aZoid,thld=3,fixIdx=1) ) cnt<-cnt+1
+					# <15>
+					# <16>
+					# <32>
+					if( fCutU.hasPtn(c(11,29,32),aZoid) ) cnt<-cnt+1
+
+					#	fCutCnt.nextFStepBin
+					# < 5>
+					# <12>
+					if( fCutU.hasPtn(c( 3,12,20,31,32),aZoid,thld=3,fixIdx=2) ) cnt<-cnt+1
+					# <13>
+					# <20>
+					if( fCutU.hasPtn(c( 3,12,20,31,32),aZoid,thld=3,fixIdx=3) ) cnt<-cnt+1
+					# <26>
+					if( fCutU.hasPtn(c(19,26),aZoid) ) cnt<-cnt+1
+					# <27>
+					if( fCutU.hasPtn(c(25,NA,27,40,NA,42),aZoid,thld=3,fixIdx=3) ) cnt<-cnt+1
+					# <28>
+					if( fCutU.hasPtn(c(15, 9, 3,28,45),aZoid,thld=3,fixIdx=4) ) cnt<-cnt+1
+					# <29>
+					if( fCutU.hasPtn(c(11, 7,13,24,29,36),aZoid,thld=3,fixIdx=5) ) cnt<-cnt+1
+					# <38>
+					if( fCutU.hasPtn(c(14,NA,28,NA,38),aZoid) ) cnt<-cnt+1
+					# <43>
+					if( fCutU.hasPtn(c(11, 8,10,20,32,43),aZoid,thld=3,fixIdx=6) ) cnt<-cnt+1
+
+					# fCutCnt.nextColVal_1
+					# < 8>
+					# <10>
+					if( fCutU.hasPtn(c(10,33,42,42),aZoid,thld=3,fixIdx=1) ) cnt<-cnt+1
+					# <11>
+					if( fCutU.hasPtn(c( 6,11,18,16),aZoid,thld=3,fixIdx=2) ) cnt<-cnt+1
+					# <13>
+					if( fCutU.hasPtn(c( 6,13,35,NA,45),aZoid,thld=3,fixIdx=2) ) cnt<-cnt+1
+					# <15>
+					# <20>
+					if( fCutU.hasPtn(c(18,20,35),aZoid) ) cnt<-cnt+1
+					# <27>
+					if( fCutU.hasPtn(c( 8,24,27),aZoid) ) cnt<-cnt+1
+					# <31>
+					if( fCutU.hasPtn(c( 8,13,31,NA,41),aZoid,thld=3,fixIdx=3) ) cnt<-cnt+1
+					# <42>
+					if( fCutU.hasPtn(c(20,18,35,37,42),aZoid,thld=3,fixIdx=5) ) cnt<-cnt+1
+					# <45>
+
+					# fCutCnt.nextColVal_2
+					# < 3>
+					if( fCutU.hasPtn(c( 3,14,15,NA,25),aZoid,thld=3,fixIdx=1) ) cnt<-cnt+1
+					# < 4>
+					if( fCutU.hasPtn(c( 4, 9,25,17,27),aZoid,thld=3,fixIdx=1) ) cnt<-cnt+1
+					# < 7>
+					if( fCutU.hasPtn(c( 7,23,26,NA,45),aZoid,thld=3,fixIdx=1) ) cnt<-cnt+1
+					# < 9>
+					if( fCutU.hasPtn(c( 2, 9,NA,17),aZoid) ) cnt<-cnt+1
+					# <13>
+					if( fCutU.hasPtn(c( 9,NA,13,19),aZoid) ) cnt<-cnt+1
+					# <16>
+					# <25>
+					if( fCutU.hasPtn(c( 3,14,15,NA,25),aZoid,thld=3,fixIdx=5) ) cnt<-cnt+1
+					# <33>
+					# <38>
+					if( fCutU.hasPtn(c(21,14,14,NA,38),aZoid,thld=3,fixIdx=5) ) cnt<-cnt+1
+
+					# fCutCnt.nextColVal_3
+					cnt <- 0
+					# < 4>
+					# <11>
+					if( fCutU.hasPtn(c(11,12,NA,23,38),aZoid,thld=3,fixIdx=1) ) cnt<-cnt+1
+					# <17>
+					# <18>
+					if( fCutU.hasPtn(c(18,26,39,28,35),aZoid,thld=3,fixIdx=1) ) cnt<-cnt+1
+					# <19>
+					if( fCutU.hasPtn(c(19,28,31),aZoid) ) cnt<-cnt+1
+					# <26>
+					if( fCutU.hasPtn(c(18,26,39,28,35),aZoid,thld=3,fixIdx=1) ) cnt<-cnt+1
+					# <27>
+					# <38>
+					if( fCutU.hasPtn(c(   25,26,38),aZoid) ) cnt<-cnt+1
+					# <41>
+					if( fCutU.hasPtn(c(16,12,21,34,41),aZoid,thld=3,fixIdx=4) ) cnt<-cnt+1
+
+					# fCutCnt.nextColVal_4
+					# <15>
+					if( fCutU.hasPtn(c(15,33,33,45),aZoid,thld=3,fixIdx=1) ) cnt<-cnt+1
+					# <17>
+					# <21>
+					# <24>
+					if( fCutU.hasPtn(c(16,NA,23,24,25,41),aZoid,thld=3,fixIdx=4) ) cnt<-cnt+1
+					# <26>
+					if( fCutU.hasPtn(c( 7, 9,18,NA,26),aZoid,thld=3,fixIdx=5) ) cnt<-cnt+1
+					# <27>
+					if( fCutU.hasPtn(c( 19,21,NA,27),aZoid) ) cnt<-cnt+1
+					# <36>
+					if( fCutU.hasPtn(c( 5,22,14,20,24,36),aZoid,thld=3,fixIdx=6) ) cnt<-cnt+1
+
+					# fCutCnt.nextColVal_5
+					# <11>
+					# <18>
+					if( fCutU.hasPtn(c( 8,18,19,34,23),aZoid,thld=3,fixIdx=2) ) cnt<-cnt+1
+					# <19>
+					if( fCutU.hasPtn(c(14,18,19,23,23),aZoid,thld=3,fixIdx=3) ) cnt<-cnt+1
+					# <24>					# <33>
+					# <35>
+					if( fCutU.hasPtn(c( 5,NA,38),aZoid) ) cnt<-cnt+1
+					# <39>
+					if( fCutU.hasPtn(c(22,26,27,NA,27,39),aZoid,thld=3,fixIdx=6) ) cnt<-cnt+1
+
+					# fCutCnt.nextColVal_6
+					# < 3>
+					if( fCutU.hasPtn(c( 3,16,14,NA,19),aZoid) ) cnt<-cnt+1
+					# <10>
+					if( fCutU.hasPtn(c(10,16),aZoid) ) cnt<-cnt+1
+					# <12>
+					if( fCutU.hasPtn(c(12,23,20,27,30),aZoid,thld=3,fixIdx=1) ) cnt<-cnt+1
+					# <18>
+					# <31>
+					if( fCutU.hasPtn(c(21,24,25,NA,31),aZoid,thld=3,fixIdx=5) ) cnt<-cnt+1
+					# <42>
+					if( fCutU.hasPtn(c(23,31,38,NA,42),aZoid,thld=3,fixIdx=5) ) cnt<-cnt+1
+					# <43>
+					if( fCutU.hasPtn(c(19,27,34,NA,34,43),aZoid,thld=3,fixIdx=6) ) cnt<-cnt+1
+
+					return( cnt )
+				})	;kIdx<-anaFltCnt(cntMtx[,"rawFV"],rpt)
+
+	return( cntMtx[,"rawFV"]>0 )
+}
 
 finalCut.test <- function(){
 	# 1 2 3 / 1 4 1	<- lastZoid quo

@@ -231,7 +231,7 @@ analyLst[["toZ816"]] <- list(	stdFltCnt = 0
 				)
 	,fCutCnt.nextColVal_3 = list(	commonCutCnt=2	# reb spanM
 					,auxZW=0	,auxQuo=0
-					,raw =0	,rawFV =2	# fCutU.hasPtn(c(18,19),aZoid)
+					,raw =0	,rawFV =2	# 2 * fCutU.hasPtn(c(18,19))
 					,rem =1	,cStep =3	,fStep =0
 				)
 	,fCutCnt.nextColVal_4 = list(	commonCutCnt=1	# reb
@@ -539,8 +539,6 @@ analyLst[["toZ823"]] <- list(	stdFltCnt =1
 					,raw =0	,rawFV =0
 					,rem =0	,cStep =0	,fStep =0
 				)
-
-
 	,fCutCnt.colValSeqNext =0
 	,fCutCnt.colValSeqNext.cStep =0
 	,fCutCnt.nextZW = list(	commonCutCnt=2	# nbor quoAll
