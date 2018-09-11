@@ -20,7 +20,9 @@ rpt.analyLst <- function( analy ){
 } # rpt.analyLst()
 
 
-# 	mtxLst <- lapply( c("toZ819","toZ820","toZ821","toZ822") 
+#	tgtGold <- c("toZ809","toZ814","toZ816","toZ820","toZ823")
+#	tgtLate <- c("toZ819","toZ820","toZ821","toZ822","toZ823")
+# 	mtxLst <- lapply( tgtLate
 # 						,function(nm){ rpt.analyLst( analyLst[[nm]] ) }
 # 					)
 # 	for( nIdx in colnames( mtxLst[[1]] ) ){
