@@ -802,7 +802,7 @@ fCutCnt.colValSeqNext <- function( gEnv ,allIdxF ,rpt=FALSE ){
     flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
 					cnt <- sum(aZoid[banVal.idx]==banVal)
 					return( cnt<2 )
-				})	;kIdx<-anaFltCnt(flag,rpt)
+				})	;kIdx<-anaFltCnt(!flag,rpt)
     flgCnt[!flag] <- flgCnt[!flag] + 1
 	# # -- conditional
     # flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){

@@ -731,6 +731,51 @@ fCutU.getSpanMatchObj <- function( rawTail ,rpt=FALSE ){
 
 } # fCutU.getSpanMatchObj()
 
+fCutU.getChkCStepValReb <- function( pMtx ){
+	#	현재의 cStep 코드(파편)이 이전에도 같은 값으로 인해 나온 파편일까?
+	#		gEnv$zhF[820,1:3], gEnv$zhF[821,1:3] 은 cStep 파편은 같으나 값이 다르다.
+
+	cSize <- ncol(pMtx)
+	rSize <- nrow(pMtx)
+
+	rObj <- list(  )
+	cStepMtx <- pMtx[,2:cSize,drop=F] - pMtx[,1:(cSize-1),drop=F]
+
+	hpnLst <- list()
+	if( rSize > 1 ){
+		for( rIdx in rSize:2 ){
+			# hpnLst에 기록이 있으면 skip
+			if( 0<length(hpnLst) ){
+				existF <- sapply( hpnLst ,function(hpnObj){ all(hpnObj$cStep==cStepMtx[rIdx,]) } )
+				if( any(existF) ) next
+			}
+
+			hpnObj <- list( cStep=cStepMtx[rIdx,] ,raw=pMtx[rIdx,] )
+			hpnLst[[paste(sprintf("%2d",hpnObj$cStep),collapse=",")]] <- hpnObj
+		}
+	}
+	rObj$hpnLst <- hpnLst
+
+	rObj$match <- function( aCodeMtx ){
+		cSize <- ncol(aCodeMtx)
+		flag <- apply( aCodeMtx ,1 ,function( aCode ){
+					aCStep <- aCode[2:cSize] - aCode[1:(cSize-1)]
+					for( idx in seq_len(length(rObj$hpnLst)) ){
+						hpnObj <- rObj$hpnLst[[idx]]
+						if( all(hpnObj$cStep==aCStep) && all(hpnObj$raw==aCode) ){
+							return( TRUE )
+						}
+					}
+					return( FALSE )
+				})
+		return( flag )
+	} # rObj$match( )
+
+	return( rObj )
+
+} # fCutU.chkCStepValReb()
+
+
 #	toZnnn.R 에서의 finalCut() 함수에서 사용.
 #		주의 : NA 은 미발생 허용을 의미.
 #			   0  은 미발생을 허용치 않겠다는 의미이다.
@@ -779,6 +824,7 @@ fCutU.commonCutCnt <- function( gEnv, allIdxF ,zMtx
 	flgCnt <- rep( 0 ,length(allIdxF) )
 	stdMI <- fCutU.getMtxInfo( zMtx )
 	scoreMtx <- NULL
+	cStepValMtx <- NULL
 	if( pScoreMtx ){
 		cName <- c("reb","nbor","spanM"
 						,"quoAll","quoPtn","zw"
@@ -786,6 +832,10 @@ fCutU.commonCutCnt <- function( gEnv, allIdxF ,zMtx
 					)
 		scoreMtx <- matrix( 0, nrow=length(allIdxF) ,ncol=length(cName) )
 		colnames(scoreMtx) <-cName
+
+		cName <- c("c31","c32","c33","c34","c21","c22","c23","c24","c25")
+		cStepValMtx <- matrix( 0 ,nrow=length(allIdxF) ,ncol=length(cName) )
+		colnames(cStepValMtx) <- cName
 	}
 
 	fltCnt <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
@@ -879,7 +929,45 @@ fCutU.commonCutCnt <- function( gEnv, allIdxF ,zMtx
     flgCnt[!flag] <- flgCnt[!flag] + 1
 	if( pScoreMtx ) scoreMtx[,"cStep3"] <- !flag
 
-	return( list( flgCnt=flgCnt ,scoreMtx=scoreMtx ) )
+
+	# cName <- c("c31","c32","c33","c34","c21","c22","c23","c24","c25")
+	# cStepValMtx <- matrix( 0 ,nrow=length(allIdxF) ,ncol=length(cName) )
+	for( idx in 1:4 ){
+		colSpan <- 0:2+idx	# column span of cStepMtx
+
+		logId <- sprintf("c3%d",idx)
+		obj <- fCutU.getChkCStepValReb( zMtx[,colSpan] )
+		cStepValMtx[,logId] <- obj$match( gEnv$allZoidMtx[allIdxF,colSpan,drop=F] )
+	}
+	for( idx in 1:5 ){
+		colSpan <- 0:1+idx	# column span of cStepMtx
+
+		logId <- sprintf("c2%d",idx)
+		obj <- fCutU.getChkCStepValReb( zMtx[,colSpan] )
+		cStepValMtx[,logId] <- obj$match( gEnv$allZoidMtx[allIdxF,colSpan,drop=F] )
+	}
+
+	return( list( flgCnt=flgCnt ,scoreMtx=scoreMtx ,cStepValMtx=cStepValMtx ) )
 
 } #	fCutU.commonCutCnt( )
+
+
+
+
+#=================================================================================
+fCutU.testLab <- function( ){
+	testSpan <- 500:nrow(gEnv$zhF)
+	partSpan <- 3:5
+		# 500:~
+		#	1:3 11/324	2:4 11/324	3:5 8/324
+
+	flag <- rep( FALSE ,length(testSpan) )	;names(flag)<-testSpan
+	for( tIdx in testSpan ){
+		obj <- fCutU.getChkCStepValReb( gEnv$zhF[1:(tIdx-1),partSpan] )
+		aZoidMtx <- gEnv$zhF[tIdx,partSpan,drop=F]
+		flag[as.character(tIdx)] <- obj$match( aZoidMtx )
+	}
+	table(flag)
+
+} # fCutU.testLab( )
 
