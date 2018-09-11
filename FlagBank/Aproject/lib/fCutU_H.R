@@ -833,7 +833,7 @@ fCutU.commonCutCnt <- function( gEnv, allIdxF ,zMtx
 		scoreMtx <- matrix( 0, nrow=length(allIdxF) ,ncol=length(cName) )
 		colnames(scoreMtx) <-cName
 
-		cName <- c("c31","c32","c33","c34","c21","c22","c23","c24","c25")
+		cName <- c("c31","c32","c33","c34","c21","c22","c23","c24","c25","max2","min2")
 		cStepValMtx <- matrix( 0 ,nrow=length(allIdxF) ,ncol=length(cName) )
 		colnames(cStepValMtx) <- cName
 	}
@@ -845,7 +845,7 @@ fCutU.commonCutCnt <- function( gEnv, allIdxF ,zMtx
 					return( cnt )
 				})	;kIdx<-anaFltCnt(fltCnt,rpt)
 	flag <- fltCnt==0	# 양쪽 다 나온 경우도 빈번해서. 그냥 둘 중 하나만 나와도 flag처리.
-	flgCnt[!flag] <- flgCnt[!flag] + 1
+	# flgCnt[!flag] <- flgCnt[!flag] + 1	# 너무 빈번하니 별도계산.
 	if( pScoreMtx ) scoreMtx[,"reb"] <- !flag
 
 	neighborObj <- fCutU.neighborObj( stdMI$rawTail )
@@ -930,7 +930,7 @@ fCutU.commonCutCnt <- function( gEnv, allIdxF ,zMtx
 	if( pScoreMtx ) scoreMtx[,"cStep3"] <- !flag
 
 
-	# cName <- c("c31","c32","c33","c34","c21","c22","c23","c24","c25")
+	# cName <- c("c31","c32","c33","c34","c21","c22","c23","c24","c25","max2","min2")
 	# cStepValMtx <- matrix( 0 ,nrow=length(allIdxF) ,ncol=length(cName) )
 	for( idx in 1:4 ){
 		colSpan <- 0:2+idx	# column span of cStepMtx
@@ -946,6 +946,18 @@ fCutU.commonCutCnt <- function( gEnv, allIdxF ,zMtx
 		obj <- fCutU.getChkCStepValReb( zMtx[,colSpan] )
 		cStepValMtx[,logId] <- obj$match( gEnv$allZoidMtx[allIdxF,colSpan,drop=F] )
 	}
+	cStepMax2 <- sort(stdMI$lastZoid[2:6]-stdMI$lastZoid[1:5] ,decreasing=T)[1:2]
+	flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+					return( !all( cStepMax2 == sort( aZoid[2:6]-aZoid[1:5] ,decreasing=T)[1:2] ) )
+				})	;kIdx<-anaFlagFnd(!flag,rpt)
+	cStepValMtx[,"max2"] <- !flag
+    flgCnt[!flag] <- flgCnt[!flag] + 1
+	cStepMin2 <- sort(stdMI$lastZoid[2:6]-stdMI$lastZoid[1:5] )[1:2]
+	flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+					return( !all( cStepMax2 == sort( aZoid[2:6]-aZoid[1:5] )[1:2] ) )
+				})	;kIdx<-anaFlagFnd(!flag,rpt)
+	cStepValMtx[,"min2"] <- !flag
+    flgCnt[!flag] <- flgCnt[!flag] + 1
 
 	return( list( flgCnt=flgCnt ,scoreMtx=scoreMtx ,cStepValMtx=cStepValMtx ) )
 
