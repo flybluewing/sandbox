@@ -62,6 +62,20 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 	tStmp <- Sys.time()
 	# 기본제거 --------------------------------------------------------------------	
 	allIdxF <- fCut.default( gEnv ,allIdxF )
+
+	# colValSeqNext ------------------------------------------------------
+	flgCnt <- fCutCnt.colValSeqNext( gEnv ,allIdxF ) 
+	flgCnt <- flgCnt + fCutCnt.colValSeqNext.cStep( gEnv ,allIdxF )
+	flgCnt <- flgCnt + fCutCnt.default( gEnv ,allIdxF )	# 효율이 의문시된다.
+	flag <- flgCnt<2	;table(flag)
+    allIdxF <- allIdxF[flag]
+	allIdxF.bak <- allIdxF
+	allIdxFObj$allIdxF.colValSeqNext <- allIdxF
+	cat(sprintf("allIdxF %d\n",length(allIdxF)))
+
+	allIdxF <- fCut.rawFV3(  gEnv ,allIdxF  )
+	cat(sprintf("allIdxF %d\n",length(allIdxF)))
+
 	allIdxF <- fCut.basic( gEnv ,allIdxF )
 	cat(sprintf("allIdxF %d\n",length(allIdxF)))
 	allIdxFObj$allIdxF.fCut <- allIdxF
@@ -341,14 +355,6 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 	cat(sprintf("allIdxF %d\n",length(allIdxF)))
 	# save( allIdxF ,file="Obj_allIdxF.save" )
 
-	# colValSeqNext ------------------------------------------------------
-	flgCnt <- fCutCnt.colValSeqNext( gEnv ,allIdxF ) 
-	flgCnt <- flgCnt + fCutCnt.colValSeqNext.cStep( gEnv ,allIdxF )
-	flag <- flgCnt<2	;table(flag)
-    allIdxF <- allIdxF[flag]
-	allIdxF.bak <- allIdxF
-	allIdxFObj$allIdxF.colValSeqNext <- allIdxF
-	cat(sprintf("allIdxF %d\n",length(allIdxF)))
 
 	tDiff <- Sys.time() - tStmp
 	allIdxFObj$timeCost <- tDiff

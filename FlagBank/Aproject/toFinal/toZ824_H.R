@@ -149,11 +149,17 @@ fCut.basic <- function( gEnv ,allIdxF ,rpt=FALSE ){
 		flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
 						if( any(aZoid==stdMI$lastZoid) ) return(FALSE)
 						if( 1<sum(aZoid%in%stdMI$lastZoid) ) return(FALSE)
-						# if( 1<sum(aZoid[c(2,5,6)]== aZoid[1]*c(2,3,4) )) return( FALSE )
-						# if( 1<sum( aZoid[2:6] %in% (aZoid[1]*c(2,3,4)) )) return( FALSE )
+						if( 0 == (aZoid[1]%%2) ){
+							baseVal <- aZoid[1] / 2
+							if( all(aZoid[2:3] == baseVal*c(3,4) ) ) return(FALSE)
+						}
 						return( TRUE )
 					})	;kIdx<-anaFlagFnd(!flag,rpt)
 		allIdxF <- allIdxF[flag]
+
+		# QQE working
+
+
 
 		# cStep ÆÐÅÏ
 		flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
@@ -910,7 +916,7 @@ fCutCnt.colValSeqNext <- function( gEnv ,allIdxF ,rpt=FALSE ){
 						if( fCutU.remFilt(aZoid[1],c( 2, 0    ),c(    )) )	remCnt <- remCnt+1
 						if( fCutU.remFilt(aZoid[2],c( 7, 2, 1 ),c(    )) )	remCnt <- remCnt+1
 						if( fCutU.remFilt(aZoid[3],c( 1, 4, 9 ),c( 29 )) )	remCnt <- remCnt+1
-						if( fCutU.remFilt(aZoid[4],c( 7,      ),c( 29 )) )	remCnt <- remCnt+1
+						if( fCutU.remFilt(aZoid[4],c( 7       ),c( 29 )) )	remCnt <- remCnt+1
 						if( fCutU.remFilt(aZoid[5],c(         ),c(    )) )	remCnt <- remCnt+1
 						if( fCutU.remFilt(aZoid[6],c( 4, 3    ),c( 33 )) )	remCnt <- remCnt+1
 						# grp 1
@@ -963,7 +969,7 @@ fCutCnt.colValSeqNext <- function( gEnv ,allIdxF ,rpt=FALSE ){
 
 					return( score )
 				})	;kIdx<-anaFltCnt(fltCnt,rpt)
-	flgCnt[fltCnt=>2] <- flgCnt[fltCnt=>2] + 1
+	flgCnt[fltCnt>=2] <- flgCnt[fltCnt>=2] + 1
 
 	# -- conditional
     flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
@@ -1711,7 +1717,6 @@ fCutCnt.nextRebNum <- function( gEnv ,allIdxF ,rpt=FALSE ){
 					# <23>
 					# <40>
 					if( fCutU.hasPtn(c(      27,40),aZoid) ) cnt<-cnt+1
-					if( fCutU.hasPtn(c(30,28,NA,40),aZoid) ) cnt<-cnt+1
 
 					return( cnt )
 				})	;kIdx<-anaFltCnt(cntMtx[,"rawFV"],rpt)
@@ -1878,9 +1883,9 @@ fCutCnt.nextCStepBin <- function( gEnv ,allIdxF ,rpt=FALSE ){
 					if( aCStep[4]%in%c(16, 7 ) ) cnt<-cnt+1
 					if( aCStep[5]%in%c(17    ) ) cnt<-cnt+1
 
-					if( 1<sum(aCStep[1:3+0]==c( 1  4  6)) ) cnt<-cnt+1	# 1
-					if( 1<sum(aCStep[1:3+0]==c( 2  9  6)) ) cnt<-cnt+1	# 4
-					if( 1<sum(aCStep[1:3+1]==c( 1  9  3)) ) cnt<-cnt+1	# 6
+					if( 1<sum(aCStep[1:3+0]==c( 1,  4,  6)) ) cnt<-cnt+1	# 1
+					if( 1<sum(aCStep[1:3+0]==c( 2,  9,  6)) ) cnt<-cnt+1	# 4
+					if( 1<sum(aCStep[1:3+1]==c( 1,  9,  3)) ) cnt<-cnt+1	# 6
 
 					if( fCutU.hasPtn(c( 1, 4),aCStep) ) cnt<-cnt+1
 					if( fCutU.hasPtn(c( 7, 7),aCStep) ) cnt<-cnt+1
@@ -2446,7 +2451,7 @@ fCutCnt.nextColVal_3 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 					if( 1<sum(aCStep[1:2+0]==c( 5, 12    )) ) cnt<-cnt+1	#  2
 					if( 1<sum(aCStep[1:3+0]==c( 4, 30,  1)) ) cnt<-cnt+1	#  5
 					if( 1<sum(aCStep[1:3+1]==c( 5,  4, 30)) ) cnt<-cnt+1	#  4
-					if( 1<sum(aCStep[1:3+2]==c( 1, 13   4)) ) cnt<-cnt+1	#  1
+					if( 1<sum(aCStep[1:3+2]==c( 1, 13,  4)) ) cnt<-cnt+1	#  1
 
 					if( fCutU.hasPtn(c( 5,12 ),aCStep) ) cnt<-cnt+1
 					if( fCutU.hasPtn(c( 1, 6 ),aCStep) ) cnt<-cnt+1
@@ -2945,6 +2950,223 @@ fCutCnt.nextColVal_6 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 #------------------------------------------------------------------------
 #------------------------------------------------------------------------
 #========================================================================
+
+fCut.rawFV3 <- function(  gEnv ,allIdxF ,rpt=FALSE ){
+
+	surRawFV <- rep( TRUE ,length(allIdxF) )
+	# anaMtx.freqVal( stdMI$rawTail )
+
+    surRawFV <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+					# [fCutCnt.basic] ---------------------------------------
+					# <12>
+					if( fCutU.hasPtn(c(12,23,24,23,34),aZoid,thld=3,fixIdx=1) ) return( FALSE )
+					# <18>
+					if( fCutU.hasPtn(c(15,18,28,28,NA,44),aZoid,thld=3,fixIdx=2) ) return( FALSE )
+					# <24>
+					if( fCutU.hasPtn(c( 6,16,24,25,42),aZoid,thld=3,fixIdx=3) ) return( FALSE )
+					# <25>
+					if( fCutU.hasPtn(c(17,25,38),aZoid,thld=3,fixIdx=2) ) return( FALSE )
+					# <29>
+					if( fCutU.hasPtn(c( 9, 1,20,29),aZoid,thld=3,fixIdx=4) ) return( FALSE )
+					# <30>
+					if( fCutU.hasPtn(c(14,15,30),aZoid,thld=3,fixIdx=3) ) return( FALSE )
+					# <40>
+					if( fCutU.hasPtn(c(20,23,19,NA,40),aZoid,thld=3,fixIdx=5) ) return( FALSE )
+
+
+					# [fCutCnt.nextZW] ---------------------------------------
+					# < 2>
+					if( fCutU.hasPtn(c( 2,17,23,32,37,41),aZoid,thld=3,fixIdx=1) ) return( FALSE )
+					# < 6>
+					# <11>
+					if( fCutU.hasPtn(c(10,11,NA,NA,18),aZoid,thld=3,fixIdx=2) ) return( FALSE )
+					# <15>
+					if( fCutU.hasPtn(c(10,NA,15,16,27),aZoid,thld=3,fixIdx=3) ) return( FALSE )
+					# <17>
+					if( fCutU.hasPtn(c( 4,13,14,17,27),aZoid,thld=3,fixIdx=4) ) return( FALSE )
+					# <18>
+					if( fCutU.hasPtn(c(18,43,45),aZoid,thld=3,fixIdx=1) ) return( FALSE )
+					# <19>					# <23>					# <28>
+					# <38>
+					if( fCutU.hasPtn(c(13,35,NA,38),aZoid,thld=3,fixIdx=4) ) return( FALSE )
+
+
+					# [fCutCnt.nextQuo10] ---------------------------------------
+					# <12>
+					if( fCutU.hasPtn(c( 7,12,NA,NA,19),aZoid,thld=3,fixIdx=2 ) ) return( FALSE )
+					# <15>
+					if( fCutU.hasPtn(c(15,31,32,22),aZoid,thld=3,fixIdx=1 ) ) return( FALSE )
+					# <19>
+					if( fCutU.hasPtn(c(14, 9,19,NA,26),aZoid,thld=3,fixIdx=3 ) ) return( FALSE )
+					# <25>
+					if( fCutU.hasPtn(c(13,25,28),aZoid,thld=3,fixIdx=2 ) ) return( FALSE )
+					# <28>
+					if( fCutU.hasPtn(c(13,25,28),aZoid,thld=3,fixIdx=3 ) ) return( FALSE )
+					# <30>
+					# <43>
+					if( fCutU.hasPtn(c(25,38,26,35,43),aZoid,thld=3,fixIdx=5 ) ) return( FALSE )
+					# <44>
+					if( fCutU.hasPtn(c(31,NA,40,NA,NA,44),aZoid,thld=3,fixIdx=6 ) ) return( FALSE )
+
+					# [fCutCnt.nextBin] ---------------------------------------
+					# < 7>
+					if( fCutU.hasPtn(c( 7,NA,12,41),aZoid,thld=3,fixIdx=1 ) ) return( FALSE )
+					# <11>
+					if( fCutU.hasPtn(c( 4,11,19,41),aZoid,thld=3,fixIdx=2 ) ) return( FALSE )
+					# <15>
+					if( fCutU.hasPtn(c(10,15,31,44,42),aZoid,thld=3,fixIdx=2 ) ) return( FALSE )
+					# <25>
+					if( fCutU.hasPtn(c( 7,NA,25,31),aZoid,thld=3,fixIdx=3 ) ) return( FALSE )
+					# <33>
+					# <40>
+					if( fCutU.hasPtn(c( 4, 8,13,14,40),aZoid,thld=3,fixIdx=5 ) ) return( FALSE )
+					# <43>
+					if( fCutU.hasPtn(c(22,27,24,NA,43),aZoid,thld=3,fixIdx=5 ) ) return( FALSE )
+
+					# [fCutCnt.nextRebNum] ---------------------------------------
+					# <23>					# <40>
+
+					# [fCutCnt.nextCStepBin] ---------------------------------------
+					# < 3>
+					if( fCutU.hasPtn(c( 3,NA,NA,28, 8,22),aZoid,thld=3,fixIdx=1 ) ) return( FALSE )
+					# < 6>
+					# <11>
+					if( fCutU.hasPtn(c( 4,11,19,41),aZoid,thld=3,fixIdx=2 ) ) return( FALSE )
+					# <14>
+					# <15>
+					if( fCutU.hasPtn(c(14,NA,15,23,19,23),aZoid,thld=3,fixIdx=3 ) ) return( FALSE )
+					# <20>
+					if( fCutU.hasPtn(c( 7,12,20),aZoid,thld=3,fixIdx=3 ) ) return( FALSE )
+					# <24>
+					if( fCutU.hasPtn(c( 3,24,NA,34),aZoid,thld=3,fixIdx=2 ) ) return( FALSE )
+					# <25>
+					if( fCutU.hasPtn(c( 7,NA,25,31),aZoid,thld=3,fixIdx=3 ) ) return( FALSE )
+					# <27>
+					if( fCutU.hasPtn(c(11,16,27),aZoid,thld=3,fixIdx=3 ) ) return( FALSE )
+					# <33>
+					if( fCutU.hasPtn(c( 8, 5,NA, 9,33),aZoid,thld=3,fixIdx=5 ) ) return( FALSE )
+					# <44>
+					if( fCutU.hasPtn(c( 9, 9, 8,14,24,44),aZoid,thld=3,fixIdx=6 ) ) return( FALSE )
+
+					# [fCutCnt.nextFStepBin] ---------------------------------------
+					# < 8>
+					if( fCutU.hasPtn(c( 8,10,17,12,25),aZoid,thld=3,fixIdx=1 ) ) return( FALSE )
+					# <12>
+					if( fCutU.hasPtn(c(12,24,25,38,30),aZoid,thld=3,fixIdx=1 ) ) return( FALSE )
+					# <14>
+					if( fCutU.hasPtn(c(14,NA,18,43),aZoid,thld=3,fixIdx=1 ) ) return( FALSE )
+					# <17>
+					# <21>
+					if( fCutU.hasPtn(c(10,16,NA,21,32,33),aZoid,thld=3,fixIdx=4 ) ) return( FALSE )
+					# <24>					# <29>
+					# <31>
+					if( fCutU.hasPtn(c(12,15,28,13,31,36),aZoid,thld=3,fixIdx=5 ) ) return( FALSE )
+					# <37>
+					if( fCutU.hasPtn(c(18,26,27,36,37),aZoid,thld=3,fixIdx=5 ) ) return( FALSE )
+
+					# [fCutCnt.nextColVal_1] ---------------------------------------
+					# < 1>
+					if( fCutU.hasPtn(c( 1, 6, 5, 5,32),aZoid,thld=3,fixIdx=1 ) ) return( FALSE )
+					# <12>
+					if( fCutU.hasPtn(c( 2, 8,12),aZoid,thld=3,fixIdx=3 ) ) return( FALSE )
+					# <13>					# <28>
+					# <33>
+					if( fCutU.hasPtn(c( 4,28,33,41),aZoid,thld=3,fixIdx=3 ) ) return( FALSE )
+					# <36>
+					if( fCutU.hasPtn(c( 5,13,36),aZoid,thld=3,fixIdx=3 ) ) return( FALSE )
+
+					# [fCutCnt.nextColVal_2] ---------------------------------------
+					# < 3>
+					if( fCutU.hasPtn(c( 3,14,15,NA,25),aZoid,thld=3,fixIdx=1 ) ) return( FALSE )
+					# < 7>
+					if( fCutU.hasPtn(c( 7,23,26,NA,45),aZoid,thld=3,fixIdx=1 ) ) return( FALSE )
+					# < 9>
+					if( fCutU.hasPtn(c( 2, 9,NA,NA,17),aZoid,thld=3,fixIdx=2 ) ) return( FALSE )
+					# <12>					# <13>					# <16>					# <18>
+					# <24>
+					if( fCutU.hasPtn(c(24,27,45),aZoid,thld=3,fixIdx=1) ) return( FALSE )
+					# <25>
+					if( fCutU.hasPtn(c( 3,14,15,NA,25),aZoid,thld=3,fixIdx=5 ) ) return( FALSE )
+					# <38>
+					if( fCutU.hasPtn(c(21,14,14,NA,38),aZoid,thld=3,fixIdx=5 ) ) return( FALSE )
+
+					# [fCutCnt.nextColVal_3] ---------------------------------------
+					# < 1>					# < 5>
+					# <12>
+					if( fCutU.hasPtn(c( 1,10,12),aZoid,thld=3,fixIdx=3 ) ) return( FALSE )
+					# <17>
+					if( fCutU.hasPtn(c(17,NA,26,27),aZoid,thld=3,fixIdx=1 ) ) return( FALSE )
+					# <24>
+					if( fCutU.hasPtn(c( 9,15,24,42),aZoid,thld=3,fixIdx=3 ) ) return( FALSE )
+					# <30>
+					if( fCutU.hasPtn(c(11,16,30),aZoid,thld=3,fixIdx=3 ) ) return( FALSE )
+
+					# [fCutCnt.nextColVal_4] ---------------------------------------
+					# < 1>
+					if( fCutU.hasPtn(c( 1,NA,NA,16,24,31),aZoid,thld=3,fixIdx=1 ) ) return( FALSE )
+					# <10>
+					if( fCutU.hasPtn(c(10,12,37),aZoid,thld=3,fixIdx=1 ) ) return( FALSE )
+					# <12>
+					if( fCutU.hasPtn(c(12,23,20,27,30),aZoid,thld=3,fixIdx=1 ) ) return( FALSE )
+					# <13>
+					if( fCutU.hasPtn(c( 5,NA,13,NA,30,28),aZoid,thld=3,fixIdx=3 ) ) return( FALSE )
+					# <15>
+					if( fCutU.hasPtn(c(15,20,26),aZoid,thld=3,fixIdx=1 ) ) return( FALSE )
+					# <18>
+					if( fCutU.hasPtn(c(11,18,NA,26),aZoid,thld=3,fixIdx=2 ) ) return( FALSE )
+					# <19>
+					if( fCutU.hasPtn(c(19,34,26),aZoid,thld=3,fixIdx=1 ) ) return( FALSE )
+					# <26>
+					if( fCutU.hasPtn(c(19, 5,26,28,32),aZoid,thld=3,fixIdx=3 ) ) return( FALSE )
+					# <31>
+					if( fCutU.hasPtn(c(21,24,25,NA,31),aZoid,thld=3,fixIdx=5 ) ) return( FALSE )
+					# <32>
+					if( fCutU.hasPtn(c(23,16,23,NA,32),aZoid,thld=3,fixIdx=5 ) ) return( FALSE )
+					# <36>
+					if( fCutU.hasPtn(c(25,31,NA,36),aZoid,thld=3,fixIdx=4 ) ) return( FALSE )
+
+					# [fCutCnt.nextColVal_5] ---------------------------------------
+					# <10>
+					if( fCutU.hasPtn(c(10,11,26,43,43),aZoid,thld=3,fixIdx=1 ) ) return( FALSE )
+					# <20>
+					if( fCutU.hasPtn(c(20,32,35),aZoid,thld=3,fixIdx=1 ) ) return( FALSE )
+					# <21>
+					if( fCutU.hasPtn(c( 6, 5,20,21,43),aZoid,thld=3,fixIdx=4 ) ) return( FALSE )
+					# <33>
+					if( fCutU.hasPtn(c(33,37,44,40),aZoid,thld=3,fixIdx=1 ) ) return( FALSE )
+					# <36>
+					if( fCutU.hasPtn(c( 6, 8,16,10,36),aZoid,thld=3,fixIdx=5 ) ) return( FALSE )
+					# <42>
+					if( fCutU.hasPtn(c(21, 7,26,28,42),aZoid,thld=3,fixIdx=5 ) ) return( FALSE )
+
+					# [fCutCnt.nextColVal_6] ---------------------------------------
+					# < 6>
+					if( fCutU.hasPtn(c( 6, 8,NA,NA,27,29),aZoid,thld=3,fixIdx=1 ) ) return( FALSE )
+					# < 7>
+					# <12>
+					if( fCutU.hasPtn(c( 5,12,19,18,43,31),aZoid,thld=3,fixIdx=2 ) ) return( FALSE )
+					# <15>
+					if( fCutU.hasPtn(c(15,NA,17,25),aZoid,thld=3,fixIdx=1 ) ) return( FALSE )
+					# <21>
+					if( fCutU.hasPtn(c( 4, 8, 9,21,44),aZoid,thld=3,fixIdx=4 ) ) return( FALSE )
+					# <34>
+					if( fCutU.hasPtn(c( 9,15,21,34),aZoid,thld=3,fixIdx=4 ) ) return( FALSE )
+					# <37>
+					# <41>
+					if( fCutU.hasPtn(c(24,22, 5,30,41,43),aZoid,thld=3,fixIdx=5 ) ) return( FALSE )
+					# <43>
+					if( fCutU.hasPtn(c( 3, 8,11,18,NA,43),aZoid,thld=3,fixIdx=6 ) ) return( FALSE )
+					# <44>
+					if( fCutU.hasPtn(c(28,31,15,35,41,44),aZoid,thld=3,fixIdx=6 ) ) return( FALSE )
+
+					return( TRUE )
+				})	;kIdx<-anaFltCnt(surRawFV,rpt)
+
+	return( allIdxF(surRawFV) )
+
+}	# fCut.rawFV3( )
+
+
 
 fCut.finalApproach <- function( gEnv ,allIdxF ,rpt=FALSE ){
 
