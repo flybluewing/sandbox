@@ -3162,7 +3162,7 @@ fCut.rawFV3 <- function(  gEnv ,allIdxF ,rpt=FALSE ){
 					return( TRUE )
 				})	;kIdx<-anaFltCnt(surRawFV,rpt)
 
-	return( allIdxF(surRawFV) )
+	return( allIdxF[surRawFV] )
 
 }	# fCut.rawFV3( )
 
