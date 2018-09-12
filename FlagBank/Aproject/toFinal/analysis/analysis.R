@@ -527,7 +527,7 @@ analyLst[["toZ822"]] <- list(	stdFltCnt = 3
 					,raw =0	,rawFV =0
 					,rem =0	,cStep =1	,fStep =0
 				)
-	,fCutCnt.nextColVal_6 = list(	commonCutCnt=1	# 	/	/ cStep2
+	,fCutCnt.nextColVal_6 = list(	commonCutCnt=1	# 	/ cStep2 / 
 					,auxZW=0	,auxQuo=0
 					,raw =0	,rawFV =0
 					,rem =1	,cStep =1	,fStep =0
