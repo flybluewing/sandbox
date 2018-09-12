@@ -166,17 +166,11 @@ fCut.basic <- function( gEnv ,allIdxF ,rpt=FALSE ){
 						cnt <- 0
 						aCStep <- aZoid[2:6]-aZoid[1:5]
 
-						# if( fCutU.hasPtn(c( 2, 3 ),aCStep) ) cnt<-cnt+1
-						# if( fCutU.hasPtn(c( 3, 1 ),aCStep) ) cnt<-cnt+1
-						# if( fCutU.hasPtn(c(11, 1 ),aCStep) ) cnt<-cnt+1
-						# if( fCutU.hasPtn(c( 8, 5 ),aCStep) ) cnt<-cnt+1
+						if( fCutU.hasPtn(c(11, 1),aCStep) ) cnt<-cnt+1
+						if( all(aCStep[1:2+0]==c( 6, 6)) ) cnt<-cnt+1
 
-						# if( all(aCStep[1:2+0]==c( 9, 2)) ) cnt<-cnt+1
-						# if( all(aCStep[1:2+2]==c( 2, 4)) ) cnt<-cnt+1
-
-						# if( aCStep[1]==sum(aCStep[2:4]) ) cnt<-cnt+10
-						# if( aCStep[5]==sum(aCStep[2:4]) ) cnt<-cnt+10
-						# if( all(aCStep[c(1,5)]== aCStep[4]*c(3,3) ) ) cnt<-cnt+10
+						if( all(aCStep[1:2]== aCStep[3]*c(3,3) ) ) cnt<-cnt+1
+						if( aCStep[4]==sum(aCStep[c(1,2,5)]) ) cnt<-cnt+1
 
 						return( 2>cnt )
 					})	;kIdx<-anaFlagFnd(!flag,rpt)
@@ -187,9 +181,9 @@ fCut.basic <- function( gEnv ,allIdxF ,rpt=FALSE ){
 						cnt <- 0
 						aFStep <- aZoid - stdMI$lastZoid
 
-						# if( aFStep[4]==sum(aFStep[c(1,6)]) ) cnt<-cnt+10
-						# if( aFStep[2]==sum(aFStep[c(1,5)]) ) cnt<-cnt+10
-						# if( aFStep[5]==sum(aFStep[c(2,6)]) ) cnt<-cnt+10
+						if( (aFStep[5]== (aFStep[1]*aFStep[3]) ) ) cnt<-cnt+1
+						if( (aFStep[5]== (aFStep[1]*aFStep[6]) ) ) cnt<-cnt+1
+						if( all(aFStep[c(3,6)]== (aFStep[4]*c(2,2)) ) ) cnt<-cnt+1
 
 						return( 2>cnt )
 					})	;kIdx<-anaFlagFnd(!flag,rpt)
@@ -197,12 +191,20 @@ fCut.basic <- function( gEnv ,allIdxF ,rpt=FALSE ){
 
 		# auxZW, auxQuo
 		flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
-						quoSize <- fCutU.getQuoObj( aZoid )$size
-						# if( all(quoSize[1:3+2]==c(1,2,2)) ) return(FALSE)	# next rebind of 3,1,0
-						# if( all(quoSize[1:3+0]==c(2,0,1)) ) return(FALSE)	# next rebind of 1,2,2
+						if( (aZoid[6]-aZoid[1]) %in% c( 29 ) ) return( FALSE )
 						return( TRUE )
 					})	;kIdx<-anaFlagFnd(!flag,rpt)
 		allIdxF <- allIdxF[flag]
+		flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+						quoSize <- fCutU.getQuoObj( aZoid )$size
+						if( all(quoSize[1:3+0]==c(1,3,1)) ) return(FALSE)	# next rebind of 0,2,2 reverse
+						if( all(quoSize[1:3+1]==c(2,0,1)) ) return(FALSE)	# next rebind of 2,2,1
+						if( all(quoSize[1:3+2]==c(2,2,1)) ) return(FALSE)	# next rebind of 2,1,1
+						if( all(quoSize[1:3+2]==c(2,2,1)) ) return(FALSE)	# next rebind of 3,1,0
+						return( TRUE )
+					})	;kIdx<-anaFlagFnd(!flag,rpt)
+		allIdxF <- allIdxF[flag]
+
 
 		cccObj <- fCutU.commonCutCnt( gEnv ,allIdxF ,zMtx )
 		flag <- apply( cccObj$scoreMtx ,1 ,function( score ){

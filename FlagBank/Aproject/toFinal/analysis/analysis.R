@@ -2,12 +2,13 @@
 rpt.analyLst <- function( analy ){
 	#	analy <- analyLst[["toZ821"]]
 	cat( sprintf( "* stdFltCnt:%d \n" ,analy$stdFltCnt )  )
+	cat( sprintf( "    default:%d \n" ,analy$fCutCnt.default )  )
 	cat( sprintf( "    colValSeqNext:%d \n" ,analy$fCutCnt.colValSeqNext )  )
 	cat( sprintf( "    colValSeqNext.cStep:%d \n",analy$fCutCnt.colValSeqNext.cStep	) )
 
 	phaseNm <- attributes(analy)$names
-	phaseNm <- phaseNm[-grep("colValSeqNext",phaseNm)]
-	phaseNm <- phaseNm[-grep("^stdFltCnt$",phaseNm)]
+	exctPhNmIdx <- c( grep("colValSeqNext",phaseNm) ,grep("^stdFltCnt$",phaseNm) ,grep("^fCutCnt.default$",phaseNm) )
+	phaseNm <- phaseNm[-exctPhNmIdx]
 	scoreMtx <- do.call( rbind, 
 							lapply(phaseNm,function(nm){
 										do.call( c ,analy[[nm]] )

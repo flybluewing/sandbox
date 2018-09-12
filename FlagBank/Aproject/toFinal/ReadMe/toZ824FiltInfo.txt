@@ -1,0 +1,11 @@
+
+fCut.basic
+    1. raw
+        - 동일 컬럼 값 연속, 동일 값 2개 이상 재발
+        - aZoid[1:3] 값이 2:3:4 비율 (12 18 24)
+        - cStep, fStep 와일드 패턴
+        - auxZW, auxQuo
+
+    2. nextZW
+        - 
+
