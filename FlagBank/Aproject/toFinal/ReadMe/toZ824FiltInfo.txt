@@ -1,4 +1,32 @@
 
+Global
+    * fCut.차원 별 이벤트 
+    * cccMtx
+        최소한 spanM이나 quoPtn 하나 이상은 존재.
+    * Gold Cut
+        - fCut.차원 별 이벤트 (표준:0~2. fCut.default에서 처리)
+            # auxZW, auxQuo는 이벤트 확인에서 예외
+            # ccc에서 reb는 예외
+            표준:이전 H의 차원에서 이벤트 발생 후 다음 H에서는 이벤트 발생 없다.
+        - 이벤트 총계 (표준:1~2, OL:4)
+            # cccObj$scoreMtx 차원 별 이벤트의 합산.
+        - reb( 3 ~ 5, OL:7 )
+            동일 연속 발생 갯수는 2개 이하.
+            4번 연속이 2개이상 나오기는 어렵겠지.(colval4,colval6)
+            최근 내 동일 패턴 재발은 없음.
+        - spanM(0~3) ,quoPtn(0~3)
+            동일 차원에서 연속 발생 없음.
+            기존 발생 패턴이 재발되지 않음.
+        - zw(0~2), nbor(0~2), remH1(0~1)
+            동일 차원에서 연속 발생 없음.
+            기존 발생 패턴이 재발되지 않음.
+        - quoAll(0~2)
+            동일 차원 연속발생은 1개 이하.
+        - auxZW, auxQuo
+            최종 발생차원(이전 H가 아닌)에서의 재발은 없음.
+        - cStep2 (0~2)
+            주의:연속발생이 종종 나타남. 3연속은 없겠지.. (fCut.default에서 처리)
+    * Gold Count
 fCut.basic
     1. raw
         - 동일 컬럼 값 연속, 동일 값 2개 이상 재발

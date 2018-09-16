@@ -128,7 +128,10 @@ fCutCnt.nextXXX <- function( gEnv ,allIdxF ,rpt=FALSE ){
 				})
     flgCnt <- flgCnt + score
 
-	return( list(flgCnt=flgCnt ,cntMtx=cntMtx ,auxCntMtx=auxCntMtx ,cccMtx=cccObj$scoreMtx ) )
+	return( list(flgCnt=flgCnt ,cntMtx=cntMtx ,auxCntMtx=auxCntMtx 
+					,cccMtx=cccObj$scoreMtx ,cStepValMtx=cccObj$cStepValMtx 
+				) 
+			)
 
 } # fCutCnt.nextXXX()
 
