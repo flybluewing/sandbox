@@ -125,12 +125,12 @@ analyLst[["toZ814"]] <- list(	stdFltCnt = 1
 	,fCutCnt.nextZW = list(	commonCutCnt=1	# reb / spanM / c25
 					,auxZW=0	,auxQuo=0
 					,raw =0	,rawFV =0
-					,rem =1	,cStep =0	,fStep =1	# fStep(1/2)
+					,rem =1	,cStep =0	,fStep =1	# fStep( *2 1/2)
 				)
 	,fCutCnt.nextQuo10 = list(	commonCutCnt=0
 					,auxZW=0	,auxQuo=0
 					,raw =0	,rawFV =0
-					,rem =1	,cStep =1	,fStep =0
+					,rem =1	,cStep =1	,fStep =0	# cStep( *1 )
 				)
 	,fCutCnt.nextBin = list(	commonCutCnt=0	# reb /	/
 					,auxZW=0	,auxQuo=0
@@ -210,7 +210,7 @@ analyLst[["toZ816"]] <- list(	stdFltCnt = 0
 	,fCutCnt.nextRebNum = list(	commonCutCnt=0	# reb /	/ 
 					,auxZW=0	,auxQuo=0
 					,raw =0	,rawFV =0
-					,rem =1	,cStep =1	,fStep =0
+					,rem =1	,cStep =1	,fStep =0	# cStep(*1)
 				)
 	,fCutCnt.nextCStepBin = list(	commonCutCnt=0	#	/	/ 
 					,auxZW=0	,auxQuo=0
@@ -225,7 +225,7 @@ analyLst[["toZ816"]] <- list(	stdFltCnt = 0
 	,fCutCnt.nextColVal_1 = list(	commonCutCnt=0	# reb /	/ 
 					,auxZW=0	,auxQuo=0
 					,raw =0	,rawFV =0
-					,rem =0	,cStep =1	,fStep =0
+					,rem =0	,cStep =1	,fStep =0	# cStep(*1)
 				)
 	,fCutCnt.nextColVal_2 = list(	commonCutCnt=0
 					,auxZW=0	,auxQuo=0
@@ -235,7 +235,7 @@ analyLst[["toZ816"]] <- list(	stdFltCnt = 0
 	,fCutCnt.nextColVal_3 = list(	commonCutCnt=1	# reb / spanM /
 					,auxZW=0	,auxQuo=0
 					,raw =0	,rawFV =2	# 2 * fCutU.hasPtn(c(18,19))
-					,rem =1	,cStep =3	,fStep =0
+					,rem =1	,cStep =3	,fStep =0	# cStep(*1)
 				)
 	,fCutCnt.nextColVal_4 = list(	commonCutCnt=0	# reb /	/
 					,auxZW=0	,auxQuo=0
@@ -253,6 +253,11 @@ analyLst[["toZ816"]] <- list(	stdFltCnt = 0
 					,rem =0	,cStep =1	,fStep =0
 				)
 ) # analyLst[["toZ816"]]
+
+# analyLst[["toZ820"]] : 1
+# analyLst[["toZ823"]] : 1
+
+
 
 # [late] ---------------------------------------
 analyLst[["toZ819"]] <- list(	stdFltCnt =2
@@ -316,12 +321,12 @@ analyLst[["toZ819"]] <- list(	stdFltCnt =2
 	,fCutCnt.nextColVal_5 = list(	commonCutCnt=0
 					,auxZW=0	,auxQuo=0
 					,raw =0	,rawFV =0
-					,rem =0	,cStep =3	,fStep =1
+					,rem =0	,cStep =3	,fStep =1	# cStep(*1)
 				)
 	,fCutCnt.nextColVal_6 = list(	commonCutCnt=0
 					,auxZW=0	,auxQuo=0
 					,raw =0	,rawFV =0
-					,rem =1	,cStep =2	,fStep =0
+					,rem =1	,cStep =2	,fStep =0	# cStep(*1)
 				)
 ) # analyLst[["toZ819"]] check
 
@@ -329,7 +334,7 @@ analyLst[["toZ820"]] <- list(	stdFltCnt = 1	# (A0110.A 필터 제외)
 	,fCutCnt.basic = list(	commonCutCnt=1	# 	/ cStep2 /
 					,auxZW=0	,auxQuo=0
 					,raw =0	,rawFV =0
-					,rem =1	,cStep =1	,fStep =0
+					,rem =1	,cStep =1	,fStep =0	# cStep(*1)
 				)
 	,fCutCnt.colValSeqNext = 0
 	,fCutCnt.colValSeqNext.cStep = 0
@@ -351,7 +356,7 @@ analyLst[["toZ820"]] <- list(	stdFltCnt = 1	# (A0110.A 필터 제외)
 	,fCutCnt.nextRebNum = list(	commonCutCnt=0
 					,auxZW=0	,auxQuo=0
 					,raw =0	,rawFV =0
-					,rem =1	,cStep =0	,fStep =1
+					,rem =1	,cStep =0	,fStep =1	# fStep(*1)
 				)
 	,fCutCnt.nextCStepBin = list(	commonCutCnt=0
 					,auxZW=0	,auxQuo=0
@@ -371,7 +376,7 @@ analyLst[["toZ820"]] <- list(	stdFltCnt = 1	# (A0110.A 필터 제외)
 	,fCutCnt.nextColVal_2 = list(	commonCutCnt=2	# reb / zw remH1 /
 					,auxZW=0	,auxQuo=0
 					,raw =0	,rawFV =0
-					,rem =1	,cStep =0	,fStep =1	# fStep(1/2)
+					,rem =1	,cStep =0	,fStep =1	# fStep( *2:1/2 )
 				)
 	,fCutCnt.nextColVal_3 = list(	commonCutCnt=0
 					,auxZW=0	,auxQuo=0
@@ -395,7 +400,6 @@ analyLst[["toZ820"]] <- list(	stdFltCnt = 1	# (A0110.A 필터 제외)
 				)
 ) # analyLst[["toZ820"]]
 
-#----- wild check done
 analyLst[["toZ821"]] <- list(	stdFltCnt = 3
 	,fCutCnt.basic = list(	commonCutCnt=3	# 	/ quoAll cStep2 cStep3 / 
 					,auxZW=0	,auxQuo=0
