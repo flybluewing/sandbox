@@ -1,7 +1,11 @@
 #	rpt.analyLst( analyLst[["toZ821"]] )
-rpt.analyLst <- function( analy ){
+rpt.analyLst <- function( analy ,rptId=NULL ){
 	#	analy <- analyLst[["toZ821"]]
-	cat( sprintf( "* stdFltCnt:%d \n" ,analy$stdFltCnt )  )
+	if( is.null(rptId) ){
+		cat( sprintf( "* stdFltCnt:%d \n" ,analy$stdFltCnt )  )
+	} else {
+		cat( sprintf( "*<%s> stdFltCnt:%d \n" ,rptId ,analy$stdFltCnt )  )
+	}
 	cat( sprintf( "    default:%d \n" ,analy$fCutCnt.default )  )
 	cat( sprintf( "    colValSeqNext:%d \n" ,analy$fCutCnt.colValSeqNext )  )
 	cat( sprintf( "    colValSeqNext.cStep:%d \n",analy$fCutCnt.colValSeqNext.cStep	) )
@@ -22,9 +26,9 @@ rpt.analyLst <- function( analy ){
 
 
 #	tgtGold <- c("toZ809","toZ814","toZ816","toZ820","toZ823")
-#	tgtLate <- c("toZ819","toZ820","toZ821","toZ822","toZ823")
+#	tgtLate <- c("toZ819","toZ820","toZ821","toZ822","toZ823","toZ824")
 # 	mtxLst <- lapply( tgtLate
-# 						,function(nm){ rpt.analyLst( analyLst[[nm]] ) }
+# 						,function(nm){ rpt.analyLst( analyLst[[nm]] ,nm ) }
 # 					)
 # 	for( nIdx in colnames( mtxLst[[1]] ) ){
 # 		cat( sprintf("name : %s\n",nIdx) )

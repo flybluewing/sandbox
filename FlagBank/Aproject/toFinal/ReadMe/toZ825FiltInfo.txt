@@ -1,0 +1,53 @@
+
+1. Filter별
+    1.1 cccObj$scoreMtx
+        1.1.a reb
+            gold : H연속갯수 1~2(OL:0,3) / 3~7(OL: , )
+            late : H연속갯수 0~3(OL: , ) / 3~5(OL: , )
+            common : 연속 길이 3H 이상이 나오지는 않겠지.(과거패턴 재발X)
+        1.1.b nbor
+            common : H연속갯수 : 0~0 / 0~2 (과거패턴 재발X)
+        1.1.c spanM
+            common : H연속갯수 : 0~0 / 0~3 (과거패턴 재발X)
+        1.1.d quoAll
+            common : H연속갯수 : 0~0 / 0~2 (과거패턴 재발X)
+        1.1.e quoPtn
+            common : H연속갯수 : 0~0 / 0~3 (과거패턴 재발X)
+        1.1.f zw
+            common : H연속갯수 : 0~0 / 0~2 (과거패턴 재발X)
+        1.1.g remH0
+            common : H연속갯수 : 0~0 / 0~0 (과거패턴 재발X)
+        1.1.h remH1
+            common : H연속갯수 : 0~0 / 0~1 (과거패턴 재발X)
+        1.1.i cStep2
+            common : H연속갯수 : 0~1 / 0~3 (과거패턴 재발X)
+        1.1.j cStep3
+            common : H연속갯수 : 0~0 / 0~1 (과거패턴 재발X)
+    1.2 cccObj$cStepValMtx
+        1.2.a c3n 
+            common : H연속갯수 : 0~0 / 0~2(OL: , ) (과거패턴 재발X)
+        1.2.b c2n
+            gold : H연속갯수 0~1(OL: , ) / 0~4(OL: , )
+            late : H연속갯수 0~1(OL: , ) / 3~5(OL: , )
+            common : 2개 이상 발생한 차원은 다음 H에서 발생 없음.
+                    2개 이상 발생 dimPlace 수 : 0~2
+        1.2.c max2/min2
+            common : H연속갯수 : 0~0 / 0~0(OL: ,1) (과거패턴 재발X)
+    1.3 wild card (*n)
+        1.3.a rawFV
+            common : H연속갯수 : 0~0 / 0~1 (과거패턴 재발X)
+        1.3.b cStep wild
+            common : H연속갯수 : 0~1 / 0~4  (과거패턴 재발X)
+        1.3.c fStep wild
+            common : H연속갯수 : 0~0 /  0~2  (과거패턴 재발X)
+2. Dimension plane (sum/haunt/event)
+    2.1 one dimPlane
+            gold : event h방향 연속발생 없음.
+            late : event h방향 연속발생 1~2
+            common : event 발생 수 0~1 (OL: ,2)
+                     cnt 0~4 (0, 4는 h,dp 모든 방향에서 연속발생 없음)
+    2.2 sum:through dimPlane ( in 1 H )
+            gold : event 1~2(OL:,4), cnt 23~31
+            late : event 2~6(OL:, ), cnt 20~30
+            common : 
+

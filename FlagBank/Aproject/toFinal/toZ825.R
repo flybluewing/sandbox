@@ -38,7 +38,7 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 	allIdxFObj$allIdxF.colValSeqNext <- allIdxF
 	cat(sprintf("allIdxF %d\n",length(allIdxF)))
 
-	allIdxF <- fCut.rawFV3(  gEnv ,allIdxF  )
+	# allIdxF <- fCut.rawFV3(  gEnv ,allIdxF  )
 	cat(sprintf("allIdxF %d\n",length(allIdxF)))
 
 	allIdxF <- fCut.basic( gEnv ,allIdxF )
@@ -109,7 +109,7 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 	ccObjLst[["nextColVal_4"]] <- fCutCnt.nextColVal_4( gEnv ,allIdxF )
 	ccObjLst[["nextColVal_5"]] <- fCutCnt.nextColVal_5( gEnv ,allIdxF )
 	ccObjLst[["nextColVal_6"]] <- fCutCnt.nextColVal_6( gEnv ,allIdxF )
-
+	save( ccObjLst ,file="Obj_ccObjLst.save" )
 
 	# surFlag(scoreMtx) ------------------------------------------------------
 	surFlag <- rep( TRUE ,length(allIdxF) )
@@ -145,33 +145,71 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 
 		} # for(nIdx)
 
+		# scoreMtx : ccc auxZW auxQuo raw rawFV rem cStep fStep
+		# cccMtx : reb nbor spanM quoAll quoPtn zw remH0 remH1 cStep2 cStep3
+		# cStepValMtx : c31 c32 c33 c34 c21 c22 c23 c24 c25 max2 min2
+
 		cutCnt <- 0
 
+		# 이벤트 발생
 		eventFlag <- apply(scoreMtx ,1 ,function(score){ sum(score>=thld) })
-		if( any( 0<eventFlag[c("nextZW","nextBin","nextColVal_3","nextColVal_6")] ) ){ # gold cut기준을 표준으로 적용.
-			surFlag[aIdx] <- FALSE
-			next
-		}
-		eventCnt <- sum( eventFlag )
-		if( (1>eventCnt) || (eventCnt>2) ){ # gold cut기준을 표준으로 적용.
-			surFlag[aIdx] <- FALSE
-			next
+		if( TRUE ){	# eventFlag
+			if( any( 0<eventFlag[c("nextZW","nextBin","nextColVal_3","nextColVal_6")] ) ){
+				# 2.1 one dimPlane - gold : event h방향 연속발생 없음.
+				surFlag[aIdx] <- FALSE
+				next
+			}
+			if( any( 2<eventFlag[c("nextZW","nextQuo10","nextFStepBin","nextColVal_3")] ) ){
+				# 2.1 one dimPlane - late : event h방향 연속발생 1~2
+				surFlag[aIdx] <- FALSE
+				next
+			}
+			hpnCnt <- apply( scoreMtx ,1 ,sum )
+			if( any(0==hpnCnt[c("basic","nextBin","nextRebNum","nextColVal_1")]) ){
+				# 2.1 one dimPlane - common cnt 0~4 (0, 4는 h,dp 모든 방향에서 연속발생 없음)
+				surFlag[aIdx] <- FALSE
+				next
+			}
+			if( any(4<=hpnCnt[c("nextColVal_2","nextFStepBin")]) ){
+				# 2.1 one dimPlane - common cnt 0~4 (0, 4는 h,dp 모든 방향에서 연속발생 없음)
+				surFlag[aIdx] <- FALSE
+				next
+			}
+			if( any(hpnCnt>4) ){
+				# 2.1 one dimPlane - cnt 0~4
+				surFlag[aIdx] <- FALSE
+				next
+			}
+			eventCnt <- sum( eventFlag )
+			if( (1>eventCnt) || (eventCnt>2) ){ 
+				# 2.2 sum:through dimPlane - gold : event 1~2(OL:,4)
+				surFlag[aIdx] <- FALSE
+				next
+			}
 		}
 
-		# filt for gold
-		flagCnt.gold <- finalFilt.gold( scoreMtx ,cccMtx ,cStepValMtx ,thld ,cccMtx.rCol )
-		if( 5<flagCnt.gold ){
-			surFlag[aIdx] <- FALSE
-			next
-		}
-		# filt for late
-		flagCnt.late <- finalFilt.late( scoreMtx ,cccMtx ,cStepValMtx ,thld ,cccMtx.rCol )
-		if( 5<flagCnt.late ){
-			surFlag[aIdx] <- FALSE
-			next
-		}
+		# filt for gold & late
+		# flagCnt.gold <- finalFilt.common( scoreMtx ,cccMtx ,cStepValMtx ,thld ,cccMtx.rCol )
+		# if( 5<flagCnt.gold ){
+		# 	surFlag[aIdx] <- FALSE
+		# 	next
+		# }
 
-		surFlag[aIdx] <- ( 1 >= (cutCnt+flagCnt.gold+flagCnt.late) )
+
+		# # filt for gold
+		# flagCnt.gold <- finalFilt.gold( scoreMtx ,cccMtx ,cStepValMtx ,thld ,cccMtx.rCol )
+		# if( 5<flagCnt.gold ){
+		# 	surFlag[aIdx] <- FALSE
+		# 	next
+		# }
+		# # filt for late
+		# flagCnt.late <- finalFilt.late( scoreMtx ,cccMtx ,cStepValMtx ,thld ,cccMtx.rCol )
+		# if( 5<flagCnt.late ){
+		# 	surFlag[aIdx] <- FALSE
+		# 	next
+		# }
+
+		# surFlag[aIdx] <- ( 1 >= (cutCnt+flagCnt.gold+flagCnt.late) )
 
 	}  # aIdx
 
