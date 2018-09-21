@@ -49,5 +49,5 @@
     2.2 sum:through dimPlane ( in 1 H )
             gold : event 1~2(OL:,4), cnt 23~31
             late : event 2~6(OL:, ), cnt 20~30
-            common : 
+            common : 20~31
 

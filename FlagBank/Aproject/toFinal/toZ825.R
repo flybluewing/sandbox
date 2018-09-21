@@ -180,6 +180,12 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 				surFlag[aIdx] <- FALSE
 				next
 			}
+			hpnCnt.sum <- sum(hpnCnt)
+			if( (hpnCnt.sum<20) || (31<hpnCnt.sum) ){
+				# 2.2 sum:through dimPlane - common
+				surFlag[aIdx] <- FALSE
+				next
+			}
 			eventCnt <- sum( eventFlag )
 			if( (1>eventCnt) || (eventCnt>2) ){ 
 				# 2.2 sum:through dimPlane - gold : event 1~2(OL:,4)
@@ -188,12 +194,12 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 			}
 		}
 
-		# filt for gold & late
-		# flagCnt.gold <- finalFilt.common( scoreMtx ,cccMtx ,cStepValMtx ,thld ,cccMtx.rCol )
-		# if( 5<flagCnt.gold ){
-		# 	surFlag[aIdx] <- FALSE
-		# 	next
-		# }
+		# common : filt for gold & late
+		flagCnt.gold <- finalFilt.common( scoreMtx ,cccMtx ,cStepValMtx ,thld ,cccMtx.rCol )
+		if( 5<flagCnt.gold ){
+			surFlag[aIdx] <- FALSE
+			next
+		}
 
 
 		# # filt for gold
