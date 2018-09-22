@@ -3137,6 +3137,10 @@ finalFilt.common <- function( scoreMtx ,cccMtx ,cStepValMtx ,thld ,cccMtx.rCol )
 	pastHpn <- rep( FALSE ,nrow(scoreMtx) )	;names(pastHpn)<-rownames(scoreMtx)
 
 	if( TRUE ){	# 1.1.a reb - common
+		# 1.1.a reb - gold/last 3~7
+		if( 3>sum(cccMtx[,"reb"]>0) )	return( 10 )
+		if( 7<sum(cccMtx[,"reb"]>0) )	return( 10 )
+
 		# 1.1.a reb - gold/last 이전 H와 연속은 2개 이내. (3개는 OL)
 		lastHpn <- c("basic","nextRebNum","nextColVal_1","nextColVal_2","nextColVal_4")	# late
 		if( 2<sum(cccMtx[lastHpn,"reb"]>0) )	return( 10 )

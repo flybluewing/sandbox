@@ -39,8 +39,7 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 	cat(sprintf("allIdxF %d\n",length(allIdxF)))
 
 	# allIdxF <- fCut.rawFV3(  gEnv ,allIdxF  )
-	allIdxF <- fCut.wildF_cStep(  gEnv ,allIdxF  )
-	cat(sprintf("allIdxF %d\n",length(allIdxF)))
+	# cat(sprintf("allIdxF %d\n",length(allIdxF)))
 
 	allIdxF <- fCut.basic( gEnv ,allIdxF )
 	cat(sprintf("allIdxF %d\n",length(allIdxF)))
@@ -131,6 +130,7 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 	cStepValMtx = matrix( 0 ,nrow=length(ccObjLst) ,ncol=length(cName) )
 	rownames(cStepValMtx) <- fName		;colnames(cStepValMtx) <- cName
 
+	cnt4Spy <- rep( TRUE ,length(allIdxF) )
 	for( aIdx in 1:length(allIdxF) ){
 		scoreMtx[,] <- 0	;cccMtx[,] <- 0		;cStepValMtx[,] <- 0
 		for( nIdx in fName ){
@@ -151,6 +151,7 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 		# cStepValMtx : c31 c32 c33 c34 c21 c22 c23 c24 c25 max2 min2
 
 		cutCnt <- 0
+		cnt4Spy[aIdx] <- sum(cccMtx[,c("reb","spanM","quoPtn")])
 
 		# 이벤트 발생
 		eventFlag <- apply(scoreMtx ,1 ,function(score){ sum(score>=thld) })
