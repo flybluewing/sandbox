@@ -3139,11 +3139,9 @@ finalFilt.common <- function( scoreMtx ,cccMtx ,cStepValMtx ,thld ,cccMtx.rCol )
 	if( TRUE ){	# 1.1.a reb - common
 		# 1.1.a reb - gold/last 이전 H와 연속은 2개 이내. (3개는 OL)
 		lastHpn <- c("basic","nextRebNum","nextColVal_1","nextColVal_2","nextColVal_4")	# late
-		if( 3<sum(cccMtx[lastHpn,"reb"]) ){	return( 10 )
-		} else if( 2>=sum(cccMtx[lastHpn,"reb"]) ){	flagCnt<-flagCnt+1	}
-		lastHpn <- c("reb","nextRebNum","nextColVal_4","nextColVal_5","nextColVal_6")	# late
-		if( 3<sum(cccMtx[lastHpn,"reb"]) ){	return( 10 )
-		} else if( 2>=sum(cccMtx[lastHpn,"reb"]) ){	flagCnt<-flagCnt+1	}
+		if( 2<sum(cccMtx[lastHpn,"reb"]>0) )	return( 10 )
+		lastHpn <- c("basic","nextRebNum","nextColVal_4","nextColVal_5","nextColVal_6")	# late
+		if( 2<sum(cccMtx[lastHpn,"reb"]>0) )	return( 10 )
 
 		# 1.1.a reb - common 과거패턴 재발제거.
 		pastHpnLst <-list() 
@@ -3328,6 +3326,14 @@ finalFilt.common <- function( scoreMtx ,cccMtx ,cStepValMtx ,thld ,cccMtx.rCol )
 		}
 
 	}
+	if( TRUE ){	# 1.1.z etc
+
+		hpnSum <- apply( cccMtx[,c("spanM","quoPtn")] ,1 ,sum )
+		if( 1 > sum(hpnSum>0) )	return( 10 )
+		if( 6 < sum(hpnSum>0) )	return( 10 )
+
+	}
+
 
 	if( TRUE ){	# 1.2.a c3n - common
 		hpnCnt <- apply( cStepValMtx[,c("c31","c32","c33","c34")] ,1 ,sum )
@@ -3432,6 +3438,269 @@ finalFilt.common <- function( scoreMtx ,cccMtx ,cStepValMtx ,thld ,cccMtx.rCol )
 	return( flagCnt )
 
 } # finalFilt.common( )
+
+
+
+fCut.wildF_cStep <- function( aZoid ){
+
+	rName <- c("basic" ,"nextZW" ,"nextQuo10" ,"nextBin" ,"nextRebNum" ,"nextCStepBin" ,"nextFStepBin" 
+				,"nextColVal_1" ,"nextColVal_2" ,"nextColVal_3" ,"nextColVal_4" ,"nextColVal_5" ,"nextColVal_6" )
+	cName <- c("*1","*2")
+	wildFMtx <- matrix( 0 ,nrow=length(rName) ,ncol=length(cName) )
+	colnames(wildFMtx) <- cName	;rownames(wildFMtx) <- rName
+
+
+	aCStep <- aZoid[2:6] - aZoid[1:5]	
+	if(TRUE){	# basic
+		#	*1
+		cnt <- 0
+		if( 1<sum(aCStep[1:3+0]==c( 5,  5,  4 )) ) cnt<-cnt+1	# 2
+		if( 1<sum(aCStep[1:3+1]==c( 4,  3,  9 )) ) cnt<-cnt+1	# 5
+		if( 1<sum(aCStep[1:3+2]==c( 4,  3,  9 )) ) cnt<-cnt+1	# 5
+		if( 1<sum(aCStep[1:3+2]==c( 6,  6,  2 )) ) cnt<-cnt+1	# 4
+
+		if( fCutU.hasPtn(c( 8, 5 ),aCStep) ) cnt<-cnt+1
+		if( fCutU.hasPtn(c(11, 1 ),aCStep) ) cnt<-cnt+1
+		if( all(aCStep[1:2+2]==c(15, 5)) ) cnt<-cnt+1
+		if( all(aCStep[1:2+0]==c( 2,15)) ) cnt<-cnt+1
+		if( cnt>0 )	wildFMtx["basic","*1"] <- 1
+
+		#	*2
+		cnt <- 0
+		if( all(aCStep[2:3]== aCStep[4]*c(3,1) ) ) cnt<-cnt+1
+		if( cnt>0 )	wildFMtx["basic","*2"] <- 1
+	}
+	if(TRUE){	# nextZW
+		#	*1
+		cnt <- 0
+		if( 1<sum(aCStep[1:2+0]==c( 1,  4    )) ) cnt<-cnt+1	#  7
+		if( 1<sum(aCStep[1:3+1]==c(13,  1,  7)) ) cnt<-cnt+1	#  1
+		if( 1<sum(aCStep[1:3+2]==c( 1,  1,  4)) ) cnt<-cnt+1	#  7
+		if( 1<sum(aCStep[1:3+2]==c( 6,  3, 11)) ) cnt<-cnt+1	#  8
+
+		if( fCutU.hasPtn(c( 7,14),aCStep) ) cnt<-cnt+1
+		if( fCutU.hasPtn(c( 1, 8),aCStep) ) cnt<-cnt+1
+		if( fCutU.hasPtn(c( 1, 4),aCStep) ) cnt<-cnt+1
+		if( all(aCStep[1:2+2]==c(15,14)) ) cnt<-cnt+1
+		if( cnt>0 )	wildFMtx["nextZW","*1"] <- 1
+
+		#	*2
+		cnt <- 0
+		if( aCStep[5]==sum(aCStep[c(1,3)]) ) cnt<-cnt+1
+		if( aCStep[5]==sum(aCStep[c(4,3)]) ) cnt<-cnt+1
+		if( sum(aCStep[c(1,4)])==sum(aCStep[c(2,3)]) ) cnt<-cnt+1
+		if( cnt>0 )	wildFMtx["nextZW","*2"] <- 1
+	}
+	if(TRUE){	# nextQuo10
+		#	*1
+		cnt <- 0
+		if( 1<sum(aCStep[1:3+0]==c( 4,  2,  2)) ) cnt<-cnt+1	#  7
+		if( 1<sum(aCStep[1:3+0]==c( 8,  1,  8)) ) cnt<-cnt+1	#  3
+		if( 1<sum(aCStep[1:3+2]==c( 3, 13,  8)) ) cnt<-cnt+1	#  8
+		if( 1<sum(aCStep[1:3+2]==c(13,  8,  4)) ) cnt<-cnt+1	#  4
+
+		if( fCutU.hasPtn(c( 7, 3),aCStep) ) cnt<-cnt+1
+		if( all(aCStep[1:2+0]==c( 4, 2)) ) cnt<-cnt+1
+		if( fCutU.hasPtn(c( 6, 3),aCStep) ) cnt<-cnt+1
+		if( fCutU.hasPtn(c(16, 4),aCStep) ) cnt<-cnt+1
+		if( all(aCStep[1:2+3]==c( 8, 4)) ) cnt<-cnt+1
+		if( fCutU.hasPtn(c( 9, 1),aCStep) ) cnt<-cnt+1
+		if( fCutU.hasPtn(c( 7, 1),aCStep) ) cnt<-cnt+1
+		if( fCutU.hasPtn(c(16, 4),aCStep) ) cnt<-cnt+1
+		if( cnt>0 )	wildFMtx["nextQuo10","*1"] <- 1
+
+		#	*2
+		cnt <- 0
+		if( aCStep[1]==sum(aCStep[c(2,5)]) ) cnt<-cnt+1
+		if( cnt>0 )	wildFMtx["nextQuo10","*2"] <- 1
+	}
+	if(TRUE){	# nextBin
+		#	*1
+		cnt <- 0
+		if( 1<sum(aCStep[1:2+0]==c( 8,  6    )) ) cnt<-cnt+1	# 20
+		if( 1<sum(aCStep[1:3+1]==c( 2,  1,  8)) ) cnt<-cnt+1	#  2
+		if( 1<sum(aCStep[1:3+1]==c( 2, 20,  2)) ) cnt<-cnt+1	#  8
+		if( 1<sum(aCStep[1:3+2]==c( 4,  2, 20)) ) cnt<-cnt+1	#  6
+
+		if( fCutU.hasPtn(c(20, 2),aCStep) ) cnt<-cnt+1
+		if( all(aCStep[1:2+0]==c( 8, 6)) ) cnt<-cnt+1
+		if( fCutU.hasPtn(c( 4,17),aCStep) ) cnt<-cnt+1
+		if( cnt>0 )	wildFMtx["nextBin","*1"] <- 1
+
+		#	*2
+		cnt <- 0
+		if( all(aCStep[4:5]== aCStep[2]*c(4,3) ) ) cnt<-cnt+1
+		if( cnt>0 )	wildFMtx["nextBin","*2"] <- 1
+	}
+	if(TRUE){	# nextRebNum
+		#	*1
+		cnt <- 0
+		if( 1<sum(aCStep[1:3+0]==c( 8,  7,  9)) ) cnt<-cnt+1	# 4
+		if( 1<sum(aCStep[1:3+0]==c( 7,  9,  1)) ) cnt<-cnt+1	# 8
+		if( 1<sum(aCStep[1:3+1]==c(10,  4,  2)) ) cnt<-cnt+1	# 7
+		if( 1<sum(aCStep[1:2+3]==c(10,  4    )) ) cnt<-cnt+1	# 9
+
+		if( fCutU.hasPtn(c(2,2),aCStep) ) cnt<-cnt+1
+		if( cnt>0 )	wildFMtx["nextRebNum","*1"] <- 1
+
+		#	*2
+		cnt <- 0
+		if( aCStep[4]==sum(aCStep[c(2,5)]) ) cnt<-cnt+1
+		if( aCStep[2]==sum(aCStep[c(3,5)]) ) cnt<-cnt+1
+		if( cnt>0 )	wildFMtx["nextRebNum","*2"] <- 1
+	}
+	if(TRUE){	# nextCStepBin
+		#	*1
+		cnt <- 0
+		if( 1<sum(aCStep[1:3+0]==c(11,  8,  3)) ) cnt<-cnt+1	# 5
+		if( 1<sum(aCStep[1:3+1]==c( 3,  7, 20)) ) cnt<-cnt+1	# 8 
+		if( 1<sum(aCStep[1:3+2]==c(11,  8,  3)) ) cnt<-cnt+1	# 3
+
+		if( fCutU.hasPtn(c( 5, 3),aCStep) ) cnt<-cnt+1
+		if( all(aCStep[1:2+1]==c( 1,12)) ) cnt<-cnt+1
+		if( cnt>0 )	wildFMtx["nextCStepBin","*1"] <- 1
+
+		#	*2
+		cnt <- 0
+		if( aCStep[3]==sum(aCStep[c(1,4)]) ) cnt<-cnt+1
+		if( aCStep[2]==sum(aCStep[c(3,4)]) ) cnt<-cnt+1
+		if( aCStep[5]==sum(aCStep[c(3,4)]) ) cnt<-cnt+1
+		if( cnt>0 )	wildFMtx["nextCStepBin","*2"] <- 1
+	}
+	if(TRUE){	# nextFStepBin
+		#	*1
+		cnt <- 0
+		if( 1<sum(aCStep[1:3+0]==c( 5,  2,  1)) ) cnt<-cnt+1	#  5
+		if( 1<sum(aCStep[1:3+0]==c(14, 10,  6)) ) cnt<-cnt+1	#  2
+		if( 1<sum(aCStep[1:3+1]==c(10,  6,  5)) ) cnt<-cnt+1	#  1
+		if( 1<sum(aCStep[1:2+3]==c( 5,  2    )) ) cnt<-cnt+1	#  5
+
+		if( fCutU.hasPtn(c( 5, 2),aCStep) ) cnt<-cnt+1
+		if( all(aCStep[1:2+0]==c(14,10)) ) cnt<-cnt+1
+		if( fCutU.hasPtn(c( 2, 1),aCStep) ) cnt<-cnt+1
+		if( all(aCStep[1:2+1]==c(10, 6)) ) cnt<-cnt+1
+		if( fCutU.hasPtn(c(14, 9),aCStep) ) cnt<-cnt+1
+		if( cnt>0 )	wildFMtx["nextFStepBin","*1"] <- 1
+
+		#	*2
+		cnt <- 0
+		if( all(aCStep[4:5]== aCStep[1]*c(1,3) ) ) cnt<-cnt+1
+		if( cnt>0 )	wildFMtx["nextFStepBin","*2"] <- 1
+	}
+	if(TRUE){	# nextColVal_1
+		#	*1
+		cnt <- 0
+		if( 1<sum(aCStep[1:3+0]==c( 2,  4,  5)) ) cnt<-cnt+1	#  2
+		if( 1<sum(aCStep[1:3+0]==c( 4,  5, 25)) ) cnt<-cnt+1	#  4
+		if( 1<sum(aCStep[1:3+1]==c( 2,  4,  5)) ) cnt<-cnt+1	#  5
+		if( 1<sum(aCStep[1:3+2]==c( 2,  4,  5)) ) cnt<-cnt+1	#  4
+
+		if( fCutU.hasPtn(c( 7, 1),aCStep) ) cnt<-cnt+1
+		if( all(aCStep[1:2+2]==c( 4,30 )) ) cnt<-cnt+1
+		if( cnt>0 )	wildFMtx["nextColVal_1","*1"] <- 1
+
+		#	*2
+		cnt <- 0
+		if( all(aCStep[c(2,5)]== aCStep[1]*c(2,2) ) ) cnt<-cnt+1
+		if( cnt>0 )	wildFMtx["nextColVal_1","*2"] <- 1
+	}
+	if(TRUE){	# nextColVal_2
+		#	*1
+		cnt <- 0
+		if( 1<sum(aCStep[1:3+0]==c( 4, 13,  3)) ) cnt<-cnt+1	#  1
+		if( 1<sum(aCStep[1:3+1]==c( 1, 10,  3)) ) cnt<-cnt+1	#  3
+		if( 1<sum(aCStep[1:3+2]==c( 5,  4, 13)) ) cnt<-cnt+1	#  1
+		if( 1<sum(aCStep[1:3+2]==c( 6,  5,  4)) ) cnt<-cnt+1	#  1
+
+		if( fCutU.hasPtn(c( 11, 3 ),aCStep) ) cnt<-cnt+1
+		if( fCutU.hasPtn(c(  2,13 ),aCStep) ) cnt<-cnt+1
+		if( fCutU.hasPtn(c(  6, 3 ),aCStep) ) cnt<-cnt+1
+		if( fCutU.hasPtn(c(  7, 4 ),aCStep) ) cnt<-cnt+1
+		if( cnt>0 )	wildFMtx["nextColVal_2","*1"] <- 1
+
+		#	*2
+		cnt <- 0
+		if( all(aCStep[1]==aCStep[4:5]) ) cnt<-cnt+1
+		if( aCStep[3]==sum(aCStep[c(1,4,5)]) ) cnt<-cnt+1
+		if( cnt>0 )	wildFMtx["nextColVal_2","*2"] <- 1
+	}
+	if(TRUE){	# nextColVal_3
+		#	*1
+		cnt <- 0
+		if( 1<sum(aCStep[1:3+0]==c( 2, 15,  5)) ) cnt<-cnt+1	#  2
+		if( 1<sum(aCStep[1:3+1]==c( 2, 15,  5)) ) cnt<-cnt+1	#  5
+		if( 1<sum(aCStep[1:3+2]==c( 2, 15,  5)) ) cnt<-cnt+1	#  5
+		if( 1<sum(aCStep[1:3+2]==c( 2, 15,  5)) ) cnt<-cnt+1	#  4
+
+		if( fCutU.hasPtn(c( 5, 4),aCStep) ) cnt<-cnt+1
+		if( fCutU.hasPtn(c( 1, 6),aCStep) ) cnt<-cnt+1
+		if( cnt>0 )	wildFMtx["nextColVal_3","*1"] <- 1
+
+		#	*2
+		cnt <- 0
+		if( all(aCStep[2:3]== aCStep[4]*c(3,1) ) ) cnt<-cnt+1
+		if( cnt>0 )	wildFMtx["nextColVal_3","*2"] <- 1
+	}
+	if(TRUE){	# nextColVal_4
+		#	*1
+		cnt <- 0
+		if( 1<sum(aCStep[1:3+0]==c( 7,  4,  2)) ) cnt<-cnt+1	#  6
+		if( 1<sum(aCStep[1:3+0]==c( 2, 20,  2)) ) cnt<-cnt+1	#  3
+		if( 1<sum(aCStep[1:3+0]==c( 8,  3,  5)) ) cnt<-cnt+1	#  1
+
+		if( fCutU.hasPtn(c(6,2),aCStep) ) cnt<-cnt+1
+		if( fCutU.hasPtn(c(8,4),aCStep) ) cnt<-cnt+1
+		if( fCutU.hasPtn(c(5,2),aCStep) ) cnt<-cnt+1
+		if( cnt>0 )	wildFMtx["nextColVal_4","*1"] <- 1
+
+		#	*2
+		cnt <- 0
+		if( all(aCStep[c(1,5)]== aCStep[2]*c(2,6)) ) cnt<-cnt+1
+		if( aCStep[5]==sum(aCStep[c(1,4)]) ) cnt<-cnt+1
+		if( cnt>0 )	wildFMtx["nextColVal_4","*2"] <- 1
+	}
+	if(TRUE){	# nextColVal_5
+		#	*1
+		cnt <- 0
+		if( 1<sum(aCStep[1:2+0]==c( 4,  1    )) ) cnt<-cnt+1	#  6
+		if( 1<sum(aCStep[1:3+0]==c(10,  1,  9)) ) cnt<-cnt+1	# 10
+		if( 1<sum(aCStep[1:3+0]==c( 1,  9,  2)) ) cnt<-cnt+1	#  1
+		if( 1<sum(aCStep[1:3+2]==c(20,  5, 10)) ) cnt<-cnt+1	#  2
+
+		if( fCutU.hasPtn(c( 7,10 ),aCStep) ) cnt<-cnt+1
+		if( cnt>0 )	wildFMtx["nextColVal_5","*1"] <- 1
+
+		#	*2
+		cnt <- 0
+		if( all(aCStep[1:2]== aCStep[5]*c(3,5) ) ) cnt<-cnt+1
+		if( aCStep[2]==sum(aCStep[c(3,4)]) ) cnt<-cnt+1
+		if( cnt>0 )	wildFMtx["nextColVal_5","*2"] <- 1
+	}
+	if(TRUE){	# nextColVal_6
+		#	*1
+		cnt <- 0
+		if( 1<sum(aCStep[1:2+0]==c( 9,  1    )) ) cnt<-cnt+1	#  4
+		if( 1<sum(aCStep[1:3+0]==c(10,  4,  1)) ) cnt<-cnt+1	#  8
+		if( 1<sum(aCStep[1:3+2]==c(20,  5, 10)) ) cnt<-cnt+1	#  7
+		if( 1<sum(aCStep[1:3+2]==c( 3,  3,  3)) ) cnt<-cnt+1	#  9
+		if( 1<sum(aCStep[1:3+2]==c( 7,  9,  1)) ) cnt<-cnt+1	#  1
+
+		if( fCutU.hasPtn(c( 8,9 ),aCStep) ) cnt<-cnt+1
+		if( fCutU.hasPtn(c(10,5 ),aCStep) ) cnt<-cnt+1
+		if( fCutU.hasPtn(c( 7,2 ),aCStep) ) cnt<-cnt+1
+		if( cnt>0 )	wildFMtx["nextColVal_6","*1"] <- 1
+
+		#	*2
+		cnt <- 0
+		if( aCStep[4]==sum(aCStep[c(2,5)]) ) cnt<-cnt+1
+		if( aCStep[2]==sum(aCStep[c(3,5)]) ) cnt<-cnt+1
+		if( cnt>0 )	wildFMtx["nextColVal_6","*2"] <- 1
+	}
+	
+	return( wildFMtx )
+
+} # fCut.wildF_cStep()
+
 
 
 finalFilt.gold.old <- function( scoreMtx ,cccMtx ,cStepValMtx ,thld ,cccMtx.rCol ) {

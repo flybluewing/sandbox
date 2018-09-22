@@ -39,6 +39,7 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 	cat(sprintf("allIdxF %d\n",length(allIdxF)))
 
 	# allIdxF <- fCut.rawFV3(  gEnv ,allIdxF  )
+	allIdxF <- fCut.wildF_cStep(  gEnv ,allIdxF  )
 	cat(sprintf("allIdxF %d\n",length(allIdxF)))
 
 	allIdxF <- fCut.basic( gEnv ,allIdxF )
@@ -201,16 +202,108 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 			next
 		}
 
+		# wildF : cStep
+		wildFMtx <- fCut.wildF_cStep( gEnv$allZoidMtx[allIdxF[aIdx],] )
+		if(TRUE){
+			#	*2 : gold 기준
+			if( 0 < sum(wildFMtx[,"*2"]) ){
+				surFlag[aIdx] <- FALSE
+				next
+			}
+
+			#	*1 범위
+			wildF1.sum <- sum(wildFMtx[,"*1"])
+			if( 3<wildF1.sum ){
+				surFlag[aIdx] <- FALSE
+				next
+			}
+
+			#	*1 과거 패턴 재발 없음.
+			pastHpnLst <-list() 
+			pastHpnLst[["toZ816"]]	<- c("nextRebNum","nextColVal_1","nextColVal_3")
+			pastHpnLst[["toZ819"]]	<- c("nextColVal_5","nextColVal_6")
+			pastHpnLst[["toZ820"]]	<- c("basic")
+			pastHpnLst[["toZ821"]]	<- c("nextColVal_1","nextColVal_2")
+			pastHpnLst[["toZ822"]]	<- c("nextColVal_6")
+			pastHpnLst[["toZ823"]]	<- c("nextBin")
+			for( nIdx in attributes(pastHpnLst)$names ){
+				if( sum(wildFMtx[,"*1"]) != length(pastHpnLst[[nIdx]]) ) next
+
+				if( all(wildFMtx[ pastHpnLst[[nIdx]] ,"*1"]>0) ){
+					return( 10 )
+				}
+			}
+
+		}
+
+		# Filt range : ccc auxZW auxQuo raw rawFV rem cStep fStep
+		if(TRUE){
+			# ccc
+			scoreCut <- fCutU.cutScore( scoreMtx[,"ccc"]
+										,pMinMaxSum=c( 0, 9) ,pMinMaxHpn=c( 0, 9) ,pMinMaxEvent=c(2,NA,3) 
+									)
+			if( 0 < sum(scoreCut,na.rm=T) ) surFlag[aIdx] <- FALSE
+			if( all(2<=scoreMtx[c("nextZW"),"ccc"]) )	 surFlag[aIdx] <- FALSE		# gold hpn rebind
+			fltName <- c("nextZW","nextQuo10","nextRebNum","nextFStepBin","nextColVal_2","nextColVal_5","nextColVal_6")
+			if( 2>=sum(0<scoreMtx[fltName,"ccc"]) )	 surFlag[aIdx] <- FALSE		# gold hpn rebind
+
+			# auxZW
+			scoreCut <- fCutU.cutScore( scoreMtx[,"auxZW"]
+										,pMinMaxSum=c(NA, 3) ,pMinMaxHpn=c(NA, 3) ,pMinMaxEvent=c(1,NA,3) 
+									)
+			if( 0 < sum(scoreCut,na.rm=T) ) surFlag[aIdx] <- FALSE
+			if( all(1<=scoreMtx[c("nextRebNum","nextColVal_1"),"auxZW"]) ) surFlag[aIdx] <- FALSE	# gold hpn rebind
+
+			# auxQuo
+			scoreCut <- fCutU.cutScore( scoreMtx[,"auxQuo"]
+										,pMinMaxSum=c(NA,2) ,pMinMaxHpn=c(NA,2) ,pMinMaxEvent=c(2,NA,2)
+									)
+			if( 0 < sum(scoreCut,na.rm=T) ) surFlag[aIdx] <- FALSE
+			if( all(1<=scoreMtx[c("nextZW"),"auxQuo"]) ) surFlag[aIdx] <- FALSE	# gold hpn rebind
+
+			# raw
+			scoreCut <- fCutU.cutScore( scoreMtx[,"raw"]
+										,pMinMaxSum=c(NA,6) ,pMinMaxHpn=c(NA,5) ,pMinMaxEvent=c(2,NA,2) 
+									)
+			if( 0 < sum(scoreCut,na.rm=T) ) surFlag[aIdx] <- FALSE
+			if( all(2<=scoreMtx[c("nextRebNum"),"raw"]) ) surFlag[aIdx] <- FALSE	# gold hpn rebind
+			
+			# rawFV
+			scoreCut <- fCutU.cutScore( scoreMtx[,"rawFV"]
+										,pMinMaxSum=c(NA,3) ,pMinMaxHpn=c(NA,2) ,pMinMaxEvent=c(2,NA,2) 
+									)
+			if( 0 < sum(scoreCut,na.rm=T) ) surFlag[aIdx] <- FALSE
+			if( all(2<=scoreMtx[c("nextColVal_3"),"rawFV"]) ) surFlag[aIdx] <- FALSE	# gold hpn rebind
+
+			# rem
+			scoreCut <- fCutU.cutScore( scoreMtx[,"rem"]
+										,pMinMaxSum=c(9,15) ,pMinMaxHpn=c(6,11) ,pMinMaxEvent=c(3,NA,1) 
+									)
+			if( 0 < sum(scoreCut,na.rm=T) ) surFlag[aIdx] <- FALSE
+			if( all(3<=scoreMtx[c("nextColVal_5"),"rem"]) ) surFlag[aIdx] <- FALSE	# late hpn rebind
+			# 2는 1번 이상 연속 없음.
+			if( 1 < sum(2<=scoreMtx[c("nextFStepBin","nextColVal_2"),"rem"]) ) surFlag[aIdx] <- FALSE	# gold
+			if( 1 < sum(2<=scoreMtx[c("nextQuo10","nextFStepBin","nextColVal_3"),"rem"]) ) surFlag[aIdx] <- FALSE	# late
+
+			# cStep
+			scoreCut <- fCutU.cutScore( scoreMtx[,"cStep"]
+										,pMinMaxSum=c(4,13) ,pMinMaxHpn=c(4,10) ,pMinMaxEvent=c(2,NA,4) 
+									)
+			if( 0 < sum(scoreCut,na.rm=T) ) surFlag[aIdx] <- FALSE
+			if( all(2<=scoreMtx[c("nextBin","nextColVal_3","nextColVal_6"),"cStep"]) ) surFlag[aIdx] <- FALSE	# gold hpn rebind
+
+			# fStep
+			scoreCut <- fCutU.cutScore( scoreMtx[,"fStep"]
+										,pMinMaxSum=c(0,4) ,pMinMaxHpn=c(0,3) ,pMinMaxEvent=c(2,NA,2) 
+									)
+			if( 0 < sum(scoreCut,na.rm=T) ) surFlag[aIdx] <- FALSE
+			if( all(2<=scoreMtx[c("nextCStepBin"),"fStep"]) ) surFlag[aIdx] <- FALSE	# gold hpn rebind
+
+		}
 
 		# # filt for gold
 		# flagCnt.gold <- finalFilt.gold( scoreMtx ,cccMtx ,cStepValMtx ,thld ,cccMtx.rCol )
 		# if( 5<flagCnt.gold ){
-		# 	surFlag[aIdx] <- FALSE
-		# 	next
-		# }
-		# # filt for late
-		# flagCnt.late <- finalFilt.late( scoreMtx ,cccMtx ,cStepValMtx ,thld ,cccMtx.rCol )
-		# if( 5<flagCnt.late ){
 		# 	surFlag[aIdx] <- FALSE
 		# 	next
 		# }

@@ -23,6 +23,9 @@
             common : H연속갯수 : 0~1 / 0~3 (과거패턴 재발X)
         1.1.j cStep3
             common : H연속갯수 : 0~0 / 0~1 (과거패턴 재발X)
+        1.1.z etc
+            common : spanM이나 quoPtn 둘 중의 하나는 반드시 존재.
+                        1~6
     1.2 cccObj$cStepValMtx
         1.2.a c3n 
             common : H연속갯수 : 0~0 / 0~2(OL: , ) (과거패턴 재발X)
