@@ -131,6 +131,8 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 	rownames(cStepValMtx) <- fName		;colnames(cStepValMtx) <- cName
 
 	cnt4Spy <- rep( TRUE ,length(allIdxF) )
+	cName <- c("reb","spanM","quoPtn")
+	spyMtx <- matrix( 0, ncol=length(cName), nrow=length(allIdxF) )	;colnames(spyMtx)<-cName
 	for( aIdx in 1:length(allIdxF) ){
 		scoreMtx[,] <- 0	;cccMtx[,] <- 0		;cStepValMtx[,] <- 0
 		for( nIdx in fName ){
@@ -152,6 +154,7 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 
 		cutCnt <- 0
 		cnt4Spy[aIdx] <- sum(cccMtx[,c("reb","spanM","quoPtn")])
+		spyMtx[aIdx,] <- apply( cccMtx[,c("reb","spanM","quoPtn")] ,2 ,function(p){sum(p>0)} )
 
 		# 이벤트 발생
 		eventFlag <- apply(scoreMtx ,1 ,function(score){ sum(score>=thld) })
@@ -163,6 +166,7 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 			}
 			if( any( 2<eventFlag[c("nextZW","nextQuo10","nextFStepBin","nextColVal_3")] ) ){
 				# 2.1 one dimPlane - late : event h방향 연속발생 1~2
+				#	(그런데 allIdxFObj$allIdxF.fCutCnt 단계에서 2개 이상은 모두 잘렸으니... 의미없다.)
 				surFlag[aIdx] <- FALSE
 				next
 			}
@@ -189,7 +193,7 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 				next
 			}
 			eventCnt <- sum( eventFlag )
-			if( (1>eventCnt) || (eventCnt>2) ){ 
+			if( (eventCnt<1) || (2<eventCnt) ){ 
 				# 2.2 sum:through dimPlane - gold : event 1~2(OL:,4)
 				surFlag[aIdx] <- FALSE
 				next
@@ -231,7 +235,8 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 				if( sum(wildFMtx[,"*1"]) != length(pastHpnLst[[nIdx]]) ) next
 
 				if( all(wildFMtx[ pastHpnLst[[nIdx]] ,"*1"]>0) ){
-					return( 10 )
+					surFlag[aIdx] <- FALSE
+					next
 				}
 			}
 
@@ -301,15 +306,6 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 			if( all(2<=scoreMtx[c("nextCStepBin"),"fStep"]) ) surFlag[aIdx] <- FALSE	# gold hpn rebind
 
 		}
-
-		# # filt for gold
-		# flagCnt.gold <- finalFilt.gold( scoreMtx ,cccMtx ,cStepValMtx ,thld ,cccMtx.rCol )
-		# if( 5<flagCnt.gold ){
-		# 	surFlag[aIdx] <- FALSE
-		# 	next
-		# }
-
-		# surFlag[aIdx] <- ( 1 >= (cutCnt+flagCnt.gold+flagCnt.late) )
 
 	}  # aIdx
 

@@ -819,5 +819,417 @@ fCut.wildF_cStep <- function( aZoid ){
 
 
 
+finalFilt.common <- function( scoreMtx ,cccMtx ,cStepValMtx ,thld ,cccMtx.rCol ) {
+
+	flagCnt <- 0
+	pastHpn <- rep( FALSE ,nrow(scoreMtx) )	;names(pastHpn)<-rownames(scoreMtx)
+
+	if( TRUE ){	# 1.1.a reb - common
+		# 1.1.a reb - gold/last 3~7
+		rebHpn.sum <- sum(cccMtx[,"reb"]>0)
+		if( (rebHpn.sum<3) || (7<rebHpn.sum) )	return( 10 )
+
+		# 1.1.a reb - gold/last 이전 H와 연속은 2개 이내. (3개는 OL)
+		lastHpn <- c("basic","nextRebNum","nextColVal_1","nextColVal_2","nextColVal_4")	# late
+		if( 2<sum(cccMtx[lastHpn,"reb"]>0) )	return( 10 )
+		lastHpn <- c("basic","nextRebNum","nextColVal_4","nextColVal_5","nextColVal_6")	# late
+		if( 2<sum(cccMtx[lastHpn,"reb"]>0) )	return( 10 )
+
+		# 1.1.a reb - common 과거패턴 재발제거.
+		pastHpnLst <-list() 
+		pastHpnLst[["toZ809"]]	<- c("nextZW","nextQuo10","nextFStepBin")
+		pastHpnLst[["toZ814"]]	<- c("basic","nextZW","nextBin","nextColVal_1","nextColVal_5")
+		pastHpnLst[["toZ816"]]	<- c("nextRebNum","nextFStepBin"
+									,"nextColVal_1","nextColVal_3","nextColVal_4","nextColVal_5","nextColVal_6")
+		pastHpnLst[["toZ819"]]	<- c("nextBin","nextRebNum","nextCStepBin","nextFStepBin","nextColVal_4")
+		pastHpnLst[["toZ820"]]	<- c("nextZW","nextColVal_2","nextColVal_4","nextColVal_6")
+		pastHpnLst[["toZ821"]]	<- c("nextZW","nextColVal_2","nextColVal_3")
+		pastHpnLst[["toZ822"]]	<- c("basic","nextQuo10","nextRebNum")
+		pastHpnLst[["toZ823"]]	<- c("basic","nextRebNum","nextColVal_4","nextColVal_5","nextColVal_6")
+		pastHpnLst[["toZ824"]]	<- c("basic","nextRebNum","nextColVal_1","nextColVal_2","nextColVal_4")
+		for( nIdx in attributes(pastHpnLst)$names ){
+			if( sum(cccMtx[,"reb"]) != length(pastHpnLst[[nIdx]]) ) next
+
+			if( all(cccMtx[ pastHpnLst[[nIdx]] ,"reb"]>0) ){
+				return( 10 )
+			}
+		}
+
+	}
+	if( TRUE ){	# 1.1.b nbor - common
+		# 1.1.b nbor - 0~2
+		if( 2<sum(0<cccMtx[,"nbor"]) )	return( 10 )
+
+		# 1.1.b nbor - common 과거패턴 재발제거.
+		#	- gold
+		pastHpn[]<-FALSE	;pastHpn[c("nextColVal_2","nextColVal_3")]<-TRUE					# toZ814
+		if( all( pastHpn== (cccMtx[,"nbor"]>0) ) )	return( 10 )
+		pastHpn[]<-FALSE	;pastHpn[c("nextZW")]<-TRUE											# toZ823
+		if( all( pastHpn== (cccMtx[,"nbor"]>0) ) )	return( 10 )
+		#	- late
+		#		gold																			  toZ823
+	}
+	if( TRUE ){	# 1.1.c spanM - common
+		# 1.1.b spanM - 0~3
+		if( 3<sum(0<cccMtx[,"spanM"]) )	return( 10 )
+
+		# 1.1.c spanM - common 과거패턴 재발제거.
+		pastHpnLst <-list() 
+		#	- gold --------------------------------------------		
+		pastHpnLst[["toZ809"]]	<- c("nextBin","nextCStepBin","nextColVal_1")
+		pastHpnLst[["toZ814"]]	<- c("nextZW","nextColVal_2")
+		pastHpnLst[["toZ816"]]	<- c("nextColVal_3")
+		pastHpnLst[["toZ823"]]	<- c("nextQuo10","nextColVal_5","nextColVal_6")
+		#	- late --------------------------------------------
+		pastHpnLst[["toZ819"]]	<- c("nextBin","nextFStepBin","nextColVal_4")
+		#		gold	 toZ820
+		pastHpnLst[["toZ822"]]	<- c("nextZW")
+		#		gold	 toZ823
+		pastHpnLst[["toZ824"]]	<- c("nextZW","nextCStepBin","nextFStepBin")
+
+		for( nIdx in attributes(pastHpnLst)$names ){
+			if( sum(cccMtx[,"spanM"]) != length(pastHpnLst[[nIdx]]) ) next
+
+			if( all(cccMtx[ pastHpnLst[[nIdx]] ,"spanM"]>0) ){
+				return( 10 )
+			}
+		}
+
+	}
+	if( TRUE ){	# 1.1.d quoAll - common
+		# 1.1.d quoAll - 0~2
+		if( 3<sum(0<cccMtx[,"quoAll"]) )	return( 10 )
+
+		# 1.1.d quoAll - common 과거패턴 재발제거.
+		#	- gold
+		pastHpnLst <-list() 
+		pastHpnLst[["toZ821"]]	<- c("basic","nextCStepBin")
+		pastHpnLst[["toZ823"]]	<- c("nextZW","nextColVal_1")
+		for( nIdx in attributes(pastHpnLst)$names ){
+			if( sum(cccMtx[,"quoAll"]) != length(pastHpnLst[[nIdx]]) ) next
+
+			if( all(cccMtx[ pastHpnLst[[nIdx]] ,"quoAll"]>0) ){
+				return( 10 )
+			}
+		}
+	}
+	if( TRUE ){	# 1.1.e quoPtn - common
+		# 1.1.e quoPtn - 0~3
+		if( 4<sum(0<cccMtx[,"quoPtn"]) )	return( 10 )
+
+		# 1.1.e quoPtn - common 과거패턴 재발제거.
+		pastHpnLst <-list() 
+		pastHpnLst[["toZ809"]]	<- c("nextFStepBin","nextColVal_2","nextColVal_5")
+		pastHpnLst[["toZ819"]]	<- c("nextQuo10")
+		pastHpnLst[["toZ820"]]	<- c("nextZW","nextBin")
+		pastHpnLst[["toZ821"]]	<- c("nextRebNum","nextColVal_2","nextColVal_4")
+		pastHpnLst[["toZ822"]]	<- c("nextZW","nextBin")
+		for( nIdx in attributes(pastHpnLst)$names ){
+			if( sum(cccMtx[,"quoPtn"]) != length(pastHpnLst[[nIdx]]) ) next
+
+			if( all(cccMtx[ pastHpnLst[[nIdx]] ,"quoPtn"]>0) ){
+				return( 10 )
+			}
+		}
+
+	}
+	if( TRUE ){	# 1.1.f zw - common
+		# 1.1.f zw - 0~2
+		if( 3<sum(0<cccMtx[,"zw"]) )	return( 10 )
+
+		# 1.1.f zw - common 과거패턴 재발제거.
+		pastHpnLst <-list() 
+		pastHpnLst[["toZ809"]]	<- c("nextColVal_3","nextColVal_4")
+		pastHpnLst[["toZ819"]]	<- c("nextColVal_1")
+		pastHpnLst[["toZ820"]]	<- c("nextFStepBin","nextColVal_2")
+		pastHpnLst[["toZ821"]]	<- c("nextColVal_6")
+		for( nIdx in attributes(pastHpnLst)$names ){
+			if( sum(cccMtx[,"zw"]) != length(pastHpnLst[[nIdx]]) ) next
+
+			if( all(cccMtx[ pastHpnLst[[nIdx]] ,"zw"]>0) ){
+				return( 10 )
+			}
+		}
+
+	}
+	if( TRUE ){	# 1.1.g remH0 - common
+		# 1.1.g remH0 - 0~0
+		if( 1<sum(0<cccMtx[,"remH0"]) )	return( 10 )
+
+		# 1.1.g remH0 - common 과거패턴 재발제거.
+		pastHpnLst <-list() 
+		for( nIdx in attributes(pastHpnLst)$names ){
+			if( sum(cccMtx[,"remH0"]) != length(pastHpnLst[[nIdx]]) ) next
+
+			if( all(cccMtx[ pastHpnLst[[nIdx]] ,"remH0"]>0) ){
+				return( 10 )
+			}
+		}
+
+	}
+	if( TRUE ){	# 1.1.h remH1 - common
+		# 1.1.h remH1 - 0~1
+		if( 2<sum(0<cccMtx[,"remH1"]) )	return( 10 )
+
+		# 1.1.h remH1 - common 과거패턴 재발제거.
+		pastHpnLst <-list() 
+		pastHpnLst[["toZ820"]]	<- c("nextColVal_2")
+		for( nIdx in attributes(pastHpnLst)$names ){
+			if( sum(cccMtx[,"remH1"]) != length(pastHpnLst[[nIdx]]) ) next
+
+			if( all(cccMtx[ pastHpnLst[[nIdx]] ,"remH1"]>0) ){
+				return( 10 )
+			}
+		}
+
+	}
+	if( TRUE ){	# 1.1.i cStep2 - common
+		# 1.1.i cStep2 - 0~3
+		if( 4<sum(0<cccMtx[,"cStep2"]) )	return( 10 )
+
+		# 1.1.i cStep2 - common 과거패턴 재발제거.
+		pastHpnLst <-list() 
+		pastHpnLst[["toZ820"]]	<- c("basic","nextFStepBin")
+		pastHpnLst[["toZ821"]]	<- c("basic")
+		pastHpnLst[["toZ823"]]	<- c("nextCStepBin")
+		pastHpnLst[["toZ824"]]	<- c("nextZW","nextColVal_3","nextColVal_5")
+		for( nIdx in attributes(pastHpnLst)$names ){
+			if( sum(cccMtx[,"cStep2"]) != length(pastHpnLst[[nIdx]]) ) next
+
+			if( all(cccMtx[ pastHpnLst[[nIdx]] ,"cStep2"]>0) ){
+				return( 10 )
+			}
+		}
+
+	}
+	if( TRUE ){	# 1.1.j cStep3 - common
+		# 1.1.j cStep3 - 0~1
+		if( 2<sum(0<cccMtx[,"cStep3"]) )	return( 10 )
+
+		# 1.1.j cStep3 - common 과거패턴 재발제거.
+		pastHpnLst <-list() 
+		pastHpnLst[["toZ821"]]	<- c("basic")
+		for( nIdx in attributes(pastHpnLst)$names ){
+			if( sum(cccMtx[,"cStep3"]) != length(pastHpnLst[[nIdx]]) ) next
+
+			if( all(cccMtx[ pastHpnLst[[nIdx]] ,"cStep3"]>0) ){
+				return( 10 )
+			}
+		}
+
+	}
+	if( TRUE ){	# 1.1.z etc
+		hpnSum <- apply( cccMtx[,c("spanM","quoPtn")] ,1 ,sum )
+		if( 1 > sum(hpnSum>0) )	return( 10 )
+		if( 6 < sum(hpnSum>0) )	return( 10 )
+	}
 
 
+	if( TRUE ){	# 1.2.a c3n - common
+		hpnCnt <- apply( cStepValMtx[,c("c31","c32","c33","c34")] ,1 ,sum )
+		# 1.2.a c3n - 0~2
+		if( 2<sum(hpnCnt>0) )	return( 10 )
+
+		# 1.2.a c3n - common 과거패턴 재발제거.
+		pastHpnLst <-list() 
+		pastHpnLst[["toZ821"]]	<- c("nextRebNum")
+		pastHpnLst[["toZ822"]]	<- c("nextZW","nextColVal_1")
+		for( nIdx in attributes(pastHpnLst)$names ){
+			if( sum(hpnCnt>0) != length(pastHpnLst[[nIdx]]) ) next
+
+			if( all(hpnCnt[pastHpnLst[[nIdx]]] > 0) ){
+				return( 10 )
+			}
+		}
+
+	}
+	if( TRUE ){	# 1.2.b c2n - common
+		hpnCnt <- apply( cStepValMtx[,c("c21","c22","c23","c24","c25")] ,1 ,sum )
+		# 1.2.b c2n - 0~4, 3~5
+		if( 5<sum(hpnCnt>0) )	return( 10 )
+
+		# 1.2.b c2n - common 2개 이상 발생한 차원은 다음 H에서 발생 없음.
+		if( hpnCnt["nextColVal_2"]>0 )	return( 10 )	# toZ824
+
+		# 1.2.b c2n - common 2개 이상 발생 dimPlace 수 : 0~2
+		if( 2 < sum(hpnCnt>2) )	return( 10 )	# toZ824
+
+		# 1.2.b c2n - common 과거패턴 재발제거.
+		pastHpnLst <-list() 
+		pastHpnLst[["toZ809"]]	<- c("nextZW","nextColVal_1")
+		pastHpnLst[["toZ814"]]	<- c("basic","nextZW","nextColVal_4","nextColVal_5")
+		pastHpnLst[["toZ816"]]	<- c("nextFStepBin")
+		pastHpnLst[["toZ819"]]	<- c("nextBin","nextCStepBin","nextColVal_1","nextColVal_2")
+		pastHpnLst[["toZ821"]]	<- c("nextZW","nextRebNum","nextCStepBin","nextColVal_3","nextColVal_6")
+		pastHpnLst[["toZ822"]]	<- c("basic","nextZW","nextBin")
+		pastHpnLst[["toZ823"]]	<- c("nextBin","nextColVal_5","nextColVal_6")
+		pastHpnLst[["toZ824"]]	<- c("nextRebNum","nextColVal_2","nextColVal_4")
+		for( nIdx in attributes(pastHpnLst)$names ){
+			if( sum(hpnCnt) != length(pastHpnLst[[nIdx]]) ) next
+
+			if( all(hpnCnt[pastHpnLst[[nIdx]]] > 0) ){
+				return( 10 )
+			}
+		}
+
+	}
+	if( TRUE ){	# 1.2.c max2/min2 - common
+		hpnCnt <- apply( cStepValMtx[,c("max2","min2")] ,1 ,sum )
+		# 1.2.c max2/min2 - 0~0
+		if( 2<sum(hpnCnt>0) )	return( 10 )
+
+		# 1.2.c max2/min2 - common 과거패턴 재발제거.
+		pastHpnLst <-list() 
+		pastHpnLst[["toZ819"]]	<- c("nextColVal_1")
+		for( nIdx in attributes(pastHpnLst)$names ){
+			if( sum(hpnCnt) != length(pastHpnLst[[nIdx]]) ) next
+
+			if( all(hpnCnt[pastHpnLst[[nIdx]]] > 0) ){
+				return( 10 )
+			}
+		}
+
+	}
+
+	if( TRUE ){	# 1.3.a rawFV - common
+		# 1.3.a rawFV - 0~2(sum)
+		if( 3<sum(scoreMtx[,"rawFV"]) )	return( 10 )
+		if( 2<sum(scoreMtx[,"rawFV"]>0) )	return( 10 )
+
+		# 1.3.a rawFV - common 과거패턴 재발제거.
+		pastHpnLst <-list() 
+		pastHpnLst[["toZ809"]]	<- c("nextRebNum")
+		pastHpnLst[["toZ816"]]	<- c("nextColVal_3")
+		pastHpnLst[["toZ823"]]	<- c("nextZW")
+		for( nIdx in attributes(pastHpnLst)$names ){
+			if( sum(scoreMtx[,"rawFV"]>0) != length(pastHpnLst[[nIdx]]) ) next
+
+			if( all(scoreMtx[ pastHpnLst[[nIdx]] ,"rawFV"]>0) ){
+				return( 10 )
+			}
+		}
+	}
+	# if( TRUE ){	# 1.1.a xxx - common
+	# 	# 1.1.d xxx - 0~2
+	# 	if( <sum(cccMtx[,"xxx"]) )	return( 10 )
+
+	# 	# 1.1.a xxx - common 과거패턴 재발제거.
+	# 	pastHpnLst <-list() 
+	# 	pastHpnLst[["toZ"]]	<- c("","")
+	# 	for( nIdx in attributes(pastHpnLst)$names ){
+	# 		if( sum(cccMtx[,"xxx"]) != length(pastHpnLst[[nIdx]]) ) next
+
+	# 		if( all(cccMtx[ pastHpnLst[[nIdx]] ,"xxx"]>0) ){
+	# 			return( 10 )
+	# 		}
+	# 	}
+	# }
+
+	return( flagCnt )
+
+} # finalFilt.common( )
+
+
+
+	# surFlag(scoreMtx) ------------------------------------------------------
+	surFlag <- rep( TRUE ,length(allIdxF) )
+	fName <- attributes(ccObjLst)$names
+	cName <- c( "ccc", "auxZW", "auxQuo", "raw", "rawFV", "rem", "cStep", "fStep" )
+	thld <- c( 2, 2, 2, 2, 2, 3, 2, 2 )	;names(thld) <- cName
+	scoreMtx <- matrix( 0 ,nrow=length(ccObjLst) ,ncol=length(thld) )
+	rownames(scoreMtx) <- fName		;colnames(scoreMtx) <- names(thld)
+	cName <- c( "reb",  "nbor", "spanM", "quoAll", "quoPtn", "zw",  "remH0", "remH1", "cStep2", "cStep3" )	
+	cccMtx <- matrix( 0 ,nrow=length(ccObjLst) ,ncol=length(cName) )	
+	rownames(cccMtx) <- fName		;colnames(cccMtx) <- cName
+	cccMtx.rCol <- cName[ cName!="reb" ]
+	cName <- c( "c31","c32","c33","c34","c21","c22","c23","c24","c25","max2","min2" )	# cccObj$cStepValMtx 
+	cStepValMtx = matrix( 0 ,nrow=length(ccObjLst) ,ncol=length(cName) )
+	rownames(cStepValMtx) <- fName		;colnames(cStepValMtx) <- cName
+	cnt4Spy <- rep( 1 ,length(allIdxF) )
+	cnt4Spy <- rep( TRUE ,length(allIdxF) )
+	cName <- c("reb","spanM","quoPtn")
+	spyMtx <- matrix( 0, ncol=length(cName), nrow=length(allIdxF) )	;colnames(spyMtx)<-cName
+
+	for( aIdx in 1:length(allIdxF) ){
+		scoreMtx[,] <- 0	;cccMtx[,] <- 0		;cStepValMtx[,] <- 0
+		for( nIdx in fName ){
+			cccVal <- ccObjLst[[nIdx]]$cccMtx[aIdx,]
+			cccMtx[nIdx,] <- ccObjLst[[nIdx]]$cccMtx[aIdx,]
+
+			scoreMtx[nIdx,"ccc"] <- sum( 0 < cccVal[cccMtx.rCol] )
+			scoreMtx[nIdx,c("auxZW", "auxQuo")] <- ccObjLst[[nIdx]]$auxCntMtx[aIdx,c("auxZW", "auxQuo")]
+			scoreMtx[nIdx,c("raw", "rawFV", "rem", "cStep", "fStep")] <-
+				ccObjLst[[nIdx]]$cntMtx[aIdx,c("raw", "rawFV", "rem", "cStep", "fStep")]
+
+			cStepValMtx[nIdx,] <- ccObjLst[[nIdx]]$cStepValMtx[aIdx,]
+
+		} # for(nIdx)
+
+		# scoreMtx : ccc auxZW auxQuo raw rawFV rem cStep fStep
+		# cccMtx : reb nbor spanM quoAll quoPtn zw remH0 remH1 cStep2 cStep3
+		# cStepValMtx : c31 c32 c33 c34 c21 c22 c23 c24 c25 max2 min2
+
+		cutCnt <- 0
+		cnt4Spy[aIdx] <- sum(cccMtx[,c("reb","spanM","quoPtn")])
+		spyMtx[aIdx,] <- apply( cccMtx[,c("reb","spanM","quoPtn")] ,2 ,function(p){sum(p>0)} )
+
+		# 이벤트 발생
+		eventFlag <- apply(scoreMtx ,1 ,function(score){ sum(score>=thld) })
+		if( TRUE ){	# eventFlag
+			if( any( 0<eventFlag[c("nextZW","nextBin","nextColVal_3","nextColVal_6")] ) ){
+				# 2.1 one dimPlane - gold : event h방향 연속발생 없음.
+				surFlag[aIdx] <- FALSE
+				next
+			}
+			if( any( 2<eventFlag[c("nextZW","nextQuo10","nextFStepBin","nextColVal_3")] ) ){
+				# 2.1 one dimPlane - late : event h방향 연속발생 1~2
+				#	(그런데 allIdxFObj$allIdxF.fCutCnt 단계에서 2개 이상은 모두 잘렸으니... 의미없다.)
+				surFlag[aIdx] <- FALSE
+				next
+			}
+			hpnCnt <- apply( scoreMtx ,1 ,sum )
+			if( any(0==hpnCnt[c("basic","nextBin","nextRebNum","nextColVal_1")]) ){
+				# 2.1 one dimPlane - common cnt 0~4 (0, 4는 h,dp 모든 방향에서 연속발생 없음)
+				surFlag[aIdx] <- FALSE
+				next
+			}
+			if( any(4<=hpnCnt[c("nextColVal_2","nextFStepBin")]) ){
+				# 2.1 one dimPlane - common cnt 0~4 (0, 4는 h,dp 모든 방향에서 연속발생 없음)
+				surFlag[aIdx] <- FALSE
+				next
+			}
+			if( any(hpnCnt>4) ){
+				# 2.1 one dimPlane - cnt 0~4
+				surFlag[aIdx] <- FALSE
+				next
+			}
+			hpnCnt.sum <- sum(hpnCnt)
+			if( (hpnCnt.sum<20) || (31<hpnCnt.sum) ){
+				# 2.2 sum:through dimPlane - common
+				surFlag[aIdx] <- FALSE
+				next
+			}
+			eventCnt <- sum( eventFlag )
+			if( (eventCnt<1) || (2<eventCnt) ){ 
+				# 2.2 sum:through dimPlane - gold : event 1~2(OL:,4)
+				surFlag[aIdx] <- FALSE
+				next
+			}
+		}
+
+		# common : filt for gold & late
+		flagCnt.gold <- finalFilt.common( scoreMtx ,cccMtx ,cStepValMtx ,thld ,cccMtx.rCol )
+		if( 5<flagCnt.gold ){
+			surFlag[aIdx] <- FALSE
+			next
+		}
+
+
+	}
+
+	table(surFlag)	;kIdx <- head(which(!surFlag))	
+
+
+	cnt <- apply( spyMtx[,c("spanM","quoPtn")] ,1 ,sum )
+
+	allIdxF <- allIdxF[ surFlag ]

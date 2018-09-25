@@ -3138,8 +3138,8 @@ finalFilt.common <- function( scoreMtx ,cccMtx ,cStepValMtx ,thld ,cccMtx.rCol )
 
 	if( TRUE ){	# 1.1.a reb - common
 		# 1.1.a reb - gold/last 3~7
-		if( 3>sum(cccMtx[,"reb"]>0) )	return( 10 )
-		if( 7<sum(cccMtx[,"reb"]>0) )	return( 10 )
+		rebHpn.sum <- sum(cccMtx[,"reb"]>0)
+		if( (rebHpn.sum<3) || (7<rebHpn.sum) )	return( 10 )
 
 		# 1.1.a reb - gold/last 이전 H와 연속은 2개 이내. (3개는 OL)
 		lastHpn <- c("basic","nextRebNum","nextColVal_1","nextColVal_2","nextColVal_4")	# late
@@ -3170,7 +3170,7 @@ finalFilt.common <- function( scoreMtx ,cccMtx ,cStepValMtx ,thld ,cccMtx.rCol )
 	}
 	if( TRUE ){	# 1.1.b nbor - common
 		# 1.1.b nbor - 0~2
-		if( 2<sum(cccMtx[,"nbor"]) )	return( 10 )
+		if( 2<sum(0<cccMtx[,"nbor"]) )	return( 10 )
 
 		# 1.1.b nbor - common 과거패턴 재발제거.
 		#	- gold
@@ -3183,7 +3183,7 @@ finalFilt.common <- function( scoreMtx ,cccMtx ,cStepValMtx ,thld ,cccMtx.rCol )
 	}
 	if( TRUE ){	# 1.1.c spanM - common
 		# 1.1.b spanM - 0~3
-		if( 3<sum(cccMtx[,"spanM"]) )	return( 10 )
+		if( 3<sum(0<cccMtx[,"spanM"]) )	return( 10 )
 
 		# 1.1.c spanM - common 과거패턴 재발제거.
 		pastHpnLst <-list() 
@@ -3210,7 +3210,7 @@ finalFilt.common <- function( scoreMtx ,cccMtx ,cStepValMtx ,thld ,cccMtx.rCol )
 	}
 	if( TRUE ){	# 1.1.d quoAll - common
 		# 1.1.d quoAll - 0~2
-		if( 3<sum(cccMtx[,"quoAll"]) )	return( 10 )
+		if( 3<sum(0<cccMtx[,"quoAll"]) )	return( 10 )
 
 		# 1.1.d quoAll - common 과거패턴 재발제거.
 		#	- gold
@@ -3227,7 +3227,7 @@ finalFilt.common <- function( scoreMtx ,cccMtx ,cStepValMtx ,thld ,cccMtx.rCol )
 	}
 	if( TRUE ){	# 1.1.e quoPtn - common
 		# 1.1.e quoPtn - 0~3
-		if( 4<sum(cccMtx[,"quoPtn"]) )	return( 10 )
+		if( 4<sum(0<cccMtx[,"quoPtn"]) )	return( 10 )
 
 		# 1.1.e quoPtn - common 과거패턴 재발제거.
 		pastHpnLst <-list() 
@@ -3247,7 +3247,7 @@ finalFilt.common <- function( scoreMtx ,cccMtx ,cStepValMtx ,thld ,cccMtx.rCol )
 	}
 	if( TRUE ){	# 1.1.f zw - common
 		# 1.1.f zw - 0~2
-		if( 3<sum(cccMtx[,"zw"]) )	return( 10 )
+		if( 3<sum(0<cccMtx[,"zw"]) )	return( 10 )
 
 		# 1.1.f zw - common 과거패턴 재발제거.
 		pastHpnLst <-list() 
@@ -3266,7 +3266,7 @@ finalFilt.common <- function( scoreMtx ,cccMtx ,cStepValMtx ,thld ,cccMtx.rCol )
 	}
 	if( TRUE ){	# 1.1.g remH0 - common
 		# 1.1.g remH0 - 0~0
-		if( 1<sum(cccMtx[,"remH0"]) )	return( 10 )
+		if( 1<sum(0<cccMtx[,"remH0"]) )	return( 10 )
 
 		# 1.1.g remH0 - common 과거패턴 재발제거.
 		pastHpnLst <-list() 
@@ -3281,7 +3281,7 @@ finalFilt.common <- function( scoreMtx ,cccMtx ,cStepValMtx ,thld ,cccMtx.rCol )
 	}
 	if( TRUE ){	# 1.1.h remH1 - common
 		# 1.1.h remH1 - 0~1
-		if( 2<sum(cccMtx[,"remH1"]) )	return( 10 )
+		if( 2<sum(0<cccMtx[,"remH1"]) )	return( 10 )
 
 		# 1.1.h remH1 - common 과거패턴 재발제거.
 		pastHpnLst <-list() 
@@ -3297,7 +3297,7 @@ finalFilt.common <- function( scoreMtx ,cccMtx ,cStepValMtx ,thld ,cccMtx.rCol )
 	}
 	if( TRUE ){	# 1.1.i cStep2 - common
 		# 1.1.i cStep2 - 0~3
-		if( 4<sum(cccMtx[,"cStep2"]) )	return( 10 )
+		if( 4<sum(0<cccMtx[,"cStep2"]) )	return( 10 )
 
 		# 1.1.i cStep2 - common 과거패턴 재발제거.
 		pastHpnLst <-list() 
@@ -3316,7 +3316,7 @@ finalFilt.common <- function( scoreMtx ,cccMtx ,cStepValMtx ,thld ,cccMtx.rCol )
 	}
 	if( TRUE ){	# 1.1.j cStep3 - common
 		# 1.1.j cStep3 - 0~1
-		if( 2<sum(cccMtx[,"cStep3"]) )	return( 10 )
+		if( 2<sum(0<cccMtx[,"cStep3"]) )	return( 10 )
 
 		# 1.1.j cStep3 - common 과거패턴 재발제거.
 		pastHpnLst <-list() 
