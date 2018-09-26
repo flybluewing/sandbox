@@ -1147,7 +1147,7 @@ finalFilt.common <- function( scoreMtx ,cccMtx ,cStepValMtx ,thld ,cccMtx.rCol )
 	rownames(cStepValMtx) <- fName		;colnames(cStepValMtx) <- cName
 	cnt4Spy <- rep( 1 ,length(allIdxF) )
 	cnt4Spy <- rep( TRUE ,length(allIdxF) )
-	cName <- c("reb","spanM","quoPtn")
+	cName <- c("nextRebNum","nextColVal_1")
 	spyMtx <- matrix( 0, ncol=length(cName), nrow=length(allIdxF) )	;colnames(spyMtx)<-cName
 
 	for( aIdx in 1:length(allIdxF) ){
@@ -1171,59 +1171,17 @@ finalFilt.common <- function( scoreMtx ,cccMtx ,cStepValMtx ,thld ,cccMtx.rCol )
 
 		cutCnt <- 0
 		cnt4Spy[aIdx] <- sum(cccMtx[,c("reb","spanM","quoPtn")])
-		spyMtx[aIdx,] <- apply( cccMtx[,c("reb","spanM","quoPtn")] ,2 ,function(p){sum(p>0)} )
+		spyMtx[aIdx,] <- scoreMtx[c("nextRebNum","nextColVal_1"),"auxZW"]
 
-		# 이벤트 발생
-		eventFlag <- apply(scoreMtx ,1 ,function(score){ sum(score>=thld) })
-		if( TRUE ){	# eventFlag
-			if( any( 0<eventFlag[c("nextZW","nextBin","nextColVal_3","nextColVal_6")] ) ){
-				# 2.1 one dimPlane - gold : event h방향 연속발생 없음.
-				surFlag[aIdx] <- FALSE
-				next
-			}
-			if( any( 2<eventFlag[c("nextZW","nextQuo10","nextFStepBin","nextColVal_3")] ) ){
-				# 2.1 one dimPlane - late : event h방향 연속발생 1~2
-				#	(그런데 allIdxFObj$allIdxF.fCutCnt 단계에서 2개 이상은 모두 잘렸으니... 의미없다.)
-				surFlag[aIdx] <- FALSE
-				next
-			}
-			hpnCnt <- apply( scoreMtx ,1 ,sum )
-			if( any(0==hpnCnt[c("basic","nextBin","nextRebNum","nextColVal_1")]) ){
-				# 2.1 one dimPlane - common cnt 0~4 (0, 4는 h,dp 모든 방향에서 연속발생 없음)
-				surFlag[aIdx] <- FALSE
-				next
-			}
-			if( any(4<=hpnCnt[c("nextColVal_2","nextFStepBin")]) ){
-				# 2.1 one dimPlane - common cnt 0~4 (0, 4는 h,dp 모든 방향에서 연속발생 없음)
-				surFlag[aIdx] <- FALSE
-				next
-			}
-			if( any(hpnCnt>4) ){
-				# 2.1 one dimPlane - cnt 0~4
-				surFlag[aIdx] <- FALSE
-				next
-			}
-			hpnCnt.sum <- sum(hpnCnt)
-			if( (hpnCnt.sum<20) || (31<hpnCnt.sum) ){
-				# 2.2 sum:through dimPlane - common
-				surFlag[aIdx] <- FALSE
-				next
-			}
-			eventCnt <- sum( eventFlag )
-			if( (eventCnt<1) || (2<eventCnt) ){ 
-				# 2.2 sum:through dimPlane - gold : event 1~2(OL:,4)
-				surFlag[aIdx] <- FALSE
-				next
-			}
+		# Filt range : ccc auxZW auxQuo raw rawFV rem cStep fStep
+		if(TRUE){
+			# fStep
+			scoreCut <- fCutU.cutScore( scoreMtx[,"fStep"]
+										,pMinMaxSum=c(0,4) ,pMinMaxHpn=c(0,3) ,pMinMaxEvent=c(2,NA,2) 
+									)
+			if( 0 < sum(scoreCut,na.rm=T) ) surFlag[aIdx] <- FALSE
+			# if( all(2<=scoreMtx[c("nextCStepBin"),"fStep"]) ) surFlag[aIdx] <- FALSE	# gold hpn rebind
 		}
-
-		# common : filt for gold & late
-		flagCnt.gold <- finalFilt.common( scoreMtx ,cccMtx ,cStepValMtx ,thld ,cccMtx.rCol )
-		if( 5<flagCnt.gold ){
-			surFlag[aIdx] <- FALSE
-			next
-		}
-
 
 	}
 

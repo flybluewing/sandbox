@@ -723,7 +723,7 @@ analyLst[["toZ825"]] <- list(	stdFltCnt =0
 	,fCutCnt.nextFStepBin = list(	commonCutCnt=0	# 	/ / 
 					,auxZW=0	,auxQuo=0
 					,raw =1	,rawFV =0
-					,rem =0	,cStep =1	,fStep =0
+					,rem =2	,cStep =1	,fStep =0
 				)
 	,fCutCnt.nextColVal_1 = list(	commonCutCnt=1	#  /quoPtn/ 
 					,auxZW=0	,auxQuo=0
