@@ -51,12 +51,7 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 	#		각 파트에서 2 이상씩은 잘라낸 후,
 	#		전체 파트에서 하나도 안 걸린 것들은 제외시키자.
 	# ccObj <- fCutCnt.default( gEnv ,allIdxF )
-	ccObj <- fCutCnt.basic( gEnv ,allIdxF )
-	allIdxF <- allIdxF[ cutCC( ccObj ,allIdxF ) ]
-    cat(sprintf("allIdxF %d\n",length(allIdxF)))
-	ccObj <- fCutCnt.nextZW( gEnv ,allIdxF )
-	allIdxF <- allIdxF[ cutCC( ccObj ,allIdxF ) ]
-	cat(sprintf("allIdxF %d\n",length(allIdxF)))
+
 	ccObj <- fCutCnt.nextQuo10( gEnv ,allIdxF )
 	allIdxF <- allIdxF[ cutCC( ccObj ,allIdxF ) ]
 	cat(sprintf("allIdxF %d\n",length(allIdxF)))
@@ -88,6 +83,14 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 	allIdxF <- allIdxF[ cutCC( ccObj ,allIdxF ) ]
 	cat(sprintf("allIdxF %d\n",length(allIdxF)))
 	ccObj <- fCutCnt.nextColVal_6( gEnv ,allIdxF )
+	allIdxF <- allIdxF[ cutCC( ccObj ,allIdxF ) ]
+	cat(sprintf("allIdxF %d\n",length(allIdxF)))
+
+	# basic과 nextZW는 fCut.basic()에서 이미 필터링 되는지라..
+	ccObj <- fCutCnt.basic( gEnv ,allIdxF )
+	allIdxF <- allIdxF[ cutCC( ccObj ,allIdxF ) ]
+    cat(sprintf("allIdxF %d\n",length(allIdxF)))
+	ccObj <- fCutCnt.nextZW( gEnv ,allIdxF )
 	allIdxF <- allIdxF[ cutCC( ccObj ,allIdxF ) ]
 	cat(sprintf("allIdxF %d\n",length(allIdxF)))
 	save( allIdxF ,file="Obj_allIdxF.save" )
@@ -131,6 +134,8 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 	rownames(cStepValMtx) <- fName		;colnames(cStepValMtx) <- cName
 
 	cnt4Spy <- rep( TRUE ,length(allIdxF) )
+	cName <- c("reb","spanM","quoPtn")
+	spyMtx <- matrix( 0, ncol=length(cName), nrow=length(allIdxF) )	;colnames(spyMtx)<-cName
 	for( aIdx in 1:length(allIdxF) ){
 		scoreMtx[,] <- 0	;cccMtx[,] <- 0		;cStepValMtx[,] <- 0
 		for( nIdx in fName ){
@@ -152,28 +157,37 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 
 		cutCnt <- 0
 		cnt4Spy[aIdx] <- sum(cccMtx[,c("reb","spanM","quoPtn")])
+		spyMtx[aIdx,] <- apply( cccMtx[,c("reb","spanM","quoPtn")] ,2 ,function(p){sum(p>0)} )
 
 		# 이벤트 발생
 		eventFlag <- apply(scoreMtx ,1 ,function(score){ sum(score>=thld) })
 		if( TRUE ){	# eventFlag
-			if( any( 0<eventFlag[c("nextZW","nextBin","nextColVal_3","nextColVal_6")] ) ){
-				# 2.1 one dimPlane - gold : event h방향 연속발생 없음.
+			# 2.1 one dimPlane - gold : event h방향 연속발생 없음.
+			#	하지만 4개는 너무 많다... 고로 sumThld 적용
+			checkName <- c("nextZW","nextBin","nextColVal_3","nextColVal_6")
+			sumThld <- ifelse( 3>=length(checkName) ,0 ,length(checkName)-3 )
+			if( sumThld < sum(0<eventFlag[checkName]) ){
 				surFlag[aIdx] <- FALSE
 				next
 			}
-			if( any( 2<eventFlag[c("nextZW","nextQuo10","nextFStepBin","nextColVal_3")] ) ){
+			checkName <- c("nextZW","nextQuo10","nextFStepBin","nextColVal_3")
+			if( 2 < sum( 0<eventFlag[checkName] ) ){
 				# 2.1 one dimPlane - late : event h방향 연속발생 1~2
 				surFlag[aIdx] <- FALSE
 				next
 			}
-			hpnCnt <- apply( scoreMtx ,1 ,sum )
-			if( any(0==hpnCnt[c("basic","nextBin","nextRebNum","nextColVal_1")]) ){
-				# 2.1 one dimPlane - common cnt 0~4 (0, 4는 h,dp 모든 방향에서 연속발생 없음)
+
+			hpnCnt <- apply( scoreMtx ,1 ,function(p){sum(p>0)} )
+			# 2.1 one dimPlane - common cnt 0~4 (0, 4는 h,dp 모든 방향에서 연속발생 없음)
+			#	단 4개 이상은... (gold와 late를 분리할까...)
+			checkName <- c("basic","nextBin","nextRebNum","nextColVal_1")
+			sumThld <- ifelse( 3>=length(checkName) ,0 ,length(checkName)-3 )
+			if( sumThld < sum(0==hpnCnt[checkName]) ){
 				surFlag[aIdx] <- FALSE
 				next
 			}
+			# 2.1 one dimPlane - common cnt 0~4 (0, 4는 h,dp 모든 방향에서 연속발생 없음)
 			if( any(4<=hpnCnt[c("nextColVal_2","nextFStepBin")]) ){
-				# 2.1 one dimPlane - common cnt 0~4 (0, 4는 h,dp 모든 방향에서 연속발생 없음)
 				surFlag[aIdx] <- FALSE
 				next
 			}
@@ -189,13 +203,14 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 				next
 			}
 			eventCnt <- sum( eventFlag )
-			if( (1>eventCnt) || (eventCnt>2) ){ 
+			if( (eventCnt<1) || (2<eventCnt) ){ 
 				# 2.2 sum:through dimPlane - gold : event 1~2(OL:,4)
 				surFlag[aIdx] <- FALSE
 				next
 			}
 		}
 
+		# QQE : working
 		# common : filt for gold & late
 		flagCnt.gold <- finalFilt.common( scoreMtx ,cccMtx ,cStepValMtx ,thld ,cccMtx.rCol )
 		if( 5<flagCnt.gold ){
@@ -207,13 +222,13 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 		wildFMtx <- fCut.wildF_cStep( gEnv$allZoidMtx[allIdxF[aIdx],] )
 		if(TRUE){
 			#	*2 : gold 기준
-			if( 0 < sum(wildFMtx[,"*2"]) ){
+			if( 0 < sum(wildFMtx[,"*2"]>0) ){
 				surFlag[aIdx] <- FALSE
 				next
 			}
 
 			#	*1 범위
-			wildF1.sum <- sum(wildFMtx[,"*1"])
+			wildF1.sum <- sum(wildFMtx[,"*1"]>0)
 			if( 3<wildF1.sum ){
 				surFlag[aIdx] <- FALSE
 				next
@@ -231,11 +246,14 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 				if( sum(wildFMtx[,"*1"]) != length(pastHpnLst[[nIdx]]) ) next
 
 				if( all(wildFMtx[ pastHpnLst[[nIdx]] ,"*1"]>0) ){
-					return( 10 )
+					surFlag[aIdx] <- FALSE
+					next
 				}
 			}
 
 		}
+
+		# QQE : wildF : fStep
 
 		# Filt range : ccc auxZW auxQuo raw rawFV rem cStep fStep
 		if(TRUE){
@@ -244,16 +262,17 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 										,pMinMaxSum=c( 0, 9) ,pMinMaxHpn=c( 0, 9) ,pMinMaxEvent=c(2,NA,3) 
 									)
 			if( 0 < sum(scoreCut,na.rm=T) ) surFlag[aIdx] <- FALSE
-			if( all(2<=scoreMtx[c("nextZW"),"ccc"]) )	 surFlag[aIdx] <- FALSE		# gold hpn rebind
+			if( any(2<=scoreMtx[c("nextZW"),"ccc"]) )	 surFlag[aIdx] <- FALSE		# gold event rebind
 			fltName <- c("nextZW","nextQuo10","nextRebNum","nextFStepBin","nextColVal_2","nextColVal_5","nextColVal_6")
-			if( 2>=sum(0<scoreMtx[fltName,"ccc"]) )	 surFlag[aIdx] <- FALSE		# gold hpn rebind
+			sumThld <- 2 + ifelse( 3<length(fltName) ,0 ,1 )	# length(fltName)이 3일 때 2가 발생한 적은 있으나, OL로 판단.
+			if( sumThld < sum(0<scoreMtx[fltName,"ccc"]) )	 surFlag[aIdx] <- FALSE		# gold hpn rebind
 
 			# auxZW
 			scoreCut <- fCutU.cutScore( scoreMtx[,"auxZW"]
 										,pMinMaxSum=c(NA, 3) ,pMinMaxHpn=c(NA, 3) ,pMinMaxEvent=c(1,NA,3) 
 									)
 			if( 0 < sum(scoreCut,na.rm=T) ) surFlag[aIdx] <- FALSE
-			if( all(1<=scoreMtx[c("nextRebNum","nextColVal_1"),"auxZW"]) ) surFlag[aIdx] <- FALSE	# gold hpn rebind
+			if( all(1<=scoreMtx[c("nextRebNum","nextColVal_1"),"auxZW"]) ) surFlag[aIdx] <- FALSE	# gold past hpn rebind
 
 			# auxQuo
 			scoreCut <- fCutU.cutScore( scoreMtx[,"auxQuo"]
@@ -267,24 +286,26 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 										,pMinMaxSum=c(NA,6) ,pMinMaxHpn=c(NA,5) ,pMinMaxEvent=c(2,NA,2) 
 									)
 			if( 0 < sum(scoreCut,na.rm=T) ) surFlag[aIdx] <- FALSE
-			if( all(2<=scoreMtx[c("nextRebNum"),"raw"]) ) surFlag[aIdx] <- FALSE	# gold hpn rebind
+			if( all(2<=scoreMtx[c("nextRebNum"),"raw"]) ) surFlag[aIdx] <- FALSE	# gold past event rebind
 			
 			# rawFV
 			scoreCut <- fCutU.cutScore( scoreMtx[,"rawFV"]
 										,pMinMaxSum=c(NA,3) ,pMinMaxHpn=c(NA,2) ,pMinMaxEvent=c(2,NA,2) 
 									)
 			if( 0 < sum(scoreCut,na.rm=T) ) surFlag[aIdx] <- FALSE
-			if( all(2<=scoreMtx[c("nextColVal_3"),"rawFV"]) ) surFlag[aIdx] <- FALSE	# gold hpn rebind
+			if( all(2<=scoreMtx[c("nextColVal_3"),"rawFV"]) ) surFlag[aIdx] <- FALSE	# gold past event rebind
 
 			# rem
+			#	gold에서 event가 없기 한데.. 너무 과한 듯 해서 1까지는 허용.
 			scoreCut <- fCutU.cutScore( scoreMtx[,"rem"]
-										,pMinMaxSum=c(9,15) ,pMinMaxHpn=c(6,11) ,pMinMaxEvent=c(3,NA,1) 
+										,pMinMaxSum=c(9,15) ,pMinMaxHpn=c(6,11) ,pMinMaxEvent=c(3,NA,2) 
 									)
 			if( 0 < sum(scoreCut,na.rm=T) ) surFlag[aIdx] <- FALSE
 			if( all(3<=scoreMtx[c("nextColVal_5"),"rem"]) ) surFlag[aIdx] <- FALSE	# late hpn rebind
 			# 2는 1번 이상 연속 없음.
 			if( 1 < sum(2<=scoreMtx[c("nextFStepBin","nextColVal_2"),"rem"]) ) surFlag[aIdx] <- FALSE	# gold
 			if( 1 < sum(2<=scoreMtx[c("nextQuo10","nextFStepBin","nextColVal_3"),"rem"]) ) surFlag[aIdx] <- FALSE	# late
+			#	violation이 생기긴 했는데, OL로 판단.
 
 			# cStep
 			scoreCut <- fCutU.cutScore( scoreMtx[,"cStep"]
@@ -301,15 +322,6 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 			if( all(2<=scoreMtx[c("nextCStepBin"),"fStep"]) ) surFlag[aIdx] <- FALSE	# gold hpn rebind
 
 		}
-
-		# # filt for gold
-		# flagCnt.gold <- finalFilt.gold( scoreMtx ,cccMtx ,cStepValMtx ,thld ,cccMtx.rCol )
-		# if( 5<flagCnt.gold ){
-		# 	surFlag[aIdx] <- FALSE
-		# 	next
-		# }
-
-		# surFlag[aIdx] <- ( 1 >= (cutCnt+flagCnt.gold+flagCnt.late) )
 
 	}  # aIdx
 

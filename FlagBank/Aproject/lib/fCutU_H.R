@@ -959,7 +959,7 @@ fCutU.commonCutCnt <- function( gEnv, allIdxF ,zMtx
 	cStepValMtx[,"min2"] <- !flag
     flgCnt[!flag] <- flgCnt[!flag] + 1
 
-	return( list( flgCnt=flgCnt ,scoreMtx=scoreMtx ,cStepValMtx=cStepValMtx ) )
+	return( list( flgCnt=flgCnt ,scoreMtx=scoreMtx ,cStepValMtx=cStepValMtx ,lastZoid=stdMI$lastZoid ) )
 
 } #	fCutU.commonCutCnt( )
 

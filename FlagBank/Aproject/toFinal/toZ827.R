@@ -1,7 +1,7 @@
-# Z825
-source("./toFinal/toZ825_H.R")
+# Z827
+source("./toFinal/toZ827_H.R")
 
-saveId <- "Z824"	;rpt=TRUE
+saveId <- "Z826"	;rpt=TRUE
 load( sprintf("Obj_allIdxLst%s.save",saveId) )
 load(sprintf("./save/Obj_gEnv%s.save",saveId))
 allZoidGrpName <-"allZoid.idx0"	# 
@@ -9,13 +9,8 @@ allIdx <- allIdxLst[[allZoidGrpName]]	#
 allIdxF <- 1000:1010		;stdZoid <- NULL
 
 # simMode start ----------------------------------------------------
-	aZoid <- stdZoid <- c( 8,15,21,31,33,38 ) # ZH 825 채워넣을 것.
-	allIdxF <- allIdx <- 5666707
-		#stdIdx <- which(apply(gEnv$allZoidMtx,1,function(zoid){all(zoid==stdZoid)}))
-
-	# load(sprintf("Obj_allIdxFObj_%s.save",allZoidGrpName))
-	# allIdxF <- allIdxFObj$allIdxF.fCutCnt
-	# load("Obj_ccObjLst.save")
+	aZoid <- stdZoid <- c( ,,,,, ) # ZH 827 채워넣을 것.
+	allIdxF <- allIdx <- stdIdx <- which(apply(gEnv$allZoidMtx,1,function(zoid){all(zoid==stdZoid)}))
 # simMode end   ----------------------------------------------------
 finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
     # cutEadge.getBanPtnColVal() 에서 1~2개 발생 탈락값들에 대한 검토 권장.
@@ -56,12 +51,7 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 	#		각 파트에서 2 이상씩은 잘라낸 후,
 	#		전체 파트에서 하나도 안 걸린 것들은 제외시키자.
 	# ccObj <- fCutCnt.default( gEnv ,allIdxF )
-	ccObj <- fCutCnt.basic( gEnv ,allIdxF )
-	allIdxF <- allIdxF[ cutCC( ccObj ,allIdxF ) ]
-    cat(sprintf("allIdxF %d\n",length(allIdxF)))
-	ccObj <- fCutCnt.nextZW( gEnv ,allIdxF )
-	allIdxF <- allIdxF[ cutCC( ccObj ,allIdxF ) ]
-	cat(sprintf("allIdxF %d\n",length(allIdxF)))
+
 	ccObj <- fCutCnt.nextQuo10( gEnv ,allIdxF )
 	allIdxF <- allIdxF[ cutCC( ccObj ,allIdxF ) ]
 	cat(sprintf("allIdxF %d\n",length(allIdxF)))
@@ -93,6 +83,14 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 	allIdxF <- allIdxF[ cutCC( ccObj ,allIdxF ) ]
 	cat(sprintf("allIdxF %d\n",length(allIdxF)))
 	ccObj <- fCutCnt.nextColVal_6( gEnv ,allIdxF )
+	allIdxF <- allIdxF[ cutCC( ccObj ,allIdxF ) ]
+	cat(sprintf("allIdxF %d\n",length(allIdxF)))
+
+	# basic과 nextZW는 fCut.basic()에서 이미 필터링 되는지라..
+	ccObj <- fCutCnt.basic( gEnv ,allIdxF )
+	allIdxF <- allIdxF[ cutCC( ccObj ,allIdxF ) ]
+    cat(sprintf("allIdxF %d\n",length(allIdxF)))
+	ccObj <- fCutCnt.nextZW( gEnv ,allIdxF )
 	allIdxF <- allIdxF[ cutCC( ccObj ,allIdxF ) ]
 	cat(sprintf("allIdxF %d\n",length(allIdxF)))
 	save( allIdxF ,file="Obj_allIdxF.save" )

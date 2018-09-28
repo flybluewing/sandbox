@@ -134,6 +134,7 @@ fCutCnt.nextXXX <- function( gEnv ,allIdxF ,rpt=FALSE ){
 
 	return( list(flgCnt=flgCnt ,cntMtx=cntMtx ,auxCntMtx=auxCntMtx 
 					,cccMtx=cccObj$scoreMtx ,cStepValMtx=cccObj$cStepValMtx 
+					,lastZoid=stdMI$lastZoid
 				) 
 			)
 
