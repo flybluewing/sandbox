@@ -156,6 +156,299 @@ u0.zoidMtx_ana <- function( pMtx ){
 
 } # u0.zoidMtx_ana( )
 
+u0.zoidCMtx_ana.rpt <- function( pMtx ){
+    # u0.zoidCMtx_ana.rpt( pMtx )
+    cat("cStep ptn info \n")
+    dfStr <- capture.output( u0.zoidCMtx_ana(pMtx) )
+    cat(sprintf("%s\n",dfStr))
+    # QQE working
+} # u0.zoidCMtx_ana.rpt()
+
+u0.zoidCMtx_ana <- function( pMtx ){
+
+    banLst <- list()
+    pMtxLen <- nrow( pMtx )
+    cMtx <- t( apply( pMtx ,1 ,function(code){ code[2:6]-code[1:5] }) )
+
+    # ana by col
+    for( cIdx in 1:5 ){
+        lst <- u0.srchStep_std( cMtx[pMtxLen:1,cIdx] )
+        for( lIdx in seq_len(length(lst)) ){
+            lst[[lIdx]]$tgt.col <- cIdx
+            lst[[lIdx]]$tgt.dir <- "col"
+        }
+        banLst <- c( banLst ,lst )
+
+        lst <- u0.srchStep_seqReb( cMtx[pMtxLen:1,cIdx] )
+        for( lIdx in seq_len(length(lst)) ){
+            lst[[lIdx]]$tgt.col <- cIdx
+            lst[[lIdx]]$tgt.dir <- "col"
+        }
+        banLst <- c( banLst ,lst )
+
+        lst <- u0.srchStep_symm( cMtx[pMtxLen:1,cIdx] )
+        for( lIdx in seq_len(length(lst)) ){
+            lst[[lIdx]]$tgt.col <- cIdx
+            lst[[lIdx]]$tgt.dir <- "col"
+        }
+        banLst <- c( banLst ,lst )
+
+        lst <- u0.srchStep_ptnReb( cMtx[pMtxLen:1,cIdx] )
+        for( lIdx in seq_len(length(lst)) ){
+            lst[[lIdx]]$tgt.col <- cIdx
+            lst[[lIdx]]$tgt.dir <- "col"
+        }
+        banLst <- c( banLst ,lst )
+    }
+
+    # ana left slide /
+    for( cIdx in 1:3 ){
+        val <- integer(0)
+        for( dIdx in 1:5 ){
+            dRIdx <- pMtxLen - (dIdx-1)
+            dCIdx <- cIdx+dIdx            
+            # cat(sprintf("%d %d\n",dRIdx,dCIdx))
+            if( (dCIdx>5)||(dRIdx<1) ) break
+
+            val <- c( val ,cMtx[dRIdx,dCIdx] )
+        }
+
+        lst <- u0.srchStep_std( val )
+        for( lIdx in seq_len(length(lst)) ){
+            lst[[lIdx]]$tgt.col <- cIdx
+            lst[[lIdx]]$tgt.dir <- "Slide/"
+        }
+        banLst <- c( banLst ,lst )
+
+        lst <- u0.srchStep_seqReb( val )
+        for( lIdx in seq_len(length(lst)) ){
+            lst[[lIdx]]$tgt.col <- cIdx
+            lst[[lIdx]]$tgt.dir <- "Slide/"
+        }
+        banLst <- c( banLst ,lst )
+
+        lst <- u0.srchStep_symm( val )
+        for( lIdx in seq_len(length(lst)) ){
+            lst[[lIdx]]$tgt.col <- cIdx
+            lst[[lIdx]]$tgt.dir <- "Slide/"
+        }
+        banLst <- c( banLst ,lst )
+
+        lst <- u0.srchStep_ptnReb( val )
+        for( lIdx in seq_len(length(lst)) ){
+            lst[[lIdx]]$tgt.col <- cIdx
+            lst[[lIdx]]$tgt.dir <- "Slide/"
+        }
+        banLst <- c( banLst ,lst )
+    }
+
+    # ana right slide \
+    for( cIdx in 3:5 ){
+        val <- integer(0)
+        for( dIdx in 1:5 ){
+            dRIdx <- pMtxLen - (dIdx-1)
+            dCIdx <- cIdx-dIdx            
+            # cat(sprintf("%d %d\n",dRIdx,dCIdx))
+            if( (dCIdx<1)||(dRIdx<1) ) break
+
+            val <- c( val ,cMtx[dRIdx,dCIdx] )
+        }
+
+        lst <- u0.srchStep_std( val )
+        for( lIdx in seq_len(length(lst)) ){
+            lst[[lIdx]]$tgt.col <- cIdx
+            lst[[lIdx]]$tgt.dir <- "Slide\\"
+        }
+        banLst <- c( banLst ,lst )
+
+        lst <- u0.srchStep_seqReb( val )
+        for( lIdx in seq_len(length(lst)) ){
+            lst[[lIdx]]$tgt.col <- cIdx
+            lst[[lIdx]]$tgt.dir <- "Slide\\"
+        }
+        banLst <- c( banLst ,lst )
+
+        lst <- u0.srchStep_symm( val )
+        for( lIdx in seq_len(length(lst)) ){
+            lst[[lIdx]]$tgt.col <- cIdx
+            lst[[lIdx]]$tgt.dir <- "Slide\\"
+        }
+        banLst <- c( banLst ,lst )
+
+        lst <- u0.srchStep_ptnReb( val )
+        for( lIdx in seq_len(length(lst)) ){
+            lst[[lIdx]]$tgt.col <- cIdx
+            lst[[lIdx]]$tgt.dir <- "Slide\\"
+        }
+        banLst <- c( banLst ,lst )
+    }
+
+
+    banDF <- do.call( rbind ,lapply(banLst,function(ban){
+                    data.frame( tgt.col=ban$tgt.col ,banVal=ban$banVal 
+                                    ,descript=ban$descript
+                                    ,tgt.dir=ban$tgt.dir
+                                )
+                }))
+    if( 0==length(banLst) ){
+        banDF <- data.frame( tgt.col=integer(0) ,banVal=integer(0)
+                                ,descript=character(0)
+                                ,tgt.dir=character(0)
+                            )
+    }
+
+    return( banDF )
+}
+
+u0.zoidFMtx_ana.rpt <- function( pMtx ){
+    # u0.zoidFMtx_ana.rpt( pMtx )
+    cat("cStep ptn info \n")
+    dfStr <- capture.output( u0.zoidFMtx_ana(pMtx) )
+    cat(sprintf("%s\n",dfStr))
+    # QQE working
+} # u0.zoidFMtx_ana.rpt()
+
+u0.zoidFMtx_ana <- function( pMtx ){
+
+    banLst <- list()
+    pMtxLen <- nrow( pMtx )-1
+    if( pMtxLen>0 ){
+        fMtx <- do.call( rbind ,lapply( 1:pMtxLen ,function(rIdx){ pMtx[rIdx+1,]-pMtx[rIdx,] }) )
+
+        # ana by col
+        for( cIdx in 1:6 ){
+            lst <- u0.srchStep_std( pMtx[pMtxLen:1,cIdx] )
+            for( lIdx in seq_len(length(lst)) ){
+                lst[[lIdx]]$tgt.col <- cIdx
+                lst[[lIdx]]$tgt.dir <- "col"
+            }
+            banLst <- c( banLst ,lst )
+
+            lst <- u0.srchStep_seqReb( pMtx[pMtxLen:1,cIdx] )
+            for( lIdx in seq_len(length(lst)) ){
+                lst[[lIdx]]$tgt.col <- cIdx
+                lst[[lIdx]]$tgt.dir <- "col"
+            }
+            banLst <- c( banLst ,lst )
+
+            lst <- u0.srchStep_symm( pMtx[pMtxLen:1,cIdx] )
+            for( lIdx in seq_len(length(lst)) ){
+                lst[[lIdx]]$tgt.col <- cIdx
+                lst[[lIdx]]$tgt.dir <- "col"
+            }
+            banLst <- c( banLst ,lst )
+
+            lst <- u0.srchStep_ptnReb( pMtx[pMtxLen:1,cIdx] )
+            for( lIdx in seq_len(length(lst)) ){
+                lst[[lIdx]]$tgt.col <- cIdx
+                lst[[lIdx]]$tgt.dir <- "col"
+            }
+            banLst <- c( banLst ,lst )
+
+        }
+
+        # ana left slide /
+        for( cIdx in 1:4 ){
+            val <- integer(0)
+            for( dIdx in 1:5 ){
+                dRIdx <- pMtxLen - (dIdx-1)
+                dCIdx <- cIdx+dIdx            
+                # cat(sprintf("%d %d\n",dRIdx,dCIdx))
+                if( (dCIdx>6)||(dRIdx<1) ) break
+
+                val <- c( val ,pMtx[dRIdx,dCIdx] )
+            }
+
+            lst <- u0.srchStep_std( val )
+            for( lIdx in seq_len(length(lst)) ){
+                lst[[lIdx]]$tgt.col <- cIdx
+                lst[[lIdx]]$tgt.dir <- "Slide/"
+            }
+            banLst <- c( banLst ,lst )
+
+            lst <- u0.srchStep_seqReb( val )
+            for( lIdx in seq_len(length(lst)) ){
+                lst[[lIdx]]$tgt.col <- cIdx
+                lst[[lIdx]]$tgt.dir <- "Slide/"
+            }
+            banLst <- c( banLst ,lst )
+
+            lst <- u0.srchStep_symm( val )
+            for( lIdx in seq_len(length(lst)) ){
+                lst[[lIdx]]$tgt.col <- cIdx
+                lst[[lIdx]]$tgt.dir <- "Slide/"
+            }
+            banLst <- c( banLst ,lst )
+
+            lst <- u0.srchStep_ptnReb( val )
+            for( lIdx in seq_len(length(lst)) ){
+                lst[[lIdx]]$tgt.col <- cIdx
+                lst[[lIdx]]$tgt.dir <- "Slide/"
+            }
+            banLst <- c( banLst ,lst )
+        }
+
+        # ana right slide \
+        for( cIdx in 3:6 ){
+            val <- integer(0)
+            for( dIdx in 1:5 ){
+                dRIdx <- pMtxLen - (dIdx-1)
+                dCIdx <- cIdx-dIdx            
+                # cat(sprintf("%d %d\n",dRIdx,dCIdx))
+                if( (dCIdx<1)||(dRIdx<1) ) break
+
+                val <- c( val ,pMtx[dRIdx,dCIdx] )
+            }
+
+            lst <- u0.srchStep_std( val )
+            for( lIdx in seq_len(length(lst)) ){
+                lst[[lIdx]]$tgt.col <- cIdx
+                lst[[lIdx]]$tgt.dir <- "Slide\\"
+            }
+            banLst <- c( banLst ,lst )
+
+            lst <- u0.srchStep_seqReb( val )
+            for( lIdx in seq_len(length(lst)) ){
+                lst[[lIdx]]$tgt.col <- cIdx
+                lst[[lIdx]]$tgt.dir <- "Slide\\"
+            }
+            banLst <- c( banLst ,lst )
+
+            lst <- u0.srchStep_symm( val )
+            for( lIdx in seq_len(length(lst)) ){
+                lst[[lIdx]]$tgt.col <- cIdx
+                lst[[lIdx]]$tgt.dir <- "Slide\\"
+            }
+            banLst <- c( banLst ,lst )
+
+            lst <- u0.srchStep_ptnReb( val )
+            for( lIdx in seq_len(length(lst)) ){
+                lst[[lIdx]]$tgt.col <- cIdx
+                lst[[lIdx]]$tgt.dir <- "Slide\\"
+            }
+            banLst <- c( banLst ,lst )
+        }
+
+    }
+
+    banDF <- do.call( rbind ,lapply(banLst,function(ban){
+                    data.frame( tgt.col=ban$tgt.col ,banVal=ban$banVal 
+                                    ,descript=ban$descript
+                                    ,tgt.dir=ban$tgt.dir
+                                )
+                }))
+    if( 0==length(banLst) ){
+        banDF <- data.frame( tgt.col=integer(0) ,banVal=integer(0)
+                                ,descript=character(0)
+                                ,tgt.dir=character(0)
+                            )
+    }
+
+    return( banDF )
+
+} # u0.zoidFMtx_ana( )
+
+
 # 1,1,1 / 1,2,3 / 2,4,6
 u0.srchStep_std <- function( pVal ,pCordLst=NULL ){
 
