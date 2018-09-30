@@ -776,10 +776,10 @@ fCutCnt.basic <- function( gEnv ,allIdxF ,rpt=FALSE ){
 					cnt <- 0
 					aFStep <- aZoid - stdMI$lastZoid
 					if( aFStep[1]%in%c(         ) ) cnt<-cnt+1
-					if( aFStep[2]%in%c(         ) ) cnt<-cnt+1
+					if( aFStep[2]%in%c( 0       ) ) cnt<-cnt+1
 					if( aFStep[3]%in%c(         ) ) cnt<-cnt+1
-					if( aFStep[4]%in%c( 1, 0, 2 ) ) cnt<-cnt+1
-					if( aFStep[5]%in%c(         ) ) cnt<-cnt+1
+					if( aFStep[4]%in%c( 1, 0    ) ) cnt<-cnt+1
+					if( aFStep[5]%in%c( 2       ) ) cnt<-cnt+1
 					if( aFStep[6]%in%c(         ) ) cnt<-cnt+1
 
 					if( 1<sum(aFStep[1:3+0]==c(  3,   0,   4)) ) cnt<-cnt+1 #  6
@@ -1425,9 +1425,9 @@ fCutCnt.nextZW <- function( gEnv ,allIdxF ,rpt=FALSE ){
 					aFStep <- aZoid - stdMI$lastZoid
 					if( aFStep[1]%in%c(  0,  7  ) ) cnt<-cnt+1
 					if( aFStep[2]%in%c(         ) ) cnt<-cnt+1
-					if( aFStep[3]%in%c( -2,-10  ) ) cnt<-cnt+1
-					if( aFStep[4]%in%c(         ) ) cnt<-cnt+1
-					if( aFStep[5]%in%c(         ) ) cnt<-cnt+1
+					if( aFStep[3]%in%c( -2      ) ) cnt<-cnt+1
+					if( aFStep[4]%in%c(-10      ) ) cnt<-cnt+1
+					if( aFStep[5]%in%c(-14      ) ) cnt<-cnt+1
 					if( aFStep[6]%in%c(         ) ) cnt<-cnt+1
 
 					if( 1<sum(aFStep[1:3+0]==c(  0,   4, -11)) ) cnt<-cnt+1 #  0
@@ -1725,7 +1725,7 @@ fCutCnt.nextBin <- function( gEnv ,allIdxF ,rpt=FALSE ){
 					if( aFStep[1]%in%c(         ) ) cnt<-cnt+1
 					if( aFStep[2]%in%c(         ) ) cnt<-cnt+1
 					if( aFStep[3]%in%c(         ) ) cnt<-cnt+1
-					if( aFStep[4]%in%c(         ) ) cnt<-cnt+1
+					if( aFStep[4]%in%c(  2      ) ) cnt<-cnt+1
 					if( aFStep[5]%in%c(         ) ) cnt<-cnt+1
 					if( aFStep[6]%in%c(  0, 13  ) ) cnt<-cnt+1
 
@@ -1880,11 +1880,11 @@ fCutCnt.nextRebNum <- function( gEnv ,allIdxF ,rpt=FALSE ){
 					cnt <- 0
 					aFStep <- aZoid - stdMI$lastZoid
 					if( aFStep[1]%in%c(  1      ) ) cnt<-cnt+1
-					if( aFStep[2]%in%c( -1      ) ) cnt<-cnt+1
+					if( aFStep[2]%in%c( -1,-12  ) ) cnt<-cnt+1
 					if( aFStep[3]%in%c(         ) ) cnt<-cnt+1
 					if( aFStep[4]%in%c( -1      ) ) cnt<-cnt+1
 					if( aFStep[5]%in%c(         ) ) cnt<-cnt+1
-					if( aFStep[6]%in%c(         ) ) cnt<-cnt+1
+					if( aFStep[6]%in%c( -7      ) ) cnt<-cnt+1
 
 					if( 1<sum(aFStep[1:3+0]==c( -3,  -9,  -6)) ) cnt<-cnt+1 #  2
 					if( 1<sum(aFStep[1:3+0]==c( -2,   5,   7)) ) cnt<-cnt+1 # -5
@@ -2358,7 +2358,7 @@ fCutCnt.nextColVal_1 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 					if( aFStep[1]%in%c(  -4     ) ) cnt<-cnt+1
 					if( aFStep[2]%in%c(  -5     ) ) cnt<-cnt+1
 					if( aFStep[3]%in%c(         ) ) cnt<-cnt+1
-					if( aFStep[4]%in%c(  -7,  -5) ) cnt<-cnt+1
+					if( aFStep[4]%in%c(  -7,  -5,  -6) ) cnt<-cnt+1
 					if( aFStep[5]%in%c(         ) ) cnt<-cnt+1
 					if( aFStep[6]%in%c(         ) ) cnt<-cnt+1
 
@@ -2477,7 +2477,7 @@ fCutCnt.nextColVal_2 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 					if( aCStep[2]%in%c(      ) ) cnt<-cnt+1
 					if( aCStep[3]%in%c( 1    ) ) cnt<-cnt+1
 					if( aCStep[4]%in%c( 2    ) ) cnt<-cnt+1
-					if( aCStep[5]%in%c( 8, 6 ) ) cnt<-cnt+1
+					if( aCStep[5]%in%c( 8, 6, 3 ) ) cnt<-cnt+1
 
 					if( 1<sum(aCStep[1:2+0]==c( 2,  5    )) ) cnt<-cnt+1	#  8
 					if( 1<sum(aCStep[1:3+1]==c( 1,  7,  8)) ) cnt<-cnt+1	#  5
@@ -2505,11 +2505,11 @@ fCutCnt.nextColVal_2 <- function( gEnv ,allIdxF ,rpt=FALSE ){
     cntMtx[,"fStep"] <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
 					cnt <- 0
 					aFStep <- aZoid - stdMI$lastZoid
-					if( aFStep[1]%in%c(         ) ) cnt<-cnt+1
+					if( aFStep[1]%in%c(  31     ) ) cnt<-cnt+1
 					if( aFStep[2]%in%c(         ) ) cnt<-cnt+1
 					if( aFStep[3]%in%c(         ) ) cnt<-cnt+1
-					if( aFStep[4]%in%c(  40     ) ) cnt<-cnt+1
-					if( aFStep[5]%in%c(         ) ) cnt<-cnt+1
+					if( aFStep[4]%in%c(  10     ) ) cnt<-cnt+1
+					if( aFStep[5]%in%c(  17     ) ) cnt<-cnt+1
 					if( aFStep[6]%in%c(         ) ) cnt<-cnt+1
 
 					if( 1<sum(aFStep[1:3+0]==c( -5,  -3,  -3)) ) cnt<-cnt+1 # 10
@@ -2759,7 +2759,7 @@ fCutCnt.nextColVal_4 <- function( gEnv ,allIdxF ,rpt=FALSE ){
     cntMtx[,"cStep"] <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
 					cnt <- 0
 					aCStep <- aZoid[2:6]-aZoid[1:5]
-					if( aCStep[1]%in%c( 6, 1 ) ) cnt<-cnt+1
+					if( aCStep[1]%in%c( 3, 1 ) ) cnt<-cnt+1
 					if( aCStep[2]%in%c(      ) ) cnt<-cnt+1
 					if( aCStep[3]%in%c( 8    ) ) cnt<-cnt+1
 					if( aCStep[4]%in%c(      ) ) cnt<-cnt+1
@@ -2899,7 +2899,7 @@ fCutCnt.nextColVal_5 <- function( gEnv ,allIdxF ,rpt=FALSE ){
     cntMtx[,"cStep"] <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
 					cnt <- 0
 					aCStep <- aZoid[2:6]-aZoid[1:5]
-					if( aCStep[1]%in%c( 6, 3 ) ) cnt<-cnt+1
+					if( aCStep[1]%in%c( 6, 3,19 ) ) cnt<-cnt+1
 					if( aCStep[2]%in%c(      ) ) cnt<-cnt+1
 					if( aCStep[3]%in%c( 4    ) ) cnt<-cnt+1
 					if( aCStep[4]%in%c( 6    ) ) cnt<-cnt+1
@@ -2933,8 +2933,8 @@ fCutCnt.nextColVal_5 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 					if( aFStep[1]%in%c(  -1     ) ) cnt<-cnt+1
 					if( aFStep[2]%in%c(         ) ) cnt<-cnt+1
 					if( aFStep[3]%in%c(         ) ) cnt<-cnt+1
-					if( aFStep[4]%in%c(         ) ) cnt<-cnt+1
-					if( aFStep[5]%in%c(  -3     ) ) cnt<-cnt+1
+					if( aFStep[4]%in%c(  10     ) ) cnt<-cnt+1
+					if( aFStep[5]%in%c(  -3, -7 ) ) cnt<-cnt+1
 					if( aFStep[6]%in%c(         ) ) cnt<-cnt+1
 
 					if( 1<sum(aFStep[1:3+0]==c(  7,  -5, -10)) ) cnt<-cnt+1 #  -3
@@ -3095,7 +3095,7 @@ fCutCnt.nextColVal_6 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 					if( aFStep[3]%in%c(  5      ) ) cnt<-cnt+1
 					if( aFStep[4]%in%c(         ) ) cnt<-cnt+1
 					if( aFStep[5]%in%c(         ) ) cnt<-cnt+1
-					if( aFStep[6]%in%c(         ) ) cnt<-cnt+1
+					if( aFStep[6]%in%c(  9      ) ) cnt<-cnt+1
 
 					if( 1<sum(aFStep[1:3+0]==c( 10,   6,   3)) ) cnt<-cnt+1 #  2
 					if( 1<sum(aFStep[1:3+1]==c(  2,   5,   3)) ) cnt<-cnt+1 #  5

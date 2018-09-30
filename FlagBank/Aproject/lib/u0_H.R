@@ -283,7 +283,6 @@ u0.zoidCMtx_ana <- function( pMtx ){
         banLst <- c( banLst ,lst )
     }
 
-
     banDF <- do.call( rbind ,lapply(banLst,function(ban){
                     data.frame( tgt.col=ban$tgt.col ,banVal=ban$banVal 
                                     ,descript=ban$descript
@@ -295,6 +294,8 @@ u0.zoidCMtx_ana <- function( pMtx ){
                                 ,descript=character(0)
                                 ,tgt.dir=character(0)
                             )
+    } else {    # 필요없는 데이터는 지우자.
+        banDF <- banDF[ banDF$banVal>0 ,]
     }
 
     return( banDF )
@@ -302,7 +303,7 @@ u0.zoidCMtx_ana <- function( pMtx ){
 
 u0.zoidFMtx_ana.rpt <- function( pMtx ){
     # u0.zoidFMtx_ana.rpt( pMtx )
-    cat("cStep ptn info \n")
+    cat("fStep ptn info \n")
     dfStr <- capture.output( u0.zoidFMtx_ana(pMtx) )
     cat(sprintf("%s\n",dfStr))
     # QQE working
@@ -317,28 +318,28 @@ u0.zoidFMtx_ana <- function( pMtx ){
 
         # ana by col
         for( cIdx in 1:6 ){
-            lst <- u0.srchStep_std( pMtx[pMtxLen:1,cIdx] )
+            lst <- u0.srchStep_std( fMtx[pMtxLen:1,cIdx] )
             for( lIdx in seq_len(length(lst)) ){
                 lst[[lIdx]]$tgt.col <- cIdx
                 lst[[lIdx]]$tgt.dir <- "col"
             }
             banLst <- c( banLst ,lst )
 
-            lst <- u0.srchStep_seqReb( pMtx[pMtxLen:1,cIdx] )
+            lst <- u0.srchStep_seqReb( fMtx[pMtxLen:1,cIdx] )
             for( lIdx in seq_len(length(lst)) ){
                 lst[[lIdx]]$tgt.col <- cIdx
                 lst[[lIdx]]$tgt.dir <- "col"
             }
             banLst <- c( banLst ,lst )
 
-            lst <- u0.srchStep_symm( pMtx[pMtxLen:1,cIdx] )
+            lst <- u0.srchStep_symm( fMtx[pMtxLen:1,cIdx] )
             for( lIdx in seq_len(length(lst)) ){
                 lst[[lIdx]]$tgt.col <- cIdx
                 lst[[lIdx]]$tgt.dir <- "col"
             }
             banLst <- c( banLst ,lst )
 
-            lst <- u0.srchStep_ptnReb( pMtx[pMtxLen:1,cIdx] )
+            lst <- u0.srchStep_ptnReb( fMtx[pMtxLen:1,cIdx] )
             for( lIdx in seq_len(length(lst)) ){
                 lst[[lIdx]]$tgt.col <- cIdx
                 lst[[lIdx]]$tgt.dir <- "col"
@@ -356,7 +357,7 @@ u0.zoidFMtx_ana <- function( pMtx ){
                 # cat(sprintf("%d %d\n",dRIdx,dCIdx))
                 if( (dCIdx>6)||(dRIdx<1) ) break
 
-                val <- c( val ,pMtx[dRIdx,dCIdx] )
+                val <- c( val ,fMtx[dRIdx,dCIdx] )
             }
 
             lst <- u0.srchStep_std( val )
@@ -397,7 +398,7 @@ u0.zoidFMtx_ana <- function( pMtx ){
                 # cat(sprintf("%d %d\n",dRIdx,dCIdx))
                 if( (dCIdx<1)||(dRIdx<1) ) break
 
-                val <- c( val ,pMtx[dRIdx,dCIdx] )
+                val <- c( val ,fMtx[dRIdx,dCIdx] )
             }
 
             lst <- u0.srchStep_std( val )
