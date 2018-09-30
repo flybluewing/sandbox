@@ -776,6 +776,94 @@ fCutU.getChkCStepValReb <- function( pMtx ){
 } # fCutU.chkCStepValReb()
 
 
+# QQE working
+fCutU.getChkNextPtn4FV.cStep <- function( rawTail ,pDebug=FALSE ){
+	rObj <- list()
+	rObj$cMtx <- t( apply( rawTail ,1 ,function(pRaw){ pRaw[2:6]-pRaw[1:5] }) )
+
+	if( 2>nrow(rObj$cMtx) ){
+		rObj$check <- function( aZoid ){ return( list(fltCnt=0 ,infoLst=list() ,fltLst=list() ) ) }
+		return( rObj )
+	}
+
+	datLen <- nrow(rObj$cMtx)
+	lastCode <- rObj$cMtx[datLen,]
+	availLst <- fCutU.getChkNextPtn4FV.u.availLst( lastCode )	# avail col span
+
+	rObj$fltLst <- list()
+	for( cIdx in 1:5 ){
+		tgtSpanDF <- availLst[[1]]$spanDF
+		rebValLst <- list()
+		for( rIdx in (datLen-1):1 ){
+			fndIdx <- which( rObj$cMtx[rIdx,] == lastCode[cIdx] )
+			if( 0==length(fndIdx) ) break
+			
+			for( fIdx in fndIdx ){
+				rebValObj <- list( rIdx=rIdx ,fIdx=fIdx ,spanDF=availLst[[fIdx]]$spanDF )
+				rebValObj$banValLst <- lapply( 1:nrow(rebValObj$spanDF) ,function(sdIdx){
+												spanInfo <- rebValObj$spanDF[sdIdx,] 
+												banColSpan <- (1:spanInfo[1,"spanLen"]+spanInfo[1,"offset"])
+												banVal <- rObj$cMtx[rIdx+1,banColSpan]
+												return(banVal)
+											} )
+				rebValLst[[1+length(rebValLst)]] <- rebValObj
+			}
+
+			# qqe working
+			# check if any available match
+			#	then add rObj$fltLst and break!
+			#	match priority
+			#		full match, nearest col
+			#		
+		} # for(rIdx)
+
+	}
+	
+	return( rObj )
+} # fCutU.getChkNextPtn4FV.cStep()
+
+
+#	utility function for fCutU.getChkNextPtn4FV.xxxx()
+fCutU.getChkNextPtn4FV.u.availLst <- function( lastCode ){
+
+	len <- length( lastCode )
+	availLst <- list()
+	for( cIdx in 1:len ){
+		availObj <- list( val=lastCode[cIdx] ,cIdx=cIdx )
+		spanDF <- data.frame( spanLen=integer(0) ,offset=integer(0) ,description=character(0) )
+		if( (1<cIdx) && (cIdx<len) ){
+			newDF <- data.frame( spanLen=3 ,offset=(cIdx-2) 
+						,description=sprintf("1:3+%d middle",(cIdx-2)) )
+			spanDF <- rbind( spanDF ,newDF )
+		}
+		if( cIdx<(len-1) ){	# to right side
+			newDF <- data.frame( spanLen=3 ,offset=(cIdx-1) 
+						,description=sprintf("1:3+%d right",(cIdx-1)) )
+			spanDF <- rbind( spanDF ,newDF )
+		} else if( cIdx==(len-1) ){
+			newDF <- data.frame( spanLen=2 ,offset=(cIdx-1) 
+						,description=sprintf("1:2+%d right",(cIdx-1)) )
+			spanDF <- rbind( spanDF ,newDF )
+		}
+		if( 2<cIdx ){	# to left side
+			newDF <- data.frame( spanLen=3 ,offset=(cIdx-3) 
+						,description=sprintf("1:3+%d left",(cIdx-3)) )
+			spanDF <- rbind( spanDF ,newDF )
+		} else if( 2==cIdx ){
+			newDF <- data.frame( spanLen=2 ,offset=(cIdx-2) 
+						,description=sprintf("1:2+%d left",(cIdx-2)) )
+			spanDF <- rbind( spanDF ,newDF )
+		}
+		spanDF <- spanDF[ order(spanDF$spanLen,decreasing=T) ,]
+		availObj$spanDF <- spanDF
+		availLst[[cIdx]] <- availObj
+	}
+	return( availLst )
+} # fCutU.getChkNextPtn4FV.u.availLst
+
+
+
+
 #	toZnnn.R 에서의 finalCut() 함수에서 사용.
 #		주의 : NA 은 미발생 허용을 의미.
 #			   0  은 미발생을 허용치 않겠다는 의미이다.

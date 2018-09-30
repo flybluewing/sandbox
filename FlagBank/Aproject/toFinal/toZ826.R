@@ -9,8 +9,9 @@ allIdx <- allIdxLst[[allZoidGrpName]]	#
 allIdxF <- 1000:1010		;stdZoid <- NULL
 
 # simMode start ----------------------------------------------------
-	aZoid <- stdZoid <- c( ,,,,, ) # ZH 826 채워넣을 것.
-	allIdxF <- allIdx <- stdIdx <- which(apply(gEnv$allZoidMtx,1,function(zoid){all(zoid==stdZoid)}))
+	aZoid <- stdZoid <- c( 13,16,24,25,33,36 ) # ZH 826 채워넣을 것.
+	allIdxF <- allIdx <- stdIdx <- 7112913
+		# which(apply(gEnv$allZoidMtx,1,function(zoid){all(zoid==stdZoid)}))
 # simMode end   ----------------------------------------------------
 finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
     # cutEadge.getBanPtnColVal() 에서 1~2개 발생 탈락값들에 대한 검토 권장.
