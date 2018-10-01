@@ -822,8 +822,13 @@ fCutU.getChkNextPtn4FV.cStep <- function( rawTail ,pDebug=FALSE ){
 		} # for(rIdx)
 	}
 
+	
 	rObj$check <- function( aCStep ){
-			QQE.working
+			matchCntBuffer <- rep( 0 ,length(rObj$fltLst) )
+			for( fIdx in seq_len(length(rObj$fltLst)) ){
+				matchCntBuffer[fIdx] <- sum(rObj$fltLst[[fIdx]]$banVal==aCStep[rObj$fltLst[[fIdx]]$chkSpan])
+			}
+			return( list( flgCnt=sum(rObj$matchCntBuffer>=2) ,matchCnt=matchCntBuffer ) )
 		} # rObj$check()
 
 	return( rObj )
