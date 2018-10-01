@@ -4,7 +4,7 @@ source("./toFinal/toZ827_H.R")
 saveId <- "Z826"	;rpt=TRUE
 load( sprintf("Obj_allIdxLst%s.save",saveId) )
 load(sprintf("./save/Obj_gEnv%s.save",saveId))
-allZoidGrpName <-"allZoid.idx0"	# 
+allZoidGrpName <-"allZoid.idx0"	# 999138	1794816
 allIdx <- allIdxLst[[allZoidGrpName]]	#   
 allIdxF <- 1000:1010		;stdZoid <- NULL
 

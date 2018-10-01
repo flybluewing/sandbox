@@ -782,7 +782,7 @@ fCutU.getChkNextPtn4FV.cStep <- function( rawTail ,pDebug=FALSE ){
 	rObj$cMtx <- t( apply( rawTail ,1 ,function(pRaw){ pRaw[2:6]-pRaw[1:5] }) )
 
 	if( 2>nrow(rObj$cMtx) ){
-		rObj$check <- function( aZoid ){ return( list(fltCnt=0 ,infoLst=list() ,fltLst=list() ) ) }
+		rObj$check <- function( aCStep ){ return( list(fltCnt=0 ,infoLst=list() ,fltLst=list() ) ) }
 		return( rObj )
 	}
 
@@ -792,36 +792,110 @@ fCutU.getChkNextPtn4FV.cStep <- function( rawTail ,pDebug=FALSE ){
 
 	rObj$fltLst <- list()
 	for( cIdx in 1:5 ){
-		tgtSpanDF <- availLst[[1]]$spanDF
-		rebValLst <- list()
+		tgtSpanDF <- availLst[[cIdx]]$spanDF
 		for( rIdx in (datLen-1):1 ){
 			fndIdx <- which( rObj$cMtx[rIdx,] == lastCode[cIdx] )
-			if( 0==length(fndIdx) ) break
-			
+			fndIdx <- fndIdx[order( abs(fndIdx-cIdx) )]
+
+			fndFlag <- FALSE
 			for( fIdx in fndIdx ){
-				rebValObj <- list( rIdx=rIdx ,fIdx=fIdx ,spanDF=availLst[[fIdx]]$spanDF )
-				rebValObj$banValLst <- lapply( 1:nrow(rebValObj$spanDF) ,function(sdIdx){
-												spanInfo <- rebValObj$spanDF[sdIdx,] 
-												banColSpan <- (1:spanInfo[1,"spanLen"]+spanInfo[1,"offset"])
+				rebSpanDF <- availLst[[fIdx]]$spanDF
+				banValLst <- lapply( 1:nrow(rebSpanDF) ,function(sdIdx){
+												banColSpan <- (1:rebSpanDF[sdIdx,"spanLen"]+rebSpanDF[sdIdx,"offset"] )
 												banVal <- rObj$cMtx[rIdx+1,banColSpan]
 												return(banVal)
 											} )
-				rebValLst[[1+length(rebValLst)]] <- rebValObj
+				matchInfo <- fCutU.getChkNextPtn4FV.u.matchSpan( tgtSpanDF ,rebSpanDF ,banValLst )
+				if( !is.null(matchInfo) ){
+					fltObj <- list( dbgStr=sprintf("col:%d val:%d lastIdx:%d,%d",cIdx,lastCode[cIdx],rIdx,fIdx)
+									,chkSpan=matchInfo$chkSpan ,banVal=matchInfo$banVal )
+					fltObj$matchInfo <- matchInfo
+					rObj$fltLst[[sprintf("col%d(%2d)",cIdx,lastCode[cIdx])]] <- fltObj
+					fndFlag <- TRUE
+					break
+				}
 			}
 
-			# qqe working
-			# check if any available match
-			#	then add rObj$fltLst and break!
-			#	match priority
-			#		full match, nearest col
-			#		
+			if(fndFlag){
+				break
+			}
 		} # for(rIdx)
-
 	}
-	
+
+	rObj$check <- function( aCStep ){
+			QQE.working
+		} # rObj$check()
+
 	return( rObj )
 } # fCutU.getChkNextPtn4FV.cStep()
 
+#	utility function for fCutU.getChkNextPtn4FV.xxxx()
+fCutU.getChkNextPtn4FV.u.matchSpan <- function( tgtSpanDF ,rebSpanDF ,banValLst ){
+
+
+	# QQE todo : chkSpan 추가. description 개조.
+	matchInfo <- NULL
+	for( tgtIdx in 1:nrow(tgtSpanDF) ){	# 전체 매치 체크.
+		tgtSpan <- tgtSpanDF[tgtIdx,"startIdx"]:tgtSpanDF[tgtIdx,"endIdx"]
+		rebIdx.match <- NA
+		for( rebIdx in 1:nrow(rebSpanDF) ){
+			rebSpan <- rebSpanDF[rebIdx,"startIdx"]:rebSpanDF[rebIdx,"endIdx"]
+			if( length(tgtSpan)!=length(rebSpan) ) next
+
+			if( all(tgtSpan==rebSpan) ){
+				rebIdx.match <- rebIdx
+				break
+			}
+		}
+
+		if( !is.na(rebIdx.match) ){
+			matchInfo <- list( chkSpan = 1:tgtSpanDF[tgtIdx,"spanLen"]+tgtSpanDF[tgtIdx,"offset"] )
+			matchInfo$banVal <- banValLst[[rebIdx.match]]
+			matchInfo$tgt.desc <- sprintf("tgtIdx:%d    %s",tgtIdx,tgtSpanDF[tgtIdx,"description"])
+			matchInfo$reb.desc <- sprintf("rebIdx:%d    %s",rebIdx.match,rebSpanDF[rebIdx.match,"description"])
+			break
+		}
+	}
+	if( !is.null(matchInfo) ){
+		return( matchInfo )
+	}
+
+	# 3개 짜리 매치는 찾지 못했으면 상대방에 대해서 2개 짜리 매치라도..
+	for( tgtIdx in 1:nrow(tgtSpanDF) ){
+		tgtSpan <- tgtSpanDF[tgtIdx,"startIdx"]:tgtSpanDF[tgtIdx,"endIdx"]
+		rebIdx.match <- NA
+		newSpan <- NULL
+		for( rebIdx in 1:nrow(rebSpanDF) ){
+			rebSpan <- rebSpanDF[rebIdx,"startIdx"]:rebSpanDF[rebIdx,"endIdx"]
+
+			if( 2==sum(rebSpan%in%tgtSpan) ){	# 0:1 또는 -1:0
+				rebIdx.match <- rebIdx
+				newSpan <- rebSpan[rebSpan%in%tgtSpan]
+				break
+			}
+		}
+
+		if( !is.na(rebIdx.match) ){
+			matchInfo <- list( )
+
+			banVal <- banValLst[[rebIdx.match]]
+			if( all(newSpan==c(0,1)) ){	# 로직보단 차라리 하드코딩이 알아보기 쉽겠다.... -_-;
+				matchInfo$chkSpan <- 0:1 + tgtSpanDF[tgtIdx,"cIdx"]
+				matchInfo$banVal <- banVal[newSpan+1]
+				matchInfo$tgt.desc <- sprintf("tgtIdx:%d    1:2+%d",tgtIdx ,tgtSpanDF[tgtIdx,"cIdx"]-1 )
+				matchInfo$reb.desc <- sprintf("rebIdx:%d    1:2+%d",rebIdx.match ,rebSpanDF[rebIdx.match,"cIdx"]-1 )
+			} else if( all(newSpan==c(-1,0)) ){
+				matchInfo$chkSpan <- -1:0 + tgtSpanDF[tgtIdx,"cIdx"]
+				matchInfo$banVal <- banVal[newSpan+length(banVal)]
+				matchInfo$tgt.desc <- sprintf("tgtIdx:%d    1:2+%d",tgtIdx ,tgtSpanDF[tgtIdx,"cIdx"]-2 )
+				matchInfo$reb.desc <- sprintf("rebIdx:%d    1:2+%d",rebIdx.match ,rebSpanDF[rebIdx.match,"cIdx"]-2 )
+			}
+			break
+		}
+	}
+
+	return( matchInfo )
+} # fCutU.getChkNextPtn4FV.u.matchSpan()
 
 #	utility function for fCutU.getChkNextPtn4FV.xxxx()
 fCutU.getChkNextPtn4FV.u.availLst <- function( lastCode ){
@@ -829,28 +903,36 @@ fCutU.getChkNextPtn4FV.u.availLst <- function( lastCode ){
 	len <- length( lastCode )
 	availLst <- list()
 	for( cIdx in 1:len ){
-		availObj <- list( val=lastCode[cIdx] ,cIdx=cIdx )
-		spanDF <- data.frame( spanLen=integer(0) ,offset=integer(0) ,description=character(0) )
-		if( (1<cIdx) && (cIdx<len) ){
-			newDF <- data.frame( spanLen=3 ,offset=(cIdx-2) 
+		availObj <- list( val=lastCode[cIdx] )
+		spanDF <- data.frame( cIdx=integer(0), spanLen=integer(0) ,offset=integer(0) 
+								,startIdx=integer(0) ,endIdx=integer(0)
+								,description=character(0) 
+							)
+		if( (1<cIdx) && (cIdx<len) ){	# -1:1
+			newDF <- data.frame( cIdx=cIdx ,spanLen=3 ,offset=(cIdx-2) 
+						,startIdx=-1	,endIdx=1
 						,description=sprintf("1:3+%d middle",(cIdx-2)) )
 			spanDF <- rbind( spanDF ,newDF )
 		}
-		if( cIdx<(len-1) ){	# to right side
-			newDF <- data.frame( spanLen=3 ,offset=(cIdx-1) 
+		if( cIdx<(len-1) ){	# to right side. 0:2
+			newDF <- data.frame( cIdx=cIdx ,spanLen=3 ,offset=(cIdx-1) 
+						,startIdx=0	,endIdx=2
 						,description=sprintf("1:3+%d right",(cIdx-1)) )
 			spanDF <- rbind( spanDF ,newDF )
 		} else if( cIdx==(len-1) ){
-			newDF <- data.frame( spanLen=2 ,offset=(cIdx-1) 
+			newDF <- data.frame( cIdx=cIdx ,spanLen=2 ,offset=(cIdx-1) 
+						,startIdx=0	,endIdx=1
 						,description=sprintf("1:2+%d right",(cIdx-1)) )
 			spanDF <- rbind( spanDF ,newDF )
 		}
 		if( 2<cIdx ){	# to left side
-			newDF <- data.frame( spanLen=3 ,offset=(cIdx-3) 
+			newDF <- data.frame( cIdx=cIdx ,spanLen=3 ,offset=(cIdx-3) 
+						,startIdx=-2	,endIdx=0
 						,description=sprintf("1:3+%d left",(cIdx-3)) )
 			spanDF <- rbind( spanDF ,newDF )
 		} else if( 2==cIdx ){
-			newDF <- data.frame( spanLen=2 ,offset=(cIdx-2) 
+			newDF <- data.frame( cIdx=cIdx ,spanLen=2 ,offset=(cIdx-2) 
+						,startIdx=-1	,endIdx=0
 						,description=sprintf("1:2+%d left",(cIdx-2)) )
 			spanDF <- rbind( spanDF ,newDF )
 		}
@@ -858,7 +940,9 @@ fCutU.getChkNextPtn4FV.u.availLst <- function( lastCode ){
 		availObj$spanDF <- spanDF
 		availLst[[cIdx]] <- availObj
 	}
+
 	return( availLst )
+
 } # fCutU.getChkNextPtn4FV.u.availLst
 
 
