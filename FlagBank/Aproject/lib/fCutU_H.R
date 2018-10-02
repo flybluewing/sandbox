@@ -776,8 +776,9 @@ fCutU.getChkCStepValReb <- function( pMtx ){
 } # fCutU.chkCStepValReb()
 
 
-# QQE working
 fCutU.getChkNextPtn4FV.cStep <- function( rawTail ,pDebug=FALSE ){
+	# rObj <- fCutU.getChkNextPtn4FV.cStep( stdMI$rawTail ,pDebug=T )
+
 	rObj <- list()
 	rObj$cMtx <- t( apply( rawTail ,1 ,function(pRaw){ pRaw[2:6]-pRaw[1:5] }) )
 
@@ -821,7 +822,6 @@ fCutU.getChkNextPtn4FV.cStep <- function( rawTail ,pDebug=FALSE ){
 			}
 		} # for(rIdx)
 	}
-
 	
 	rObj$check <- function( aCStep ){
 			matchCntBuffer <- rep( 0 ,length(rObj$fltLst) )
@@ -831,14 +831,25 @@ fCutU.getChkNextPtn4FV.cStep <- function( rawTail ,pDebug=FALSE ){
 			return( list( flgCnt=sum(rObj$matchCntBuffer>=2) ,matchCnt=matchCntBuffer ) )
 		} # rObj$check()
 
+	if( pDebug ){
+		cat( sprintf("    %s",capture.output(rObj$cMtx)), sep="\n" ) 
+		cat("---------------------------------------------------", sep="\n") 
+		for( lIdx in seq_len(length(rObj$fltLst)) ){
+			flt <- rObj$fltLst[[lIdx]]
+			cat(sprintf("%dth flter     %s \n" ,lIdx ,flt$dbgStr ))
+			cat(sprintf("   ban Val %s\n", paste(flt$banVal ,collapse=" " ) ))
+			cat(sprintf("   tgt DF %s (%s)\n", flt$matchInfo$tgt.desc,paste(flt$chkSpan,collapse=" ") ))
+			cat(sprintf("   reb DF %s \n", flt$matchInfo$reb.desc ))
+		}
+	}
+
 	return( rObj )
+
 } # fCutU.getChkNextPtn4FV.cStep()
 
 #	utility function for fCutU.getChkNextPtn4FV.xxxx()
 fCutU.getChkNextPtn4FV.u.matchSpan <- function( tgtSpanDF ,rebSpanDF ,banValLst ){
 
-
-	# QQE todo : chkSpan 추가. description 개조.
 	matchInfo <- NULL
 	for( tgtIdx in 1:nrow(tgtSpanDF) ){	# 전체 매치 체크.
 		tgtSpan <- tgtSpanDF[tgtIdx,"startIdx"]:tgtSpanDF[tgtIdx,"endIdx"]
@@ -869,17 +880,20 @@ fCutU.getChkNextPtn4FV.u.matchSpan <- function( tgtSpanDF ,rebSpanDF ,banValLst 
 	for( tgtIdx in 1:nrow(tgtSpanDF) ){
 		tgtSpan <- tgtSpanDF[tgtIdx,"startIdx"]:tgtSpanDF[tgtIdx,"endIdx"]
 		rebIdx.match <- NA
-		newSpan <- NULL
+		newSpan.tgt <- NULL	;newSpan.reb <- NULL
 		for( rebIdx in 1:nrow(rebSpanDF) ){
 			rebSpan <- rebSpanDF[rebIdx,"startIdx"]:rebSpanDF[rebIdx,"endIdx"]
 
 			if( 2==sum(rebSpan%in%tgtSpan) ){	# 0:1 또는 -1:0
 				rebIdx.match <- rebIdx
-				newSpan <- rebSpan[rebSpan%in%tgtSpan]
+				newSpan.tgt <- tgtSpan[tgtSpan%in%rebSpan]
+				newSpan.reb <- rebSpan[rebSpan%in%tgtSpan]
 				break
 			}
 		}
 
+		QQE working : newSpan -> newSpan.tgt ,newSpan.reb
+			fCutCnt.nextZW     1th flter     col:1 val:5 lastIdx:5,4 
 		if( !is.na(rebIdx.match) ){
 			matchInfo <- list( )
 
