@@ -2787,7 +2787,7 @@ fCutCnt.nextColVal_4 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 					#      2  7 19 25 29 36(2) | 5 12  6  4  7 | -5 -20 -10  -5  -9  -8 |2 1 2 1 0 |2 1 2 1
 					#      6 10 18 25 34 35(1) | 4  8  7  9  1 |  4   3  -1   0   5  -1 |1 2 1 2 0 |1 2 1 2
     cntMtx[,"fStep"] <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
-					cnt <- 0
+					cnt <	- 0
 					aFStep <- aZoid - stdMI$lastZoid
 					if( aFStep[1]%in%c(     ) ) cnt<-cnt+1
 					if( aFStep[2]%in%c(     ) ) cnt<-cnt+1

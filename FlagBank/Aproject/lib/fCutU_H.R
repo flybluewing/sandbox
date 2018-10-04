@@ -808,7 +808,7 @@ fCutU.getChkNextPtn4FV.cStep <- function( rawTail ,pDebug=FALSE ){
 											} )
 				matchInfo <- fCutU.getChkNextPtn4FV.u.matchSpan( tgtSpanDF ,rebSpanDF ,banValLst )
 				if( !is.null(matchInfo) ){
-					fltObj <- list( dbgStr=sprintf("col:%d val:%d lastIdx:%d,%d",cIdx,lastCode[cIdx],rIdx,fIdx)
+					fltObj <- list( dbgStr=sprintf("val:%d(col:%d)      last reb:%d,%d",lastCode[cIdx],cIdx,rIdx,fIdx)
 									,chkSpan=matchInfo$chkSpan ,banVal=matchInfo$banVal )
 					fltObj$matchInfo <- matchInfo
 					rObj$fltLst[[sprintf("col%d(%2d)",cIdx,lastCode[cIdx])]] <- fltObj
@@ -828,7 +828,7 @@ fCutU.getChkNextPtn4FV.cStep <- function( rawTail ,pDebug=FALSE ){
 			for( fIdx in seq_len(length(rObj$fltLst)) ){
 				matchCntBuffer[fIdx] <- sum(rObj$fltLst[[fIdx]]$banVal==aCStep[rObj$fltLst[[fIdx]]$chkSpan])
 			}
-			return( list( flgCnt=sum(rObj$matchCntBuffer>=2) ,matchCnt=matchCntBuffer ) )
+			return( list( flgCnt=sum(matchCntBuffer>=2) ,matchCnt=matchCntBuffer ) )
 		} # rObj$check()
 
 	if( pDebug ){
@@ -846,6 +846,113 @@ fCutU.getChkNextPtn4FV.cStep <- function( rawTail ,pDebug=FALSE ){
 	return( rObj )
 
 } # fCutU.getChkNextPtn4FV.cStep()
+
+fCutU.getChkNextPtn4FV.fStep <- function( rawTail ,pDebug=FALSE ){
+	# rObj <- fCutU.getChkNextPtn4FV.fStep( stdMI$rawTail ,pDebug=T )
+
+	rObj <- list()
+	if( (2+1) > nrow(rawTail) ){
+		rObj$check <- function( aFStep ){ return( list(fltCnt=0 ,infoLst=list() ,fltLst=list() ) ) }
+		return( rObj )
+	}
+
+	# rObj$cMtx <- t( apply( rawTail ,1 ,function(pRaw){ pRaw[2:6]-pRaw[1:5] }) )
+	rObj$fMtx <- apply( rawTail ,2 ,function(cVal){ cVal[2:length(cVal)]-cVal[1:(length(cVal)-1)] })
+
+
+	datLen <- nrow(rObj$fMtx)
+	lastCode <- rObj$fMtx[datLen,]
+	availLst <- fCutU.getChkNextPtn4FV.u.availLst( lastCode )	# avail col span
+
+	rObj$fltLst <- list()
+	for( cIdx in 1:6 ){
+		tgtSpanDF <- availLst[[cIdx]]$spanDF
+
+		fndFlag <- FALSE
+		for( rIdx in (datLen-1):1 ){
+			fndIdx <- which( rObj$fMtx[rIdx,] == lastCode[cIdx] )
+			fndIdx <- fndIdx[order( abs(fndIdx-cIdx) )]
+
+			for( fIdx in fndIdx ){
+				rebSpanDF <- availLst[[fIdx]]$spanDF
+				banValLst <- lapply( 1:nrow(rebSpanDF) ,function(sdIdx){
+												banColSpan <- (1:rebSpanDF[sdIdx,"spanLen"]+rebSpanDF[sdIdx,"offset"] )
+												banVal <- rObj$fMtx[rIdx+1,banColSpan]
+												return(banVal)
+											} )
+				matchInfo <- fCutU.getChkNextPtn4FV.u.matchSpan( tgtSpanDF ,rebSpanDF ,banValLst )
+				if( !is.null(matchInfo) ){
+					fltObj <- list( dbgStr=sprintf("val:%d(col:%d)      last reb:%d,%d",lastCode[cIdx],cIdx,rIdx,fIdx)
+									,chkSpan=matchInfo$chkSpan ,banVal=matchInfo$banVal )
+					fltObj$matchInfo <- matchInfo
+					rObj$fltLst[[sprintf("col%d(%2d)",cIdx,lastCode[cIdx])]] <- fltObj
+					fndFlag <- TRUE
+					break
+				}
+			}
+
+			if(fndFlag){
+				break
+			}
+		} # for(rIdx)
+		if( fndFlag ){
+			next
+		}
+
+		# 동일 값이 없으면 +,- 반대값으로 검색
+		for( rIdx in (datLen-1):1 ){
+			fndIdx <- which( rObj$fMtx[rIdx,] == -lastCode[cIdx] )
+			fndIdx <- fndIdx[order( abs(fndIdx-cIdx) )]
+
+			for( fIdx in fndIdx ){
+				rebSpanDF <- availLst[[fIdx]]$spanDF
+				banValLst <- lapply( 1:nrow(rebSpanDF) ,function(sdIdx){
+												banColSpan <- (1:rebSpanDF[sdIdx,"spanLen"]+rebSpanDF[sdIdx,"offset"] )
+												banVal <- -rObj$fMtx[rIdx+1,banColSpan]
+												return(banVal)
+											} )
+				matchInfo <- fCutU.getChkNextPtn4FV.u.matchSpan( tgtSpanDF ,rebSpanDF ,banValLst )
+				if( !is.null(matchInfo) ){
+					fltObj <- list( dbgStr=sprintf("val:%d(col:%d)      last reb:%d,%d  (reverse)",lastCode[cIdx],cIdx,rIdx,fIdx)
+									,chkSpan=matchInfo$chkSpan ,banVal=matchInfo$banVal )
+					fltObj$matchInfo <- matchInfo
+					rObj$fltLst[[sprintf("col%d(%2d)",cIdx,lastCode[cIdx])]] <- fltObj
+					fndFlag <- TRUE
+					break
+				}
+			}
+
+			if(fndFlag){
+				break
+			}
+		} # for(rIdx)
+
+	}
+	
+	rObj$check <- function( aCStep ){
+			matchCntBuffer <- rep( 0 ,length(rObj$fltLst) )
+			for( fIdx in seq_len(length(rObj$fltLst)) ){
+				matchCntBuffer[fIdx] <- sum(rObj$fltLst[[fIdx]]$banVal==aCStep[rObj$fltLst[[fIdx]]$chkSpan])
+			}
+			return( list( flgCnt=sum(matchCntBuffer>=2) ,matchCnt=matchCntBuffer ) )
+		} # rObj$check()
+
+	if( pDebug ){
+		cat( sprintf("    %s",capture.output(rObj$fMtx)), sep="\n" ) 
+		cat("---------------------------------------------------", sep="\n") 
+		for( lIdx in seq_len(length(rObj$fltLst)) ){
+			flt <- rObj$fltLst[[lIdx]]
+			cat(sprintf("%dth flter     %s \n" ,lIdx ,flt$dbgStr ))
+			cat(sprintf("   ban Val %s\n", paste(flt$banVal ,collapse=" " ) ))
+			cat(sprintf("   tgt DF %s (%s)\n", flt$matchInfo$tgt.desc,paste(flt$chkSpan,collapse=" ") ))
+			cat(sprintf("   reb DF %s \n", flt$matchInfo$reb.desc ))
+		}
+	}
+
+	return( rObj )
+
+} # fCutU.getChkNextPtn4FV.fStep()
+
 
 #	utility function for fCutU.getChkNextPtn4FV.xxxx()
 fCutU.getChkNextPtn4FV.u.matchSpan <- function( tgtSpanDF ,rebSpanDF ,banValLst ){
@@ -892,26 +999,31 @@ fCutU.getChkNextPtn4FV.u.matchSpan <- function( tgtSpanDF ,rebSpanDF ,banValLst 
 			}
 		}
 
-		QQE working : newSpan -> newSpan.tgt ,newSpan.reb
-			fCutCnt.nextZW     1th flter     col:1 val:5 lastIdx:5,4 
+		# 	fCutCnt.nextZW     1th flter     col:1 val:5 lastIdx:5,4 
 		if( !is.na(rebIdx.match) ){
 			matchInfo <- list( )
 
+			banVal.idx <- rebSpanDF[rebIdx.match,"startIdx"]:rebSpanDF[rebIdx.match,"endIdx"]
 			banVal <- banValLst[[rebIdx.match]]
-			if( all(newSpan==c(0,1)) ){	# 로직보단 차라리 하드코딩이 알아보기 쉽겠다.... -_-;
+			banVal <- banVal[banVal.idx %in% newSpan.reb]
+
+			# 참고 : newSpan.tgt와 newSpan.reb 모두 증,감의 방향은 동일할 수 밖에 없다
+			# 로직보단 차라리 하드코딩이 알아보기 쉽겠다.... -_-;
+			if( all(newSpan.tgt==c(0,1)) ){	
 				matchInfo$chkSpan <- 0:1 + tgtSpanDF[tgtIdx,"cIdx"]
-				matchInfo$banVal <- banVal[newSpan+1]
+				matchInfo$banVal <- banVal
 				matchInfo$tgt.desc <- sprintf("tgtIdx:%d    1:2+%d",tgtIdx ,tgtSpanDF[tgtIdx,"cIdx"]-1 )
 				matchInfo$reb.desc <- sprintf("rebIdx:%d    1:2+%d",rebIdx.match ,rebSpanDF[rebIdx.match,"cIdx"]-1 )
-			} else if( all(newSpan==c(-1,0)) ){
+			} else if( all(newSpan.tgt==c(-1,0)) ){
 				matchInfo$chkSpan <- -1:0 + tgtSpanDF[tgtIdx,"cIdx"]
-				matchInfo$banVal <- banVal[newSpan+length(banVal)]
+				matchInfo$banVal <- banVal
 				matchInfo$tgt.desc <- sprintf("tgtIdx:%d    1:2+%d",tgtIdx ,tgtSpanDF[tgtIdx,"cIdx"]-2 )
 				matchInfo$reb.desc <- sprintf("rebIdx:%d    1:2+%d",rebIdx.match ,rebSpanDF[rebIdx.match,"cIdx"]-2 )
 			}
 			break
 		}
-	}
+
+	} # for(tgtIdx)
 
 	return( matchInfo )
 } # fCutU.getChkNextPtn4FV.u.matchSpan()
