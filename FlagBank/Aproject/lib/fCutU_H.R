@@ -1132,6 +1132,7 @@ fCutU.commonCutCnt <- function( gEnv, allIdxF ,zMtx
 		cName <- c("reb","nbor","spanM"
 						,"quoAll","quoPtn","zw"
 						,"remH0","remH1","cStep2","cStep3"
+						,"w1CStep.cnt","w1FStep.cnt","w1CStep.matLen","w1FStep.matLen"
 					)
 		scoreMtx <- matrix( 0, nrow=length(allIdxF) ,ncol=length(cName) )
 		colnames(scoreMtx) <-cName
@@ -1232,6 +1233,21 @@ fCutU.commonCutCnt <- function( gEnv, allIdxF ,zMtx
     flgCnt[!flag] <- flgCnt[!flag] + 1
 	if( pScoreMtx ) scoreMtx[,"cStep3"] <- !flag
 
+	wCObj <- fCutU.getChkNextPtn4FV.cStep( stdMI$rawTail )
+	wFObj <- fCutU.getChkNextPtn4FV.fStep( stdMI$rawTail )
+	for( idx in seq_len(length(allIdxF)) ){
+		aZoid <- gEnv$allZoidMtx[allIdxF[idx],]
+		#	scoreMtx	"w1CStep.cnt","w1FStep.cnt","w1CStep.matLen","w1FStep.matLen"
+		aCStep <- aZoid[2:6] - aZoid[1:5]
+		chkObj.c <- wCObj$check(aCStep)
+		scoreMtx[idx,"w1CStep.cnt"] <- chkObj.c$flgCnt
+		scoreMtx[idx,"w1CStep.matLen"] <- max( chkObj.c$matchCnt )
+
+		aFStep <- aZoid - stdMI$lastZoid
+		chkObj.f <- wFObj$check(aFStep)
+		scoreMtx[idx,"w1FStep.cnt"] <- chkObj.f$flgCnt
+		scoreMtx[idx,"w1FStep.matLen"] <- max( chkObj.f$matchCnt )
+	}
 
 	# cName <- c("c31","c32","c33","c34","c21","c22","c23","c24","c25","max2","min2")
 	# cStepValMtx <- matrix( 0 ,nrow=length(allIdxF) ,ncol=length(cName) )
