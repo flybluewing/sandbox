@@ -1,5 +1,7 @@
 # toZ826_H.R 최종접근
-cntThld <- c(2,2,3,2,2)	;names(cntThld) <- c("raw","rawFV","rem","cStep","fStep")
+cntMtx.colName <- c( "raw","rawFV","rem","cStep","fStep"
+						,"raw.w1","cStep.w1","cStep.w2","fStep.w1","fStep.w2"
+					)
 
 # 공용
 # undone
@@ -664,7 +666,6 @@ fCut.basic <- function( gEnv ,allIdxF ,rpt=FALSE ){
 # done
 fCutCnt.basic <- function( gEnv ,allIdxF ,rpt=FALSE ){
 
-	flgCnt <- rep( 0 ,length(allIdxF) )
 	zMtx <- gEnv$zhF					# rptObj<-anaQuoTbl( zMtx )
 
 	stdMI <- fCutU.getMtxInfo( zMtx )
@@ -680,7 +681,6 @@ fCutCnt.basic <- function( gEnv ,allIdxF ,rpt=FALSE ){
 					return( TRUE )
 				})	;kIdx<-anaFlagFnd(!flag,rpt)
 	auxCntMtx[,"auxZW"] <- !flag
-    flgCnt[!flag] <- flgCnt[!flag] + 1	
     flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
 					quoSize <- fCutU.getQuoObj( aZoid )$size
 					if( all(quoSize[1:3+1]==c(0,2,2)) ) return(FALSE)	# next rebind of 1,1,3
@@ -689,14 +689,10 @@ fCutCnt.basic <- function( gEnv ,allIdxF ,rpt=FALSE ){
 					return( TRUE )
 				})	;kIdx<-anaFlagFnd(!flag,rpt)
 	auxCntMtx[,"auxQuo"] <- !flag
-    flgCnt[!flag] <- flgCnt[!flag] + 1
 
 	# -- conditional
-	cName <- c( "raw","rawFV","rem","cStep","fStep"
-					,"raw.w1","cStep.w1","cStep.w2","fStep.w1","fStep.w2"
-				)
-	cntMtx <- matrix( 0 ,nrow=length(allIdxF) ,ncol=length(cName) )
-	colnames(cntMtx) = cName
+	cntMtx <- matrix( 0 ,nrow=length(allIdxF) ,ncol=length(cntMtx.colName) )
+	colnames(cntMtx) = cntMtx.colName
 
 	cnt <- 0	;cnt.w1 <- 0	;cnt.w2 <- 0
 	for( idx in seq_len(length(allIdxF)) ){
@@ -770,6 +766,13 @@ fCutCnt.basic <- function( gEnv ,allIdxF ,rpt=FALSE ){
 			cntMtx[idx,"cStep.w2"] <- cnt.w2
 			cntMtx[idx,"cStep"] <- cnt + cnt.w1 + cnt.w2
 		}
+		# Raw value(reb)       |cStep          |fStep                   |QuoSize   |QuoTbl 
+		# 10 21 22 30 35 42    |11  1  8  5  7 |                        |0 1 2 2 1 |1 2 2 1
+		#  1 12 13 24 29 44    |11  1 11  5 15 | -9  -9  -9  -6  -6   2 |1 2 2 0 1 |1 2 2 1
+		#  9 18 20 24 27 36(1) | 9  2  4  3  9 |  8   6   7   0  -2  -8 |1 1 3 1 0 |1 1 3 1
+		# 12 18 24 26 39 40(2) | 6  6  2 13  1 |  3   0   4   2  12   4 |0 2 2 1 1 |2 2 1 1
+		#  7  9 24 29 34 38(1) | 2 15  5  5  4 | -5  -9   0   3  -5  -2 |2 0 2 2 0 |2 2 2
+		#  8 15 21 31 33 38(1) | 7  6 10  2  5 |  1   6  -3   2  -1   0 |1 1 1 3 0 |1 1 1 3
 		if( TRUE ){ # fStep
 			cnt <- 0
 			if( aFStep[1]%in%c( 7   ) ) cnt<-cnt+1

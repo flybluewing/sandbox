@@ -159,9 +159,21 @@ u0.zoidMtx_ana <- function( pMtx ){
 u0.zoidCMtx_ana.rpt <- function( pMtx ){
     # u0.zoidCMtx_ana.rpt( pMtx )
     cat("cStep ptn info \n")
+
     dfStr <- capture.output( u0.zoidCMtx_ana(pMtx) )
     cat(sprintf("%s\n",dfStr))
-    # QQE working
+
+    if( 0 == pMtxLen ){
+        return( "" )
+    }
+
+    pMtxLen <- nrow( pMtx )
+    cMtx <- t( apply( pMtx ,1 ,function(code){ code[2:6]-code[1:5] }) )
+    tbl <- table(cMtx)
+    tbl <- tbl[tbl>1]
+    fvStr <- capture.output( tbl )
+    cat(sprintf("    %s\n",fvStr))
+
 } # u0.zoidCMtx_ana.rpt()
 
 u0.zoidCMtx_ana <- function( pMtx ){
@@ -304,9 +316,20 @@ u0.zoidCMtx_ana <- function( pMtx ){
 u0.zoidFMtx_ana.rpt <- function( pMtx ){
     # u0.zoidFMtx_ana.rpt( pMtx )
     cat("fStep ptn info \n")
+
     dfStr <- capture.output( u0.zoidFMtx_ana(pMtx) )
     cat(sprintf("%s\n",dfStr))
-    # QQE working
+
+    pMtxLen <- nrow( pMtx )-1
+    if( 0 == pMtxLen ){
+        return( "" )
+    }
+    fMtx <- do.call( rbind ,lapply( 1:pMtxLen ,function(rIdx){ pMtx[rIdx+1,]-pMtx[rIdx,] }) )
+    tbl <- table(fMtx)
+    tbl <- tbl[tbl>1]
+    fvStr <- capture.output( tbl )
+    cat(sprintf("    %s\n",fvStr))
+
 } # u0.zoidFMtx_ana.rpt()
 
 u0.zoidFMtx_ana <- function( pMtx ){
