@@ -44,7 +44,6 @@ fCutCnt.next181006 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 	colnames(cntMtx) = cntMtx.colName
 
 	cnt <- 0	;cnt.w1 <- 0	;cnt.w2 <- 0
-	cnt <- 0	;cnt.w1 <- 0	;cnt.w2 <- 0
 	for( idx in seq_len(length(allIdxF)) ){
 		aZoid <- gEnv$allZoidMtx[allIdxF[idx],]
 		aCStep <- aZoid[2:6] - aZoid[1:5]
@@ -126,10 +125,7 @@ fCutCnt.next181006 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 
 	} # for( idx )	# kIdx<-anaFltCnt(cntMtx[,"raw"],rpt)
 
-	return( list( lastZoid=stdMI$lastZoid
-					,cccObj=cccObj	,auxCntMtx=auxCntMtx
-				) 
-			)
+	return( list( cccObj=cccObj	,auxCntMtx=auxCntMtx ,cntMtx=cntMtx	) )	# lastZoid´Â cccObj ¾È¿¡..
 
 } # fCutCnt.next181006()
 
