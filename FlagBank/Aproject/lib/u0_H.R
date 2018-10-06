@@ -160,19 +160,46 @@ u0.zoidCMtx_ana.rpt <- function( pMtx ){
     # u0.zoidCMtx_ana.rpt( pMtx )
     cat("cStep ptn info \n")
 
-    dfStr <- capture.output( u0.zoidCMtx_ana(pMtx) )
-    cat(sprintf("%s\n",dfStr))
+    cat("    Raw value(reb)       |cStep          |fStep                   |QuoSize   |QuoTbl \n")
+    dummy <- sapply( seq_len(nrow(pMtx)) ,function( zIdx ){
+                    valStr <- paste(sprintf("%2d",pMtx[zIdx,]) ,collapse=" " )
+                    rebCnt <- 0
+                    if( zIdx>1 ){
+                        rebCnt <- sum(pMtx[zIdx,] %in% pMtx[(zIdx-1),])
+                    }
 
+                    cStepStr <- paste(sprintf("%2d",pMtx[zIdx,2:6]-pMtx[zIdx,1:5]) 
+                                    ,collapse=" " )
+                    fStepStr <- if( zIdx>1 ){
+                                    paste(sprintf("%3d" ,pMtx[zIdx,]-pMtx[(zIdx-1),])
+                                        ,collapse=" " )
+                                } else { "                       " }
+
+                    quoObj <- fCutU.getQuoObj( pMtx[zIdx,]  )
+                    quoTblStr <- paste( quoObj$tbl ,collapse=" " )
+                    quoSizeStr <- paste( quoObj$size ,collapse=" " )
+
+                    cat(sprintf("    %s%s |%s |%s |%s |%s\n"
+                            ,valStr
+                            ,ifelse(rebCnt>0,sprintf("(%d)",rebCnt),"   ")
+                            ,cStepStr ,fStepStr ,quoSizeStr ,quoTblStr
+                        ))
+                })
+    cat("-------------------------------------------------------------------------------------\n")
+
+    dfStr <- capture.output( u0.zoidCMtx_ana(pMtx) )
+    cat(sprintf("    %s\n",dfStr))
+    cat("-------------------------------------------------------------------------------------\n")
+
+    pMtxLen <- nrow( pMtx )
     if( 0 == pMtxLen ){
         return( "" )
     }
-
-    pMtxLen <- nrow( pMtx )
     cMtx <- t( apply( pMtx ,1 ,function(code){ code[2:6]-code[1:5] }) )
     tbl <- table(cMtx)
     tbl <- tbl[tbl>1]
-    fvStr <- capture.output( tbl )
-    cat(sprintf("    %s\n",fvStr))
+    fvStr <- paste( sprintf("%s(%d)",names(tbl),tbl) ,collapse="   ")
+    cat(sprintf("    FV :    %s \n",fvStr))
 
 } # u0.zoidCMtx_ana.rpt()
 
@@ -317,8 +344,36 @@ u0.zoidFMtx_ana.rpt <- function( pMtx ){
     # u0.zoidFMtx_ana.rpt( pMtx )
     cat("fStep ptn info \n")
 
+    cat("    Raw value(reb)       |cStep          |fStep                   |QuoSize   |QuoTbl \n")
+    dummy <- sapply( seq_len(nrow(pMtx)) ,function( zIdx ){
+                    valStr <- paste(sprintf("%2d",pMtx[zIdx,]) ,collapse=" " )
+                    rebCnt <- 0
+                    if( zIdx>1 ){
+                        rebCnt <- sum(pMtx[zIdx,] %in% pMtx[(zIdx-1),])
+                    }
+
+                    cStepStr <- paste(sprintf("%2d",pMtx[zIdx,2:6]-pMtx[zIdx,1:5]) 
+                                    ,collapse=" " )
+                    fStepStr <- if( zIdx>1 ){
+                                    paste(sprintf("%3d" ,pMtx[zIdx,]-pMtx[(zIdx-1),])
+                                        ,collapse=" " )
+                                } else { "                       " }
+
+                    quoObj <- fCutU.getQuoObj( pMtx[zIdx,]  )
+                    quoTblStr <- paste( quoObj$tbl ,collapse=" " )
+                    quoSizeStr <- paste( quoObj$size ,collapse=" " )
+
+                    cat(sprintf("    %s%s |%s |%s |%s |%s\n"
+                            ,valStr
+                            ,ifelse(rebCnt>0,sprintf("(%d)",rebCnt),"   ")
+                            ,cStepStr ,fStepStr ,quoSizeStr ,quoTblStr
+                        ))
+                })
+    cat("-------------------------------------------------------------------------------------\n")
+
     dfStr <- capture.output( u0.zoidFMtx_ana(pMtx) )
-    cat(sprintf("%s\n",dfStr))
+    cat(sprintf("    %s\n",dfStr))
+    cat("-------------------------------------------------------------------------------------\n")
 
     pMtxLen <- nrow( pMtx )-1
     if( 0 == pMtxLen ){
@@ -327,8 +382,8 @@ u0.zoidFMtx_ana.rpt <- function( pMtx ){
     fMtx <- do.call( rbind ,lapply( 1:pMtxLen ,function(rIdx){ pMtx[rIdx+1,]-pMtx[rIdx,] }) )
     tbl <- table(fMtx)
     tbl <- tbl[tbl>1]
-    fvStr <- capture.output( tbl )
-    cat(sprintf("    %s\n",fvStr))
+    fvStr <- paste( sprintf("%s(%d)",names(tbl),tbl) ,collapse="   ")
+    cat(sprintf("    FV :    %s \n",fvStr))
 
 } # u0.zoidFMtx_ana.rpt()
 
