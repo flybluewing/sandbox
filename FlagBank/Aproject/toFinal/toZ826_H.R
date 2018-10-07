@@ -709,6 +709,9 @@ fCutCnt.basic <- function( gEnv ,allIdxF ,rpt=FALSE ){
 			if( aZoid[5]%in%c(32    ) ) cnt<-cnt+1
 			if( aZoid[6]%in%c(38,40 ) ) cnt<-cnt+1
 			cntMtx[idx,"raw"] <- cnt
+
+			cnt <- 0
+			cntMtx[idx,"raw.w1"] <- cnt
 		}
 		if( TRUE ){ # rawFV		# anaMtx.freqVal( stdMI$rawTail )
 			cnt <- 0
