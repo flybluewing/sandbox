@@ -1374,7 +1374,13 @@ fCutCnt.nextCStepBin <- function( gEnv ,allIdxF ,rpt=FALSE ){
 } # fCutCnt.nextCStepBin()
 
 QQE
-
+    Raw value(reb)       |cStep          |fStep                   |QuoSize   |QuoTbl 
+     4 10 18 27 40 45    | 6  8  9 13  5 |                        |1 2 1 0 2 |1 2 1 2
+     6  7 10 16 38 41(1) | 1  3  6 22  3 |  2  -3  -8 -11  -2  -4 |2 2 0 1 1 |2 2 1 1
+     2  9 22 25 31 45    | 7 13  3  6 14 | -4   2  12   9  -7   4 |2 0 2 1 1 |2 2 1 1
+    16 21 26 31 36 43(1) | 5  5  5  5  7 | 14  12   4   6   5  -2 |0 1 2 2 1 |1 2 2 1
+     7  9 10 13 31 35(1) | 2  1  3 18  4 | -9 -12 -16 -18  -5  -8 |2 2 0 2 0 |2 2 2
+     6 18 31 34 38 45(1) |12 13  3  4  7 | -1   9  21  21   7  10 |1 1 0 3 1 |1 1 3 1
 # done
 fCutCnt.nextFStepBin <- function( gEnv ,allIdxF ,rpt=FALSE ){
 
