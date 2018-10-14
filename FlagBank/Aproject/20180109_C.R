@@ -13,7 +13,7 @@ source("./lib/fCutU_H.R")
 source("./lib/u0_H.R")
 
 tStmp <- Sys.time()
-saveId <- "Z827"
+saveId <- "Z828"
 # myObj <- load( sprintf("Obj_allIdxLst%s.save",saveId) )
 load(sprintf("./save/Obj_gEnv%s.save",saveId))
 
@@ -92,6 +92,30 @@ allIdxLst$infoMtx <- cbind( stdFiltedCnt ,rebCnt[names(stdFiltedCnt)] )
 colnames( allIdxLst$infoMtx ) <- c("stdFiltedCnt","rebCnt")
 
 save( allIdxLst, file=sprintf("Obj_allIdxLst%s.save",saveId) )
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 #=[Final Course]=========================================================================
