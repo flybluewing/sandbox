@@ -1896,15 +1896,10 @@ fCutCnt.nextCStepBin <- function( gEnv ,allIdxF ,rpt=FALSE ){
 	# -- conditional
 	auxCntMtx <- matrix( 0 ,nrow=length(allIdxF) ,ncol=2 )	;colnames(auxCntMtx)=c("auxZW","auxQuo")
     flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
-					# if( (aZoid[6]-aZoid[1]) %in% c( , ) ) return( FALSE )
-					return( TRUE )
-				})	;kIdx<-anaFlagFnd(!flag,rpt)
-	auxCntMtx[,"auxZW"] <- !flag
-    flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
 					quoSize <- fCutU.getQuoObj( aZoid )$size
-					# if( all(quoSize[1:3+ ]==c(,,)) ) return(FALSE)	# next rebind of ,,
-					# if( all(quoSize[1:3+ ]==c(,,)) ) return(FALSE)	# next rebind of ,,
-					# if( all(quoSize[1:3+ ]==c(,,)) ) return(FALSE)	# next rebind of ,,
+					if( all(quoSize[1:3+0]==c(1,1,2)) ) return(FALSE)	# next rebind of 1,1,1
+					if( all(quoSize[1:3+1]==c(1,1,2)) ) return(FALSE)	# next rebind of 1,1,1
+					if( all(quoSize[1:3+2]==c(0,4,2)) ) return(FALSE)	# next rebind of 1,1,2
 					return( TRUE )
 				})	;kIdx<-anaFlagFnd(!flag,rpt)
 	auxCntMtx[,"auxQuo"] <- !flag
@@ -1918,8 +1913,8 @@ fCutCnt.nextCStepBin <- function( gEnv ,allIdxF ,rpt=FALSE ){
 			#     10 14 16 18 27 28(1) | 4  2  2  9  1 |  6  -2  -4 -15 -13 -15 |0 4 2 0 0 |4 2
 			# -<standard zoid>---------------------------------------------------------------------
 			#      4  5 31 35 43 45    | 1 26  4  8  2 | -6  -9  15  17  16  17 |2 0 0 2 2 |2 2 2
-			#   dup number  16:3   20:2   24:2   44:2
-			#   zoid width  ... 37   26   42   43   39   18 and ?
+			
+
 			#        Quo10 pattern rebind table 
 			#        none:100.0%(6/6) 
 			#      tgt.col banVal                           descript tgt.dir
@@ -1943,12 +1938,12 @@ fCutCnt.nextCStepBin <- function( gEnv ,allIdxF ,rpt=FALSE ){
 	
 		if( TRUE ){	# raw
 			cnt <- 0
-			if( aZoid[1]%in%c(    ) ) cnt<-cnt+1
-			if( aZoid[2]%in%c(    ) ) cnt<-cnt+1
-			if( aZoid[3]%in%c(    ) ) cnt<-cnt+1
-			if( aZoid[4]%in%c(    ) ) cnt<-cnt+1
-			if( aZoid[5]%in%c(    ) ) cnt<-cnt+1
-			if( aZoid[6]%in%c(    ) ) cnt<-cnt+1
+			if( aZoid[1]%in%c(          ) ) cnt<-cnt+1
+			if( aZoid[2]%in%c(          ) ) cnt<-cnt+1
+			if( aZoid[3]%in%c( 21,22    ) ) cnt<-cnt+1
+			if( aZoid[4]%in%c( 24,16, 1 ) ) cnt<-cnt+1
+			if( aZoid[5]%in%c( 41       ) ) cnt<-cnt+1
+			if( aZoid[6]%in%c( 42       ) ) cnt<-cnt+1
 			cntMtx[idx,"raw"] <- cnt
 
 			cnt <- 0
@@ -1958,6 +1953,7 @@ fCutCnt.nextCStepBin <- function( gEnv ,allIdxF ,rpt=FALSE ){
 			cnt <- 0
 			# < >
 			if( fCutU.hasPtn(c(  ,  ),aZoid) ) cnt<-cnt+1
+			#   dup number  16:3   20:2   24:2   44:2
 			cntMtx[idx,"rawFV"] <- cnt
 		}
 		if( TRUE ){ # rem		# u0.zoidMtx_ana( stdMI$rawTail%%10 )
