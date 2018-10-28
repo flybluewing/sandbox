@@ -1,4 +1,4 @@
-# toZ830_H.R 최종접근
+# toZ831_H.R 최종접근
 cntMtx.colName <- c( "raw","rawFV","rem","cStep","fStep"
 						,"raw.w1","cStep.w1","cStep.w2","fStep.w1","fStep.w2"
 					)
