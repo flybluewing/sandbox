@@ -2851,7 +2851,7 @@ fCutCnt.nextColVal_5 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 
 } # fCutCnt.nextColVal_5()
 
-# undone
+# done
 fCutCnt.nextColVal_6 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 	# 경고 : 동일 컬럼 동일 값 반복 상태인 경우 신중할 것.
 	flgCnt <- rep( 0 ,length(allIdxF) )
@@ -2955,9 +2955,8 @@ fCutCnt.nextColVal_6 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 			if( fCutU.hasPtn(c(  6, 3  ),aCStep) )	cnt.w1<-cnt.w1+1
 
 			cnt.w2 <- 0
-			if( all(aCStep[]==aCStep[]) )					cnt.w2<-cnt.w2+1
-			if( aCStep[ ]==sum(aCStep[c( , )]) )			cnt.w2<-cnt.w2+1
-			if( sum(aCStep[c( , )])==sum(aCStep[c( , )]) )	cnt.w2<-cnt.w2+1
+			if( all(aCStep[1:2]== aCStep[3]*c(3,3)) )		cnt.w2<-cnt.w2+1
+			if( aCStep[4]==sum(aCStep[c(1,2,5)]) )			cnt.w2<-cnt.w2+1
 
 			cntMtx[idx,"cStep.w1"] <- cnt.w1	;cntMtx[idx,"cStep.w2"] <- cnt.w2
 			cntMtx[idx,"cStep"] <- cnt + cnt.w1 + cnt.w2

@@ -86,12 +86,12 @@ fCutCnt.next181006 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 			if( aCStep[4]%in%c(      ) ) cnt<-cnt+1
 			if( aCStep[5]%in%c(      ) ) cnt<-cnt+1
 
-			cnt.w1 <- cccObj$scoreMtx[idx,"w1CStep.cnt"]
+			cnt.w1 <- cccObj$scoreMtx[idx,"w1CStep.cnt"]	# fv in cStep
 			if( fCutU.hasPtn(c( , ),aCStep) )	cnt.w1<-cnt.w1+1
 			if( 1<sum(aCStep[1:2+ ]==c( , )) )	cnt.w1<-cnt.w1+1
 
 			cnt.w2 <- 0
-			if( all(aCStep[]==aCStep[]) )	cnt.w2<-cnt.w2+1
+			if( 1<sum(aCStep[c( , )]== aCStep[]*c(,) ) )	cnt.w2<-cnt.w2+1
 			if( aCStep[ ]==sum(aCStep[c( , )]) )	cnt.w2<-cnt.w2+1
 			if( sum(aCStep[c( , )])==sum(aCStep[c( , )]) )	cnt.w2<-cnt.w2+1
 
@@ -115,12 +115,12 @@ fCutCnt.next181006 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 			if( aFStep[5]%in%c(     ) ) cnt<-cnt+1
 			if( aFStep[6]%in%c(     ) ) cnt<-cnt+1
 
-			cnt.w1 <- cccObj$scoreMtx[idx,"w1FStep.cnt"]
+			cnt.w1 <- cccObj$scoreMtx[idx,"w1FStep.cnt"]	# fv in fStep
 			if( fCutU.hasPtn(c( , ),aFStep) )	cnt.w1<-cnt.w1+1
 			if( 1<sum(aFStep[1:2+ ]==c( , )) )	cnt.w1<-cnt.w1+1
 
 			cnt.w2 <- 0
-			if( all(aFStep[]==aFStep[]) )	cnt.w2<-cnt.w2+1
+			if( 1<sum(aFStep[c( , )]== aFStep[]*c( , ) ) )	cnt.w2<-cnt.w2+1
 			if( aFStep[ ]==sum(aFStep[c( , )]) )	cnt.w2<-cnt.w2+1
 			if( sum(aFStep[c( , )])==sum(aFStep[c( , )]) )	cnt.w2<-cnt.w2+1
 
