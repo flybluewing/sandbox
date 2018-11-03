@@ -190,7 +190,7 @@ fCutCnt.basic <- function( gEnv ,allIdxF ,rpt=FALSE ){
 	# flgCnt <- flgCnt + cccObj$flgCnt	단순 평가용. 실제 대부분은 fCutCnt.basic에서 ..
 
 	# -- conditional
-	auxCntMtx <- matrix( 0 ,nrow=length(allIdxF) ,ncol=3 )	;colnames(auxCntMtx)=c("auxZW","auxQuo")
+	auxCntMtx <- matrix( 0 ,nrow=length(allIdxF) ,ncol=2 )	;colnames(auxCntMtx)=c("auxZW","auxQuo")
     flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
 					if( (aZoid[6]-aZoid[1]) %in% c(27,29) ) return( FALSE )
 					return( TRUE )

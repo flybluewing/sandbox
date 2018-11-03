@@ -254,7 +254,7 @@ fCutCnt.basic <- function( gEnv ,allIdxF ,rpt=FALSE ){
 
 			cnt.w1 <- cccObj$scoreMtx[idx,"w1CStep.cnt"]
 			cnt.w2 <- 0
-			if( aCStep[4]==sum(aCStep[c(2,3,5)]) ) cnt<-cnt+1	cnt.w2<-cnt.w2+1
+			if( aCStep[4]==sum(aCStep[c(2,3,5)]) ) cnt.w2<-cnt.w2+1
 
 			cntMtx[idx,"cStep.w1"] <- cnt.w1	;cntMtx[idx,"cStep.w2"] <- cnt.w2
 			cntMtx[idx,"cStep"] <- cnt + cnt.w1 + cnt.w2
