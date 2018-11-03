@@ -804,3 +804,49 @@ u0.getDescript_ptnReb <- function( banObj ,rawVal ){
 	descStr <- sprintf("[ptnReb   ] %2d(?),%s",banObj$banVal,valStr)
     return(descStr)
 }
+
+
+u0.saveStdZoidFltRst <- function( hNum ){
+	#	source("./toFinal/toZ826_H.R")
+	#	u0.saveStdZoidFltRst( hNum=826 )
+
+	load(sprintf("./save/Obj_gEnvZ%d.save",hNum))
+	aZoid <- stdZoid <- gEnv$zhF[hNum,]
+	allIdxF <- allIdx <- stdIdx <- which(apply(gEnv$allZoidMtx,1,function(zoid){all(zoid==stdZoid)}))
+	rm(gEnv)
+
+	load( sprintf("Obj_allIdxLstZ%d.save",hNum) )
+	stdFiltedCnt <- allIdxLst$stdFiltedCnt[as.character(hNum)]
+	rm(allIdxLst)
+
+	rptObj <- list( h=hNum ,stdIdx=stdIdx ,stdFiltedCnt=stdFiltedCnt ,stdZoid=stdZoid )
+	saveId <- sprintf( "Z%d" ,hNum-1 )
+	load(sprintf("./save/Obj_gEnv%s.save",saveId))
+
+	# rptObj$default.cutSurvive <- 0<length(fCut.default( gEnv ,allIdxF ))
+	# rptObj$colValSeqNext.cnt		<- fCutCnt.colValSeqNext( gEnv ,allIdxF )
+	# rptObj$colValSeqNext.cStep.cnt	<- fCutCnt.colValSeqNext.cStep( gEnv ,allIdxF )
+	rptObj$default.cnt	<- fCutCnt.default( gEnv ,allIdxF )
+
+	ccObjLst <- list()
+	ccObjLst[["basic"		]] <- fCutCnt.basic( 		gEnv ,allIdxF )
+	ccObjLst[["nextZW"		]] <- fCutCnt.nextZW( 		gEnv ,allIdxF )
+	ccObjLst[["nextQuo10"	]] <- fCutCnt.nextQuo10( 	gEnv ,allIdxF )
+	ccObjLst[["nextBin"		]] <- fCutCnt.nextBin( 		gEnv ,allIdxF )
+	ccObjLst[["nextRebNum"	]] <- fCutCnt.nextRebNum( 	gEnv ,allIdxF )
+	ccObjLst[["nextCStepBin"]] <- fCutCnt.nextCStepBin( gEnv ,allIdxF )
+	ccObjLst[["nextFStepBin"]] <- fCutCnt.nextFStepBin( gEnv ,allIdxF )
+	ccObjLst[["nextColVal_1"]] <- fCutCnt.nextColVal_1( gEnv ,allIdxF )
+	ccObjLst[["nextColVal_2"]] <- fCutCnt.nextColVal_2( gEnv ,allIdxF )
+	ccObjLst[["nextColVal_3"]] <- fCutCnt.nextColVal_3( gEnv ,allIdxF )
+	ccObjLst[["nextColVal_4"]] <- fCutCnt.nextColVal_4( gEnv ,allIdxF )
+	ccObjLst[["nextColVal_5"]] <- fCutCnt.nextColVal_5( gEnv ,allIdxF )
+	ccObjLst[["nextColVal_6"]] <- fCutCnt.nextColVal_6( gEnv ,allIdxF )
+	rptObj$ccObjLst <- ccObjLst
+
+	saveFile <- sprintf("./save/stdZoidFltRst/z%d.save",rptObj$h)
+	cat(sprintf("    saving rptObj into %s \n",saveFile))
+
+	save( rptObj ,file=saveFile )
+
+}	# u0.saveStdZoidFltRst()

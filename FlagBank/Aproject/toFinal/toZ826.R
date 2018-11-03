@@ -1,4 +1,4 @@
-# Z826
+# Z826 (개선된 구조가 적용된 시작점.)
 source("./toFinal/toZ826_H.R")
 
 saveId <- "Z825"	;rpt=TRUE
@@ -12,43 +12,9 @@ allIdxF <- 1000:1010		;stdZoid <- NULL
 	aZoid <- stdZoid <- c( 13,16,24,25,33,36 ) # ZH 826 채워넣을 것.
 	allIdxF <- allIdx <- stdIdx <- 7112913
 		# which(apply(gEnv$allZoidMtx,1,function(zoid){all(zoid==stdZoid)}))
+	u0.saveStdZoidFltRst( 826 )
 # simMode end   ----------------------------------------------------
 
-#	QQE 동작 테스트 후, u0_H.R 에 추가시킬 것.
-saveStdZoidFltRst <- function( hNum ,stdIdx ,stdFiltedCnt ){
-	#	saveStdZoidFltRst( hNum=826 ,stdIdx=7112913 ,stdFiltedCnt=1 )
-	
-	saveId <- sprintf( "Z%d" ,hNum-1 )
-	load(sprintf("./save/Obj_gEnv%s.save",saveId))
-
-	rptObj <- list( h=hNum ,stdIdx=stdIdx ,stdFiltedCnt=stdFiltedCnt )
-	rptObj$default.cutSurvive <- 0<length(fCut.default( gEnv ,allIdxF ))
-	rptObj$colValSeqNext.cnt		<- fCutCnt.colValSeqNext( gEnv ,allIdxF )
-	rptObj$colValSeqNext.cStep.cnt	<- fCutCnt.colValSeqNext.cStep( gEnv ,allIdxF )
-	rptObj$default.cnt	<- fCutCnt.default( gEnv ,allIdxF )
-
-	ccObjLst <- list()
-	ccObjLst[["basic"		]] <- fCutCnt.basic( 		gEnv ,allIdxF )
-	ccObjLst[["nextZW"		]] <- fCutCnt.nextZW( 		gEnv ,allIdxF )
-	ccObjLst[["nextQuo10"	]] <- fCutCnt.nextQuo10( 	gEnv ,allIdxF )
-	ccObjLst[["nextBin"		]] <- fCutCnt.nextBin( 		gEnv ,allIdxF )
-	ccObjLst[["nextRebNum"	]] <- fCutCnt.nextRebNum( 	gEnv ,allIdxF )
-	ccObjLst[["nextCStepBin"]] <- fCutCnt.nextCStepBin( gEnv ,allIdxF )
-	ccObjLst[["nextFStepBin"]] <- fCutCnt.nextFStepBin( gEnv ,allIdxF )
-	ccObjLst[["nextColVal_1"]] <- fCutCnt.nextColVal_1( gEnv ,allIdxF )
-	ccObjLst[["nextColVal_2"]] <- fCutCnt.nextColVal_2( gEnv ,allIdxF )
-	ccObjLst[["nextColVal_3"]] <- fCutCnt.nextColVal_3( gEnv ,allIdxF )
-	ccObjLst[["nextColVal_4"]] <- fCutCnt.nextColVal_4( gEnv ,allIdxF )
-	ccObjLst[["nextColVal_5"]] <- fCutCnt.nextColVal_5( gEnv ,allIdxF )
-	ccObjLst[["nextColVal_6"]] <- fCutCnt.nextColVal_6( gEnv ,allIdxF )
-	rptObj$ccObjLst <- ccObjLst
-
-	saveFile <- sprintf("./save/stdZoidFltRst/z%d.save",rptObj$h)
-	cat(sprintf("    saving rptObj into %s \n",saveFile))
-
-	save( rptObj ,file=saveFile )
-
-}	# saveStdZoidFltRst()
 
 finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
     # cutEadge.getBanPtnColVal() 에서 1~2개 발생 탈락값들에 대한 검토 권장.
