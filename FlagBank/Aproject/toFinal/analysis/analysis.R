@@ -1,5 +1,5 @@
 tStmp <- Sys.time()
-for( hIdx in c( 809, 814, 816, 819, 820:830 ) ){
+for( hIdx in c( 809, 814, 816, 819, 820:831 ) ){
 	tDiff <- Sys.time() - tStmp
 	cat(sprintf("start hIdx %d (%.1f%s)\n",hIdx,tDiff,units(tDiff) ))
 	source(sprintf("./toFinal/toZ%d_H.R",hIdx) )
