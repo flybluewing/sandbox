@@ -1,9 +1,9 @@
 # Z832
-source("./toFinal/toZ832_H.R")
+workH <- 832	;rpt=TRUE
+source(sprintf("./toFinal/toZ%d_H.R",workH))
 
-saveId <- "Z831"	;rpt=TRUE
-load( sprintf("Obj_allIdxLst%s.save",saveId) )
-load(sprintf("./save/Obj_gEnv%s.save",saveId))
+load( sprintf("Obj_allIdxLstZ%d.save",workH-1) )
+load(sprintf("./save/Obj_gEnvZ%d.save",workH-1))
 allZoidGrpName <-"allZoid.idx0"	# 
 allIdx <- allIdxLst[[allZoidGrpName]]	#   
 allIdxF <- 1000:1010		;stdZoid <- NULL
@@ -11,6 +11,7 @@ allIdxF <- 1000:1010		;stdZoid <- NULL
 # simMode start ----------------------------------------------------
 	aZoid <- stdZoid <- c( ,,,,, ) # ZH 832 채워넣을 것.
 	allIdxF <- allIdx <- stdIdx <- 
+	u0.saveStdZoidFltRst( workH )
 		# which(apply(gEnv$allZoidMtx,1,function(zoid){all(zoid==stdZoid)}))
 # simMode end   ----------------------------------------------------
 
@@ -341,7 +342,7 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 
 
 	fCutU.logAllZoidMtx( gEnv$allZoidMtx[ allIdxFObj$allIdxF.final ,,drop=F] 
-					,logId=sprintf("final_nextOf%s_%s",saveId,allZoidGrpName) 
+					,logId=sprintf("finalFor%s_%s",workH,allZoidGrpName) 
 				)
 
 
