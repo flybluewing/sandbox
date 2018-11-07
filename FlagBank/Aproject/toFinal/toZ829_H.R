@@ -1829,7 +1829,7 @@ fCutCnt.nextRebNum <- function( gEnv ,allIdxF ,rpt=FALSE ){
 			cnt.w2 <- 0
 			if( 1<sum(aCStep[c(2,3,5)]== aCStep[4]*c(3,8,4) ) )	cnt.w2<-cnt.w2+1
 			if( aCStep[3]==sum(aCStep[c( 2,4,5 )]) )			cnt.w2<-cnt.w2+1
-			if( aCStep[6]==sum(aCStep[c( 2,4 )]) )			cnt.w2<-cnt.w2+1
+			if( aCStep[5]==sum(aCStep[c( 2,4 )]) )			cnt.w2<-cnt.w2+1
 
 			cntMtx[idx,"cStep.w1"] <- cnt.w1	;cntMtx[idx,"cStep.w2"] <- cnt.w2
 			cntMtx[idx,"cStep"] <- cnt + cnt.w1 + cnt.w2
@@ -2466,7 +2466,7 @@ fCutCnt.nextColVal_2 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 
 # done
 fCutCnt.nextColVal_3 <- function( gEnv ,allIdxF ,rpt=FALSE ){
-	# 경고 : 동일 컬럼 동일 값 반복 상태인 경우 신중할 것.
+
 	flgCnt <- rep( 0 ,length(allIdxF) )
 	zMtx <- fCutU.getNextColVal( gEnv ,3 )$zMtx	# rptObj<-anaQuoTbl( zMtx )
 	if( 0==nrow(zMtx) ) return( rep(0,length(allIdxF)) )
@@ -2555,8 +2555,8 @@ fCutCnt.nextColVal_3 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 			if( all(aCStep[c(1,5)]==aCStep[4]*c(3,3)) )	cnt.w2<-cnt.w2+1
 			if( all(aCStep[c(2,4)]*c(2,3) ==aCStep[c(3,5)] ) )	cnt.w2<-cnt.w2+1
 			if( all(aCStep[c(2,4)]*c(2,3) ==aCStep[c(3,1)] ) )	cnt.w2<-cnt.w2+1
-			if( aCStep[1]==sum(aCStep[c( 2,,3,4 )]) )	cnt.w2<-cnt.w2+1
-			if( aCStep[5]==sum(aCStep[c( 2,,3,4 )]) )	cnt.w2<-cnt.w2+1
+			if( aCStep[1]==sum(aCStep[c( 2,3,4 )]) )	cnt.w2<-cnt.w2+1
+			if( aCStep[5]==sum(aCStep[c( 2,3,4 )]) )	cnt.w2<-cnt.w2+1
 
 			cntMtx[idx,"cStep.w1"] <- cnt.w1	;cntMtx[idx,"cStep.w2"] <- cnt.w2
 			cntMtx[idx,"cStep"] <- cnt + cnt.w1 + cnt.w2

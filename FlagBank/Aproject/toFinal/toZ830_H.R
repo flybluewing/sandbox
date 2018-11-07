@@ -783,7 +783,7 @@ fCutCnt.basic <- function( gEnv ,allIdxF ,rpt=FALSE ){
 			#     FV :    -5 (2)   -2 (3)   -1 (2)   0 (5)   1 (3)   6 (3) 
 
 			cnt.w2 <- 0
-			if( 1<(aFStep[6]*c(3,1,2)==aFStep[c(3,4,5)]) )	cnt.w2<-cnt.w2+1
+			if( 1<sum(aFStep[6]*c(3,1,2)==aFStep[c(3,4,5)]) )	cnt.w2<-cnt.w2+1
 
 			cntMtx[idx,"fStep.w1"] <- cnt.w1	;cntMtx[idx,"fStep.w2"] <- cnt.w2
 			cntMtx[idx,"fStep"] <- cnt + cnt.w1 + cnt.w2
@@ -1545,7 +1545,7 @@ fCutCnt.nextQuo10 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 			#     FV :    1 (3)   2 (3)   3 (2)   4 (5)   6 (2)   7 (2)   8 (4)   11 (2)   16 (2) 
 			cnt.w2 <- 0
 			if( aCStep[3]==sum(aCStep[c( 1,5 )]) )	cnt.w2<-cnt.w2+1
-			if( aCStep[6]==sum(aCStep[c( 1,2,5 )]) )	cnt.w2<-cnt.w2+1
+			if( aCStep[5]==sum(aCStep[c( 1,2,4 )]) )	cnt.w2<-cnt.w2+1
 
 			cntMtx[idx,"cStep.w1"] <- cnt.w1	;cntMtx[idx,"cStep.w2"] <- cnt.w2
 			cntMtx[idx,"cStep"] <- cnt + cnt.w1 + cnt.w2
@@ -1970,7 +1970,7 @@ fCutCnt.nextCStepBin <- function( gEnv ,allIdxF ,rpt=FALSE ){
 			#     FV :    1 (2)   2 (5)   3 (3)   4 (3)   5 (2)   7 (2)   8 (2)   10 (5) 
 
 			cnt.w2 <- 0
-			if( all(aCStep[5]*c(13,2,4,)==aCStep[c(2,3,4)]) )	cnt.w2<-cnt.w2+1
+			if( all(aCStep[5]*c(13,2,4)==aCStep[c(2,3,4)]) )	cnt.w2<-cnt.w2+1
 
 			cntMtx[idx,"cStep.w1"] <- cnt.w1	;cntMtx[idx,"cStep.w2"] <- cnt.w2
 			cntMtx[idx,"cStep"] <- cnt + cnt.w1 + cnt.w2
@@ -2715,7 +2715,6 @@ fCutCnt.nextColVal_4 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 			if( all(aFStep[c(1,6)]*c(-3,2)==aFStep[c(5,2)]) )	cnt.w2<-cnt.w2+1
 			if( aFStep[3]==sum(aFStep[c(1,2)]) )	cnt.w2<-cnt.w2+1
 			if( aFStep[4]==sum(aFStep[c(5,6)]) )	cnt.w2<-cnt.w2+1
-			if( sum(aFStep[c( , )])==sum(aFStep[c( , )]) )	cnt.w2<-cnt.w2+1
 
 			cntMtx[idx,"fStep.w1"] <- cnt.w1	;cntMtx[idx,"fStep.w2"] <- cnt.w2
 			cntMtx[idx,"fStep"] <- cnt + cnt.w1 + cnt.w2

@@ -783,7 +783,7 @@ fCutU.getChkNextPtn4FV.cStep <- function( rawTail ,pDebug=FALSE ){
 	rObj$cMtx <- t( apply( rawTail ,1 ,function(pRaw){ pRaw[2:6]-pRaw[1:5] }) )
 
 	if( 2>nrow(rObj$cMtx) ){
-		rObj$check <- function( aCStep ){ return( list(fltCnt=0 ,infoLst=list() ,fltLst=list() ) ) }
+		rObj$check <- function( aCStep ){ return( list(flgCnt=0 ,matchCnt=0 ) ) }
 		return( rObj )
 	}
 
@@ -852,7 +852,7 @@ fCutU.getChkNextPtn4FV.fStep <- function( rawTail ,pDebug=FALSE ){
 
 	rObj <- list()
 	if( (2+1) > nrow(rawTail) ){
-		rObj$check <- function( aFStep ){ return( list(fltCnt=0 ,infoLst=list() ,fltLst=list() ) ) }
+		rObj$check <- function( aFStep ){ return( list(flgCnt=0 ,matchCnt=0 ) ) }
 		return( rObj )
 	}
 

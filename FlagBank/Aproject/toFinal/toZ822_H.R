@@ -2303,8 +2303,8 @@ fCutCnt.nextColVal_5 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 			# -------------------------------------------------------------------------------------
 			#     FV :    -4 (2)   -2 (2)   1 (2)   2 (4)   3 (3)   7 (3)   8 (2) 
 			cnt.w2 <- 0
-			if( 1<sum( aCStep[6]*c(2,5,6,1)==aCStep[c(1,2,3,5)] ) )	cnt.w2<-cnt.w2+1
-			if( 1<sum( aCStep[4]*c(2,4)==aCStep[c(1,3)] ) )	cnt.w2<-cnt.w2+1
+			if( 1<sum( aFStep[6]*c(2,5,6,1)==aFStep[c(1,2,3,5)] ) )	cnt.w2<-cnt.w2+1
+			if( 1<sum( aFStep[4]*c(2,4)==aFStep[c(1,3)] ) )	cnt.w2<-cnt.w2+1
 			if( aFStep[3]==sum(aFStep[c(2,5)]) )	cnt.w2<-cnt.w2+1
 			if( aFStep[3]==sum(aFStep[c(2,6)]) )	cnt.w2<-cnt.w2+1
 			if( aFStep[2]==sum(aFStep[c(1,5,6)]) )	cnt.w2<-cnt.w2+1

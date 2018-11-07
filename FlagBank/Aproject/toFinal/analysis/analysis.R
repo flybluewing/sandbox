@@ -6,7 +6,7 @@ for( hIdx in c( 809, 814, 816, 819, 820:831 ) ){
 	source(sprintf("./toFinal/toZ%d_H.R",hIdx) )
 	u0.saveStdZoidFltRst( hIdx )
 }
-
+#		trouble c( 819 ,822 ,827 ,828 ,829 ,830 ,831)
 
 
 #	rpt.analyLst( analyLst[["toZ821"]] )

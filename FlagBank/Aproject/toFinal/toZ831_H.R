@@ -1630,7 +1630,6 @@ fCutCnt.nextBin <- function( gEnv ,allIdxF ,rpt=FALSE ){
 			# <28>
 			if( fCutU.hasPtn(c( 25,25,28,39 ),aZoid,thld=3,fixIdx=3) ) cnt<-cnt+1
 			# <32>
-			if( fCutU.hasPtn(c(  ,  ),aZoid) ) cnt<-cnt+1
 			# <39>
 			if( fCutU.hasPtn(c(    19,NA,NA,39 ),aZoid) ) cnt<-cnt+1
 			if( fCutU.hasPtn(c( 17,NA,20,23,39 ),aZoid,thld=3,fixIdx=5) ) cnt<-cnt+1
@@ -1766,7 +1765,6 @@ fCutCnt.nextRebNum <- function( gEnv ,allIdxF ,rpt=FALSE ){
 		if( TRUE ){ # rawFV		# anaMtx.freqVal( stdMI$rawTail )
 			cnt <- 0
 			# <10>
-			if( fCutU.hasPtn(c(  ,  ),aZoid) ) cnt<-cnt+1
 			# <13>
 			if( fCutU.hasPtn(c( 13,30,40,45 ),aZoid,thld=3,fixIdx=1) ) cnt<-cnt+1
 			# <24>
@@ -2972,7 +2970,8 @@ fCutCnt.nextColVal_6 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 			# <26>
 			if( fCutU.hasPtn(c( 26,38,42 ),aZoid) ) cnt<-cnt+1
 			# <33>
-			if( fCutU.hasPtn(c(  ,  ),aZoid) ) cnt<-cnt+1
+			if( fCutU.hasPtn(c(    17,NA,NA,33    ),aZoid) ) cnt<-cnt+1
+			if( fCutU.hasPtn(c( 18,NA,27,19,33,34 ),aZoid,thld=3,fixIdx=5) ) cnt<-cnt+1
 			# <34>
 			if( fCutU.hasPtn(c(    10,NA,NA,34    ),aZoid) ) cnt<-cnt+1
 			if( fCutU.hasPtn(c(    17,NA,NA,NA,34 ),aZoid) ) cnt<-cnt+1
