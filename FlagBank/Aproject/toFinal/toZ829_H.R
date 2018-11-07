@@ -1960,8 +1960,6 @@ fCutCnt.nextCStepBin <- function( gEnv ,allIdxF ,rpt=FALSE ){
 			cnt.w1 <- cccObj$scoreMtx[idx,"w1CStep.cnt"]
 			if( fCutU.hasPtn(c( 15, 5 ),aCStep) )	cnt.w1<-cnt.w1+1
 			if( all(aCStep[1:2+3]==c( 7,3 )) )	cnt.w1<-cnt.w1+1
-			if( fCutU.hasPtn(c( , ),aCStep) )	cnt.w1<-cnt.w1+1
-			if( all(aCStep[1:2+ ]==c( , )) )	cnt.w1<-cnt.w1+1
 			# -------------------------------------------------------------------------------------
 			#     FV :    2 (6)   3 (3)   4 (2)   5 (3)   7 (2)   10 (5)   13 (2)   15 (2) 
 
