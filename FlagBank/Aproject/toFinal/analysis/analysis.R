@@ -1,3 +1,4 @@
+#	개선 구조는 826 부터 적용되어 있음.
 tStmp <- Sys.time()
 for( hIdx in c( 809, 814, 816, 819, 820:831 ) ){
 	tDiff <- Sys.time() - tStmp

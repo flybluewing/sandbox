@@ -541,7 +541,10 @@ fCutCnt.basic <- function( gEnv ,allIdxF ,rpt=FALSE ){
 			cnt.w1 <- cccObj$scoreMtx[idx,"w1CStep.cnt"]
 			if( fCutU.hasPtn(c(11, 1),aCStep) )	cnt.w1<-cnt.w1+1
 			if( all(aCStep[1:2+0]==c( 6, 6)) )	cnt.w1<-cnt.w1+1
-
+			if( fCutU.hasPtn(c( 8,5 ),aCStep) )	cnt.w1<-cnt.w1+1
+			if( 1<sum(aCStep[1:2+2]==c( 6,2 )) )	cnt.w1<-cnt.w1+1
+			# -------------------------------------------------------------------------------------
+			#     FV :    1 (6)   2 (3)   3 (2)   5 (4)   6 (2)   8 (2)   9 (3)   11 (3)
 			cnt.w2 <- 0
 			if( all(aCStep[1:2]== aCStep[3]*c(3,3) ) )	cnt.w2<-cnt.w2+1
 			if( aCStep[4]==sum(aCStep[c(1,2,5)]) )	cnt.w2<-cnt.w2+1
@@ -549,13 +552,16 @@ fCutCnt.basic <- function( gEnv ,allIdxF ,rpt=FALSE ){
 			cntMtx[idx,"cStep.w1"] <- cnt.w1	;cntMtx[idx,"cStep.w2"] <- cnt.w2
 			cntMtx[idx,"cStep"] <- cnt + cnt.w1 + cnt.w2
 
-			# Raw value(reb)       |cStep          |fStep                   |QuoSize   |QuoTbl 
-			# 14 15 25 28 29 30    | 1 10  3  1  1 |                        |0 2 3 1 0 |2 3 1
-			# 16 25 33 38 40 45(1) | 9  8  5  2  5 |  2  10   8  10  11  15 |0 1 1 2 2 |1 1 2 2
-			# 10 21 22 30 35 42    |11  1  8  5  7 | -6  -4 -11  -8  -5  -3 |0 1 2 2 1 |1 2 2 1
-			#  1 12 13 24 29 44    |11  1 11  5 15 | -9  -9  -9  -6  -6   2 |1 2 2 0 1 |1 2 2 1
-			#  9 18 20 24 27 36(1) | 9  2  4  3  9 |  8   6   7   0  -2  -8 |1 1 3 1 0 |1 1 3 1
-			# 12 18 24 26 39 40(2) | 6  6  2 13  1 |  3   0   4   2  12   4 |0 2 2 1 1 |2 2 1 1
+			#     Raw value(reb)       |cStep          |fStep                   |QuoSize   |QuoTbl 
+			#     14 15 25 28 29 30    | 1 10  3  1  1 |                        |0 2 3 1 0 |2 3 1
+			#     16 25 33 38 40 45(1) | 9  8  5  2  5 |  2  10   8  10  11  15 |0 1 1 2 2 |1 1 2 2
+			#     10 21 22 30 35 42    |11  1  8  5  7 | -6  -4 -11  -8  -5  -3 |0 1 2 2 1 |1 2 2 1
+			#      1 12 13 24 29 44    |11  1 11  5 15 | -9  -9  -9  -6  -6   2 |1 2 2 0 1 |1 2 2 1
+			#      9 18 20 24 27 36(1) | 9  2  4  3  9 |  8   6   7   0  -2  -8 |1 1 3 1 0 |1 1 3 1
+			#     12 18 24 26 39 40(2) | 6  6  2 13  1 |  3   0   4   2  12   4 |0 2 2 1 1 |2 2 1 1
+			# -<standard zoid>---------------------------------------------------------------------
+			#      7  9 24 29 34 38(1) | 2 15  5  5  4 | -5  -9   0   3  -5  -2 |2 0 2 2 0 |2 2 2
+
 		}
 		if( TRUE ){ # fStep		#	u0.zoidFMtx_ana.rpt( stdMI$rawTail )
 			cnt <- 0
@@ -567,13 +573,16 @@ fCutCnt.basic <- function( gEnv ,allIdxF ,rpt=FALSE ){
 			if( aFStep[6]%in%c(     ) ) cnt<-cnt+1
 
 			cnt.w1 <- cccObj$scoreMtx[idx,"w1FStep.cnt"]
-			if( fCutU.hasPtn(c( , ),aFStep) )	cnt.w1<-cnt.w1+1
-			if( all(aFStep[1:2+ ]==c( , )) )	cnt.w1<-cnt.w1+1
-
+			if( fCutU.hasPtn(c( -9,-9 ),aFStep) )	cnt.w1<-cnt.w1+1
+			# -------------------------------------------------------------------------------------
+			#     FV :    -9 (3)   -8 (2)   -6 (3)   0 (2)   2 (3)   4 (2)   8 (2)   10 (2) 
 			cnt.w2 <- 0
+			if( 1<sum( aFStep[4]*c(2,6,2)==aFStep[c(3,5,6)] ) )	cnt.w2<-cnt.w2+1
+			if( 1<sum( aFStep[3]*c(3,1  )==aFStep[c(5,6  )] ) )	cnt.w2<-cnt.w2+1
+			if( 1<sum( aFStep[c(1,4)]*c(4,4)==aFStep[c(5,6)] ) )	cnt.w2<-cnt.w2+1
+			if( 1<sum( aFStep[c(1,4)]*c(4,4)==aFStep[c(5,6)] ) )	cnt.w2<-cnt.w2+1			
 			if( (aFStep[5]== (aFStep[1]*aFStep[3]) ) )	cnt.w2<-cnt.w2+1
 			if( (aFStep[5]== (aFStep[1]*aFStep[6]) ) )	cnt.w2<-cnt.w2+1
-			if( all(aFStep[c(3,6)]== (aFStep[4]*c(2,2)) ) )	cnt.w2<-cnt.w2+1
 
 			cntMtx[idx,"fStep.w1"] <- cnt.w1	;cntMtx[idx,"fStep.w2"] <- cnt.w2
 			cntMtx[idx,"fStep"] <- cnt + cnt.w1 + cnt.w2
@@ -1409,11 +1418,13 @@ fCutCnt.nextBin <- function( gEnv ,allIdxF ,rpt=FALSE ){
 
 			cnt.w1 <- cccObj$scoreMtx[idx,"w1CStep.cnt"]
 			if( fCutU.hasPtn(c( 1, 4),aCStep) )	cnt.w1<-cnt.w1+1
-			if( fCutU.hasPtn(c(13, 2),aCStep) )	cnt.w1<-cnt.w1+1
-			if( fCutU.hasPtn(c( 4,13),aCStep) )	cnt.w1<-cnt.w1+1
 			if( all(aCStep[1:2+0]==c( 1, 5)) )	cnt.w1<-cnt.w1+1
+			if( fCutU.hasPtn(c(13, 2),aCStep) )	cnt.w1<-cnt.w1+1
 			if( all(aCStep[1:2+0]==c(16,11)) )	cnt.w1<-cnt.w1+1
 			if( all(aCStep[1:2+3]==c(16,11)) )	cnt.w1<-cnt.w1+1
+			if( fCutU.hasPtn(c( 4,13),aCStep) )	cnt.w1<-cnt.w1+1	# -
+			# -------------------------------------------------------------------------------------
+			#     FV :    1 (4)   2 (4)   3 (4)   4 (3)   6 (2)   10 (2)   13 (3) 
 
 			cnt.w2 <- 0
 			if( sum(aCStep[c(1,4)])==sum(aCStep[c(3,5)]) )	cnt.w2<-cnt.w2+1
@@ -1421,13 +1432,16 @@ fCutCnt.nextBin <- function( gEnv ,allIdxF ,rpt=FALSE ){
 			cntMtx[idx,"cStep.w1"] <- cnt.w1	;cntMtx[idx,"cStep.w2"] <- cnt.w2
 			cntMtx[idx,"cStep"] <- cnt + cnt.w1 + cnt.w2
 
-			# Raw value(reb)       |cStep          |fStep                   |QuoSize   |QuoTbl 
-			#  8 11 28 30 43 45    | 3 17  2 13  2 |                        |1 1 1 1 2 |1 1 1 1 2
-			#  7 20 22 25 38 40    |13  2  3 13  2 | -1   9  -6  -5  -5  -5 |1 0 3 1 1 |1 3 1 1
-			# 12 15 19 26 40 43(1) | 3  4  7 14  3 |  5  -5  -3   1   2   3 |0 3 1 0 2 |3 1 2
-			# 10 11 15 25 35 41(1) | 1  4 10 10  6 | -2  -4  -4  -1  -5  -2 |0 3 1 1 1 |3 1 1 1
-			#  3  4  9 24 25 33(1) | 1  5 15  1  8 | -7  -7  -6  -1 -10  -8 |3 0 2 1 0 |3 2 1
-			#  6  7 11 17 33 44(1) | 1  4  6 16 11 |  3   3   2  -7   8  11 |2 2 0 1 1 |2 2 1 1
+			#     Raw value(reb)       |cStep          |fStep                   |QuoSize   |QuoTbl 
+			#      8 11 28 30 43 45    | 3 17  2 13  2 |                        |1 1 1 1 2 |1 1 1 1 2
+			#      7 20 22 25 38 40    |13  2  3 13  2 | -1   9  -6  -5  -5  -5 |1 0 3 1 1 |1 3 1 1
+			#     12 15 19 26 40 43(1) | 3  4  7 14  3 |  5  -5  -3   1   2   3 |0 3 1 0 2 |3 1 2
+			#     10 11 15 25 35 41(1) | 1  4 10 10  6 | -2  -4  -4  -1  -5  -2 |0 3 1 1 1 |3 1 1 1
+			#      3  4  9 24 25 33(1) | 1  5 15  1  8 | -7  -7  -6  -1 -10  -8 |3 0 2 1 0 |3 2 1
+			#      6  7 11 17 33 44(1) | 1  4  6 16 11 |  3   3   2  -7   8  11 |2 2 0 1 1 |2 2 1 1
+			# -<standard zoid>---------------------------------------------------------------------
+			#      7  9 24 29 34 38(1) | 2 15  5  5  4 |  1   2  13  12   1  -6 |2 0 2 2 0 |2 2 2
+
 		}
 		if( TRUE ){ # fStep		#	u0.zoidFMtx_ana.rpt( stdMI$rawTail )
 			cnt <- 0
@@ -1439,10 +1453,13 @@ fCutCnt.nextBin <- function( gEnv ,allIdxF ,rpt=FALSE ){
 			if( aFStep[6]%in%c(     ) ) cnt<-cnt+1
 
 			cnt.w1 <- cccObj$scoreMtx[idx,"w1FStep.cnt"]
-			if( fCutU.hasPtn(c( , ),aFStep) )	cnt.w1<-cnt.w1+1
-			if( all(aFStep[1:2+ ]==c( , )) )	cnt.w1<-cnt.w1+1
-
+			if( fCutU.hasPtn(c( -5, -5 ),aFStep) )	cnt.w1<-cnt.w1+1	# -
+			if( fCutU.hasPtn(c( -5, -1 ),aFStep) )	cnt.w1<-cnt.w1+1
+			if( fCutU.hasPtn(c(  4,  3 ),aFStep) )	cnt.w1<-cnt.w1+1
+			# -------------------------------------------------------------------------------------
+			#     FV :    -7 (3)   -6 (2)   -5 (5)   -4 (2)   -2 (2)   -1 (3)   2 (2)   3 (3) 
 			cnt.w2 <- 0
+			if( 1<sum( aFStep[c(1,3)]*c(1,4)==aFStep[c(1,5)] ) )	cnt.w2<-cnt.w2+1
 			if( aFStep[5]==sum(aFStep[c(1,2,3)]) )	cnt.w2<-cnt.w2+1
 			if( aFStep[6]==sum(aFStep[c(1,5)]) )	cnt.w2<-cnt.w2+1
 			if( aFStep[6]==sum(aFStep[c(2,5)]) )	cnt.w2<-cnt.w2+1
@@ -2245,7 +2262,7 @@ fCutCnt.nextColVal_3 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 
 # done
 fCutCnt.nextColVal_4 <- function( gEnv ,allIdxF ,rpt=FALSE ){
-	# 경고 : 동일 컬럼 동일 값 반복 상태인 경우 신중할 것.
+
 	flgCnt <- rep( 0 ,length(allIdxF) )
 	zMtx <- fCutU.getNextColVal( gEnv ,4 )$zMtx	# rptObj<-anaQuoTbl( zMtx )
 	if( 0==nrow(zMtx) ) return( rep(0,length(allIdxF)) )
@@ -2339,25 +2356,32 @@ fCutCnt.nextColVal_4 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 			if( aCStep[5]%in%c(  1, 4    ) ) cnt<-cnt+1
 
 			cnt.w1 <- cccObj$scoreMtx[idx,"w1CStep.cnt"]
-			if( fCutU.hasPtn(c( 6, 4),aCStep) )	cnt.w1<-cnt.w1+1
+
 			if( fCutU.hasPtn(c( 4, 1),aCStep) )	cnt.w1<-cnt.w1+1
+			if( 1<sum(aCStep[1:2+1]==c( 1,5 )) )	cnt.w1<-cnt.w1+1
+			if( fCutU.hasPtn(c( 6, 4),aCStep) )	cnt.w1<-cnt.w1+1
 			if( all(aCStep[1:2+3]==c( 9, 3)) )	cnt.w1<-cnt.w1+1
 
+			# -------------------------------------------------------------------------------------
+			#     FV :    1 (6)   3 (2)   4 (5)   5 (3)   6 (3)   9 (2)   10 (2)   13 (3) 
 			cnt.w2 <- 0
-			if( all(aCStep[c(1,5)]== aCStep[4]*c(3,4) ) )	cnt.w2<-cnt.w2+1
+			if( 1<sum( aCStep[4]*c(3,5,4)==aCStep[c(1,3,5)] ) )	cnt.w2<-cnt.w2+1
 			if( aCStep[3]==sum(aCStep[c(4,5)]) )	cnt.w2<-cnt.w2+1
 			if( aCStep[5]==sum(aCStep[c(1,4)]) )	cnt.w2<-cnt.w2+1
 
 			cntMtx[idx,"cStep.w1"] <- cnt.w1	;cntMtx[idx,"cStep.w2"] <- cnt.w2
 			cntMtx[idx,"cStep"] <- cnt + cnt.w1 + cnt.w2
 
-			# Raw value(reb)       |cStep          |fStep                   |QuoSize   |QuoTbl 
-			#  4 10 14 15 18 22    | 6  4  1  3  4 |                        |1 4 1 0 0 |1 4 1
-			#  1  2 15 19 24 36(1) | 1 13  4  5 12 | -3  -8   1   4   6  14 |2 2 1 1 0 |2 2 1 1
-			#  1 21 26 36 40 41(2) |20  5 10  4  1 |  0  19  11  17  16   5 |1 0 2 1 2 |1 2 1 2
-			#  1 10 13 26 32 36(3) | 9  3 13  6  4 |  0 -11 -13 -10  -8  -5 |1 2 1 2 0 |1 2 1 2
-			#  3 12 13 18 31 32(2) | 9  1  5 13  1 |  2   2   0  -8  -1  -4 |1 3 0 2 0 |1 3 2
-			# 12 18 19 29 31 39(3) | 6  1 10  2  8 |  9   6   6  11   0   7 |0 3 1 2 0 |3 1 2
+			#     Raw value(reb)       |cStep          |fStep                   |QuoSize   |QuoTbl 
+			#      4 10 14 15 18 22    | 6  4  1  3  4 |                        |1 4 1 0 0 |1 4 1
+			#      1  2 15 19 24 36(1) | 1 13  4  5 12 | -3  -8   1   4   6  14 |2 2 1 1 0 |2 2 1 1
+			#      1 21 26 36 40 41(2) |20  5 10  4  1 |  0  19  11  17  16   5 |1 0 2 1 2 |1 2 1 2
+			#      1 10 13 26 32 36(3) | 9  3 13  6  4 |  0 -11 -13 -10  -8  -5 |1 2 1 2 0 |1 2 1 2
+			#      3 12 13 18 31 32(2) | 9  1  5 13  1 |  2   2   0  -8  -1  -4 |1 3 0 2 0 |1 3 2
+			#     12 18 19 29 31 39(3) | 6  1 10  2  8 |  9   6   6  11   0   7 |0 3 1 2 0 |3 1 2
+			# -<standard zoid>---------------------------------------------------------------------
+			#      7  9 24 29 34 38(1) | 2 15  5  5  4 | -5  -9   5   0   3  -1 |2 0 2 2 0 |2 2 2
+
 		}
 		if( TRUE ){ # fStep		#	u0.zoidFMtx_ana.rpt( stdMI$rawTail )
 			cnt <- 0
@@ -2369,13 +2393,10 @@ fCutCnt.nextColVal_4 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 			if( aFStep[6]%in%c(          ) ) cnt<-cnt+1
 
 			cnt.w1 <- cccObj$scoreMtx[idx,"w1FStep.cnt"]
-			if( fCutU.hasPtn(c( , ),aFStep) )	cnt.w1<-cnt.w1+1
-			if( all(aFStep[1:2+ ]==c( , )) )	cnt.w1<-cnt.w1+1
+			# -------------------------------------------------------------------------------------
+			#     FV :    -8 (3)   0 (4)   2 (2)   6 (3)   11 (2) 
 
 			cnt.w2 <- 0
-			if( all(aFStep[]==aFStep[]) )					cnt.w2<-cnt.w2+1
-			if( aFStep[ ]==sum(aFStep[c( , )]) )			cnt.w2<-cnt.w2+1
-			if( sum(aFStep[c( , )])==sum(aFStep[c( , )]) )	cnt.w2<-cnt.w2+1
 
 			cntMtx[idx,"fStep.w1"] <- cnt.w1	;cntMtx[idx,"fStep.w2"] <- cnt.w2
 			cntMtx[idx,"fStep"] <- cnt + cnt.w1 + cnt.w2
@@ -2531,7 +2552,7 @@ fCutCnt.nextColVal_5 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 
 # done
 fCutCnt.nextColVal_6 <- function( gEnv ,allIdxF ,rpt=FALSE ){
-	# 경고 : 동일 컬럼 동일 값 반복 상태인 경우 신중할 것.
+
 	flgCnt <- rep( 0 ,length(allIdxF) )
 	zMtx <- fCutU.getNextColVal( gEnv ,6 )$zMtx	# rptObj<-anaQuoTbl( zMtx )
 	if( 0==nrow(zMtx) ) return( rep(0,length(allIdxF)) )
@@ -2636,13 +2657,15 @@ fCutCnt.nextColVal_6 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 			cntMtx[idx,"cStep.w1"] <- cnt.w1	;cntMtx[idx,"cStep.w2"] <- cnt.w2
 			cntMtx[idx,"cStep"] <- cnt + cnt.w1 + cnt.w2
 
-			# Raw value(reb)       |cStep          |fStep                   |QuoSize   |QuoTbl 
-			#  7 12 15 24 25 43    | 5  3  9  1 18 |                        |1 2 2 0 1 |1 2 2 1
-			#  2  7 27 33 41 44(1) | 5 20  6  8  3 | -5  -5  12   9  16   1 |2 0 1 1 2 |2 1 1 2
-			#  6 16 37 38 41 45(1) |10 21  1  3  4 |  4   9  10   5   0   1 |1 1 0 2 2 |1 1 2 2
-			# 15 19 21 34 41 44(1) | 4  2 13  7  3 |  9   3 -16  -4   0  -1 |0 2 1 1 2 |2 1 1 2
-			#  6 12 17 21 34 37(2) | 6  5  4 13  3 | -9  -7  -4 -13  -7  -7 |1 2 1 2 0 |1 2 1 2
-			#  5 10 13 21 39 43(1) | 5  3  8 18  4 | -1  -2  -4   0   5   6 |1 2 1 1 1 |1 2 1 1 1
+			#     Raw value(reb)       |cStep          |fStep                   |QuoSize   |QuoTbl 
+			#      7 12 15 24 25 43    | 5  3  9  1 18 |                        |1 2 2 0 1 |1 2 2 1
+			#      2  7 27 33 41 44(1) | 5 20  6  8  3 | -5  -5  12   9  16   1 |2 0 1 1 2 |2 1 1 2
+			#      6 16 37 38 41 45(1) |10 21  1  3  4 |  4   9  10   5   0   1 |1 1 0 2 2 |1 1 2 2
+			#     15 19 21 34 41 44(1) | 4  2 13  7  3 |  9   3 -16  -4   0  -1 |0 2 1 1 2 |2 1 1 2
+			#      6 12 17 21 34 37(2) | 6  5  4 13  3 | -9  -7  -4 -13  -7  -7 |1 2 1 2 0 |1 2 1 2
+			#      5 10 13 21 39 43(1) | 5  3  8 18  4 | -1  -2  -4   0   5   6 |1 2 1 1 1 |1 2 1 1 1
+			# -<standard zoid>---------------------------------------------------------------------
+			#      7  9 24 29 34 38    | 2 15  5  5  4 |  2  -1  11   8  -5  -5 |2 0 2 2 0 |2 2 2
 
 		}
 		if( TRUE ){ # fStep		#	u0.zoidFMtx_ana.rpt( stdMI$rawTail )
@@ -2931,86 +2954,6 @@ fCut.rawFV3 <- function(  gEnv ,allIdxF ,rpt=FALSE ){
 finalFilt.gold <- function( scoreMtx ,cccMtx ,cStepValMtx ,thld ,cccMtx.rCol ) {
 	
 	flagCnt <- 0
-
-	if( TRUE ){	# reb ---------------------------------------------------------------------------------
-		# 발생 수 범위.
-		rebHpn.sum <- sum(cccMtx[,"reb"]>0)
-		if( (rebHpn.sum<3)||(7<rebHpn.sum)  ) return( 10 )
-		if( (5<rebHpn.sum)  ) flagCnt <- flagCnt+1
-		# reb 연속발생은 2개 이하.
-		rebHpnPhs.nm <- c( "basic" ,"nextRebNum" ,"nextColVal_4" ,"nextColVal_5" ,"nextColVal_6" )
-		if( 2 < sum(cccMtx[rebHpnPhs.nm,"reb"]>0)  )  return( 10 )
-		# reb 연속발생 4번이 얼마나 나올까?
-		rebHpnPhs <- cccMtx[ c( "nextColVal_4" ,"nextColVal_6" ) ,"reb" ]
-		if( all(rebHpnPhs>0) ){	 return( 10 )
-		} else if( any(rebHpnPhs>0) ){	flagCnt <- flagCnt + 1	}
-
-		# 최근 reb 발생 패턴과 똑같을 수는 없겠지.(실제로는 포함관계..)
-		rebHpnPhs.nm <- c( "nextZW" ,"nextColVal_2" ,"nextColVal_4" ,"nextColVal_6" )	# toZ820
-		if( all(cccMtx[rebHpnPhs.nm,"reb"]>0) )	 return( 10 )
-		rebHpnPhs.nm <- c( "nextRebNum" ,"nextFStepBin" 
-							,"nextColVal_1" ,"nextColVal_3" ,"nextColVal_4" ,"nextColVal_5" ,"nextColVal_6" )	# toZ816
-		if( all(cccMtx[rebHpnPhs.nm,"reb"]>0) )	 return( 10 )
-		rebHpnPhs.nm <- c( "basic" ,"nextZW" ,"nextBin" ,"nextColVal_1" ,"nextColVal_5" )	# toZ814
-		if( all(cccMtx[rebHpnPhs.nm,"reb"]>0) )	 return( 10 )
-		rebHpnPhs.nm <- c( "nextZW" ,"nextQuo10" ,"nextFStepBin" )	# toZ809
-		if( all(cccMtx[rebHpnPhs.nm,"reb"]>0) )	 return( 10 )
-	}
-	if( TRUE ){	# nbor ---------------------------------------------------------------------------------
-		fltKey <- "nbor"
-		hpn.sum <- sum(cccMtx[,fltKey]>0)
-		if( (2<hpn.sum)  ) return( 10 )
-		hpnPhs.nm <- c("nextZW")	# 바로 이전 H에서의 발생 회피.
-		if( any(cccMtx[hpnPhs.nm,fltKey]>0)  ) return( 10 )
-		# 최근 reb 발생 패턴과 똑같을 수는 없겠지.(실제로는 포함관계..)
-		hpnPhs.nm <- c( "nextColVal_2" ,"nextColVal_3" )	# toZ814
-		hpnPhs.cnt <- sum(cccMtx[hpnPhs.nm,fltKey]>0)
-		if( (length(hpnPhs.nm)==hpnPhs.cnt) && all(cccMtx[hpnPhs.nm,fltKey]>0) )	 return( 10 )
-	}
-	if( TRUE ){	# spanM ---------------------------------------------------------------------------------
-		fltKey <- "spanM"
-		hpn.sum <- sum(cccMtx[,fltKey]>0)
-		if( ( 3<hpn.sum)  ) return( 10 )
-		hpnPhs.nm <- c("nextQuo10","nextColVal_5","nextColVal_6")	# 바로 이전 H에서의 발생 회피.
-		if( any(cccMtx[hpnPhs.nm,fltKey]>0)  ) return( 10 )
-
-	}
-	if( TRUE ){	# quoAll ---------------------------------------------------------------------------------
-		fltKey <- "quoAll"
-		hpn.sum <- sum(cccMtx[,fltKey]>0)
-		if( ( 5<hpn.sum)  ) return( 10 )
-	}
-	if( TRUE ){	# quoPtn ---------------------------------------------------------------------------------
-		fltKey <- "quoPtn"
-		hpn.sum <- sum(cccMtx[,fltKey]>0)
-		if( ( 5<hpn.sum)  ) return( 10 )
-	}
-	if( TRUE ){	# zw ---------------------------------------------------------------------------------
-		fltKey <- "zw"
-		hpn.sum <- sum(cccMtx[,fltKey]>0)
-		if( ( 5<hpn.sum)  ) return( 10 )
-	}
-	if( TRUE ){	# remH0 ---------------------------------------------------------------------------------
-		fltKey <- "remH0"
-		hpn.sum <- sum(cccMtx[,fltKey]>0)
-		if( ( 5<hpn.sum)  ) return( 10 )
-	}
-	if( TRUE ){	# remH1 ---------------------------------------------------------------------------------
-		fltKey <- "remH1"
-		hpn.sum <- sum(cccMtx[,fltKey]>0)
-		if( ( 5<hpn.sum)  ) return( 10 )
-	}
-	if( TRUE ){	# cStep2 ---------------------------------------------------------------------------------
-		fltKey <- "cStep2"
-		hpn.sum <- sum(cccMtx[,fltKey]>0)
-		if( ( 5<hpn.sum)  ) return( 10 )
-	}
-	if( TRUE ){	# cStep3 ---------------------------------------------------------------------------------
-		fltKey <- "cStep3"
-		hpn.sum <- sum(cccMtx[,fltKey]>0)
-		if( ( <hpn.sum)  ) return( 10 )
-	}
-
 
 
 	return( flagCnt )
