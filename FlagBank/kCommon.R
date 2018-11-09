@@ -502,21 +502,61 @@ k.FLogStr <- function( pMsg ,pFile=k.FLogOpt$defaultLogFile
 					)
 	{
 
+	if( pTime ){
+		cat( sprintf("[%s] %s",Sys.time(),pMsg), file=pFile, sep="\n", append=pAppend ) 
+	} else {
+		cat( sprintf("%s",pMsg), file=pFile, sep="\n", append=pAppend ) 
+	}
+	
+	if( pConsole ){
 		if( pTime ){
-			cat( sprintf("[%s] %s",Sys.time(),pMsg), file=pFile, sep="\n", append=pAppend ) 
+			print( sprintf("[%s] %s",Sys.time(),pMsg), file=pFile, sep="\n", append=pAppend ) 
 		} else {
-			cat( sprintf("%s",pMsg), file=pFile, sep="\n", append=pAppend ) 
+			print( sprintf("%s",pMsg), file=pFile, sep="\n", append=pAppend ) 
 		}
-		
-		if( pConsole ){
-			if( pTime ){
-				print( sprintf("[%s] %s",Sys.time(),pMsg), file=pFile, sep="\n", append=pAppend ) 
-			} else {
-				print( sprintf("%s",pMsg), file=pFile, sep="\n", append=pAppend ) 
+	}
+
+}	# k.FLogStr()
+
+k.getFlogObj <- function( fileName ){
+
+	logObj <- list( fileName=fileName )
+	logObj$fLog <- function( msgObj ,pAppend=T ,pTime=F ,pConsole=F ){
+		k.FLog( msgObj ,pFile=logObj$fileName ,pAppend=pAppend ,pTime=pTime ,pConsole=pConsole )
+	}
+	logObj$fLogStr <- function( msgStr ,pAppend=T ,pTime=F ,pConsole=F ){
+		k.FLogStr( msgStr ,pFile=logObj$fileName ,pAppend=pAppend ,pTime=pTime ,pConsole=pConsole )
+	}
+	logObj$fCat <- function( msgStr ){
+		cat( msgStr ,pFile=logObj$fileName )
+	}
+	logObj$fLogMtx <- function( mtx ,pIndent="" ){
+		dfStr <- capture.output( mtx )
+		cat( sprintf("%s%s\n",pIndent,dfStr) ,file=logObj$fileName ,append=T )
+	}
+	logObj$fLogMtxLst <- function( mtxLst ,pIndent="" ,pSep="" ,pFirstRowName=T ){
+
+		if( pFirstRowName && 1<length(mtxLst) ){
+			for( idx in 2:length(mtxLst) ){
+				rownames(mtxLst[[idx]]) <- NULL
 			}
 		}
 
+		mtxStrLst <- lapply( mtxLst ,function(mtx){ capture.output(mtx) })
+		maxRow <- max( sapply(mtxStrLst,length) )
+		strLength <- sapply(mtxStrLst,function(str){nchar(str[1])})
+		for( lIdx in 1:maxRow ){
+			
+			str <- sapply(mtxStrLst,function(mtxStr){ ifelse( lIdx<=,mtxStr[lIdx],) })
+			finalStr <- paste( str ,collapse=pSep )
+			cat( sprintf("%s%s\n",pIndent,finalStr) ,file=logObj$fileName ,append=T )
+		}
 	}
+
+	return( logObj )
+}	# k.getFlogObj()
+
+
 
 #	pMtx=cvr$cvrRateMtxLst.clue[[idx]] ;pFmt="%3.0f" ;pNA.str="  ." ;pIndent="  " ;pRowName=paste("rn:",1:nrow(pMtx),sep="")
 k.matrixToStr <- function( pMtx ,pFmt="%3.0f" ,pNA.str="  ." ,pIndent="  " ,pRowName=NULL ){
