@@ -4,9 +4,17 @@ for( hIdx in c( 809, 814, 816, 819, 820:831 ) ){
 	tDiff <- Sys.time() - tStmp
 	cat(sprintf("start hIdx %d (%.1f%s)\n",hIdx,tDiff,units(tDiff) ))
 	source(sprintf("./toFinal/toZ%d_H.R",hIdx) )
-	u0.saveStdZoidFltRst( hIdx )
+	u0.saveStdZoidFltRst( hIdx )	# "./save/stdZoidFltRst/z%d.save"  rptObj
 }
 #		trouble c( 819 ,822 ,827 ,828 ,829 ,830 ,831)
+
+
+
+
+
+
+
+
 
 
 #	rpt.analyLst( analyLst[["toZ821"]] )
