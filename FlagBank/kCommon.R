@@ -545,10 +545,17 @@ k.getFlogObj <- function( fileName ){
 		mtxStrLst <- lapply( mtxLst ,function(mtx){ capture.output(mtx) })
 		maxRow <- max( sapply(mtxStrLst,length) )
 		strLength <- sapply(mtxStrLst,function(str){nchar(str[1])})
+		str.blank <- sapply(mtxStrLst,function(str){ strrep(" ",nchar(str[1])) })
 		for( lIdx in 1:maxRow ){
-			
-			str <- sapply(mtxStrLst,function(mtxStr){ ifelse( lIdx<=,mtxStr[lIdx],) })
-			finalStr <- paste( str ,collapse=pSep )
+			str <- character(0)
+			for( idx in seq_len(length(mtxStrLst)) ){
+				if( lIdx<=length(mtxStrLst[[idx]]) ){
+					str[idx] <- mtxStrLst[[idx]][lIdx]
+				} else {
+					str[idx] <- str.blank[idx]
+				}
+			}
+			finalStr <- paste( str , collapse=pSep )
 			cat( sprintf("%s%s\n",pIndent,finalStr) ,file=logObj$fileName ,append=T )
 		}
 	}

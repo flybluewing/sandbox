@@ -32,6 +32,7 @@ for( zhIdx in zhName ){
     hCntMtx <- t(hCntMtx)       ;colnames(hCntMtx) <- name.cntMtx
     hAuxCntMtx <- sapply( rptLst[[zhIdx]]$ccObjLst ,function(ccObj){ ccObj$auxCntMtx } )
     hAuxCntMtx <- t(hAuxCntMtx) ;colnames( hAuxCntMtx ) <- name.auxCntMtx
+    # log.cntMtx$fLogMtxLst( list(hAuxCntMtx,hCntMtx) ,pSep=" | " ,pIndent="   ")
     hCntMtx <- cbind( hCntMtx ,hAuxCntMtx )
     log.cntMtx$fLogMtx(hCntMtx,pIndent="  ")
 
@@ -39,6 +40,9 @@ for( zhIdx in zhName ){
     hScoreMtx <- sapply( rptLst[[zhIdx]]$ccObjLst ,function(ccObj){ ccObj$cccObj$scoreMtx })
     hScoreMtx <- t(hScoreMtx)   ;colnames( hScoreMtx ) <- name.cccObj.scoreMtx
     log.scoreMtx$fLogMtx(hScoreMtx)
+
+    
+
 
     log.cStepValMtx$fLogStr(sprintf("<%s> ---------------------------------",zhIdx))
     hCStepValMtx <- sapply( rptLst[[zhIdx]]$ccObjLst ,function(ccObj){ ccObj$cccObj$cStepValMtx })
