@@ -56,11 +56,10 @@ for( zhIdx in zhName ){
 } # for(zhIdx)
 
 mtx <- mtxObj$cntMtx
-mtx.evt <- 
 
-pMtx <- mtx ;pMtx.evt <- mtx > 1
+pMtx <- mtx ;pMtx.evt <- mtx > 1    ;pEvtName="Evt"
 
-anaMtx <- function( pMtx ,pMtx.evt=NULL ,pEvtName="Evt" ){
+anaMtx <- function( pMtx ,pMtx.evt=NULL ,pEvtName="evt" ){
 
     cName <- if( is.null(pMtx.evt) ) c("hpn","sum") else c("hpn","sum",pEvtName)
     cntMtx <- matrix( 0 ,ncol=length(cName) ,nrow=nrow(pMtx) )
@@ -79,7 +78,7 @@ anaMtx <- function( pMtx ,pMtx.evt=NULL ,pEvtName="Evt" ){
 
 }
 
-anaMtx.cnt <- function( pMtx ,pMtx.evt=NULL ,pReb=c(2,4,6) ,pRow=T ){
+anaMtx.cnt <- function( pMtx ,pMtx.evt=NULL ,pEvtName="evt" ,pReb=c(2,4,6) ,pRow=T ){
     #   pRow : T 이면 row 방향에 대한 count, F이면 col방향으로의 count
     workMtx <- if( pRow ) pMtx else t(pMtx)
     rObj <- list(   hpn = apply( workMtx ,1 ,function(row){ sum(row>0) } )
@@ -88,14 +87,18 @@ anaMtx.cnt <- function( pMtx ,pMtx.evt=NULL ,pReb=c(2,4,6) ,pRow=T ){
     workMtx.evt <- NULL
     if( !is.null(pMtx.evt) ){
         workMtx.evt <- if( pRow ) pMtx.evt else t(pMtx.evt)
-        rObj$hpn <- apply( workMtx.evt ,1 ,sum )
-    }
+        rObj[[pEvtName]] <- apply( workMtx.evt ,1 ,sum )
 
-    # reb count
-    rebSpan <- c( pReb[pReb<ncol(workMtx)] ,ncol(workMtx) )
-    for( rebIdx in rebSpan ){
+        # reb count for event
+        rebSpan <- c( pReb[pReb<ncol(workMtx)] ,ncol(workMtx) )
+        valSpanLst <- list()
+        for( rebIdx in rebSpan ){
+            # search index Span 생성.
+            # span 내에서 min,max값 검색.
+            valSpanLst[[sprintf("reb%02d",rebIdx)]] <- c( 0, 3 )    # min max
+        }
 
-    }
+    } # if( !is.null(pMtx.evt) )
 
     return( rObj )
 }
