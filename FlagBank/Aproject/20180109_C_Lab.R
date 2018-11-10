@@ -57,7 +57,7 @@ for( zhIdx in zhName ){
 
 mtx <- mtxObj$cntMtx
 
-pMtx <- mtx ;pMtx.evt <- mtx > 1    ;pEvtName="Evt"
+pMtx <- mtx ;pMtx.evt <- mtx > 0    ;pEvtName="Evt"
 
 anaMtx <- function( pMtx ,pMtx.evt=NULL ,pEvtName="evt" ){
 
@@ -94,8 +94,25 @@ anaMtx.cnt <- function( pMtx ,pMtx.evt=NULL ,pEvtName="evt" ,pReb=c(2,4,6) ,pRow
         valSpanLst <- list()
         for( rebIdx in rebSpan ){
             # search index Span 생성.
+            searchSpanLst <- list()
+            for( sIdx in 1:(ncol(workMtx)-rebIdx+1) ){
+                searchSpanLst[[length(searchSpanLst)+1]] <- sIdx:(sIdx+rebIdx-1)
+            }
+            
             # span 내에서 min,max값 검색.
-            valSpanLst[[sprintf("reb%02d",rebIdx)]] <- c( 0, 3 )    # min max
+            matchCnt <- integer(0)
+            spanLen <- length(searchSpanLst[[1]])
+            for( lIdx in 1:length(searchSpanLst) ){
+                idxSpan <- searchSpanLst[[lIdx]]
+                for( baseIdx in 1:(spanLen-1) ){
+                    for( tIdx in (baseIdx+1):spanLen ){
+                        matchSum <- sum( workMtx.evt[,idxSpan[baseIdx]] & workMtx.evt[,idxSpan[tIdx]] )
+                        matchCnt <- c( matchCnt ,matchSum )
+                    }
+                }
+            }
+            QQE : 동작확인.
+            valSpanLst[[sprintf("reb%02d",rebIdx)]] <- c( min(matchCnt), max(matchCnt) )    # min max
         }
 
     } # if( !is.null(pMtx.evt) )
