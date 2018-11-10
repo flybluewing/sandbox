@@ -26,8 +26,6 @@ log.cStepValMtx <- k.getFlogObj( "./report/cStepValMtx.txt" )   ;log.cStepValMtx
 
 mtxInfoLst <- list()
 for( zhIdx in zhName ){
-
-    log.cntMtx$fLogStr(sprintf("<%s> ---------------------------------",zhIdx))
     hCntMtx <- sapply( rptLst[[zhIdx]]$ccObjLst ,function(ccObj){ ccObj$cntMtx } )
     hCntMtx <- t(hCntMtx)       ;colnames(hCntMtx) <- name.cntMtx
     hAuxCntMtx <- sapply( rptLst[[zhIdx]]$ccObjLst ,function(ccObj){ ccObj$auxCntMtx } )
@@ -36,26 +34,70 @@ for( zhIdx in zhName ){
     hCntMtx <- cbind( hCntMtx ,hAuxCntMtx )
     log.cntMtx$fLogMtx(hCntMtx,pIndent="  ")
 
-    log.scoreMtx$fLogStr(sprintf("<%s> ---------------------------------",zhIdx))
     hScoreMtx <- sapply( rptLst[[zhIdx]]$ccObjLst ,function(ccObj){ ccObj$cccObj$scoreMtx })
     hScoreMtx <- t(hScoreMtx)   ;colnames( hScoreMtx ) <- name.cccObj.scoreMtx
     log.scoreMtx$fLogMtx(hScoreMtx)
 
-    
-
-
-    log.cStepValMtx$fLogStr(sprintf("<%s> ---------------------------------",zhIdx))
     hCStepValMtx <- sapply( rptLst[[zhIdx]]$ccObjLst ,function(ccObj){ ccObj$cccObj$cStepValMtx })
     hCStepValMtx <- t(hCStepValMtx) ;colnames( hCStepValMtx ) <- name.cccObj.cStepValMtx 
     log.cStepValMtx$fLogMtx(hCStepValMtx)
 
     mtxInfoLst[[zhIdx]] <- list( cntMtx=hCntMtx ,scoreMtx=hScoreMtx ,cStepValMtx=hCStepValMtx )
+
+} # for(zhIdx) -- mtxInfoLst
+
+for( zhIdx in zhName ){
+    mtxObj <- mtxInfoLst[[zhIdx]]
+    # log.cntMtx$fLogStr(sprintf("<%s> ---------------------------------",zhIdx))
+    # log.scoreMtx$fLogStr(sprintf("<%s> ---------------------------------",zhIdx))
+    # log.cStepValMtx$fLogStr(sprintf("<%s> ---------------------------------",zhIdx))
+
+
+} # for(zhIdx)
+
+mtx <- mtxObj$cntMtx
+mtx.evt <- 
+
+pMtx <- mtx ;pMtx.evt <- mtx > 1
+
+anaMtx <- function( pMtx ,pMtx.evt=NULL ,pEvtName="Evt" ){
+
+    cName <- if( is.null(pMtx.evt) ) c("hpn","sum") else c("hpn","sum",pEvtName)
+    cntMtx <- matrix( 0 ,ncol=length(cName) ,nrow=nrow(pMtx) )
+    rownames(cntMtx) <- rownames(pMtx)      ;colnames(cntMtx)<-cName
+
+    # row 방향 분석
+        # count
+
+        # rebCnt 1, 3, 5, 전체 (1는 사실상 연속.)
+
+    # col 방향 분석
+        # count
+
+        # rebCnt 1, 3, 5, 전체 (1는 사실상 연속.)
+
+
 }
 
-fLogMtx <- function( mtx ,pIndent="" ){
-    # pIndent
-    dfStr <- capture.output( mtx )
-    cat(sprintf("%s%s\n",pIndent,dfStr))
+anaMtx.cnt <- function( pMtx ,pMtx.evt=NULL ,pReb=c(2,4,6) ,pRow=T ){
+    #   pRow : T 이면 row 방향에 대한 count, F이면 col방향으로의 count
+    workMtx <- if( pRow ) pMtx else t(pMtx)
+    rObj <- list(   hpn = apply( workMtx ,1 ,function(row){ sum(row>0) } )
+                    ,sum = apply( workMtx ,1 ,sum )
+                )
+    workMtx.evt <- NULL
+    if( !is.null(pMtx.evt) ){
+        workMtx.evt <- if( pRow ) pMtx.evt else t(pMtx.evt)
+        rObj$hpn <- apply( workMtx.evt ,1 ,sum )
+    }
+
+    # reb count
+    rebSpan <- c( pReb[pReb<ncol(workMtx)] ,ncol(workMtx) )
+    for( rebIdx in rebSpan ){
+
+    }
+
+    return( rObj )
 }
 
 # 분석
