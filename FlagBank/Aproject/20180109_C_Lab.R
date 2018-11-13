@@ -55,6 +55,11 @@ for( zhIdx in zhName ){
 
 } # for(zhIdx)
 
+
+
+
+
+
 mtx <- mtxObj$cntMtx
 
 pMtx <- mtx ;pMtx.evt <- mtx > 0    ;pEvtName="Evt"

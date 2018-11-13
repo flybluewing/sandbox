@@ -532,6 +532,7 @@ k.getFlogObj <- function( fileName ){
 	}
 	logObj$fLogMtx <- function( mtx ,pIndent="" ){
 		dfStr <- capture.output( mtx )
+		dfStr <- gsub("FALSE","    .",dfStr)	;dfStr <- gsub(" TRUE","    T",dfStr)
 		cat( sprintf("%s%s\n",pIndent,dfStr) ,file=logObj$fileName ,append=T )
 	}
 	logObj$fLogMtxLst <- function( mtxLst ,pIndent="" ,pSep="" ,pFirstRowName=T ){
@@ -542,7 +543,10 @@ k.getFlogObj <- function( fileName ){
 			}
 		}
 
-		mtxStrLst <- lapply( mtxLst ,function(mtx){ capture.output(mtx) })
+		mtxStrLst <- lapply( mtxLst ,function(mtx){ dfStr <- capture.output(mtx) 
+							dfStr <- gsub("FALSE","    .",dfStr)	;dfStr <- gsub(" TRUE","    T",dfStr)
+							return( dfStr )
+						})
 		maxRow <- max( sapply(mtxStrLst,length) )
 		strLength <- sapply(mtxStrLst,function(str){nchar(str[1])})
 		str.blank <- sapply(mtxStrLst,function(str){ strrep(" ",nchar(str[1])) })
