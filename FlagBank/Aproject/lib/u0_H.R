@@ -1,4 +1,5 @@
 # u0_H.R unit model zero
+#   주로 패턴 검색&검증 용
 
 u0.zoidInc_ana <- function( zoid1 ,zoid2 ){
     # zoid1=c(6,18,31,34,38,45);zoid2=c(14,15,16,17,38,45)
