@@ -44,7 +44,8 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 	# allIdxF <- fCut.rawFV3(  gEnv ,allIdxF  )
 	# cat(sprintf("allIdxF %d\n",length(allIdxF)))
 
-	allIdxF <- fCut.basic( gEnv ,allIdxF )
+	# fCut.basic( gEnv ,allIdxF )
+	# allIdxF <- fCut.basic( gEnv ,allIdxF )
 	cat(sprintf("allIdxF %d\n",length(allIdxF)))
 	allIdxFObj$allIdxF.fCut <- allIdxF
 	tDiff <- Sys.time() - tStmp	

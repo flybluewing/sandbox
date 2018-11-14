@@ -1,12 +1,18 @@
+lastH <- 832
+# fullRstSpan, goldRstSpan ----------------------------------------------------------
+fullRstSpan <- 826:lastH
+load( sprintf("Obj_allIdxLstZ%d.save",lastH) )
+stdFiltedCnt <- allIdxLst$stdFiltedCnt[as.character(809:lastH)] ;rm(allIdxLst)
+goldRstSpan <- as.integer(names( stdFiltedCnt[stdFiltedCnt<=1] ))
 
+# rptLst ----------------------------------------------------------------------------
 rptLst <- list()
-for( hIdx in 826:832 ){
+for( hIdx in goldRstSpan ){
     fileName <- sprintf("./save/stdZoidFltRst/z%d.save",hIdx)
     cat( paste(fileName,"\n",collapse="") )
     myObj <- load(fileName)    # rptObj
     rptLst[[sprintf("z%d_%d",hIdx,rptObj$stdFiltedCnt)]] <- rptObj
 }
-
 
 hSpan <- sapply( rptLst ,function(rpt){rpt$h})
 zhName <- attributes(rptLst)$names
@@ -16,7 +22,7 @@ name.auxCntMtx <- colnames(rptLst[[1]]$ccObjLst[[1]]$auxCntMtx)
 name.cccObj.scoreMtx <- colnames(rptLst[[1]]$ccObjLst[[1]]$cccObj$scoreMtx)
 name.cccObj.cStepValMtx <- colnames(rptLst[[1]]$ccObjLst[[1]]$cccObj$cStepValMtx)
 
-# 매트릭스 작성
+# mtxInfoLst ------------------------------------------------------------------------
 hpnCntMtx <- matrix( 0 ,nrow=length(phName) ,ncol=length(zhName) )
 colnames(hpnCntMtx)<-zhName        ;rownames(hpnCntMtx)<-phName
 
@@ -51,73 +57,126 @@ for( zhIdx in zhName ){
 } # for(zhIdx) -- mtxInfoLst
 
 
-for( zhIdx in zhName ){
-    mtxObj <- mtxInfoLst[[zhIdx]]
-    # log.cntMtx$fLogStr(sprintf("<%s> ---------------------------------",zhIdx))
-    # log.scoreMtx$fLogStr(sprintf("<%s> ---------------------------------",zhIdx))
-    # log.cStepValMtx$fLogStr(sprintf("<%s> ---------------------------------",zhIdx))
+# testMtx ---------------------------------------------------------------------------
+logObj <- k.getFlogObj( "./report/logObj.txt" )        ;logObj$fLogStr("start", pTime=T ,pAppend=F )
 
-} # for(zhIdx)
+logObj$fLogStr(sprintf("<< cntMtx >> ------------------------"))
+hpnMtx <- NULL  ;sumMtx <- NULL ;evtMtx <- NULL
+for( phIdx in phName ){
+    # cntMtx( No w filter in cStep, fStep ) -----------------------------------------
+    testMtx <- NULL
+    for( zhIdx in zhName ){
+        mtxObj <- mtxInfoLst[[zhIdx]]
+        testMtx <- rbind( testMtx ,mtxObj$cntMtx[ phIdx,,drop=F] )
+    } # for(zhIdx)
+    rownames(testMtx) <- zhName
+    cStep.score <-  testMtx[,"cStep"] - testMtx[,"cStep.w1"] - testMtx[,"cStep.w2"]
+    testMtx[,"cStep"] <- ifelse( cStep.score>0 ,cStep.score ,0 )
+    fStep.score <- testMtx[,"fStep"] - testMtx[,"fStep.w1"] - testMtx[,"fStep.w2"]
+    testMtx[,"fStep"] <- ifelse( fStep.score>0 ,fStep.score ,0 )
+
+    testMtx.evt <- testMtx > 1  ;testMtx.evt[,"rem"] <- testMtx[,"rem"] > 2
+    rowObj <- u1.anaMtx.cnt( pMtx=testMtx ,pMtx.evt=testMtx.evt ,pEvtName="evt" ,pRow=T )
+    colObj <- u1.anaMtx.cnt( pMtx=testMtx ,pMtx.evt=testMtx.evt ,pEvtName="evt" ,pRow=F )
+
+    hpnMtx <- cbind( hpnMtx ,rowObj$anaMtx[,"hpn"] )
+    sumMtx <- cbind( sumMtx ,rowObj$anaMtx[,"sum"] )
+    evtMtx <- cbind( evtMtx ,rowObj$anaMtx[,"evt"] )
+
+    logObj$fLogStr(sprintf("    [%s]",phIdx))
+    logObj$fLogMtxLst( list(rowObj$anaMtx,testMtx) ,pIndent="    " ,pSep=" |"  )
+}
+colnames(hpnMtx) <- phName  ;colnames(sumMtx) <- phName     ;colnames(evtMtx) <- phName
+logObj$fLogStr(sprintf("  ** [hpnMtx]"))
+rowObj <- u1.anaMtx.cnt( pMtx=hpnMtx ,pMtx.evt=hpnMtx>3 ,pEvtName="e>3" ,pRow=T )
+logObj$fLogMtxLst( list(rowObj$anaMtx,hpnMtx) ,pIndent="    " ,pSep=" :")
+logObj$fLogStr(sprintf("  ** [sumMtx]"))
+rowObj <- u1.anaMtx.cnt( pMtx=sumMtx ,pMtx.evt=sumMtx>5 ,pEvtName="e>5" ,pRow=T )
+logObj$fLogMtxLst( list(rowObj$anaMtx,sumMtx) ,pIndent="    " ,pSep=" :")
+logObj$fLogStr(sprintf("  ** [evtMtx]"))
+rowObj <- u1.anaMtx.cnt( pMtx=evtMtx ,pMtx.evt=evtMtx>1 ,pEvtName="e>1" ,pRow=T )
+logObj$fLogMtxLst( list(rowObj$anaMtx,evtMtx) ,pIndent="    " ,pSep=" :")
+
+
+logObj$fLogStr(sprintf("<< scoreMtx >> ------------------------"))
+hpnMtx <- NULL  ;sumMtx <- NULL ;evtMtx <- NULL
+for( phIdx in phName ){
+    # scoreMtx -----------------------------------------
+    testMtx <- NULL
+    for( zhIdx in zhName ){
+        mtxObj <- mtxInfoLst[[zhIdx]]
+        testMtx <- rbind( testMtx ,mtxObj$scoreMtx[ phIdx,,drop=F] )
+    } # for(zhIdx)
+    rownames(testMtx) <- zhName
+    cName <- setdiff( colnames(testMtx) ,c("w1CStep.matLen","w1FStep.matLen") )
+    testMtx <- testMtx[,cName]
+
+    testMtx.evt <- testMtx > 0
+    rowObj <- u1.anaMtx.cnt( pMtx=testMtx ,pMtx.evt=testMtx.evt ,pEvtName="evt" ,pRow=T )
+    colObj <- u1.anaMtx.cnt( pMtx=testMtx ,pMtx.evt=testMtx.evt ,pEvtName="evt" ,pRow=F )
+
+    hpnMtx <- cbind( hpnMtx ,rowObj$anaMtx[,"hpn"] )
+    sumMtx <- cbind( sumMtx ,rowObj$anaMtx[,"sum"] )
+    evtMtx <- cbind( evtMtx ,rowObj$anaMtx[,"evt"] )
+
+    logObj$fLogStr(sprintf("    [%s]",phIdx))
+    logObj$fLogMtxLst( list(rowObj$anaMtx,testMtx) ,pIndent="      " ,pSep=" |"  )
+
+}
+colnames(hpnMtx) <- phName  ;colnames(sumMtx) <- phName     ;colnames(evtMtx) <- phName
+logObj$fLogStr(sprintf("  ** [hpnMtx]"))
+rowObj <- u1.anaMtx.cnt( pMtx=hpnMtx ,pMtx.evt=hpnMtx>2 ,pEvtName="e>2" ,pRow=T )
+logObj$fLogMtxLst( list(rowObj$anaMtx,hpnMtx) ,pIndent="    " ,pSep=" :")
+logObj$fLogStr(sprintf("  ** [sumMtx]"))
+rowObj <- u1.anaMtx.cnt( pMtx=sumMtx ,pMtx.evt=sumMtx>3 ,pEvtName="e>3" ,pRow=T )
+logObj$fLogMtxLst( list(rowObj$anaMtx,sumMtx) ,pIndent="    " ,pSep=" :")
+logObj$fLogStr(sprintf("  ** [evtMtx]"))
+rowObj <- u1.anaMtx.cnt( pMtx=evtMtx ,pMtx.evt=evtMtx>2 ,pEvtName="e>2" ,pRow=T )
+logObj$fLogMtxLst( list(rowObj$anaMtx,evtMtx) ,pIndent="    " ,pSep=" :")
+
+
+logObj$fLogStr(sprintf("<< cStepValMtx >> ------------------------"))
+hpnMtx <- NULL  ;sumMtx <- NULL ;evtMtx <- NULL
+for( phIdx in phName ){
+    # scoreMtx -----------------------------------------
+    testMtx <- NULL
+    for( zhIdx in zhName ){
+        mtxObj <- mtxInfoLst[[zhIdx]]
+        testMtx <- rbind( testMtx ,mtxObj$cStepValMtx[ phIdx,,drop=F] )
+    } # for(zhIdx)
+    rownames(testMtx) <- zhName
+
+    testMtx.evt <- testMtx > 0
+    rowObj <- u1.anaMtx.cnt( pMtx=testMtx ,pMtx.evt=testMtx.evt ,pEvtName="evt" ,pRow=T )
+    colObj <- u1.anaMtx.cnt( pMtx=testMtx ,pMtx.evt=testMtx.evt ,pEvtName="evt" ,pRow=F )
+
+    c3 <- apply( testMtx[,c("c31","c32","c33","c34")] ,1 ,sum )
+    c2 <- apply( testMtx[,c("c21","c22","c23","c24","c25")] ,1 ,sum )
+    grpMtx <- cbind( c3 ,c2 ,testMtx[,c("max2","min2")] )
+    rowObj.sum <- u1.anaMtx.cnt( pMtx=grpMtx ,pMtx.evt=grpMtx>0 ,pEvtName="evt" ,pRow=T )
+    colObj.sum <- u1.anaMtx.cnt( pMtx=grpMtx ,pMtx.evt=grpMtx>0 ,pEvtName="evt" ,pRow=F )
+
+    hpnMtx <- cbind( hpnMtx ,rowObj.sum$anaMtx[,"hpn"] )
+    sumMtx <- cbind( sumMtx ,rowObj.sum$anaMtx[,"sum"] )
+    evtMtx <- cbind( evtMtx ,rowObj.sum$anaMtx[,"evt"] )
+
+    logObj$fLogStr(sprintf("    [%s]",phIdx))
+    logObj$fLogMtxLst( list(rowObj$anaMtx,testMtx,rowObj.sum$anaMtx,grpMtx) ,pIndent="      " ,pSep=" |"  )
+
+}
+colnames(hpnMtx) <- phName  ;colnames(sumMtx) <- phName     ;colnames(evtMtx) <- phName
+logObj$fLogStr(sprintf("  ** [hpnMtx]"))
+rowObj <- u1.anaMtx.cnt( pMtx=hpnMtx ,pMtx.evt=hpnMtx>1 ,pEvtName="e>3" ,pRow=T )
+logObj$fLogMtxLst( list(rowObj$anaMtx,hpnMtx) ,pIndent="    " ,pSep=" :")
+logObj$fLogStr(sprintf("  ** [sumMtx]"))
+rowObj <- u1.anaMtx.cnt( pMtx=sumMtx ,pMtx.evt=sumMtx>2 ,pEvtName="e>2" ,pRow=T )
+logObj$fLogMtxLst( list(rowObj$anaMtx,sumMtx) ,pIndent="    " ,pSep=" :")
+logObj$fLogStr(sprintf("  ** [evtMtx]"))
+rowObj <- u1.anaMtx.cnt( pMtx=evtMtx ,pMtx.evt=evtMtx>1 ,pEvtName="e>1" ,pRow=T )
+logObj$fLogMtxLst( list(rowObj$anaMtx,evtMtx) ,pIndent="    " ,pSep=" :")
 
 
 
-
-
-
-
-u1.anaMtx.cnt <- function( pMtx ,pMtx.evt=NULL ,pEvtName="evt" ,pReb=c(2,4,6) ,pRow=T ){
-    # test : pMtx.evt=pMtx>0 ;pEvtName="evt" ;pReb=c(2,4,6) ;pRow=T
-    #       rowObj <- u1.anaMtx.cnt( pMtx=pMtx ,pMtx.evt=pMtx.evt ,pEvtName=pEvtName ,pRow=T )
-    #       colObj <- u1.anaMtx.cnt( pMtx=pMtx ,pMtx.evt=pMtx.evt ,pEvtName=pEvtName ,pRow=F )
-
-    #   pRow : T 이면 row 방향에 대한 count, F이면 col방향으로의 count
-    workMtx <- if( pRow ) pMtx else t(pMtx)
-
-    rObj <- list( direction=ifelse(pRow,"row","col") )
-    anaMtx <- rbind( apply( workMtx ,1 ,function(row){ sum(row>0) } )
-                    ,apply( workMtx ,1 ,sum )
-                )
-    rownames( anaMtx ) <- c("hpn","sum")
-
-    evtRebPtnMtx <- NULL
-    if( !is.null(pMtx.evt) ){
-        workMtx.evt <- if( pRow ) pMtx.evt else t(pMtx.evt)
-        anaMtx <- rbind( anaMtx ,apply( workMtx.evt ,1 ,sum ) )
-        rownames( anaMtx ) <- c("hpn","sum",pEvtName)
-
-        # reb count for event
-        rebSpan <- c( pReb[pReb<ncol(workMtx)] ,ncol(workMtx) )
-        rebMatchNumLst <- list()
-        for( rebIdx in rebSpan ){
-            # search index Span 생성.
-            searchSpanLst <- list()
-            for( sIdx in 1:(ncol(workMtx)-rebIdx+1) ){
-                searchSpanLst[[length(searchSpanLst)+1]] <- sIdx:(sIdx+rebIdx-1)
-            }
-
-            # span 내에서 min,max값 검색.
-            matchCnt <- integer(0)
-            spanLen <- length(searchSpanLst[[1]])
-            for( lIdx in 1:length(searchSpanLst) ){
-                idxSpan <- searchSpanLst[[lIdx]]
-                for( baseIdx in 1:(spanLen-1) ){
-                    for( tIdx in (baseIdx+1):spanLen ){
-                        matchSum <- sum( workMtx.evt[,idxSpan[baseIdx]] & workMtx.evt[,idxSpan[tIdx]] )
-                        matchCnt <- c( matchCnt ,matchSum )
-                    }
-                }
-            }
-            rebMatchNumLst[[sprintf("reb%02d",rebIdx)]] <- c( min(matchCnt), max(matchCnt) )    # min max
-        }
-        evtRebPtnMtx <- do.call( rbind ,rebMatchNumLst )
-        colnames(evtRebPtnMtx) <- c("min","max")
-    } # if( !is.null(pMtx.evt) )
-
-    rObj$anaMtx <- if( pRow ) t(anaMtx) else anaMtx
-    rObj$evtRebPtnMtx <- evtRebPtnMtx
-
-    return( rObj )
-} # u1.anaMtx.cnt()
 
 
 log.cntMtx$fLogMtx( workMtx.evt )

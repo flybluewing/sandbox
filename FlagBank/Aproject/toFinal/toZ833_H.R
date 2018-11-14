@@ -994,7 +994,7 @@ fCutCnt.colValSeqNext <- function( gEnv ,allIdxF ,rpt=FALSE ){
 						if( all(aCStep[c(4,5)]*c(3,1)== aCStep[c(2,1)] ) ) cnt<-cnt+1
 						# if( all(aCStep[c(,)]*c(,)== aCStep[c(,)] ) ) cnt<-cnt+1
 
-						if( sum(aCStep[c(1,5)])==sum(aCStep[c(2,4)]) )	cnt.w2<-cnt.w2+1	# 
+						if( sum(aCStep[c(1,5)])==sum(aCStep[c(2,4)]) )	cnt<-cnt+1	# 
 
 					score <- score + ifelse(cnt>1,1,0)
 
@@ -1133,19 +1133,19 @@ fCutCnt.colValSeqNext.cStep <- function( gEnv ,allIdxF ,rpt=FALSE ){
 						if( aCStep[4]%in%c(10    ) ) tCnt<-tCnt+1
 						if( aCStep[5]%in%c( 4, 4 ) ) tCnt<-tCnt+1
 
-						if( all(aCStep[1]*c(5,1)== aCStep[3,4]) ) cnt<-cnt+1
+						if( all(aCStep[1]*c(5,1)== aCStep[c(3,4)]) ) cnt<-cnt+1
 						if( aCStep[5]==sum(aCStep[c(1,2)]) ) cnt<-cnt+1
 						if( aCStep[5]==sum(aCStep[c(4,2)]) ) cnt<-cnt+1
-						if( sum(aCStep[c( 1,3 )])==sum(aCStep[c( 2,5 )]) )	cnt.w2<-cnt.w2+1	# 12
-						if( sum(aCStep[c( 4,3 )])==sum(aCStep[c( 2,5 )]) )	cnt.w2<-cnt.w2+1	# 12
+						if( sum(aCStep[c( 1,3 )])==sum(aCStep[c( 2,5 )]) )	cnt<-cnt+1	# 12
+						if( sum(aCStep[c( 4,3 )])==sum(aCStep[c( 2,5 )]) )	cnt<-cnt+1	# 12
 					cnt <- cnt + ifelse( tCnt>1 ,tCnt-1 ,0 )
 
 					# if( fCutU.hasPtn(c( , ),aCStep) )	cnt.w1<-cnt.w1+1
 					# if( 1<sum(aCStep[1:2+ ]==c( , )) )	cnt.w1<-cnt.w1+1
 					if( fCutU.hasPtn(c(2,6),aCStep) ) cnt<-cnt+1	# -
-					if( fCutU.hasPtn(c(1,3),aCStep) )	cnt.w1<-cnt.w1+1
-					if( fCutU.hasPtn(c( 1,1 ),aCStep) )	cnt.w1<-cnt.w1+1
-					if( fCutU.hasPtn(c( 3,3 ),aCStep) )	cnt.w1<-cnt.w1+1
+					if( fCutU.hasPtn(c(1,3),aCStep) )	cnt<-cnt+1
+					if( fCutU.hasPtn(c( 1,1 ),aCStep) )	cnt<-cnt+1
+					if( fCutU.hasPtn(c( 3,3 ),aCStep) )	cnt<-cnt+1
 					# [1]    2  1  4  6 12  8  7 22  7  3 11  5  9  4 13  7  5  4  8  1 25  5 22 
 					# [2]*   5  4  7  2  6  4  3 12  1  3 13 14  1 22  2  7  8  6  1  1  6  4  1  3  8
 					# [3]*  10  5 11 11  9  1  3  2  5  4  2 17 12  1  4  2 11  6  1 
