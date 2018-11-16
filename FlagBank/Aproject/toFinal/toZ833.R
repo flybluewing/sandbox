@@ -55,6 +55,7 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 	#		각 파트에서 2 이상씩은 잘라낸 후,
 	#		전체 파트에서 하나도 안 걸린 것들은 제외시키자.
 	# ccObj <- fCutCnt.default( gEnv ,allIdxF )
+	# ccObj <- fCutCnt.basic( gEnv ,allIdxF )
 
 	ccObj <- fCutCnt.nextQuo10( gEnv ,allIdxF )
 	allIdxF <- allIdxF[ cutCC( ccObj ,allIdxF ) ]
@@ -99,7 +100,7 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 	cat(sprintf("allIdxF %d\n",length(allIdxF)))
 	save( allIdxF ,file="Obj_allIdxF.save" )
 
-	tDiff <- Sys.time() - tStmp	
+	tDiff <- Sys.time() - tStmp
 	allIdxFObj$allIdxF.fCutCnt <- allIdxF
 
 	ccObjLst <- list()
@@ -117,6 +118,7 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 	ccObjLst[["nextColVal_5"]] <- fCutCnt.nextColVal_5( gEnv ,allIdxF )
 	ccObjLst[["nextColVal_6"]] <- fCutCnt.nextColVal_6( gEnv ,allIdxF )
 	save( ccObjLst ,file="Obj_ccObjLst.save" )
+	tDiff <- Sys.time() - tStmp
 
 	# surFlag(scoreMtx) ------------------------------------------------------
 	surFlag <- rep( TRUE ,length(allIdxF) )
