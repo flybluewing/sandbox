@@ -186,27 +186,28 @@ ff0.phName <- c(    "basic","nextZW","nextQuo10" ,"nextBin" ,"nextRebNum" ,"next
                     ,"nextColVal_1","nextColVal_2","nextColVal_3","nextColVal_4","nextColVal_5","nextColVal_6"
                 )
 
-ff0.filtCntMtx <- function( phName ,pCntMtx ){
+ff0.filtCntMtx.1ph <- function( phName ,pCntMtx ){
     #   phName="basic"  ;pCntMtx=ccObj$cntMtx
-    getThldMtx <- function( phName ){
+    #   1개 필터차원 단위의 생존평가.
+    getEvtThldMtx <- function( phName ){
                         rMtx <- NULL
-                        rMtx <- rbind( rMtx ,c( NA ,1 ) )    # "basic"
-                        rMtx <- rbind( rMtx ,c( NA ,1 ) )    # "nextZW"
-                        rMtx <- rbind( rMtx ,c( NA ,1 ) )    # "nextQuo10"
-                        rMtx <- rbind( rMtx ,c( NA ,1 ) )    # "nextBin"
-                        rMtx <- rbind( rMtx ,c( NA ,1 ) )    # "nextRebNum"
-                        rMtx <- rbind( rMtx ,c( NA ,1 ) )    # "nextCStepBin"
-                        rMtx <- rbind( rMtx ,c( NA ,1 ) )    # "nextFStepBin"
-                        rMtx <- rbind( rMtx ,c( NA ,2 ) )    # "nextColVal_1"
-                        rMtx <- rbind( rMtx ,c( NA ,2 ) )    # "nextColVal_2"
-                        rMtx <- rbind( rMtx ,c( NA ,2 ) )    # "nextColVal_3"
-                        rMtx <- rbind( rMtx ,c( NA ,2 ) )    # "nextColVal_4"
-                        rMtx <- rbind( rMtx ,c( NA ,2 ) )    # "nextColVal_5"
-                        rMtx <- rbind( rMtx ,c( NA ,2 ) )    # "nextColVal_6"
+                        rMtx <- rbind( rMtx ,c( NA,3, NA,5, NA,1 ) )    # "basic"
+                        rMtx <- rbind( rMtx ,c( NA,3, NA,5, NA,1 ) )    # "nextZW"
+                        rMtx <- rbind( rMtx ,c( NA,3, NA,5, NA,1 ) )    # "nextQuo10"
+                        rMtx <- rbind( rMtx ,c( NA,3, NA,5, NA,1 ) )    # "nextBin"
+                        rMtx <- rbind( rMtx ,c( NA,3, NA,5, NA,1 ) )    # "nextRebNum"
+                        rMtx <- rbind( rMtx ,c( NA,3, NA,5, NA,1 ) )    # "nextCStepBin"
+                        rMtx <- rbind( rMtx ,c( NA,3, NA,5, NA,1 ) )    # "nextFStepBin"
+                        rMtx <- rbind( rMtx ,c( NA,3, NA,5, NA,2 ) )    # "nextColVal_1"
+                        rMtx <- rbind( rMtx ,c( NA,3, NA,5, NA,2 ) )    # "nextColVal_2"
+                        rMtx <- rbind( rMtx ,c( NA,3, NA,5, NA,2 ) )    # "nextColVal_3"
+                        rMtx <- rbind( rMtx ,c( NA,3, NA,5, NA,2 ) )    # "nextColVal_4"
+                        rMtx <- rbind( rMtx ,c( NA,3, NA,5, NA,2 ) )    # "nextColVal_5"
+                        rMtx <- rbind( rMtx ,c( NA,3, NA,5, NA,2 ) )    # "nextColVal_6"
                         rownames(rMtx) <- ff0.phName
-                        colnames(rMtx) <- c("evtMin","evtMax")
+                        colnames(rMtx) <- c("hpnMin","hpnMax","sumMin","sumMax""evtMin","evtMax")
                         return( rMtx[phName,] )
-    } # getThldMtx()
+    } # getEvtThldMtx()
 
     cntMtx <- pCntMtx
 
@@ -215,7 +216,7 @@ ff0.filtCntMtx <- function( phName ,pCntMtx ){
     fStep.score <- cntMtx[,"fStep"] - cntMtx[,"fStep.w1"] - cntMtx[,"fStep.w2"]
     cntMtx[,"fStep"] <- ifelse( fStep.score>0 ,fStep.score ,0 )
 
-    thld <- getThsldMtx( phName )
+    thld <- getEvtThldMtx( phName )
 
     # evtMtx
     cntMtx.evt <- cntMtx > 1  ;cntMtx.evt[,"rem"] <- cntMtx[,"rem"] > 2
@@ -244,7 +245,7 @@ ff0.filtCntMtx <- function( phName ,pCntMtx ){
 
     return( rObj )
 
-} # ff0.filtCntMtx( )
+} # ff0.filtCntMtx.1ph( )
 
 
 log.cntMtx$fLogMtx( workMtx.evt )
