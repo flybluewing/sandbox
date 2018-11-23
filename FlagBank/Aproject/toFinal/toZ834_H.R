@@ -985,20 +985,20 @@ fCutCnt.colValSeqNext <- function( gEnv ,allIdxF ,rpt=FALSE ){
 					matCnt <- sum(aCStep==c( NA,NA,NA,20, 2 ),na.rm=T)
 					score <- score + ifelse( matCnt>1 ,matCnt-1 ,0 )
 
-					if( fCutU.hasPtn(c(  5, 2 ),aCStep) ) aCStep<-aCStep+1
-					if( 1<sum(aCStep[1:2+1]==c( 12, 7 )) )	cnt<-cnt+1
-					if( fCutU.hasPtn(c(  5, 7 ),aCStep) ) aCStep<-aCStep+1
-					if( fCutU.hasPtn(c( 10, 8, 2 ),aCStep) ) aCStep<-aCStep+1
-
 					cnt <- 0
+						if( fCutU.hasPtn(c(  5, 2 ),aCStep) ) aCStep<-aCStep+1
+						if( 1<sum(aCStep[1:2+1]==c( 12, 7 )) )	cnt<-cnt+1
+						if( fCutU.hasPtn(c(  5, 7 ),aCStep) ) aCStep<-aCStep+1
+						if( fCutU.hasPtn(c( 10, 8, 2 ),aCStep) ) aCStep<-aCStep+1
+
 						if( aCStep[1]%in%c(  7, 5    ) ) cnt<-cnt+1
 						if( aCStep[2]%in%c(  7, 3    ) ) cnt<-cnt+1
 						if( aCStep[3]%in%c(  3, 4    ) ) cnt<-cnt+1
 						if( aCStep[4]%in%c(  9, 1    ) ) cnt<-cnt+1
 						if( aCStep[5]%in%c( 10, 2, 9   ) ) cnt<-cnt+1
 
-						if( 1<sum( aCStep[ 1 ]*c(1,4)==aCStep[c(3,4)] ) )	cnt.w2<-cnt.w2+1
-						if( 1<sum( aCStep[c(1,2)]*c(1,2)==aCStep[c(3,5)] ) )	cnt.w2<-cnt.w2+1
+						if( 1<sum( aCStep[ 1 ]*c(1,4)==aCStep[c(3,4)] ) )	cnt<-cnt+1
+						if( 1<sum( aCStep[c(1,2)]*c(1,2)==aCStep[c(3,5)] ) )	cnt<-cnt+1
 					score <- score + ifelse(cnt>1,1,0)
 
 					return( score )

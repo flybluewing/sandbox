@@ -5,7 +5,7 @@ source(sprintf("./toFinal/toZ%d_H.R",workH))
 load( sprintf("Obj_allIdxLstZ%d.save",workH-1) )
 load(sprintf("./save/Obj_gEnvZ%d.save",workH-1))
 allZoidGrpName <-"allZoid.idx0"	# 
-allIdx <- allIdxLst[[allZoidGrpName]]	#   
+allIdx <- allIdxLst[[allZoidGrpName]]	#   1109726 ,1723043
 allIdxF <- 1000:1010		;stdZoid <- NULL
 
 # simMode start ----------------------------------------------------
@@ -29,7 +29,7 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 
 	tStmp <- Sys.time()
 	# 기본제거 --------------------------------------------------------------------	
-	allIdxF <- fCut.default( gEnv ,allIdxF )
+	allIdxF <- fCut.default( gEnv ,allIdxF )		;allIdxF.bak <- allIdxF
 
 	# colValSeqNext ------------------------------------------------------
 	flgCnt <- fCutCnt.colValSeqNext( gEnv ,allIdxF ) 
