@@ -806,6 +806,32 @@ u0.getDescript_ptnReb <- function( banObj ,rawVal ){
     return(descStr)
 }
 
+#   get ccObjLst from each Phase
+u0.getPhObjLst <- function( gEnv ,allIdxF ){
+
+    logMsg <- function( phName ,tDiff ){
+        #   print(sprintf("    %s   %.1f%s",phName,tDiff,units(tDiff)))
+        k.FLogStr( sprintf("    %s   %.1f%s",phName,tDiff,units(tDiff)) ,pConsole=T,pTime=F )
+    } # logMsg()
+
+    tStmp <- Sys.time()
+	ccObjLst <- list()
+	ccObjLst[["basic"		]] <- fCutCnt.basic( 		gEnv ,allIdxF ) ;logMsg( "basic"        ,Sys.time()-tStmp )
+	ccObjLst[["nextZW"		]] <- fCutCnt.nextZW( 		gEnv ,allIdxF ) ;logMsg( "nextZW"		,Sys.time()-tStmp )
+	ccObjLst[["nextQuo10"	]] <- fCutCnt.nextQuo10( 	gEnv ,allIdxF ) ;logMsg( "nextQuo10"	,Sys.time()-tStmp )
+	ccObjLst[["nextBin"		]] <- fCutCnt.nextBin( 		gEnv ,allIdxF ) ;logMsg( "nextBin"		,Sys.time()-tStmp )
+	ccObjLst[["nextRebNum"	]] <- fCutCnt.nextRebNum( 	gEnv ,allIdxF ) ;logMsg( "nextRebNum"	,Sys.time()-tStmp )
+	ccObjLst[["nextCStepBin"]] <- fCutCnt.nextCStepBin( gEnv ,allIdxF ) ;logMsg( "nextCStepBin" ,Sys.time()-tStmp )
+	ccObjLst[["nextFStepBin"]] <- fCutCnt.nextFStepBin( gEnv ,allIdxF ) ;logMsg( "nextFStepBin" ,Sys.time()-tStmp )
+	ccObjLst[["nextColVal_1"]] <- fCutCnt.nextColVal_1( gEnv ,allIdxF ) ;logMsg( "nextColVal_1" ,Sys.time()-tStmp )
+	ccObjLst[["nextColVal_2"]] <- fCutCnt.nextColVal_2( gEnv ,allIdxF ) ;logMsg( "nextColVal_2" ,Sys.time()-tStmp )
+	ccObjLst[["nextColVal_3"]] <- fCutCnt.nextColVal_3( gEnv ,allIdxF ) ;logMsg( "nextColVal_3" ,Sys.time()-tStmp )
+	ccObjLst[["nextColVal_4"]] <- fCutCnt.nextColVal_4( gEnv ,allIdxF ) ;logMsg( "nextColVal_4" ,Sys.time()-tStmp )
+	ccObjLst[["nextColVal_5"]] <- fCutCnt.nextColVal_5( gEnv ,allIdxF ) ;logMsg( "nextColVal_5" ,Sys.time()-tStmp )
+	ccObjLst[["nextColVal_6"]] <- fCutCnt.nextColVal_6( gEnv ,allIdxF ) ;logMsg( "nextColVal_6" ,Sys.time()-tStmp )
+
+    return( ccObjLst )
+}
 
 u0.saveStdZoidFltRst <- function( hNum ){
 	#	source("./toFinal/toZ826_H.R")
@@ -851,3 +877,5 @@ u0.saveStdZoidFltRst <- function( hNum ){
 	save( rptObj ,file=saveFile )
 
 }	# u0.saveStdZoidFltRst()
+
+
