@@ -1,16 +1,16 @@
-# Z834
-workH <- 834	;rpt=TRUE
+# Z835
+workH <- 835	;rpt=TRUE
 source(sprintf("./toFinal/toZ%d_H.R",workH))
 
 load( sprintf("Obj_allIdxLstZ%d.save",workH-1) )
 load(sprintf("./save/Obj_gEnvZ%d.save",workH-1))
 allZoidGrpName <-"allZoid.idx0"	# 
-allIdx <- allIdxLst[[allZoidGrpName]]	#   1109726 ,1723043
+allIdx <- allIdxLst[[allZoidGrpName]]	#        8144226             120             111  ???
 allIdxF <- 1000:1010		;stdZoid <- NULL
 
 # simMode start ----------------------------------------------------
-	aZoid <- stdZoid <- c(  6, 8,18,35,42,43 ) # ZH 834 채워넣을 것.
-	allIdxF <- allIdx <- stdIdx <- 4428865
+	aZoid <- stdZoid <- c( ,,,,, ) # ZH 834 채워넣을 것.
+	allIdxF <- allIdx <- stdIdx <- 
 		# which(apply(gEnv$allZoidMtx,1,function(zoid){all(zoid==stdZoid)}))
 	u0.saveStdZoidFltRst( workH )
 # simMode end   ----------------------------------------------------
