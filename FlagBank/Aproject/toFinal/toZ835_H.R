@@ -709,55 +709,29 @@ fCutCnt.basic <- function( gEnv ,allIdxF ,rpt=FALSE ){
 		if( TRUE ){ # rawFV		# anaMtx.freqVal( stdMI$rawTail )
 			cnt <- 0
 			# < 5>
-			if( fCutU.hasPtn(c(  ,  ),aZoid) ) cnt<-cnt+1
 			# < 6>
-			if( fCutU.hasPtn(c(  ,  ),aZoid) ) cnt<-cnt+1
+			if( fCutU.hasPtn(c(  6,NA,18 ),aZoid) ) cnt<-cnt+1
 			# <16>
-			if( fCutU.hasPtn(c(  ,  ),aZoid) ) cnt<-cnt+1
+			if( fCutU.hasPtn(c(       16,20       ),aZoid) ) cnt<-cnt+1
+			if( fCutU.hasPtn(c(       16,NA,NA,40 ),aZoid) ) cnt<-cnt+1
+			if( fCutU.hasPtn(c(  1,14,16,NA,25    ),aZoid,thld=3,fixIdx=3) ) cnt<-cnt+1
 			# <18>
-			if( fCutU.hasPtn(c(  ,  ),aZoid) ) cnt<-cnt+1
+			if( fCutU.hasPtn(c(  6,NA,18 ),aZoid) ) cnt<-cnt+1
+			if( fCutU.hasPtn(c(  4,18,40,45,45 ),aZoid,thld=3,fixIdx=2) ) cnt<-cnt+1
 			# <19>
-			if( fCutU.hasPtn(c(  ,  ),aZoid) ) cnt<-cnt+1
+			if( fCutU.hasPtn(c(       19,NA,41 ),aZoid) ) cnt<-cnt+1
+			if( fCutU.hasPtn(c( 16,12,19,21    ),aZoid,thld=3,fixIdx=3) ) cnt<-cnt+1
 			# <31>
-			if( fCutU.hasPtn(c(  ,  ),aZoid) ) cnt<-cnt+1
+			if( fCutU.hasPtn(c( 28,NA,31,43 ),aZoid) ) cnt<-cnt+1
 			# <35>
-			if( fCutU.hasPtn(c(  ,  ),aZoid) ) cnt<-cnt+1
+			if( fCutU.hasPtn(c(          35,41    ),aZoid) ) cnt<-cnt+1
+			if( fCutU.hasPtn(c(  8,11, 5,35,NA,41 ),aZoid,thld=3,fixIdx=4) ) cnt<-cnt+1
 			# <39>
-			if( fCutU.hasPtn(c(  ,  ),aZoid) ) cnt<-cnt+1
+			if( fCutU.hasPtn(c( 17,NA,39 ),aZoid) ) cnt<-cnt+1
+			if( fCutU.hasPtn(c(    29,39 ),aZoid) ) cnt<-cnt+1
 			# <42>
-			if( fCutU.hasPtn(c(  ,  ),aZoid) ) cnt<-cnt+1
 			# <43>
-			if( fCutU.hasPtn(c(  ,  ),aZoid) ) cnt<-cnt+1
-			# <  5>  -1      5 , 31 , 35 , 43 , 45 
-			#                5 ,  6 , 16 , 18 , 37 
-			#          -->   5*, NA , NA , NA , 29 
-			# <  6>  -1      6 , 16 , 18 , 37 , 38 
-			#                6 ,  8 , 18 , 35 , 42 
-			#          -->   6*, NA , 18!, 33 , NA 
-			# < 16>   0      5 ,  6 , 16 , 18 , 37 , 38 
-			#                3 , 10 , 16 , 19 , 31 , 39 
-			#          -->   1 , 14 , 16*, 20!, 25 , 40!
-			# < 18>   1     12 , 18 , 30 , 39 , 41 
-			#                8 , 18 , 35 , 42 , 43 
-			#          -->   4 , 18*, 40 , 45 , 45 
-			# < 19>  -1     10 , 16 , 19 , 31 , 39 
-			#               13 , 14 , 19 , 26 , 40 
-			#          -->  16 , 12 , 19*, 21 , 41!
-			# < 31>   2      4 ,  5 , 31 , 35 
-			#               16 , 19 , 31 , 39 
-			#          -->  28 , NA , 31*, 43 
-			# < 35>   0      4 ,  5 , 31 , 35 , 43 , 45 
-			#                6 ,  8 , 18 , 35 , 42 , 43 
-			#          -->   8 , 11 ,  5 , 35*, 41!, 41 
-			# < 39>  -2     16 , 19 , 31 , 39 
-			#               12 , 18 , 30 , 39 
-			#          -->   8 , 17!, 29!, 39*
-			# < 42>  -1     18 , 30 , 39 , 41 , 42 
-			#                6 ,  8 , 18 , 35 , 42 
-			#          -->  NA , NA , NA , 29 , 42*
-			# < 43>   0     13 , 14 , 19 , 26 , 40 , 43 
-			#                6 ,  8 , 18 , 35 , 42 , 43 
-			#          -->  NA ,  2 , 17!, NA , NA , 43*
+			if( fCutU.hasPtn(c( 17,NA,NA,43 ),aZoid) ) cnt<-cnt+1
 			cntMtx[idx,"rawFV"] <- cnt
 		}
 		if( TRUE ){ # rem		# u0.zoidMtx_ana( stdMI$rawTail%%10 )
