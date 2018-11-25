@@ -5,7 +5,7 @@ source(sprintf("./toFinal/toZ%d_H.R",workH))
 load( sprintf("Obj_allIdxLstZ%d.save",workH-1) )
 load(sprintf("./save/Obj_gEnvZ%d.save",workH-1))
 allZoidGrpName <-"allZoid.idx0"	# 
-allIdx <- allIdxLst[[allZoidGrpName]]	#        8144226             120             111  ???
+allIdx <- allIdxLst[[allZoidGrpName]]	# 868,696	1,669,054	1,287,997
 allIdxF <- 1000:1010		;stdZoid <- NULL
 
 # simMode start ----------------------------------------------------
