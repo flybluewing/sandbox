@@ -1,60 +1,76 @@
-lastH <- 832
+lastH <- 834
 # fullRstSpan, goldRstSpan ----------------------------------------------------------
 fullRstSpan <- 826:lastH
 load( sprintf("Obj_allIdxLstZ%d.save",lastH) )
 stdFiltedCnt <- allIdxLst$stdFiltedCnt[as.character(809:lastH)] ;rm(allIdxLst)
 goldRstSpan <- as.integer(names( stdFiltedCnt[stdFiltedCnt<=1] ))
 
-# rptLst ----------------------------------------------------------------------------
-rptLst <- list()
-for( hIdx in goldRstSpan ){
-    fileName <- sprintf("./save/stdZoidFltRst/z%d.save",hIdx)
-    cat( paste(fileName,"\n",collapse="") )
-    myObj <- load(fileName)    # rptObj
-    rptLst[[sprintf("z%d_%d",hIdx,rptObj$stdFiltedCnt)]] <- rptObj
-}
+lab.getMtxLst <- function( hSpan ){
 
-hSpan <- sapply( rptLst ,function(rpt){rpt$h})
-zhName <- attributes(rptLst)$names
-phName <- attributes(rptLst[[1]]$ccObjLst)$names
-name.cntMtx <- colnames(rptLst[[1]]$ccObjLst[[1]]$cntMtx)
-name.auxCntMtx <- colnames(rptLst[[1]]$ccObjLst[[1]]$auxCntMtx)
-name.cccObj.scoreMtx <- colnames(rptLst[[1]]$ccObjLst[[1]]$cccObj$scoreMtx)
-name.cccObj.cStepValMtx <- colnames(rptLst[[1]]$ccObjLst[[1]]$cccObj$cStepValMtx)
+    # rptLst ----------------------------------------------------------------------------
+    rptLst <- list()
+    for( hIdx in hSpan ){
+        fileName <- sprintf("./save/stdZoidFltRst/z%d.save",hIdx)
+        cat( paste(fileName,"\n",collapse="") )
+        myObj <- load(fileName)    # rptObj
+        rptLst[[sprintf("z%d_%d",hIdx,rptObj$stdFiltedCnt)]] <- rptObj
+    }
 
-# mtxInfoLst ------------------------------------------------------------------------
-hpnCntMtx <- matrix( 0 ,nrow=length(phName) ,ncol=length(zhName) )
-colnames(hpnCntMtx)<-zhName        ;rownames(hpnCntMtx)<-phName
+    hSpan <- sapply( rptLst ,function(rpt){rpt$h})
+    zhName <- attributes(rptLst)$names
+    phName <- attributes(rptLst[[1]]$ccObjLst)$names
+    name.cntMtx <- colnames(rptLst[[1]]$ccObjLst[[1]]$cntMtx)
+    name.auxCntMtx <- colnames(rptLst[[1]]$ccObjLst[[1]]$auxCntMtx)
+    name.cccObj.scoreMtx <- colnames(rptLst[[1]]$ccObjLst[[1]]$cccObj$scoreMtx)
+    name.cccObj.cStepValMtx <- colnames(rptLst[[1]]$ccObjLst[[1]]$cccObj$cStepValMtx)
 
-log.cntMtx      <- k.getFlogObj( "./report/cntMtx.txt" )        ;log.cntMtx$fLogStr("start", pTime=T ,pAppend=F )
-log.scoreMtx    <- k.getFlogObj( "./report/scoreMtx.txt" )      ;log.scoreMtx$fLogStr("start", pTime=T ,pAppend=F )
-log.cStepValMtx <- k.getFlogObj( "./report/cStepValMtx.txt" )   ;log.cStepValMtx$fLogStr("start", pTime=T ,pAppend=F )
+    # mtxInfoLst ------------------------------------------------------------------------
+    hpnCntMtx <- matrix( 0 ,nrow=length(phName) ,ncol=length(zhName) )
+    colnames(hpnCntMtx)<-zhName        ;rownames(hpnCntMtx)<-phName
 
-mtxInfoLst <- list()
-for( zhIdx in zhName ){
+    log.cntMtx      <- k.getFlogObj( "./report/cntMtx.txt" )        ;log.cntMtx$fLogStr("start", pTime=T ,pAppend=F )
+    log.scoreMtx    <- k.getFlogObj( "./report/scoreMtx.txt" )      ;log.scoreMtx$fLogStr("start", pTime=T ,pAppend=F )
+    log.cStepValMtx <- k.getFlogObj( "./report/cStepValMtx.txt" )   ;log.cStepValMtx$fLogStr("start", pTime=T ,pAppend=F )
 
-    hCntMtx <- sapply( rptLst[[zhIdx]]$ccObjLst ,function(ccObj){ ccObj$cntMtx } )
-    hCntMtx <- t(hCntMtx)       ;colnames(hCntMtx) <- name.cntMtx
-    hAuxCntMtx <- sapply( rptLst[[zhIdx]]$ccObjLst ,function(ccObj){ ccObj$auxCntMtx } )
-    hAuxCntMtx <- t(hAuxCntMtx) ;colnames( hAuxCntMtx ) <- name.auxCntMtx
+    mtxInfoLst <- list()
+    for( zhIdx in zhName ){
 
-    hCntMtx <- cbind( hCntMtx ,hAuxCntMtx )
-    log.cntMtx$fLogStr( sprintf("<%s> %d ---------------------------------",zhIdx,rptLst[[zhIdx]]$stdFiltedCnt) )
-    log.cntMtx$fLogMtx(hCntMtx,pIndent="  ")
+        hCntMtx <- sapply( rptLst[[zhIdx]]$ccObjLst ,function(ccObj){ ccObj$cntMtx } )
+        hCntMtx <- t(hCntMtx)       ;colnames(hCntMtx) <- name.cntMtx
+        hAuxCntMtx <- sapply( rptLst[[zhIdx]]$ccObjLst ,function(ccObj){ ccObj$auxCntMtx } )
+        hAuxCntMtx <- t(hAuxCntMtx) ;colnames( hAuxCntMtx ) <- name.auxCntMtx
 
-    hScoreMtx <- sapply( rptLst[[zhIdx]]$ccObjLst ,function(ccObj){ ccObj$cccObj$scoreMtx })
-    hScoreMtx <- t(hScoreMtx)   ;colnames( hScoreMtx ) <- name.cccObj.scoreMtx
-    log.scoreMtx$fLogStr(sprintf("<%s> %d ---------------------------------",zhIdx,rptLst[[zhIdx]]$stdFiltedCnt))
-    log.scoreMtx$fLogMtx(hScoreMtx)
+        hCntMtx <- cbind( hCntMtx ,hAuxCntMtx )
+        log.cntMtx$fLogStr( sprintf("<%s> %d ---------------------------------",zhIdx,rptLst[[zhIdx]]$stdFiltedCnt) )
+        log.cntMtx$fLogMtx(hCntMtx,pIndent="  ")
 
-    hCStepValMtx <- sapply( rptLst[[zhIdx]]$ccObjLst ,function(ccObj){ ccObj$cccObj$cStepValMtx })
-    hCStepValMtx <- t(hCStepValMtx) ;colnames( hCStepValMtx ) <- name.cccObj.cStepValMtx 
-    log.cStepValMtx$fLogStr(sprintf("<%s> %d ---------------------------------",zhIdx,rptLst[[zhIdx]]$stdFiltedCnt))
-    log.cStepValMtx$fLogMtx(hCStepValMtx)
+        hScoreMtx <- sapply( rptLst[[zhIdx]]$ccObjLst ,function(ccObj){ ccObj$cccObj$scoreMtx })
+        hScoreMtx <- t(hScoreMtx)   ;colnames( hScoreMtx ) <- name.cccObj.scoreMtx
+        log.scoreMtx$fLogStr(sprintf("<%s> %d ---------------------------------",zhIdx,rptLst[[zhIdx]]$stdFiltedCnt))
+        log.scoreMtx$fLogMtx(hScoreMtx)
 
-    mtxInfoLst[[zhIdx]] <- list( cntMtx=hCntMtx ,scoreMtx=hScoreMtx ,cStepValMtx=hCStepValMtx )
+        hCStepValMtx <- sapply( rptLst[[zhIdx]]$ccObjLst ,function(ccObj){ ccObj$cccObj$cStepValMtx })
+        hCStepValMtx <- t(hCStepValMtx) ;colnames( hCStepValMtx ) <- name.cccObj.cStepValMtx 
+        log.cStepValMtx$fLogStr(sprintf("<%s> %d ---------------------------------",zhIdx,rptLst[[zhIdx]]$stdFiltedCnt))
+        log.cStepValMtx$fLogMtx(hCStepValMtx)
 
-} # for(zhIdx) -- mtxInfoLst
+        mtxInfoLst[[zhIdx]] <- list( cntMtx=hCntMtx ,scoreMtx=hScoreMtx ,cStepValMtx=hCStepValMtx )
+
+    } # for(zhIdx) -- mtxInfoLst
+
+    rObj <- list( mtxInfoLst=mtxInfoLst ,hSpan=hSpan ,zhName=zhName ,phName=phName
+                    ,name.cntMtx=name.cntMtx
+                    ,name.auxCntMtx=name.auxCntMtx
+                    ,name.cccObj.scoreMtx=name.cccObj.scoreMtx
+                    ,name.cccObj.cStepValMtx=name.cccObj.cStepValMtx
+                 )
+
+    return( rObj )
+
+}   # lab.getMtxLst( )
+
+rstObj <- lab.getMtxLst( goldRstSpan )
+
 
 
 # testMtx ---------------------------------------------------------------------------
@@ -62,14 +78,14 @@ logObj <- k.getFlogObj( "./report/logObj.txt" )        ;logObj$fLogStr("start", 
 
 logObj$fLogStr(sprintf("<< cntMtx >> ------------------------"))
 hpnMtx <- NULL  ;sumMtx <- NULL ;evtMtx <- NULL
-for( phIdx in phName ){
+for( phIdx in rstObj$phName ){
     # cntMtx( No w filter in cStep, fStep ) -----------------------------------------
     testMtx <- NULL
-    for( zhIdx in zhName ){
-        mtxObj <- mtxInfoLst[[zhIdx]]
+    for( zhIdx in rstObj$zhName ){
+        mtxObj <- rstObj$mtxInfoLst[[zhIdx]]
         testMtx <- rbind( testMtx ,mtxObj$cntMtx[ phIdx,,drop=F] )
     } # for(zhIdx)
-    rownames(testMtx) <- zhName
+    rownames(testMtx) <- rstObj$zhName
     cStep.score <-  testMtx[,"cStep"] - testMtx[,"cStep.w1"] - testMtx[,"cStep.w2"]
     testMtx[,"cStep"] <- ifelse( cStep.score>0 ,cStep.score ,0 )
     fStep.score <- testMtx[,"fStep"] - testMtx[,"fStep.w1"] - testMtx[,"fStep.w2"]
@@ -87,7 +103,7 @@ for( phIdx in phName ){
     logObj$fLogMtxLst( list(rowObj$anaMtx,testMtx) ,pIndent="    " ,pSep=" |"  )
 }
 if( TRUE ){
-    colnames(hpnMtx) <- phName  ;colnames(sumMtx) <- phName     ;colnames(evtMtx) <- phName
+    colnames(hpnMtx) <- rstObj$phName  ;colnames(sumMtx) <- rstObj$phName     ;colnames(evtMtx) <- rstObj$phName
     logObj$fLogStr(sprintf("  ** [hpnMtx]"))
     rowObj <- u1.anaMtx.cnt( pMtx=hpnMtx ,pMtx.evt=hpnMtx>3 ,pEvtName="e>3" ,pRow=T )
     logObj$fLogMtxLst( list(rowObj$anaMtx,hpnMtx) ,pIndent="    " ,pSep=" :")
@@ -102,14 +118,14 @@ if( TRUE ){
 
 logObj$fLogStr(sprintf("<< scoreMtx >> ------------------------"))
 hpnMtx <- NULL  ;sumMtx <- NULL ;evtMtx <- NULL
-for( phIdx in phName ){
+for( phIdx in rstObj$phName ){
     # scoreMtx -----------------------------------------
     testMtx <- NULL
-    for( zhIdx in zhName ){
-        mtxObj <- mtxInfoLst[[zhIdx]]
+    for( zhIdx in rstObj$zhName ){
+        mtxObj <- rstObj$mtxInfoLst[[zhIdx]]
         testMtx <- rbind( testMtx ,mtxObj$scoreMtx[ phIdx,,drop=F] )
     } # for(zhIdx)
-    rownames(testMtx) <- zhName
+    rownames(testMtx) <- rstObj$zhName
     cName <- setdiff( colnames(testMtx) ,c("w1CStep.matLen","w1FStep.matLen") )
     testMtx <- testMtx[,cName]
 
@@ -126,7 +142,7 @@ for( phIdx in phName ){
 
 }
 if( TRUE ){
-    colnames(hpnMtx) <- phName  ;colnames(sumMtx) <- phName     ;colnames(evtMtx) <- phName
+    colnames(hpnMtx) <- rstObj$phName  ;colnames(sumMtx) <- rstObj$phName     ;colnames(evtMtx) <- rstObj$phName
     logObj$fLogStr(sprintf("  ** [hpnMtx]"))
     rowObj <- u1.anaMtx.cnt( pMtx=hpnMtx ,pMtx.evt=hpnMtx>2 ,pEvtName="e>2" ,pRow=T )
     logObj$fLogMtxLst( list(rowObj$anaMtx,hpnMtx) ,pIndent="    " ,pSep=" :")
@@ -141,14 +157,14 @@ if( TRUE ){
 
 logObj$fLogStr(sprintf("<< cStepValMtx >> ------------------------"))
 hpnMtx <- NULL  ;sumMtx <- NULL ;evtMtx <- NULL
-for( phIdx in phName ){
+for( phIdx in rstObj$phName ){
     # scoreMtx -----------------------------------------
     testMtx <- NULL
-    for( zhIdx in zhName ){
-        mtxObj <- mtxInfoLst[[zhIdx]]
+    for( zhIdx in rstObj$zhName ){
+        mtxObj <- rstObj$mtxInfoLst[[zhIdx]]
         testMtx <- rbind( testMtx ,mtxObj$cStepValMtx[ phIdx,,drop=F] )
     } # for(zhIdx)
-    rownames(testMtx) <- zhName
+    rownames(testMtx) <- rstObj$zhName
 
     testMtx.evt <- testMtx > 0
     rowObj <- u1.anaMtx.cnt( pMtx=testMtx ,pMtx.evt=testMtx.evt ,pEvtName="evt" ,pRow=T )
@@ -169,7 +185,7 @@ for( phIdx in phName ){
 
 }
 if( TRUE ){
-    colnames(hpnMtx) <- phName  ;colnames(sumMtx) <- phName     ;colnames(evtMtx) <- phName
+    colnames(hpnMtx) <- rstObj$phName  ;colnames(sumMtx) <- rstObj$phName     ;colnames(evtMtx) <- rstObj$phName
     logObj$fLogStr(sprintf("  ** [hpnMtx]"))
     rowObj <- u1.anaMtx.cnt( pMtx=hpnMtx ,pMtx.evt=hpnMtx>1 ,pEvtName="e>3" ,pRow=T )
     logObj$fLogMtxLst( list(rowObj$anaMtx,hpnMtx) ,pIndent="    " ,pSep=" :")
@@ -181,7 +197,81 @@ if( TRUE ){
     logObj$fLogMtxLst( list(rowObj$anaMtx,evtMtx) ,pIndent="    " ,pSep=" :")
 }
 
+# testMtx by mtx---------------------------------------------------------------------------
+logObj <- k.getFlogObj( "./report/logObj_cntMtx.txt" )        ;logObj$fLogStr("start", pTime=T ,pAppend=F )
+for( cnIdx in c(rstObj$name.cntMtx,rstObj$name.auxCntMtx) ){
+    logObj$fLogStr(sprintf("<cntMtx: %s >",cnIdx))
+    testMtx <- NULL
+    for( hnIdx in rstObj$zhName ){
+        testMtx <- rbind( testMtx ,rstObj$mtxInfoLst[[hnIdx]]$cntMtx[,cnIdx] )
+    } # for( hnIdx )
+    rownames( testMtx ) <- rstObj$zhName
 
+    sumMtx <- NULL
+    sumMtx <- cbind( sumMtx ,apply( testMtx ,1 ,function(dRow){sum(dRow)} ) )   # sum
+    sumMtx <- cbind( sumMtx ,apply( testMtx ,1 ,function(dRow){sum(dRow>0)} ) ) # hpn
+    if( cnIdx %in% c("raw","cStep","fStep") ){  
+        sumMtx <- cbind( sumMtx ,apply( testMtx ,1 ,function(dRow){sum(dRow>1)} ) ) # evt > 0
+    } else if( cnIdx %in% c("rem") ) {
+        sumMtx <- cbind( sumMtx ,apply( testMtx ,1 ,function(dRow){sum(dRow>2)} ) ) # evt > 0
+    } else {    # "rawFV" "raw.w1"   "cStep.w1" "cStep.w2" "fStep.w1" "fStep.w2"
+        sumMtx <- cbind( sumMtx ,apply( testMtx ,1 ,function(dRow){sum(dRow>0)} ) ) # evt > 0
+    }
+    colnames(sumMtx) <- c("sum","hpn","evt")
+
+    logObj$fLogMtxLst( list(sumMtx,testMtx) ,pIndent="      " ,pSep=" |"  )
+    logObj$fLogStr("\n")
+
+} # for(cnIdx)
+
+logObj <- k.getFlogObj( "./report/logObj_scoreMtx.txt" )        ;logObj$fLogStr("start", pTime=T ,pAppend=F )
+for( cnIdx in setdiff(rstObj$name.cccObj.scoreMtx,c("w1CStep.matLen","w1FStep.matLen")) ){
+    logObj$fLogStr(sprintf("<scoreMtx: %s >",cnIdx))
+    testMtx <- NULL
+    for( hnIdx in rstObj$zhName ){
+        testMtx <- rbind( testMtx ,rstObj$mtxInfoLst[[hnIdx]]$scoreMtx[,cnIdx] )
+    } # for( hnIdx )
+    rownames( testMtx ) <- rstObj$zhName
+
+    sumMtx <- NULL
+    sumMtx <- cbind( sumMtx ,apply( testMtx ,1 ,function(dRow){sum(dRow)} ) )   # sum
+    sumMtx <- cbind( sumMtx ,apply( testMtx ,1 ,function(dRow){sum(dRow>0)} ) ) # hpn
+    if( cnIdx %in% c("QQE") ){  
+    } else {    # "reb" "nbor" "spanM" "quoAll" "quoPtn" "zw" "remH0" "remH1" "cStep2" "cStep3" "w1CStep.cnt" "w1FStep.cnt"
+        sumMtx <- cbind( sumMtx ,apply( testMtx ,1 ,function(dRow){sum(dRow>0)} ) ) # evt > 0
+    }
+    colnames(sumMtx) <- c("sum","hpn","evt")
+
+    logObj$fLogMtxLst( list(sumMtx,testMtx) ,pIndent="      " ,pSep=" |"  )
+    logObj$fLogStr("\n")
+
+} # for(cnIdx)
+
+logObj <- k.getFlogObj( "./report/logObj_cStepValMtx.txt" )        ;logObj$fLogStr("start", pTime=T ,pAppend=F )
+for( cnIdx in rstObj$name.cccObj.cStepValMtx ){
+    logObj$fLogStr(sprintf("<cStepValMtx: %s >",cnIdx))
+    testMtx <- NULL
+    for( hnIdx in rstObj$zhName ){
+        testMtx <- rbind( testMtx ,rstObj$mtxInfoLst[[hnIdx]]$cStepValMtx[,cnIdx] )
+    } # for( hnIdx )
+    rownames( testMtx ) <- rstObj$zhName
+
+    sumMtx <- NULL
+    sumMtx <- cbind( sumMtx ,apply( testMtx ,1 ,function(dRow){sum(dRow  )} ) )   # sum
+    sumMtx <- cbind( sumMtx ,apply( testMtx ,1 ,function(dRow){sum(dRow>0)} ) ) # hpn
+    if( cnIdx %in% c("QQE") ){  
+    } else {    # "c31"  "c32"  "c33"  "c34"  "c21"  "c22"  "c23"  "c24"  "c25"  "max2" "min2"
+        sumMtx <- cbind( sumMtx ,apply( testMtx ,1 ,function(dRow){sum(dRow>0)} ) ) # evt > 0
+    }
+    colnames(sumMtx) <- c("sum","hpn","evt")
+
+    logObj$fLogMtxLst( list(sumMtx,testMtx) ,pIndent="      " ,pSep=" |"  )
+    logObj$fLogStr("\n")
+
+} # for(cnIdx)
+
+
+# -----------------------------------------------------------------------------------------------------------------------------------
 ff0.phName <- c(    "basic","nextZW","nextQuo10" ,"nextBin" ,"nextRebNum" ,"nextCStepBin" ,"nextFStepBin"
                     ,"nextColVal_1","nextColVal_2","nextColVal_3","nextColVal_4","nextColVal_5","nextColVal_6"
                 )

@@ -140,6 +140,23 @@ fCutCnt.default <- function( gEnv ,allIdxF ,rpt=FALSE ){
 # UNdone
 fCut.basic <- function( gEnv ,allIdxF ,rpt=FALSE ){
 
+	# 829  4  5 31 35 43 45
+	# 830  5  6 16 18 37 38
+	# 831  3 10 16 19 31 39
+	# 832 13 14 19 26 40 43
+	# 833 12 18 30 39 41 42
+	# 834  6  8 18 35 42 43
+	for( idx in seq_len(length(allIdxF)) ){
+		aZoid <- gEnv$allZoidMtx[allIdxF[idx],]
+		aCStep <- aZoid[2:6] - aZoid[1:5]
+		aFStep <- aZoid - stdMI$lastZoid
+
+		cnt.rem <- 0
+		aRem <- aZoid%%10
+		if( all(aRem[c(3,5)]==c(8,3)) ) aRem <- aRem+10	# 18->18, 42->42, 8->? 43->?
+
+	}
+
 	#=====================================================================================
 	#	fCutCnt.basic() 에서 정책적으로 자르기.
 	zMtx <- gEnv$zhF					# rptObj<-anaQuoTbl( zMtx )
@@ -2237,42 +2254,26 @@ fCutCnt.nextColVal_1 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 		}
 		if( TRUE ){ # rawFV		# anaMtx.freqVal( stdMI$rawTail )
 			cnt <- 0
-			# < >
-			if( fCutU.hasPtn(c(  ,  ),aZoid) ) cnt<-cnt+1
-			#   dup number  10:2   13:2   15:3   17:2   19:2   21:3   34:2   38:2   41:2   43:2   45:2
-			# < 10>   0      3 , 10 , 13 , 26 , 34 , 38 
-			#                5 , 10 , 13 , 21 , 39 , 43 
-			#          -->   7 , 10*, 13!, 16 , 44 , NA 
-			# < 13>   0      3 , 10 , 13 , 26 , 34 , 38 
-			#                5 , 10 , 13 , 21 , 39 , 43 
-			#          -->   7 , 10!, 13*, 16 , 44 , NA 
-			# < 15>  -1     15 , 16 , 17 , 38 , 45 
-			#               15 , 21 , 31 , 32 , 41 
-			#          -->  15*, 26 , 45 , 26 , 37 
-			# < 17>   2     15 , 17 , 19 , 21 
-			#               16 , 17 , 38 , 45 
-			#          -->  NA , 17*, NA , NA 
-			# < 19>   0      6 , 12 , 19 , 24 , 34 , 41 
-			#               15 , 17 , 19 , 21 , 27 , 45 
-			#          -->  NA , NA , 19*, NA , 20 , NA 
-			# < 21>   2     15 , 21 , 31 , 32 
-			#               13 , 21 , 39 , 43 
-			#          -->  11 , 21*, NA , NA 
-			# < 34>   0      6 , 12 , 19 , 24 , 34 , 41 
-			#                3 , 10 , 13 , 26 , 34 , 38 
-			#          -->  NA ,  8 ,  7 , 28 , 34*, 35 
-			# < 38>   1     14 , 15 , 16 , 17 , 38 
-			#               10 , 13 , 26 , 34 , 38 
-			#          -->   6 , 11 , 36 , NA , 38*
-			# < 41>  -1     12 , 19 , 24 , 34 , 41 
-			#               15 , 21 , 31 , 32 , 41 
-			#          -->  18 , 23 , 38 , 30 , 41*
-			# < 43>   0     15 , 21 , 31 , 32 , 41 , 43 
-			#                5 , 10 , 13 , 21 , 39 , 43 
-			#          -->  NA , NA , NA , 10 , 37 , 43*
-			# < 45>   0     15 , 17 , 19 , 21 , 27 , 45 
-			#               14 , 15 , 16 , 17 , 38 , 45 
-			#          -->  13!, 13 , 13 , 13 , NA , 45*
+			# <10>
+			if( fCutU.hasPtn(c(    10,13       ),aZoid) ) cnt<-cnt+1
+			if( fCutU.hasPtn(c(  7,10,NA,16,44 ),aZoid) ) cnt<-cnt+1
+			# <13>
+			if( fCutU.hasPtn(c(    10,13       ),aZoid) ) cnt<-cnt+1
+			if( fCutU.hasPtn(c(  7,NA,13,16 ),aZoid) ) cnt<-cnt+1
+			if( fCutU.hasPtn(c( 13,NA,NA,NA,NA,45 ),aZoid) ) cnt<-cnt+1
+			# <15>
+			if( fCutU.hasPtn(c( 15,26,45,26,37 ),aZoid,thld=3,fixIdx=1) ) cnt<-cnt+1
+			# <17>			# <19>			# <21>
+			# <34>
+			if( fCutU.hasPtn(c(  8, 7,28,34,35 ),aZoid,thld=3,fixIdx=4) ) cnt<-cnt+1
+			# <38>
+			if( fCutU.hasPtn(c(  6,11,36,NA,38 ),aZoid,thld=3,fixIdx=5) ) cnt<-cnt+1
+			# <41>
+			if( fCutU.hasPtn(c( 18,23,38,30,41 ),aZoid,thld=3,fixIdx=5) ) cnt<-cnt+1
+			# <43>
+			if( fCutU.hasPtn(c( 10,37,43 ),aZoid) ) cnt<-cnt+1
+			# <45>
+			if( fCutU.hasPtn(c( 13,NA,NA,NA,NA,45 ),aZoid) ) cnt<-cnt+1
 			cntMtx[idx,"rawFV"] <- cnt
 		}
 		if( TRUE ){ # rem		# u0.zoidMtx_ana( stdMI$rawTail%%10 )
@@ -2749,8 +2750,6 @@ fCutCnt.nextColVal_4 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 			if( aFStep[3]==sum(aFStep[c(5,6)]) )	cnt.w2<-cnt.w2+1
 			if( aFStep[4]==sum(aFStep[c(2,5)]) )	cnt.w2<-cnt.w2+1
 			if( sum(aFStep[c(2,6)])==sum(aFStep[c(1,4,5)]) )	cnt.w2<-cnt.w2+1	# -22
-
-			if( sum(aFStep[c( , )])==sum(aFStep[c( , )]) )	cnt.w2<-cnt.w2+1	# 
 
 			cntMtx[idx,"fStep.w1"] <- cnt.w1	;cntMtx[idx,"fStep.w2"] <- cnt.w2
 			cntMtx[idx,"fStep"] <- cnt + cnt.w1 + cnt.w2
