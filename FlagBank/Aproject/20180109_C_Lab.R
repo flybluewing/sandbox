@@ -70,7 +70,13 @@ lab.getMtxLst <- function( hSpan ){
 }   # lab.getMtxLst( )
 
 rstObj <- lab.getMtxLst( goldRstSpan )
-
+if( TRUE ){ # cStep, fStep 에서 w1,w2 포함 제외
+    for( nIdx in rstObj$zhName ){
+        cntMtx <- rstObj$mtxInfoLst[[nIdx]]$cntMtx
+        rstObj$mtxInfoLst[[nIdx]]$cntMtx[,"cStep"] <- cntMtx[,"cStep"] - cntMtx[,"cStep.w1"] - cntMtx[,"cStep.w2"]
+        rstObj$mtxInfoLst[[nIdx]]$cntMtx[,"fStep"] <- cntMtx[,"fStep"] - cntMtx[,"fStep.w1"] - cntMtx[,"fStep.w2"]
+    }
+}
 
 
 # testMtx ---------------------------------------------------------------------------
@@ -86,10 +92,10 @@ for( phIdx in rstObj$phName ){
         testMtx <- rbind( testMtx ,mtxObj$cntMtx[ phIdx,,drop=F] )
     } # for(zhIdx)
     rownames(testMtx) <- rstObj$zhName
-    cStep.score <-  testMtx[,"cStep"] - testMtx[,"cStep.w1"] - testMtx[,"cStep.w2"]
-    testMtx[,"cStep"] <- ifelse( cStep.score>0 ,cStep.score ,0 )
-    fStep.score <- testMtx[,"fStep"] - testMtx[,"fStep.w1"] - testMtx[,"fStep.w2"]
-    testMtx[,"fStep"] <- ifelse( fStep.score>0 ,fStep.score ,0 )
+    # cStep.score <-  testMtx[,"cStep"] - testMtx[,"cStep.w1"] - testMtx[,"cStep.w2"]
+    # testMtx[,"cStep"] <- ifelse( cStep.score>0 ,cStep.score ,0 )
+    # fStep.score <- testMtx[,"fStep"] - testMtx[,"fStep.w1"] - testMtx[,"fStep.w2"]
+    # testMtx[,"fStep"] <- ifelse( fStep.score>0 ,fStep.score ,0 )
 
     testMtx.evt <- testMtx > 1  ;testMtx.evt[,"rem"] <- testMtx[,"rem"] > 2
     rowObj <- u1.anaMtx.cnt( pMtx=testMtx ,pMtx.evt=testMtx.evt ,pEvtName="evt" ,pRow=T )
@@ -210,11 +216,11 @@ for( cnIdx in c(rstObj$name.cntMtx,rstObj$name.auxCntMtx) ){
     sumMtx <- NULL
     sumMtx <- cbind( sumMtx ,apply( testMtx ,1 ,function(dRow){sum(dRow)} ) )   # sum
     sumMtx <- cbind( sumMtx ,apply( testMtx ,1 ,function(dRow){sum(dRow>0)} ) ) # hpn
-    if( cnIdx %in% c("raw","cStep","fStep") ){  
+    if( cnIdx %in% c("raw","rawFV","cStep","fStep") ){  
         sumMtx <- cbind( sumMtx ,apply( testMtx ,1 ,function(dRow){sum(dRow>1)} ) ) # evt > 0
     } else if( cnIdx %in% c("rem") ) {
         sumMtx <- cbind( sumMtx ,apply( testMtx ,1 ,function(dRow){sum(dRow>2)} ) ) # evt > 0
-    } else {    # "rawFV" "raw.w1"   "cStep.w1" "cStep.w2" "fStep.w1" "fStep.w2"
+    } else {    # "raw.w1"   "cStep.w1" "cStep.w2" "fStep.w1" "fStep.w2"
         sumMtx <- cbind( sumMtx ,apply( testMtx ,1 ,function(dRow){sum(dRow>0)} ) ) # evt > 0
     }
     colnames(sumMtx) <- c("sum","hpn","evt")
