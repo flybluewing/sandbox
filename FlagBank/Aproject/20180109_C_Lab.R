@@ -81,6 +81,9 @@ if( TRUE ){ # cStep, fStep 에서 w1,w2 포함 제외
 
 # testMtx ---------------------------------------------------------------------------
 logObj <- k.getFlogObj( "./report/logObj.txt" )        ;logObj$fLogStr("start", pTime=T ,pAppend=F )
+phName.short <- gsub("^next","",rstObj$phName)
+phName.short <- gsub("^ColVal","CV",phName.short)
+phName.short <- gsub("StepBin","Step",phName.short)
 
 logObj$fLogStr(sprintf("<< cntMtx >> ------------------------"))
 hpnMtx <- NULL  ;sumMtx <- NULL ;evtMtx <- NULL
@@ -109,7 +112,7 @@ for( phIdx in rstObj$phName ){
     logObj$fLogMtxLst( list(rowObj$anaMtx,testMtx) ,pIndent="    " ,pSep=" |"  )
 }
 if( TRUE ){
-    colnames(hpnMtx) <- rstObj$phName  ;colnames(sumMtx) <- rstObj$phName     ;colnames(evtMtx) <- rstObj$phName
+    colnames(hpnMtx) <- phName.short  ;colnames(sumMtx) <- phName.short     ;colnames(evtMtx) <- phName.short
     logObj$fLogStr(sprintf("  ** [hpnMtx]"))
     rowObj <- u1.anaMtx.cnt( pMtx=hpnMtx ,pMtx.evt=hpnMtx>3 ,pEvtName="e>3" ,pRow=T )
     logObj$fLogMtxLst( list(rowObj$anaMtx,hpnMtx) ,pIndent="    " ,pSep=" :")
@@ -148,7 +151,7 @@ for( phIdx in rstObj$phName ){
 
 }
 if( TRUE ){
-    colnames(hpnMtx) <- rstObj$phName  ;colnames(sumMtx) <- rstObj$phName     ;colnames(evtMtx) <- rstObj$phName
+    colnames(hpnMtx) <- phName.short  ;colnames(sumMtx) <- phName.short     ;colnames(evtMtx) <- phName.short
     logObj$fLogStr(sprintf("  ** [hpnMtx]"))
     rowObj <- u1.anaMtx.cnt( pMtx=hpnMtx ,pMtx.evt=hpnMtx>2 ,pEvtName="e>2" ,pRow=T )
     logObj$fLogMtxLst( list(rowObj$anaMtx,hpnMtx) ,pIndent="    " ,pSep=" :")
@@ -191,7 +194,7 @@ for( phIdx in rstObj$phName ){
 
 }
 if( TRUE ){
-    colnames(hpnMtx) <- rstObj$phName  ;colnames(sumMtx) <- rstObj$phName     ;colnames(evtMtx) <- rstObj$phName
+    colnames(hpnMtx) <- phName.short  ;colnames(sumMtx) <- phName.short     ;colnames(evtMtx) <- phName.short
     logObj$fLogStr(sprintf("  ** [hpnMtx]"))
     rowObj <- u1.anaMtx.cnt( pMtx=hpnMtx ,pMtx.evt=hpnMtx>1 ,pEvtName="e>3" ,pRow=T )
     logObj$fLogMtxLst( list(rowObj$anaMtx,hpnMtx) ,pIndent="    " ,pSep=" :")
@@ -225,6 +228,9 @@ for( cnIdx in c(rstObj$name.cntMtx,rstObj$name.auxCntMtx) ){
     }
     colnames(sumMtx) <- c("sum","hpn","evt")
 
+    shortName <- gsub("^next" ,"" ,colnames(testMtx) )
+    shortName <- gsub("^ColVal","CV",shortName)
+    colnames(testMtx) <- shortName
     logObj$fLogMtxLst( list(sumMtx,testMtx) ,pIndent="      " ,pSep=" |"  )
     logObj$fLogStr("\n")
 
