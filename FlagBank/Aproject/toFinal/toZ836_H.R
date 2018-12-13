@@ -1012,9 +1012,9 @@ fCutCnt.colValSeqNext <- function( gEnv ,allIdxF ,rpt=FALSE ){
 					cnt <- 0
 						# if( fCutU.hasPtn(c(   ,   ),aCStep) ) aCStep<-aCStep+1
 						# if( 1<sum(aCStep[1:2+ ]==c(   ,   )) )	cnt<-cnt+1
-						if( fCutU.hasPtn(c(  1, 7 ),aCStep) ) aCStep<-aCStep+1	# -
-						if( fCutU.hasPtn(c(  5, 5 ),aCStep) ) aCStep<-aCStep+1
-						if( fCutU.hasPtn(c(  3, 2 ),aCStep) ) aCStep<-aCStep+1
+						if( fCutU.hasPtn(c(  1, 7 ),aCStep) ) cnt<-cnt+1	# -
+						if( fCutU.hasPtn(c(  5, 5 ),aCStep) ) cnt<-cnt+1
+						if( fCutU.hasPtn(c(  3, 2 ),aCStep) ) cnt<-cnt+1
 
 						if( aCStep[1]%in%c(  7, 6, 8 ) ) cnt<-cnt+1
 						if( aCStep[2]%in%c(  4,13    ) ) cnt<-cnt+1
