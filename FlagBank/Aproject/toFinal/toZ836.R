@@ -10,7 +10,7 @@ allIdxF <- 1000:1010		;stdZoid <- NULL
 
 # simMode start ----------------------------------------------------
 	aZoid <- stdZoid <- c(  1, 9,11,14,26,28 ) # ZH 836 채워넣을 것.
-	allIdxF <- allIdx <- stdIdx <- 
+	allIdxF <- allIdx <- stdIdx <- 657957
 		# which(apply(gEnv$allZoidMtx,1,function(zoid){all(zoid==stdZoid)}))
 	u0.saveStdZoidFltRst( workH )
 # simMode end   ----------------------------------------------------

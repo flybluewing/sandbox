@@ -36,6 +36,12 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 	cat(sprintf("allIdxF %d\n",length(allIdxF)))
 	allIdxFObj$allIdxF.fCut <- allIdxF
 
+	ccObj <- fCutCnt.nextColVal_3( gEnv ,allIdxF )
+	allIdxF <- allIdxF[ !byOnePhase(ccObj)$filtedFlg ]
+
+	a <- filtByOnePhase( gEnv ,allIdxF )
+
+
 	# ------------------------------------------------------------------
 	# fCutCnt.**
 	#		각 파트에서 2 이상씩은 잘라낸 후,

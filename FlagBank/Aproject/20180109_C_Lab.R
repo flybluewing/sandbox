@@ -1,9 +1,11 @@
-lastH <- 834
+lastH <- 836
 # fullRstSpan, goldRstSpan ----------------------------------------------------------
 fullRstSpan <- 826:lastH
 load( sprintf("Obj_allIdxLstZ%d.save",lastH) )
 stdFiltedCnt <- allIdxLst$stdFiltedCnt[as.character(809:lastH)] ;rm(allIdxLst)
 goldRstSpan <- as.integer(names( stdFiltedCnt[stdFiltedCnt<=1] ))
+stdFiltedCnt <- allIdxLst$stdFiltedCnt[as.character(819:lastH)] ;rm(allIdxLst)
+grp2RstSpan <- as.integer(names( stdFiltedCnt[stdFiltedCnt==2] ))
 
 lab.getMtxLst <- function( hSpan ){
 
@@ -70,6 +72,8 @@ lab.getMtxLst <- function( hSpan ){
 }   # lab.getMtxLst( )
 
 rstObj <- lab.getMtxLst( goldRstSpan )
+#   rstObj <- lab.getMtxLst( grp2RstSpan )
+#   rstObj <- lab.getMtxLst( fullRstSpan )
 if( TRUE ){ # cStep, fStep 에서 w1,w2 포함 제외
     for( nIdx in rstObj$zhName ){
         cntMtx <- rstObj$mtxInfoLst[[nIdx]]$cntMtx
@@ -254,6 +258,9 @@ for( cnIdx in setdiff(rstObj$name.cccObj.scoreMtx,c("w1CStep.matLen","w1FStep.ma
     }
     colnames(sumMtx) <- c("sum","hpn","evt")
 
+    shortName <- gsub("^next" ,"" ,colnames(testMtx) )
+    shortName <- gsub("^ColVal","CV",shortName)
+    colnames(testMtx) <- shortName
     logObj$fLogMtxLst( list(sumMtx,testMtx) ,pIndent="      " ,pSep=" |"  )
     logObj$fLogStr("\n")
 
@@ -277,6 +284,9 @@ for( cnIdx in rstObj$name.cccObj.cStepValMtx ){
     }
     colnames(sumMtx) <- c("sum","hpn","evt")
 
+    shortName <- gsub("^next" ,"" ,colnames(testMtx) )
+    shortName <- gsub("^ColVal","CV",shortName)
+    colnames(testMtx) <- shortName
     logObj$fLogMtxLst( list(sumMtx,testMtx) ,pIndent="      " ,pSep=" |"  )
     logObj$fLogStr("\n")
 
