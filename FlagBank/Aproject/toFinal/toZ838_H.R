@@ -674,7 +674,7 @@ fCut.basic <- function( gEnv ,allIdxF ,rpt=FALSE ){
 
 } # fCut.basic()
 
-# UNdone
+# done
 fCutCnt.basic <- function( gEnv ,allIdxF ,rpt=FALSE ){
 
 	flgCnt <- rep( 0 ,length(allIdxF) )
@@ -688,18 +688,10 @@ fCutCnt.basic <- function( gEnv ,allIdxF ,rpt=FALSE ){
 	# -- conditional
 	auxCntMtx <- matrix( 0 ,nrow=length(allIdxF) ,ncol=2 )	;colnames(auxCntMtx)=c("auxZW","auxQuo")
     flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
-					if( (aZoid[6]-aZoid[1]) %in% c( , ) ) return( FALSE )
-					return( TRUE )
-				})	;kIdx<-anaFlagFnd(!flag,rpt)
-	auxCntMtx[,"auxZW"] <- !flag
-    flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
 					quoSize <- fCutU.getQuoObj( aZoid )$size
-					if( all(quoSize[1:3+0]==c(,,)) ) return(FALSE)	# next rebind of ,,
-					if( all(quoSize[1:3+1]==c(,,)) ) return(FALSE)	# next rebind of ,,
-					if( all(quoSize[1:3+2]==c(,,)) ) return(FALSE)	# next rebind of ,,
-					if( all(quoSize[1:3+0]==c(,,)) ) return(FALSE)	# next rebind of ,,
-					if( all(quoSize[1:3+1]==c(,,)) ) return(FALSE)	# next rebind of ,,
-					if( all(quoSize[1:3+2]==c(,,)) ) return(FALSE)	# next rebind of ,,
+					if( all(quoSize[1:3+0]==c(0,2,2)) ) return(FALSE)	# next rebind of 1,0,2
+					if( all(quoSize[1:3+1]==c(0,1,2)) ) return(FALSE)	# next rebind of 0,2,2
+					if( all(quoSize[1:3+1]==c(1,1,1)) ) return(FALSE)	# next rebind of 2,2,0	reverse
 					return( TRUE )
 				})	;kIdx<-anaFlagFnd(!flag,rpt)
 	auxCntMtx[,"auxQuo"] <- !flag
@@ -716,12 +708,12 @@ fCutCnt.basic <- function( gEnv ,allIdxF ,rpt=FALSE ){
 	
 		if( TRUE ){	# raw
 			cnt <- 0
-			if( aZoid[1]%in%c(       ) ) cnt<-cnt+1
-			if( aZoid[2]%in%c(       ) ) cnt<-cnt+1
+			if( aZoid[1]%in%c(  3    ) ) cnt<-cnt+1
+			if( aZoid[2]%in%c( 10    ) ) cnt<-cnt+1
 			if( aZoid[3]%in%c(       ) ) cnt<-cnt+1
-			if( aZoid[4]%in%c(       ) ) cnt<-cnt+1
+			if( aZoid[4]%in%c( 28    ) ) cnt<-cnt+1
 			if( aZoid[5]%in%c(       ) ) cnt<-cnt+1
-			if( aZoid[6]%in%c(       ) ) cnt<-cnt+1
+			if( aZoid[6]%in%c( 28,43 ) ) cnt<-cnt+1
 			cntMtx[idx,"raw"] <- cnt
 
 			cnt <- 0
@@ -729,47 +721,66 @@ fCutCnt.basic <- function( gEnv ,allIdxF ,rpt=FALSE ){
 		}
 		if( TRUE ){ # rawFV		# anaMtx.freqVal( stdMI$rawTail )
 			cnt <- 0
-			# < >
-			if( fCutU.hasPtn(c(  ,  ),aZoid) ) cnt<-cnt+1
+			# < 9>
+			if( fCutU.hasPtn(c(  9,12          ),aZoid) ) cnt<-cnt+1
+			if( fCutU.hasPtn(c(  9,NA,15       ),aZoid) ) cnt<-cnt+1
+			# <13>
+			# <14>
+			if( fCutU.hasPtn(c(  9,14,33,30 ),aZoid,thld=3,fixIdx=2) ) cnt<-cnt+1
+			# <18>
+			if( fCutU.hasPtn(c(  4,18,40,45,45 ),aZoid,thld=3,fixIdx=2) ) cnt<-cnt+1
+			# <26>
+			if( fCutU.hasPtn(c(  5, 8, 9,26 ),aZoid,thld=3,fixIdx=4) ) cnt<-cnt+1
+			# <28>
+			if( fCutU.hasPtn(c( 24,28 ),aZoid) ) cnt<-cnt+1
+			# <30>			# <42>
+			# <43>
+			if( fCutU.hasPtn(c( 17,NA,NA,43 ),aZoid) ) cnt<-cnt+1
+			# <45>
 			cntMtx[idx,"rawFV"] <- cnt
 		}
 		if( TRUE ){ # rem		# u0.zoidMtx_ana( stdMI$rawTail%%10 )
 			cnt <- 0
-			if( fCutU.remFilt(aZoid[1],c(         ),c(  )) ) cnt<-cnt+1 # 1
-			if( fCutU.remFilt(aZoid[2],c(         ),c(  )) ) cnt<-cnt+1 # 2
-			if( fCutU.remFilt(aZoid[3],c(         ),c(  )) ) cnt<-cnt+1 # 3
-			if( fCutU.remFilt(aZoid[4],c(         ),c(  )) ) cnt<-cnt+1 # 4
-			if( fCutU.remFilt(aZoid[5],c(         ),c(  )) ) cnt<-cnt+1 # 5
-			if( fCutU.remFilt(aZoid[6],c(         ),c(  )) ) cnt<-cnt+1 # 6
+			if( fCutU.remFilt(aZoid[1],c( 3,0     ),c(  3    )) ) cnt<-cnt+1 # 1
+			if( fCutU.remFilt(aZoid[2],c( 0,5,3   ),c( 10    )) ) cnt<-cnt+1 # 2
+			if( fCutU.remFilt(aZoid[3],c(         ),c(       )) ) cnt<-cnt+1 # 3
+			if( fCutU.remFilt(aZoid[4],c( 3,7,8   ),c( 28    )) ) cnt<-cnt+1 # 4
+			if( fCutU.remFilt(aZoid[5],c( 6       ),c(       )) ) cnt<-cnt+1 # 5
+			if( fCutU.remFilt(aZoid[6],c( 8,3,2   ),c( 28,43 )) ) cnt<-cnt+1 # 6
 			cntMtx[idx,"rem"] <- cnt
 		}
 		if( TRUE ){ # cStep		#	u0.zoidCMtx_ana.rpt( stdMI$rawTail )
 			cnt <- 0
-			if( aCStep[1]%in%c(         ) ) cnt<-cnt+1
-			if( aCStep[2]%in%c(         ) ) cnt<-cnt+1
-			if( aCStep[3]%in%c(         ) ) cnt<-cnt+1
-			if( aCStep[4]%in%c(         ) ) cnt<-cnt+1
-			if( aCStep[5]%in%c(         ) ) cnt<-cnt+1
+			if( aCStep[1]%in%c(  1, 3,10   ) ) cnt<-cnt+1
+			if( aCStep[2]%in%c(  4,10      ) ) cnt<-cnt+1
+			if( aCStep[3]%in%c(  1, 4      ) ) cnt<-cnt+1
+			if( aCStep[4]%in%c(  2, 1      ) ) cnt<-cnt+1
+			if( aCStep[5]%in%c(  3, 2, 4   ) ) cnt<-cnt+1
 
 			cnt.w1 <- cccObj$scoreMtx[idx,"w1CStep.cnt"]	# fv in cStep
-			if( fCutU.hasPtn(c( , ),aCStep) )	cnt.w1<-cnt.w1+1
-			if( 1<sum(aCStep[1:2+ ]==c( , )) )	cnt.w1<-cnt.w1+1
+			if( fCutU.hasPtn(c( 2, 3 ),aCStep) )	cnt.w1<-cnt.w1+1
+			if( 1<sum(aCStep[1:2+2]==c( 3, 2 )) )	cnt.w1<-cnt.w1+1
+			if( fCutU.hasPtn(c( 3,12 ),aCStep) )	cnt.w1<-cnt.w1+1	# unique
+			if( 1<sum(aCStep[1:2+3]==c( 2, 3 )) )	cnt.w1<-cnt.w1+1
+			if( fCutU.hasPtn(c( 1, 3,15 ),aCStep) )	cnt.w1<-cnt.w1+1
+			# -------------------------------------------------------------------------------------
+			#     FV :    1 (4)   2 (5)   3 (5)   7 (3)   10 (2)   12 (3) 
 
 			cnt.w2 <- 0
-			if( 1<sum( aCStep[c(,)]*c(,)==aCStep[c( , )] ) )	cnt.w2<-cnt.w2+1
-			if( aCStep[ ]==sum(aCStep[c( , )]) )	cnt.w2<-cnt.w2+1
-			if( sum(aCStep[c( , )])==sum(aCStep[c( , )]) )	cnt.w2<-cnt.w2+1	# 
+			if( 1<sum( aCStep[ 2 ]*c(1,4)==aCStep[c(4,5)] ) )	cnt.w2<-cnt.w2+1
+			if( 1<sum( aCStep[c(2,3)]*c(1,6)==aCStep[c(4,5)] ) )	cnt.w2<-cnt.w2+1
 
 			cntMtx[idx,"cStep.w1"] <- cnt.w1	;cntMtx[idx,"cStep.w2"] <- cnt.w2
 			cntMtx[idx,"cStep"] <- cnt + cnt.w1 + cnt.w2
 
-			# Raw value(reb)       |cStep          |fStep                   |QuoSize   |QuoTbl 
-			#  Templete  number    | for sample    |                        |0 1 2 2 1 |1 2 2 1
-			#  Templete  number    | for sample    | -9  -9  -9  -6  -6   2 |1 2 2 0 1 |1 2 2 1
-			#  Templete  number( ) | for sample    |  8   6   7   0  -2  -8 |1 1 3 1 0 |1 1 3 1
-			#  Templete  number( ) | for sample    |  3   0   4   2  12   4 |0 2 2 1 1 |2 2 1 1
-			#  Templete  number( ) | for sample    | -5  -9   0   3  -5  -2 |2 0 2 2 0 |2 2 2
-			#  Templete  number( ) | for sample    |  1   6  -3   2  -1   0 |1 1 1 3 0 |1 1 1 3
+			#     Raw value(reb)       |cStep          |fStep                   |QuoSize   |QuoTbl 
+			#     13 14 19 26 40 43    | 1  5  7 14  3 |                        |0 3 1 0 2 |3 1 2
+			#     12 18 30 39 41 42    | 6 12  9  2  1 | -1   4  11  13   1  -1 |0 2 0 2 2 |2 2 2
+			#      6  8 18 35 42 43(2) | 2 10 17  7  1 | -6 -10 -12  -4   1   1 |2 1 0 1 2 |2 1 1 2
+			#      9 10 13 28 38 45    | 1  3 15 10  7 |  3   2  -5  -7  -4   2 |1 2 1 1 1 |1 2 1 1 1
+			#      1  9 11 14 26 28(2) | 8  2  3 12  2 | -8  -1  -2 -14 -12 -17 |2 2 2 0 0 |2 2 2
+			#      2 25 28 30 33 45(1) |23  3  2  3 12 |  1  16  17  16   7  17 |1 0 2 2 1 |1 2 2 1
+
 		}
 		if( TRUE ){ # fStep		#	u0.zoidFMtx_ana.rpt( stdMI$rawTail )
 			cnt <- 0
@@ -781,13 +792,13 @@ fCutCnt.basic <- function( gEnv ,allIdxF ,rpt=FALSE ){
 			if( aFStep[6]%in%c(        ) ) cnt<-cnt+1
 
 			cnt.w1 <- cccObj$scoreMtx[idx,"w1FStep.cnt"]	# fv in fStep
-			if( fCutU.hasPtn(c( , ),aFStep) )	cnt.w1<-cnt.w1+1
-			if( 1<sum(aFStep[1:2+ ]==c( , )) )	cnt.w1<-cnt.w1+1
-
+			if( fCutU.hasPtn(c( -4, 3 ),aFStep) )	cnt.w1<-cnt.w1+1	# -
+			# -------------------------------------------------------------------------------------
+			#     FV :    -12 (2)   -4 (2)   -1 (3)   1 (4)   2 (2)   16 (2)   17 (2) 
 			cnt.w2 <- 0
-			if( 1<sum( aFStep[c(,)]*c(,)==aFStep[c(,)] ) )	cnt.w2<-cnt.w2+1
-			if( aFStep[ ]==sum(aFStep[c( , )]) )	cnt.w2<-cnt.w2+1
-			if( sum(aFStep[c( , )])==sum(aFStep[c( , )]) )	cnt.w2<-cnt.w2+1	# 
+			if( 1<sum( aFStep[c(2,3)]*c(1,1)==aFStep[c(4,6)] ) )	cnt.w2<-cnt.w2+1
+			if( aFStep[3]==sum(aFStep[c(1,2)]) )	cnt.w2<-cnt.w2+1
+			if( aFStep[6]==sum(aFStep[c(1,4)]) )	cnt.w2<-cnt.w2+1
 
 			cntMtx[idx,"fStep.w1"] <- cnt.w1	;cntMtx[idx,"fStep.w2"] <- cnt.w2
 			cntMtx[idx,"fStep"] <- cnt + cnt.w1 + cnt.w2
@@ -799,7 +810,7 @@ fCutCnt.basic <- function( gEnv ,allIdxF ,rpt=FALSE ){
 
 } # fCutCnt.basic()
 
-# UNdone
+# done
 fCutCnt.colValSeqNext <- function( gEnv ,allIdxF ,rpt=FALSE ){
 
 	flgCnt <- rep( 0 ,length(allIdxF) )
@@ -833,28 +844,27 @@ fCutCnt.colValSeqNext <- function( gEnv ,allIdxF ,rpt=FALSE ){
 	# -- conditional custom
     flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
 					cnt <- 0
-					# [1]    1 11  9  8  2
-					# [2]*   6  6  3 11
-					# [3]*   7  7 12  9 10 17 21
-					# [4]   30 16
-					# [5]   29 31 40
-					# [6]   32
-					if( 1<sum(aZoid==c(  1, 6, 7,30,29,32 ) ,na.rm=T) ) cnt<-cnt+1
-					if( 1<sum(aZoid==c( 11, 6, 7,16,31,NA ) ,na.rm=T) ) cnt<-cnt+1
-					if( 1<sum(aZoid==c(  9, 3,12,NA,40,NA ) ,na.rm=T) ) cnt<-cnt+1
-					if( 1<sum(aZoid==c(  8,11, 9,NA,NA,NA ) ,na.rm=T) ) cnt<-cnt+1
-					if( 1<sum(aZoid==c(  2,NA,10,NA,NA,NA ) ,na.rm=T) ) cnt<-cnt+1
+					# [1]*   2  3  5 13  2  3  6  6 11  5 10 22
+					# [2]   
+					# [3]   27
+					# [4]    8 31
+					# [5]   34 35 36 30
+					# [6]   
+					if( 1<sum(aZoid==c(  2,NA,27, 8,34,NA ) ,na.rm=T) ) cnt<-cnt+1
+					if( 1<sum(aZoid==c(  3,NA,NA,31,35,NA ) ,na.rm=T) ) cnt<-cnt+1
+					if( 1<sum(aZoid==c(  5,NA,NA,NA,36,NA ) ,na.rm=T) ) cnt<-cnt+1
+					if( 1<sum(aZoid==c( 13,NA,NA,NA,30,NA ) ,na.rm=T) ) cnt<-cnt+1
 					# if( 1<sum(aZoid==c( NA,NA,NA,NA,NA,NA ) ,na.rm=T) ) cnt<-cnt+1
 
-					if( fCutU.hasPtn(c( 6, 7 ),aZoid) ) cnt<-cnt+1
+					# if( fCutU.hasPtn(c( 6, 7 ),aZoid) ) cnt<-cnt+1
 
 					score <- 0
-					if( aZoid[1]%in%c(  5        ) ) score<-score+1
-					if( aZoid[2]%in%c(  6, 3     ) ) score<-score+1
-					if( aZoid[3]%in%c(  7,12,29  ) ) score<-score+1
-					if( aZoid[4]%in%c(  8        ) ) score<-score+1
-					if( aZoid[5]%in%c(  6        ) ) score<-score+1
-					if( aZoid[6]%in%c(           ) ) score<-score+1
+					if( aZoid[1]%in%c(  1, 6      ) ) score<-score+1
+					if( aZoid[2]%in%c(            ) ) score<-score+1
+					if( aZoid[3]%in%c(            ) ) score<-score+1
+					if( aZoid[4]%in%c(            ) ) score<-score+1
+					if( aZoid[5]%in%c( 33         ) ) score<-score+1
+					if( aZoid[6]%in%c(            ) ) score<-score+1
 					if( score>1 ) cnt<-cnt+1
 
 					return( 1>cnt )
@@ -912,44 +922,41 @@ fCutCnt.colValSeqNext <- function( gEnv ,allIdxF ,rpt=FALSE ){
 					aRem <- aZoid%%10
 					cnt <- 0
 					if( aZoid[1]%in%c(        ) ) cnt<-cnt+1
-					if( aZoid[2]%in%c( 12     ) ) cnt<-cnt+1
-					if( aZoid[3]%in%c( 18     ) ) cnt<-cnt+1
-					if( aZoid[4]%in%c( 12     ) ) cnt<-cnt+1
-					if( aZoid[5]%in%c( 16     ) ) cnt<-cnt+1
-					if( aZoid[6]%in%c( 18     ) ) cnt<-cnt+1
+					if( aZoid[2]%in%c(        ) ) cnt<-cnt+1
+					if( aZoid[3]%in%c(        ) ) cnt<-cnt+1
+					if( aZoid[4]%in%c( 22     ) ) cnt<-cnt+1
+					if( aZoid[5]%in%c( 33     ) ) cnt<-cnt+1
+					if( aZoid[6]%in%c(        ) ) cnt<-cnt+1
 
 					# for(idx in 1:5){ cat(sprintf("+%d----------------\n",idx-1)) ;anaMtx_ColVal(cvSeqNextLst[[idx]]$fndMtx) }
-					if( all(aZoid[1:2+0]==c(  6,10 )) ) cnt<-cnt+1
-					if( all(aZoid[1:2+0]==c(  1,10 )) ) cnt<-cnt+1
+					#	if( all(aZoid[1:2+ ]==c(    )) ) cnt<-cnt+1
 
-					# [  1]  6 10     8 19    19 21    13 26    16 18
-					# [  2] 14 23    14 20     6 11    14 16    19 26
-					# [  3]  9 12    13 32    16 19    29 32    19 26
-					# [  4]  1 10    24 34     4  7     9 22    14 28
-					# [  5]  6 10    13 18    26 37     9 17    17 30
-					# [  6]          14 29    13 27    34 36    10 11
-					# [  7]           3 13    10 19              9 25
-					# [  8]                   25 31             20 29
-					# [  9]                   23 34             33 35
-					# [ 10]                    1  2             23 25
+					# [  1]          33 38    18 27     8 33    19 23
+					# [  2]          11 12    39 44    25 35    39 43
+					# [  3]          23 32    28 35    22 35    21 29
+					# [  4]          19 27    26 31    13 18         
+					# [  5]          35 38    29 36    28 33         
+					# [  6]          31 35    37 40    22 30         
+					# [  7]          31 39    31 34    36 37         
+					# [  8]          15 43    31 40                  
+					# [  9]          10 13    30 33                  
+					# [ 10]          24 27    25 29                  
 
 					remCnt <- 0
-						if( fCutU.remFilt(aZoid[1],c(       ),c(     )) )	remCnt <- remCnt+1
-						if( fCutU.remFilt(aZoid[2],c( 4,2   ),c(  12 )) )	remCnt <- remCnt+1
-						if( fCutU.remFilt(aZoid[3],c( 9,3   ),c(  18 )) )	remCnt <- remCnt+1
-						if( fCutU.remFilt(aZoid[4],c( 1,9,2 ),c(  12 )) )	remCnt <- remCnt+1
-						if( fCutU.remFilt(aZoid[5],c( 6,2   ),c(  16 )) )	remCnt <- remCnt+1
-						if( fCutU.remFilt(aZoid[6],c( 8     ),c(  18 )) )	remCnt <- remCnt+1
+						if( fCutU.remFilt(aZoid[1],c(         ),c(     )) )	remCnt <- remCnt+1
+						if( fCutU.remFilt(aZoid[2],c( 9,5     ),c(     )) )	remCnt <- remCnt+1
+						if( fCutU.remFilt(aZoid[3],c( 6,7,9,8 ),c(     )) )	remCnt <- remCnt+1
+						if( fCutU.remFilt(aZoid[4],c( 2       ),c( 22  )) )	remCnt <- remCnt+1
+						if( fCutU.remFilt(aZoid[5],c( 3,9,1   ),c( 33  )) )	remCnt <- remCnt+1
+						if( fCutU.remFilt(aZoid[6],c( 3,9     ),c(     )) )	remCnt <- remCnt+1
 
 						# grp (1:2+0)
-							if( aZoid[1]==6  && fCutU.remFilt(aZoid[2],c( 0 ),c( )) ) remCnt <- remCnt+1
 							#	if( aZoid[ ]==   && fCutU.remFilt(aZoid[ ],c( ),c( )) ) remCnt <- remCnt+1
 						# grp (1:2+1)
 						# grp (1:2+2)
 						# grp (1:2+3)
+							if( aZoid[5]==33 && fCutU.remFilt(aZoid[4],c( 8 ),c(22)) ) remCnt <- remCnt+1
 						# grp (1:2+4)
-							if( aZoid[5]==19   && fCutU.remFilt(aZoid[6],c( 6 ),c(26)) ) remCnt <- remCnt+1
-							if( aZoid[6]==26   && fCutU.remFilt(aZoid[5],c( 9 ),c(19)) ) remCnt <- remCnt+1
 
 					if(remCnt>1) cnt<-cnt+1
 
@@ -962,50 +969,56 @@ fCutCnt.colValSeqNext <- function( gEnv ,allIdxF ,rpt=FALSE ){
 	# <remove>	cStep 
 	#		idx<-1	;cvSeqNextLst[[idx]]$fndMtx[,2] - cvSeqNextLst[[idx]]$fndMtx[,1]
     fltCnt <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
-					#	[1]  4   9   3   9   4 
-					#	[2] 11   6  19  10   5  15  10 
-					#	[3]  2   5   3   3  11  14   9   6  11   1 
-					#	[4] 13   2   3  13   8   2 
-					#	[5]  2   7   7  14  13   1  16   9   2   2 
+					#	[1] 
+					#	[2]  5   1   9   8   3   4   8  28   3   3   3  13 
+					#	[3]  9   5   7   5   7   3   3   9   3   4   5 
+					#	[4] 25  10  13   5   5   8   1 
+					#	[5]  4   4   8 
 					aCStep <- aZoid[2:6]-aZoid[1:5]
 
-					score  <- sum(aCStep==c(  4,11, 2,13, 2 ),na.rm=T)
-					matCnt <- sum(aCStep==c(  9, 6, 5, 2, 7 ),na.rm=T)
+					score  <- sum(aCStep==c( NA, 5, 9,25, 4 ),na.rm=T)
+					matCnt <- sum(aCStep==c( NA, 1, 5,10, 4 ),na.rm=T)
 					score <- score + ifelse( matCnt>1 ,matCnt-1 ,0 )
-					matCnt <- sum(aCStep==c(  3,19, 3, 3, 7 ),na.rm=T)
+					matCnt <- sum(aCStep==c( NA, 9, 7,13, 8 ),na.rm=T)
 					score <- score + ifelse( matCnt>1 ,matCnt-1 ,0 )
-					matCnt <- sum(aCStep==c(  9,10, 3,13,14 ),na.rm=T)
+					matCnt <- sum(aCStep==c( NA, 8, 5, 5,NA ),na.rm=T)
 					score <- score + ifelse( matCnt>1 ,matCnt-1 ,0 )
-					matCnt <- sum(aCStep==c(  4, 5,11, 8,13 ),na.rm=T)
+					matCnt <- sum(aCStep==c( NA, 3, 7, 5,NA ),na.rm=T)
 					score <- score + ifelse( matCnt>1 ,matCnt-1 ,0 )
-					matCnt <- sum(aCStep==c( NA,15,14, 2, 1 ),na.rm=T)
+					matCnt <- sum(aCStep==c( NA, 4, 3, 8,NA ),na.rm=T)
 					score <- score + ifelse( matCnt>1 ,matCnt-1 ,0 )
-					matCnt <- sum(aCStep==c( NA,10, 9,NA,16 ),na.rm=T)
+					matCnt <- sum(aCStep==c( NA, 8, 3, 1,NA ),na.rm=T)
 					score <- score + ifelse( matCnt>1 ,matCnt-1 ,0 )
-					matCnt <- sum(aCStep==c( NA,NA, 6,NA, 9 ),na.rm=T)
+					matCnt <- sum(aCStep==c( NA,28, 9,NA,NA ),na.rm=T)
 					score <- score + ifelse( matCnt>1 ,matCnt-1 ,0 )
-					matCnt <- sum(aCStep==c( NA,NA,11,NA, 2 ),na.rm=T)
+					matCnt <- sum(aCStep==c( NA, 3, 3,NA,NA ),na.rm=T)
 					score <- score + ifelse( matCnt>1 ,matCnt-1 ,0 )
-					matCnt <- sum(aCStep==c( NA,NA, 1,NA, 2 ),na.rm=T)
+					matCnt <- sum(aCStep==c( NA, 3, 4,NA,NA ),na.rm=T)
+					score <- score + ifelse( matCnt>1 ,matCnt-1 ,0 )
+					matCnt <- sum(aCStep==c( NA, 3, 5,NA,NA ),na.rm=T)
 					score <- score + ifelse( matCnt>1 ,matCnt-1 ,0 )
 					#	matCnt <- sum(aCStep==c( NA,NA,NA,NA,NA ),na.rm=T)
+
+					#	[1] 
+					#	[2]  5   1   9   8   3   4   8  28   3   3   3  13 
+					#	[3]  9   5   7   5   7   3   3   9   3   4   5 
+					#	[4] 25  10  13   5   5   8   1 
+					#	[5]  4   4   8 
 
 					cnt <- 0
 						# if( fCutU.hasPtn(c(   ,   ),aCStep) ) cnt<-cnt+1
 						# if( 1<sum(aCStep[1:2+ ]==c(   ,   )) )	cnt<-cnt+1
-						if( fCutU.hasPtn(c(  3,11  ),aCStep) ) cnt<-cnt+1	# -
-						if( fCutU.hasPtn(c(  1,13  ),aCStep) ) cnt<-cnt+1
-						if( fCutU.hasPtn(c(  1, 7  ),aCStep) ) cnt<-cnt+1
+						if( fCutU.hasPtn(c(  5, 8  ),aCStep) ) cnt<-cnt+1	# -
+						if( fCutU.hasPtn(c(  3, 6  ),aCStep) ) cnt<-cnt+1
 
-						if( aCStep[1]%in%c(  9      ) ) cnt<-cnt+1
-						if( aCStep[2]%in%c(  2, 7   ) ) cnt<-cnt+1
-						if( aCStep[3]%in%c(         ) ) cnt<-cnt+1
-						if( aCStep[4]%in%c(  4      ) ) cnt<-cnt+1
-						if( aCStep[5]%in%c(  2      ) ) cnt<-cnt+1
+						if( aCStep[1]%in%c(  5,13  ) ) cnt<-cnt+1
+						if( aCStep[2]%in%c(  8     ) ) cnt<-cnt+1
+						if( aCStep[3]%in%c(  5     ) ) cnt<-cnt+1
+						if( aCStep[4]%in%c(        ) ) cnt<-cnt+1
+						if( aCStep[5]%in%c(  4, 8  ) ) cnt<-cnt+1
 
-						if( 1<sum( aCStep[ 5 ]*c(2,1)==aCStep[c(1,3)] ) )	cnt<-cnt+1
-						if( aCStep[4]==sum(aCStep[c(2,3)]) )	cnt<-cnt+1
-						if( aCStep[4]==sum(aCStep[c(2,5)]) )	cnt<-cnt+1
+						if( aCStep[3]==sum(aCStep[c(2,5)]) )	cnt<-cnt+1
+
 						# if( 1<sum( aCStep[c(,)]*c(,)==aCStep[c( , )] ) )	cnt<-cnt+1
 						# if( aCStep[ ]==sum(aCStep[c( , )]) )	cnt<-cnt+1
 						# if( sum(aCStep[c( , )])==sum(aCStep[c( , )]) )	cnt<-cnt+1	# 
@@ -1092,8 +1105,7 @@ fCutCnt.colValSeqNext <- function( gEnv ,allIdxF ,rpt=FALSE ){
 	# -- conditional custom
     flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
 					aCStep <- aZoid[2:6]-aZoid[1:5]
-					# [  1] 21 28 31    22 23 34                        
-					# [  2]  2  8 13                 
+					# [  1] 
 					return( TRUE )
 				})	;kIdx<-anaFlagFnd(!flag,rpt)
     flgCnt[!flag] <- flgCnt[!flag] + 1
@@ -1102,7 +1114,7 @@ fCutCnt.colValSeqNext <- function( gEnv ,allIdxF ,rpt=FALSE ){
 	return( flgCnt )
 } # fCutCnt.colValSeqNext()                     
 
-# UNdone
+# done
 fCutCnt.colValSeqNext.cStep <- function( gEnv ,allIdxF ,rpt=FALSE ){
 
 	flgCnt <- rep( 0 ,length(allIdxF) )
@@ -1140,25 +1152,26 @@ fCutCnt.colValSeqNext.cStep <- function( gEnv ,allIdxF ,rpt=FALSE ){
 					cnt <- 0
 					aCStep <- aZoid[2:6]-aZoid[1:5]
 
-					# [1]*   3 11  4 21 10 20 | 2  3  1 16  4  1  4  9  8  9  3  2  9  2  2  4  7  1 11  2  1  2  7  6  7  1  4
-					# [2]*  19  4 10  5  9  3 | 3  7  8  7  1 15  7 12  3  4  5  2  2 12  6  9  3  6  3  9  2  1 12  1  8  5 10  1 ...
-					# [3]*   1  1  5 11  7  3 | 2  2  3 28  5  3
-					# [4]    3 11  6  1
-					# [5]*   3  2  2  1  3  8 |16 13  5  1  1  2  1  7  2  4  3  1 14  2 16  3 10  3  7
+					# [1]   
+					# [2]*   7  9  1 30  1 10 | 3  5  8  5  7  3 11  1 10  1 15  7  3  8  7  5  3 16  6  3 15  4  9 11  3  8  2 14  8  2  1  3  3  1 13  3  1  5  3 21  5  6 11 14  8  9  3
+					# [3]*   3 19  4 10  5  9 | 3  3  7  8  7  1 15  7 12  3  4  5  2  2 12  6  9  3  6  3  9  2  1 12  1  8  5 10  1 10  5  7  1 11  1  3  1 15  2 16  6  2  9 16  2  4  1
+					# [4]    4  2 14  5  2 15 | 9  6 13
+					# [5]    1  6  4  1 12  5 | 1  3  6  1
 					tCnt <- 0
-						if( aCStep[1]%in%c(  1        ) ) tCnt<-tCnt+1
-						if( aCStep[2]%in%c(  3        ) ) tCnt<-tCnt+1
-						if( aCStep[3]%in%c(  1, 5, 4  ) ) tCnt<-tCnt+1
-						if( aCStep[4]%in%c(  1        ) ) tCnt<-tCnt+1
-						if( aCStep[5]%in%c(  3        ) ) tCnt<-tCnt+1
+						if( aCStep[1]%in%c(          ) ) tCnt<-tCnt+1
+						if( aCStep[2]%in%c(          ) ) tCnt<-tCnt+1
+						if( aCStep[3]%in%c(          ) ) tCnt<-tCnt+1
+						if( aCStep[4]%in%c( 13       ) ) tCnt<-tCnt+1
+						if( aCStep[5]%in%c(  3       ) ) tCnt<-tCnt+1
 
-						if( 1<sum( aCStep[ 1 ]*c(1,1)==aCStep[c(4,5)] ) )	cnt<-cnt+1
+						if( aCStep[2]==sum(aCStep[c(3,4)]) )	cnt<-cnt+1
 					cnt <- cnt + ifelse( tCnt>1 ,tCnt-1 ,0 )
 
 					# if( fCutU.hasPtn(c( , ),aCStep) )	cnt<-cnt+1
 					# if( 1<sum(aCStep[1:2+ ]==c( , )) )	cnt<-cnt+1
-					if( fCutU.hasPtn(c(  3, 3 ),aCStep) )	cnt<-cnt+1
-					if( fCutU.hasPtn(c( 11, 3 ),aCStep) )	cnt<-cnt+1
+					if( fCutU.hasPtn(c(  3, 5 ),aCStep) )	cnt<-cnt+1
+					if( fCutU.hasPtn(c(  3, 1 ),aCStep) )	cnt<-cnt+1
+					if( fCutU.hasPtn(c(  1, 3 ),aCStep) )	cnt<-cnt+1
 
 					if( is.null(valMtx) ){
 						# matCnt 작업을 루프문으로 바꾼 것.
@@ -1239,39 +1252,41 @@ fCutCnt.colValSeqNext.cStep <- function( gEnv ,allIdxF ,rpt=FALSE ){
     flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
 					aCStep <- aZoid[2:6] - aZoid[1:5]
 					cnt <- 0
-					# [  1] 19  1     7  3     7 14     2  2
-					# [  2]  9  2     4  2     7 15    10  2
-					# [  3]  5 12     4  1     2  1    15  1
-					# [  4]  2  8     8  3     8  5     5  2
-					# [  5]  1  3     7  1     2 15    13  6
-					# [  6] 17  4    10 13     9  6     6 10
-					# [  7] 10  6     5  6     2  8     4 16
-					# [  8] 13  1    16  8    26  1     7  2
-					# [  9]  7  7     2  1    12  5     6  1
-					# [ 10]  5  5     2 11     9 12    13  2
-					# [ 11]  9 16     3  1    11  1         
+					# [  1]          30  1     3  2     2  3
+					# [  2]           3  9     7  3     7 14
+					# [  3]          25  2     4  2     7 15
+					# [  4]           4 15     4  1     2  1
+					# [  5]           4  8     8  3     8  5
+					# [  6]           3 11     7  1     2 15
+					# [  7]          11 18    10 13     9  6
+					# [  8]           5  2     5  6     2  8
+					# [  9]           6 14    16  8    26  1
+					# [ 10]           1 19     2  1    12  5
 
 					if( aCStep[1]%in%c(                ) ) cnt<-cnt+1
-					if( aCStep[2]%in%c(  7             ) ) cnt<-cnt+1
-					if( aCStep[3]%in%c(  4, 1, 7, 2, 6 ) ) cnt<-cnt+1
-					if( aCStep[4]%in%c( 13             ) ) cnt<-cnt+1
-					if( aCStep[5]%in%c(                ) ) cnt<-cnt+1
+					if( aCStep[2]%in%c(  2, 5          ) ) cnt<-cnt+1
+					if( aCStep[3]%in%c(  5             ) ) cnt<-cnt+1
+					if( aCStep[4]%in%c(  1, 3, 2, 8, 7 ) ) cnt<-cnt+1
+					if( aCStep[5]%in%c( 15             ) ) cnt<-cnt+1
 
 					# for(idx in 1:4){ cat(sprintf("+%d----------------\n",idx-1)) ;anaMtx_ColVal(cvSeqNextLst[[idx]]$fndMtx) }
-					if( all(aCStep[1:2+0]==c(  1, 3 )) ) cnt<-cnt+1
-					if( all(aCStep[1:2+0]==c(  1,12 )) ) cnt<-cnt+1
-					if( all(aCStep[1:2+0]==c(  7, 7 )) ) cnt<-cnt+1
-					if( all(aCStep[1:2+0]==c(  7, 6 )) ) cnt<-cnt+1
-					if( all(aCStep[1:2+0]==c(  4, 3 )) ) cnt<-cnt+1
-					if( all(aCStep[1:2+0]==c( 11, 6 )) ) cnt<-cnt+1
-					if( all(aCStep[1:2+1]==c(  1,16 )) ) cnt<-cnt+1
-					if( all(aCStep[1:2+1]==c(  4, 3 )) ) cnt<-cnt+1
-					if( all(aCStep[1:2+1]==c(  8, 3 )) ) cnt<-cnt+1
-					if( all(aCStep[1:2+1]==c(  8, 5 )) ) cnt<-cnt+1
-					if( all(aCStep[1:2+1]==c( 13, 1 )) ) cnt<-cnt+1
+					if( all(aCStep[1:2+1]==c(  5, 1  )) ) cnt<-cnt+1
+					if( all(aCStep[1:2+1]==c( 11, 4 )) ) cnt<-cnt+1
 					if( all(aCStep[1:2+1]==c(  7, 3 )) ) cnt<-cnt+1
 
-					if( all(aCStep[1:2+2]==c(  7,13 )) ) cnt<-cnt+1
+					if( all(aCStep[1:2+2]==c(  1,16 )) ) cnt<-cnt+1
+					if( all(aCStep[1:2+2]==c(  3, 3 )) ) cnt<-cnt+1
+					if( all(aCStep[1:2+2]==c(  4, 3 )) ) cnt<-cnt+1
+					if( all(aCStep[1:2+2]==c(  8, 3 )) ) cnt<-cnt+1
+					if( all(aCStep[1:2+2]==c(  8, 5 )) ) cnt<-cnt+1
+					if( all(aCStep[1:2+2]==c(  9, 2 )) ) cnt<-cnt+1
+					if( all(aCStep[1:2+2]==c( 13, 1 )) ) cnt<-cnt+1
+					if( all(aCStep[1:2+2]==c(  2, 2 )) ) cnt<-cnt+1
+					if( all(aCStep[1:2+2]==c(  6, 3 )) ) cnt<-cnt+1
+					if( all(aCStep[1:2+2]==c(  7, 3 )) ) cnt<-cnt+1
+
+					if( all(aCStep[1:2+3]==c(  7,13 )) ) cnt<-cnt+1
+
 					#	if( all(aCStep[1:2+ ]==c(   ,   )) ) cnt<-cnt+1
 
 					return( cnt<2 )
@@ -1301,14 +1316,16 @@ fCutCnt.colValSeqNext.cStep <- function( gEnv ,allIdxF ,rpt=FALSE ){
     flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
 					cnt <- 0
 					aCStep <- aZoid[2:6]-aZoid[1:5]
-					if( aCStep[1]%in%c( 3     ) ) cnt<-cnt+1
-					if( aCStep[2]%in%c( 8     ) ) cnt<-cnt+1
-					if( aCStep[3]%in%c(       ) ) cnt<-cnt+1
-					if( aCStep[4]%in%c(       ) ) cnt<-cnt+1
-					if( aCStep[5]%in%c(       ) ) cnt<-cnt+1
+					if( aCStep[1]%in%c(        ) ) cnt<-cnt+1
+					if( aCStep[2]%in%c(        ) ) cnt<-cnt+1
+					if( aCStep[3]%in%c(        ) ) cnt<-cnt+1
+					if( aCStep[4]%in%c(        ) ) cnt<-cnt+1
+					if( aCStep[5]%in%c(        ) ) cnt<-cnt+1
 
-					# [  1]  2  8  3                        
-					# [  2]  1  8  5   
+					# [  1]             13  8  3     3  2  3
+					# [  2]              2  1  1            
+					# [  3]             10  9  2            
+
 					return( cnt<1 )
 				})	;kIdx<-anaFlagFnd(!flag,rpt)
     flgCnt[!flag] <- flgCnt[!flag] + 1
@@ -1317,7 +1334,7 @@ fCutCnt.colValSeqNext.cStep <- function( gEnv ,allIdxF ,rpt=FALSE ){
 
 } # fCutCnt.colValSeqNext.cStep()
 
-# UNdone
+# done
 fCutCnt.nextZW <- function( gEnv ,allIdxF ,rpt=FALSE ){
 
 	flgCnt <- rep( 0 ,length(allIdxF) )
@@ -1332,18 +1349,8 @@ fCutCnt.nextZW <- function( gEnv ,allIdxF ,rpt=FALSE ){
 	# -- conditional
 	auxCntMtx <- matrix( 0 ,nrow=length(allIdxF) ,ncol=2 )	;colnames(auxCntMtx)=c("auxZW","auxQuo")
     flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
-					if( (aZoid[6]-aZoid[1]) %in% c( , ) ) return( FALSE )
-					return( TRUE )
-				})	;kIdx<-anaFlagFnd(!flag,rpt)
-	auxCntMtx[,"auxZW"] <- !flag
-    flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
 					quoSize <- fCutU.getQuoObj( aZoid )$size
-					if( all(quoSize[1:3+0]==c(,,)) ) return(FALSE)	# next rebind of ,,
-					if( all(quoSize[1:3+1]==c(,,)) ) return(FALSE)	# next rebind of ,,
-					if( all(quoSize[1:3+2]==c(,,)) ) return(FALSE)	# next rebind of ,,
-					if( all(quoSize[1:3+0]==c(,,)) ) return(FALSE)	# next rebind of ,,
-					if( all(quoSize[1:3+1]==c(,,)) ) return(FALSE)	# next rebind of ,,
-					if( all(quoSize[1:3+2]==c(,,)) ) return(FALSE)	# next rebind of ,,
+					if( all(quoSize[1:3+0]==c(1,1,2)) ) return(FALSE)	# next rebind of 1,1,3	reverse
 					return( TRUE )
 				})	;kIdx<-anaFlagFnd(!flag,rpt)
 	auxCntMtx[,"auxQuo"] <- !flag
@@ -1360,12 +1367,12 @@ fCutCnt.nextZW <- function( gEnv ,allIdxF ,rpt=FALSE ){
 	
 		if( TRUE ){	# raw
 			cnt <- 0
-			if( aZoid[1]%in%c(       ) ) cnt<-cnt+1
-			if( aZoid[2]%in%c(       ) ) cnt<-cnt+1
-			if( aZoid[3]%in%c(       ) ) cnt<-cnt+1
-			if( aZoid[4]%in%c(       ) ) cnt<-cnt+1
-			if( aZoid[5]%in%c(       ) ) cnt<-cnt+1
-			if( aZoid[6]%in%c(       ) ) cnt<-cnt+1
+			if( aZoid[1]%in%c(             ) ) cnt<-cnt+1
+			if( aZoid[2]%in%c(             ) ) cnt<-cnt+1
+			if( aZoid[3]%in%c( 19          ) ) cnt<-cnt+1
+			if( aZoid[4]%in%c( 19          ) ) cnt<-cnt+1
+			if( aZoid[5]%in%c( 27,30,39,23 ) ) cnt<-cnt+1
+			if( aZoid[6]%in%c( 36,41,28    ) ) cnt<-cnt+1
 			cntMtx[idx,"raw"] <- cnt
 
 			cnt <- 0
@@ -1373,65 +1380,89 @@ fCutCnt.nextZW <- function( gEnv ,allIdxF ,rpt=FALSE ){
 		}
 		if( TRUE ){ # rawFV		# anaMtx.freqVal( stdMI$rawTail )
 			cnt <- 0
-			# < >
-			if( fCutU.hasPtn(c(  ,  ),aZoid) ) cnt<-cnt+1
+			# < 8>
+			if( fCutU.hasPtn(c(  8,28,35,39 ),aZoid,thld=3,fixIdx=1) ) cnt<-cnt+1
+			# <17>
+			if( fCutU.hasPtn(c( 17,NA,18 ),aZoid) ) cnt<-cnt+1
+			# <19>
+			if( fCutU.hasPtn(c(    19,NA,29 ),aZoid) ) cnt<-cnt+1
+			if( fCutU.hasPtn(c(  6,19,33    ),aZoid) ) cnt<-cnt+1
+			# <21>
+			# <27>
+			if( fCutU.hasPtn(c(             27,36 ),aZoid) ) cnt<-cnt+1
+			if( fCutU.hasPtn(c(  1,15,15,22,27    ),aZoid,thld=3,fixIdx=5) ) cnt<-cnt+1
+			# <30>
+			if( fCutU.hasPtn(c(  4,24,NA,30,43 ),aZoid,thld=3,fixIdx=4) ) cnt<-cnt+1
+			# <36>
+			if( fCutU.hasPtn(c(             27,36 ),aZoid) ) cnt<-cnt+1
+			if( fCutU.hasPtn(c(  1,15,15,22,NA,36 ),aZoid,thld=3,fixIdx=6) ) cnt<-cnt+1
 			cntMtx[idx,"rawFV"] <- cnt
 		}
 		if( TRUE ){ # rem		# u0.zoidMtx_ana( stdMI$rawTail%%10 )
 			cnt <- 0
-			if( fCutU.remFilt(aZoid[1],c(         ),c(  )) ) cnt<-cnt+1 # 1
-			if( fCutU.remFilt(aZoid[2],c(         ),c(  )) ) cnt<-cnt+1 # 2
-			if( fCutU.remFilt(aZoid[3],c(         ),c(  )) ) cnt<-cnt+1 # 3
-			if( fCutU.remFilt(aZoid[4],c(         ),c(  )) ) cnt<-cnt+1 # 4
-			if( fCutU.remFilt(aZoid[5],c(         ),c(  )) ) cnt<-cnt+1 # 5
-			if( fCutU.remFilt(aZoid[6],c(         ),c(  )) ) cnt<-cnt+1 # 6
+			if( fCutU.remFilt(aZoid[1],c( 4,7      ),c(             )) ) cnt<-cnt+1 # 1
+			if( fCutU.remFilt(aZoid[2],c( 1,4,2    ),c(             )) ) cnt<-cnt+1 # 2
+			if( fCutU.remFilt(aZoid[3],c( 5,1,9    ),c( 19          )) ) cnt<-cnt+1 # 3
+			if( fCutU.remFilt(aZoid[4],c( 5,8      ),c( 19          )) ) cnt<-cnt+1 # 4
+			if( fCutU.remFilt(aZoid[5],c( 7,0,9,3  ),c( 27,30,39,23 )) ) cnt<-cnt+1 # 5
+			if( fCutU.remFilt(aZoid[6],c( 6,1,8    ),c( 36,41,28    )) ) cnt<-cnt+1 # 6
 			cntMtx[idx,"rem"] <- cnt
 		}
 		if( TRUE ){ # cStep		#	u0.zoidCMtx_ana.rpt( stdMI$rawTail )
 			cnt <- 0
-			if( aCStep[1]%in%c(         ) ) cnt<-cnt+1
-			if( aCStep[2]%in%c(         ) ) cnt<-cnt+1
-			if( aCStep[3]%in%c(         ) ) cnt<-cnt+1
-			if( aCStep[4]%in%c(         ) ) cnt<-cnt+1
-			if( aCStep[5]%in%c(         ) ) cnt<-cnt+1
+			if( aCStep[1]%in%c(  4, 3    ) ) cnt<-cnt+1
+			if( aCStep[2]%in%c(          ) ) cnt<-cnt+1
+			if( aCStep[3]%in%c(  7       ) ) cnt<-cnt+1
+			if( aCStep[4]%in%c( 10, 4, 5 ) ) cnt<-cnt+1
+			if( aCStep[5]%in%c(  9,11    ) ) cnt<-cnt+1
 
 			cnt.w1 <- cccObj$scoreMtx[idx,"w1CStep.cnt"]	# fv in cStep
-			if( fCutU.hasPtn(c( , ),aCStep) )	cnt.w1<-cnt.w1+1
-			if( 1<sum(aCStep[1:2+ ]==c( , )) )	cnt.w1<-cnt.w1+1
+			if( fCutU.hasPtn(c( 9, 2 ),aCStep) )	cnt.w1<-cnt.w1+1
+			if( 1<sum(aCStep[1:2+0]==c( 12,10 )) )	cnt.w1<-cnt.w1+1
+			if( fCutU.hasPtn(c( 4, 2 ),aCStep) )	cnt.w1<-cnt.w1+1	# -
+			# -------------------------------------------------------------------------------------
+			#     FV :    1 (4)   2 (5)   3 (2)   4 (4)   5 (2)   9 (6)   10 (2)   11 (2) 
 
 			cnt.w2 <- 0
-			if( 1<sum( aCStep[c(,)]*c(,)==aCStep[c( , )] ) )	cnt.w2<-cnt.w2+1
-			if( aCStep[ ]==sum(aCStep[c( , )]) )	cnt.w2<-cnt.w2+1
-			if( sum(aCStep[c( , )])==sum(aCStep[c( , )]) )	cnt.w2<-cnt.w2+1	# 
+			if( 1<sum( aCStep[ 4 ]*c(3,3)==aCStep[c(1,5)] ) )	cnt.w2<-cnt.w2+1
+			if( 1<sum( aCStep[c(1,2)]*c(2,1)==aCStep[c(3,5)] ) )	cnt.w2<-cnt.w2+1
+			if( 1<sum( aCStep[c(2,4)]*c(2,3)==aCStep[c(3,5)] ) )	cnt.w2<-cnt.w2+1
+			if( aCStep[1]==sum(aCStep[c(2,3,4)]) )	cnt.w2<-cnt.w2+1
+			if( aCStep[5]==sum(aCStep[c(2,3,4)]) )	cnt.w2<-cnt.w2+1
 
 			cntMtx[idx,"cStep.w1"] <- cnt.w1	;cntMtx[idx,"cStep.w2"] <- cnt.w2
 			cntMtx[idx,"cStep"] <- cnt + cnt.w1 + cnt.w2
 
-			# Raw value(reb)       |cStep          |fStep                   |QuoSize   |QuoTbl 
-			#  Templete  number    | for sample    |                        |0 1 2 2 1 |1 2 2 1
-			#  Templete  number    | for sample    | -9  -9  -9  -6  -6   2 |1 2 2 0 1 |1 2 2 1
-			#  Templete  number( ) | for sample    |  8   6   7   0  -2  -8 |1 1 3 1 0 |1 1 3 1
-			#  Templete  number( ) | for sample    |  3   0   4   2  12   4 |0 2 2 1 1 |2 2 1 1
-			#  Templete  number( ) | for sample    | -5  -9   0   3  -5  -2 |2 0 2 2 0 |2 2 2
-			#  Templete  number( ) | for sample    |  1   6  -3   2  -1   0 |1 1 1 3 0 |1 1 1 3
+			#     Raw value(reb)       |cStep          |fStep                   |QuoSize   |QuoTbl 
+			#     12 14 21 30 39 43    | 2  7  9  9  4 |                        |0 2 1 2 1 |2 1 2 1
+			#      7  8 10 19 21 31(1) | 1  2  9  2 10 | -5  -6 -11 -11 -18 -12 |2 2 1 1 0 |2 2 1 1
+			#      2  4  5 17 27 32    | 2  1 12 10  5 | -5  -4  -5  -2   6   1 |3 1 1 1 0 |3 1 1 1
+			#      3  8 19 27 30 41(1) | 5 11  8  3 11 |  1   4  14  10   3   9 |2 1 1 1 1 |2 1 1 1 1
+			#     17 21 25 26 27 36(1) | 4  4  1  1  9 | 14  13   6  -1  -3  -5 |0 1 4 1 0 |1 4 1
+			#      9 18 20 24 27 36(2) | 9  2  4  3  9 | -8  -3  -5  -2   0   0 |1 1 3 1 0 |1 1 3 1
+
 		}
 		if( TRUE ){ # fStep		#	u0.zoidFMtx_ana.rpt( stdMI$rawTail )
 			cnt <- 0
-			if( aFStep[1]%in%c(        ) ) cnt<-cnt+1
-			if( aFStep[2]%in%c(        ) ) cnt<-cnt+1
-			if( aFStep[3]%in%c(        ) ) cnt<-cnt+1
-			if( aFStep[4]%in%c(        ) ) cnt<-cnt+1
+			if( aFStep[1]%in%c(  6     ) ) cnt<-cnt+1
+			if( aFStep[2]%in%c( -9     ) ) cnt<-cnt+1
+			if( aFStep[3]%in%c( -1     ) ) cnt<-cnt+1
+			if( aFStep[4]%in%c( -3,  0 ) ) cnt<-cnt+1
 			if( aFStep[5]%in%c(        ) ) cnt<-cnt+1
-			if( aFStep[6]%in%c(        ) ) cnt<-cnt+1
+			if( aFStep[6]%in%c(  1     ) ) cnt<-cnt+1
 
 			cnt.w1 <- cccObj$scoreMtx[idx,"w1FStep.cnt"]	# fv in fStep
-			if( fCutU.hasPtn(c( , ),aFStep) )	cnt.w1<-cnt.w1+1
-			if( 1<sum(aFStep[1:2+ ]==c( , )) )	cnt.w1<-cnt.w1+1
-
+			if( fCutU.hasPtn(c( -3, 5 ),aFStep) )	cnt.w1<-cnt.w1+1
+			if( 1<sum(aFStep[1:2+1]==c( 0, 0 )) )	cnt.w1<-cnt.w1+1
+			if( fCutU.hasPtn(c( -5,-2 ),aFStep) )	cnt.w1<-cnt.w1+1
+			if( 1<sum(aFStep[1:2+2]==c( 14,10 )) )	cnt.w1<-cnt.w1+1
+			if( 1<sum(aFStep[1:2+1]==c( -2,-5 )) )	cnt.w1<-cnt.w1+1	# -
+			# -------------------------------------------------------------------------------------
+			#     FV :    -11 (2)   -5 (5)   -3 (2)   -2 (2)   0 (2)   1 (2)   6 (2)   14 (2) 
 			cnt.w2 <- 0
-			if( 1<sum( aFStep[c(,)]*c(,)==aFStep[c(,)] ) )	cnt.w2<-cnt.w2+1
-			if( aFStep[ ]==sum(aFStep[c( , )]) )	cnt.w2<-cnt.w2+1
-			if( sum(aFStep[c( , )])==sum(aFStep[c( , )]) )	cnt.w2<-cnt.w2+1	# 
+			if( 1<sum( aFStep[c(4,6)]*c(4,1)==aFStep[c(1,5)] ) )	cnt.w2<-cnt.w2+1
+			if( aFStep[1]==sum(aFStep[c(2,3)]) )	cnt.w2<-cnt.w2+1
+			if( aFStep[3]==sum(aFStep[c(2,4)]) )	cnt.w2<-cnt.w2+1
 
 			cntMtx[idx,"fStep.w1"] <- cnt.w1	;cntMtx[idx,"fStep.w2"] <- cnt.w2
 			cntMtx[idx,"fStep"] <- cnt + cnt.w1 + cnt.w2
@@ -1443,7 +1474,7 @@ fCutCnt.nextZW <- function( gEnv ,allIdxF ,rpt=FALSE ){
 
 } # fCutCnt.nextZW()
 
-# UNdone
+# done
 fCutCnt.nextQuo10 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 
 	flgCnt <- rep( 0 ,length(allIdxF) )
@@ -1458,18 +1489,14 @@ fCutCnt.nextQuo10 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 	# -- conditional
 	auxCntMtx <- matrix( 0 ,nrow=length(allIdxF) ,ncol=2 )	;colnames(auxCntMtx)=c("auxZW","auxQuo")
     flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
-					if( (aZoid[6]-aZoid[1]) %in% c( , ) ) return( FALSE )
+					if( (aZoid[6]-aZoid[1]) %in% c( 33 ) ) return( FALSE )
 					return( TRUE )
 				})	;kIdx<-anaFlagFnd(!flag,rpt)
 	auxCntMtx[,"auxZW"] <- !flag
     flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
 					quoSize <- fCutU.getQuoObj( aZoid )$size
-					if( all(quoSize[1:3+0]==c(,,)) ) return(FALSE)	# next rebind of ,,
-					if( all(quoSize[1:3+1]==c(,,)) ) return(FALSE)	# next rebind of ,,
-					if( all(quoSize[1:3+2]==c(,,)) ) return(FALSE)	# next rebind of ,,
-					if( all(quoSize[1:3+0]==c(,,)) ) return(FALSE)	# next rebind of ,,
-					if( all(quoSize[1:3+1]==c(,,)) ) return(FALSE)	# next rebind of ,,
-					if( all(quoSize[1:3+2]==c(,,)) ) return(FALSE)	# next rebind of ,,
+					if( all(quoSize[1:3+0]==c(2,0,0)) ) return(FALSE)	# next rebind of 1,2,2
+					if( all(quoSize[1:3+1]==c(1,2,2)) ) return(FALSE)	# next rebind of 2,2,0
 					return( TRUE )
 				})	;kIdx<-anaFlagFnd(!flag,rpt)
 	auxCntMtx[,"auxQuo"] <- !flag
@@ -1488,10 +1515,10 @@ fCutCnt.nextQuo10 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 			cnt <- 0
 			if( aZoid[1]%in%c(       ) ) cnt<-cnt+1
 			if( aZoid[2]%in%c(       ) ) cnt<-cnt+1
-			if( aZoid[3]%in%c(       ) ) cnt<-cnt+1
-			if( aZoid[4]%in%c(       ) ) cnt<-cnt+1
-			if( aZoid[5]%in%c(       ) ) cnt<-cnt+1
-			if( aZoid[6]%in%c(       ) ) cnt<-cnt+1
+			if( aZoid[3]%in%c( 18    ) ) cnt<-cnt+1
+			if( aZoid[4]%in%c( 24,25 ) ) cnt<-cnt+1
+			if( aZoid[5]%in%c( 27    ) ) cnt<-cnt+1
+			if( aZoid[6]%in%c( 43,45 ) ) cnt<-cnt+1
 			cntMtx[idx,"raw"] <- cnt
 
 			cnt <- 0
@@ -1499,65 +1526,95 @@ fCutCnt.nextQuo10 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 		}
 		if( TRUE ){ # rawFV		# anaMtx.freqVal( stdMI$rawTail )
 			cnt <- 0
-			# < >
-			if( fCutU.hasPtn(c(  ,  ),aZoid) ) cnt<-cnt+1
+			# < 7>
+			if( fCutU.hasPtn(c(  7,27,34,17,27 ),aZoid,thld=3,fixIdx=1) ) cnt<-cnt+1
+			# <11>
+			if( fCutU.hasPtn(c( 10,11,12 ),aZoid) ) cnt<-cnt+1
+			# <19>
+			if( fCutU.hasPtn(c( 19,29,24,31 ),aZoid,thld=3,fixIdx=1) ) cnt<-cnt+1
+			# <20>
+			if( fCutU.hasPtn(c(       20,25       ),aZoid) ) cnt<-cnt+1
+			if( fCutU.hasPtn(c( 14,NA,20,NA,22,33 ),aZoid,thld=3,fixIdx=3) ) cnt<-cnt+1
+			# <24>
+			if( fCutU.hasPtn(c( 17,NA,NA,24,25,28 ),aZoid,thld=3,fixIdx=4) ) cnt<-cnt+1
+			# <29>
+			if( fCutU.hasPtn(c( 23,29 ),aZoid) ) cnt<-cnt+1
+			# <36>
+			if( fCutU.hasPtn(c(       21,NA,NA,36 ),aZoid) ) cnt<-cnt+1
+			if( fCutU.hasPtn(c(          23,NA,36 ),aZoid) ) cnt<-cnt+1
+			if( fCutU.hasPtn(c( 16,29,NA,NA,25,36 ),aZoid,thld=3,fixIdx=6) ) cnt<-cnt+1
+			# <41>
+			# <44>
+			if( fCutU.hasPtn(c(  5, 5,14,17,44 ),aZoid,thld=3,fixIdx=5) ) cnt<-cnt+1
 			cntMtx[idx,"rawFV"] <- cnt
 		}
 		if( TRUE ){ # rem		# u0.zoidMtx_ana( stdMI$rawTail%%10 )
 			cnt <- 0
-			if( fCutU.remFilt(aZoid[1],c(         ),c(  )) ) cnt<-cnt+1 # 1
-			if( fCutU.remFilt(aZoid[2],c(         ),c(  )) ) cnt<-cnt+1 # 2
-			if( fCutU.remFilt(aZoid[3],c(         ),c(  )) ) cnt<-cnt+1 # 3
-			if( fCutU.remFilt(aZoid[4],c(         ),c(  )) ) cnt<-cnt+1 # 4
-			if( fCutU.remFilt(aZoid[5],c(         ),c(  )) ) cnt<-cnt+1 # 5
-			if( fCutU.remFilt(aZoid[6],c(         ),c(  )) ) cnt<-cnt+1 # 6
+			if( fCutU.remFilt(aZoid[1],c(          ),c(       )) ) cnt<-cnt+1 # 1
+			if( fCutU.remFilt(aZoid[2],c(  3       ),c(       )) ) cnt<-cnt+1 # 2
+			if( fCutU.remFilt(aZoid[3],c(          ),c( 18    )) ) cnt<-cnt+1 # 3
+			if( fCutU.remFilt(aZoid[4],c(  4, 5, 0 ),c( 24,25 )) ) cnt<-cnt+1 # 4
+			if( fCutU.remFilt(aZoid[5],c(  7, 5    ),c( 27    )) ) cnt<-cnt+1 # 5
+			if( fCutU.remFilt(aZoid[6],c(  3, 5    ),c( 43,45 )) ) cnt<-cnt+1 # 6
 			cntMtx[idx,"rem"] <- cnt
 		}
 		if( TRUE ){ # cStep		#	u0.zoidCMtx_ana.rpt( stdMI$rawTail )
 			cnt <- 0
 			if( aCStep[1]%in%c(         ) ) cnt<-cnt+1
-			if( aCStep[2]%in%c(         ) ) cnt<-cnt+1
+			if( aCStep[2]%in%c(  3      ) ) cnt<-cnt+1
 			if( aCStep[3]%in%c(         ) ) cnt<-cnt+1
 			if( aCStep[4]%in%c(         ) ) cnt<-cnt+1
-			if( aCStep[5]%in%c(         ) ) cnt<-cnt+1
+			if( aCStep[5]%in%c(  7      ) ) cnt<-cnt+1
 
 			cnt.w1 <- cccObj$scoreMtx[idx,"w1CStep.cnt"]	# fv in cStep
-			if( fCutU.hasPtn(c( , ),aCStep) )	cnt.w1<-cnt.w1+1
-			if( 1<sum(aCStep[1:2+ ]==c( , )) )	cnt.w1<-cnt.w1+1
+			if( fCutU.hasPtn(c( 2, 4 ),aCStep) )	cnt.w1<-cnt.w1+1
+			if( 1<sum(aCStep[1:2+1]==c(  5,12 )) )	cnt.w1<-cnt.w1+1
+			if( fCutU.hasPtn(c( 3, 9 ),aCStep) )	cnt.w1<-cnt.w1+1
+			if( 1<sum(aCStep[1:2+3]==c( 13, 7 )) )	cnt.w1<-cnt.w1+1
+			if( fCutU.hasPtn(c( 9, 1 ),aCStep) )	cnt.w1<-cnt.w1+1	# -
+			# -------------------------------------------------------------------------------------
+			#     FV :    2 (3)   3 (3)   4 (5)   5 (3)   7 (4)   9 (4)   11 (2) 
 
 			cnt.w2 <- 0
-			if( 1<sum( aCStep[c(,)]*c(,)==aCStep[c( , )] ) )	cnt.w2<-cnt.w2+1
-			if( aCStep[ ]==sum(aCStep[c( , )]) )	cnt.w2<-cnt.w2+1
-			if( sum(aCStep[c( , )])==sum(aCStep[c( , )]) )	cnt.w2<-cnt.w2+1	# 
+			if( 1<sum( aCStep[ 4 ]*c(3,3)==aCStep[c(1,5)] ) )	cnt.w2<-cnt.w2+1
+			if( 1<sum( aCStep[c(1,2)]*c(2,1)==aCStep[c(3,5)] ) )	cnt.w2<-cnt.w2+1
+			if( 1<sum( aCStep[c(2,4)]*c(2,3)==aCStep[c(3,5)] ) )	cnt.w2<-cnt.w2+1
+			if( aCStep[1]==sum(aCStep[c(2,3,4)]) )	cnt.w2<-cnt.w2+1
+			if( aCStep[5]==sum(aCStep[c(2,3,4)]) )	cnt.w2<-cnt.w2+1
 
 			cntMtx[idx,"cStep.w1"] <- cnt.w1	;cntMtx[idx,"cStep.w2"] <- cnt.w2
 			cntMtx[idx,"cStep"] <- cnt + cnt.w1 + cnt.w2
 
-			# Raw value(reb)       |cStep          |fStep                   |QuoSize   |QuoTbl 
-			#  Templete  number    | for sample    |                        |0 1 2 2 1 |1 2 2 1
-			#  Templete  number    | for sample    | -9  -9  -9  -6  -6   2 |1 2 2 0 1 |1 2 2 1
-			#  Templete  number( ) | for sample    |  8   6   7   0  -2  -8 |1 1 3 1 0 |1 1 3 1
-			#  Templete  number( ) | for sample    |  3   0   4   2  12   4 |0 2 2 1 1 |2 2 1 1
-			#  Templete  number( ) | for sample    | -5  -9   0   3  -5  -2 |2 0 2 2 0 |2 2 2
-			#  Templete  number( ) | for sample    |  1   6  -3   2  -1   0 |1 1 1 3 0 |1 1 1 3
+			#     Raw value(reb)       |cStep          |fStep                   |QuoSize   |QuoTbl 
+			#      4 11 20 23 32 39    | 7  9  3  9  7 |                        |1 1 2 2 0 |1 1 2 2
+			#     15 19 21 34 41 44    | 4  2 13  7  3 | 11   8   1  11   9   5 |0 2 1 1 2 |2 1 1 2
+			#      5  7 11 16 41 45(1) | 2  4  5 25  4 |-10 -12 -10 -18   0   1 |2 2 0 0 2 |2 2 2
+			#      2  7 19 25 29 36(1) | 5 12  6  4  7 | -3   0   8   9 -12  -9 |2 1 2 1 0 |2 1 2 1
+			#      1 12 13 24 29 44(1) |11  1 11  5 15 | -1   5  -6  -1   0   8 |1 2 2 0 1 |1 2 2 1
+			#      9 18 20 24 27 36(1) | 9  2  4  3  9 |  8   6   7   0  -2  -8 |1 1 3 1 0 |1 1 3 1
+
 		}
 		if( TRUE ){ # fStep		#	u0.zoidFMtx_ana.rpt( stdMI$rawTail )
 			cnt <- 0
-			if( aFStep[1]%in%c(        ) ) cnt<-cnt+1
-			if( aFStep[2]%in%c(        ) ) cnt<-cnt+1
-			if( aFStep[3]%in%c(        ) ) cnt<-cnt+1
-			if( aFStep[4]%in%c(        ) ) cnt<-cnt+1
-			if( aFStep[5]%in%c(        ) ) cnt<-cnt+1
-			if( aFStep[6]%in%c(        ) ) cnt<-cnt+1
+			if( aFStep[1]%in%c(         ) ) cnt<-cnt+1
+			if( aFStep[2]%in%c(  7      ) ) cnt<-cnt+1
+			if( aFStep[3]%in%c(  0, -9  ) ) cnt<-cnt+1
+			if( aFStep[4]%in%c(  1      ) ) cnt<-cnt+1
+			if( aFStep[5]%in%c(  0,-10  ) ) cnt<-cnt+1
+			if( aFStep[6]%in%c( -3      ) ) cnt<-cnt+1
 
 			cnt.w1 <- cccObj$scoreMtx[idx,"w1FStep.cnt"]	# fv in fStep
-			if( fCutU.hasPtn(c( , ),aFStep) )	cnt.w1<-cnt.w1+1
-			if( 1<sum(aFStep[1:2+ ]==c( , )) )	cnt.w1<-cnt.w1+1
+			if( fCutU.hasPtn(c( 0, 8 ),aFStep) )	cnt.w1<-cnt.w1+1
+			if( 1<sum(aFStep[1:2+4]==c( 6, 7 )) )	cnt.w1<-cnt.w1+1
+			if( fCutU.hasPtn(c( -12, -8 ),aFStep) )	cnt.w1<-cnt.w1+1	# -
+			# -------------------------------------------------------------------------------------
+			#     FV :    -12 (2)   -10 (2)   -1 (2)   0 (4)   1 (2)   5 (2)   8 (4)   9 (2)   11 (2) 
 
 			cnt.w2 <- 0
-			if( 1<sum( aFStep[c(,)]*c(,)==aFStep[c(,)] ) )	cnt.w2<-cnt.w2+1
-			if( aFStep[ ]==sum(aFStep[c( , )]) )	cnt.w2<-cnt.w2+1
-			if( sum(aFStep[c( , )])==sum(aFStep[c( , )]) )	cnt.w2<-cnt.w2+1	# 
+			if( 1<sum( aFStep[ 5 ]*c(-4,-3, 4)==aFStep[c(1,2,6)] ) )	cnt.w2<-cnt.w2+1
+			if( aFStep[2]==sum(aFStep[c(1,5)]) )	cnt.w2<-cnt.w2+1
+			if( aFStep[4]==sum(aFStep[c(1,6)]) )	cnt.w2<-cnt.w2+1
+			if( aFStep[5]==sum(aFStep[c(2,6)]) )	cnt.w2<-cnt.w2+1
 
 			cntMtx[idx,"fStep.w1"] <- cnt.w1	;cntMtx[idx,"fStep.w2"] <- cnt.w2
 			cntMtx[idx,"fStep"] <- cnt + cnt.w1 + cnt.w2
@@ -1569,7 +1626,7 @@ fCutCnt.nextQuo10 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 
 } # fCutCnt.nextQuo10()
 
-# UNdone
+# done
 fCutCnt.nextBin <- function( gEnv ,allIdxF ,rpt=FALSE ){
 
 	flgCnt <- rep( 0 ,length(allIdxF) )
@@ -1584,18 +1641,12 @@ fCutCnt.nextBin <- function( gEnv ,allIdxF ,rpt=FALSE ){
 	# -- conditional
 	auxCntMtx <- matrix( 0 ,nrow=length(allIdxF) ,ncol=2 )	;colnames(auxCntMtx)=c("auxZW","auxQuo")
     flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
-					if( (aZoid[6]-aZoid[1]) %in% c( , ) ) return( FALSE )
-					return( TRUE )
-				})	;kIdx<-anaFlagFnd(!flag,rpt)
-	auxCntMtx[,"auxZW"] <- !flag
-    flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
 					quoSize <- fCutU.getQuoObj( aZoid )$size
-					if( all(quoSize[1:3+0]==c(,,)) ) return(FALSE)	# next rebind of ,,
-					if( all(quoSize[1:3+1]==c(,,)) ) return(FALSE)	# next rebind of ,,
-					if( all(quoSize[1:3+2]==c(,,)) ) return(FALSE)	# next rebind of ,,
-					if( all(quoSize[1:3+0]==c(,,)) ) return(FALSE)	# next rebind of ,,
-					if( all(quoSize[1:3+1]==c(,,)) ) return(FALSE)	# next rebind of ,,
-					if( all(quoSize[1:3+2]==c(,,)) ) return(FALSE)	# next rebind of ,,
+					if( all(quoSize[1:3+0]==c(1,0,1)) ) return(FALSE)	# next rebind of 0,1,3	reverse
+					if( all(quoSize[1:3+1]==c(1,1,0)) ) return(FALSE)	# next rebind of 1,3,1
+					if( all(quoSize[1:3+2]==c(0,1,3)) ) return(FALSE)	# next rebind of 3,1,1
+					if( all(quoSize[1:3+0]==c(0,1,1)) ) return(FALSE)	# next rebind of 3,1,1
+					if( all(quoSize[1:3+2]==c(1,1,3)) ) return(FALSE)	# next rebind of 1,1,0
 					return( TRUE )
 				})	;kIdx<-anaFlagFnd(!flag,rpt)
 	auxCntMtx[,"auxQuo"] <- !flag
@@ -1612,7 +1663,7 @@ fCutCnt.nextBin <- function( gEnv ,allIdxF ,rpt=FALSE ){
 	
 		if( TRUE ){	# raw
 			cnt <- 0
-			if( aZoid[1]%in%c(       ) ) cnt<-cnt+1
+			if( aZoid[1]%in%c( 15    ) ) cnt<-cnt+1
 			if( aZoid[2]%in%c(       ) ) cnt<-cnt+1
 			if( aZoid[3]%in%c(       ) ) cnt<-cnt+1
 			if( aZoid[4]%in%c(       ) ) cnt<-cnt+1
@@ -1625,47 +1676,68 @@ fCutCnt.nextBin <- function( gEnv ,allIdxF ,rpt=FALSE ){
 		}
 		if( TRUE ){ # rawFV		# anaMtx.freqVal( stdMI$rawTail )
 			cnt <- 0
-			# < >
-			if( fCutU.hasPtn(c(  ,  ),aZoid) ) cnt<-cnt+1
+			# < 3>
+			if( fCutU.hasPtn(c(  3,NA, 6          ),aZoid) ) cnt<-cnt+1
+			if( fCutU.hasPtn(c(  3,NA,NA,10,32,26 ),aZoid,thld=3,fixIdx=1) ) cnt<-cnt+1
+			# < 7>
+			if( fCutU.hasPtn(c(  7,20,34 ),aZoid) ) cnt<-cnt+1
+			# <11>
+			if( fCutU.hasPtn(c( 11,28,30,27,23 ),aZoid,thld=3,fixIdx=1) ) cnt<-cnt+1
+			# <18>
+			if( fCutU.hasPtn(c( 14,18,32,20 ),aZoid,thld=3,fixIdx=2) ) cnt<-cnt+1
+			# <24>
+			if( fCutU.hasPtn(c( 18,24,37,35,35 ),aZoid,thld=3,fixIdx=2) ) cnt<-cnt+1
+			# <26>
+			if( fCutU.hasPtn(c(  3,10,26,37 ),aZoid,thld=3,fixIdx=3) ) cnt<-cnt+1
+			# <29>
+			if( fCutU.hasPtn(c( 10,NA,NA,29 ),aZoid) ) cnt<-cnt+1
+			if( fCutU.hasPtn(c(    22,NA,29 ),aZoid) ) cnt<-cnt+1
+			# <31>
+			if( fCutU.hasPtn(c( 12,22,31 ),aZoid) ) cnt<-cnt+1
+			# <40>
+			if( fCutU.hasPtn(c(          33,NA,40 ),aZoid) ) cnt<-cnt+1
+			if( fCutU.hasPtn(c( 19,30,36,NA,29,40 ),aZoid,thld=3,fixIdx=6) ) cnt<-cnt+1
 			cntMtx[idx,"rawFV"] <- cnt
 		}
 		if( TRUE ){ # rem		# u0.zoidMtx_ana( stdMI$rawTail%%10 )
 			cnt <- 0
-			if( fCutU.remFilt(aZoid[1],c(         ),c(  )) ) cnt<-cnt+1 # 1
-			if( fCutU.remFilt(aZoid[2],c(         ),c(  )) ) cnt<-cnt+1 # 2
-			if( fCutU.remFilt(aZoid[3],c(         ),c(  )) ) cnt<-cnt+1 # 3
-			if( fCutU.remFilt(aZoid[4],c(         ),c(  )) ) cnt<-cnt+1 # 4
-			if( fCutU.remFilt(aZoid[5],c(         ),c(  )) ) cnt<-cnt+1 # 5
-			if( fCutU.remFilt(aZoid[6],c(         ),c(  )) ) cnt<-cnt+1 # 6
+			if( fCutU.remFilt(aZoid[1],c( 5,7     ),c( 15 )) ) cnt<-cnt+1 # 1
+			if( fCutU.remFilt(aZoid[2],c(         ),c(    )) ) cnt<-cnt+1 # 2
+			if( fCutU.remFilt(aZoid[3],c( 9,8,3   ),c(    )) ) cnt<-cnt+1 # 3
+			if( fCutU.remFilt(aZoid[4],c( 8       ),c(    )) ) cnt<-cnt+1 # 4
+			if( fCutU.remFilt(aZoid[5],c( 5       ),c(    )) ) cnt<-cnt+1 # 5
+			if( fCutU.remFilt(aZoid[6],c( 4,0     ),c(    )) ) cnt<-cnt+1 # 6
 			cntMtx[idx,"rem"] <- cnt
 		}
 		if( TRUE ){ # cStep		#	u0.zoidCMtx_ana.rpt( stdMI$rawTail )
 			cnt <- 0
 			if( aCStep[1]%in%c(         ) ) cnt<-cnt+1
 			if( aCStep[2]%in%c(         ) ) cnt<-cnt+1
-			if( aCStep[3]%in%c(         ) ) cnt<-cnt+1
-			if( aCStep[4]%in%c(         ) ) cnt<-cnt+1
-			if( aCStep[5]%in%c(         ) ) cnt<-cnt+1
+			if( aCStep[3]%in%c(  1, 5   ) ) cnt<-cnt+1
+			if( aCStep[4]%in%c(  6      ) ) cnt<-cnt+1
+			if( aCStep[5]%in%c(  7, 1   ) ) cnt<-cnt+1
 
 			cnt.w1 <- cccObj$scoreMtx[idx,"w1CStep.cnt"]	# fv in cStep
-			if( fCutU.hasPtn(c( , ),aCStep) )	cnt.w1<-cnt.w1+1
-			if( 1<sum(aCStep[1:2+ ]==c( , )) )	cnt.w1<-cnt.w1+1
+			if( fCutU.hasPtn(c(  1, 1 ),aCStep) )	cnt.w1<-cnt.w1+1
+			if( 1<sum(aCStep[1:2+2]==c(  7,12 )) )	cnt.w1<-cnt.w1+1
+			if( fCutU.hasPtn(c(  3, 7 ),aCStep) )	cnt.w1<-cnt.w1+1	# -
+			# -------------------------------------------------------------------------------------
+			#     FV :    1 (6)   2 (4)   3 (2)   4 (2)   5 (2)   7 (4)   8 (2)   12 (3) 
 
 			cnt.w2 <- 0
-			if( 1<sum( aCStep[c(,)]*c(,)==aCStep[c( , )] ) )	cnt.w2<-cnt.w2+1
-			if( aCStep[ ]==sum(aCStep[c( , )]) )	cnt.w2<-cnt.w2+1
-			if( sum(aCStep[c( , )])==sum(aCStep[c( , )]) )	cnt.w2<-cnt.w2+1	# 
+			if( aCStep[ 5 ]==sum(aCStep[c( 1,3,4 )]) )	cnt.w2<-cnt.w2+1
 
 			cntMtx[idx,"cStep.w1"] <- cnt.w1	;cntMtx[idx,"cStep.w2"] <- cnt.w2
 			cntMtx[idx,"cStep"] <- cnt + cnt.w1 + cnt.w2
 
-			# Raw value(reb)       |cStep          |fStep                   |QuoSize   |QuoTbl 
-			#  Templete  number    | for sample    |                        |0 1 2 2 1 |1 2 2 1
-			#  Templete  number    | for sample    | -9  -9  -9  -6  -6   2 |1 2 2 0 1 |1 2 2 1
-			#  Templete  number( ) | for sample    |  8   6   7   0  -2  -8 |1 1 3 1 0 |1 1 3 1
-			#  Templete  number( ) | for sample    |  3   0   4   2  12   4 |0 2 2 1 1 |2 2 1 1
-			#  Templete  number( ) | for sample    | -5  -9   0   3  -5  -2 |2 0 2 2 0 |2 2 2
-			#  Templete  number( ) | for sample    |  1   6  -3   2  -1   0 |1 1 1 3 0 |1 1 1 3
+			#     Raw value(reb)       |cStep          |fStep                   |QuoSize   |QuoTbl 
+			#      9 12 24 25 29 31    | 3 12  1  4  2 |                        |1 1 3 1 0 |1 1 3 1
+			#      3  7  8 18 20 42    | 4  1 10  2 22 | -6  -5 -16  -7  -9  11 |3 1 1 0 1 |3 1 1 1
+			#     11 18 26 31 37 40(1) | 7  8  5  6  3 |  8  11  18  13  17  -2 |0 2 1 2 1 |2 1 2 1
+			#     15 24 31 32 33 40(2) | 9  7  1  1  7 |  4   6   5   1  -4   0 |0 1 1 3 1 |1 1 3 1
+			#      3  5  7 14 26 34    | 2  2  7 12  8 |-12 -19 -24 -18  -7  -6 |3 1 1 1 0 |3 1 1 1
+			#     11 23 28 29 30 44    |12  5  1  1 14 |  8  18  21  15   4  10 |0 1 3 1 1 |1 3 1 1
+
 		}
 		if( TRUE ){ # fStep		#	u0.zoidFMtx_ana.rpt( stdMI$rawTail )
 			cnt <- 0
@@ -1677,13 +1749,13 @@ fCutCnt.nextBin <- function( gEnv ,allIdxF ,rpt=FALSE ){
 			if( aFStep[6]%in%c(        ) ) cnt<-cnt+1
 
 			cnt.w1 <- cccObj$scoreMtx[idx,"w1FStep.cnt"]	# fv in fStep
-			if( fCutU.hasPtn(c( , ),aFStep) )	cnt.w1<-cnt.w1+1
-			if( 1<sum(aFStep[1:2+ ]==c( , )) )	cnt.w1<-cnt.w1+1
+			# -------------------------------------------------------------------------------------
+			#     FV :    -7 (2)   -6 (2)   4 (2)   8 (2)   11 (2)   18 (2) 
 
 			cnt.w2 <- 0
-			if( 1<sum( aFStep[c(,)]*c(,)==aFStep[c(,)] ) )	cnt.w2<-cnt.w2+1
-			if( aFStep[ ]==sum(aFStep[c( , )]) )	cnt.w2<-cnt.w2+1
-			if( sum(aFStep[c( , )])==sum(aFStep[c( , )]) )	cnt.w2<-cnt.w2+1	# 
+			if( aFStep[2]==sum(aFStep[c(1,6)]) )	cnt.w2<-cnt.w2+1
+			if( sum(aFStep[c(3,5)])==sum(aFStep[c(4,6)]) )	cnt.w2<-cnt.w2+1	# 25
+			if( sum(aFStep[c(3,4)])==sum(aFStep[c(1,2,6)]) )	cnt.w2<-cnt.w2+1	# 36
 
 			cntMtx[idx,"fStep.w1"] <- cnt.w1	;cntMtx[idx,"fStep.w2"] <- cnt.w2
 			cntMtx[idx,"fStep"] <- cnt + cnt.w1 + cnt.w2
@@ -1695,7 +1767,7 @@ fCutCnt.nextBin <- function( gEnv ,allIdxF ,rpt=FALSE ){
 
 } # fCutCnt.nextBin()
 
-# UNdone
+# done
 fCutCnt.nextRebNum <- function( gEnv ,allIdxF ,rpt=FALSE ){
 
 	flgCnt <- rep( 0 ,length(allIdxF) )
@@ -1710,22 +1782,6 @@ fCutCnt.nextRebNum <- function( gEnv ,allIdxF ,rpt=FALSE ){
 
 	# -- conditional
 	auxCntMtx <- matrix( 0 ,nrow=length(allIdxF) ,ncol=2 )	;colnames(auxCntMtx)=c("auxZW","auxQuo")
-    flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
-					if( (aZoid[6]-aZoid[1]) %in% c( , ) ) return( FALSE )
-					return( TRUE )
-				})	;kIdx<-anaFlagFnd(!flag,rpt)
-	auxCntMtx[,"auxZW"] <- !flag
-    flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
-					quoSize <- fCutU.getQuoObj( aZoid )$size
-					if( all(quoSize[1:3+0]==c(,,)) ) return(FALSE)	# next rebind of ,,
-					if( all(quoSize[1:3+1]==c(,,)) ) return(FALSE)	# next rebind of ,,
-					if( all(quoSize[1:3+2]==c(,,)) ) return(FALSE)	# next rebind of ,,
-					if( all(quoSize[1:3+0]==c(,,)) ) return(FALSE)	# next rebind of ,,
-					if( all(quoSize[1:3+1]==c(,,)) ) return(FALSE)	# next rebind of ,,
-					if( all(quoSize[1:3+2]==c(,,)) ) return(FALSE)	# next rebind of ,,
-					return( TRUE )
-				})	;kIdx<-anaFlagFnd(!flag,rpt)
-	auxCntMtx[,"auxQuo"] <- !flag
 
 	# -- conditional
 	cntMtx <- matrix( 0 ,nrow=length(allIdxF) ,ncol=length(cntMtx.colName) )
@@ -1740,11 +1796,11 @@ fCutCnt.nextRebNum <- function( gEnv ,allIdxF ,rpt=FALSE ){
 		if( TRUE ){	# raw
 			cnt <- 0
 			if( aZoid[1]%in%c(       ) ) cnt<-cnt+1
-			if( aZoid[2]%in%c(       ) ) cnt<-cnt+1
-			if( aZoid[3]%in%c(       ) ) cnt<-cnt+1
+			if( aZoid[2]%in%c( 12    ) ) cnt<-cnt+1
+			if( aZoid[3]%in%c( 30    ) ) cnt<-cnt+1
 			if( aZoid[4]%in%c(       ) ) cnt<-cnt+1
-			if( aZoid[5]%in%c(       ) ) cnt<-cnt+1
-			if( aZoid[6]%in%c(       ) ) cnt<-cnt+1
+			if( aZoid[5]%in%c( 23,10 ) ) cnt<-cnt+1
+			if( aZoid[6]%in%c( 24,30 ) ) cnt<-cnt+1
 			cntMtx[idx,"raw"] <- cnt
 
 			cnt <- 0
@@ -1752,47 +1808,67 @@ fCutCnt.nextRebNum <- function( gEnv ,allIdxF ,rpt=FALSE ){
 		}
 		if( TRUE ){ # rawFV		# anaMtx.freqVal( stdMI$rawTail )
 			cnt <- 0
-			# < >
-			if( fCutU.hasPtn(c(  ,  ),aZoid) ) cnt<-cnt+1
+			# < 3>
+			if( fCutU.hasPtn(c(  3,NA,12,36,30 ),aZoid,thld=3,fixIdx=1) ) cnt<-cnt+1
+			# <10>
+			if( fCutU.hasPtn(c( 10,NA,25 ),aZoid) ) cnt<-cnt+1
+			# <12>
+			# <24>
+			if( fCutU.hasPtn(c( 19,20,NA,24 ),aZoid) ) cnt<-cnt+1
+			# <25>
+			if( fCutU.hasPtn(c( 10,NA,25 ),aZoid) ) cnt<-cnt+1
+			# <30>
+			if( fCutU.hasPtn(c(  1,30,36,39 ),aZoid,thld=3,fixIdx=2) ) cnt<-cnt+1
+			# <33>
+			if( fCutU.hasPtn(c(  4,18,19,33 ),aZoid,thld=3,fixIdx=4) ) cnt<-cnt+1
+			# <42>
+			if( fCutU.hasPtn(c( 14, 8,11,18,42 ),aZoid,thld=3,fixIdx=5) ) cnt<-cnt+1
 			cntMtx[idx,"rawFV"] <- cnt
 		}
 		if( TRUE ){ # rem		# u0.zoidMtx_ana( stdMI$rawTail%%10 )
 			cnt <- 0
-			if( fCutU.remFilt(aZoid[1],c(         ),c(  )) ) cnt<-cnt+1 # 1
-			if( fCutU.remFilt(aZoid[2],c(         ),c(  )) ) cnt<-cnt+1 # 2
-			if( fCutU.remFilt(aZoid[3],c(         ),c(  )) ) cnt<-cnt+1 # 3
-			if( fCutU.remFilt(aZoid[4],c(         ),c(  )) ) cnt<-cnt+1 # 4
-			if( fCutU.remFilt(aZoid[5],c(         ),c(  )) ) cnt<-cnt+1 # 5
-			if( fCutU.remFilt(aZoid[6],c(         ),c(  )) ) cnt<-cnt+1 # 6
+			if( fCutU.remFilt(aZoid[1],c( 1         ),c(       )) ) cnt<-cnt+1 # 1
+			if( fCutU.remFilt(aZoid[2],c( 2,5       ),c( 12    )) ) cnt<-cnt+1 # 2
+			if( fCutU.remFilt(aZoid[3],c( 0,8       ),c( 30    )) ) cnt<-cnt+1 # 3
+			if( fCutU.remFilt(aZoid[4],c( 5         ),c(       )) ) cnt<-cnt+1 # 4
+			if( fCutU.remFilt(aZoid[5],c( 3,7,0     ),c( 23,10 )) ) cnt<-cnt+1 # 5
+			if( fCutU.remFilt(aZoid[6],c( 3,7,1,4,0 ),c( 24,30 )) ) cnt<-cnt+1 # 6
 			cntMtx[idx,"rem"] <- cnt
 		}
 		if( TRUE ){ # cStep		#	u0.zoidCMtx_ana.rpt( stdMI$rawTail )
 			cnt <- 0
-			if( aCStep[1]%in%c(         ) ) cnt<-cnt+1
-			if( aCStep[2]%in%c(         ) ) cnt<-cnt+1
-			if( aCStep[3]%in%c(         ) ) cnt<-cnt+1
-			if( aCStep[4]%in%c(         ) ) cnt<-cnt+1
-			if( aCStep[5]%in%c(         ) ) cnt<-cnt+1
+			if( aCStep[1]%in%c(  1, 6    ) ) cnt<-cnt+1
+			if( aCStep[2]%in%c( 18       ) ) cnt<-cnt+1
+			if( aCStep[3]%in%c(  1       ) ) cnt<-cnt+1
+			if( aCStep[4]%in%c(  2, 7    ) ) cnt<-cnt+1
+			if( aCStep[5]%in%c(  4       ) ) cnt<-cnt+1
 
 			cnt.w1 <- cccObj$scoreMtx[idx,"w1CStep.cnt"]	# fv in cStep
-			if( fCutU.hasPtn(c( , ),aCStep) )	cnt.w1<-cnt.w1+1
-			if( 1<sum(aCStep[1:2+ ]==c( , )) )	cnt.w1<-cnt.w1+1
+			if( fCutU.hasPtn(c( 1, 2 ),aCStep) )	cnt.w1<-cnt.w1+1
+			if( 1<sum(aCStep[1:2+0]==c(  6, 6 )) )	cnt.w1<-cnt.w1+1
+			if( fCutU.hasPtn(c( 1, 6 ),aCStep) )	cnt.w1<-cnt.w1+1
+			if( 1<sum(aCStep[1:2+1]==c(  5,12 )) )	cnt.w1<-cnt.w1+1
+			if( fCutU.hasPtn(c( 2, 4 ),aCStep) )	cnt.w1<-cnt.w1+1
+			if( 1<sum(aCStep[1:2+3]==c( 2, 4 )) )	cnt.w1<-cnt.w1+1
+			if( fCutU.hasPtn(c( 6,19 ),aCStep) )	cnt.w1<-cnt.w1+1	# - 
+			# -------------------------------------------------------------------------------------
+			#     FV :    1 (8)   2 (3)   4 (3)   5 (2)   6 (4)   8 (3)   9 (2) 
 
 			cnt.w2 <- 0
-			if( 1<sum( aCStep[c(,)]*c(,)==aCStep[c( , )] ) )	cnt.w2<-cnt.w2+1
-			if( aCStep[ ]==sum(aCStep[c( , )]) )	cnt.w2<-cnt.w2+1
-			if( sum(aCStep[c( , )])==sum(aCStep[c( , )]) )	cnt.w2<-cnt.w2+1	# 
+			if( 1<sum( aCStep[ 3 ]*c(1,3)==aCStep[c(4,5)] ) )	cnt.w2<-cnt.w2+1
+			if( 1<sum( aCStep[c(1,3)]*c(1,1)==aCStep[c(2,4)] ) )	cnt.w2<-cnt.w2+1
 
 			cntMtx[idx,"cStep.w1"] <- cnt.w1	;cntMtx[idx,"cStep.w2"] <- cnt.w2
 			cntMtx[idx,"cStep"] <- cnt + cnt.w1 + cnt.w2
 
-			# Raw value(reb)       |cStep          |fStep                   |QuoSize   |QuoTbl 
-			#  Templete  number    | for sample    |                        |0 1 2 2 1 |1 2 2 1
-			#  Templete  number    | for sample    | -9  -9  -9  -6  -6   2 |1 2 2 0 1 |1 2 2 1
-			#  Templete  number( ) | for sample    |  8   6   7   0  -2  -8 |1 1 3 1 0 |1 1 3 1
-			#  Templete  number( ) | for sample    |  3   0   4   2  12   4 |0 2 2 1 1 |2 2 1 1
-			#  Templete  number( ) | for sample    | -5  -9   0   3  -5  -2 |2 0 2 2 0 |2 2 2
-			#  Templete  number( ) | for sample    |  1   6  -3   2  -1   0 |1 1 1 3 0 |1 1 1 3
+			#     Raw value(reb)       |cStep          |fStep                   |QuoSize   |QuoTbl 
+			#     10 14 30 31 33 37    | 4 16  1  2  4 |                        |0 2 0 4 0 |2 4
+			#      2  3  5  6 12 20    | 1  2  1  6  8 | -8 -11 -25 -25 -21 -17 |4 1 1 0 0 |4 1 1
+			#      8 16 25 30 42 43    | 8  9  5 12  1 |  6  13  20  24  30  23 |1 1 1 1 2 |1 1 1 1 2
+			#      7 13 30 39 41 45(1) | 6 17  9  2  4 | -1  -3   5   9  -1   2 |1 1 0 2 2 |1 1 2 2
+			#      3  4  9 24 25 33    | 1  5 15  1  8 | -4  -9 -21 -15 -16 -12 |3 0 2 1 0 |3 2 1
+			#     10 11 12 18 24 42(1) | 1  1  6  6 18 |  7   7   3  -6  -1   9 |0 4 1 0 1 |4 1 1
+
 		}
 		if( TRUE ){ # fStep		#	u0.zoidFMtx_ana.rpt( stdMI$rawTail )
 			cnt <- 0
@@ -1800,17 +1876,22 @@ fCutCnt.nextRebNum <- function( gEnv ,allIdxF ,rpt=FALSE ){
 			if( aFStep[2]%in%c(        ) ) cnt<-cnt+1
 			if( aFStep[3]%in%c(        ) ) cnt<-cnt+1
 			if( aFStep[4]%in%c(        ) ) cnt<-cnt+1
-			if( aFStep[5]%in%c(        ) ) cnt<-cnt+1
+			if( aFStep[5]%in%c(  30    ) ) cnt<-cnt+1
 			if( aFStep[6]%in%c(        ) ) cnt<-cnt+1
 
 			cnt.w1 <- cccObj$scoreMtx[idx,"w1FStep.cnt"]	# fv in fStep
-			if( fCutU.hasPtn(c( , ),aFStep) )	cnt.w1<-cnt.w1+1
-			if( 1<sum(aFStep[1:2+ ]==c( , )) )	cnt.w1<-cnt.w1+1
+			# -------------------------------------------------------------------------------------
+			#     FV :    -25 (2)   -21 (2)   -1 (3)   7 (2)   9 (2) 
 
 			cnt.w2 <- 0
-			if( 1<sum( aFStep[c(,)]*c(,)==aFStep[c(,)] ) )	cnt.w2<-cnt.w2+1
-			if( aFStep[ ]==sum(aFStep[c( , )]) )	cnt.w2<-cnt.w2+1
-			if( sum(aFStep[c( , )])==sum(aFStep[c( , )]) )	cnt.w2<-cnt.w2+1	# 
+			if( 1<sum( aFStep[ 3 ]*c(-2, 3)==aFStep[c(4,6)] ) )	cnt.w2<-cnt.w2+1
+			if( 1<sum( aFStep[c(1,3)]*c(1,-2)==aFStep[c(2,4)] ) )	cnt.w2<-cnt.w2+1
+			if( 1<sum( aFStep[c(1,3)]*c(1, 3)==aFStep[c(2,6)] ) )	cnt.w2<-cnt.w2+1
+			if( aFStep[ 3 ]==sum(aFStep[c(4,6)]) )	cnt.w2<-cnt.w2+1
+			if( aFStep[ 6 ]==sum(aFStep[c(1,3,5)]) )	cnt.w2<-cnt.w2+1
+			if( aFStep[ 6 ]==sum(aFStep[c(2,3,5)]) )	cnt.w2<-cnt.w2+1
+			if( sum(aFStep[c(1,3)])==sum(aFStep[c(2,4,6)]) )	cnt.w2<-cnt.w2+1	# 10
+			if( sum(aFStep[c(2,3)])==sum(aFStep[c(1,4,6)]) )	cnt.w2<-cnt.w2+1	# 10
 
 			cntMtx[idx,"fStep.w1"] <- cnt.w1	;cntMtx[idx,"fStep.w2"] <- cnt.w2
 			cntMtx[idx,"fStep"] <- cnt + cnt.w1 + cnt.w2
@@ -1822,7 +1903,7 @@ fCutCnt.nextRebNum <- function( gEnv ,allIdxF ,rpt=FALSE ){
 
 } # fCutCnt.nextRebNum()
 
-# UNdone
+# done
 fCutCnt.nextCStepBin <- function( gEnv ,allIdxF ,rpt=FALSE ){
 
 	flgCnt <- rep( 0 ,length(allIdxF) )
@@ -1837,18 +1918,13 @@ fCutCnt.nextCStepBin <- function( gEnv ,allIdxF ,rpt=FALSE ){
 	# -- conditional
 	auxCntMtx <- matrix( 0 ,nrow=length(allIdxF) ,ncol=2 )	;colnames(auxCntMtx)=c("auxZW","auxQuo")
     flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
-					if( (aZoid[6]-aZoid[1]) %in% c( , ) ) return( FALSE )
-					return( TRUE )
-				})	;kIdx<-anaFlagFnd(!flag,rpt)
-	auxCntMtx[,"auxZW"] <- !flag
-    flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
 					quoSize <- fCutU.getQuoObj( aZoid )$size
-					if( all(quoSize[1:3+0]==c(,,)) ) return(FALSE)	# next rebind of ,,
-					if( all(quoSize[1:3+1]==c(,,)) ) return(FALSE)	# next rebind of ,,
-					if( all(quoSize[1:3+2]==c(,,)) ) return(FALSE)	# next rebind of ,,
-					if( all(quoSize[1:3+0]==c(,,)) ) return(FALSE)	# next rebind of ,,
-					if( all(quoSize[1:3+1]==c(,,)) ) return(FALSE)	# next rebind of ,,
-					if( all(quoSize[1:3+2]==c(,,)) ) return(FALSE)	# next rebind of ,,
+					# unique : <0 1 3 1 1>, <2 1 2 0 1>
+					if( all(quoSize[1:3+0]==c(2,1,2)) ) return(FALSE)	# next rebind of 2,1,2	
+					if( all(quoSize[1:3+1]==c(2,1,0)) ) return(FALSE)	# next rebind of ,,
+					if( all(quoSize[1:3+2]==c(2,0,1)) ) return(FALSE)	# next rebind of ,,
+					if( all(quoSize[1:3+0]==c(1,1,1)) ) return(FALSE)	# next rebind of 2,1,2
+					if( all(quoSize[1:3+1]==c(1,1,3)) ) return(FALSE)	# next rebind of 1,2,0 reverse
 					return( TRUE )
 				})	;kIdx<-anaFlagFnd(!flag,rpt)
 	auxCntMtx[,"auxQuo"] <- !flag
@@ -1865,12 +1941,12 @@ fCutCnt.nextCStepBin <- function( gEnv ,allIdxF ,rpt=FALSE ){
 	
 		if( TRUE ){	# raw
 			cnt <- 0
-			if( aZoid[1]%in%c(       ) ) cnt<-cnt+1
-			if( aZoid[2]%in%c(       ) ) cnt<-cnt+1
-			if( aZoid[3]%in%c(       ) ) cnt<-cnt+1
-			if( aZoid[4]%in%c(       ) ) cnt<-cnt+1
-			if( aZoid[5]%in%c(       ) ) cnt<-cnt+1
-			if( aZoid[6]%in%c(       ) ) cnt<-cnt+1
+			if( aZoid[1]%in%c(  3,13    ) ) cnt<-cnt+1
+			if( aZoid[2]%in%c(  3       ) ) cnt<-cnt+1
+			if( aZoid[3]%in%c( 28       ) ) cnt<-cnt+1
+			if( aZoid[4]%in%c( 22       ) ) cnt<-cnt+1
+			if( aZoid[5]%in%c( 28,30    ) ) cnt<-cnt+1
+			if( aZoid[6]%in%c( 45,40, 5 ) ) cnt<-cnt+1
 			cntMtx[idx,"raw"] <- cnt
 
 			cnt <- 0
@@ -1878,65 +1954,84 @@ fCutCnt.nextCStepBin <- function( gEnv ,allIdxF ,rpt=FALSE ){
 		}
 		if( TRUE ){ # rawFV		# anaMtx.freqVal( stdMI$rawTail )
 			cnt <- 0
-			# < >
-			if( fCutU.hasPtn(c(  ,  ),aZoid) ) cnt<-cnt+1
+			# < 3>
+			if( fCutU.hasPtn(c(  3,NA,25,26,30 ),aZoid,thld=3,fixIdx=1) ) cnt<-cnt+1
+			# < 4>
+			if( fCutU.hasPtn(c(  4,26,29,39 ),aZoid,thld=3,fixIdx=1) ) cnt<-cnt+1
+			# <11>
+			if( fCutU.hasPtn(c( 11,NA,28 ),aZoid) ) cnt<-cnt+1
+			# <28>
+			if( fCutU.hasPtn(c(          22,28    ),aZoid) ) cnt<-cnt+1
+			if( fCutU.hasPtn(c( 13,14,20,NA,28,36 ),aZoid,thld=3,fixIdx=5) ) cnt<-cnt+1
+			# <44>
+			if( fCutU.hasPtn(c(  4,11,26,44 ),aZoid,thld=3,fixIdx=4) ) cnt<-cnt+1
 			cntMtx[idx,"rawFV"] <- cnt
 		}
 		if( TRUE ){ # rem		# u0.zoidMtx_ana( stdMI$rawTail%%10 )
 			cnt <- 0
-			if( fCutU.remFilt(aZoid[1],c(         ),c(  )) ) cnt<-cnt+1 # 1
-			if( fCutU.remFilt(aZoid[2],c(         ),c(  )) ) cnt<-cnt+1 # 2
-			if( fCutU.remFilt(aZoid[3],c(         ),c(  )) ) cnt<-cnt+1 # 3
-			if( fCutU.remFilt(aZoid[4],c(         ),c(  )) ) cnt<-cnt+1 # 4
-			if( fCutU.remFilt(aZoid[5],c(         ),c(  )) ) cnt<-cnt+1 # 5
-			if( fCutU.remFilt(aZoid[6],c(         ),c(  )) ) cnt<-cnt+1 # 6
+			if( fCutU.remFilt(aZoid[1],c( 3,6      ),c(  3,13    )) ) cnt<-cnt+1 # 1
+			if( fCutU.remFilt(aZoid[2],c( 3,8      ),c(  3       )) ) cnt<-cnt+1 # 2
+			if( fCutU.remFilt(aZoid[3],c( 8,5,7    ),c( 28       )) ) cnt<-cnt+1 # 3
+			if( fCutU.remFilt(aZoid[4],c( 2        ),c( 22       )) ) cnt<-cnt+1 # 4
+			if( fCutU.remFilt(aZoid[5],c( 8,0      ),c( 28,30    )) ) cnt<-cnt+1 # 5
+			if( fCutU.remFilt(aZoid[6],c( 4,3,5,0  ),c( 45,40, 5 )) ) cnt<-cnt+1 # 6
 			cntMtx[idx,"rem"] <- cnt
 		}
 		if( TRUE ){ # cStep		#	u0.zoidCMtx_ana.rpt( stdMI$rawTail )
 			cnt <- 0
-			if( aCStep[1]%in%c(         ) ) cnt<-cnt+1
-			if( aCStep[2]%in%c(         ) ) cnt<-cnt+1
-			if( aCStep[3]%in%c(         ) ) cnt<-cnt+1
-			if( aCStep[4]%in%c(         ) ) cnt<-cnt+1
-			if( aCStep[5]%in%c(         ) ) cnt<-cnt+1
+			if( aCStep[1]%in%c(  1,12    ) ) cnt<-cnt+1
+			if( aCStep[2]%in%c(          ) ) cnt<-cnt+1
+			if( aCStep[3]%in%c(  2       ) ) cnt<-cnt+1
+			if( aCStep[4]%in%c(  1, 6, 3 ) ) cnt<-cnt+1
+			if( aCStep[5]%in%c(          ) ) cnt<-cnt+1
 
 			cnt.w1 <- cccObj$scoreMtx[idx,"w1CStep.cnt"]	# fv in cStep
-			if( fCutU.hasPtn(c( , ),aCStep) )	cnt.w1<-cnt.w1+1
-			if( 1<sum(aCStep[1:2+ ]==c( , )) )	cnt.w1<-cnt.w1+1
-
+			if( fCutU.hasPtn(c( 2, 2 ),aCStep) )	cnt.w1<-cnt.w1+1
+			if( 1<sum(aCStep[1:2+0]==c( 1, 9 )) )	cnt.w1<-cnt.w1+1
+			if( fCutU.hasPtn(c(  7,12 ),aCStep) )	cnt.w1<-cnt.w1+1	# unique 4,7,12
+			if( 1<sum(aCStep[1:2+3]==c( 1, 1 )) )	cnt.w1<-cnt.w1+1
+			if( fCutU.hasPtn(c(  4, 7 ),aCStep) )	cnt.w1<-cnt.w1+1	# -
+			if( fCutU.hasPtn(c( 12, 3 ),aCStep) )	cnt.w1<-cnt.w1+1
+			# -------------------------------------------------------------------------------------
+			#     FV :    1 (5)   2 (4)   5 (3)   6 (2)   7 (2)   8 (2)   9 (3)   12 (4) 
 			cnt.w2 <- 0
-			if( 1<sum( aCStep[c(,)]*c(,)==aCStep[c( , )] ) )	cnt.w2<-cnt.w2+1
-			if( aCStep[ ]==sum(aCStep[c( , )]) )	cnt.w2<-cnt.w2+1
-			if( sum(aCStep[c( , )])==sum(aCStep[c( , )]) )	cnt.w2<-cnt.w2+1	# 
+			if( 1<sum( aCStep[ 3 ]*c(3,4)==aCStep[c(2,5)] ) )	cnt.w2<-cnt.w2+1
+			if( aCStep[5]==sum(aCStep[c(2,3)]) )	cnt.w2<-cnt.w2+1
+			if( sum(aCStep[c(1,2)])==sum(aCStep[c(3,4)]) )	cnt.w2<-cnt.w2+1	# 10
+			if( sum(aCStep[c(2,4)])==sum(aCStep[c(1,3,5)]) )	cnt.w2<-cnt.w2+1	# 16
 
 			cntMtx[idx,"cStep.w1"] <- cnt.w1	;cntMtx[idx,"cStep.w2"] <- cnt.w2
 			cntMtx[idx,"cStep"] <- cnt + cnt.w1 + cnt.w2
 
-			# Raw value(reb)       |cStep          |fStep                   |QuoSize   |QuoTbl 
-			#  Templete  number    | for sample    |                        |0 1 2 2 1 |1 2 2 1
-			#  Templete  number    | for sample    | -9  -9  -9  -6  -6   2 |1 2 2 0 1 |1 2 2 1
-			#  Templete  number( ) | for sample    |  8   6   7   0  -2  -8 |1 1 3 1 0 |1 1 3 1
-			#  Templete  number( ) | for sample    |  3   0   4   2  12   4 |0 2 2 1 1 |2 2 1 1
-			#  Templete  number( ) | for sample    | -5  -9   0   3  -5  -2 |2 0 2 2 0 |2 2 2
-			#  Templete  number( ) | for sample    |  1   6  -3   2  -1   0 |1 1 1 3 0 |1 1 1 3
+			#     Raw value(reb)       |cStep          |fStep                   |QuoSize   |QuoTbl 
+			#     13 19 28 37 38 43    | 6  9  9  1  5 |                        |0 2 1 2 1 |2 1 2 1
+			#      2  4  6 11 17 28(1) | 2  2  5  6 11 |-11 -15 -22 -26 -21 -15 |3 2 1 0 0 |3 2 1
+			#      3  5  7 14 26 34    | 2  2  7 12  8 |  1   1   1   3   9   6 |3 1 1 1 0 |3 1 1 1
+			#     11 23 28 29 30 44    |12  5  1  1 14 |  8  18  21  15   4  10 |0 1 3 1 1 |1 3 1 1
+			#      3  4 16 20 28 44(2) | 1 12  4  8 16 | -8 -19 -12  -9  -2   0 |2 1 2 0 1 |2 1 2 1
+			#      8  9 18 21 28 40(1) | 1  9  3  7 12 |  5   5   2   1   0  -4 |2 1 2 0 1 |2 1 2 1
+
 		}
 		if( TRUE ){ # fStep		#	u0.zoidFMtx_ana.rpt( stdMI$rawTail )
 			cnt <- 0
 			if( aFStep[1]%in%c(        ) ) cnt<-cnt+1
 			if( aFStep[2]%in%c(        ) ) cnt<-cnt+1
 			if( aFStep[3]%in%c(        ) ) cnt<-cnt+1
-			if( aFStep[4]%in%c(        ) ) cnt<-cnt+1
+			if( aFStep[4]%in%c(   0    ) ) cnt<-cnt+1
 			if( aFStep[5]%in%c(        ) ) cnt<-cnt+1
 			if( aFStep[6]%in%c(        ) ) cnt<-cnt+1
 
 			cnt.w1 <- cccObj$scoreMtx[idx,"w1FStep.cnt"]	# fv in fStep
-			if( fCutU.hasPtn(c( , ),aFStep) )	cnt.w1<-cnt.w1+1
-			if( 1<sum(aFStep[1:2+ ]==c( , )) )	cnt.w1<-cnt.w1+1
-
+			if( fCutU.hasPtn(c( 3, 1 ),aFStep) )	cnt.w1<-cnt.w1+1	# -
+			if( fCutU.hasPtn(c( 1,-1 ),aFStep) )	cnt.w1<-cnt.w1+1
+			# -------------------------------------------------------------------------------------
+			#     FV :    -15 (2)   0 (2)   1 (4)   5 (2) 
 			cnt.w2 <- 0
-			if( 1<sum( aFStep[c(,)]*c(,)==aFStep[c(,)] ) )	cnt.w2<-cnt.w2+1
-			if( aFStep[ ]==sum(aFStep[c( , )]) )	cnt.w2<-cnt.w2+1
-			if( sum(aFStep[c( , )])==sum(aFStep[c( , )]) )	cnt.w2<-cnt.w2+1	# 
+			if( 1<sum( aFStep[c(1,3)]*c( 1,-2)==aFStep[c(2,6)] ) )	cnt.w2<-cnt.w2+1
+			if( aFStep[4]==sum(aFStep[c(1,6)]) )	cnt.w2<-cnt.w2+1
+			if( aFStep[4]==sum(aFStep[c(2,6)]) )	cnt.w2<-cnt.w2+1
+			if( aFStep[3]==sum(aFStep[c(1,4,6)]) )	cnt.w2<-cnt.w2+1
+			if( aFStep[3]==sum(aFStep[c(2,4,6)]) )	cnt.w2<-cnt.w2+1
 
 			cntMtx[idx,"fStep.w1"] <- cnt.w1	;cntMtx[idx,"fStep.w2"] <- cnt.w2
 			cntMtx[idx,"fStep"] <- cnt + cnt.w1 + cnt.w2
@@ -1948,7 +2043,7 @@ fCutCnt.nextCStepBin <- function( gEnv ,allIdxF ,rpt=FALSE ){
 
 } # fCutCnt.nextCStepBin()
 
-# UNdone
+# done
 fCutCnt.nextFStepBin <- function( gEnv ,allIdxF ,rpt=FALSE ){
 
 	flgCnt <- rep( 0 ,length(allIdxF) )
@@ -1963,18 +2058,15 @@ fCutCnt.nextFStepBin <- function( gEnv ,allIdxF ,rpt=FALSE ){
 	# -- conditional
 	auxCntMtx <- matrix( 0 ,nrow=length(allIdxF) ,ncol=2 )	;colnames(auxCntMtx)=c("auxZW","auxQuo")
     flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
-					if( (aZoid[6]-aZoid[1]) %in% c( , ) ) return( FALSE )
+					if( (aZoid[6]-aZoid[1]) %in% c( 34 ) ) return( FALSE )
 					return( TRUE )
 				})	;kIdx<-anaFlagFnd(!flag,rpt)
 	auxCntMtx[,"auxZW"] <- !flag
     flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
 					quoSize <- fCutU.getQuoObj( aZoid )$size
-					if( all(quoSize[1:3+0]==c(,,)) ) return(FALSE)	# next rebind of ,,
-					if( all(quoSize[1:3+1]==c(,,)) ) return(FALSE)	# next rebind of ,,
-					if( all(quoSize[1:3+2]==c(,,)) ) return(FALSE)	# next rebind of ,,
-					if( all(quoSize[1:3+0]==c(,,)) ) return(FALSE)	# next rebind of ,,
-					if( all(quoSize[1:3+1]==c(,,)) ) return(FALSE)	# next rebind of ,,
-					if( all(quoSize[1:3+2]==c(,,)) ) return(FALSE)	# next rebind of ,,
+					if( all(quoSize[1:3+2]==c(0,3,1)) ) return(FALSE)	# next rebind of 1,2,0	reverse
+					if( all(quoSize[1:3+1]==c(1,2,1)) ) return(FALSE)	# next rebind of 2,1,1
+					if( all(quoSize[1:3+2]==c(1,2,1)) ) return(FALSE)	# next rebind of 1,1,2	reverse
 					return( TRUE )
 				})	;kIdx<-anaFlagFnd(!flag,rpt)
 	auxCntMtx[,"auxQuo"] <- !flag
@@ -1991,9 +2083,9 @@ fCutCnt.nextFStepBin <- function( gEnv ,allIdxF ,rpt=FALSE ){
 	
 		if( TRUE ){	# raw
 			cnt <- 0
-			if( aZoid[1]%in%c(       ) ) cnt<-cnt+1
-			if( aZoid[2]%in%c(       ) ) cnt<-cnt+1
-			if( aZoid[3]%in%c(       ) ) cnt<-cnt+1
+			if( aZoid[1]%in%c( 12, 2     ) ) cnt<-cnt+1
+			if( aZoid[2]%in%c(  7,19     ) ) cnt<-cnt+1
+			if( aZoid[3]%in%c( 16    ) ) cnt<-cnt+1
 			if( aZoid[4]%in%c(       ) ) cnt<-cnt+1
 			if( aZoid[5]%in%c(       ) ) cnt<-cnt+1
 			if( aZoid[6]%in%c(       ) ) cnt<-cnt+1
@@ -2004,51 +2096,75 @@ fCutCnt.nextFStepBin <- function( gEnv ,allIdxF ,rpt=FALSE ){
 		}
 		if( TRUE ){ # rawFV		# anaMtx.freqVal( stdMI$rawTail )
 			cnt <- 0
-			# < >
-			if( fCutU.hasPtn(c(  ,  ),aZoid) ) cnt<-cnt+1
+			# < 2>
+			if( fCutU.hasPtn(c(  2,NA,19    ),aZoid) ) cnt<-cnt+1
+			if( fCutU.hasPtn(c(  2,NA,NA,26 ),aZoid) ) cnt<-cnt+1
+			# < 7>
+			if( fCutU.hasPtn(c(  7,26,22,20,32 ),aZoid,thld=3,fixIdx=1) ) cnt<-cnt+1
+			# <12>
+			if( fCutU.hasPtn(c( 12,19             ),aZoid) ) cnt<-cnt+1
+			if( fCutU.hasPtn(c( 12,NA,15,24,20,33 ),aZoid,thld=3,fixIdx=1) ) cnt<-cnt+1
+			# <18>
+			if( fCutU.hasPtn(c( 18,NA,30 ),aZoid) ) cnt<-cnt+1
+			# <19>
+			if( fCutU.hasPtn(c(  2,NA,19    ),aZoid) ) cnt<-cnt+1
+			if( fCutU.hasPtn(c( 12,19             ),aZoid) ) cnt<-cnt+1
+			if( fCutU.hasPtn(c( 19,33,33,42 ),aZoid,thld=3,fixIdx=1) ) cnt<-cnt+1
+			# <28>
+			# <29>
+			if( fCutU.hasPtn(c( 17,NA,29 ),aZoid) ) cnt<-cnt+1
+			# <36>
+			if( fCutU.hasPtn(c(  3,NA,NA,NA,NA,36 ),aZoid) ) cnt<-cnt+1
+			if( fCutU.hasPtn(c(    12,23,31,34,36 ),aZoid,thld=3,fixIdx=5) ) cnt<-cnt+1
 			cntMtx[idx,"rawFV"] <- cnt
 		}
 		if( TRUE ){ # rem		# u0.zoidMtx_ana( stdMI$rawTail%%10 )
 			cnt <- 0
-			if( fCutU.remFilt(aZoid[1],c(         ),c(  )) ) cnt<-cnt+1 # 1
-			if( fCutU.remFilt(aZoid[2],c(         ),c(  )) ) cnt<-cnt+1 # 2
-			if( fCutU.remFilt(aZoid[3],c(         ),c(  )) ) cnt<-cnt+1 # 3
-			if( fCutU.remFilt(aZoid[4],c(         ),c(  )) ) cnt<-cnt+1 # 4
-			if( fCutU.remFilt(aZoid[5],c(         ),c(  )) ) cnt<-cnt+1 # 5
-			if( fCutU.remFilt(aZoid[6],c(         ),c(  )) ) cnt<-cnt+1 # 6
+			if( fCutU.remFilt(aZoid[1],c( 2,0      ),c( 12, 2 )) ) cnt<-cnt+1 # 1
+			if( fCutU.remFilt(aZoid[2],c( 7,9,8    ),c(  7,19 )) ) cnt<-cnt+1 # 2
+			if( fCutU.remFilt(aZoid[3],c( 6        ),c( 16    )) ) cnt<-cnt+1 # 3
+			if( fCutU.remFilt(aZoid[4],c( 4        ),c(       )) ) cnt<-cnt+1 # 4
+			if( fCutU.remFilt(aZoid[5],c( 0        ),c(       )) ) cnt<-cnt+1 # 5
+			if( fCutU.remFilt(aZoid[6],c( 4        ),c(       )) ) cnt<-cnt+1 # 6
 			cntMtx[idx,"rem"] <- cnt
 		}
 		if( TRUE ){ # cStep		#	u0.zoidCMtx_ana.rpt( stdMI$rawTail )
 			cnt <- 0
-			if( aCStep[1]%in%c(         ) ) cnt<-cnt+1
+			if( aCStep[1]%in%c(  7, 6   ) ) cnt<-cnt+1
 			if( aCStep[2]%in%c(         ) ) cnt<-cnt+1
-			if( aCStep[3]%in%c(         ) ) cnt<-cnt+1
-			if( aCStep[4]%in%c(         ) ) cnt<-cnt+1
+			if( aCStep[3]%in%c(  9, 1   ) ) cnt<-cnt+1
+			if( aCStep[4]%in%c(  7      ) ) cnt<-cnt+1
 			if( aCStep[5]%in%c(         ) ) cnt<-cnt+1
 
 			cnt.w1 <- cccObj$scoreMtx[idx,"w1CStep.cnt"]	# fv in cStep
-			if( fCutU.hasPtn(c( , ),aCStep) )	cnt.w1<-cnt.w1+1
-			if( 1<sum(aCStep[1:2+ ]==c( , )) )	cnt.w1<-cnt.w1+1
+			if( fCutU.hasPtn(c( 10, 2 ),aCStep) )	cnt.w1<-cnt.w1+1
+			if( 1<sum(aCStep[1:2+3]==c(  5,12 )) )	cnt.w1<-cnt.w1+1
+			if( fCutU.hasPtn(c(  5,12 ),aCStep) )	cnt.w1<-cnt.w1+1
+			if( 1<sum(aCStep[1:2+0]==c( 8, 3 )) )	cnt.w1<-cnt.w1+1
+			if( fCutU.hasPtn(c( 2, 7 ),aCStep) )	cnt.w1<-cnt.w1+1	# -
+			if( fCutU.hasPtn(c( 5, 6 ),aCStep) )	cnt.w1<-cnt.w1+1
+			# -------------------------------------------------------------------------------------
+			#     FV :    1 (4)   2 (4)   4 (3)   5 (4)   6 (3)   8 (2)   10 (2)   12 (2) 
 
 			cnt.w2 <- 0
-			if( 1<sum( aCStep[c(,)]*c(,)==aCStep[c( , )] ) )	cnt.w2<-cnt.w2+1
-			if( aCStep[ ]==sum(aCStep[c( , )]) )	cnt.w2<-cnt.w2+1
-			if( sum(aCStep[c( , )])==sum(aCStep[c( , )]) )	cnt.w2<-cnt.w2+1	# 
+			if( 1<sum( aCStep[ 4 ]*c(3,5,4)==aCStep[c(1,3,5)] ) )	cnt.w2<-cnt.w2+1
+			if( aCStep[3]==sum(aCStep[c(4,5)]) )	cnt.w2<-cnt.w2+1
 
 			cntMtx[idx,"cStep.w1"] <- cnt.w1	;cntMtx[idx,"cStep.w2"] <- cnt.w2
 			cntMtx[idx,"cStep"] <- cnt + cnt.w1 + cnt.w2
 
-			# Raw value(reb)       |cStep          |fStep                   |QuoSize   |QuoTbl 
-			#  Templete  number    | for sample    |                        |0 1 2 2 1 |1 2 2 1
-			#  Templete  number    | for sample    | -9  -9  -9  -6  -6   2 |1 2 2 0 1 |1 2 2 1
-			#  Templete  number( ) | for sample    |  8   6   7   0  -2  -8 |1 1 3 1 0 |1 1 3 1
-			#  Templete  number( ) | for sample    |  3   0   4   2  12   4 |0 2 2 1 1 |2 2 1 1
-			#  Templete  number( ) | for sample    | -5  -9   0   3  -5  -2 |2 0 2 2 0 |2 2 2
-			#  Templete  number( ) | for sample    |  1   6  -3   2  -1   0 |1 1 1 3 0 |1 1 1 3
+			#     Raw value(reb)       |cStep          |fStep                   |QuoSize   |QuoTbl 
+			#      6  7 12 28 38 40    | 1  5 16 10  2 |                        |2 1 1 1 1 |2 1 1 1 1
+			#      1  2 15 19 24 36    | 1 13  4  5 12 | -5  -5   3  -9 -14  -4 |2 2 1 1 0 |2 2 1 1
+			#     10 14 16 18 27 28    | 4  2  2  9  1 |  9  12   1  -1   3  -8 |0 4 2 0 0 |4 2
+			#      2  7 19 25 29 36    | 5 12  6  4  7 | -8  -7   3   7   2   8 |2 1 2 1 0 |2 1 2 1
+			#     12 17 23 34 42 45    | 5  6 11  8  3 | 10  10   4   9  13   9 |0 2 1 1 2 |2 1 1 2
+			#     12 18 19 29 31 39(1) | 6  1 10  2  8 |  0   1  -4  -5 -11  -6 |0 3 1 2 0 |3 1 2
+
 		}
 		if( TRUE ){ # fStep		#	u0.zoidFMtx_ana.rpt( stdMI$rawTail )
 			cnt <- 0
-			if( aFStep[1]%in%c(        ) ) cnt<-cnt+1
+			if( aFStep[1]%in%c( 11, 5,-2 ) ) cnt<-cnt+1
 			if( aFStep[2]%in%c(        ) ) cnt<-cnt+1
 			if( aFStep[3]%in%c(        ) ) cnt<-cnt+1
 			if( aFStep[4]%in%c(        ) ) cnt<-cnt+1
@@ -2056,13 +2172,16 @@ fCutCnt.nextFStepBin <- function( gEnv ,allIdxF ,rpt=FALSE ){
 			if( aFStep[6]%in%c(        ) ) cnt<-cnt+1
 
 			cnt.w1 <- cccObj$scoreMtx[idx,"w1FStep.cnt"]	# fv in fStep
-			if( fCutU.hasPtn(c( , ),aFStep) )	cnt.w1<-cnt.w1+1
-			if( 1<sum(aFStep[1:2+ ]==c( , )) )	cnt.w1<-cnt.w1+1
+			if( fCutU.hasPtn(c( -3, -5 ),aFStep) )	cnt.w1<-cnt.w1+1	# -
+			if( fCutU.hasPtn(c(  9, 14 ),aFStep) )	cnt.w1<-cnt.w1+1
+			# -------------------------------------------------------------------------------------
+			#     FV :    -8 (2)   -5 (3)   -4 (2)   1 (2)   3 (3)   9 (3)   10 (2) 
 
 			cnt.w2 <- 0
-			if( 1<sum( aFStep[c(,)]*c(,)==aFStep[c(,)] ) )	cnt.w2<-cnt.w2+1
-			if( aFStep[ ]==sum(aFStep[c( , )]) )	cnt.w2<-cnt.w2+1
-			if( sum(aFStep[c( , )])==sum(aFStep[c( , )]) )	cnt.w2<-cnt.w2+1	# 
+			if( aFStep[3]==sum(aFStep[c(2,4)]) )	cnt.w2<-cnt.w2+1
+			if( aFStep[4]==sum(aFStep[c(2,6)]) )	cnt.w2<-cnt.w2+1
+			if( aFStep[5]==sum(aFStep[c(4,6)]) )	cnt.w2<-cnt.w2+1
+			if( sum(aFStep[c(3,6)])==sum(aFStep[c(1,5)]) )	cnt.w2<-cnt.w2+1	# -10
 
 			cntMtx[idx,"fStep.w1"] <- cnt.w1	;cntMtx[idx,"fStep.w2"] <- cnt.w2
 			cntMtx[idx,"fStep"] <- cnt + cnt.w1 + cnt.w2
@@ -2074,7 +2193,7 @@ fCutCnt.nextFStepBin <- function( gEnv ,allIdxF ,rpt=FALSE ){
 
 }	# fCutCnt.nextFStepBin( )
 
-# UNdone
+# done
 fCutCnt.nextColVal_1 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 
 	flgCnt <- rep( 0 ,length(allIdxF) )
@@ -2089,18 +2208,15 @@ fCutCnt.nextColVal_1 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 	# -- conditional
 	auxCntMtx <- matrix( 0 ,nrow=length(allIdxF) ,ncol=2 )	;colnames(auxCntMtx)=c("auxZW","auxQuo")
     flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
-					if( (aZoid[6]-aZoid[1]) %in% c( , ) ) return( FALSE )
+					if( (aZoid[6]-aZoid[1]) %in% c( 19, 32 ) ) return( FALSE )
 					return( TRUE )
 				})	;kIdx<-anaFlagFnd(!flag,rpt)
 	auxCntMtx[,"auxZW"] <- !flag
     flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
 					quoSize <- fCutU.getQuoObj( aZoid )$size
-					if( all(quoSize[1:3+0]==c(,,)) ) return(FALSE)	# next rebind of ,,
-					if( all(quoSize[1:3+1]==c(,,)) ) return(FALSE)	# next rebind of ,,
-					if( all(quoSize[1:3+2]==c(,,)) ) return(FALSE)	# next rebind of ,,
-					if( all(quoSize[1:3+0]==c(,,)) ) return(FALSE)	# next rebind of ,,
-					if( all(quoSize[1:3+1]==c(,,)) ) return(FALSE)	# next rebind of ,,
-					if( all(quoSize[1:3+2]==c(,,)) ) return(FALSE)	# next rebind of ,,
+					if( all(quoSize[1:3+0]==c(0,1,4)) ) return(FALSE)	# next rebind of 0,2,1
+					if( all(quoSize[1:3+1]==c(0,2,1)) ) return(FALSE)	# next rebind of 2,1,1
+					if( all(quoSize[1:3+2]==c(1,2,0)) ) return(FALSE)	# next rebind of 1,1,2 reverse
 					return( TRUE )
 				})	;kIdx<-anaFlagFnd(!flag,rpt)
 	auxCntMtx[,"auxQuo"] <- !flag
@@ -2117,9 +2233,9 @@ fCutCnt.nextColVal_1 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 	
 		if( TRUE ){	# raw
 			cnt <- 0
-			if( aZoid[1]%in%c(       ) ) cnt<-cnt+1
+			if( aZoid[1]%in%c( 12    ) ) cnt<-cnt+1
 			if( aZoid[2]%in%c(       ) ) cnt<-cnt+1
-			if( aZoid[3]%in%c(       ) ) cnt<-cnt+1
+			if( aZoid[3]%in%c( 27    ) ) cnt<-cnt+1
 			if( aZoid[4]%in%c(       ) ) cnt<-cnt+1
 			if( aZoid[5]%in%c(       ) ) cnt<-cnt+1
 			if( aZoid[6]%in%c(       ) ) cnt<-cnt+1
@@ -2130,65 +2246,99 @@ fCutCnt.nextColVal_1 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 		}
 		if( TRUE ){ # rawFV		# anaMtx.freqVal( stdMI$rawTail )
 			cnt <- 0
-			# < >
-			if( fCutU.hasPtn(c(  ,  ),aZoid) ) cnt<-cnt+1
+			# < 2>
+			if( fCutU.hasPtn(c(  2, 8             ),aZoid) ) cnt<-cnt+1
+			if( fCutU.hasPtn(c(  2,NA,31,38,39,27 ),aZoid,thld=3,fixIdx=1) ) cnt<-cnt+1
+			# < 7>
+			if( fCutU.hasPtn(c(  7,26,31 ),aZoid) ) cnt<-cnt+1
+			# <12>			# <17>
+			# <19>
+			if( fCutU.hasPtn(c(  1,NA,19          ),aZoid) ) cnt<-cnt+1
+			if( fCutU.hasPtn(c(     6,19          ),aZoid) ) cnt<-cnt+1
+			if( fCutU.hasPtn(c(       19,NA,28    ),aZoid) ) cnt<-cnt+1
+			if( fCutU.hasPtn(c(       19,23,NA,31 ),aZoid) ) cnt<-cnt+1
+			# <21>			# <25>
+			# <27>
+			if( fCutU.hasPtn(c(          27,NA,36 ),aZoid) ) cnt<-cnt+1
+			# <36>
+			if( fCutU.hasPtn(c(          27,NA,36 ),aZoid) ) cnt<-cnt+1
+			# <45>
+			if( fCutU.hasPtn(c( 22,28,39,NA,NA,45 ),aZoid,thld=3,fixIdx=6) ) cnt<-cnt+1
 			cntMtx[idx,"rawFV"] <- cnt
 		}
 		if( TRUE ){ # rem		# u0.zoidMtx_ana( stdMI$rawTail%%10 )
 			cnt <- 0
-			if( fCutU.remFilt(aZoid[1],c(         ),c(  )) ) cnt<-cnt+1 # 1
-			if( fCutU.remFilt(aZoid[2],c(         ),c(  )) ) cnt<-cnt+1 # 2
-			if( fCutU.remFilt(aZoid[3],c(         ),c(  )) ) cnt<-cnt+1 # 3
-			if( fCutU.remFilt(aZoid[4],c(         ),c(  )) ) cnt<-cnt+1 # 4
-			if( fCutU.remFilt(aZoid[5],c(         ),c(  )) ) cnt<-cnt+1 # 5
-			if( fCutU.remFilt(aZoid[6],c(         ),c(  )) ) cnt<-cnt+1 # 6
+			if( fCutU.remFilt(aZoid[1],c( 2       ),c( 12 )) ) cnt<-cnt+1 # 1
+			if( fCutU.remFilt(aZoid[2],c( 7,6,4   ),c(    )) ) cnt<-cnt+1 # 2
+			if( fCutU.remFilt(aZoid[3],c( 7,0     ),c( 27 )) ) cnt<-cnt+1 # 3
+			if( fCutU.remFilt(aZoid[4],c( 3       ),c(    )) ) cnt<-cnt+1 # 4
+			if( fCutU.remFilt(aZoid[5],c( 7,2,4   ),c(    )) ) cnt<-cnt+1 # 5
+			if( fCutU.remFilt(aZoid[6],c( 7,4,0   ),c(    )) ) cnt<-cnt+1 # 6
 			cntMtx[idx,"rem"] <- cnt
 		}
 		if( TRUE ){ # cStep		#	u0.zoidCMtx_ana.rpt( stdMI$rawTail )
 			cnt <- 0
-			if( aCStep[1]%in%c(         ) ) cnt<-cnt+1
-			if( aCStep[2]%in%c(         ) ) cnt<-cnt+1
-			if( aCStep[3]%in%c(         ) ) cnt<-cnt+1
-			if( aCStep[4]%in%c(         ) ) cnt<-cnt+1
-			if( aCStep[5]%in%c(         ) ) cnt<-cnt+1
+			if( aCStep[1]%in%c(  5, 4, 3, 6     ) ) cnt<-cnt+1
+			if( aCStep[2]%in%c(  4       ) ) cnt<-cnt+1
+			if( aCStep[3]%in%c(  3       ) ) cnt<-cnt+1
+			if( aCStep[4]%in%c(          ) ) cnt<-cnt+1
+			if( aCStep[5]%in%c(          ) ) cnt<-cnt+1
 
 			cnt.w1 <- cccObj$scoreMtx[idx,"w1CStep.cnt"]	# fv in cStep
-			if( fCutU.hasPtn(c( , ),aCStep) )	cnt.w1<-cnt.w1+1
-			if( 1<sum(aCStep[1:2+ ]==c( , )) )	cnt.w1<-cnt.w1+1
+			if( fCutU.hasPtn(c( 4, 1 ),aCStep) )	cnt.w1<-cnt.w1+1
+			if( 1<sum(aCStep[1:2+1]==c(  5,11 )) )	cnt.w1<-cnt.w1+1
+			if( fCutU.hasPtn(c( 8, 3 ),aCStep) )	cnt.w1<-cnt.w1+1
+			if( 1<sum(aCStep[1:2+3]==c( 14, 3 )) )	cnt.w1<-cnt.w1+1
+			if( fCutU.hasPtn(c( 5, 6 ),aCStep) )	cnt.w1<-cnt.w1+1
+			if( 1<sum(aCStep[1:2+0]==c( 4, 4 )) )	cnt.w1<-cnt.w1+1
+			if( fCutU.hasPtn(c( 11, 8 ),aCStep) )	cnt.w1<-cnt.w1+1
+			if( 1<sum(aCStep[1:2+2]==c(  6,14 )) )	cnt.w1<-cnt.w1+1	#	unique <11, 8, 3> <5 11  8  3 - 6 11  8  3> 
+			if( fCutU.hasPtn(c(  8, 3 ),aCStep) )	cnt.w1<-cnt.w1+1
+			if( 1<sum(aCStep[1:2+3]==c( 14, 3  )) )	cnt.w1<-cnt.w1+1
+			if( fCutU.hasPtn(c( 3, 7 ),aCStep) )	cnt.w1<-cnt.w1+1	# -
+			if( fCutU.hasPtn(c( 7,11 ),aCStep) )	cnt.w1<-cnt.w1+1
+			# -------------------------------------------------------------------------------------
+			#     FV :    1 (3)   3 (3)   4 (4)   5 (6)   6 (3)   7 (2)   8 (2)   11 (3) 
 
 			cnt.w2 <- 0
-			if( 1<sum( aCStep[c(,)]*c(,)==aCStep[c( , )] ) )	cnt.w2<-cnt.w2+1
-			if( aCStep[ ]==sum(aCStep[c( , )]) )	cnt.w2<-cnt.w2+1
-			if( sum(aCStep[c( , )])==sum(aCStep[c( , )]) )	cnt.w2<-cnt.w2+1	# 
+			if( 1<sum( aCStep[c(1,3)]*c(1,1)==aCStep[c(2,4)] ) )	cnt.w2<-cnt.w2+1
+			if( aCStep[5]==sum(aCStep[c(1,2,3)]) )	cnt.w2<-cnt.w2+1
+			if( aCStep[5]==sum(aCStep[c(1,2,4)]) )	cnt.w2<-cnt.w2+1
 
 			cntMtx[idx,"cStep.w1"] <- cnt.w1	;cntMtx[idx,"cStep.w2"] <- cnt.w2
 			cntMtx[idx,"cStep"] <- cnt + cnt.w1 + cnt.w2
 
-			# Raw value(reb)       |cStep          |fStep                   |QuoSize   |QuoTbl 
-			#  Templete  number    | for sample    |                        |0 1 2 2 1 |1 2 2 1
-			#  Templete  number    | for sample    | -9  -9  -9  -6  -6   2 |1 2 2 0 1 |1 2 2 1
-			#  Templete  number( ) | for sample    |  8   6   7   0  -2  -8 |1 1 3 1 0 |1 1 3 1
-			#  Templete  number( ) | for sample    |  3   0   4   2  12   4 |0 2 2 1 1 |2 2 1 1
-			#  Templete  number( ) | for sample    | -5  -9   0   3  -5  -2 |2 0 2 2 0 |2 2 2
-			#  Templete  number( ) | for sample    |  1   6  -3   2  -1   0 |1 1 1 3 0 |1 1 1 3
+			#     Raw value(reb)       |cStep          |fStep                   |QuoSize   |QuoTbl 
+			#      2  6  7 12 19 45    | 4  1  5  7 26 |                        |3 2 0 0 1 |3 2 1
+			#      3  8 19 27 30 41(1) | 5 11  8  3 11 |  1   2  12  15  11  -4 |2 1 1 1 1 |2 1 1 1 1
+			#      2  7 19 25 29 36(1) | 5 12  6  4  7 | -1  -1   0  -2  -1  -5 |2 1 2 1 0 |2 1 2 1
+			#     10 15 21 35 38 43    | 5  6 14  3  5 |  8   8   2  10   9   7 |0 2 1 2 1 |2 1 2 1
+			#     12 17 23 34 42 45    | 5  6 11  8  3 |  2   2   2  -1   4   2 |0 2 1 1 2 |2 1 1 2
+			#     17 21 25 26 27 36(1) | 4  4  1  1  9 |  5   4   2  -8 -15  -9 |0 1 4 1 0 |1 4 1
+
 		}
 		if( TRUE ){ # fStep		#	u0.zoidFMtx_ana.rpt( stdMI$rawTail )
 			cnt <- 0
-			if( aFStep[1]%in%c(        ) ) cnt<-cnt+1
-			if( aFStep[2]%in%c(        ) ) cnt<-cnt+1
-			if( aFStep[3]%in%c(        ) ) cnt<-cnt+1
-			if( aFStep[4]%in%c(        ) ) cnt<-cnt+1
-			if( aFStep[5]%in%c(        ) ) cnt<-cnt+1
-			if( aFStep[6]%in%c(        ) ) cnt<-cnt+1
+			if( aFStep[1]%in%c(          ) ) cnt<-cnt+1
+			if( aFStep[2]%in%c(          ) ) cnt<-cnt+1
+			if( aFStep[3]%in%c(  2, 0    ) ) cnt<-cnt+1
+			if( aFStep[4]%in%c(  0, 2, 8 ) ) cnt<-cnt+1
+			if( aFStep[5]%in%c(          ) ) cnt<-cnt+1
+			if( aFStep[6]%in%c( -1       ) ) cnt<-cnt+1
 
 			cnt.w1 <- cccObj$scoreMtx[idx,"w1FStep.cnt"]	# fv in fStep
-			if( fCutU.hasPtn(c( , ),aFStep) )	cnt.w1<-cnt.w1+1
-			if( 1<sum(aFStep[1:2+ ]==c( , )) )	cnt.w1<-cnt.w1+1
+			if( fCutU.hasPtn(c( 4, 2 ),aFStep) )	cnt.w1<-cnt.w1+1
+			if( 1<sum(aFStep[1:2+4]==c( -15, -9 )) )	cnt.w1<-cnt.w1+1
+			if( fCutU.hasPtn(c( 2, 2 ),aFStep) )	cnt.w1<-cnt.w1+1	# -
+			# -------------------------------------------------------------------------------------
+			#     FV :    -1 (4)   2 (7)   4 (2)   8 (2) 
 
 			cnt.w2 <- 0
-			if( 1<sum( aFStep[c(,)]*c(,)==aFStep[c(,)] ) )	cnt.w2<-cnt.w2+1
-			if( aFStep[ ]==sum(aFStep[c( , )]) )	cnt.w2<-cnt.w2+1
-			if( sum(aFStep[c( , )])==sum(aFStep[c( , )]) )	cnt.w2<-cnt.w2+1	# 
+			if( 1<sum( aFStep[ 3 ]*c(2,-4)==aFStep[c(2,4)] ) )	cnt.w2<-cnt.w2+1
+			if( 1<sum( aFStep[c(1,3)]*c(-3,2)==aFStep[c(5,2)] ) )	cnt.w2<-cnt.w2+1
+			if( aFStep[4]==sum(aFStep[c(1,3,5)]) )	cnt.w2<-cnt.w2+1
+			if( aFStep[5]==sum(aFStep[c(3,4,6)]) )	cnt.w2<-cnt.w2+1
+			if( sum(aFStep[c(2,4)])==sum(aFStep[c(2,6)]) )	cnt.w2<-cnt.w2+1	# -4
 
 			cntMtx[idx,"fStep.w1"] <- cnt.w1	;cntMtx[idx,"fStep.w2"] <- cnt.w2
 			cntMtx[idx,"fStep"] <- cnt + cnt.w1 + cnt.w2
@@ -2200,7 +2350,7 @@ fCutCnt.nextColVal_1 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 
 } # fCutCnt.nextColVal_1()
 
-# UNdone
+# done
 fCutCnt.nextColVal_2 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 
 	flgCnt <- rep( 0 ,length(allIdxF) )
@@ -2215,18 +2365,14 @@ fCutCnt.nextColVal_2 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 	# -- conditional
 	auxCntMtx <- matrix( 0 ,nrow=length(allIdxF) ,ncol=2 )	;colnames(auxCntMtx)=c("auxZW","auxQuo")
     flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
-					if( (aZoid[6]-aZoid[1]) %in% c( , ) ) return( FALSE )
+					if( (aZoid[6]-aZoid[1]) %in% c( 32,30 ) ) return( FALSE )
 					return( TRUE )
 				})	;kIdx<-anaFlagFnd(!flag,rpt)
 	auxCntMtx[,"auxZW"] <- !flag
     flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
 					quoSize <- fCutU.getQuoObj( aZoid )$size
-					if( all(quoSize[1:3+0]==c(,,)) ) return(FALSE)	# next rebind of ,,
-					if( all(quoSize[1:3+1]==c(,,)) ) return(FALSE)	# next rebind of ,,
-					if( all(quoSize[1:3+2]==c(,,)) ) return(FALSE)	# next rebind of ,,
-					if( all(quoSize[1:3+0]==c(,,)) ) return(FALSE)	# next rebind of ,,
-					if( all(quoSize[1:3+1]==c(,,)) ) return(FALSE)	# next rebind of ,,
-					if( all(quoSize[1:3+2]==c(,,)) ) return(FALSE)	# next rebind of ,,
+					if( all(quoSize[1:3+1]==c(1,0,1)) ) return(FALSE)	# next rebind of 1,2,2
+					if( all(quoSize[1:3+2]==c(1,0,1)) ) return(FALSE)	# next rebind of 2,2,1 reveres
 					return( TRUE )
 				})	;kIdx<-anaFlagFnd(!flag,rpt)
 	auxCntMtx[,"auxQuo"] <- !flag
@@ -2243,12 +2389,12 @@ fCutCnt.nextColVal_2 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 	
 		if( TRUE ){	# raw
 			cnt <- 0
-			if( aZoid[1]%in%c(       ) ) cnt<-cnt+1
+			if( aZoid[1]%in%c( 10,15 ) ) cnt<-cnt+1
 			if( aZoid[2]%in%c(       ) ) cnt<-cnt+1
 			if( aZoid[3]%in%c(       ) ) cnt<-cnt+1
 			if( aZoid[4]%in%c(       ) ) cnt<-cnt+1
-			if( aZoid[5]%in%c(       ) ) cnt<-cnt+1
-			if( aZoid[6]%in%c(       ) ) cnt<-cnt+1
+			if( aZoid[5]%in%c( 12    ) ) cnt<-cnt+1
+			if( aZoid[6]%in%c( 42,45 ) ) cnt<-cnt+1
 			cntMtx[idx,"raw"] <- cnt
 
 			cnt <- 0
@@ -2256,65 +2402,98 @@ fCutCnt.nextColVal_2 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 		}
 		if( TRUE ){ # rawFV		# anaMtx.freqVal( stdMI$rawTail )
 			cnt <- 0
-			# < >
-			if( fCutU.hasPtn(c(  ,  ),aZoid) ) cnt<-cnt+1
+			# <10>
+			if( fCutU.hasPtn(c( 10,NA,NA,NA,NA,42 ),aZoid) ) cnt<-cnt+1
+			if( fCutU.hasPtn(c( 10,31,32,42       ),aZoid,thld=3,fixIdx=1) ) cnt<-cnt+1
+			# <12>			# <18>
+			# <22>
+			if( fCutU.hasPtn(c(       22,NA,34 ),aZoid) ) cnt<-cnt+1
+			if( fCutU.hasPtn(c(  7,NA,22,37    ),aZoid) ) cnt<-cnt+1
+			# <29>
+			if( fCutU.hasPtn(c(    29,NA,NA,39    ),aZoid) ) cnt<-cnt+1
+			if( fCutU.hasPtn(c(  6,29,34,NA,NA,37 ),aZoid,thld=3,fixIdx=2) ) cnt<-cnt+1
+			# <30>
+			if( fCutU.hasPtn(c( 24,15,30,33,45 ),aZoid,thld=3,fixIdx=3) ) cnt<-cnt+1
+			# <33>
+			if( fCutU.hasPtn(c(  1,22,33 ),aZoid) ) cnt<-cnt+1
+			# <35>
+			if( fCutU.hasPtn(c(          35,41 ),aZoid) ) cnt<-cnt+1
+			if( fCutU.hasPtn(c(    17,27,35    ),aZoid,thld=3,fixIdx=3) ) cnt<-cnt+1
+			# <39>
+			if( fCutU.hasPtn(c(    29,NA,NA,39    ),aZoid) ) cnt<-cnt+1
+			if( fCutU.hasPtn(c(  6,NA,34,29,39 ),aZoid,thld=3,fixIdx=5) ) cnt<-cnt+1
+			# <42>
+			if( fCutU.hasPtn(c( 10,NA,NA,NA,NA,42 ),aZoid) ) cnt<-cnt+1
+			if( fCutU.hasPtn(c( 31,32,NA,NA,42 ),aZoid) ) cnt<-cnt+1
+			# <43>
+			if( fCutU.hasPtn(c(  1,24,29,31,43 ),aZoid,thld=3,fixIdx=5) ) cnt<-cnt+1
 			cntMtx[idx,"rawFV"] <- cnt
 		}
 		if( TRUE ){ # rem		# u0.zoidMtx_ana( stdMI$rawTail%%10 )
 			cnt <- 0
-			if( fCutU.remFilt(aZoid[1],c(         ),c(  )) ) cnt<-cnt+1 # 1
-			if( fCutU.remFilt(aZoid[2],c(         ),c(  )) ) cnt<-cnt+1 # 2
-			if( fCutU.remFilt(aZoid[3],c(         ),c(  )) ) cnt<-cnt+1 # 3
-			if( fCutU.remFilt(aZoid[4],c(         ),c(  )) ) cnt<-cnt+1 # 4
-			if( fCutU.remFilt(aZoid[5],c(         ),c(  )) ) cnt<-cnt+1 # 5
-			if( fCutU.remFilt(aZoid[6],c(         ),c(  )) ) cnt<-cnt+1 # 6
+			if( fCutU.remFilt(aZoid[1],c( 0,5      ),c( 10,15 )) ) cnt<-cnt+1 # 1
+			if( fCutU.remFilt(aZoid[2],c( 1,7      ),c(       )) ) cnt<-cnt+1 # 2
+			if( fCutU.remFilt(aZoid[3],c( 2,3,0    ),c(       )) ) cnt<-cnt+1 # 3
+			if( fCutU.remFilt(aZoid[4],c( 3        ),c(       )) ) cnt<-cnt+1 # 4
+			if( fCutU.remFilt(aZoid[5],c( 3,6,2    ),c( 12    )) ) cnt<-cnt+1 # 5
+			if( fCutU.remFilt(aZoid[6],c( 2,5,4,7  ),c( 42,45 )) ) cnt<-cnt+1 # 6
 			cntMtx[idx,"rem"] <- cnt
 		}
 		if( TRUE ){ # cStep		#	u0.zoidCMtx_ana.rpt( stdMI$rawTail )
 			cnt <- 0
-			if( aCStep[1]%in%c(         ) ) cnt<-cnt+1
-			if( aCStep[2]%in%c(         ) ) cnt<-cnt+1
-			if( aCStep[3]%in%c(         ) ) cnt<-cnt+1
-			if( aCStep[4]%in%c(         ) ) cnt<-cnt+1
-			if( aCStep[5]%in%c(         ) ) cnt<-cnt+1
+			if( aCStep[1]%in%c(          ) ) cnt<-cnt+1
+			if( aCStep[2]%in%c(  1, 6, 5 ) ) cnt<-cnt+1
+			if( aCStep[3]%in%c(  2, 1    ) ) cnt<-cnt+1
+			if( aCStep[4]%in%c(  6, 1, 4 ) ) cnt<-cnt+1
+			if( aCStep[5]%in%c(  4, 5    ) ) cnt<-cnt+1
 
 			cnt.w1 <- cccObj$scoreMtx[idx,"w1CStep.cnt"]	# fv in cStep
-			if( fCutU.hasPtn(c( , ),aCStep) )	cnt.w1<-cnt.w1+1
-			if( 1<sum(aCStep[1:2+ ]==c( , )) )	cnt.w1<-cnt.w1+1
+			if( fCutU.hasPtn(c(  1, 6 ),aCStep) )	cnt.w1<-cnt.w1+1
+			if( 1<sum(aCStep[1:2+1]==c(  6, 6 )) )	cnt.w1<-cnt.w1+1
+			if( fCutU.hasPtn(c( 11, 1 ),aCStep) )	cnt.w1<-cnt.w1+1
+			if( 1<sum(aCStep[1:2+0]==c( 17, 3 )) )	cnt.w1<-cnt.w1+1
+			if( fCutU.hasPtn(c(  7, 2 ),aCStep) )	cnt.w1<-cnt.w1+1
+			if( 1<sum(aCStep[1:2+2]==c(  1, 8 )) )	cnt.w1<-cnt.w1+1
+			if( fCutU.hasPtn(c(  5, 7 ),aCStep) )	cnt.w1<-cnt.w1+1
+			if( 1<sum(aCStep[1:2+3]==c( 11, 1 )) )	cnt.w1<-cnt.w1+1
+			if( fCutU.hasPtn(c(  5, 2 ),aCStep) )	cnt.w1<-cnt.w1+1	# -
+			if( fCutU.hasPtn(c(  9, 2 ),aCStep) )	cnt.w1<-cnt.w1+1
+			# -------------------------------------------------------------------------------------
+			#     FV :    1 (7)   2 (4)   5 (2)   6 (4)   7 (3)   8 (2)   11 (2) 
 
 			cnt.w2 <- 0
-			if( 1<sum( aCStep[c(,)]*c(,)==aCStep[c( , )] ) )	cnt.w2<-cnt.w2+1
-			if( aCStep[ ]==sum(aCStep[c( , )]) )	cnt.w2<-cnt.w2+1
-			if( sum(aCStep[c( , )])==sum(aCStep[c( , )]) )	cnt.w2<-cnt.w2+1	# 
+			if( aCStep[3]==sum(aCStep[c(2,5)]) )	cnt.w2<-cnt.w2+1
+			if( sum(aCStep[c(1,2)])==sum(aCStep[c(4,5)]) )	cnt.w2<-cnt.w2+1	# 12
+			if( sum(aCStep[c(1,4)])==sum(aCStep[c(2,3,5)]) )	cnt.w2<-cnt.w2+1	# 15
 
 			cntMtx[idx,"cStep.w1"] <- cnt.w1	;cntMtx[idx,"cStep.w2"] <- cnt.w2
 			cntMtx[idx,"cStep"] <- cnt + cnt.w1 + cnt.w2
 
-			# Raw value(reb)       |cStep          |fStep                   |QuoSize   |QuoTbl 
-			#  Templete  number    | for sample    |                        |0 1 2 2 1 |1 2 2 1
-			#  Templete  number    | for sample    | -9  -9  -9  -6  -6   2 |1 2 2 0 1 |1 2 2 1
-			#  Templete  number( ) | for sample    |  8   6   7   0  -2  -8 |1 1 3 1 0 |1 1 3 1
-			#  Templete  number( ) | for sample    |  3   0   4   2  12   4 |0 2 2 1 1 |2 2 1 1
-			#  Templete  number( ) | for sample    | -5  -9   0   3  -5  -2 |2 0 2 2 0 |2 2 2
-			#  Templete  number( ) | for sample    |  1   6  -3   2  -1   0 |1 1 1 3 0 |1 1 1 3
+			#     Raw value(reb)       |cStep          |fStep                   |QuoSize   |QuoTbl 
+			#      8 13 20 22 23 36    | 5  7  2  1 13 |                        |1 1 3 1 0 |1 1 3 1
+			#     18 29 30 37 39 43    |11  1  7  2  4 | 10  16  10  15  16   7 |0 1 1 3 1 |1 1 3 1
+			#     12 29 32 33 39 40(2) |17  3  1  6  1 | -6   0   2  -4   0  -3 |0 1 1 3 1 |1 1 3 1
+			#     15 27 33 35 43 45(1) |12  6  2  8  2 |  3  -2   1   2   4   5 |0 1 1 2 2 |1 1 2 2
+			#     10 11 12 18 24 42    | 1  1  6  6 18 | -5 -16 -21 -17 -19  -3 |0 4 1 0 1 |4 1 1
+			#     10 21 22 30 35 42(2) |11  1  8  5  7 |  0  10  10  12  11   0 |0 1 2 2 1 |1 2 2 1
+
 		}
 		if( TRUE ){ # fStep		#	u0.zoidFMtx_ana.rpt( stdMI$rawTail )
 			cnt <- 0
-			if( aFStep[1]%in%c(        ) ) cnt<-cnt+1
+			if( aFStep[1]%in%c(  -4    ) ) cnt<-cnt+1
 			if( aFStep[2]%in%c(        ) ) cnt<-cnt+1
 			if( aFStep[3]%in%c(        ) ) cnt<-cnt+1
 			if( aFStep[4]%in%c(        ) ) cnt<-cnt+1
 			if( aFStep[5]%in%c(        ) ) cnt<-cnt+1
-			if( aFStep[6]%in%c(        ) ) cnt<-cnt+1
+			if( aFStep[6]%in%c(  -3    ) ) cnt<-cnt+1
 
 			cnt.w1 <- cccObj$scoreMtx[idx,"w1FStep.cnt"]	# fv in fStep
-			if( fCutU.hasPtn(c( , ),aFStep) )	cnt.w1<-cnt.w1+1
-			if( 1<sum(aFStep[1:2+ ]==c( , )) )	cnt.w1<-cnt.w1+1
+			if( fCutU.hasPtn(c(  2,  2 ),aFStep) )	cnt.w1<-cnt.w1+1	# -
+			# -------------------------------------------------------------------------------------
+			#     FV :    -3 (2)   0 (4)   2 (2)   10(4)   16 (2) 
 
 			cnt.w2 <- 0
-			if( 1<sum( aFStep[c(,)]*c(,)==aFStep[c(,)] ) )	cnt.w2<-cnt.w2+1
-			if( aFStep[ ]==sum(aFStep[c( , )]) )	cnt.w2<-cnt.w2+1
-			if( sum(aFStep[c( , )])==sum(aFStep[c( , )]) )	cnt.w2<-cnt.w2+1	# 
+			if( 1<sum( aFStep[c(1,2)]*c(1,1)==aFStep[c(6,3)] ) )	cnt.w2<-cnt.w2+1
 
 			cntMtx[idx,"fStep.w1"] <- cnt.w1	;cntMtx[idx,"fStep.w2"] <- cnt.w2
 			cntMtx[idx,"fStep"] <- cnt + cnt.w1 + cnt.w2
@@ -2326,7 +2505,7 @@ fCutCnt.nextColVal_2 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 
 } # fCutCnt.nextColVal_2()
 
-# UNdone
+# done
 fCutCnt.nextColVal_3 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 
 	flgCnt <- rep( 0 ,length(allIdxF) )
@@ -2341,18 +2520,9 @@ fCutCnt.nextColVal_3 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 	# -- conditional
 	auxCntMtx <- matrix( 0 ,nrow=length(allIdxF) ,ncol=2 )	;colnames(auxCntMtx)=c("auxZW","auxQuo")
     flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
-					if( (aZoid[6]-aZoid[1]) %in% c( , ) ) return( FALSE )
-					return( TRUE )
-				})	;kIdx<-anaFlagFnd(!flag,rpt)
-	auxCntMtx[,"auxZW"] <- !flag
-    flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
 					quoSize <- fCutU.getQuoObj( aZoid )$size
-					if( all(quoSize[1:3+0]==c(,,)) ) return(FALSE)	# next rebind of ,,
-					if( all(quoSize[1:3+1]==c(,,)) ) return(FALSE)	# next rebind of ,,
-					if( all(quoSize[1:3+2]==c(,,)) ) return(FALSE)	# next rebind of ,,
-					if( all(quoSize[1:3+0]==c(,,)) ) return(FALSE)	# next rebind of ,,
-					if( all(quoSize[1:3+1]==c(,,)) ) return(FALSE)	# next rebind of ,,
-					if( all(quoSize[1:3+2]==c(,,)) ) return(FALSE)	# next rebind of ,,
+					if( all(quoSize[1:3+0]==c(1,4,1)) ) return(FALSE)	# next rebind of 0,1,4	reverse
+					if( all(quoSize[1:3+2]==c(1,4,1)) ) return(FALSE)	# next rebind of 4,1,0
 					return( TRUE )
 				})	;kIdx<-anaFlagFnd(!flag,rpt)
 	auxCntMtx[,"auxQuo"] <- !flag
@@ -2369,10 +2539,10 @@ fCutCnt.nextColVal_3 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 	
 		if( TRUE ){	# raw
 			cnt <- 0
-			if( aZoid[1]%in%c(       ) ) cnt<-cnt+1
-			if( aZoid[2]%in%c(       ) ) cnt<-cnt+1
+			if( aZoid[1]%in%c( 10    ) ) cnt<-cnt+1
+			if( aZoid[2]%in%c( 12,23 ) ) cnt<-cnt+1
 			if( aZoid[3]%in%c(       ) ) cnt<-cnt+1
-			if( aZoid[4]%in%c(       ) ) cnt<-cnt+1
+			if( aZoid[4]%in%c( 33    ) ) cnt<-cnt+1
 			if( aZoid[5]%in%c(       ) ) cnt<-cnt+1
 			if( aZoid[6]%in%c(       ) ) cnt<-cnt+1
 			cntMtx[idx,"raw"] <- cnt
@@ -2382,47 +2552,75 @@ fCutCnt.nextColVal_3 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 		}
 		if( TRUE ){ # rawFV		# anaMtx.freqVal( stdMI$rawTail )
 			cnt <- 0
-			# < >
-			if( fCutU.hasPtn(c(  ,  ),aZoid) ) cnt<-cnt+1
+			# < 3>
+			if( fCutU.hasPtn(c(  3,NA, 6,NA,31,34 ),aZoid,thld=3,fixIdx=1) ) cnt<-cnt+1
+			# < 7>
+			if( fCutU.hasPtn(c(  7,NA,NA,NA,35    ),aZoid) ) cnt<-cnt+1
+			if( fCutU.hasPtn(c(  7,34,41,37       ),aZoid,thld=3,fixIdx=1) ) cnt<-cnt+1
+			# <10>
+			# <17>
+			# <21>
+			if( fCutU.hasPtn(c( 21,28,NA,NA,30 ),aZoid) ) cnt<-cnt+1
+			# <22>
+			if( fCutU.hasPtn(c( 22,NA,25,26 ),aZoid) ) cnt<-cnt+1
+			# <29>
+			if( fCutU.hasPtn(c(       29,33 ),aZoid) ) cnt<-cnt+1
+			if( fCutU.hasPtn(c(  4,27,29    ),aZoid) ) cnt<-cnt+1
+			# <33>
+			if( fCutU.hasPtn(c(       29,33 ),aZoid) ) cnt<-cnt+1
+			if( fCutU.hasPtn(c(  4,27,NA,33 ),aZoid) ) cnt<-cnt+1
+			# <36>
+			# <42>
+			if( fCutU.hasPtn(c(  1, 2, 3, 7,42 ),aZoid,thld=3,fixIdx=5) ) cnt<-cnt+1
 			cntMtx[idx,"rawFV"] <- cnt
 		}
 		if( TRUE ){ # rem		# u0.zoidMtx_ana( stdMI$rawTail%%10 )
 			cnt <- 0
-			if( fCutU.remFilt(aZoid[1],c(         ),c(  )) ) cnt<-cnt+1 # 1
-			if( fCutU.remFilt(aZoid[2],c(         ),c(  )) ) cnt<-cnt+1 # 2
-			if( fCutU.remFilt(aZoid[3],c(         ),c(  )) ) cnt<-cnt+1 # 3
-			if( fCutU.remFilt(aZoid[4],c(         ),c(  )) ) cnt<-cnt+1 # 4
-			if( fCutU.remFilt(aZoid[5],c(         ),c(  )) ) cnt<-cnt+1 # 5
-			if( fCutU.remFilt(aZoid[6],c(         ),c(  )) ) cnt<-cnt+1 # 6
+			if( fCutU.remFilt(aZoid[1],c( 0,3      ),c( 10    )) ) cnt<-cnt+1 # 1
+			if( fCutU.remFilt(aZoid[2],c( 1,2,3,8  ),c( 12,23 )) ) cnt<-cnt+1 # 2
+			if( fCutU.remFilt(aZoid[3],c( 2        ),c(       )) ) cnt<-cnt+1 # 3
+			if( fCutU.remFilt(aZoid[4],c( 3        ),c( 33    )) ) cnt<-cnt+1 # 4
+			if( fCutU.remFilt(aZoid[5],c( 7,1,6    ),c(       )) ) cnt<-cnt+1 # 5
+			if( fCutU.remFilt(aZoid[6],c( 6        ),c(       )) ) cnt<-cnt+1 # 6
 			cntMtx[idx,"rem"] <- cnt
 		}
 		if( TRUE ){ # cStep		#	u0.zoidCMtx_ana.rpt( stdMI$rawTail )
 			cnt <- 0
-			if( aCStep[1]%in%c(         ) ) cnt<-cnt+1
-			if( aCStep[2]%in%c(         ) ) cnt<-cnt+1
-			if( aCStep[3]%in%c(         ) ) cnt<-cnt+1
-			if( aCStep[4]%in%c(         ) ) cnt<-cnt+1
-			if( aCStep[5]%in%c(         ) ) cnt<-cnt+1
+			if( aCStep[1]%in%c(          ) ) cnt<-cnt+1
+			if( aCStep[2]%in%c(          ) ) cnt<-cnt+1
+			if( aCStep[3]%in%c(          ) ) cnt<-cnt+1
+			if( aCStep[4]%in%c( 20, 1,15 ) ) cnt<-cnt+1
+			if( aCStep[5]%in%c(  1, 5    ) ) cnt<-cnt+1
 
 			cnt.w1 <- cccObj$scoreMtx[idx,"w1CStep.cnt"]	# fv in cStep
-			if( fCutU.hasPtn(c( , ),aCStep) )	cnt.w1<-cnt.w1+1
-			if( 1<sum(aCStep[1:2+ ]==c( , )) )	cnt.w1<-cnt.w1+1
+			if( fCutU.hasPtn(c(  1, 1 ),aCStep) )	cnt.w1<-cnt.w1+1	# unique
+			if( 1<sum(aCStep[1:2+2]==c(  4, 4 )) )	cnt.w1<-cnt.w1+1
+			if( fCutU.hasPtn(c(  4, 1 ),aCStep) )	cnt.w1<-cnt.w1+1
+			if( 1<sum(aCStep[1:2+1]==c(  6, 6 )) )	cnt.w1<-cnt.w1+1
+			if( fCutU.hasPtn(c(  7, 4 ),aCStep) )	cnt.w1<-cnt.w1+1
+			if( 1<sum(aCStep[1:2+1]==c(  4, 4 )) )	cnt.w1<-cnt.w1+1
+			if( fCutU.hasPtn(c( 4, 2 ),aCStep) )	cnt.w1<-cnt.w1+1	# -
+			if( fCutU.hasPtn(c( 4, 4 ),aCStep) )	cnt.w1<-cnt.w1+1
+			if( fCutU.hasPtn(c( 7,12 ),aCStep) )	cnt.w1<-cnt.w1+1
+			# -------------------------------------------------------------------------------------
+			#     FV :    1 (8)   2 (2)   4 (5)   6 (2)   7 (3)   11 (2)   18 (2) 
 
 			cnt.w2 <- 0
-			if( 1<sum( aCStep[c(,)]*c(,)==aCStep[c( , )] ) )	cnt.w2<-cnt.w2+1
-			if( aCStep[ ]==sum(aCStep[c( , )]) )	cnt.w2<-cnt.w2+1
-			if( sum(aCStep[c( , )])==sum(aCStep[c( , )]) )	cnt.w2<-cnt.w2+1	# 
+			if( 1<sum( aCStep[c(1,3)]*c(1,1)==aCStep[c(2,4)] ) )	cnt.w2<-cnt.w2+1
+			if( aCStep[5]==sum(aCStep[c(1,2,3)]) )	cnt.w2<-cnt.w2+1
+			if( aCStep[5]==sum(aCStep[c(1,2,4)]) )	cnt.w2<-cnt.w2+1
 
 			cntMtx[idx,"cStep.w1"] <- cnt.w1	;cntMtx[idx,"cStep.w2"] <- cnt.w2
 			cntMtx[idx,"cStep"] <- cnt + cnt.w1 + cnt.w2
 
-			# Raw value(reb)       |cStep          |fStep                   |QuoSize   |QuoTbl 
-			#  Templete  number    | for sample    |                        |0 1 2 2 1 |1 2 2 1
-			#  Templete  number    | for sample    | -9  -9  -9  -6  -6   2 |1 2 2 0 1 |1 2 2 1
-			#  Templete  number( ) | for sample    |  8   6   7   0  -2  -8 |1 1 3 1 0 |1 1 3 1
-			#  Templete  number( ) | for sample    |  3   0   4   2  12   4 |0 2 2 1 1 |2 2 1 1
-			#  Templete  number( ) | for sample    | -5  -9   0   3  -5  -2 |2 0 2 2 0 |2 2 2
-			#  Templete  number( ) | for sample    |  1   6  -3   2  -1   0 |1 1 1 3 0 |1 1 1 3
+			#     Raw value(reb)       |cStep          |fStep                   |QuoSize   |QuoTbl 
+			#      3 21 22 33 41 42    |18  1 11  8  1 |                        |1 0 2 1 2 |1 2 1 2
+			#      7 10 17 29 33 44(1) | 3  7 12  4 11 |  4 -11  -5  -4  -8   2 |1 2 1 1 1 |1 2 1 1 1
+			#      3 10 14 16 36 38(1) | 7  4  2 20  2 | -4   0  -3 -13   3  -6 |1 3 0 2 0 |1 3 2
+			#      7 22 29 33 34 35    |15  7  4  1  1 |  4  12  15  17  -2  -3 |1 0 2 3 0 |1 2 3
+			#     10 11 12 18 24 42    | 1  1  6  6 18 |  3 -11 -17 -15 -10   7 |0 4 1 0 1 |4 1 1
+			#     17 21 25 26 27 36    | 4  4  1  1  9 |  7  10  13   8   3  -6 |0 1 4 1 0 |1 4 1
+
 		}
 		if( TRUE ){ # fStep		#	u0.zoidFMtx_ana.rpt( stdMI$rawTail )
 			cnt <- 0
@@ -2434,13 +2632,17 @@ fCutCnt.nextColVal_3 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 			if( aFStep[6]%in%c(        ) ) cnt<-cnt+1
 
 			cnt.w1 <- cccObj$scoreMtx[idx,"w1FStep.cnt"]	# fv in fStep
-			if( fCutU.hasPtn(c( , ),aFStep) )	cnt.w1<-cnt.w1+1
-			if( 1<sum(aFStep[1:2+ ]==c( , )) )	cnt.w1<-cnt.w1+1
+			if( fCutU.hasPtn(c(  3,-6 ),aFStep) )	cnt.w1<-cnt.w1+1
+			if( 1<sum(aFStep[1:2+4]==c( -2,-3 )) )	cnt.w1<-cnt.w1+1
+			if( fCutU.hasPtn(c(  2,-11 ),aFStep) )	cnt.w1<-cnt.w1+1	# -
+			# -------------------------------------------------------------------------------------
+			#     FV :    -11 (2)   -6 (2)   -4 (2)   -3 (2)   3 (3)   4 (2)   7 (2) 
 
 			cnt.w2 <- 0
-			if( 1<sum( aFStep[c(,)]*c(,)==aFStep[c(,)] ) )	cnt.w2<-cnt.w2+1
-			if( aFStep[ ]==sum(aFStep[c( , )]) )	cnt.w2<-cnt.w2+1
-			if( sum(aFStep[c( , )])==sum(aFStep[c( , )]) )	cnt.w2<-cnt.w2+1	# 
+			if( aFStep[1]==sum(aFStep[c(3,6)]) )	cnt.w2<-cnt.w2+1
+			if( aFStep[1]==sum(aFStep[c(2,6,5)]) )	cnt.w2<-cnt.w2+1
+			if( aFStep[2]==sum(aFStep[c(3,5,6)]) )	cnt.w2<-cnt.w2+1
+			if( aFStep[3]==sum(aFStep[c(2,5)]) )	cnt.w2<-cnt.w2+1
 
 			cntMtx[idx,"fStep.w1"] <- cnt.w1	;cntMtx[idx,"fStep.w2"] <- cnt.w2
 			cntMtx[idx,"fStep"] <- cnt + cnt.w1 + cnt.w2
@@ -2451,7 +2653,7 @@ fCutCnt.nextColVal_3 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 	return( list( cccObj=cccObj	,auxCntMtx=auxCntMtx ,cntMtx=cntMtx	) )	# lastZoid는 cccObj 안에..
 } # fCutCnt.nextColVal_3()
 
-# UNdone
+# done
 fCutCnt.nextColVal_4 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 
 	flgCnt <- rep( 0 ,length(allIdxF) )
@@ -2466,18 +2668,12 @@ fCutCnt.nextColVal_4 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 	# -- conditional
 	auxCntMtx <- matrix( 0 ,nrow=length(allIdxF) ,ncol=2 )	;colnames(auxCntMtx)=c("auxZW","auxQuo")
     flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
-					if( (aZoid[6]-aZoid[1]) %in% c( , ) ) return( FALSE )
-					return( TRUE )
-				})	;kIdx<-anaFlagFnd(!flag,rpt)
-	auxCntMtx[,"auxZW"] <- !flag
-    flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
 					quoSize <- fCutU.getQuoObj( aZoid )$size
-					if( all(quoSize[1:3+0]==c(,,)) ) return(FALSE)	# next rebind of ,,
-					if( all(quoSize[1:3+1]==c(,,)) ) return(FALSE)	# next rebind of ,,
-					if( all(quoSize[1:3+2]==c(,,)) ) return(FALSE)	# next rebind of ,,
-					if( all(quoSize[1:3+0]==c(,,)) ) return(FALSE)	# next rebind of ,,
-					if( all(quoSize[1:3+1]==c(,,)) ) return(FALSE)	# next rebind of ,,
-					if( all(quoSize[1:3+2]==c(,,)) ) return(FALSE)	# next rebind of ,,
+					if( all(quoSize[1:3+0]==c(2,0,0)) ) return(FALSE)	# next rebind of 1,2,2
+					if( all(quoSize[1:3+1]==c(1,2,2)) ) return(FALSE)	# next rebind of 2,2,0
+					if( all(quoSize[1:3+0]==c(0,0,1)) ) return(FALSE)	# next rebind of 2,2,0
+					if( all(quoSize[1:3+1]==c(0,2,2)) ) return(FALSE)	# next rebind of 2,0,0
+					if( all(quoSize[1:3+2]==c(2,2,0)) ) return(FALSE)	# next rebind of 0,0,2
 					return( TRUE )
 				})	;kIdx<-anaFlagFnd(!flag,rpt)
 	auxCntMtx[,"auxQuo"] <- !flag
@@ -2494,12 +2690,12 @@ fCutCnt.nextColVal_4 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 	
 		if( TRUE ){	# raw
 			cnt <- 0
-			if( aZoid[1]%in%c(       ) ) cnt<-cnt+1
-			if( aZoid[2]%in%c(       ) ) cnt<-cnt+1
-			if( aZoid[3]%in%c(       ) ) cnt<-cnt+1
-			if( aZoid[4]%in%c(       ) ) cnt<-cnt+1
-			if( aZoid[5]%in%c(       ) ) cnt<-cnt+1
-			if( aZoid[6]%in%c(       ) ) cnt<-cnt+1
+			if( aZoid[1]%in%c( 13       ) ) cnt<-cnt+1
+			if( aZoid[2]%in%c(          ) ) cnt<-cnt+1
+			if( aZoid[3]%in%c(          ) ) cnt<-cnt+1
+			if( aZoid[4]%in%c(          ) ) cnt<-cnt+1
+			if( aZoid[5]%in%c( 11,15    ) ) cnt<-cnt+1
+			if( aZoid[6]%in%c( 45,39,43 ) ) cnt<-cnt+1
 			cntMtx[idx,"raw"] <- cnt
 
 			cnt <- 0
@@ -2507,65 +2703,88 @@ fCutCnt.nextColVal_4 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 		}
 		if( TRUE ){ # rawFV		# anaMtx.freqVal( stdMI$rawTail )
 			cnt <- 0
-			# < >
-			if( fCutU.hasPtn(c(  ,  ),aZoid) ) cnt<-cnt+1
+			# <11>
+			if( fCutU.hasPtn(c( 11,15 ),aZoid) ) cnt<-cnt+1
+			# <24>
+			# <33>
+			if( fCutU.hasPtn(c( 33,37 ),aZoid) ) cnt<-cnt+1
+			# <36>
+			# <44>
+			if( fCutU.hasPtn(c( 13,22,44 ),aZoid) ) cnt<-cnt+1
+			# <45>
 			cntMtx[idx,"rawFV"] <- cnt
 		}
 		if( TRUE ){ # rem		# u0.zoidMtx_ana( stdMI$rawTail%%10 )
 			cnt <- 0
-			if( fCutU.remFilt(aZoid[1],c(         ),c(  )) ) cnt<-cnt+1 # 1
-			if( fCutU.remFilt(aZoid[2],c(         ),c(  )) ) cnt<-cnt+1 # 2
-			if( fCutU.remFilt(aZoid[3],c(         ),c(  )) ) cnt<-cnt+1 # 3
-			if( fCutU.remFilt(aZoid[4],c(         ),c(  )) ) cnt<-cnt+1 # 4
-			if( fCutU.remFilt(aZoid[5],c(         ),c(  )) ) cnt<-cnt+1 # 5
-			if( fCutU.remFilt(aZoid[6],c(         ),c(  )) ) cnt<-cnt+1 # 6
+			if( fCutU.remFilt(aZoid[1],c( 3        ),c( 13       )) ) cnt<-cnt+1 # 1
+			if( fCutU.remFilt(aZoid[2],c( 7,5      ),c(          )) ) cnt<-cnt+1 # 2
+			if( fCutU.remFilt(aZoid[3],c( 1,3      ),c(          )) ) cnt<-cnt+1 # 3
+			if( fCutU.remFilt(aZoid[4],c( 6,4      ),c(          )) ) cnt<-cnt+1 # 4
+			if( fCutU.remFilt(aZoid[5],c( 1        ),c( 11,15    )) ) cnt<-cnt+1 # 5
+			if( fCutU.remFilt(aZoid[6],c( 5,9,3    ),c( 45,39,43 )) ) cnt<-cnt+1 # 6
 			cntMtx[idx,"rem"] <- cnt
 		}
 		if( TRUE ){ # cStep		#	u0.zoidCMtx_ana.rpt( stdMI$rawTail )
 			cnt <- 0
-			if( aCStep[1]%in%c(         ) ) cnt<-cnt+1
-			if( aCStep[2]%in%c(         ) ) cnt<-cnt+1
-			if( aCStep[3]%in%c(         ) ) cnt<-cnt+1
-			if( aCStep[4]%in%c(         ) ) cnt<-cnt+1
-			if( aCStep[5]%in%c(         ) ) cnt<-cnt+1
+			if( aCStep[1]%in%c(             ) ) cnt<-cnt+1
+			if( aCStep[2]%in%c(  4, 8       ) ) cnt<-cnt+1
+			if( aCStep[3]%in%c(  5, 1, 6    ) ) cnt<-cnt+1
+			if( aCStep[4]%in%c(             ) ) cnt<-cnt+1
+			if( aCStep[5]%in%c(  1, 5, 3, 4 ) ) cnt<-cnt+1
 
 			cnt.w1 <- cccObj$scoreMtx[idx,"w1CStep.cnt"]	# fv in cStep
-			if( fCutU.hasPtn(c( , ),aCStep) )	cnt.w1<-cnt.w1+1
-			if( 1<sum(aCStep[1:2+ ]==c( , )) )	cnt.w1<-cnt.w1+1
-
+			if( fCutU.hasPtn(c( 2, 1 ),aCStep) )	cnt.w1<-cnt.w1+1
+			if( 1<sum(aCStep[1:2+3]==c(  5,25 )) )	cnt.w1<-cnt.w1+1
+			if( fCutU.hasPtn(c( 1, 8 ),aCStep) )	cnt.w1<-cnt.w1+1
+			if( 1<sum(aCStep[1:2+3]==c( 11, 1 )) )	cnt.w1<-cnt.w1+1
+			if( fCutU.hasPtn(c( 4, 5 ),aCStep) )	cnt.w1<-cnt.w1+1
+			if( 1<sum(aCStep[1:2+1]==c( 4, 5 )) )	cnt.w1<-cnt.w1+1
+			if( fCutU.hasPtn(c( 5, 2 ),aCStep) )	cnt.w1<-cnt.w1+1	# -
+			# if( fCutU.hasPtn(c( 2, 4 ),aCStep) )	cnt.w1<-cnt.w1+1
+			if( fCutU.hasPtn(c( 1, 4 ),aCStep) )	cnt.w1<-cnt.w1+1
+			# if( fCutU.hasPtn(c( 4, 1 ),aCStep) )	cnt.w1<-cnt.w1+1
+			# -------------------------------------------------------------------------------------
+			#     FV :    1 (6)   2 (3)   3 (2)   4 (5)   5 (3)   8 (2)   10 (2)   11 (2) 
 			cnt.w2 <- 0
-			if( 1<sum( aCStep[c(,)]*c(,)==aCStep[c( , )] ) )	cnt.w2<-cnt.w2+1
-			if( aCStep[ ]==sum(aCStep[c( , )]) )	cnt.w2<-cnt.w2+1
-			if( sum(aCStep[c( , )])==sum(aCStep[c( , )]) )	cnt.w2<-cnt.w2+1	# 
+			if( 1<sum( aCStep[c(1,4)]*c(1,3)==aCStep[c(3,5)] ) )	cnt.w2<-cnt.w2+1
+			if( sum(aCStep[c(4,1)])==sum(aCStep[c(2,5)]) )	cnt.w2<-cnt.w2+1	# 16
+			if( sum(aCStep[c(4,3)])==sum(aCStep[c(2,5)]) )	cnt.w2<-cnt.w2+1	# 16
 
 			cntMtx[idx,"cStep.w1"] <- cnt.w1	;cntMtx[idx,"cStep.w2"] <- cnt.w2
 			cntMtx[idx,"cStep"] <- cnt + cnt.w1 + cnt.w2
 
-			# Raw value(reb)       |cStep          |fStep                   |QuoSize   |QuoTbl 
-			#  Templete  number    | for sample    |                        |0 1 2 2 1 |1 2 2 1
-			#  Templete  number    | for sample    | -9  -9  -9  -6  -6   2 |1 2 2 0 1 |1 2 2 1
-			#  Templete  number( ) | for sample    |  8   6   7   0  -2  -8 |1 1 3 1 0 |1 1 3 1
-			#  Templete  number( ) | for sample    |  3   0   4   2  12   4 |0 2 2 1 1 |2 2 1 1
-			#  Templete  number( ) | for sample    | -5  -9   0   3  -5  -2 |2 0 2 2 0 |2 2 2
-			#  Templete  number( ) | for sample    |  1   6  -3   2  -1   0 |1 1 1 3 0 |1 1 1 3
+			# cStep ptn info 
+			#     Raw value(reb)       |cStep          |fStep                   |QuoSize   |QuoTbl 
+			#     24 25 33 34 38 39    | 1  8  1  4  1 |                        |0 0 2 4 0 |2 4
+			#     20 30 33 35 36 44(1) |10  3  2  1  8 | -4   5   0   1  -2   5 |0 0 1 4 1 |1 4 1
+			#     11 17 21 26 36 45(1) | 6  4  5 10  9 | -9 -13 -12  -9   0   1 |0 2 2 1 1 |2 2 1 1
+			#      9 33 36 40 42 43(1) |24  3  4  2  1 | -2  16  15  14   6  -2 |1 0 0 2 3 |1 2 3
+			#      5  7 11 16 41 45    | 2  4  5 25  4 | -4 -26 -25 -24  -1   2 |2 2 0 0 2 |2 2 2
+			#      1 12 13 24 29 44    |11  1 11  5 15 | -4   5   2   8 -12  -1 |1 2 2 0 1 |1 2 2 1
+
 		}
 		if( TRUE ){ # fStep		#	u0.zoidFMtx_ana.rpt( stdMI$rawTail )
 			cnt <- 0
-			if( aFStep[1]%in%c(        ) ) cnt<-cnt+1
-			if( aFStep[2]%in%c(        ) ) cnt<-cnt+1
-			if( aFStep[3]%in%c(        ) ) cnt<-cnt+1
-			if( aFStep[4]%in%c(        ) ) cnt<-cnt+1
-			if( aFStep[5]%in%c(        ) ) cnt<-cnt+1
-			if( aFStep[6]%in%c(        ) ) cnt<-cnt+1
+			if( aFStep[1]%in%c(  -4, -2  ) ) cnt<-cnt+1
+			if( aFStep[2]%in%c(          ) ) cnt<-cnt+1
+			if( aFStep[3]%in%c(          ) ) cnt<-cnt+1
+			if( aFStep[4]%in%c(          ) ) cnt<-cnt+1
+			if( aFStep[5]%in%c(  -2      ) ) cnt<-cnt+1
+			if( aFStep[6]%in%c(   3      ) ) cnt<-cnt+1
 
 			cnt.w1 <- cccObj$scoreMtx[idx,"w1FStep.cnt"]	# fv in fStep
-			if( fCutU.hasPtn(c( , ),aFStep) )	cnt.w1<-cnt.w1+1
-			if( 1<sum(aFStep[1:2+ ]==c( , )) )	cnt.w1<-cnt.w1+1
-
+			if( fCutU.hasPtn(c(  -4,  5 ),aFStep) )	cnt.w1<-cnt.w1+1
+			if( 1<sum(aFStep[1:2+0]==c(  -9,-13 )) )	cnt.w1<-cnt.w1+1
+			if( fCutU.hasPtn(c(   0,  1 ),aFStep) )	cnt.w1<-cnt.w1+1
+			if( 1<sum(aFStep[1:2+4]==c(  2,  8 )) )	cnt.w1<-cnt.w1+1
+			# -------------------------------------------------------------------------------------
+			#     FV :    -12 (2)   -9 (2)   -4 (3)   -2 (3)   -1 (2)   0 (2)   1 (2)   2 (2)   5 (3) 
 			cnt.w2 <- 0
-			if( 1<sum( aFStep[c(,)]*c(,)==aFStep[c(,)] ) )	cnt.w2<-cnt.w2+1
-			if( aFStep[ ]==sum(aFStep[c( , )]) )	cnt.w2<-cnt.w2+1
-			if( sum(aFStep[c( , )])==sum(aFStep[c( , )]) )	cnt.w2<-cnt.w2+1	# 
+			if( 1<sum( aFStep[ 3 ]*c(-2, 4,-6)==aFStep[c(1,4,5)] ) )	cnt.w2<-cnt.w2+1
+			if( aFStep[1]==sum(aFStep[c(4,5    )]) )	cnt.w2<-cnt.w2+1
+			if( aFStep[2]==sum(aFStep[c(1,3,4,6)]) )	cnt.w2<-cnt.w2+1
+			if( sum(aFStep[c(2,3)])==sum(aFStep[c(4,6)]) )	cnt.w2<-cnt.w2+1	# 7
+			if( sum(aFStep[c(1,4)])==sum(aFStep[c(2,6)]) )	cnt.w2<-cnt.w2+1	# 4
 
 			cntMtx[idx,"fStep.w1"] <- cnt.w1	;cntMtx[idx,"fStep.w2"] <- cnt.w2
 			cntMtx[idx,"fStep"] <- cnt + cnt.w1 + cnt.w2
@@ -2577,7 +2796,7 @@ fCutCnt.nextColVal_4 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 
 } # fCutCnt.nextColVal_4()
 
-# UNdone
+# done
 fCutCnt.nextColVal_5 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 
 	flgCnt <- rep( 0 ,length(allIdxF) )
@@ -2592,18 +2811,11 @@ fCutCnt.nextColVal_5 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 	# -- conditional
 	auxCntMtx <- matrix( 0 ,nrow=length(allIdxF) ,ncol=2 )	;colnames(auxCntMtx)=c("auxZW","auxQuo")
     flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
-					if( (aZoid[6]-aZoid[1]) %in% c( , ) ) return( FALSE )
-					return( TRUE )
-				})	;kIdx<-anaFlagFnd(!flag,rpt)
-	auxCntMtx[,"auxZW"] <- !flag
-    flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
 					quoSize <- fCutU.getQuoObj( aZoid )$size
-					if( all(quoSize[1:3+0]==c(,,)) ) return(FALSE)	# next rebind of ,,
-					if( all(quoSize[1:3+1]==c(,,)) ) return(FALSE)	# next rebind of ,,
-					if( all(quoSize[1:3+2]==c(,,)) ) return(FALSE)	# next rebind of ,,
-					if( all(quoSize[1:3+0]==c(,,)) ) return(FALSE)	# next rebind of ,,
-					if( all(quoSize[1:3+1]==c(,,)) ) return(FALSE)	# next rebind of ,,
-					if( all(quoSize[1:3+2]==c(,,)) ) return(FALSE)	# next rebind of ,,
+					if( all(quoSize[1:3+0]==c(1,1,2)) ) return(FALSE)	# next rebind of 2,1,1
+					if( all(quoSize[1:3+1]==c(2,1,1)) ) return(FALSE)	# next rebind of 1,1,2
+					if( all(quoSize[1:3+2]==c(0,1,2)) ) return(FALSE)	# next rebind of 1,2,0
+					if( all(quoSize[1:3+0]==c(2,1,1)) ) return(FALSE)	# next rebind of 1,2,1
 					return( TRUE )
 				})	;kIdx<-anaFlagFnd(!flag,rpt)
 	auxCntMtx[,"auxQuo"] <- !flag
@@ -2620,11 +2832,11 @@ fCutCnt.nextColVal_5 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 	
 		if( TRUE ){	# raw
 			cnt <- 0
-			if( aZoid[1]%in%c(       ) ) cnt<-cnt+1
+			if( aZoid[1]%in%c(  3, 5 ) ) cnt<-cnt+1
 			if( aZoid[2]%in%c(       ) ) cnt<-cnt+1
-			if( aZoid[3]%in%c(       ) ) cnt<-cnt+1
-			if( aZoid[4]%in%c(       ) ) cnt<-cnt+1
-			if( aZoid[5]%in%c(       ) ) cnt<-cnt+1
+			if( aZoid[3]%in%c( 14    ) ) cnt<-cnt+1
+			if( aZoid[4]%in%c( 29,25 ) ) cnt<-cnt+1
+			if( aZoid[5]%in%c( 31    ) ) cnt<-cnt+1
 			if( aZoid[6]%in%c(       ) ) cnt<-cnt+1
 			cntMtx[idx,"raw"] <- cnt
 
@@ -2633,65 +2845,97 @@ fCutCnt.nextColVal_5 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 		}
 		if( TRUE ){ # rawFV		# anaMtx.freqVal( stdMI$rawTail )
 			cnt <- 0
-			# < >
-			if( fCutU.hasPtn(c(  ,  ),aZoid) ) cnt<-cnt+1
+			# < 2>
+			if( fCutU.hasPtn(c(  2, 9,23,32,39 ),aZoid,thld=3,fixIdx=1) ) cnt<-cnt+1
+			# < 5>
+			if( fCutU.hasPtn(c(  5,NA,12          ),aZoid) ) cnt<-cnt+1
+			if( fCutU.hasPtn(c(  5,NA,NA,28       ),aZoid) ) cnt<-cnt+1
+			if( fCutU.hasPtn(c(  5,NA,NA,NA,NA,45 ),aZoid) ) cnt<-cnt+1
+			if( fCutU.hasPtn(c(  5,13,NA,NA,27    ),aZoid) ) cnt<-cnt+1
+			# < 7>
+			if( fCutU.hasPtn(c(  6, 7,NA,33,33,42 ),aZoid,thld=3,fixIdx=2) ) cnt<-cnt+1
+			# <12>
+			if( fCutU.hasPtn(c(  5,NA,12          ),aZoid) ) cnt<-cnt+1
+			if( fCutU.hasPtn(c(       12,28       ),aZoid) ) cnt<-cnt+1
+			if( fCutU.hasPtn(c(       12,NA,NA,45 ),aZoid) ) cnt<-cnt+1
+			# <13>			# <19>
+			# <25>
+			if( fCutU.hasPtn(c( 25,NA,36 ),aZoid) ) cnt<-cnt+1
+			# <29>
+			if( fCutU.hasPtn(c(  3,NA,NA,29       ),aZoid) ) cnt<-cnt+1
+			if( fCutU.hasPtn(c(       14,29       ),aZoid) ) cnt<-cnt+1
+			if( fCutU.hasPtn(c(     3,NA,29,NA,34 ),aZoid) ) cnt<-cnt+1
+			# <33>
+			# <36>
+			if( fCutU.hasPtn(c( 25,NA,36 ),aZoid) ) cnt<-cnt+1
+			if( fCutU.hasPtn(c( 24,25,29,NA,NA,36 ),aZoid,thld=3,fixIdx=6) ) cnt<-cnt+1
+			# <39>
+			if( fCutU.hasPtn(c(          32,39 ),aZoid) ) cnt<-cnt+1
+			if( fCutU.hasPtn(c(  9,17,NA,NA,39 ),aZoid) ) cnt<-cnt+1
 			cntMtx[idx,"rawFV"] <- cnt
 		}
 		if( TRUE ){ # rem		# u0.zoidMtx_ana( stdMI$rawTail%%10 )
 			cnt <- 0
-			if( fCutU.remFilt(aZoid[1],c(         ),c(  )) ) cnt<-cnt+1 # 1
-			if( fCutU.remFilt(aZoid[2],c(         ),c(  )) ) cnt<-cnt+1 # 2
-			if( fCutU.remFilt(aZoid[3],c(         ),c(  )) ) cnt<-cnt+1 # 3
-			if( fCutU.remFilt(aZoid[4],c(         ),c(  )) ) cnt<-cnt+1 # 4
-			if( fCutU.remFilt(aZoid[5],c(         ),c(  )) ) cnt<-cnt+1 # 5
-			if( fCutU.remFilt(aZoid[6],c(         ),c(  )) ) cnt<-cnt+1 # 6
+			if( fCutU.remFilt(aZoid[1],c( 3,4,5   ),c(  3, 5 )) ) cnt<-cnt+1 # 1
+			if( fCutU.remFilt(aZoid[2],c( 7,6     ),c(       )) ) cnt<-cnt+1 # 2
+			if( fCutU.remFilt(aZoid[3],c( 4,3     ),c( 14    )) ) cnt<-cnt+1 # 3
+			if( fCutU.remFilt(aZoid[4],c( 9,5     ),c( 29,25 )) ) cnt<-cnt+1 # 4
+			if( fCutU.remFilt(aZoid[5],c( 1,3,2   ),c( 31    )) ) cnt<-cnt+1 # 5
+			if( fCutU.remFilt(aZoid[6],c(         ),c(       )) ) cnt<-cnt+1 # 6
 			cntMtx[idx,"rem"] <- cnt
 		}
 		if( TRUE ){ # cStep		#	u0.zoidCMtx_ana.rpt( stdMI$rawTail )
 			cnt <- 0
-			if( aCStep[1]%in%c(         ) ) cnt<-cnt+1
-			if( aCStep[2]%in%c(         ) ) cnt<-cnt+1
-			if( aCStep[3]%in%c(         ) ) cnt<-cnt+1
-			if( aCStep[4]%in%c(         ) ) cnt<-cnt+1
-			if( aCStep[5]%in%c(         ) ) cnt<-cnt+1
+			if( aCStep[1]%in%c(  3, 7, 5 ) ) cnt<-cnt+1
+			if( aCStep[2]%in%c(          ) ) cnt<-cnt+1
+			if( aCStep[3]%in%c( 15, 6    ) ) cnt<-cnt+1
+			if( aCStep[4]%in%c(  4, 1    ) ) cnt<-cnt+1
+			if( aCStep[5]%in%c(  2       ) ) cnt<-cnt+1
 
 			cnt.w1 <- cccObj$scoreMtx[idx,"w1CStep.cnt"]	# fv in cStep
-			if( fCutU.hasPtn(c( , ),aCStep) )	cnt.w1<-cnt.w1+1
-			if( 1<sum(aCStep[1:2+ ]==c( , )) )	cnt.w1<-cnt.w1+1
-
+			if( fCutU.hasPtn(c( 3, 8 ),aCStep) )	cnt.w1<-cnt.w1+1	# -
+			if( fCutU.hasPtn(c( 1, 8 ),aCStep) )	cnt.w1<-cnt.w1+1
+			# -------------------------------------------------------------------------------------
+			#     FV :    1 (3)   3 (6)   4 (5)   6 (3)   8 (3) 
 			cnt.w2 <- 0
-			if( 1<sum( aCStep[c(,)]*c(,)==aCStep[c( , )] ) )	cnt.w2<-cnt.w2+1
-			if( aCStep[ ]==sum(aCStep[c( , )]) )	cnt.w2<-cnt.w2+1
-			if( sum(aCStep[c( , )])==sum(aCStep[c( , )]) )	cnt.w2<-cnt.w2+1	# 
+			if( 1<sum( aCStep[ 4 ]*c(3,8,4)==aCStep[c(2,3,5)] ) )	cnt.w2<-cnt.w2+1
+			if( 1<sum( aCStep[c(1,5)]*c(2,2)==aCStep[c(2,3)] ) )	cnt.w2<-cnt.w2+1
+			if( aCStep[3]==sum(aCStep[c(2,4,5)]) )	cnt.w2<-cnt.w2+1
+			if( aCStep[5]==sum(aCStep[c(2,4)]) )	cnt.w2<-cnt.w2+1
 
 			cntMtx[idx,"cStep.w1"] <- cnt.w1	;cntMtx[idx,"cStep.w2"] <- cnt.w2
 			cntMtx[idx,"cStep"] <- cnt + cnt.w1 + cnt.w2
 
-			# Raw value(reb)       |cStep          |fStep                   |QuoSize   |QuoTbl 
-			#  Templete  number    | for sample    |                        |0 1 2 2 1 |1 2 2 1
-			#  Templete  number    | for sample    | -9  -9  -9  -6  -6   2 |1 2 2 0 1 |1 2 2 1
-			#  Templete  number( ) | for sample    |  8   6   7   0  -2  -8 |1 1 3 1 0 |1 1 3 1
-			#  Templete  number( ) | for sample    |  3   0   4   2  12   4 |0 2 2 1 1 |2 2 1 1
-			#  Templete  number( ) | for sample    | -5  -9   0   3  -5  -2 |2 0 2 2 0 |2 2 2
-			#  Templete  number( ) | for sample    |  1   6  -3   2  -1   0 |1 1 1 3 0 |1 1 1 3
+			# cStep ptn info 
+			#     Raw value(reb)       |cStep          |fStep                   |QuoSize   |QuoTbl 
+			#      2  5 15 18 19 23    | 3 10  3  1  4 |                        |2 3 1 0 0 |2 3 1
+			#      5  9 12 30 39 43(1) | 4  3 18  9  4 |  3   4  -3  12  20  20 |2 1 0 2 1 |2 1 2 1
+			#      2  7 19 25 29 36    | 5 12  6  4  7 | -3  -2   7  -5 -10  -7 |2 1 2 1 0 |2 1 2 1
+			#     13 16 24 25 33 36(2) | 3  8  1  8  3 | 11   9   5   0   4   0 |0 2 2 2 0 |2 2 2
+			#      5 11 12 29 33 44(1) | 6  1 17  4 11 | -8  -5 -12   4   0   8 |1 2 1 1 1 |1 2 1 1 1
+			#      4  7 13 29 31 39(1) | 3  6 16  2  8 | -1  -4   1   0  -2  -5 |2 1 1 2 0 |2 1 1 2
 		}
 		if( TRUE ){ # fStep		#	u0.zoidFMtx_ana.rpt( stdMI$rawTail )
 			cnt <- 0
-			if( aFStep[1]%in%c(        ) ) cnt<-cnt+1
-			if( aFStep[2]%in%c(        ) ) cnt<-cnt+1
-			if( aFStep[3]%in%c(        ) ) cnt<-cnt+1
-			if( aFStep[4]%in%c(        ) ) cnt<-cnt+1
-			if( aFStep[5]%in%c(        ) ) cnt<-cnt+1
-			if( aFStep[6]%in%c(        ) ) cnt<-cnt+1
+			if( aFStep[1]%in%c(         ) ) cnt<-cnt+1
+			if( aFStep[2]%in%c(  -3,  1 ) ) cnt<-cnt+1
+			if( aFStep[3]%in%c(   0     ) ) cnt<-cnt+1
+			if( aFStep[4]%in%c(  -5     ) ) cnt<-cnt+1
+			if( aFStep[5]%in%c(         ) ) cnt<-cnt+1
+			if( aFStep[6]%in%c(         ) ) cnt<-cnt+1
 
 			cnt.w1 <- cccObj$scoreMtx[idx,"w1FStep.cnt"]	# fv in fStep
-			if( fCutU.hasPtn(c( , ),aFStep) )	cnt.w1<-cnt.w1+1
-			if( 1<sum(aFStep[1:2+ ]==c( , )) )	cnt.w1<-cnt.w1+1
-
+			if( fCutU.hasPtn(c( 4, 0 ),aFStep) )	cnt.w1<-cnt.w1+1
+			if( 1<sum(aFStep[1:2+3]==c( -2, -5 )) )	cnt.w1<-cnt.w1+1
+			# -------------------------------------------------------------------------------------
+			#     FV :    -5 (3)   -3 (2)   -2 (2)   0 (4)   4 (3)   20 (2) 
 			cnt.w2 <- 0
-			if( 1<sum( aFStep[c(,)]*c(,)==aFStep[c(,)] ) )	cnt.w2<-cnt.w2+1
-			if( aFStep[ ]==sum(aFStep[c( , )]) )	cnt.w2<-cnt.w2+1
-			if( sum(aFStep[c( , )])==sum(aFStep[c( , )]) )	cnt.w2<-cnt.w2+1	# 
+			if( 1<sum( aFStep[c(1,5)]*c(-1, 2)==aFStep[c(3,2)] ) )	cnt.w2<-cnt.w2+1
+			if( aFStep[1]==sum(aFStep[c( 3,5 )]) )	cnt.w2<-cnt.w2+1
+			if( aFStep[2]==sum(aFStep[c( 3,6 )]) )	cnt.w2<-cnt.w2+1
+			if( aFStep[4]==sum(aFStep[c( 1,3 )]) )	cnt.w2<-cnt.w2+1
+			if( aFStep[6]==sum(aFStep[c( 1,2 )]) )	cnt.w2<-cnt.w2+1
+			if( sum(aFStep[c(1,6)])==sum(aFStep[c(2,5)]) )	cnt.w2<-cnt.w2+1	# -6
 
 			cntMtx[idx,"fStep.w1"] <- cnt.w1	;cntMtx[idx,"fStep.w2"] <- cnt.w2
 			cntMtx[idx,"fStep"] <- cnt + cnt.w1 + cnt.w2
@@ -2703,7 +2947,7 @@ fCutCnt.nextColVal_5 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 
 } # fCutCnt.nextColVal_5()
 
-# UNdone
+# done
 fCutCnt.nextColVal_6 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 
 	flgCnt <- rep( 0 ,length(allIdxF) )
@@ -2718,18 +2962,8 @@ fCutCnt.nextColVal_6 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 	# -- conditional
 	auxCntMtx <- matrix( 0 ,nrow=length(allIdxF) ,ncol=2 )	;colnames(auxCntMtx)=c("auxZW","auxQuo")
     flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
-					if( (aZoid[6]-aZoid[1]) %in% c( , ) ) return( FALSE )
-					return( TRUE )
-				})	;kIdx<-anaFlagFnd(!flag,rpt)
-	auxCntMtx[,"auxZW"] <- !flag
-    flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
 					quoSize <- fCutU.getQuoObj( aZoid )$size
-					if( all(quoSize[1:3+0]==c(,,)) ) return(FALSE)	# next rebind of ,,
-					if( all(quoSize[1:3+1]==c(,,)) ) return(FALSE)	# next rebind of ,,
-					if( all(quoSize[1:3+2]==c(,,)) ) return(FALSE)	# next rebind of ,,
-					if( all(quoSize[1:3+0]==c(,,)) ) return(FALSE)	# next rebind of ,,
-					if( all(quoSize[1:3+1]==c(,,)) ) return(FALSE)	# next rebind of ,,
-					if( all(quoSize[1:3+2]==c(,,)) ) return(FALSE)	# next rebind of ,,
+					if( all(quoSize[1:3+1]==c(2,2,2)) ) return(FALSE)	# next rebind of 2,2,0
 					return( TRUE )
 				})	;kIdx<-anaFlagFnd(!flag,rpt)
 	auxCntMtx[,"auxQuo"] <- !flag
@@ -2746,11 +2980,11 @@ fCutCnt.nextColVal_6 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 	
 		if( TRUE ){	# raw
 			cnt <- 0
-			if( aZoid[1]%in%c(       ) ) cnt<-cnt+1
+			if( aZoid[1]%in%c(  5    ) ) cnt<-cnt+1
 			if( aZoid[2]%in%c(       ) ) cnt<-cnt+1
 			if( aZoid[3]%in%c(       ) ) cnt<-cnt+1
 			if( aZoid[4]%in%c(       ) ) cnt<-cnt+1
-			if( aZoid[5]%in%c(       ) ) cnt<-cnt+1
+			if( aZoid[5]%in%c( 15    ) ) cnt<-cnt+1
 			if( aZoid[6]%in%c(       ) ) cnt<-cnt+1
 			cntMtx[idx,"raw"] <- cnt
 
@@ -2759,65 +2993,89 @@ fCutCnt.nextColVal_6 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 		}
 		if( TRUE ){ # rawFV		# anaMtx.freqVal( stdMI$rawTail )
 			cnt <- 0
-			# < >
-			if( fCutU.hasPtn(c(  ,  ),aZoid) ) cnt<-cnt+1
+			# < 1>
+			if( fCutU.hasPtn(c(  1,NA,10          ),aZoid) ) cnt<-cnt+1
+			if( fCutU.hasPtn(c(  1,NA,NA,14       ),aZoid) ) cnt<-cnt+1
+			if( fCutU.hasPtn(c(  1,15,NA,NA,36    ),aZoid) ) cnt<-cnt+1
+			# <14>
+			if( fCutU.hasPtn(c(  1,NA,NA,14       ),aZoid) ) cnt<-cnt+1
+			if( fCutU.hasPtn(c( 10,14 ),aZoid) ) cnt<-cnt+1
+			# <16>
+			# <17>
+			if( fCutU.hasPtn(c( 17,NA,22,NA,NA,28 ),aZoid) ) cnt<-cnt+1
+			# <21>
+			if( fCutU.hasPtn(c(  3,21,NA,34,43 ),aZoid,thld=3,fixIdx=2) ) cnt<-cnt+1
+			# <25>
+			# <26>
+			if( fCutU.hasPtn(c(          26,29 ),aZoid) ) cnt<-cnt+1
+			if( fCutU.hasPtn(c(  1, 1, 3,26    ),aZoid,thld=3,fixIdx=4) ) cnt<-cnt+1
+			# <28>
+			if( fCutU.hasPtn(c( 27,28 ),aZoid) ) cnt<-cnt+1
+			# <37>
+			if( fCutU.hasPtn(c(  7, 8,37 ),aZoid) ) cnt<-cnt+1
+			# <43>
 			cntMtx[idx,"rawFV"] <- cnt
 		}
 		if( TRUE ){ # rem		# u0.zoidMtx_ana( stdMI$rawTail%%10 )
 			cnt <- 0
-			if( fCutU.remFilt(aZoid[1],c(         ),c(  )) ) cnt<-cnt+1 # 1
-			if( fCutU.remFilt(aZoid[2],c(         ),c(  )) ) cnt<-cnt+1 # 2
-			if( fCutU.remFilt(aZoid[3],c(         ),c(  )) ) cnt<-cnt+1 # 3
-			if( fCutU.remFilt(aZoid[4],c(         ),c(  )) ) cnt<-cnt+1 # 4
-			if( fCutU.remFilt(aZoid[5],c(         ),c(  )) ) cnt<-cnt+1 # 5
-			if( fCutU.remFilt(aZoid[6],c(         ),c(  )) ) cnt<-cnt+1 # 6
+			if( fCutU.remFilt(aZoid[1],c( 5       ),c(  5  )) ) cnt<-cnt+1 # 1
+			if( fCutU.remFilt(aZoid[2],c(         ),c(     )) ) cnt<-cnt+1 # 2
+			if( fCutU.remFilt(aZoid[3],c( 7       ),c(     )) ) cnt<-cnt+1 # 3
+			if( fCutU.remFilt(aZoid[4],c(         ),c(     )) ) cnt<-cnt+1 # 4
+			if( fCutU.remFilt(aZoid[5],c( 7,3,5   ),c( 15  )) ) cnt<-cnt+1 # 5
+			if( fCutU.remFilt(aZoid[6],c( 8,2,0   ),c(     )) ) cnt<-cnt+1 # 6
 			cntMtx[idx,"rem"] <- cnt
 		}
 		if( TRUE ){ # cStep		#	u0.zoidCMtx_ana.rpt( stdMI$rawTail )
 			cnt <- 0
-			if( aCStep[1]%in%c(         ) ) cnt<-cnt+1
-			if( aCStep[2]%in%c(         ) ) cnt<-cnt+1
-			if( aCStep[3]%in%c(         ) ) cnt<-cnt+1
-			if( aCStep[4]%in%c(         ) ) cnt<-cnt+1
-			if( aCStep[5]%in%c(         ) ) cnt<-cnt+1
+			if( aCStep[1]%in%c(  2, 5    ) ) cnt<-cnt+1
+			if( aCStep[2]%in%c(          ) ) cnt<-cnt+1
+			if( aCStep[3]%in%c(  4, 3, 7 ) ) cnt<-cnt+1
+			if( aCStep[4]%in%c(  4       ) ) cnt<-cnt+1
+			if( aCStep[5]%in%c(  3       ) ) cnt<-cnt+1
 
 			cnt.w1 <- cccObj$scoreMtx[idx,"w1CStep.cnt"]	# fv in cStep
-			if( fCutU.hasPtn(c( , ),aCStep) )	cnt.w1<-cnt.w1+1
-			if( 1<sum(aCStep[1:2+ ]==c( , )) )	cnt.w1<-cnt.w1+1
-
+			if( 1<sum(aCStep[1:2+0]==c( 8, 1 )) )	cnt.w1<-cnt.w1+1	# -
+			# -------------------------------------------------------------------------------------
+			#     FV :    1 (6)   2 (6)   3 (2)   4 (2)   8 (3)   9 (3) 
 			cnt.w2 <- 0
-			if( 1<sum( aCStep[c(,)]*c(,)==aCStep[c( , )] ) )	cnt.w2<-cnt.w2+1
-			if( aCStep[ ]==sum(aCStep[c( , )]) )	cnt.w2<-cnt.w2+1
-			if( sum(aCStep[c( , )])==sum(aCStep[c( , )]) )	cnt.w2<-cnt.w2+1	# 
+			if( 1<sum( aCStep[ 5 ]*c(4,1)==aCStep[c(1,2)] ) )	cnt.w2<-cnt.w2+1
+			if( 1<sum( aCStep[c(2,3)]*c(1,4)==aCStep[c(5,4)] ) )	cnt.w2<-cnt.w2+1
+			if( aCStep[4]==sum(aCStep[c(1,2,5)]) )	cnt.w2<-cnt.w2+1
 
 			cntMtx[idx,"cStep.w1"] <- cnt.w1	;cntMtx[idx,"cStep.w2"] <- cnt.w2
 			cntMtx[idx,"cStep"] <- cnt + cnt.w1 + cnt.w2
 
-			# Raw value(reb)       |cStep          |fStep                   |QuoSize   |QuoTbl 
-			#  Templete  number    | for sample    |                        |0 1 2 2 1 |1 2 2 1
-			#  Templete  number    | for sample    | -9  -9  -9  -6  -6   2 |1 2 2 0 1 |1 2 2 1
-			#  Templete  number( ) | for sample    |  8   6   7   0  -2  -8 |1 1 3 1 0 |1 1 3 1
-			#  Templete  number( ) | for sample    |  3   0   4   2  12   4 |0 2 2 1 1 |2 2 1 1
-			#  Templete  number( ) | for sample    | -5  -9   0   3  -5  -2 |2 0 2 2 0 |2 2 2
-			#  Templete  number( ) | for sample    |  1   6  -3   2  -1   0 |1 1 1 3 0 |1 1 1 3
+			#     Raw value(reb)       |cStep          |fStep                   |QuoSize   |QuoTbl 
+			#     17 25 28 37 43 44    | 8  3  9  6  1 |                        |0 1 2 1 2 |1 2 1 2
+			#      1  3 12 14 16 43(1) | 2  9  2  2 27 |-16 -22 -16 -23 -27  -1 |2 3 0 0 1 |2 3 1
+			#     17 21 25 26 27 36    | 4  4  1  1  9 | 16  18  13  12  11  -7 |0 1 4 1 0 |1 4 1
+			#     10 21 22 30 35 42(1) |11  1  8  5  7 | -7   0  -3   4   8   6 |0 1 2 2 1 |1 2 2 1
+			#      5  6 16 18 37 38    | 1 10  2 19  1 | -5 -15  -6 -12   2  -4 |2 2 0 2 0 |2 2 2
+			#      1  9 11 14 26 28    | 8  2  3 12  2 | -4   3  -5  -4 -11 -10 |2 2 2 0 0 |2 2 2
+
 		}
 		if( TRUE ){ # fStep		#	u0.zoidFMtx_ana.rpt( stdMI$rawTail )
 			cnt <- 0
-			if( aFStep[1]%in%c(        ) ) cnt<-cnt+1
+			if( aFStep[1]%in%c(  -3    ) ) cnt<-cnt+1
 			if( aFStep[2]%in%c(        ) ) cnt<-cnt+1
-			if( aFStep[3]%in%c(        ) ) cnt<-cnt+1
+			if( aFStep[3]%in%c(  -4    ) ) cnt<-cnt+1
 			if( aFStep[4]%in%c(        ) ) cnt<-cnt+1
 			if( aFStep[5]%in%c(        ) ) cnt<-cnt+1
-			if( aFStep[6]%in%c(        ) ) cnt<-cnt+1
+			if( aFStep[6]%in%c( -10    ) ) cnt<-cnt+1
 
 			cnt.w1 <- cccObj$scoreMtx[idx,"w1FStep.cnt"]	# fv in fStep
-			if( fCutU.hasPtn(c( , ),aFStep) )	cnt.w1<-cnt.w1+1
-			if( 1<sum(aFStep[1:2+ ]==c( , )) )	cnt.w1<-cnt.w1+1
+			# -------------------------------------------------------------------------------------
+			#     FV :    -16 (2)   -7 (2)   -5 (2)   -4 (3) 
 
 			cnt.w2 <- 0
-			if( 1<sum( aFStep[c(,)]*c(,)==aFStep[c(,)] ) )	cnt.w2<-cnt.w2+1
-			if( aFStep[ ]==sum(aFStep[c( , )]) )	cnt.w2<-cnt.w2+1
-			if( sum(aFStep[c( , )])==sum(aFStep[c( , )]) )	cnt.w2<-cnt.w2+1	# 
+			if( 1<sum( aFStep[c(1,3)]*c1(1,2)==aFStep[c(4,6)] ) )	cnt.w2<-cnt.w2+1
+			if( aFStep[3]==sum(aFStep[c(1,4,2)]) )	cnt.w2<-cnt.w2+1
+			if( aFStep[5]==sum(aFStep[c(1,2,6 )]) )	cnt.w2<-cnt.w2+1
+			if( aFStep[5]==sum(aFStep[c(4,2,6)]) )	cnt.w2<-cnt.w2+1
+			if( aFStep[6]==sum(aFStep[c(3,1,4,2)]) )	cnt.w2<-cnt.w2+1
+			if( sum(aFStep[c(3,6)])==sum(aFStep[c(1,5)]) )	cnt.w2<-cnt.w2+1	# -15
+			if( sum(aFStep[c(3,6)])==sum(aFStep[c(4,5)]) )	cnt.w2<-cnt.w2+1	# -15
 
 			cntMtx[idx,"fStep.w1"] <- cnt.w1	;cntMtx[idx,"fStep.w2"] <- cnt.w2
 			cntMtx[idx,"fStep"] <- cnt + cnt.w1 + cnt.w2
@@ -2900,6 +3158,9 @@ flagScoreMtx		<- function( ccObjLst ,allIdxF ){
 flagCStepValMtx		<- function( ccObjLst ,allIdxF ){
 
 } # flagCStepValMtx()
+
+
+
 
 
 
