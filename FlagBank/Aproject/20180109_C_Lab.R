@@ -1,11 +1,12 @@
-lastH <- 837
+lastH <- 838
 # fullRstSpan, goldRstSpan ----------------------------------------------------------
 fullRstSpan <- 826:lastH
-load( sprintf("Obj_allIdxLstZ%d.save",lastH) )
-stdFiltedCnt <- allIdxLst$stdFiltedCnt[as.character(809:lastH)] ;rm(allIdxLst)
+loadObjNm <- load( sprintf("Obj_allIdxLstZ%d.save",lastH) )
+stdFiltedCnt <- allIdxLst$stdFiltedCnt[as.character(809:lastH)]
 goldRstSpan <- as.integer(names( stdFiltedCnt[stdFiltedCnt<=1] ))
-stdFiltedCnt <- allIdxLst$stdFiltedCnt[as.character(819:lastH)] ;rm(allIdxLst)
+stdFiltedCnt <- allIdxLst$stdFiltedCnt[as.character(819:lastH)]
 grp2RstSpan <- as.integer(names( stdFiltedCnt[stdFiltedCnt==2] ))
+rm(allIdxLst)
 
 lab.getMtxLst <- function( hSpan ){
 
@@ -77,8 +78,11 @@ rstObj <- lab.getMtxLst( goldRstSpan )
 if( TRUE ){ # cStep, fStep 에서 w1,w2 포함 제외
     for( nIdx in rstObj$zhName ){
         cntMtx <- rstObj$mtxInfoLst[[nIdx]]$cntMtx
+        scoreMtx <- rstObj$mtxInfoLst[[nIdx]]$scoreMtx
         rstObj$mtxInfoLst[[nIdx]]$cntMtx[,"cStep"] <- cntMtx[,"cStep"] - cntMtx[,"cStep.w1"] - cntMtx[,"cStep.w2"]
         rstObj$mtxInfoLst[[nIdx]]$cntMtx[,"fStep"] <- cntMtx[,"fStep"] - cntMtx[,"fStep.w1"] - cntMtx[,"fStep.w2"]
+        rstObj$mtxInfoLst[[nIdx]]$cntMtx[,"cStep.w1"] <- cntMtx[,"cStep.w1"] - scoreMtx[,"w1CStep.cnt"]
+        rstObj$mtxInfoLst[[nIdx]]$cntMtx[,"fStep.w1"] <- cntMtx[,"fStep.w1"] - scoreMtx[,"w1FStep.cnt"]
     }
 }
 

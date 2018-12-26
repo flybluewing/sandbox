@@ -3069,7 +3069,7 @@ fCutCnt.nextColVal_6 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 			#     FV :    -16 (2)   -7 (2)   -5 (2)   -4 (3) 
 
 			cnt.w2 <- 0
-			if( 1<sum( aFStep[c(1,3)]*c1(1,2)==aFStep[c(4,6)] ) )	cnt.w2<-cnt.w2+1
+			if( 1<sum( aFStep[c(1,3)]*c(1,2)==aFStep[c(4,6)] ) )	cnt.w2<-cnt.w2+1
 			if( aFStep[3]==sum(aFStep[c(1,4,2)]) )	cnt.w2<-cnt.w2+1
 			if( aFStep[5]==sum(aFStep[c(1,2,6 )]) )	cnt.w2<-cnt.w2+1
 			if( aFStep[5]==sum(aFStep[c(4,2,6)]) )	cnt.w2<-cnt.w2+1
