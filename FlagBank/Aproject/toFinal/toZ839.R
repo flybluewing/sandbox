@@ -5,7 +5,7 @@ source(sprintf("./toFinal/toZ%d_H.R",workH))
 load( sprintf("Obj_allIdxLstZ%d.save",workH-1) )
 load(sprintf("./save/Obj_gEnvZ%d.save",workH-1))
 allZoidGrpName <-"allZoid.idx0"	# 
-allIdx <- allIdxLst[[allZoidGrpName]]	# 
+allIdx <- allIdxLst[[allZoidGrpName]]	#       971175         1753740         1450389
 allIdxF <- 1000:1010		;stdZoid <- NULL
 
 # simMode start ----------------------------------------------------
@@ -41,7 +41,11 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 	allIdxFObj$allIdxF.colValSeqNext <- allIdxF
 	cat(sprintf("allIdxF %d\n",length(allIdxF)))
 
-	a <- filtByOnePhase( gEnv ,allIdxF )
+	# testing.
+	ccObj <- fCutCnt.basic( 		gEnv ,allIdxF )
+
+
+	a <- ff0.filtByOnePhase( gEnv ,allIdxF )
 	length( a )
 
 	# allIdxF <- fCut.rawFV3(  gEnv ,allIdxF  )
