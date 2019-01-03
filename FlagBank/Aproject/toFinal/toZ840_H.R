@@ -299,7 +299,6 @@ fCutCnt.basic <- function( gEnv ,allIdxF ,rpt=FALSE ){
 			if( 1<sum(aCStep[1:2+3]==c(  2, 1 )) )	cnt.w1<-cnt.w1+1
 			if( fCutU.hasPtn(c(  3,12 ),aCStep) )	cnt.w1<-cnt.w1+1
 			if( 1<sum(aCStep[1:2+3]==c(  1, 1 )) )	cnt.w1<-cnt.w1+1
-			if( fCutU.hasPtn(c( , ),aCStep) )	cnt.w1<-cnt.w1+1	# -
 			# -------------------------------------------------------------------------------------
 			#     FV :    1 (4)   2 (6)   3 (6)   6 (2)   7 (2)   10 (2)   12 (2) 
 
@@ -1941,9 +1940,7 @@ fCutCnt.nextColVal_2 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 			#     FV :    1 (4)   2 (2)   3 (6)   4 (3)   5 (2)   6 (3)   7 (2)   10 (2)   13 (2) 
 
 			cnt.w2 <- 0
-			if( 1<sum( aCStep[c(,)]*c(,)==aCStep[c( , )] ) )	cnt.w2<-cnt.w2+1
-			if( aCStep[ ]==sum(aCStep[c( , )]) )	cnt.w2<-cnt.w2+1
-			if( sum(aCStep[c( , )])==sum(aCStep[c( , )]) )	cnt.w2<-cnt.w2+1	# 
+			if( 1<sum( aCStep[c(2,3)]*c(1,6)==aCStep[c(4,5)] ) )	cnt.w2<-cnt.w2+1
 
 			cntMtx[idx,"cStep.w1"] <- cnt.w1	;cntMtx[idx,"cStep.w2"] <- cnt.w2
 			cntMtx[idx,"cStep"] <- cnt + cnt.w1 + cnt.w2

@@ -51,7 +51,9 @@ fCutU.neighborObj <- function( pMtx ){
 	} #getSpanLst()
 
 	if( 2>nrow(pMtx) ){
-		return( list() )
+		rObj <- list()
+		rObj$matchCnt <- function( aZoid ){ return(0) }
+		return( rObj )
 	}
 
 	vals <- sort(unique(as.vector(pMtx)))
@@ -1255,14 +1257,14 @@ fCutU.commonCutCnt <- function( gEnv, allIdxF ,zMtx
 		colSpan <- 0:2+idx	# column span of cStepMtx
 
 		logId <- sprintf("c3%d",idx)
-		obj <- fCutU.getChkCStepValReb( zMtx[,colSpan] )
+		obj <- fCutU.getChkCStepValReb( zMtx[,colSpan,drop=F] )
 		cStepValMtx[,logId] <- obj$match( gEnv$allZoidMtx[allIdxF,colSpan,drop=F] )
 	}
 	for( idx in 1:5 ){
 		colSpan <- 0:1+idx	# column span of cStepMtx
 
 		logId <- sprintf("c2%d",idx)
-		obj <- fCutU.getChkCStepValReb( zMtx[,colSpan] )
+		obj <- fCutU.getChkCStepValReb( zMtx[,colSpan,drop=F] )
 		cStepValMtx[,logId] <- obj$match( gEnv$allZoidMtx[allIdxF,colSpan,drop=F] )
 	}
 	cStepMax2 <- sort(stdMI$lastZoid[2:6]-stdMI$lastZoid[1:5] ,decreasing=T)[1:2]

@@ -891,10 +891,12 @@ fCutCnt.nextQuo10 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 			if( aCStep[5]%in%c( 7, 6    ) ) cnt<-cnt+1
 
 			cnt.w1 <- cccObj$scoreMtx[idx,"w1CStep.cnt"]
+			if( fCutU.hasPtn(c( 6, 3 ),aCStep) )	cnt.w1<-cnt.w1+1
 			if( all(aCStep[1:2+0]==c( 3, 7)) )		cnt.w1<-cnt.w1+1
 			if( all(aCStep[1:2+1]==c( 3, 6)) )		cnt.w1<-cnt.w1+1
 			if( fCutU.hasPtn(c( 6, 8 ),aCStep) )	cnt.w1<-cnt.w1+1
-			if( fCutU.hasPtn(c( 4, 3 ),aCStep) )	cnt.w1<-cnt.w1+1
+			if( fCutU.hasPtn(c( 7, 3 ),aCStep) )	cnt.w1<-cnt.w1+1
+			if( fCutU.hasPtn(c( 3, 9 ),aCStep) )	cnt.w1<-cnt.w1+1
 
 			cnt.w2 <- 0
 			if( sum(aCStep[c(1,2)])==sum(aCStep[c(3,5)]) )	cnt.w2<-cnt.w2+1
