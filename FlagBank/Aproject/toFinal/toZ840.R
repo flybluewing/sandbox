@@ -32,7 +32,7 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 	allIdxF <- fCut.default( gEnv ,allIdxF )		;allIdxF.bak <- allIdxF
 
 	# colValSeqNext ------------------------------------------------------
-	flgCnt <- fCutCnt.colValSeqNext( gEnv ,allIdxF ) 
+	flgCnt <- fCutCnt.colValSeqNext( gEnv ,allIdxF )
 	flgCnt <- flgCnt + fCutCnt.colValSeqNext.cStep( gEnv ,allIdxF )
 	flgCnt <- flgCnt + fCutCnt.default( gEnv ,allIdxF )	# 효율이 의문시된다.
 	flag <- flgCnt<2	;table(flag)

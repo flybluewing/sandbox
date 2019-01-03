@@ -2130,7 +2130,6 @@ fCutCnt.nextColVal_3 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 			if( fCutU.hasPtn(c( 28,30 ),aZoid) ) cnt<-cnt+1
 			# <30>
 			if( fCutU.hasPtn(c( 28,30 ),aZoid) ) cnt<-cnt+1
-			if( fCutU.hasPtn(c(  ,  ),aZoid) ) cnt<-cnt+1
 			# <36>
 			# <41>
 			if( fCutU.hasPtn(c(       24,NA,41 ),aZoid) ) cnt<-cnt+1

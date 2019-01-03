@@ -277,7 +277,7 @@ fCutU.getNextColVal <- function( gEnv ,colIdx ){	# <official>
 	flag <- sapply( 1:(hLen-1) ,function( hIdx ){ all(gEnv$zhF[hIdx,colIdx]==lastVal) })
 	flag.idx <- which( flag )+1
 
-	rObj <- list( zMtx=gEnv$zhF[flag.idx,] ,lastVal=lastVal ,colIdx=colIdx )
+	rObj <- list( zMtx=gEnv$zhF[flag.idx,,drop=F] ,lastVal=lastVal ,colIdx=colIdx )
 	return( rObj )
 }	# fCutU.getNextColVal()
 
@@ -1241,12 +1241,12 @@ fCutU.commonCutCnt <- function( gEnv, allIdxF ,zMtx
 		aCStep <- aZoid[2:6] - aZoid[1:5]
 		chkObj.c <- wCObj$check(aCStep)
 		scoreMtx[idx,"w1CStep.cnt"] <- chkObj.c$flgCnt
-		scoreMtx[idx,"w1CStep.matLen"] <- max( chkObj.c$matchCnt )
+		scoreMtx[idx,"w1CStep.matLen"] <- ifelse( 0<length(chkObj.c$matchCnt) ,max(chkObj.c$matchCnt) ,0 )
 
 		aFStep <- aZoid - stdMI$lastZoid
 		chkObj.f <- wFObj$check(aFStep)
 		scoreMtx[idx,"w1FStep.cnt"] <- chkObj.f$flgCnt
-		scoreMtx[idx,"w1FStep.matLen"] <- max( chkObj.f$matchCnt )
+		scoreMtx[idx,"w1FStep.matLen"] <- ifelse( 0<length(chkObj.f$matchCnt) ,max(chkObj.f$matchCnt) ,0 )
 	}
 
 	# cName <- c("c31","c32","c33","c34","c21","c22","c23","c24","c25","max2","min2")
