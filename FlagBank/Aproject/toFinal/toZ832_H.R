@@ -2763,7 +2763,7 @@ fCutCnt.nextColVal_5 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 		aZoid <- gEnv$allZoidMtx[allIdxF[idx],]
 		aCStep <- aZoid[2:6] - aZoid[1:5]
 		aFStep <- aZoid - stdMI$lastZoid
-	
+
 		if( TRUE ){	# raw
 			cnt <- 0
 			if( aZoid[1]%in%c(  5  ) ) cnt<-cnt+1
