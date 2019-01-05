@@ -956,6 +956,55 @@ fCutU.getChkNextPtn4FV.fStep <- function( rawTail ,pDebug=FALSE ){
 } # fCutU.getChkNextPtn4FV.fStep()
 
 
+fCutU.getStdMI <- function( gEnv ){
+	
+
+	stdMILst <- list()
+
+	zMtx <- gEnv$zhF
+	stdMILst[["basic"]] <- fCutU.getMtxInfo( zMtx )
+
+	zMtx <- fCutU.getNextZW( gEnv )$zMtx
+	stdMILst[["nextZW"]] <- if( 0==nrow(zMtx) ) NULL else fCutU.getMtxInfo( zMtx )
+
+	zMtx <- fCutU.getNextQuo10( gEnv )$zMtx	# rptObj<-anaQuoTbl( zMtx )
+	stdMILst[["nextQuo10"]] <- if( 0==nrow(zMtx) ) NULL else fCutU.getMtxInfo( zMtx )
+
+	zMtx <- fCutU.getNextBin( gEnv )$zMtx	# rptObj<-anaQuoTbl( zMtx )
+	stdMILst[["nextBin"]] <- if( 0==nrow(zMtx) ) NULL else fCutU.getMtxInfo( zMtx )
+
+	rebObj <- fCutU.getNextRebNumPtn( gEnv ,numPtn=NULL )
+	zMtx <- rebObj$zMtx	# rptObj<-anaQuoTbl( zMtx )
+	stdMILst[["nextRebNum"]] <- if( 0==nrow(zMtx) ) NULL else fCutU.getMtxInfo( zMtx )
+
+	zMtx <- fCutU.getNextCStepBin( gEnv )$zMtx	# rptObj<-anaQuoTbl( zMtx )
+	stdMILst[["nextCStepBin"]] <- if( 0==nrow(zMtx) ) NULL else fCutU.getMtxInfo( zMtx )
+
+	zMtx <- fCutU.getNextFStepBin( gEnv )$zMtx	# rptObj<-anaQuoTbl( zMtx )
+	stdMILst[["nextFStepBin"]] <- if( 0==nrow(zMtx) ) NULL else fCutU.getMtxInfo( zMtx )
+
+	zMtx <- fCutU.getNextColVal( gEnv ,1 )$zMtx	# rptObj<-anaQuoTbl( zMtx )
+	stdMILst[["nextColVal_1"]] <- if( 0==nrow(zMtx) ) NULL else fCutU.getMtxInfo( zMtx )
+
+	zMtx <- fCutU.getNextColVal( gEnv ,2 )$zMtx	# rptObj<-anaQuoTbl( zMtx )
+	stdMILst[["nextColVal_2"]] <- if( 0==nrow(zMtx) ) NULL else fCutU.getMtxInfo( zMtx )
+
+	zMtx <- fCutU.getNextColVal( gEnv ,3 )$zMtx	# rptObj<-anaQuoTbl( zMtx )
+	stdMILst[["nextColVal_3"]] <- if( 0==nrow(zMtx) ) NULL else fCutU.getMtxInfo( zMtx )
+
+	zMtx <- fCutU.getNextColVal( gEnv ,4 )$zMtx	# rptObj<-anaQuoTbl( zMtx )
+	stdMILst[["nextColVal_4"]] <- if( 0==nrow(zMtx) ) NULL else fCutU.getMtxInfo( zMtx )
+
+	zMtx <- fCutU.getNextColVal( gEnv ,5 )$zMtx	# rptObj<-anaQuoTbl( zMtx )
+	stdMILst[["nextColVal_5"]] <- if( 0==nrow(zMtx) ) NULL else fCutU.getMtxInfo( zMtx )
+
+	zMtx <- fCutU.getNextColVal( gEnv ,6 )$zMtx	# rptObj<-anaQuoTbl( zMtx )
+	stdMILst[["nextColVal_6"]] <- if( 0==nrow(zMtx) ) NULL else fCutU.getMtxInfo( zMtx )
+
+
+	return( stdMILst )
+}
+
 #	utility function for fCutU.getChkNextPtn4FV.xxxx()
 fCutU.getChkNextPtn4FV.u.matchSpan <- function( tgtSpanDF ,rebSpanDF ,banValLst ){
 

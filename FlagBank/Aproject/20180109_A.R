@@ -37,7 +37,7 @@ k.FLogStr(sprintf("Start filt (filt number:%d ,saveId:%s)"
 		)
 
 # =====================================================================================
-# 실제 Zoid History들의 필터링 테스트.
+# 이전 Zoid History들의 필터링 테스트.
 logFile <- sprintf("./log/gEnv%s.log",saveId)
 fRstLst <- list() # 각 hIdx에서 걸린 필터들의 ID
 for( hIdx in testSpan ){ # 35분 정도 소요.(388 ZH, 21 Filt)
