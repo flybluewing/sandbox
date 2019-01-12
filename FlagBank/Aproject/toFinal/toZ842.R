@@ -1,4 +1,4 @@
-# Z841
+# Z842
 workH <- 841	;rpt=TRUE
 source(sprintf("./toFinal/toZ%d_H.R",workH))
 
@@ -9,7 +9,7 @@ allIdx <- allIdxLst[[allZoidGrpName]]	#
 allIdxF <- 1000:1010		;stdZoid <- NULL
 
 # simMode start ----------------------------------------------------
-	aZoid <- stdZoid <- c(  5,11,14,30,33,38 ) # ZH 841 채워넣을 것.
+	aZoid <- stdZoid <- c(  ,,,,, ) # ZH 842 채워넣을 것.
 	allIdxF <- allIdx <- stdIdx <- 
 		# which(apply(gEnv$allZoidMtx,1,function(zoid){all(zoid==stdZoid)}))
 	u0.saveStdZoidFltRst( workH )

@@ -1,4 +1,4 @@
-lastH <- 839
+lastH <- 840
 # fullRstSpan, goldRstSpan ----------------------------------------------------------
 fullRstSpan <- 826:lastH
 loadObjNm <- load( sprintf("Obj_allIdxLstZ%d.save",lastH) )

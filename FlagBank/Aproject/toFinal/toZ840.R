@@ -42,8 +42,7 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 	cat(sprintf("allIdxF %d\n",length(allIdxF)))
 
 	# testing.
-	ccObj <- fCutCnt.basic( 		gEnv ,allIdxF )
-
+	#	ccObj <- fCutCnt.basic( 		gEnv ,allIdxF )
 
 	a <- ff0.filtByOnePhase( gEnv ,allIdxF )
 	length( a )
