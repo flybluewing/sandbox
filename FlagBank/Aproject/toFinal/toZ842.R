@@ -1,5 +1,5 @@
 # Z842
-workH <- 841	;rpt=TRUE
+workH <- 842	;rpt=TRUE
 source(sprintf("./toFinal/toZ%d_H.R",workH))
 
 load( sprintf("Obj_allIdxLstZ%d.save",workH-1) )
