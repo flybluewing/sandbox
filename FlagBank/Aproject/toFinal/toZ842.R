@@ -7,6 +7,9 @@ load(sprintf("./save/Obj_gEnvZ%d.save",workH-1))
 allZoidGrpName <-"allZoid.idx0"	# 
 allIdx <- allIdxLst[[allZoidGrpName]]	#
 allIdxF <- 1000:1010		;stdZoid <- NULL
+# 참고 자료 --------------------------------------------------------------------	
+fCutU.rptColValSeqNext( gEnv ,allIdxF ,sprintf("toZ%d",workH) )
+
 
 # simMode start ----------------------------------------------------
 	aZoid <- stdZoid <- c(  ,,,,, ) # ZH 842 채워넣을 것.
@@ -18,8 +21,6 @@ allIdxF <- 1000:1010		;stdZoid <- NULL
 finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
     # cutEadge.getBanPtnColVal() 에서 1~2개 발생 탈락값들에 대한 검토 권장.
 	allIdxFObj <- list()
-	# 참고 자료 --------------------------------------------------------------------	
-	fCutU.rptColValSeqNext( gEnv ,allIdxF ,sprintf("toZ%d",workH) )
 	# aQuoTblLst <- fCutU.getQuoTblLst( gEnv$allZoidMtx[allIdxF,] )
 	# aQuoTblStr <- sapply( aQuoTblLst ,function(quoTbl){quoTbl$valStr})	;table(aQuoTblStr)
 
