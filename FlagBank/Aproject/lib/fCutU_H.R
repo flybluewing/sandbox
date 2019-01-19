@@ -1333,7 +1333,66 @@ fCutU.commonCutCnt <- function( gEnv, allIdxF ,zMtx
 
 } #	fCutU.commonCutCnt( )
 
+fCutU.ccc.score2 <- function( gEnv, allIdxF, zMtx ){
+	#	...ab. <-- left slide ( k, a, b 패턴에 대한 V 값)
+	#   ..k...
+	#   .V....
 
+	#	zMtx <- gEnv$zhF
+
+	getSlideReb <- function( pZMtx ,ptnSize=2 ){
+
+		hSize <- nrow(pZMtx)
+		if( 3>hSize ){ return(list()) }
+
+		hSpan <- (hSize-1):2		;hWidth <- ncol(pZMtx)
+
+		rObj <- list()	;dbgObj <- list()
+
+		if( TRUE ){	# left slide
+			colSpan <- 1:(hWidth-ptnSize)
+
+		}
+
+		if( TRUE ){ # right slide
+
+		}
+
+		return( rObj )
+	}	# getSlideReb()
+	getSlideReb.ptnLst <- function( pZMtx ,curHIdx ,ptnSize ,direc="left" ){
+		rObj <- list()
+
+		hWidth <- ncol(pZMtx)
+		cSpan <- if( "left"==direc ) 1:(hWidth-ptnSize-1) else (ptnSize+1+1):hWidth
+		# for( cIdx in  ){
+
+		# }
+		return( rObj )
+	}	# getSlideReb.ptnLst()
+
+
+	cName <- c("rebV","rebC","rebL1","rebR1","rebL2","rebR2")
+	scoreMtx <- matrix( 0, nrow=length(allIdxF), ncol=length(cName) )
+	colnames( scoreMtx ) <- cName
+		#	rebV	: 값 재발 수
+		#	rebC	: 동일 컬럼 재발 수
+		#	rebL, rebR	: left slide reb, right slide reb
+
+	stdMI <- fCutU.getMtxInfo( zMtx )
+
+	if( TRUE ){	# reb3V ,reb2C
+		for( aIdx in seq_len(length(allIdxF)) ){
+			aZoid <- gEnv$allZoidMtx[allIdxF[aIdx],]
+			scoreMtx[aIdx,"rebV"] <- sum( aZoid %in% stdMI$lastZoid )
+			scoreMtx[aIdx,"rebC"] <- sum( aZoid == stdMI$lastZoid )
+		}
+	}	# reb3V ,reb2C
+	#	dbgN<-"rebV"	;table(scoreMtx[,dbgN])	;dbgIdx<-head(which(scoreMtx[,dbgN]==1))	;aIdx<-dbgIdx[1]
+
+	return( scoreMtx )
+
+}	# fCutU.ccc.score2
 
 
 #=================================================================================

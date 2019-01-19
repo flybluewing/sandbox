@@ -2674,7 +2674,7 @@ flagCStepValMtx		<- function( ccObjLst ,allIdxF ){
 
 # done		fCut.basic() 사용
 rmvRaw <- function( gEnv ,allIdxF ){
-
+    initSize <- length(allIdxF)
 	hasPtnCnt <- function( aCode ,ptnLst ){
 		rstFlg <- sapply( ptnLst ,function(ptn){ fCutU.hasPtn(ptn,aCode) } )
 		return( sum(rstFlg) )
@@ -2776,6 +2776,7 @@ rmvRaw <- function( gEnv ,allIdxF ){
 	#	table( surviveFlg )	;dbgIdx <- head(which(!surviveFlg))	;dbgZoid <- gEnv$allZoidMtx[allIdxF[dbgIdx],,drop=F]
 	allIdxF <- allIdxF[surviveFlg]
 
+	cat(sprintf("  survive %d from %d \n",length(allIdxF),initSize))
 	return( allIdxF )
 
 }	# rmvRaw()
@@ -2783,6 +2784,7 @@ rmvRaw <- function( gEnv ,allIdxF ){
 # done		fCut.basic() 사용
 rmvColValSeqNext <- function( gEnv ,allIdxF ){
 
+    initSize <- length(allIdxF)
 	hasPtnCnt <- function( aCode ,ptnLst ){
 		rstFlg <- sapply( ptnLst ,function(ptn){ fCutU.hasPtn(ptn,aCode) } )
 		return( sum(rstFlg) )
@@ -2834,6 +2836,7 @@ rmvColValSeqNext <- function( gEnv ,allIdxF ){
 	#	table( surviveFlg )	;dbgIdx <- head(which(!surviveFlg))	;dbgZoid <- gEnv$allZoidMtx[allIdxF[dbgIdx],,drop=F]
 	allIdxF <- allIdxF[surviveFlg]
 
+	cat(sprintf("  survive %d from %d \n",length(allIdxF),initSize))
 	return( allIdxF )
 
 }	# rmvColValSeqNext()
@@ -2841,6 +2844,7 @@ rmvColValSeqNext <- function( gEnv ,allIdxF ){
 # (no Custom)done		fCut.basic() 사용 - custom 부분이 없을 듯.
 rmvColValSeqNext.cStep <- function( gEnv ,allIdxF ){
 
+    initSize <- length(allIdxF)
 	hasPtnCnt <- function( aCode ,ptnLst ){
 		rstFlg <- sapply( ptnLst ,function(ptn){ fCutU.hasPtn(ptn,aCode) } )
 		return( sum(rstFlg) )
@@ -2885,6 +2889,7 @@ rmvColValSeqNext.cStep <- function( gEnv ,allIdxF ){
 	#	table( surviveFlg )	;dbgIdx <- head(which(!surviveFlg))	;dbgZoid <- gEnv$allZoidMtx[allIdxF[dbgIdx],,drop=F]
 	allIdxF <- allIdxF[surviveFlg]
 
+	cat(sprintf("  survive %d from %d \n",length(allIdxF),initSize))
 	return( allIdxF )
 
 }	# rmvColValSeqNext.cStep()
@@ -2892,6 +2897,7 @@ rmvColValSeqNext.cStep <- function( gEnv ,allIdxF ){
 # done		fCut.basic() 사용
 rmvCStep <- function( gEnv ,allIdxF ){
 
+    initSize <- length(allIdxF)
 	hasPtnCnt <- function( aCode ,ptnLst ){
 		rstFlg <- sapply( ptnLst ,function(ptn){ fCutU.hasPtn(ptn,aCode) } )
 		return( sum(rstFlg) )
@@ -3019,6 +3025,7 @@ rmvCStep <- function( gEnv ,allIdxF ){
 	#	dbgZoid[,2:6]-dbgZoid[,1:5]
 	allIdxF <- allIdxF[surviveFlg]
 
+	cat(sprintf("  survive %d from %d \n",length(allIdxF),initSize))
 	return( allIdxF )
 
 }	# rmvCStep()
@@ -3026,6 +3033,7 @@ rmvCStep <- function( gEnv ,allIdxF ){
 # done		fCut.basic() 사용
 rmvFStep <- function( gEnv ,allIdxF ){
 
+    initSize <- length(allIdxF)
 	hasPtnCnt <- function( aCode ,ptnLst ){
 		rstFlg <- sapply( ptnLst ,function(ptn){ fCutU.hasPtn(ptn,aCode) } )
 		return( sum(rstFlg) )
@@ -3095,15 +3103,20 @@ rmvFStep <- function( gEnv ,allIdxF ){
 
 	}
 	#	table( surviveFlg )	;dbgIdx <- head(which(!surviveFlg))	;dbgZoid <- gEnv$allZoidMtx[allIdxF[dbgIdx],,drop=F]
-
 	allIdxF <- allIdxF[surviveFlg]
 
+	cat(sprintf("  survive %d from %d \n",length(allIdxF),initSize))
 	return( allIdxF )
 
 }	# rmvFStep()
 
 # done		fCut.basic() 사용
 rmvFV3 <- function( gEnv ,allIdxF ){
+
+	# Error in if (!is.null(fixIdx) && !matFlag[fixIdx]) { : 
+	# TRUE/FALSE가 필요한 곳에 값이 없습니다  <--- fixIdx가 NA를 가리킨 경우.
+
+    initSize <- length(allIdxF)
 
 	stdMI <- fCutU.getMtxInfo( gEnv$zhF )
 	surviveFlg <- rep( TRUE ,length(allIdxF) )
@@ -3121,7 +3134,7 @@ rmvFV3 <- function( gEnv ,allIdxF ){
 			# <30>
 			if( fCutU.hasPtn(c(  8,NA,NA,30,33,31 ),aZoid,thld=3,fixIdx=4 ) ){	surviveFlg[idx]<-FALSE	;next }
 			# <33>
-			if( fCutU.hasPtn(c( 13,14,NA,33,40 ),aZoid,thld=3,fixIdx=3 ) ){	surviveFlg[idx]<-FALSE	;next }
+			if( fCutU.hasPtn(c( 13,14,NA,33,40 ),aZoid,thld=3,fixIdx=4 ) ){	surviveFlg[idx]<-FALSE	;next }
 			# <38>
 			if( fCutU.hasPtn(c(  1, 8,11,27,30,38 ),aZoid,thld=3,fixIdx=6 ) ){	surviveFlg[idx]<-FALSE	;next }
 
@@ -3331,21 +3344,27 @@ rmvFV3 <- function( gEnv ,allIdxF ){
 	#	table( surviveFlg )	;dbgIdx <- head(which(!surviveFlg))	;dbgZoid <- gEnv$allZoidMtx[allIdxF[dbgIdx],,drop=F]
 	allIdxF <- allIdxF[surviveFlg]
 
+	cat(sprintf("  survive %d from %d \n",length(allIdxF),initSize))
 	return( allIdxF )
 }	# rmvFV3()
 
 # done		fCut.basic() 사용
 rmvQuo10 <- function( gEnv ,allIdxF ){
 
-	surviveFlg <- rep( TRUE ,length(allIdxF) )
+    initSize <- length(allIdxF)
+
+	surviveFlg <- rep( TRUE ,length(allIdxF) )			;dbgLst <- list()
 	for( idx in seq_len(length(allIdxF)) ){
 		aZoid <- gEnv$allZoidMtx[allIdxF[idx],]
 		quoSize <- fCutU.getQuoObj( aZoid )$size
+		# dbgLst[[1+length(dbgLst)]] <- paste( quoSize,collapse="," )
 
 		# fCutCnt.nextColVal_1	: 1 3 0 2 0 --> 1 2 1 2 0
 		if( all(quoSize==c( 1, 2, 1, 2, 0)) ){	surviveFlg[idx]<-FALSE	;next }
 	}
 	#	table( surviveFlg )	;dbgIdx <- head(which(!surviveFlg))	;dbgZoid <- gEnv$allZoidMtx[allIdxF[dbgIdx],,drop=F]
+
+	cat(sprintf("  survive in rmvQuo10 %d from %d \n",length(allIdxF),initSize))
 	allIdxF <- allIdxF[surviveFlg]
 	return( allIdxF )
 
@@ -3354,6 +3373,7 @@ rmvQuo10 <- function( gEnv ,allIdxF ){
 # done		fCut.basic() 사용
 rmvZW <- function( gEnv ,allIdxF ){
 
+	initSize <- length(allIdxF)
 	# fCutCnt.nextQuo10
 
 	# Gold : 발생하더라도 이전에 발생한 영역에서 재발되지는 않겠지...
@@ -3361,6 +3381,7 @@ rmvZW <- function( gEnv ,allIdxF ){
 	zw <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function(aZoid){aZoid[6]-aZoid[1]})
 	allIdxF <- allIdxF[!( zw%in%c(37,40) )]
 
+	cat(sprintf("  survive %d from %d \n",length(allIdxF),initSize))
 	return( allIdxF )
 }	# rmvZW()
 
