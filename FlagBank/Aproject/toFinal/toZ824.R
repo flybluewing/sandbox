@@ -14,6 +14,7 @@ allIdxF <- 1000:1010		;stdZoid <- NULL
 		#	which(apply(gEnv$allZoidMtx,1,function(zoid){all(zoid==stdZoid)}))
 	u0.saveStdZoidFltRst( 824 )
 # simMode end   ----------------------------------------------------
+
 finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
     # cutEadge.getBanPtnColVal() 에서 1~2개 발생 탈락값들에 대한 검토 권장.
 	allIdxFObj <- list()

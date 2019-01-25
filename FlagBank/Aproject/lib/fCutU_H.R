@@ -1329,7 +1329,9 @@ fCutU.commonCutCnt <- function( gEnv, allIdxF ,zMtx
 	cStepValMtx[,"min2"] <- !flag
     flgCnt[!flag] <- flgCnt[!flag] + 1
 
-	return( list( flgCnt=flgCnt ,scoreMtx=scoreMtx ,cStepValMtx=cStepValMtx ,lastZoid=stdMI$lastZoid ) )
+	rObj <- list( flgCnt=flgCnt ,scoreMtx=scoreMtx ,cStepValMtx=cStepValMtx ,lastZoid=stdMI$lastZoid )
+	rObj$scoreMtx2 <- fCutU.ccc.score2( gEnv ,allIdxF ,zMtx )
+	return( rObj )
 
 } #	fCutU.commonCutCnt( )
 
@@ -1338,41 +1340,123 @@ fCutU.ccc.score2 <- function( gEnv, allIdxF, zMtx ){
 	#   ..k...
 	#   .V....
 
+	# zMtx : 각 ph에서의 히스토리.
 	#	zMtx <- gEnv$zhF
 
-	getSlideReb <- function( pZMtx ,ptnSize=2 ){
+	getSlideReb <- function( pZMtx ){
 
 		hSize <- nrow(pZMtx)
-		if( 3>hSize ){ return(list()) }
+		if( 3>hSize ){ return( NULL ) }
 
 		hSpan <- (hSize-1):2		;hWidth <- ncol(pZMtx)
 
 		rObj <- list()	;dbgObj <- list()
 
 		if( TRUE ){	# left slide
-			colSpan <- 1:(hWidth-ptnSize)
+			colSpan <- 1:(hWidth-2)
+			rName <- c("col","val","ref1","ref2")
+			lMtx <- matrix( NA, nrow=length(rName), ncol=length(colSpan) )
+			rownames( lMtx ) <- rName	;colnames( lMtx ) <- paste( "c" ,colSpan,sep="")
+			lMtx["col",] <- colSpan
 
+			for( idx in 1:ncol(lMtx) ){
+				colIdx <- lMtx["col",idx]
+				lMtx[c("ref1","ref2"),idx] <- c( pZMtx[hSize,colIdx+1] ,pZMtx[hSize-1,colIdx+2] )
+			}
+
+			dbgInfo <- list()
+			for( hIdx in hSize:3 ){
+				sObj <- getSlideReb.ptnLst( pZMtx ,hIdx ,"left" )
+				for( idx in 1:ncol(lMtx) ){
+					if( !is.na(lMtx["val",idx]) ){
+						next
+					}
+					for( lIdx in 1:length(sObj) ){
+						matFlag <- lMtx[c("ref1","ref2"),idx]==sObj[[lIdx]]$val[c("ref-1","ref-2")]
+						if( all(matFlag) ){
+							lMtx["val",idx] <- sObj[[lIdx]]$val["tgtV"]
+							dbgInfo[[1+length(dbgInfo)]] <- c( hIdx ,idx ,lIdx ,sObj[[lIdx]]$val[c("ref-1","ref-2")] )
+							names(dbgInfo[[length(dbgInfo)]]) <- c("hIdx","idx","lIdx",c("ref-1","ref-2"))
+							break
+						}
+					}
+				}
+
+				if( all(!is.na(lMtx["val",])) ) {
+					break
+				}
+			}
+			#	hIdx<-719    ;pZMtx[(hIdx-4):hIdx,]
+			rObj$lMtx <- lMtx
 		}
 
 		if( TRUE ){ # right slide
+			colSpan <- 3:hWidth
+			rName <- c("col","val","ref1","ref2")
+			rMtx <- matrix( NA, nrow=length(rName), ncol=length(colSpan) )
+			rownames( rMtx ) <- rName	;colnames( rMtx ) <- paste( "c" ,colSpan,sep="")
+			rMtx["col",] <- colSpan
 
+			for( idx in 1:ncol(rMtx) ){
+				colIdx <- rMtx["col",idx]
+				rMtx[c("ref1","ref2"),idx] <- c( pZMtx[hSize,colIdx-1] ,pZMtx[hSize-1,colIdx-2] )
+			}
+
+			dbgInfo <- list()
+			for( hIdx in hSize:3 ){
+				sObj <- getSlideReb.ptnLst( pZMtx ,hIdx ,"right" )
+				for( idx in 1:ncol(rMtx) ){
+					if( !is.na(rMtx["val",idx]) ){
+						next
+					}
+					for( lIdx in 1:length(sObj) ){
+						matFlag <- rMtx[c("ref1","ref2"),idx]==sObj[[lIdx]]$val[c("ref-1","ref-2")]
+						if( all(matFlag) ){
+							rMtx["val",idx] <- sObj[[lIdx]]$val["tgtV"]
+							dbgInfo[[1+length(dbgInfo)]] <- c( hIdx ,idx ,lIdx ,sObj[[lIdx]]$val[c("ref-1","ref-2")] )
+							names(dbgInfo[[length(dbgInfo)]]) <- c("hIdx","idx","lIdx",c("ref-1","ref-2"))
+							break
+						}
+					}
+				}
+
+				if( all(!is.na(rMtx["val",])) ) {
+					break
+				}
+			}
+			#	hIdx<-333    ;pZMtx[(hIdx-4):hIdx,]
+
+			rObj$rMtx <- rMtx
 		}
 
 		return( rObj )
 	}	# getSlideReb()
-	getSlideReb.ptnLst <- function( pZMtx ,curHIdx ,ptnSize ,direc="left" ){
+	getSlideReb.ptnLst <- function( pZMtx ,curHIdx ,direc="left" ){
 		rObj <- list()
 
 		hWidth <- ncol(pZMtx)
-		cSpan <- if( "left"==direc ) 1:(hWidth-ptnSize-1) else (ptnSize+1+1):hWidth
-		# for( cIdx in  ){
-
-		# }
+		if( "left"==direc ){
+			cSpan <- 1:(hWidth-2)
+			for( cIdx in cSpan ){
+				uObj <- list( col=cIdx )
+				uObj$val <- c( pZMtx[curHIdx,cIdx] ,pZMtx[curHIdx-1,cIdx+1] ,pZMtx[curHIdx-2,cIdx+2] )
+				names( uObj$val ) <- c("tgtV","ref-1","ref-2")
+				rObj[[1+length(rObj)]] <- uObj
+			}
+		} else {
+			cSpan <- 3:hWidth
+			for( cIdx in cSpan ){
+				uObj <- list( col=cIdx )
+				uObj$val <- c( pZMtx[curHIdx,cIdx] ,pZMtx[curHIdx-1,cIdx-1] ,pZMtx[curHIdx-2,cIdx-2] )
+				names( uObj$val ) <- c("tgtV","ref-1","ref-2")
+				rObj[[1+length(rObj)]] <- uObj
+			}
+		}
 		return( rObj )
 	}	# getSlideReb.ptnLst()
 
 
-	cName <- c("rebV","rebC","rebL1","rebR1","rebL2","rebR2")
+	cName <- c("rebV","rebC","rebL","rebR","rebL.cnt","rebR.cnt")
 	scoreMtx <- matrix( 0, nrow=length(allIdxF), ncol=length(cName) )
 	colnames( scoreMtx ) <- cName
 		#	rebV	: 값 재발 수
@@ -1381,11 +1465,19 @@ fCutU.ccc.score2 <- function( gEnv, allIdxF, zMtx ){
 
 	stdMI <- fCutU.getMtxInfo( zMtx )
 
-	if( TRUE ){	# reb3V ,reb2C
+	if( TRUE ){	# reb3V ,reb2C ,rebL ,rebR
+		slideObj <- getSlideReb( zMtx )
 		for( aIdx in seq_len(length(allIdxF)) ){
 			aZoid <- gEnv$allZoidMtx[allIdxF[aIdx],]
 			scoreMtx[aIdx,"rebV"] <- sum( aZoid %in% stdMI$lastZoid )
 			scoreMtx[aIdx,"rebC"] <- sum( aZoid == stdMI$lastZoid )
+
+			if( !is.null(slideObj) ){
+				scoreMtx[aIdx,"rebL"] <- sum( aZoid[slideObj$lMtx["col",]] == slideObj$lMtx["val",] ,na.rm=T )
+				scoreMtx[aIdx,"rebR"] <- sum( aZoid[slideObj$rMtx["col",]] == slideObj$rMtx["val",] ,na.rm=T )
+				scoreMtx[aIdx,"rebL.cnt"] <- sum( !is.na(slideObj$lMtx["val",]) )
+				scoreMtx[aIdx,"rebR.cnt"] <- sum( !is.na(slideObj$rMtx["val",]) )
+			}
 		}
 	}	# reb3V ,reb2C
 	#	dbgN<-"rebV"	;table(scoreMtx[,dbgN])	;dbgIdx<-head(which(scoreMtx[,dbgN]==1))	;aIdx<-dbgIdx[1]
