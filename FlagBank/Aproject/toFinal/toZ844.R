@@ -1,10 +1,10 @@
-# Z843
-workH <- 843	;rpt=TRUE
+# Z844
+workH <- 844	;rpt=TRUE
 source(sprintf("./toFinal/toZ%d_H.R",workH))
 
 load( sprintf("Obj_allIdxLstZ%d.save",workH-1) )
 load(sprintf("./save/Obj_gEnvZ%d.save",workH-1))
-allZoidGrpName <-"allZoid.idx0"						#   982235         2052865         1415072 
+allZoidGrpName <-"allZoid.idx0"						#	
 allIdx <- allIdxLst[[allZoidGrpName]]	#
 allIdxF <- 1000:1010		;stdZoid <- NULL
 # 참고 자료 --------------------------------------------------------------------	
@@ -12,7 +12,7 @@ fCutU.rptColValSeqNext( gEnv ,allIdxF ,sprintf("toZ%d",workH) )
 
 
 # simMode start ----------------------------------------------------
-	aZoid <- stdZoid <- c( 19,21,30,33,34,42 ) # ZH 843 채워넣을 것.
+	aZoid <- stdZoid <- c( ,,,,, ) # ZH 843 채워넣을 것.
 	allIdxF <- allIdx <- stdIdx <- 
 		# which(apply(gEnv$allZoidMtx,1,function(zoid){all(zoid==stdZoid)}))
 	u0.saveStdZoidFltRst( workH )

@@ -53,6 +53,7 @@ ff0.byOnePhase.cut <- function( ccObj ,phName=NULL ){
     #   ccObj <- fCutCnt.nextColVal_3( gEnv ,allIdxF )
     cntMtx <- ff0.byOnePhase.getCntMtx( ccObj )
     scoreMtx <- ff0.byOnePhase.scoreMtx( ccObj )
+    scoreMtx2 <- ff0.byOnePhase.scoreMtx2( ccObj )
     cStepValMtx <- ff0.byOnePhase.cStepValMtx( ccObj )
     filtedLst <- vector("list",nrow(cntMtx) )
     filtedFlg <- rep( FALSE ,nrow(cntMtx) )
@@ -99,6 +100,25 @@ ff0.byOnePhase.cut <- function( ccObj ,phName=NULL ){
         }
     }   # table(filtedFlg)  ;dbgIdx <- head(which(filtedFlg))
 
+    for( rIdx in 1:nrow(cntMtx) ){  # scoreMtx2 QQE
+        score <- scoreMtx2[rIdx,]
+        # flag <- score[c("w1CStep.matLen","w1FStep.matLen")] > 2
+        # if( any(flag) ){    filtedLst[[rIdx]] <- c(filtedLst[[rIdx]],"cntMtx.evtA1.out")    ;filtedFlg[ rIdx ] <- TRUE
+        # }
+        # flag <- score[c("w1CStep.cnt","w1FStep.cnt")] > 1
+        # if( any(flag) ){    filtedLst[[rIdx]] <- c(filtedLst[[rIdx]],"cntMtx.evtA2.out")    ;filtedFlg[ rIdx ] <- TRUE
+        # }
+        # flag <- score[c("quoPtn","zw","remH0","remH1","cStep2","cStep3","w1CStep.cnt","w1FStep.cnt")] > 0
+        # if( 2<sum(flag) ){  filtedLst[[rIdx]] <- c(filtedLst[[rIdx]],"cntMtx.evtA3.out")    ;filtedFlg[ rIdx ] <- TRUE
+        # }
+        # flag <- score[c("reb","nbor","spanM","quoAll")] > 0
+        # if( 2<sum(flag) ){  filtedLst[[rIdx]] <- c(filtedLst[[rIdx]],"cntMtx.evtA4.out")    ;filtedFlg[ rIdx ] <- TRUE
+        # }
+        
+
+    }   # table(filtedFlg)  ;dbgIdx <- head(which(filtedFlg))
+
+
     for( rIdx in 1:nrow(cntMtx) ){  # cStepValMtx
         score <- cStepValMtx[rIdx,]
 
@@ -119,6 +139,8 @@ ff0.byOnePhase.cut <- function( ccObj ,phName=NULL ){
 
     }   # table(filtedFlg)  ;dbgIdx <- head(which(filtedFlg))   ;rIdx<-dbgIdx[1]
 
+
+
     return( list(filtedLst=filtedLst ,filtedFlg=filtedFlg) )
 
 }   # ff0.byOnePhase.cut( )
@@ -137,6 +159,11 @@ ff0.byOnePhase.getCntMtx <- function( ccObj ){
 ff0.byOnePhase.scoreMtx <- function( ccObj ){
     return( ccObj$cccObj$scoreMtx )
 } # ff0.byOnePhase.scoreMtx()
+
+ff0.byOnePhase.scoreMtx2 <- function( ccObj ){
+    return( ccObj$cccObj$scoreMtx2 )
+} # ff0.byOnePhase.scoreMtx()
+
 
 ff0.byOnePhase.cStepValMtx <- function( ccObj ){
     return( ccObj$cccObj$cStepValMtx )
