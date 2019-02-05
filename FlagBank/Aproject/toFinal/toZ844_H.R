@@ -1337,9 +1337,6 @@ fCutCnt.nextRebNum <- function( gEnv ,allIdxF ,rpt=FALSE ){
 					if( all(quoSize[1:3+0]==c(0,1,1)) ) return(FALSE)	# next rebind of 0,1,1
 					if( all(quoSize[1:3+1]==c(1,1,3)) ) return(FALSE)	# next rebind of 1,1,3
 					if( all(quoSize[1:3+2]==c(1,3,1)) ) return(FALSE)	# next rebind of 1,3,1
-					if( all(quoSize[1:3+0]==c(,,)) ) return(FALSE)	# next rebind of ,,
-					if( all(quoSize[1:3+1]==c(,,)) ) return(FALSE)	# next rebind of ,,
-					if( all(quoSize[1:3+2]==c(,,)) ) return(FALSE)	# next rebind of ,,
 					#	unique 0 1 1 3 1, 1 2 0 3 0
 					#	unique a,3,a	( 아예 q3를 제외시켜 버릴까...)
 					return( TRUE )
@@ -1724,8 +1721,6 @@ fCutCnt.nextFStepBin <- function( gEnv ,allIdxF ,rpt=FALSE ){
 			if( 1<sum(aCStep[1:2+0]==c( 2, 1 )) )	cnt.w1<-cnt.w1+1
 			if( fCutU.hasPtn(c(  2, 1 ),aCStep) )	cnt.w1<-cnt.w1+1
 			if( 1<sum(aCStep[1:2+1]==c( 1, 5 )) )	cnt.w1<-cnt.w1+1
-			if( fCutU.hasPtn(c( , ),aCStep) )	cnt.w1<-cnt.w1+1	# -
-			if( fCutU.hasPtn(c( , ),aCStep) )	cnt.w1<-cnt.w1+1
 			#	unique	( 2: 5, 2, 1) ( 2: 7, 2, 8) ( 2: 2, 1, 4) ( 2:15, 2, 9) ( 5: 7,18, 3, 5)
 			#			( 6: 4, 6,15) ( 7: 7,11,19,NA, 6) (10: 9,NA,10,NA, 5)
 			#	unique	( 1, 1 ) ( 7, 1 ) ( 2, 5 ) ( 5, 7 )
@@ -2373,7 +2368,7 @@ fCutCnt.nextColVal_5 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 		aZoid <- gEnv$allZoidMtx[allIdxF[idx],]
 		aCStep <- aZoid[2:6] - aZoid[1:5]
 		aFStep <- aZoid - stdMI$lastZoid
-	
+
 		if( TRUE ){	# raw
 			cnt <- 0
 			if( aZoid[1]%in%c( 15,11    ) ) cnt<-cnt+1
@@ -2396,7 +2391,7 @@ fCutCnt.nextColVal_5 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 			# <21>
 			if( fCutU.hasPtn(c( 15,21       ),aZoid) ) cnt<-cnt+1
 			if( fCutU.hasPtn(c( 21,31    ),aZoid) ) cnt<-cnt+1
-			if( fCutU.hasPtn(c( 21,NS,34 ),aZoid) ) cnt<-cnt+1
+			if( fCutU.hasPtn(c( 21,NA,34 ),aZoid) ) cnt<-cnt+1
 			if( fCutU.hasPtn(c( 21,NA,36       ),aZoid) ) cnt<-cnt+1
 			# <31>
 			if( fCutU.hasPtn(c( 15,NA,31    ),aZoid) ) cnt<-cnt+1
@@ -2590,7 +2585,6 @@ fCutCnt.nextColVal_6 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 			if( fCutU.hasPtn(c( 9, 3 ),aCStep) )	cnt.w1<-cnt.w1+1
 			if( 1<sum(aCStep[1:2+1]==c( 12, 6 )) )	cnt.w1<-cnt.w1+1
 			if( fCutU.hasPtn(c(  2, 8 ),aCStep) )	cnt.w1<-cnt.w1+1	# -
-			if( fCutU.hasPtn(c( , ),aCStep) )	cnt.w1<-cnt.w1+1
 			#	unique	( 2: 2, 8,NA,NA,15) ( 3&9: 3, 9, 3*,NA, 4) ( 4: 3,NA,18, 4,19) ( 5:18, 5,18) ( 7:14,30, 7) (12: 5,12, 2,22)
 			#	unique	(  5, 15 )
 			# -------------------------------------------------------------------------------------
