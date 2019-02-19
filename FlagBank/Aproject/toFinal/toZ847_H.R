@@ -622,7 +622,7 @@ fCutCnt.colValSeqNext <- function( gEnv ,allIdxF ,rpt=FALSE ){
 	return( flgCnt )
 } # fCutCnt.colValSeqNext()
 
-# UNdone
+# done
 fCutCnt.colValSeqNext.cStep <- function( gEnv ,allIdxF ,rpt=FALSE ){
 
 	flgCnt <- rep( 0 ,length(allIdxF) )
@@ -660,21 +660,22 @@ fCutCnt.colValSeqNext.cStep <- function( gEnv ,allIdxF ,rpt=FALSE ){
 					cnt <- 0
 					aCStep <- aZoid[2:6]-aZoid[1:5]
 
-					# [1]*   6  4  7  6  5  3 | 17  2  3  4  3  3 14  3  6
-					# [2]*   9  9  2  9  5  6 | 16 10  4  3  8  1  1
-					# [3]*   8 17 11  8  4  1 |  7  8  3  5  3  3  3  9  6  9  6 17  7 11  4  4  9  5  2  9  9  2  1  6  8  4  6  3  2  1  1 13  3  5 14  8
-					# [4]*   1  1  1  3  5  8 |  1  1 21  7  4  2 11  8  2  7  7 11  7  7  5 13 12  6  3 16  9 13 14 12 11 22 13  4  1 10 11 10  5 10 14  3  1  3...
-					# [5]*   9 10  1  5 25  1 |  8 10  3  6 15  5  1  3  6 10  1  8  7  2  7  8  3 16 13  3  3  3  7  4  2  1  2
+					# [1]*   1  1
+					# [2]*   4  3  5  5  8 19 11
+					# [3]*  16 27  2 11  6 13  2  2  2
+					# [4]*  12  3  2  2  1  3  8 16 13  5  1  1  2  1  7  2  4  3  1 14  2 16  3 10  3  7
+					# [5]*   8  1  4  3  9 13  8  3 16 13  7  2 13  3  4  6  1  5 20  7  3  5  5 12  3 13
 
 					tCnt <- 0
-						if( aCStep[1]%in%c(  7          ) ) tCnt<-tCnt+1
-						if( aCStep[2]%in%c(  9, 2, 6, 8 ) ) tCnt<-tCnt+1
-						if( aCStep[3]%in%c(             ) ) tCnt<-tCnt+1
-						if( aCStep[4]%in%c(  1, 3, 7    ) ) tCnt<-tCnt+1
-						if( aCStep[5]%in%c(  8, 1, 3    ) ) tCnt<-tCnt+1
+						if( aCStep[1]%in%c(        ) ) tCnt<-tCnt+1
+						if( aCStep[2]%in%c(  5     ) ) tCnt<-tCnt+1
+						if( aCStep[3]%in%c(        ) ) tCnt<-tCnt+1
+						if( aCStep[4]%in%c(  4     ) ) tCnt<-tCnt+1
+						if( aCStep[5]%in%c(        ) ) tCnt<-tCnt+1
 
-						if( aCStep[2]==sum(aCStep[c(3,4)]) )	cnt<-cnt+1
-						if( aCStep[5]==sum(aCStep[c(3,4)]) )	cnt<-cnt+1
+						if( 1<sum( aCStep[ 2 ]*c(4,3,2)==aCStep[c(3,4,5)] ) )	cnt<-cnt+1
+						if( 1<sum( aCStep[c(2,5)]*c(3,2)==aCStep[c(4,3)] ) )	cnt<-cnt+1
+						if( sum(aCStep[c( 2,3 )])==sum(aCStep[c( 4,5 )]) )	cnt<-cnt+1	# 20
 
 						# if( 1<sum( aCStep[c(,)]*c(,)==aCStep[c( , )] ) )	cnt<-cnt+1
 						# if( aCStep[ ]==sum(aCStep[c( , )]) )	cnt<-cnt+1
@@ -682,14 +683,9 @@ fCutCnt.colValSeqNext.cStep <- function( gEnv ,allIdxF ,rpt=FALSE ){
 
 					cnt <- cnt + ifelse( tCnt>1 ,tCnt-1 ,0 )
 
-					if( fCutU.hasPtn(c( 6, 9 ),aCStep) )	cnt<-cnt+1
-					if( 1<sum(aCStep[1:2+0]==c( 7, 2 )) )	cnt<-cnt+1
-					if( fCutU.hasPtn(c( 9, 8 ),aCStep) )	cnt<-cnt+1
-					if( 1<sum(aCStep[1:2+0]==c( 2,11 )) )	cnt<-cnt+1
-					if( fCutU.hasPtn(c( 1, 8 ),aCStep) )	cnt<-cnt+1
+					if( fCutU.hasPtn(c( 2, 1 ),aCStep) )	cnt<-cnt+1
 					if( fCutU.hasPtn(c( 2, 5 ),aCStep) )	cnt<-cnt+1
-					#	unique	( 6, 9, 8)
-					#	unique	( 6, 1 ) ( 9,17 ) ( 1, 8 ) ( 8, 1 ) ( 7, 3 ) ( 2,12 )
+					if( fCutU.hasPtn(c( 5,NA, 2, 5 ),aCStep) )	cnt<-cnt+1
 
 					# if( fCutU.hasPtn(c( , ),aCStep) )	cnt<-cnt+1
 					# if( 1<sum(aCStep[1:2+ ]==c( , )) )	cnt<-cnt+1
@@ -773,47 +769,35 @@ fCutCnt.colValSeqNext.cStep <- function( gEnv ,allIdxF ,rpt=FALSE ){
     flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
 					aCStep <- aZoid[2:6] - aZoid[1:5]
 					cnt <- 0
-					# [  1] 19  4     9  1     5  2    17  4
-					# [  2]  4  7     5  4    10  3     1 11
-					# [  3]  3  1     5  6     1  7     1  5
-					# [  4]  3  2     9  4    11  4     5 25
-					# [  5]  5  8     9  4     5 17     2  4
-					# [  6]  6 16    18  2     1 12     2  8
-					# [  7]  9  9     1  8     6  8    12  6
-					# [  8]  4 20     3 10     3  8    14 10
-					# [  9] 10  2     4 13     1  3    13  6
-					# [ 10] 10  9    13  2    10  6     1  3
+					# [  1] 12  8     1 26     1  2     1  7
+					# [  2]  4  2              4  3     5  2
+					# [  3]  9  1              1  7     4  6
+					# [  4]                    1 14     2  9
+					# [  5]                    5  7     2 20
+					# [  6]                    9 14     6  9
+					# [  7]                    3  1     2  8
+					# [  8]                    1 10     1  6
+					# [  9]                    2  9     2  9
+					# [ 10]                             3 14
+					# [ 11]                             5  7
 
-					if( aCStep[1]%in%c(  5                   ) ) cnt<-cnt+1
-					if( aCStep[2]%in%c(  9                   ) ) cnt<-cnt+1
-					if( aCStep[3]%in%c(  4, 2, 9, 1          ) ) cnt<-cnt+1
-					if( aCStep[4]%in%c(  1, 2,17             ) ) cnt<-cnt+1
-					if( aCStep[5]%in%c(                      ) ) cnt<-cnt+1
+					if( aCStep[1]%in%c(            ) ) cnt<-cnt+1
+					if( aCStep[2]%in%c(            ) ) cnt<-cnt+1
+					if( aCStep[3]%in%c(  1         ) ) cnt<-cnt+1
+					if( aCStep[4]%in%c(  1, 3      ) ) cnt<-cnt+1
+					if( aCStep[5]%in%c(  2, 6      ) ) cnt<-cnt+1
 
 					# for(idx in 1:4){ cat(sprintf("+%d----------------\n",idx-1)) ;anaMtx_ColVal(cvSeqNextLst[[idx]]$fndMtx) }
 					#	if( all(aCStep[1:2+ ]==c(   ,   )) ) cnt<-cnt+1
-					if( all(aCStep[1:2+0]==c(  1, 3 )) ) cnt<-cnt+1
-					if( all(aCStep[1:2+0]==c( 12, 1 )) ) cnt<-cnt+1
-					if( all(aCStep[1:2+0]==c(  8, 9 )) ) cnt<-cnt+1
-
-					if( all(aCStep[1:2+1]==c(  1, 8 )) ) cnt<-cnt+1
-					if( all(aCStep[1:2+1]==c(  6, 3 )) ) cnt<-cnt+1
-					if( all(aCStep[1:2+1]==c(  9, 1 )) ) cnt<-cnt+1
-					if( all(aCStep[1:2+1]==c(  2, 3 )) ) cnt<-cnt+1
-					if( all(aCStep[1:2+1]==c(  5, 4 )) ) cnt<-cnt+1
-
-					if( all(aCStep[1:2+2]==c(  6, 9 )) ) cnt<-cnt+1
-					if( all(aCStep[1:2+2]==c( 11, 4 )) ) cnt<-cnt+1
-					if( all(aCStep[1:2+2]==c( 11, 7 )) ) cnt<-cnt+1
-					if( all(aCStep[1:2+2]==c( 13, 4 )) ) cnt<-cnt+1
-					if( all(aCStep[1:2+2]==c(  3,11 )) ) cnt<-cnt+1
-
+					if( all(aCStep[1:2+3]==c(  1, 8 )) ) cnt<-cnt+1
+					if( all(aCStep[1:2+3]==c(  4,11 )) ) cnt<-cnt+1
+					if( all(aCStep[1:2+3]==c(  5, 2 )) ) cnt<-cnt+1
+					if( all(aCStep[1:2+3]==c(  5, 1 )) ) cnt<-cnt+1
+					if( all(aCStep[1:2+3]==c(  5, 3 )) ) cnt<-cnt+1
 					if( all(aCStep[1:2+3]==c(  4, 3 )) ) cnt<-cnt+1
-					if( all(aCStep[1:2+3]==c(  4, 8 )) ) cnt<-cnt+1
-					if( all(aCStep[1:2+3]==c(  1, 3 )) ) cnt<-cnt+1
-					if( all(aCStep[1:2+3]==c( 11, 6 )) ) cnt<-cnt+1
-					if( all(aCStep[1:2+3]==c(  2, 8 )) ) cnt<-cnt+1
-					if( all(aCStep[1:2+3]==c(  9, 8 )) ) cnt<-cnt+1
+					if( all(aCStep[1:2+3]==c(  3, 6 )) ) cnt<-cnt+1
+					if( all(aCStep[1:2+ ]==c(  1, 7 )) ) cnt<-cnt+1
+					if( all(aCStep[1:2+ ]==c( 11, 9 )) ) cnt<-cnt+1
 
 					return( cnt<2 )
 				})	;kIdx<-anaFlagFnd(!flag,rpt)
@@ -3376,76 +3360,47 @@ rmvRaw <- function( gEnv ,allIdxF ){
 		aZoid <- gEnv$allZoidMtx[allIdxF[idx],]
 
 		# fCutCnt.basic()
-		#      2 25 28 30 33 45    |23  3  2  3 12 |                        |1 0 2 2 1 |1 2 2 1
-		#      9 14 17 33 36 38(1) | 5  3 16  3  2 |  7 -11 -11   3   3  -7 |1 2 0 3 0 |1 2 3
-		#      3  9 11 12 13 19(1) | 6  2  1  1  6 | -6  -5  -6 -21 -23 -19 |2 4 0 0 0 |2 4
-		#      2  4 11 28 29 43(1) | 2  7 17  1 14 | -1  -5   0  16  16  24 |2 1 2 0 1 |2 1 2 1
-		#      5 11 14 30 33 38(1) | 6  3 16  3  5 |  3   7   3   2   4  -5 |1 2 0 3 0 |1 2 3
-		#     14 26 32 36 39 42(1) |12  6  4  3  3 |  9  15  18   6   6   4 |0 1 1 3 1 |1 1 3 1
+
+
+		if( fCutU.hasPtn(c( ,, ),aZoid) ){	surviveFlg[idx]<-FALSE	;next }
+		if( 1<sum(aZoid[1:2+ ]==c( , )) ){	surviveFlg[idx]<-FALSE	;next }
+		ptnLst <- list( c(,) ,c(,) )
+		if( 1<hasPtnCnt(aZoid,ptnLst) ){	surviveFlg[idx]<-FALSE	;next }
+		if( 1<sum( aZoid[c(,)]*c(,)==aZoid[c(,)] ) ){	surviveFlg[idx]<-FALSE	;next }
+
+
 		if( any(aZoid[c(4,2,3,2,1)]==stdMI$lastZoid[c(5,1,3,3,3)]) ){	surviveFlg[idx]<-FALSE	;next }	# 1개 중복 기존 패턴. h-5,h-4,h-3,h-2,h-1
 		if( any(aZoid%in%c(14)) ){	surviveFlg[idx]<-FALSE	;next }	# 11 중복 3번, 14도 3번?
 		if( any(aZoid%in%c(32)) ){	surviveFlg[idx]<-FALSE	;next }	# col 3에서의 중복 3번 연속, 다음에도?
 		aRem <- aZoid%%10
 		if( all(aRem[c(2,3)]==aRem[c(4,6)]) ){	surviveFlg[idx]<-FALSE	;next }	# aRem 
-		#	if( 2<sum(aZoid==c( 8,18,17,32,33,NA),na.rm=T) ){	surviveFlg[idx]<-FALSE	;next }	# 동일 증감. 
-			# 동일 증감이... basic은 없겠지만 다른 ph는 유효할 듯.
-		#	if( 1<sum( aZoid[c(1,2)]*c(6,3)==aZoid[c(4,5)] ) ){	surviveFlg[idx]<-FALSE	;next }
 
 		# fCutCnt.nextZW
-			#      6 11 15 17 23 40(1) | 5  4  2  6 17 |  0  -7 -16 -17 -15  -5 |1 3 1 0 1 |1 3 1 1
-			#      7  9 24 29 34 38    | 2 15  5  5  4 |  1  -2   9  12  11  -2 |2 0 2 2 0 |2 2 2
 		aRem <- aZoid%%10
 		if( all(aRem[2:3]==aRem[4:5]) ){	surviveFlg[idx]<-FALSE	;next }	# aRem 너무 이쁘장한 패턴.
 		if( 2<sum(aZoid==c( 8, 7,33,41,NA,36),na.rm=T) ){	surviveFlg[idx]<-FALSE	;next }	# 동일 증감. 
 
 		# fCutCnt.nextQuo10
-			#      6 16 37 38 41 45    |10 21  1  3  4 |  4  11  22  20  22  22 |1 1 0 2 2 |1 1 2 2
-			#      6 12 19 24 34 41(2) | 6  7  5 10  7 |  0  -4 -18 -14  -7  -4 |1 2 1 1 1 |1 2 1 1 1
-			#     14 15 16 17 38 45    | 1  1  1 21  7 |  8   3  -3  -7   4   4 |0 4 0 1 1 |4 1 1
-			#      2 10 14 22 32 36(1) | 8  4  8 10  4 |-12  -5  -2   5  -6  -9 |1 2 1 2 0 |1 2 1 2
-			#     12 18 24 26 39 40    | 6  6  2 13  1 | 10   8  10   4   7   4 |0 2 2 1 1 |2 2 1 1
 		if( 2<sum(aZoid[c(1,6)]==c(12,18,24,26,39,40)[c(1,5)]) ){	surviveFlg[idx]<-FALSE	;next }	#	rebind ptn	
 		if( 2<sum(aZoid==c(22,26,34,30,NA,44),na.rm=T) ){	surviveFlg[idx]<-FALSE	;next }	# 동일 증감. 
 
 		# fCutCnt.nextBin
-			#      3  4  9 24 25 33(1) | 1  5 15  1  8 | -7  -7  -6  -1 -10  -8 |3 0 2 1 0 |3 2 1
-			#      6  7 11 17 33 44(1) | 1  4  6 16 11 |  3   3   2  -7   8  11 |2 2 0 1 1 |2 2 1 1
-			#      7  9 24 29 34 38(1) | 2 15  5  5  4 |  1   2  13  12   1  -6 |2 0 2 2 0 |2 2 2
 		if( 2<sum(aZoid==c( 8,11,37,41,35,32),na.rm=T) ){	surviveFlg[idx]<-FALSE	;next }	# 동일 증감. 
 		if( 2<sum(aZoid[c(1,5)]==c( 7, 9,24,29,34,38)[c(2,6)]) ){	surviveFlg[idx]<-FALSE	;next }	#	rebind ptn(1 두개가 동시발생.)
 
 		# fCutCnt.nextRebNum
-			#      4  7 13 29 31 39    | 3  6 16  2  8 | -7 -10  -8   3  -5  -6 |2 1 1 2 0 |2 1 1 2
-			#      4  5 31 35 43 45(2) | 1 26  4  8  2 |  0  -2  18   6  12   6 |2 0 0 2 2 |2 2 2
-			#      5 11 14 30 33 38(1) | 6  3 16  3  5 |  1   6 -17  -5 -10  -7 |1 2 0 3 0 |1 2 3
-			#     14 26 32 36 39 42(1) |12  6  4  3  3 |  9  15  18   6   6   4 |0 1 1 3 1 |1 1 3 1
-		# if( 2<sum(aZoid[c(1,1)]==c(14,26,32,36,39,42)[c(2,3)]) ){	surviveFlg[idx]<-FALSE	;next }	#	rebind ptn(1 두개가 동시발생.) 불가!
 		if( 2<sum(aZoid[c(1,3)]==c(14,26,32,36,39,42)[c(1,5)]) ){	surviveFlg[idx]<-FALSE	;next }	#	rebind ptn(2개 패턴)
 
 		# fCutCnt.nextCStepBin
-			#      3  4  9 24 25 33    | 1  5 15  1  8 | -3  -9 -11  -3  -3  -7 |3 0 2 1 0 |3 2 1
-			#      6  7 11 17 33 44(1) | 1  4  6 16 11 |  3   3   2  -7   8  11 |2 2 0 1 1 |2 2 1 1
-			#      7  9 24 29 34 38(1) | 2 15  5  5  4 |  1   2  13  12   1  -6 |2 0 2 2 0 |2 2 2
 		if( 2<sum(aZoid[c(1,5)]==c( 7, 9,24,29,34,38)[c(2,6)]) ){	surviveFlg[idx]<-FALSE	;next }	#	rebind ptn(1 두개가 동시발생.)
 		if( 2<sum(aZoid==c( 8,11,37,41,35,32),na.rm=T) ){	surviveFlg[idx]<-FALSE	;next }	# 동일 증감. 
 
 		# fCutCnt.nextFStepBin
-			#      4 20 26 28 35 40    |16  6  2  7  5 |                        |1 0 3 1 1 |1 3 1 1
-			#      1  4 20 23 29 45(2) | 3 16  3  6 16 | -3 -16  -6  -5  -6   5 |2 0 3 0 1 |2 3 1
-			#	...
-			#     10 15 18 21 34 41    | 5  3  3 13  7 |  8  12   6   1   7   3 |0 3 1 1 1 |3 1 1 1
-			#      5 11 14 30 33 38    | 6  3 16  3  5 | -5  -4  -4   9  -1  -3 |1 2 0 3 0 |1 2 3
 		if( 2<sum(aZoid[c(2,3)]==c( 5,11,14,30,33,38)[c(1,2)]) ){	surviveFlg[idx]<-FALSE	;next }	#	rebind ptn(2개 패턴)
 		if( 1<sum( aZoid[c(1,2)]*c(6,3)==aZoid[c(4,5)]) ){	surviveFlg[idx]<-FALSE	;next }
 		if( 2<sum(aZoid==c(NA, 7,10,39,32,35),na.rm=T) ){	surviveFlg[idx]<-FALSE	;next }	# 동일 증감. 
 
 		# fCutCnt.nextColVal_1
-			#      2  8 15 22 25 41    | 6  7  7  3 16 |                        |2 1 2 0 1 |2 1 2 1
-			#      2 22 27 33 36 37(2) |20  5  6  3  1 |  0  14  12  11  11  -4 |1 0 2 3 0 |1 2 3
-			#     11 18 21 36 37 43(2) | 7  3 15  1  6 |  9  -4  -6   3   1   6 |0 2 1 2 1 |2 1 2 1
-			#      3 10 23 24 31 39    | 7 13  1  7  8 | -8  -8   2 -12  -6  -4 |1 1 2 2 0 |1 1 2 2
-			#      6 10 18 25 34 35(1) | 4  8  7  9  1 |  3   0  -5   1   3  -4 |1 2 1 2 0 |1 2 1 2
-			#     16 25 33 38 40 45(1) | 9  8  5  2  5 | 10  15  15  13   6  10 |0 1 1 2 2 |1 1 2 2
 		if( 2<sum(aZoid[c(1,2)]==c(16,25,33,38,40,45)[c(1,4)]) ){	surviveFlg[idx]<-FALSE	;next }	#	rebind ptn(2개 패턴)
 		if( 2<sum(aZoid[c(4,5)]==c(16,25,33,38,40,45)[c(5,6)]) ){	surviveFlg[idx]<-FALSE	;next }	#	rebind ptn(2개 패턴)
 		#	rebind 결과 컬럼이 계속 2 이긴...
@@ -3453,37 +3408,22 @@ rmvRaw <- function( gEnv ,allIdxF ){
 		if( 0<length(rebColIdx) && any(rebColIdx==2) ){	surviveFlg[idx]<-FALSE	;next }	#	rebind ptn
 
 		# fCutCnt.nextColVal_2
-			#      4  9 13 18 21 34    | 5  4  5  3 13 |-13 -11 -16 -17 -17 -10 |2 2 1 1 0 |2 2 1 1
-			#      4 17 30 32 33 34(2) |13 13  2  1  1 |  0   8  17  14  12   0 |1 1 0 4 0 |1 1 4
-			#     11 13 15 17 25 34(2) | 2  2  2  8  9 |  7  -4 -15 -15  -8   0 |0 4 1 1 0 |4 1 1
-			#      1  8  9 17 29 32(1) | 7  1  8 12  3 |-10  -5  -6   0   4  -2 |3 1 1 1 0 |3 1 1 1
 		if( 2<sum(aZoid[c(1,6)]==c( 1, 8, 9,17,29,32)[c(1,6)]) ){	surviveFlg[idx]<-FALSE	;next }	#	rebind ptn(2개 패턴)
 		if( 2<sum(aZoid[c(4,6)]==c( 1, 8, 9,17,29,32)[c(2,6)]) ){	surviveFlg[idx]<-FALSE	;next }	#	rebind ptn(2개 패턴)
 		if( all(aZoid[c(4,6)]==c(17,32) ) ){	surviveFlg[idx]<-FALSE	;next }
 
 		# fCutCnt.nextColVal_3
-			#      3  7 14 23 26 42    | 4  7  9  3 16 | -2 -20 -17 -11  -9  -1 |2 1 2 0 1 |2 1 2 1
-			#      6 16 37 38 41 45    |10 21  1  3  4 |  3   9  23  15  15   3 |1 1 0 2 2 |1 1 2 2
 		if( aZoid[1:2]==c( 9,25) && 1<sum(aZoid%in%c( 6,16,37,38,41,45)) ) {	surviveFlg[idx]<-FALSE	;next }	# 동일 증감. & 2reb
 
 		# fCutCnt.nextColVal_4
-			#      4  5  6 12 25 37    | 1  1  6 13 12 |                        |3 1 1 1 0 |3 1 1 1
-			#      3  4  9 24 25 33(2) | 1  5 15  1  8 | -1  -1   3  12   0  -4 |3 0 2 1 0 |3 2 1
-			#	...
-			#      6 12 19 24 34 41(1) | 6  7  5 10  7 | -1   3   7  10  11  13 |1 2 1 1 1 |1 2 1 1 1
-			#      5 22 31 32 39 45    |17  9  1  7  6 | -1  10  12   8   5   4 |1 0 1 3 1 |1 1 3 1
 		aRem <- aZoid%%10
 		if( all(aRem[c(1,2)]==aRem[c(6,4)]) ){	surviveFlg[idx]<-FALSE	;next }	# aRem 
 		if( 2<sum(aZoid[c(2,5)]==c( 5,22,31,32,39,45)[c(1,5)]) ){	surviveFlg[idx]<-FALSE	;next }	#	rebind ptn(2개 패턴)
 
 		# fCutCnt.nextColVal_5
-			#      8 11 19 21 36 45(1) | 3  8  2 15  9 |  6   1   5  -1   4   9 |1 2 1 1 1 |1 2 1 1 1
-			#      7  9 24 29 34 38    | 2 15  5  5  4 | -1  -2   5   8  -2  -7 |2 0 2 2 0 |2 2 2
 		if( 2<sum(aZoid==c( 6, 7,29,37,32,31),na.rm=T) ){	surviveFlg[idx]<-FALSE	;next }	# 동일 증감. 
 
 		# fCutCnt.nextColVal_6
-			#      1 12 13 24 29 44    |11  1 11  5 15 | -4   3  -1  -2  -1   1 |1 2 2 0 1 |1 2 2 1
-			#      6  8 18 35 42 43    | 2 10 17  7  1 |  5  -4   5  11  13  -1 |2 1 0 1 2 |2 1 1 2
 		if( 2<sum(aZoid==c(11, 4,23,NA,NA,42),na.rm=T) ){	surviveFlg[idx]<-FALSE	;next }	# 동일 증감. 
 
 		# if( fCutU.hasPtn(c( ,, ),aZoid) ){	surviveFlg[idx]<-FALSE	;next }
