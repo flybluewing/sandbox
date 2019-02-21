@@ -1457,18 +1457,33 @@ fCutU.ccc.score2 <- function( gEnv, allIdxF, zMtx ){
 
 
 	cName <- c("rebV","rebC","rebL","rebR","rebL.cnt","rebR.cnt")
+	cName <- c( cName ,c("inc.raw","inc.cStep") )
 	scoreMtx <- matrix( 0, nrow=length(allIdxF), ncol=length(cName) )
 	colnames( scoreMtx ) <- cName
 		#	rebV	: 값 재발 수
 		#	rebC	: 동일 컬럼 재발 수
 		#	rebL, rebR	: left slide reb, right slide reb
+		#	inc.raw, inc.cStep : 가장 최근의 증/감 반복.(raw, cStep)
 
 	stdMI <- fCutU.getMtxInfo( zMtx )
 
 	if( TRUE ){	# reb3V ,reb2C ,rebL ,rebR
 		slideObj <- getSlideReb( zMtx )
+		inc.stdRaw		<- if( 2>stdMI$mtxLen ){ NULL 
+							} else {
+								vDiff <- stdMI$lastZoid - zMtx[stdMI$mtxLen-1,]
+								stdMI$lastZoid+vDiff
+							}
+		inc.stdCStep	<- if( 2>stdMI$mtxLen ){ NULL 
+							} else {
+								h2Zoid <- zMtx[stdMI$mtxLen-1,]
+								vDiff <- stdMI$cStep - (h2Zoid[2:6]-h2Zoid[1:5])
+								stdMI$cStep+vDiff
+							}
 		for( aIdx in seq_len(length(allIdxF)) ){
 			aZoid <- gEnv$allZoidMtx[allIdxF[aIdx],]
+			aCStep <- aZoid[2:6] - aZoid[1:5]
+			aFStep <- aZoid - stdMI$lastZoid
 			scoreMtx[aIdx,"rebV"] <- sum( aZoid %in% stdMI$lastZoid )
 			scoreMtx[aIdx,"rebC"] <- sum( aZoid == stdMI$lastZoid )
 
@@ -1477,6 +1492,13 @@ fCutU.ccc.score2 <- function( gEnv, allIdxF, zMtx ){
 				scoreMtx[aIdx,"rebR"] <- sum( aZoid[slideObj$rMtx["col",]] == slideObj$rMtx["val",] ,na.rm=T )
 				scoreMtx[aIdx,"rebL.cnt"] <- sum( !is.na(slideObj$lMtx["val",]) )
 				scoreMtx[aIdx,"rebR.cnt"] <- sum( !is.na(slideObj$rMtx["val",]) )
+			}
+
+			if( !is.null(inc.stdRaw) ){
+				scoreMtx[aIdx,"inc.raw"]	<- sum(aZoid==inc.stdRaw ,na.rm=T)
+			}
+			if( !is.null(inc.stdCStep) ){
+				scoreMtx[aIdx,"inc.cStep"]	<- sum(aCStep==inc.stdCStep ,na.rm=T)
 			}
 		}
 	}	# reb3V ,reb2C
