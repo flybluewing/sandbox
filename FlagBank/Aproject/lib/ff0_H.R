@@ -100,21 +100,12 @@ ff0.byOnePhase.cut <- function( ccObj ,phName=NULL ){
         }
     }   # table(filtedFlg)  ;dbgIdx <- head(which(filtedFlg))
 
-    for( rIdx in 1:nrow(cntMtx) ){  # scoreMtx2 QQE
+    for( rIdx in 1:nrow(cntMtx) ){  # scoreMtx2
         score <- scoreMtx2[rIdx,]
-        # flag <- score[c("w1CStep.matLen","w1FStep.matLen")] > 2
-        # if( any(flag) ){    filtedLst[[rIdx]] <- c(filtedLst[[rIdx]],"cntMtx.evtA1.out")    ;filtedFlg[ rIdx ] <- TRUE
-        # }
-        # flag <- score[c("w1CStep.cnt","w1FStep.cnt")] > 1
-        # if( any(flag) ){    filtedLst[[rIdx]] <- c(filtedLst[[rIdx]],"cntMtx.evtA2.out")    ;filtedFlg[ rIdx ] <- TRUE
-        # }
-        # flag <- score[c("quoPtn","zw","remH0","remH1","cStep2","cStep3","w1CStep.cnt","w1FStep.cnt")] > 0
-        # if( 2<sum(flag) ){  filtedLst[[rIdx]] <- c(filtedLst[[rIdx]],"cntMtx.evtA3.out")    ;filtedFlg[ rIdx ] <- TRUE
-        # }
-        # flag <- score[c("reb","nbor","spanM","quoAll")] > 0
-        # if( 2<sum(flag) ){  filtedLst[[rIdx]] <- c(filtedLst[[rIdx]],"cntMtx.evtA4.out")    ;filtedFlg[ rIdx ] <- TRUE
-        # }
-        
+        # rebV rebC rebL rebR rebL.cnt rebR.cnt inc.raw inc.cStep
+        flag <- score[c("rebV","rebC","rebL","rebR","inc.raw", "inc.cStep")] >= c( 4, 3, 2, 2, 3, 2 )
+        if( any(flag) ){    filtedLst[[rIdx]] <- c(filtedLst[[rIdx]],"scoreMtx2.evtA01.out")    ;filtedFlg[ rIdx ] <- TRUE
+        }
 
     }   # table(filtedFlg)  ;dbgIdx <- head(which(filtedFlg))
 

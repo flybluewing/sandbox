@@ -41,6 +41,7 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 	allIdxF.bak <- allIdxF
 	allIdxFObj$allIdxF.colValSeqNext <- allIdxF
 	cat(sprintf("allIdxF %d\n",length(allIdxF)))
+	tDiff <- Sys.time() - tStmp		# 21 min.
 
 	# fCut.basic( gEnv ,allIdxF ) -----------------------------------------
 	allIdxF <- fCut.basic( gEnv ,allIdxF )
@@ -66,9 +67,10 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 			ccObjLst[[nIdx]]$cntMtx[,"fStep"] <- ifelse( fStep>0 ,fStep ,0 )
 		}
 	}
-	flagCntMtx		<- fltCntMtx(		ccObjLst	,allIdxF )
-	flagScoreMtx	<- fltScoreMtx(		ccObjLst	,allIdxF )
-	flagCStepValMtx	<- fltCStepValMtx(	ccObjLst	,allIdxF )
+	# flagCntMtx		<- fltCntMtx(		ccObjLst	,allIdxF )
+	# flagScoreMtx	<- fltScoreMtx(		ccObjLst	,allIdxF )
+	flagScoreMtx2	<- fltScoreMtx2(		ccObjLst	,allIdxF )
+	# flagCStepValMtx	<- fltCStepValMtx(	ccObjLst	,allIdxF )
 
     return( rObj )
 
