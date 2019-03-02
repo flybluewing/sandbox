@@ -12,8 +12,8 @@ fCutU.rptColValSeqNext( gEnv ,allIdxF ,sprintf("toZ%d",workH) )
 
 
 # simMode start ----------------------------------------------------
-	aZoid <- stdZoid <- c( ,,,,, ) # ZH 848 채워넣을 것.
-	allIdxF <- allIdx <- stdIdx <- 
+	aZoid <- stdZoid <- c(  1, 2,16,22,38,39 ) # ZH 848 채워넣을 것.
+	allIdxF <- allIdx <- stdIdx <- 97861
 		# which(apply(gEnv$allZoidMtx,1,function(zoid){all(zoid==stdZoid)}))
 	u0.saveStdZoidFltRst( workH )
 # simMode end   ----------------------------------------------------
@@ -54,8 +54,8 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 	allIdxFObj$filtByOnePhase <- allIdxF
 
 	# u0.getPhObjLst( gEnv ,allIdxF ) -------------------------------------
-	ccObjLst <- u0.getPhObjLst( gEnv ,allIdxF )
-	save( ccObjLst ,file="Obj_ccObjLst.save" )
+		ccObjLst <- u0.getPhObjLst( gEnv ,allIdxF )
+		save( ccObjLst ,file="Obj_ccObjLst.save" )
 	tDiff <- Sys.time() - tStmp
 
 	if( TRUE ){	# cntMtx[,c("cStep","fStep")] <-- w1,w2 제거

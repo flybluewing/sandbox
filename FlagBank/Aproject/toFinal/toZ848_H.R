@@ -2690,7 +2690,7 @@ flagScoreMtx2		<- function( ccObjLst ,allIdxF ){
 	rownames(scoreMtx2) <- phName	;colnames(scoreMtx2)=colName
 	scoreMtx2.evt <- scoreMtx2
 
-	fltFlg <- rep( F ,allIdxF.len )
+	fltLst <- vector( "list",allIdxF.len )
 	for( aIdx in seq_len(allIdxF.len) ){
 		scoreMtx2[,] <- 0		;scoreMtx2.evt[,] <- 0
 		for( phIdx in phName ){
@@ -2699,42 +2699,45 @@ flagScoreMtx2		<- function( ccObjLst ,allIdxF ){
 		}
 
 		evtCnt <- apply( scoreMtx2.evt ,1 ,sum )
-		if( any(3<=evtCnt) ){	fltFlg[aIdx]<-TRUE ;next }
-		if( 5<sum(evtCnt) ){	fltFlg[aIdx]<-TRUE ;next }
+		if( any(3<=evtCnt) ){	fltLst[[aIdx]]<-c(fltLst[[aIdx]],"0010") }
+		if( 5<sum(evtCnt) ){	fltLst[[aIdx]]<-c(fltLst[[aIdx]],"0020") }
 
 		# # -[rebV]--------------------------------------------------------------
-		if( 7>sum(scoreMtx2[,"rebV"]) ){	fltFlg[aIdx]<-TRUE ;next }
+		if( 7>sum(scoreMtx2[,"rebV"]) ){	fltLst[[aIdx]]<-c(fltLst[[aIdx]],"0030") }
 		flg <- scoreMtx2[,"rebV"] >= 3
-			if( 2 < sum(flg) ){	fltFlg[aIdx]<-TRUE ;next }
+			if( 2 < sum(flg) ){	fltLst[[aIdx]]<-c(fltLst[[aIdx]],"0040") }
 			banArea <- c("basic","nextZW","nextQuo10","nextBin","nextRebNum","nextCStepBin","nextFStepBin")
-			if( any(flg[banArea]) ){	fltFlg[aIdx]<-TRUE ;next }
+			if( any(flg[banArea]) ){	fltLst[[aIdx]]<-c(fltLst[[aIdx]],"0050") }
 		flg <- scoreMtx2[,"rebV"] == 2
-			if( 5 < sum(flg) ){	fltFlg[aIdx]<-TRUE ;next }
+			if( 5 < sum(flg) ){	fltLst[[aIdx]]<-c(fltLst[[aIdx]],"0060") }
 
 		# # -[rebC]--------------------------------------------------------------
-		if( 0==sum(scoreMtx2[,"rebC"]) ){	fltFlg[aIdx]<-TRUE ;next }
+		if( 0==sum(scoreMtx2[,"rebC"]) ){	fltLst[[aIdx]]<-c(fltLst[[aIdx]],"0070") }
 		flg <- scoreMtx2[,"rebC"] >= 2
-			if( 2 < sum(flg) ){	fltFlg[aIdx]<-TRUE ;next }
+			if( 2 < sum(flg) ){	fltLst[[aIdx]]<-c(fltLst[[aIdx]],"0080") }
 			banArea <- c("basic","nextZW","nextQuo10","nextBin","nextRebNum","nextCStepBin","nextFStepBin")
-			if( any(flg[banArea]) ){	fltFlg[aIdx]<-TRUE ;next }
+			if( any(flg[banArea]) ){	fltLst[[aIdx]]<-c(fltLst[[aIdx]],"0090") }
 
 		# # -[rebL]--------------------------------------------------------------
-		if( 1<sum(scoreMtx2[,"rebL"]) ){	fltFlg[aIdx]<-TRUE ;next }
+		if( 1<sum(scoreMtx2[,"rebL"]) ){	fltLst[[aIdx]]<-c(fltLst[[aIdx]],"0100") }
 
 		# # -[rebR]--------------------------------------------------------------
-		if( 1<sum(scoreMtx2[,"rebR"]) ){	fltFlg[aIdx]<-TRUE ;next }
+		if( 1<sum(scoreMtx2[,"rebR"]) ){	fltLst[[aIdx]]<-c(fltLst[[aIdx]],"0110") }
 
 		# # -[inc.raw]-----------------------------------------------------------
-		if( 6<sum(scoreMtx2[,"inc.raw"]) ){	fltFlg[aIdx]<-TRUE ;next }
+		if( 6<sum(scoreMtx2[,"inc.raw"]) ){	fltLst[[aIdx]]<-c(fltLst[[aIdx]],"0120") }
 		flg <- scoreMtx2[,"inc.raw"] >= 2
 			banArea <- c("basic","nextZW","nextQuo10","nextBin","nextRebNum","nextCStepBin","nextFStepBin")
-			if( any(flg[banArea]) ){	fltFlg[aIdx]<-TRUE ;next }
+			if( any(flg[banArea]) ){	fltLst[[aIdx]]<-c(fltLst[[aIdx]],"0130") }
 
 		# # -[inc.cStep]---------------------------------------------------------
-		if( 6<sum(scoreMtx2[,"inc.cStep"]) ){	fltFlg[aIdx]<-TRUE ;next }
+		if( 6<sum(scoreMtx2[,"inc.cStep"]) ){	fltLst[[aIdx]]<-c(fltLst[[aIdx]],"0140") }
 
-	}	# table(fltFlg)	;dbgIdx <- head(which(fltFlg))	;aIdx<-dbgIdx[1]
-	table(fltFlg)	;dbgIdx <- head(which(fltFlg))	;aIdx<-dbgIdx[1]
+	}
+	fltCnt <- sapply(fltLst,length)
+	table(fltCnt)	;dbgIdx <- which(fltCnt>0)	;aIdx<-dbgIdx[1]
+	# QQE working
+
 
 } # flagScoreMtx2()
 
