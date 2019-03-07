@@ -1331,6 +1331,7 @@ fCutU.commonCutCnt <- function( gEnv, allIdxF ,zMtx
 
 	rObj <- list( flgCnt=flgCnt ,scoreMtx=scoreMtx ,cStepValMtx=cStepValMtx ,lastZoid=stdMI$lastZoid )
 	rObj$scoreMtx2 <- fCutU.ccc.score2( gEnv ,allIdxF ,zMtx )
+	rObj$scoreMtx3 <- fCutU.ccc.score3( gEnv ,allIdxF ,zMtx )
 	return( rObj )
 
 } #	fCutU.commonCutCnt( )
@@ -1507,6 +1508,28 @@ fCutU.ccc.score2 <- function( gEnv, allIdxF, zMtx ){
 	return( scoreMtx )
 
 }	# fCutU.ccc.score2
+
+fCutU.ccc.score3 <- function( gEnv, allIdxF, zMtx ){
+
+	# zMtx : 각 ph에서의 히스토리.
+	#	zMtx <- gEnv$zhF
+
+	cName <- c("rebC.C")
+	scoreMtx <- matrix( 0, nrow=length(allIdxF), ncol=length(cName) )
+	colnames( scoreMtx ) <- cName
+	#	rebC.C : rebC의 CStep 버전
+
+	stdMI <- fCutU.getMtxInfo( zMtx )
+
+	if( TRUE ){
+		
+	}
+
+	return( scoreMtx )
+
+}	# fCutU.ccc.score3
+
+
 
 
 #=================================================================================
