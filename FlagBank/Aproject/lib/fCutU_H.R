@@ -1513,8 +1513,23 @@ fCutU.ccc.score3 <- function( gEnv, allIdxF, zMtx ){
 
 	# zMtx : 각 ph에서의 히스토리.
 	#	zMtx <- gEnv$zhF
+	getRebPtn.1 <- function( stdMI ){
+		rObj <- list( colIdx=integer(0) )
+		rowLen <- nrow( stdMI$rawTal )
+		if( 2>rowLen ) return( rObj )
 
-	cName <- c("rebC.C")
+		for( rIdx in rowLen:2 ){
+			stdMI$rawTail[rIdx,]
+		}
+
+		return( rObj )
+	} # getRebPtn.1()
+	getRebPtn.2 <- function( stdMI ){
+		rObj <- list()
+		return( rObj )
+	} # getRebPtn.2()
+
+	cName <- c("rebC.C","rebPtn.1","rebPtn.2")
 	scoreMtx <- matrix( 0, nrow=length(allIdxF), ncol=length(cName) )
 	colnames( scoreMtx ) <- cName
 	#	rebC.C : rebC의 CStep 버전
@@ -1522,7 +1537,13 @@ fCutU.ccc.score3 <- function( gEnv, allIdxF, zMtx ){
 	stdMI <- fCutU.getMtxInfo( zMtx )
 
 	if( TRUE ){
-		
+		for( aIdx in seq_len(length(allIdxF)) ){
+			aZoid <- gEnv$allZoidMtx[allIdxF[aIdx],]
+			aCStep <- aZoid[2:6] - aZoid[1:5]
+			aFStep <- aZoid - stdMI$lastZoid
+
+			scoreMtx[aIdx,"rebC.C"] <- sum(stdMI$cStep==aCStep)
+		}
 	}
 
 	return( scoreMtx )
