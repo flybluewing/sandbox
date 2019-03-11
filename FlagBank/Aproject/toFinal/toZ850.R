@@ -1,5 +1,5 @@
 # Z850
-	workH <- 850	;rpt=TRUE
+workH <- 850	;rpt=TRUE
 source(sprintf("./toFinal/toZ%d_H.R",workH))	# working
 
 load( sprintf("Obj_allIdxLstZ%d.save",workH-1) )
