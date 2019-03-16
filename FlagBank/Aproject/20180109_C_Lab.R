@@ -374,6 +374,9 @@ for( cnIdx in rstObj$name.cccObj.cStepValMtx ){
 } # for(cnIdx)
 
 
+
+
+
 # -----------------------------------------------------------------------------------------------------------------------------------
 ff0.phName <- c(    "basic","nextZW","nextQuo10" ,"nextBin" ,"nextRebNum" ,"nextCStepBin" ,"nextFStepBin"
                     ,"nextColVal_1","nextColVal_2","nextColVal_3","nextColVal_4","nextColVal_5","nextColVal_6"
