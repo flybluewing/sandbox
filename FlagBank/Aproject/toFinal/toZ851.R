@@ -1,10 +1,10 @@
 # Z850
-workH <- 850	;rpt=TRUE
+workH <- 851	;rpt=TRUE
 source(sprintf("./toFinal/toZ%d_H.R",workH))	# working
 
 load( sprintf("Obj_allIdxLstZ%d.save",workH-1) )
 load(sprintf("./save/Obj_gEnvZ%d.save",workH-1))
-allZoidGrpName <-"allZoid.idx0"						#       635756         1372092
+allZoidGrpName <-"allZoid.idx0"						#        1035206         1905414 
 allIdx <- allIdxLst[[allZoidGrpName]]		# allIdx <- c( allIdxLst[["allZoid.idx0"]] ,allIdxLst[["allZoid.idx1"]])
 allIdxF <- 1000:1010		;stdZoid <- NULL
 # 참고 자료 --------------------------------------------------------------------	
