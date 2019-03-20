@@ -42,6 +42,7 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 	allIdxFObj$allIdxF.colValSeqNext <- allIdxF
 	cat(sprintf("allIdxF %d\n",length(allIdxF)))
 	tDiff <- Sys.time() - tStmp		# 21 min.
+	save( allIdxF ,file="Obj_allIdxF.save" )
 
 	# fCut.basic( gEnv ,allIdxF ) -----------------------------------------
 	allIdxF <- fCut.basic( gEnv ,allIdxF )
