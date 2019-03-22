@@ -2653,64 +2653,145 @@ fCutCnt.nextColVal_6 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 #========================================================================
 
 fltCntMtx		<- function( ccObjLst ,allIdxF ){
+	# 	# w1, w2는 이전에서 정산되어 있어야 한다.
+
 	cntMtxLst <- lapply( ccObjLst ,function(p){ p$cntMtx })
 	phName <- attributes(cntMtxLst)$names
 
 	# cnt <- rep( 0 ,nrow(cntMtxLst[[1]]) )	;names(cnt) <- allIdxF
 	rawMtx <- do.call( cbind ,lapply( cntMtxLst ,function(obj){ obj[,"raw"] } ) )	#	rownames(rawMtx) <- allIdxF
-	rawCnt <- apply( rawMtx ,1 ,function(rData){ 
-					if( any(rData>2) ) return( 100 )
-
-					evtCnt <- sum(rData>1)
-					if( evtCnt >2 ) return( 100 ) else return( evtCnt )
-	})
 	rawFVMtx <- do.call( cbind ,lapply( cntMtxLst ,function(obj){ obj[,"rawFV"] } ) )	#	rownames(rawFVMtx) <- allIdxF
-	rawFVCnt <- apply( rawFVMtx ,1 ,function(rData){ 
-					if( any(rData>2) ) return( 100 )
-
-					evtCnt <- sum(rData>1)
-					if( evtCnt >1 ) return( 100 ) else return( evtCnt )
-	})
 	remMtx <-  do.call( cbind ,lapply( cntMtxLst ,function(obj){ obj[,"rem"] } ) )
-	remCnt <- apply( remMtx ,1 ,function(rData){ 
-					if( any(rData>3) ) return( 100 )
-
-					evtCnt <- sum(rData>2)
-					if( evtCnt >2 ) return( 100 ) else return( evtCnt )
-	})
 	
-	cStepMtx <-  do.call( cbind ,lapply( cntMtxLst ,function(obj){ obj[,"cStep"] } ) )
+	cStepMtx <-  do.call( cbind ,lapply( cntMtxLst ,function(obj){ obj[,"cStep"] } ) )	# w1, w2는 이전에서 정산되어 있어야 한다.
 	cStepMtx.w1 <-  do.call( cbind ,lapply( cntMtxLst ,function(obj){ obj[,"cStep.w1"] } ) )
 	cStepMtx.w2 <-  do.call( cbind ,lapply( cntMtxLst ,function(obj){ obj[,"cStep.w2"] } ) )
-	cStepCnt <- rep( 0 ,nrow(cStepMtx) )
-	for( rIdx in 1:nrow(cStepMtx) ){
-		cStep <- cStepMtx[rIdx,]
-		cStep.w <- cStepMtx.w1[rIdx,] + cStepMtx.w2[rIdx,]
-		cStep.all <- cStep + cStep.w
 
-		if( any(cStep>2) || any(cStep.w>2) || (cStep.all>3) ){
-			cStepCnt[rIdx] <- 100
-			next
-		}
-
-
-
-	}
-
-
-	fStepMtx <-  do.call( cbind ,lapply( cntMtxLst ,function(obj){ obj[,"fStep"] } ) )
+	fStepMtx <-  do.call( cbind ,lapply( cntMtxLst ,function(obj){ obj[,"fStep"] } ) )	# w1, w2는 이전에서 정산되어 있어야 한다.
 	fStepMtx.w1 <-  do.call( cbind ,lapply( cntMtxLst ,function(obj){ obj[,"fStep.w1"] } ) )
 	fStepMtx.w2 <-  do.call( cbind ,lapply( cntMtxLst ,function(obj){ obj[,"fStep.w2"] } ) )
-	fStepCnt <- rep( 0 ,nrow(fStepMtx) )
 
 
+    #   basic nextZW nextQuo10 nextBin nextRebNum nextCStepBin nextFStepBin 
+	#	nextColVal_1 nextColVal_2 nextColVal_3 nextColVal_4 nextColVal_5 nextColVal_6 
 
-	fltFlag <- rep( FALSE ,nrow(cntMtxLst[[1]]) )	;names(fltFlag) <- allIdxF
-	return( fltFlag )
+	allIdxF.len <- length(allIdxF)
+	fltLst <- vector( "list",allIdxF.len )		;names(fltLst) <- paste("a",allIdxF)
+	for( aIdx in seq_len(allIdxF.len) ){
+
+		# # -[rawMtx]-----------------------------------------------------------
+			fndIdx <- which(rawMtx[aIdx,]>2)
+			if(0<length(fndIdx)) fltLst[[aIdx]] <- c( fltLst[[aIdx]] ,"raw001" )
+			fndIdx <- which(rawMtx[aIdx,]==2)
+			if(0<length(fndIdx)){
+				if( 2< length(fndIdx) )	fltLst[[aIdx]] <- c( fltLst[[aIdx]] ,"raw011" )
+				if( 2==length(fndIdx) ){
+					# if( all(c("nextQuo10","nextColVal_6")==names(fndIdx)) )		fltLst[[aIdx]] <- c( fltLst[[aIdx]] ,"raw012" )
+					fltLst[[aIdx]] <- c( fltLst[[aIdx]] ,"raw012" )
+				}
+				if( 1==length(fndIdx) ){
+					banCol <- c("nextRebNum")
+					if( banCol %in% names(fndIdx) )		fltLst[[aIdx]] <- c( fltLst[[aIdx]] ,"raw013" )
+				}
+			}
+			fndIdx <- which(rawMtx[aIdx,]==1)
+			if( 5<length(fndIdx) ) fltLst[[aIdx]] <- c( fltLst[[aIdx]] ,"raw021" )
+		# # -[remMtx]-----------------------------------------------------------
+			fndIdx <- which(remMtx[aIdx,]>3)
+			if(0<length(fndIdx)){
+				if(1<length(fndIdx)) fltLst[[aIdx]] <- c( fltLst[[aIdx]] ,"rem001" )
+				if( any(names(fndIdx)%in%c("nextColVal_2"))  ) fltLst[[aIdx]] <- c( fltLst[[aIdx]] ,"rem002" )
+			}
+			fndIdx <- which(remMtx[aIdx,]==3)
+			if(0<length(fndIdx)){
+				if( 2<length(fndIdx) ) fltLst[[aIdx]] <- c( fltLst[[aIdx]] ,"rem011" )
+				if( 1==length(fndIdx) ){
+					banCol <- c("nextColVal_3","nextQuo10","nextColVal_6")
+					if( names(fndIdx) %in% banCol ) fltLst[[aIdx]] <- c( fltLst[[aIdx]] ,"rem012" )
+				}
+			}
+			fndIdx <- which(remMtx[aIdx,]==2)
+			if( 4<length(fndIdx) || length(fndIdx)<2 ) fltLst[[aIdx]] <- c( fltLst[[aIdx]] ,"rem021" )
+			fndIdx <- which(remMtx[aIdx,]==1)
+			if( 8<length(fndIdx) || length(fndIdx)<2 ) fltLst[[aIdx]] <- c( fltLst[[aIdx]] ,"rem031" )
+			fndIdx <- which( 0<remMtx[aIdx,] & remMtx[aIdx,]<3 )
+			if( 10<length(fndIdx) || length(fndIdx)<4 ) fltLst[[aIdx]] <- c( fltLst[[aIdx]] ,"rem041" )
+		# # -[cStepMtx]-----------------------------------------------------------
+			fndIdx <- which(cStepMtx[aIdx,]>2)
+			if(0<length(fndIdx)){
+				if(1<length(fndIdx)) fltLst[[aIdx]] <- c( fltLst[[aIdx]] ,"cStep001" )
+				banCol <- c("nextColVal_4")
+				if( any(names(fndIdx)%in%banCol)  ) fltLst[[aIdx]] <- c( fltLst[[aIdx]] ,"cStep002" )
+			}
+			fndIdx <- which(cStepMtx[aIdx,]==2)
+			if(0<length(fndIdx)){
+				if( 3<length(fndIdx) ) fltLst[[aIdx]] <- c( fltLst[[aIdx]] ,"cStep011" )
+			}
+			fndIdx <- which(cStepMtx[aIdx,]==1)
+			if( 8<length(fndIdx) || length(fndIdx)<2 ) fltLst[[aIdx]] <- c( fltLst[[aIdx]] ,"cStep021" )
+		# # -[fStepMtx]-----------------------------------------------------------
+			fndIdx <- which(fStepMtx[aIdx,]>2)
+			if(0<length(fndIdx)) fltLst[[aIdx]] <- c( fltLst[[aIdx]] ,"fStep001" )
+			fndIdx <- which(fStepMtx[aIdx,]==2)
+			if(1<length(fndIdx)) fltLst[[aIdx]] <- c( fltLst[[aIdx]] ,"fStep011" )
+			fndIdx <- which(fStepMtx[aIdx,]==1)
+			if(3<length(fndIdx)) fltLst[[aIdx]] <- c( fltLst[[aIdx]] ,"fStep021" )
+
+		# # -[cStepMtx.w1]-----------------------------------------------------------
+			fndIdx <- which(cStepMtx.w1[aIdx,]>1)
+			if(0<length(fndIdx)) fltLst[[aIdx]] <- c( fltLst[[aIdx]] ,"cStepW1:001" )
+			fndIdx <- which(cStepMtx.w1[aIdx,]==1)
+			if(4<length(fndIdx)) fltLst[[aIdx]] <- c( fltLst[[aIdx]] ,"cStepW1:011" )
+		# # -[cStepMtx.w2]-----------------------------------------------------------
+			fndIdx <- which(cStepMtx.w2[aIdx,]>1)
+			if(0<length(fndIdx)) fltLst[[aIdx]] <- c( fltLst[[aIdx]] ,"cStepW2:001" )
+			fndIdx <- which(cStepMtx.w2[aIdx,]==1)
+			if(1<length(fndIdx)) fltLst[[aIdx]] <- c( fltLst[[aIdx]] ,"cStepW2:011" )
+			if( 1==length(fndIdx) ) {
+				banCol <- c("nextRebNum","nextQuo10","nextFStepBin","nextColVal_1","nextColVal_6")
+				if( any(banCol%in%names(fndIdx)) ) fltLst[[aIdx]] <- c( fltLst[[aIdx]] ,"cStepW2:021" )
+			}
+
+		# # -[fStepMtx.w1]-----------------------------------------------------------
+			fndIdx <- which(fStepMtx.w1[aIdx,]>1)
+			if(0<length(fndIdx)) fltLst[[aIdx]] <- c( fltLst[[aIdx]] ,"fStepW1:001" )
+			fndIdx <- which(fStepMtx.w1[aIdx,]==1)
+			if(2<length(fndIdx)) fltLst[[aIdx]] <- c( fltLst[[aIdx]] ,"fStepW1:011" )
+			if(1==length(fndIdx)) {
+				banCol <- c("nextRebNum","basic","nextColVal_5")
+				if( any(banCol%in%names(fndIdx)) ) fltLst[[aIdx]] <- c( fltLst[[aIdx]] ,"fStepW1:021" )
+			}
+		# # -[fStepMtx.w2]-----------------------------------------------------------
+			fndIdx <- which(fStepMtx.w1[aIdx,]>1)
+			if(0<length(fndIdx)) fltLst[[aIdx]] <- c( fltLst[[aIdx]] ,"fStepW2:001" )
+			fndIdx <- which(fStepMtx.w1[aIdx,]==1)
+			if(3<length(fndIdx)) fltLst[[aIdx]] <- c( fltLst[[aIdx]] ,"fStepW2:011" )
+			if(1==length(fndIdx)) {
+				banCol <- c("nextZW","nextColVal_2","nextQuo10","nextFStepBin")
+				if( any(banCol%in%names(fndIdx)) ) fltLst[[aIdx]] <- c( fltLst[[aIdx]] ,"fStepW2:021" )
+			}
+
+
+		# # -[raw.w1.w2]-----------------------------------------------------------
+			cntVal <- rawMtx[aIdx,] + cStepMtx.w1[aIdx,] + cStepMtx.w2[aIdx,] + fStepMtx.w1[aIdx,] + fStepMtx.w2[aIdx,]
+			if(0==sum(cntVal)) fltLst[[aIdx]] <- c( fltLst[[aIdx]] ,"raw.w1.w2:000" )
+	}
+	# debug
+	# table(do.call(c,fltLst,))	;fltCnt <- sapply(fltLst,length)	;table(fltCnt)	;dbgIdx <- which(fltCnt>0)
+	# dbgIdx<-which(sapply(fltLst,function(p){any(p=="fStepW1:021")}))		;aIdx <- dbgIdx[1]
+
+	fltCnt <- sapply(fltLst,length)
+	allIdxF <- allIdxF[fltCnt==0]
+	# fltFlag <- rep( FALSE ,nrow(cntMtxLst[[1]]) )	;names(fltFlag) <- allIdxF
+	return( list( allIdxF=allIdxF ,fltCnt=fltCnt ) )
 
 } # fltCntMtx()
 
 fltScoreMtx		<- function( ccObjLst ,allIdxF ){
+	
+	allIdxF.len <- length( allIdxF )
+	scoreMtxLst <- lapply( ccObjLst ,function(p){ p$cccObj$scoreMtx })
+	phName <- attributes(scoreMtxLst)$names
 
 } # fltScoreMtx()
 
@@ -2775,7 +2856,7 @@ fltScoreMtx2		<- function( ccObjLst ,allIdxF ){
 
 	fltCnt <- sapply(fltLst,length)
 	allIdxF <- allIdxF[fltCnt==0]
-	rObj <- list( allIdxF=allIdxF ,fltLst=fltLst )
+	rObj <- list( allIdxF=allIdxF ,fltCnt=fltCnt ,fltLst=fltLst )
 
 	return( rObj )
 

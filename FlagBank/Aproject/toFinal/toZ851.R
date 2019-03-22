@@ -61,17 +61,20 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 
 	if( TRUE ){	# cntMtx[,c("cStep","fStep")] <-- w1,w2 Á¦°Å
 		for( phIdx in attributes(ccObjLst)$names ){
-			cntMtx <- ccObjLst[[nIdx]]$cntMtx
+			cntMtx <- ccObjLst[[phIdx]]$cntMtx
 			cStep <- cntMtx[,"cStep"] - cntMtx[,"cStep.w1"] - cntMtx[,"cStep.w2"]
-			ccObjLst[[nIdx]]$cntMtx[,"cStep"] <- ifelse( cStep>0 ,cStep ,0 )
+			ccObjLst[[phIdx]]$cntMtx[,"cStep"] <- ifelse( cStep>0 ,cStep ,0 )
 			fStep <- cntMtx[,"fStep"] - cntMtx[,"fStep.w1"] - cntMtx[,"fStep.w2"]
-			ccObjLst[[nIdx]]$cntMtx[,"fStep"] <- ifelse( fStep>0 ,fStep ,0 )
+			ccObjLst[[phIdx]]$cntMtx[,"fStep"] <- ifelse( fStep>0 ,fStep ,0 )
 		}
 	}
-	# flagCntMtx		<- fltCntMtx(		ccObjLst	,allIdxF )
+
+	fltCnt <- NULL
+	rstObj	<- fltCntMtx(		ccObjLst	,allIdxF )
+	fltCnt <- rstObj$fltCnt
 	# flagScoreMtx	<- fltScoreMtx(		ccObjLst	,allIdxF )
-	flagScoreMtx2	<- fltScoreMtx2(		ccObjLst	,allIdxF )
-	allIdxF <- flagScoreMtx2$allIdxF
+	rstObj	<- fltScoreMtx2(		ccObjLst	,allIdxF )
+	fltCnt <- fltCnt + rstObj$fltCnt
 	# flagCStepValMtx	<- fltCStepValMtx(	ccObjLst	,allIdxF )
 
     return( rObj )
