@@ -13,7 +13,7 @@ fCutU.rptColValSeqNext( gEnv ,allIdxF ,sprintf("toZ%d",workH) )
 
 # simMode start ----------------------------------------------------
 	aZoid <- stdZoid <- c( 14,18,22,26,31,44 ) # ZH 850 채워넣을 것.
-	allIdxF <- allIdx <- stdIdx <- 
+	allIdxF <- allIdx <- stdIdx <- 7318133
 		# which(apply(gEnv$allZoidMtx,1,function(zoid){all(zoid==stdZoid)}))
 	u0.saveStdZoidFltRst( workH )
 # simMode end   ----------------------------------------------------
