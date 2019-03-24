@@ -250,12 +250,13 @@ fCutCnt.basic <- function( gEnv ,allIdxF ,rpt=FALSE ){
 		}
 		if( TRUE ){ # cStep		#	u0.zoidCMtx_ana.rpt( stdMI$rawTail )
 			cnt <- 0
-			if( aCStep[1]%in%c(  4, 8, 5     ) ) cnt<-cnt+1
-			if( aCStep[2]%in%c(  4,14       ) ) cnt<-cnt+1
-			if( aCStep[3]%in%c(  4,12,13       ) ) cnt<-cnt+1
-			if( aCStep[4]%in%c( 16, 4, 8      ) ) cnt<-cnt+1
+			if( aCStep[1]%in%c(  4, 8, 5   ) ) cnt<-cnt+1
+			if( aCStep[2]%in%c(  4,14      ) ) cnt<-cnt+1
+			if( aCStep[3]%in%c(  4,12,13   ) ) cnt<-cnt+1
+			if( aCStep[4]%in%c( 16, 4, 8   ) ) cnt<-cnt+1
 			if( aCStep[5]%in%c(  6, 5      ) ) cnt<-cnt+1
 
+			# unique	4가 또 존재할까? 이렇게 많이 나오고도?
 			cnt.w1 <- cccObj$scoreMtx[idx,"w1CStep.cnt"]	# fv in cStep
 			if( fCutU.hasPtn(c( , ),aCStep) )	cnt.w1<-cnt.w1+1
 			if( 1<sum(aCStep[1:2+ ]==c( , )) )	cnt.w1<-cnt.w1+1
@@ -266,11 +267,10 @@ fCutCnt.basic <- function( gEnv ,allIdxF ,rpt=FALSE ){
 			#     FV :    1(2)   2(4)   4(8)   5(3)   8(2)   12(3)   13(2) 
 
 			cnt.w2 <- 0
-			if( 1<sum( aCStep[c(,)]*c(,)==aCStep[c( , )] ) )	cnt.w2<-cnt.w2+1
-			if( aCStep[ ]==sum(aCStep[c( , )]) )	cnt.w2<-cnt.w2+1
-			if( aCStep[ ]==sum(aCStep[c( , )]) )	cnt.w2<-cnt.w2+1
-			if( sum(aCStep[c( , )])==sum(aCStep[c( , )]) )	cnt.w2<-cnt.w2+1	# 
-			if( sum(aCStep[c( , )])==sum(aCStep[c( , )]) )	cnt.w2<-cnt.w2+1	# 
+			if( 1<sum( aCStep[ 1 ]*c(1,1)==aCStep[c(2,3)] ) )	cnt.w2<-cnt.w2+1
+			if( aCStep[5]==sum(aCStep[c(1,2,4)]) )	cnt.w2<-cnt.w2+1
+			if( aCStep[5]==sum(aCStep[c(1,3,4)]) )	cnt.w2<-cnt.w2+1
+			if( aCStep[5]==sum(aCStep[c(2,3,4)]) )	cnt.w2<-cnt.w2+1
 
 			cntMtx[idx,"cStep.w1"] <- cnt.w1	;cntMtx[idx,"cStep.w2"] <- cnt.w2
 			cntMtx[idx,"cStep"] <- cnt + cnt.w1 + cnt.w2
@@ -291,6 +291,7 @@ fCutCnt.basic <- function( gEnv ,allIdxF ,rpt=FALSE ){
 			if( aFStep[4]%in%c(  -3    ) ) cnt<-cnt+1
 			if( aFStep[5]%in%c(        ) ) cnt<-cnt+1
 			if( aFStep[6]%in%c(   5    ) ) cnt<-cnt+1
+			#	unique	-2가 또 나오려나..
 
 			cnt.w1 <- cccObj$scoreMtx[idx,"w1FStep.cnt"]	# fv in fStep
 			if( fCutU.hasPtn(c( , ),aFStep) )	cnt.w1<-cnt.w1+1
@@ -301,11 +302,12 @@ fCutCnt.basic <- function( gEnv ,allIdxF ,rpt=FALSE ){
 			# -------------------------------------------------------------------------------------
 			#     FV :    -13(2)   -4(2)   -3(2)   -2(5)   0(2)   7(4)   11(2) 
 			cnt.w2 <- 0
-			if( 1<sum( aFStep[c(,)]*c(,)==aFStep[c(,)] ) )	cnt.w2<-cnt.w2+1
-			if( aFStep[ ]==sum(aFStep[c( , )]) )	cnt.w2<-cnt.w2+1
-			if( aFStep[ ]==sum(aFStep[c( , )]) )	cnt.w2<-cnt.w2+1
-			if( sum(aFStep[c( , )])==sum(aFStep[c( , )]) )	cnt.w2<-cnt.w2+1	# 
-			if( sum(aFStep[c( , )])==sum(aFStep[c( , )]) )	cnt.w2<-cnt.w2+1	# 
+			if( 1<sum( aFStep[ 1 ]*c(1,1,1)==aFStep[c(2,3,4)] ) )	cnt.w2<-cnt.w2+1	# unique.
+			if( 1<sum( aFStep[c(1,5)]*c(1,-1)==aFStep[c(2,6)] ) )	cnt.w2<-cnt.w2+1
+			if( 1<sum( aFStep[c(1,5)]*c(1,-1)==aFStep[c(3,6)] ) )	cnt.w2<-cnt.w2+1
+			if( 1<sum( aFStep[c(1,5)]*c(1,-1)==aFStep[c(4,6)] ) )	cnt.w2<-cnt.w2+1
+			if( 1<sum( aFStep[c(2,5)]*c(1,-1)==aFStep[c(3,6)] ) )	cnt.w2<-cnt.w2+1
+			if( 1<sum( aFStep[c(2,5)]*c(1,-1)==aFStep[c(4,6)] ) )	cnt.w2<-cnt.w2+1
 
 			cntMtx[idx,"fStep.w1"] <- cnt.w1	;cntMtx[idx,"fStep.w2"] <- cnt.w2
 			cntMtx[idx,"fStep"] <- cnt + cnt.w1 + cnt.w2
