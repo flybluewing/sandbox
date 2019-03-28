@@ -1626,9 +1626,67 @@ fCutU.ccc.score4 <- function( gEnv, allIdxF, zMtx ){
 
 	# zMtx : 각 ph에서의 히스토리.
 	#	zMtx <- gEnv$zhF
-	getRebPtn.n <- function( stdMI ){
-		return( matLst )
-	} # getRebPtn.n()
+	getFreqVal <- function( valMtx ){	# valMtx <- stdMI$rawTail
+		tbl <- table(valMtx)	;tbl <- tbl[tbl>1]
+		fVal <- as.integer(names(tbl))
+
+		rowLen <- nrow( valMtx )
+		rowLst <- list()
+		for( vIdx in fVal ){
+			matLst <- list()
+			for( rIdx in rowLen:1 ){
+				fndCol <- which(valMtx[rIdx,]==vIdx)
+				if( length(fndCol)==0 ) next
+
+				fObj <- list( rIdx=rIdx ,fndCol=fndCol )
+				matLst[[1+length(matLst)]] <- fObj
+			}
+			if( 2>length(matLst) ) next
+
+			rowLst[[1+length(rowLst)]] <- list( fVal=vIdx
+													,rIdx=sapply(matLst,function(p){p$rIdx})  
+													,colLst=lapply(matLst,function(p){p$fndCol})
+												)
+		}
+		rObj <- rowLst
+		return( rObj )
+	}
+	getStdDiff <- function( valMtx ){
+		getSpanInfo <- function( preCIdx ,postCIdx ,colNum ){
+			fixIdx <- NULL
+			if( preCIdx<postCIdx ){
+				lMargin <- preCIdx - 1
+				rMargin <- colNum - postCIdx
+				fixIdx <- preCIdx
+			} else {
+				lMargin <- colNum - preCIdx
+				rMargin <- postCIdx -1
+				fixIdx <- postCIdx
+			}
+
+			rObj <- list( preSpan=(preCIdx-lMargin):(preCIdx+rMargin) ,postSpan=(postCIdx-lMargin):(postCIdx+rMargin) ,fixIdx=fixIdx )
+		}
+
+		fVLst <- getFreqVal(valMtx)
+		colNum<-ncol(valMtx)	;rowNum<-nrow(valMtx)
+		
+		for( idx in seq_len(fVLst) ){
+			fVObj <- fVLst[[idx]]
+			for( postCIdx in fVObj$colLst[[1]] ){
+				for( preCIdx in fVObj$colLst[[2]] ){
+					
+				}
+			}
+		} # for(idx)
+		return( rObj )
+	}
+	getFreqVal.raw <- function( stdMI ){
+		rObj <- list()
+
+		fVLst <- getFreqVal( stdMI$rawTail )
+		return( rObj )
+	} # getFreqVal.raw()
+
 
 	cName <- c("rebPtn.1","rebPtn.n","rebC.C1","rebC.F1","rebC.C2","rebC.F2")
 	scoreMtx <- matrix( 0, nrow=length(allIdxF), ncol=length(cName) )
