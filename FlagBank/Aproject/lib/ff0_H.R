@@ -69,7 +69,7 @@ ff0.byOnePhase.cut <- function( ccObj ,phName=NULL ){
             filtedLst[[rIdx]] <- c(filtedLst[[rIdx]],"cntMtx.evt02.out")    ;filtedFlg[ rIdx ] <- TRUE
         }
 
-        flag <- score[c("cStep.w1","cStep.w2","fStep.w1","fStep.w2")] > 1
+        flag <- score[c("cStep.w1","cStep.w2","fStep.w1")] > 1  # ,"fStep.w2"
         if( any(flag) ){    filtedLst[[rIdx]] <- c(filtedLst[[rIdx]],"cntMtx.evt10.out")    ;filtedFlg[ rIdx ] <- TRUE
         }
         flagScore <- c( sum(score[c("cStep.w1","cStep.w2")]) ,sum(score[c("fStep.w1","fStep.w2")]) )

@@ -381,8 +381,19 @@ fCutU.getMtxInfo <- function( zMtx ){
 		mtx <- apply( rawMtx ,1 ,function(zoid){zoid[2:6]-zoid[1:5]})
 		return( t(mtx) )
 	} # rObj$getCStepMtx()
+	rObj$getFStepMtx <- function( rawMtx ){
+		mtx <- matrix( NA ,nrow=nrow(rawMtx) ,ncol=ncol(rawMtx) )
+		rowNum <- nrow(mtx)
+		if( 1<rowNum ){
+			for( rIdx in 1:(rowNum-1) ){
+				mtx[rIdx+1,] <- rawMtx[rIdx+1,] - rawMtx[rIdx,]
+			}
+		}
+		return( mtx )
+	} # rObj$getFStepMtx()
 
 	rObj$cStepTail <- tail(rObj$getCStepMtx(zMtx))
+	rObj$fStepTail <- tail(rObj$getFStepMtx(zMtx))
 
 	rObj$quoTail <- t(apply( rObj$rawTail ,1 ,function(zoid){ fCutU.getQuoObj(zoid)$size }))
 	rObj$quoRebPtn <- fCutU.chkRowPtnReb( rObj$quoTail )
@@ -1332,6 +1343,7 @@ fCutU.commonCutCnt <- function( gEnv, allIdxF ,zMtx
 	rObj <- list( flgCnt=flgCnt ,scoreMtx=scoreMtx ,cStepValMtx=cStepValMtx ,lastZoid=stdMI$lastZoid )
 	rObj$scoreMtx2 <- fCutU.ccc.score2( gEnv ,allIdxF ,zMtx )
 	rObj$scoreMtx3 <- fCutU.ccc.score3( gEnv ,allIdxF ,zMtx )
+	rObj$scoreMtx4 <- fCutU.ccc.score4( gEnv ,allIdxF ,zMtx )
 	return( rObj )
 
 } #	fCutU.commonCutCnt( )
@@ -1457,7 +1469,7 @@ fCutU.ccc.score2 <- function( gEnv, allIdxF, zMtx ){
 	}	# getSlideReb.ptnLst()
 
 
-	cName <- c("rebV","rebC","rebL","rebR","rebL.cnt","rebR.cnt")
+	cName <- c("rebV","rebC","rebC2","rebL","rebR","rebL.cnt","rebR.cnt")
 	cName <- c( cName ,c("inc.raw","inc.cStep") )
 	scoreMtx <- matrix( 0, nrow=length(allIdxF), ncol=length(cName) )
 	colnames( scoreMtx ) <- cName
@@ -1481,12 +1493,16 @@ fCutU.ccc.score2 <- function( gEnv, allIdxF, zMtx ){
 								vDiff <- stdMI$cStep - (h2Zoid[2:6]-h2Zoid[1:5])
 								stdMI$cStep+vDiff
 							}
+		rawLen <- nrow( stdMI$rawTail )
 		for( aIdx in seq_len(length(allIdxF)) ){
 			aZoid <- gEnv$allZoidMtx[allIdxF[aIdx],]
 			aCStep <- aZoid[2:6] - aZoid[1:5]
 			aFStep <- aZoid - stdMI$lastZoid
 			scoreMtx[aIdx,"rebV"] <- sum( aZoid %in% stdMI$lastZoid )
 			scoreMtx[aIdx,"rebC"] <- sum( aZoid == stdMI$lastZoid )
+			if( 1<rawLen ){
+				scoreMtx[aIdx,"rebC2"] <- sum( aZoid == stdMI$rawTail[rawLen-1,] )
+			}
 
 			if( !is.null(slideObj) ){
 				scoreMtx[aIdx,"rebL"] <- sum( aZoid[slideObj$lMtx["col",]] == slideObj$lMtx["val",] ,na.rm=T )
@@ -1514,27 +1530,113 @@ fCutU.ccc.score3 <- function( gEnv, allIdxF, zMtx ){
 	# zMtx : 각 ph에서의 히스토리.
 	#	zMtx <- gEnv$zhF
 	getRebPtn.1 <- function( stdMI ){
-		rObj <- list( colIdx=integer(0) )
-		rowLen <- nrow( stdMI$rawTal )
+		rObj <- list( matInfo=matrix(0,nrow=0,ncol=4) )
+		rowLen <- nrow( stdMI$rawTail )
 		if( 2>rowLen ) return( rObj )
 
+		matLst <- list()
 		for( rIdx in rowLen:2 ){
-			stdMI$rawTail[rIdx,]
+			cVal <- intersect(stdMI$rawTail[rIdx,] ,stdMI$rawTail[rIdx-1,])
+			if( 1!=length(cVal) ) next
+
+			matLst[[1+length(matLst)]] <- c( rIdx, cVal
+												, which(stdMI$rawTail[rIdx-1,]==cVal) 
+												, which(stdMI$rawTail[rIdx  ,]==cVal)
+											)
 		}
 
+		if( 0<length(matLst) ){
+			matInfo <- do.call( rbind ,matLst )
+			colnames( matInfo ) <- c("row","val","fromC","toC")
+			rObj$matInfo <- matInfo
+		}
 		return( rObj )
 	} # getRebPtn.1()
-	getRebPtn.2 <- function( stdMI ){
-		rObj <- list()
-		return( rObj )
-	} # getRebPtn.2()
+	getRebPtn.n <- function( stdMI ){
+		rObj <- list( matLst=list() )
+		rowLen <- nrow( stdMI$rawTail )
+		if( 2>rowLen ) return( rObj )
 
-	cName <- c("rebC.C","rebPtn.1","rebPtn.2")
+		matLst <- list()	;matInfo <- NULL
+		for( rIdx in rowLen:2 ){
+			cVal <- intersect(stdMI$rawTail[rIdx,] ,stdMI$rawTail[rIdx-1,])
+			if( 2>length(cVal) ) next
+
+			matMtx <- matrix( NA, nrow=2, ncol=length(cVal) )
+			rownames(matMtx) <- c("from","to")	;colnames(matMtx) <- paste("val",cVal)
+			for( idx in seq_len(length(cVal)) ){
+				val <- cVal[idx]
+				matMtx["from",idx] <- which(stdMI$rawTail[rIdx-1,]==val)
+				matMtx["to"  ,idx] <- which(stdMI$rawTail[rIdx  ,]==val)
+			}
+			matInfo <- c( matInfo ,sprintf("%d:%s",rIdx,paste(cVal,collapse=",")) )
+			matLst[[1+length(matLst)]] <- matMtx
+		}
+		names(matLst) <- matInfo
+
+		return( matLst )
+	} # getRebPtn.n()
+
+	cName <- c("rebPtn.1","rebPtn.n","rebC.C1","rebC.F1","rebC.C2","rebC.F2")
 	scoreMtx <- matrix( 0, nrow=length(allIdxF), ncol=length(cName) )
 	colnames( scoreMtx ) <- cName
-	#	rebC.C : rebC의 CStep 버전
+	#	rebC.Cn/rebC.Cn : rebC의 CStep,FStep 버전 (h-1,h-2)
 
 	stdMI <- fCutU.getMtxInfo( zMtx )
+	rowLen <- nrow(stdMI$rawTail)
+
+	rebPtn.1 <- getRebPtn.1( stdMI )
+	rebPtn.n <- getRebPtn.n( stdMI )
+	if( TRUE ){
+		for( aIdx in seq_len(length(allIdxF)) ){
+			aZoid <- gEnv$allZoidMtx[allIdxF[aIdx],]
+			aCStep <- aZoid[2:6] - aZoid[1:5]
+			aFStep <- aZoid - stdMI$lastZoid
+
+			scoreMtx[aIdx,"rebC.C1"] <- sum(stdMI$cStep==aCStep)
+			scoreMtx[aIdx,"rebC.F1"] <- sum(stdMI$fStep==aFStep)
+
+			if( 1<rowLen ){
+				scoreMtx[aIdx,"rebC.C2"] <- sum(stdMI$cStepTail[rowLen-1,]==aCStep)
+				scoreMtx[aIdx,"rebC.F2"] <- sum(stdMI$fStepTail[rowLen-1,]==aFStep)
+
+				# rebPtn.1
+				if( 0<nrow(rebPtn.1$matInfo) ){
+					reb.lastZoid <- stdMI$lastZoid[rebPtn.1$matInfo[,"fromC"]]
+					reb.aZoid <- aZoid[rebPtn.1$matInfo[,"toC"]]
+					scoreMtx[aIdx,"rebPtn.1"] <- sum( reb.aZoid==reb.lastZoid )
+				}
+
+				# rebPtn.n
+				flag <- sapply( rebPtn.n ,function( matMtx ){
+								fromVal <- stdMI$lastZoid[matMtx["from",]]
+								toVal <- aZoid[matMtx["to",]]
+								return( all(fromVal==toVal) )
+							})
+				scoreMtx[aIdx,"rebPtn.n"] <- sum( flag )
+			}
+		} # for
+	}
+
+	return( scoreMtx )
+
+}	# fCutU.ccc.score3
+
+fCutU.ccc.score4 <- function( gEnv, allIdxF, zMtx ){
+
+	# zMtx : 각 ph에서의 히스토리.
+	#	zMtx <- gEnv$zhF
+	getRebPtn.n <- function( stdMI ){
+		return( matLst )
+	} # getRebPtn.n()
+
+	cName <- c("rebPtn.1","rebPtn.n","rebC.C1","rebC.F1","rebC.C2","rebC.F2")
+	scoreMtx <- matrix( 0, nrow=length(allIdxF), ncol=length(cName) )
+	colnames( scoreMtx ) <- cName
+	#	rebC.Cn/rebC.Cn : rebC의 CStep,FStep 버전 (h-1,h-2)
+
+	stdMI <- fCutU.getMtxInfo( zMtx )
+	rowLen <- nrow(stdMI$rawTail)
 
 	if( TRUE ){
 		for( aIdx in seq_len(length(allIdxF)) ){
@@ -1542,16 +1644,17 @@ fCutU.ccc.score3 <- function( gEnv, allIdxF, zMtx ){
 			aCStep <- aZoid[2:6] - aZoid[1:5]
 			aFStep <- aZoid - stdMI$lastZoid
 
-			scoreMtx[aIdx,"rebC.C"] <- sum(stdMI$cStep==aCStep)
-		}
+			# scoreMtx[aIdx,"rebC.C1"] <- sum(stdMI$cStep==aCStep)
+
+			if( 1<rowLen ){
+				# scoreMtx[aIdx,"rebC.C2"] <- sum(stdMI$cStepTail[rowLen-1,]==aCStep)
+			}
+		} # for
 	}
 
 	return( scoreMtx )
 
-}	# fCutU.ccc.score3
-
-
-
+}	# fCutU.ccc.score4
 
 #=================================================================================
 fCutU.testLab <- function( ){
