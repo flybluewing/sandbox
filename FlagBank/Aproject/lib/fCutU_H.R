@@ -1651,16 +1651,17 @@ fCutU.ccc.score4 <- function( gEnv, allIdxF, zMtx ){
 		rObj <- rowLst
 		return( rObj )
 	}
-	getStdDiff <- function( valMtx ){
+	getStdDiff <- function( valMtx ,ptnMin=3){
 		getSpanInfo <- function( preCIdx ,postCIdx ,colNum ){
 			fixIdx <- NULL
+			preSpan <- NULL		;postSpan <- NULL
 			if( preCIdx<postCIdx ){
 				lMargin <- preCIdx - 1
 				rMargin <- colNum - postCIdx
 				fixIdx <- preCIdx
 			} else {
-				lMargin <- colNum - preCIdx
-				rMargin <- postCIdx -1
+				lMargin <- postCIdx-1
+				rMargin <- colNum - preCIdx
 				fixIdx <- postCIdx
 			}
 
@@ -1669,29 +1670,49 @@ fCutU.ccc.score4 <- function( gEnv, allIdxF, zMtx ){
 
 		fVLst <- getFreqVal(valMtx)
 		colNum<-ncol(valMtx)	;rowNum<-nrow(valMtx)
-		
-		for( idx in seq_len(fVLst) ){
+
+		ptnLst <- list()
+		for( idx in seq_len(length(fVLst)) ){
 			fVObj <- fVLst[[idx]]
 			for( postCIdx in fVObj$colLst[[1]] ){
 				for( preCIdx in fVObj$colLst[[2]] ){
-					
-				}
+					spanInfo <- getSpanInfo( preCIdx, postCIdx, colNum)
+					postSpan <- valMtx[fVObj$rIdx[1],spanInfo$postSpan]
+					preSpan <- valMtx[fVObj$rIdx[2],spanInfo$preSpan]
+					banPtn <- postSpan + (postSpan - preSpan)
+					if( ptnMin<=length(banPtn) ){
+						ptnObj <- list( fixIdx=spanInfo$fixIdx ,fixVal=fVObj$fVal ,banPtn=banPtn )
+						ptnLst[[1+length(ptnLst)]] <- ptnObj
+					}
+				} # for( preCIdx )
 			}
 		} # for(idx)
+		rObj <- list( ptnLst=ptnLst ,fVLst=fVLst )
 		return( rObj )
 	}
 	getFreqVal.raw <- function( stdMI ){
-		rObj <- list()
+		diffObj <- getStdDiff( stdMI$rawTail )
 
-		fVLst <- getFreqVal( stdMI$rawTail )
+		ptnLst <- list()
+		for( idx in seq_len(length(diffObj$ptnLst)) ){
+			ptnObj <- diffObj$ptnLst[[idx]]
+			ptnObj$banPtn[ ptnObj$banPtn<= 0 ] <- NA
+			ptnObj$banPtn[ ptnObj$banPtn >45 ] <- NA
+			if( 3>sum(!is.na(ptnObj$banPtn)) )	next
+
+			ptnLst[[1+length(ptnLst)]] <- ptnObj
+		}
+
+		rObj <- list()
 		return( rObj )
 	} # getFreqVal.raw()
 
 
-	cName <- c("rebPtn.1","rebPtn.n","rebC.C1","rebC.F1","rebC.C2","rebC.F2")
+	cName <- c("incRaw","incC","incF","incRaw.r","incC.r","incF.r")
 	scoreMtx <- matrix( 0, nrow=length(allIdxF), ncol=length(cName) )
 	colnames( scoreMtx ) <- cName
-	#	rebC.Cn/rebC.Cn : rebC의 CStep,FStep 버전 (h-1,h-2)
+	#	incRaw,incC,incF : raw,cStep,fStep의 일정증감.
+	#		*.r	: 대칭 방향에서의 일정증감.
 
 	stdMI <- fCutU.getMtxInfo( zMtx )
 	rowLen <- nrow(stdMI$rawTail)
