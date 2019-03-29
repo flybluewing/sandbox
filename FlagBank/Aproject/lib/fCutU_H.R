@@ -106,26 +106,52 @@ fCutU.neighborObj <- function( pMtx ){
 fCutU.hasPtn <- function( src ,tgt ,thld=NULL ,fixIdx=NULL ){ # < official >
 	# thld : 이거 이상 매치되어야 함.
 	# fixIdx : src[fixIdx] 는 반드시 포함되어야 함.
+	# if( is.null(thld) ){
+	# 	thld <- sum(!is.na(src))
+	# } else if( thld>sum(!is.na(src)) ){
+	# 	return( FALSE )
+	# }
+
+	# src.len <- length(src)	;tgt.len <- length(tgt)
+	# colSpan <- 1:src.len - 1
+	# for( cIdx in 1:(tgt.len-src.len+1) ){
+	# 	matFlag <- tgt[cIdx+colSpan]==src
+	# 	if( thld<=sum(matFlag,na.rm=T) ){
+	# 		if( !is.null(fixIdx) && !matFlag[fixIdx] ){
+	# 			next	
+	# 		}
+	# 		return( TRUE )
+	# 	}
+	# }
+	
+	# ------------------------------------------
 	if( is.null(thld) ){
 		thld <- sum(!is.na(src))
-	} else if( thld>sum(!is.na(src)) ){
-		return( FALSE )
 	}
 
 	src.len <- length(src)	;tgt.len <- length(tgt)
-	colSpan <- 1:src.len - 1
-	for( cIdx in 1:(tgt.len-src.len+1) ){
-		matFlag <- tgt[cIdx+colSpan]==src
-		if( thld<=sum(matFlag,na.rm=T) ){
-			if( !is.null(fixIdx) && !matFlag[fixIdx] ){
-				next	
-			}
-			return( TRUE )
-		}
+	if( thld>src.len || thld>tgt.len )	return( FALSE )
+
+	moveIdx <- 0
+	flag <- rep( NA ,src.len )
+	repeat{
+		src.span <- 
+		tgt.span <- 
+		flag[] <- NA
 	}
+
 	return( FALSE )
 
 } # fCut.hasPtn()
+
+	QQE
+	fCutU.hasPtn(c(2,NA,4,5,NA,7),c(1,2,3,4,0,6,7),thld=3,fixIdx=1)
+	fCutU.hasPtn(c(4,2,2,NA,2,6),c(1,4,2,2,5,2),thld=3,fixIdx=1)
+	fCutU.hasPtn(c(4,2,2,NA,2),c(1,4,2,2,5,2),thld=3,fixIdx=1)
+	src <- c( 4, 2, 2,NA, 2, 6)
+	tgt <- c( 1, 4, 2, 2, 5, 2)
+	thld <- 3
+	fixIdx <- 1
 
 fCutU.hasRow <- function( val ,mtx ){ # < official >
 	for( rIdx in 1:nrow(mtx) ){
@@ -1703,10 +1729,27 @@ fCutU.ccc.score4 <- function( gEnv, allIdxF, zMtx ){
 			ptnLst[[1+length(ptnLst)]] <- ptnObj
 		}
 
-		rObj <- list()
+		rObj <- list( ptnLst=ptnLst )
+		rObj$filt <- function( aCode ,pThld=3 ){
+			rstObj <- list( flag=FALSE )
+			for( idx in seq_len(length(rObj$ptnLst)) ){
+				ptnObj <- rObj$ptnLst[[idx]]
+				flag <- fCutU.hasPtn(ptnObj$banPtn,aCode,thld=pThld,fixIdx=ptnObj$fixIdx)
+				if( flag ){
+					rstObj$flag <- TRUE
+					rstObj$ptnObj <- ptnObj
+					break
+				}
+			}
+			return( rstObj )
+		}
 		return( rObj )
 	} # getFreqVal.raw()
 
+	QQE
+	fCutU.hasPtn(c(2,NA,4,5,NA,7),c(1,2,3,4,0,6,7),thld=3,fixIdx=1)
+	fCutU.hasPtn(c(4,2,2,NA,2,6),c(1,4,2,2,5,2),thld=3,fixIdx=1)
+	fCutU.hasPtn(c(4,2,2,NA,2),c(1,4,2,2,5,2),thld=3,fixIdx=1)
 
 	cName <- c("incRaw","incC","incF","incRaw.r","incC.r","incF.r")
 	scoreMtx <- matrix( 0, nrow=length(allIdxF), ncol=length(cName) )
