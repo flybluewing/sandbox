@@ -132,26 +132,45 @@ fCutU.hasPtn <- function( src ,tgt ,thld=NULL ,fixIdx=NULL ){ # < official >
 	src.len <- length(src)	;tgt.len <- length(tgt)
 	if( thld>src.len || thld>tgt.len )	return( FALSE )
 
-	moveIdx <- 0
 	flag <- rep( NA ,src.len )
-	repeat{
-		src.span <- 
-		tgt.span <- 
-		flag[] <- NA
+	towSpan <- (src.len-thld+1):(-tgt.len + thld + 1)	# slide를 끄는 기준점.
+	for( towIdx in towSpan ){
+		# src.span ---------------------------------------------------------
+		sIdx <- ifelse(towIdx<1,1,towIdx)	# start Idx
+		eIdx <- if(	towIdx<1 ){ 		# end Idx
+					tgtLeft.len <- tgt.len - towIdx -1
+					ifelse( tgtLeft.len>src.len ,src.len ,tgtLeft.len )
+				} else {
+					overlap.len <- src.len - sIdx +1
+					ifelse( overlap.len>tgt.len ,src.len ,sIdx+tgt.len-1 )
+				}
+		src.span <- sIdx:eIdx
+		# tgt.span ---------------------------------------------------------
+		sIdx <- ifelse( towIdx<1 , towIdx+2, 1 )
+		eIdx <- if( towIdx<1 ){
+					tgtLeft.len <- tgt.len - towIdx -1
+					ifelse( tgtLeft.len>src.len ,(-towIdx+1+src.len) ,tgt.len )
+				} else {
+					overlap.len <- src.len - towIdx +1
+					ifelse( overlap.len<tgt.len ,overlap.len ,tgt.len )
+				}
+		tgt.span <- sIdx:eIdx
+		# 동작확인 필요.
 	}
+
+	# QQE
+	# fCutU.hasPtn(c(2,NA,4,5,NA,7),c(1,2,3,4,0,6,7),thld=3,fixIdx=1)
+	# fCutU.hasPtn(c(4,2,2,NA,2,6),c(1,4,2,2,5,2),thld=3,fixIdx=1)
+	# fCutU.hasPtn(c(4,2,2,NA,2),c(1,4,2,2,5,2),thld=3,fixIdx=1)
+	# src <- c( 4, 2, 2,NA, 2, 6)	;tgt <- c( 1, 4, 2, 2, 5, 2)
+	# thld <- 3
+	# fixIdx <- 1
+
 
 	return( FALSE )
 
 } # fCut.hasPtn()
 
-	QQE
-	fCutU.hasPtn(c(2,NA,4,5,NA,7),c(1,2,3,4,0,6,7),thld=3,fixIdx=1)
-	fCutU.hasPtn(c(4,2,2,NA,2,6),c(1,4,2,2,5,2),thld=3,fixIdx=1)
-	fCutU.hasPtn(c(4,2,2,NA,2),c(1,4,2,2,5,2),thld=3,fixIdx=1)
-	src <- c( 4, 2, 2,NA, 2, 6)
-	tgt <- c( 1, 4, 2, 2, 5, 2)
-	thld <- 3
-	fixIdx <- 1
 
 fCutU.hasRow <- function( val ,mtx ){ # < official >
 	for( rIdx in 1:nrow(mtx) ){

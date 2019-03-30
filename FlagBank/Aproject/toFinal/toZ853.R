@@ -1,5 +1,5 @@
-# Z852
-workH <- 852	;rpt=TRUE
+# Z853
+workH <- 853	;rpt=TRUE
 source(sprintf("./toFinal/toZ%d_H.R",workH))	# working
 
 load( sprintf("Obj_allIdxLstZ%d.save",workH-1) )
@@ -12,7 +12,7 @@ fCutU.rptColValSeqNext( gEnv ,allIdxF ,sprintf("toZ%d",workH) )
 
 
 # simMode start ----------------------------------------------------
-	aZoid <- stdZoid <- c( 11,17,28,30,33,35 ) # ZH 852 채워넣을 것.
+	aZoid <- stdZoid <- c( ,,,,, ) # ZH 853 채워넣을 것.
 	allIdxF <- allIdx <- stdIdx <- 
 		# which(apply(gEnv$allZoidMtx,1,function(zoid){all(zoid==stdZoid)}))
 	u0.saveStdZoidFltRst( workH )
