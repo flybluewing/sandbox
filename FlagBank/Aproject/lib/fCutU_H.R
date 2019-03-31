@@ -106,7 +106,9 @@ fCutU.neighborObj <- function( pMtx ){
 fCutU.hasPtn <- function( src ,tgt ,thld=NULL ,fixIdx=NULL ){ # < official >
 	# thld : 이거 이상 매치되어야 함.
 	# fixIdx : src[fixIdx] 는 반드시 포함되어야 함.
-	# if( is.null(thld) ){
+
+
+	# if( is.null(thld) ){	# 기능 확인 후 삭제.
 	# 	thld <- sum(!is.na(src))
 	# } else if( thld>sum(!is.na(src)) ){
 	# 	return( FALSE )
@@ -132,40 +134,53 @@ fCutU.hasPtn <- function( src ,tgt ,thld=NULL ,fixIdx=NULL ){ # < official >
 	src.len <- length(src)	;tgt.len <- length(tgt)
 	if( thld>src.len || thld>tgt.len )	return( FALSE )
 
-	flag <- rep( NA ,src.len )
+	matFlag <- rep( NA, src.len )
 	towSpan <- (src.len-thld+1):(-tgt.len + thld + 1)	# slide를 끄는 기준점.
 	for( towIdx in towSpan ){
 		# src.span ---------------------------------------------------------
 		sIdx <- ifelse(towIdx<1,1,towIdx)	# start Idx
 		eIdx <- if(	towIdx<1 ){ 		# end Idx
-					tgtLeft.len <- tgt.len - towIdx -1
+					tgtLeft.len <- tgt.len + towIdx -1	# 여기서 towIdx값은 -상태
 					ifelse( tgtLeft.len>src.len ,src.len ,tgtLeft.len )
 				} else {
-					overlap.len <- src.len - sIdx +1
-					ifelse( overlap.len>tgt.len ,src.len ,sIdx+tgt.len-1 )
+					overlap.len <- src.len - towIdx +1
+					ifelse( overlap.len>tgt.len ,towIdx+tgt.len-1 ,src.len )
 				}
 		src.span <- sIdx:eIdx
 		# tgt.span ---------------------------------------------------------
-		sIdx <- ifelse( towIdx<1 , towIdx+2, 1 )
+		sIdx <- ifelse( towIdx<1 , -towIdx+2, 1 )
 		eIdx <- if( towIdx<1 ){
-					tgtLeft.len <- tgt.len - towIdx -1
+					tgtLeft.len <- tgt.len + towIdx -1	# towIdx 값은 -상태
 					ifelse( tgtLeft.len>src.len ,(-towIdx+1+src.len) ,tgt.len )
 				} else {
 					overlap.len <- src.len - towIdx +1
 					ifelse( overlap.len<tgt.len ,overlap.len ,tgt.len )
 				}
 		tgt.span <- sIdx:eIdx
-		# 동작확인 필요.
+		# for debug
+		# 		src.span.str <- paste( sprintf("%2d",src.span) ,collapse="")
+		# 		cat( sprintf("%2d src.span : %s \n",towIdx,src.span.str ) )
+		# 		tgt.span.str <- paste( sprintf("%2d",tgt.span) ,collapse="")
+		# 		cat( sprintf("%2d tgt.span : %s \n",towIdx,tgt.span.str ) )
+
+		matFlag[] <- NA
+		matFlag[src.span] <- src[src.span]==tgt[tgt.span]
+		#		cat( sprintf("%2d : %s \n",towIdx,paste( matFlag ,collapse=" ") ) )
+
+		if( thld<=sum(matFlag,na.rm=T) ){
+			if( !is.null(fixIdx) ){
+				if( any(is.na(matFlag[fixIdx])) || any(!matFlag[fixIdx]) ){ 
+					next 
+				}
+			}
+			# cat("       found\n")
+			return( TRUE )
+		}
 	}
 
-	# QQE
-	# fCutU.hasPtn(c(2,NA,4,5,NA,7),c(1,2,3,4,0,6,7),thld=3,fixIdx=1)
-	# fCutU.hasPtn(c(4,2,2,NA,2,6),c(1,4,2,2,5,2),thld=3,fixIdx=1)
-	# fCutU.hasPtn(c(4,2,2,NA,2),c(1,4,2,2,5,2),thld=3,fixIdx=1)
-	# src <- c( 4, 2, 2,NA, 2, 6)	;tgt <- c( 1, 4, 2, 2, 5, 2)
-	# thld <- 3
-	# fixIdx <- 1
-
+	# debug test
+	# src <- c( 4, 2, 2, 1, 1, 1)	;tgt <- c( 1, 4, 2)
+	# thld <- 3		;fixIdx <- c(1,2)
 
 	return( FALSE )
 
@@ -1739,7 +1754,7 @@ fCutU.ccc.score4 <- function( gEnv, allIdxF, zMtx ){
 		diffObj <- getStdDiff( stdMI$rawTail )
 
 		ptnLst <- list()
-		for( idx in seq_len(length(diffObj$ptnLst)) ){
+		for( idx in seq_len(length(diffObj$ptnLst)) ){	# refine diffObj$ptnLst
 			ptnObj <- diffObj$ptnLst[[idx]]
 			ptnObj$banPtn[ ptnObj$banPtn<= 0 ] <- NA
 			ptnObj$banPtn[ ptnObj$banPtn >45 ] <- NA
@@ -1764,13 +1779,65 @@ fCutU.ccc.score4 <- function( gEnv, allIdxF, zMtx ){
 		}
 		return( rObj )
 	} # getFreqVal.raw()
+	getFreqVal.cStep <- function( stdMI ){
+		diffObj <- getStdDiff( stdMI$cStepTail )
 
-	QQE
-	fCutU.hasPtn(c(2,NA,4,5,NA,7),c(1,2,3,4,0,6,7),thld=3,fixIdx=1)
-	fCutU.hasPtn(c(4,2,2,NA,2,6),c(1,4,2,2,5,2),thld=3,fixIdx=1)
-	fCutU.hasPtn(c(4,2,2,NA,2),c(1,4,2,2,5,2),thld=3,fixIdx=1)
+		ptnLst <- list()
+		for( idx in seq_len(length(diffObj$ptnLst)) ){	# refine diffObj$ptnLst
+			ptnObj <- diffObj$ptnLst[[idx]]
+			ptnObj$banPtn[ ptnObj$banPtn<= 0 ] <- NA
+			if( 3>sum(!is.na(ptnObj$banPtn)) )	next
 
-	cName <- c("incRaw","incC","incF","incRaw.r","incC.r","incF.r")
+			ptnLst[[1+length(ptnLst)]] <- ptnObj
+		}
+
+		rObj <- list( ptnLst=ptnLst )
+		rObj$filt <- function( aCode ,pThld=3 ){
+			rstObj <- list( flag=FALSE )
+			for( idx in seq_len(length(rObj$ptnLst)) ){
+				ptnObj <- rObj$ptnLst[[idx]]
+				flag <- fCutU.hasPtn(ptnObj$banPtn,aCode,thld=pThld,fixIdx=ptnObj$fixIdx)
+				if( flag ){
+					rstObj$flag <- TRUE
+					rstObj$ptnObj <- ptnObj
+					break
+				}
+			}
+			return( rstObj )
+		}
+		return( rObj )
+	} # getFreqVal.cStep()
+	getFreqVal.fStep <- function( stdMI ){
+		diffObj <- getStdDiff( stdMI$fStepTail )
+
+		ptnLst <- list()
+		for( idx in seq_len(length(diffObj$ptnLst)) ){	# refine diffObj$ptnLst
+			ptnObj <- diffObj$ptnLst[[idx]]
+			#	딱히 기준을 잡기가 애매하네.
+			if( 3>sum(!is.na(ptnObj$banPtn)) )	next
+
+			ptnLst[[1+length(ptnLst)]] <- ptnObj
+		}
+
+		rObj <- list( ptnLst=ptnLst )
+		rObj$filt <- function( aCode ,pThld=3 ){
+			rstObj <- list( flag=FALSE )
+			for( idx in seq_len(length(rObj$ptnLst)) ){
+				ptnObj <- rObj$ptnLst[[idx]]
+				flag <- fCutU.hasPtn(ptnObj$banPtn,aCode,thld=pThld,fixIdx=ptnObj$fixIdx)
+				if( flag ){
+					rstObj$flag <- TRUE
+					rstObj$ptnObj <- ptnObj
+					break
+				}
+			}
+			return( rstObj )
+		}
+		return( rObj )
+	} # getFreqVal.fStep()
+
+	cName <- c("incRaw","incC","incF")
+	# 	cName <- c( cName ,c(,"incRaw.r","incC.r","incF.r") )
 	scoreMtx <- matrix( 0, nrow=length(allIdxF), ncol=length(cName) )
 	colnames( scoreMtx ) <- cName
 	#	incRaw,incC,incF : raw,cStep,fStep의 일정증감.
@@ -1778,17 +1845,19 @@ fCutU.ccc.score4 <- function( gEnv, allIdxF, zMtx ){
 
 	stdMI <- fCutU.getMtxInfo( zMtx )
 	rowLen <- nrow(stdMI$rawTail)
-
+	freqVal.raw		<- getFreqVal.raw( stdMI )
+	freqVal.cStep	<- getFreqVal.cStep( stdMI )
+	freqVal.fStep	<- getFreqVal.fStep( stdMI )
 	if( TRUE ){
 		for( aIdx in seq_len(length(allIdxF)) ){
 			aZoid <- gEnv$allZoidMtx[allIdxF[aIdx],]
 			aCStep <- aZoid[2:6] - aZoid[1:5]
 			aFStep <- aZoid - stdMI$lastZoid
 
-			# scoreMtx[aIdx,"rebC.C1"] <- sum(stdMI$cStep==aCStep)
-
 			if( 1<rowLen ){
-				# scoreMtx[aIdx,"rebC.C2"] <- sum(stdMI$cStepTail[rowLen-1,]==aCStep)
+				scoreMtx[aIdx,"incRaw"] <- freqVal.raw$filt( aZoid	,pThld=3 )$flag
+				scoreMtx[aIdx,"incC"] <- freqVal.cStep$filt( aCStep ,pThld=3  )$flag
+				scoreMtx[aIdx,"incF"] <- freqVal.fStep$filt( aFStep ,pThld=3  )$flag
 			}
 		} # for
 	}
