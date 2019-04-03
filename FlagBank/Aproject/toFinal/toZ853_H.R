@@ -356,29 +356,31 @@ fCutCnt.colValSeqNext <- function( gEnv ,allIdxF ,rpt=FALSE ){
 	# -- conditional custom
     flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
 					cnt <- 0
-					# [1]   19 16 34  2
-					# [2]   13 14 33  9 31 29 31 19  5  8
-					# [3]   28 34
-					# [4]   32 31 24 31
-					# [5]   23
-					# [6]   40 38 32 28 34 37 40 37 42
 
-					if( 1<sum(aZoid==c( 19,13,28,32,23,40 ) ,na.rm=T) ) cnt<-cnt+1
-					if( 1<sum(aZoid==c( 16,14,34,31,NA,38 ) ,na.rm=T) ) cnt<-cnt+1
-					if( 1<sum(aZoid==c( 34,33,NA,24,NA,32 ) ,na.rm=T) ) cnt<-cnt+1
-					if( 1<sum(aZoid==c(  1, 9,NA,31,NA,28 ) ,na.rm=T) ) cnt<-cnt+1
+					# [1]   20 17  8 34
+					# [2]*  35 30 24 24 24  6
+					# [3]   27 28 33 24
+					# [4]   35 31
+					# [5]   27
+					# [6]   33 43 40 29 32 44
+
+					if( 1<sum(aZoid==c( 20,35,27,35,27,33 ) ,na.rm=T) ) cnt<-cnt+1
+					if( 1<sum(aZoid==c( 17,30,28,31,NA,43 ) ,na.rm=T) ) cnt<-cnt+1
+					if( 1<sum(aZoid==c(  8,24,33,NA,NA,40 ) ,na.rm=T) ) cnt<-cnt+1
+					if( 1<sum(aZoid==c( 34,24,24,NA,NA,29 ) ,na.rm=T) ) cnt<-cnt+1
+					if( 1<sum(aZoid==c( NA,24,NA,NA,NA,32 ) ,na.rm=T) ) cnt<-cnt+1
+					if( 1<sum(aZoid==c( NA, 6,NA,NA,NA,44 ) ,na.rm=T) ) cnt<-cnt+1
 					# if( 1<sum(aZoid==c( NA,NA,NA,NA,NA,NA ) ,na.rm=T) ) cnt<-cnt+1
 
 					# if( fCutU.hasPtn(c(  ,  ),aZoid) ) cnt<-cnt+1
-					if( fCutU.hasPtn(c( 24,31,32 ),aZoid) ) cnt<-cnt+1	# unique 32/28 --> 28,32
 
 					score <- 0
 					if( aZoid[1]%in%c(           ) ) score<-score+1
-					if( aZoid[2]%in%c( 12        ) ) score<-score+1
-					if( aZoid[3]%in%c( 32        ) ) score<-score+1	# 32/28/34 --> ??/28/34
-					if( aZoid[4]%in%c( 31,33     ) ) score<-score+1
+					if( aZoid[2]%in%c(           ) ) score<-score+1
+					if( aZoid[3]%in%c(           ) ) score<-score+1	
+					if( aZoid[4]%in%c(           ) ) score<-score+1
 					if( aZoid[5]%in%c(           ) ) score<-score+1
-					if( aZoid[6]%in%c( 38        ) ) score<-score+1	# 38 : 37,40,37 --> 38,49,??
+					if( aZoid[6]%in%c(           ) ) score<-score+1	
 					if( score>1 ) cnt<-cnt+1
 
 					return( 1>cnt )
@@ -443,28 +445,30 @@ fCutCnt.colValSeqNext <- function( gEnv ,allIdxF ,rpt=FALSE ){
 					if( aZoid[5]%in%c(            ) ) cnt<-cnt+1
 					if( aZoid[6]%in%c(            ) ) cnt<-cnt+1
 
-					# if( all(aZoid[c(3,5)]==c(33,36)) ) cnt<-cnt+1
-					if( all(aZoid[1:2+1]==c( 24,35 )) ) cnt<-cnt+1	# 42,45 unique
+					# if( all(aZoid[c( , )]==c( , )) ) cnt<-cnt+1
+					# if( all(aZoid[1:2+ ]==c( , )) ) cnt<-cnt+1	
 
-					# [  1]  2 22    42 45    22 25    38 39    24 35
-					# [  2]  9 10    15 22     7  8    21 25    42 45
-					# [  3] 34 38     2  3     2 23    20 22    12 24
-					# [  4] 20 26     7  8    22 43    24 32    32 37
-					# [  5] 20 23    28 31     4  8    14 27         
-					# [  6]  6 24     5 34             34 40         
-					# [  7] 26 28                       8  9         
-					# [  8] 12 17                      36 42         
-					# [  9]                            25 31         
-					# [ 10]                            18 26         
+					# [  1] 12 30    42 43    22 38    13 15    38 41
+					# [  2] 15 18    17 32    17 33    36 39    19 21
+					# [  3]  4 10    11 18    18 27    33 36    33 35
+					# [  4] 37 42    35 42    39 44     8 33    14 15
+					# [  5]  6 11    33 37    28 35    25 35    24 33
+					# [  6] 12 20    24 26    26 31    22 35    21 27
+					# [  7]  4 15             29 36    13 18    28 29
+					# [  8] 18 32             37 40    28 33    18 29
+					# [  9]                   31 34    22 30    18 21
+					# [ 10]                   31 40    36 37    27 40
+					# [ 11]                   30 33             36 38
+					# [ 12]                   25 29             30 32
 
 
 					remCnt <- 0
-						if( fCutU.remFilt(aZoid[1],c(         ),c(     )) )	remCnt <- remCnt+1
-						if( fCutU.remFilt(aZoid[2],c(         ),c(     )) )	remCnt <- remCnt+1
-						if( fCutU.remFilt(aZoid[3],c( 2       ),c(     )) )	remCnt <- remCnt+1
-						if( fCutU.remFilt(aZoid[4],c( 1       ),c(     )) )	remCnt <- remCnt+1
-						if( fCutU.remFilt(aZoid[5],c( 4,2     ),c(     )) )	remCnt <- remCnt+1
-						if( fCutU.remFilt(aZoid[6],c( 5,4     ),c(     )) )	remCnt <- remCnt+1
+						if( fCutU.remFilt(aZoid[1],c(          ),c(     )) )	remCnt <- remCnt+1
+						if( fCutU.remFilt(aZoid[2],c(          ),c(     )) )	remCnt <- remCnt+1
+						if( fCutU.remFilt(aZoid[3],c(          ),c(     )) )	remCnt <- remCnt+1
+						if( fCutU.remFilt(aZoid[4],c(          ),c(     )) )	remCnt <- remCnt+1
+						if( fCutU.remFilt(aZoid[5],c(          ),c(     )) )	remCnt <- remCnt+1
+						if( fCutU.remFilt(aZoid[6],c(          ),c(     )) )	remCnt <- remCnt+1
 
 						# for(idx in 1:5){ cat(sprintf("+%d----------------\n",idx-1)) ;anaMtx_ColVal(cvSeqNextLst[[idx]]$fndMtx) }
 						#	if( all(aZoid[1:2+ ]==c(    )) ) cnt<-cnt+1
@@ -2471,7 +2475,7 @@ fCutCnt.nextColVal_5 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 
 } # fCutCnt.nextColVal_5()
 
-# UNdone
+# done
 fCutCnt.nextColVal_6 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 
 	flgCnt <- rep( 0 ,length(allIdxF) )
