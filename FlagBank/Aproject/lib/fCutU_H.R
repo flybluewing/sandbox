@@ -1668,12 +1668,14 @@ fCutU.ccc.score3 <- function( gEnv, allIdxF, zMtx ){
 				}
 
 				# rebPtn.n
-				flag <- sapply( rebPtn.n ,function( matMtx ){
-								fromVal <- stdMI$lastZoid[matMtx["from",]]
-								toVal <- aZoid[matMtx["to",]]
-								return( all(fromVal==toVal) )
-							})
-				scoreMtx[aIdx,"rebPtn.n"] <- sum( flag )
+				if( length(rebPtn.n)>0 ){
+					flag <- sapply( rebPtn.n ,function( matMtx ){
+									fromVal <- stdMI$lastZoid[matMtx["from",]]
+									toVal <- aZoid[matMtx["to",]]
+									return( all(fromVal==toVal) )
+								})
+					scoreMtx[aIdx,"rebPtn.n"] <- sum( flag )
+				}
 			}
 		} # for
 	}
