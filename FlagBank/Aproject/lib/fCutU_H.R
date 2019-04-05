@@ -1838,7 +1838,7 @@ fCutU.ccc.score4 <- function( gEnv, allIdxF, zMtx ){
 		return( rObj )
 	} # getFreqVal.fStep()
 
-	cName <- c("incRaw","incC","incF")
+	cName <- c("incRaw","incC","incF","(1,6)")
 	# 	cName <- c( cName ,c(,"incRaw.r","incC.r","incF.r") )
 	scoreMtx <- matrix( 0, nrow=length(allIdxF), ncol=length(cName) )
 	colnames( scoreMtx ) <- cName
@@ -1855,6 +1855,8 @@ fCutU.ccc.score4 <- function( gEnv, allIdxF, zMtx ){
 			aZoid <- gEnv$allZoidMtx[allIdxF[aIdx],]
 			aCStep <- aZoid[2:6] - aZoid[1:5]
 			aFStep <- aZoid - stdMI$lastZoid
+
+			scoreMtx[aIdx,"(1,6)"] <- sum(stdMI$lastZoid[c(1,6)]==aZoid[c(1,6)])
 
 			if( 1<rowLen ){
 				scoreMtx[aIdx,"incRaw"] <- freqVal.raw$filt( aZoid	,pThld=3 )$flag
