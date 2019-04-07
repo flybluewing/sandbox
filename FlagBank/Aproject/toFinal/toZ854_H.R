@@ -254,10 +254,10 @@ fCutCnt.basic <- function( gEnv ,allIdxF ,rpt=FALSE ){
 		}
 		if( TRUE ){ # cStep		#	u0.zoidCMtx_ana.rpt( stdMI$rawTail )
 			cnt <- 0
-			if( aCStep[1]%in%c( 6, 4, 1      ) ) cnt<-cnt+1
+			if( aCStep[1]%in%c( 6, 4, 1  ) ) cnt<-cnt+1
 			if( aCStep[2]%in%c( 3,13     ) ) cnt<-cnt+1
 			if( aCStep[3]%in%c( 4        ) ) cnt<-cnt+1
-			if( aCStep[4]%in%c(         ) ) cnt<-cnt+1
+			if( aCStep[4]%in%c(          ) ) cnt<-cnt+1
 			if( aCStep[5]%in%c( 1        ) ) cnt<-cnt+1
 
 			cnt.w1 <- cccObj$scoreMtx[idx,"w1CStep.cnt"]	# fv in cStep
