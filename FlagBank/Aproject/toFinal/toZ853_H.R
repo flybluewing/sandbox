@@ -2830,7 +2830,7 @@ fltScoreMtx		<- function( ccObjLst ,allIdxF ){
 
 } # fltScoreMtx()
 
-fltScoreMtx2		<- function( ccObjLst ,allIdxF ){
+fltScoreMtx2	<- function( ccObjLst ,allIdxF ){
 
 	allIdxF.len <- length( allIdxF )
 	scoreMtx2Lst <- lapply( ccObjLst ,function(p){ p$cccObj$scoreMtx2 })

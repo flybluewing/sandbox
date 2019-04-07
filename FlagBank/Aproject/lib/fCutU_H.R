@@ -1838,7 +1838,7 @@ fCutU.ccc.score4 <- function( gEnv, allIdxF, zMtx ){
 		return( rObj )
 	} # getFreqVal.fStep()
 
-	cName <- c("incRaw","incC","incF","(1,6)")
+	cName <- c("incRaw3","incC3","incF3","incRaw2","incC2","incF2","(1,6)")
 	# 	cName <- c( cName ,c(,"incRaw.r","incC.r","incF.r") )
 	scoreMtx <- matrix( 0, nrow=length(allIdxF), ncol=length(cName) )
 	colnames( scoreMtx ) <- cName
@@ -1859,9 +1859,13 @@ fCutU.ccc.score4 <- function( gEnv, allIdxF, zMtx ){
 			scoreMtx[aIdx,"(1,6)"] <- sum(stdMI$lastZoid[c(1,6)]==aZoid[c(1,6)])
 
 			if( 1<rowLen ){
-				scoreMtx[aIdx,"incRaw"] <- freqVal.raw$filt( aZoid	,pThld=3 )$flag
-				scoreMtx[aIdx,"incC"] <- freqVal.cStep$filt( aCStep ,pThld=3  )$flag
-				scoreMtx[aIdx,"incF"] <- freqVal.fStep$filt( aFStep ,pThld=3  )$flag
+				scoreMtx[aIdx,"incRaw2"] <- freqVal.raw$filt( aZoid	,pThld=2 )$flag
+				scoreMtx[aIdx,"incC2"] <- freqVal.cStep$filt( aCStep ,pThld=2  )$flag
+				scoreMtx[aIdx,"incF2"] <- freqVal.fStep$filt( aFStep ,pThld=2  )$flag
+
+				scoreMtx[aIdx,"incRaw3"] <- freqVal.raw$filt( aZoid	,pThld=3 )$flag
+				scoreMtx[aIdx,"incC3"] <- freqVal.cStep$filt( aCStep ,pThld=3  )$flag
+				scoreMtx[aIdx,"incF3"] <- freqVal.fStep$filt( aFStep ,pThld=3  )$flag
 			}
 		} # for
 	}
