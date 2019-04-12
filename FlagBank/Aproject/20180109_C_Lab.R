@@ -8,6 +8,15 @@ stdFiltedCnt <- allIdxLst$stdFiltedCnt[as.character(819:lastH)]
 grp2RstSpan <- as.integer(names( stdFiltedCnt[stdFiltedCnt==2] ))
 rm(allIdxLst)
 
+build.u0.saveStdZoidFltRst <- function( pHSpan ){
+    #   pHSpan <- goldRstSpan
+    for( workH in pHSpan ){
+        cat(sprintf("workH %d ----------------------------------\n",workH))
+        source(sprintf("./toFinal/toZ%d_H.R",workH))	# working
+        u0.saveStdZoidFltRst( workH )
+    }
+} # build.u0.saveStdZoidFltRst
+
 lab.getMtxLst <- function( pHSpan ){
 
     # rptLst ----------------------------------------------------------------------------

@@ -54,6 +54,8 @@ ff0.byOnePhase.cut <- function( ccObj ,phName=NULL ){
     cntMtx <- ff0.byOnePhase.getCntMtx( ccObj )
     scoreMtx <- ff0.byOnePhase.scoreMtx( ccObj )
     scoreMtx2 <- ff0.byOnePhase.scoreMtx2( ccObj )
+    scoreMtx3 <- ff0.byOnePhase.scoreMtx3( ccObj )
+    scoreMtx4 <- ff0.byOnePhase.scoreMtx4( ccObj )
     cStepValMtx <- ff0.byOnePhase.cStepValMtx( ccObj )
     filtedLst <- vector("list",nrow(cntMtx) )
     filtedFlg <- rep( FALSE ,nrow(cntMtx) )
@@ -103,8 +105,35 @@ ff0.byOnePhase.cut <- function( ccObj ,phName=NULL ){
     for( rIdx in 1:nrow(cntMtx) ){  # scoreMtx2
         score <- scoreMtx2[rIdx,]
         # rebV rebC rebL rebR rebL.cnt rebR.cnt inc.raw inc.cStep
-        flag <- score[c("rebV","rebC","rebL","rebR","inc.raw", "inc.cStep")] >= c( 4, 3, 2, 2, 3, 2 )
+        flag <- score[c("rebV","rebC","rebC2","rebL","rebR","inc.raw", "inc.cStep")] >= c( 4, 3, 3, 2, 2, 3, 2 )
         if( any(flag) ){    filtedLst[[rIdx]] <- c(filtedLst[[rIdx]],"scoreMtx2.evtA01.out")    ;filtedFlg[ rIdx ] <- TRUE
+        }
+        if( 1<sum(score[c("rebC","rebC2")==2]) ){    
+            filtedLst[[rIdx]] <- c(filtedLst[[rIdx]],"scoreMtx2.evtA02.out")    ;filtedFlg[ rIdx ] <- TRUE
+        }
+
+    }   # table(filtedFlg)  ;dbgIdx <- head(which(filtedFlg))
+
+    for( rIdx in 1:nrow(cntMtx) ){  # scoreMtx3
+        score <- scoreMtx3[rIdx,]
+        # rebPtn.1 rebPtn.n rebC.C1 rebC.F1 rebC.C2 rebC.F2
+        flag <- score[c("rebPtn.1","rebPtn.n","rebC.C1","rebC.F1","rebC.C2","rebC.F2")] >= c( 2 ,1 ,3 ,3 ,3 ,3 )
+        if( any(flag) ){    filtedLst[[rIdx]] <- c(filtedLst[[rIdx]],"scoreMtx3.evtA01.out")    ;filtedFlg[ rIdx ] <- TRUE
+        }
+        if( 2<sum(score[c("rebC.C1","rebC.F1","rebC.C2","rebC.F2")==2]) ){    
+            filtedLst[[rIdx]] <- c(filtedLst[[rIdx]],"scoreMtx3.evtA02.out")    ;filtedFlg[ rIdx ] <- TRUE
+        }
+
+    }   # table(filtedFlg)  ;dbgIdx <- head(which(filtedFlg))
+
+    for( rIdx in 1:nrow(cntMtx) ){  # scoreMtx4
+        score <- scoreMtx4[rIdx,]
+        #  incRaw3 incC3 incF3 incRaw2 incC2 incF2 (1,6)
+        flag <- score[c("incRaw3" ,"incC3" ,"incF3" ,"incRaw2" ,"incC2" ,"incF2" ,"(1,6)")] >= c( 1, 1, 1, 2, 2, 2, 2 )
+        if( any(flag) ){    filtedLst[[rIdx]] <- c(filtedLst[[rIdx]],"scoreMtx4.evtA01.out")    ;filtedFlg[ rIdx ] <- TRUE
+        }
+        if( 2<sum(score[c("incRaw2" ,"incC2" ,"incF2")]) ){    
+            filtedLst[[rIdx]] <- c(filtedLst[[rIdx]],"scoreMtx4.evtA02.out")    ;filtedFlg[ rIdx ] <- TRUE
         }
 
     }   # table(filtedFlg)  ;dbgIdx <- head(which(filtedFlg))
@@ -155,6 +184,13 @@ ff0.byOnePhase.scoreMtx2 <- function( ccObj ){
     return( ccObj$cccObj$scoreMtx2 )
 } # ff0.byOnePhase.scoreMtx()
 
+ff0.byOnePhase.scoreMtx3 <- function( ccObj ){
+    return( ccObj$cccObj$scoreMtx3 )
+} # ff0.byOnePhase.scoreMtx()
+
+ff0.byOnePhase.scoreMtx4 <- function( ccObj ){
+    return( ccObj$cccObj$scoreMtx4 )
+} # ff0.byOnePhase.scoreMtx()
 
 ff0.byOnePhase.cStepValMtx <- function( ccObj ){
     return( ccObj$cccObj$cStepValMtx )

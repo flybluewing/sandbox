@@ -77,6 +77,8 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 	fltCnt <- fltCnt + rstObj$fltCnt
 	# flagCStepValMtx	<- fltCStepValMtx(	ccObjLst	,allIdxF )
 
+	allIdxF <- allIdxF[fltCnt==0]
+
     return( rObj )
 
 } # finalCut()
