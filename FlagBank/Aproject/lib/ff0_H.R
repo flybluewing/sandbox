@@ -129,15 +129,17 @@ ff0.byOnePhase.cut <- function( ccObj ,phName=NULL ){
     for( rIdx in 1:nrow(cntMtx) ){  # scoreMtx4
         score <- scoreMtx4[rIdx,]
         #  incRaw3 incC3 incF3 incRaw2 incC2 incF2 (1,6)
-        flag <- score[c("incRaw3" ,"incC3" ,"incF3" ,"incRaw2" ,"incC2" ,"incF2" ,"(1,6)")] >= c( 1, 1, 1, 2, 2, 2, 2 )
+        flag <- score[c("incRaw3" ,"incC3" ,"incF3" ,"incRaw2" ,"incC2" ,"incF2" ,"(1,6)" ,"nextVal.r" ,"nextVal.c" ,"nextVal.f")] >= c( 1, 1, 1, 2, 2, 2, 2, 3, 3, 3 )
         if( any(flag) ){    filtedLst[[rIdx]] <- c(filtedLst[[rIdx]],"scoreMtx4.evtA01.out")    ;filtedFlg[ rIdx ] <- TRUE
         }
         if( 2<sum(score[c("incRaw2" ,"incC2" ,"incF2")]) ){    
             filtedLst[[rIdx]] <- c(filtedLst[[rIdx]],"scoreMtx4.evtA02.out")    ;filtedFlg[ rIdx ] <- TRUE
         }
+        if( 1<sum(1<score[c("nextVal.r" ,"nextVal.c" ,"nextVal.f")]) ){    
+            filtedLst[[rIdx]] <- c(filtedLst[[rIdx]],"scoreMtx4.evtA03.out")    ;filtedFlg[ rIdx ] <- TRUE
+        }
 
     }   # table(filtedFlg)  ;dbgIdx <- head(which(filtedFlg))
-
 
     for( rIdx in 1:nrow(cntMtx) ){  # cStepValMtx
         score <- cStepValMtx[rIdx,]

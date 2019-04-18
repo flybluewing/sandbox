@@ -2782,8 +2782,8 @@ fltCntMtx		<- function( ccObjLst ,allIdxF ){
 
 } # fltCntMtx()
 
-fltScoreMtx		<- function( ccObjLst ,allIdxF ){
-	
+fltScoreMtx.static		<- function( ccObjLst ,allIdxF ){
+
 	allIdxF.len <- length( allIdxF )
 	scoreMtxLst <- lapply( ccObjLst ,function(p){ p$cccObj$scoreMtx })
 	phName <- attributes(scoreMtxLst)$names
@@ -2791,15 +2791,51 @@ fltScoreMtx		<- function( ccObjLst ,allIdxF ){
 
 	scoreMtx <- matrix( NA, nrow=length(phName), ncol=length(colName) )
 	rownames(scoreMtx) <- phName	;colnames(scoreMtx)=colName
-
+	scoreMtx.evt <- scoreMtx
 
 	fltLst <- vector( "list",allIdxF.len )
 	for( aIdx in seq_len(allIdxF.len) ){
-		fndIdx <- which(fStepMtx[aIdx,]>2)
+		scoreMtx[,] <- 0		;scoreMtx.evt[,] <- 0
+		for( phIdx in phName ){
+			scoreMtx[phIdx,] <- scoreMtxLst[[phIdx]][aIdx,]
+			#	scoreMtx.evt[phIdx,] <- scoreMtx[phIdx,] >= c( 1,1,1,  1,1,1,  1, 2,2,2 )	# 
+			#	reb nbor spanM quoAll quoPtn zw remH0 remH1 cStep2 cStep3 w1CStep.cnt w1FStep.cnt w1CStep.matLen w1FStep.matLen
+		}
+
+		evtCnt <- apply( scoreMtx.evt ,1 ,sum )
+
+		colSum <- apply( scoreMtx ,2 ,sum )
+		workCol <- c("nbor","spanM","quoAll","quoPtn","zw","remH0","remH1","cStep2","cStep3","w1CStep.cnt","w1FStep.cnt")
+		if( 0==sum(0<colSum[workCol]) ){	fltLst[[aIdx]]<-c(fltLst[[aIdx]],"voidCol.00") }
+		workCol <- c("nbor","spanM","quoAll","quoPtn","zw","remH0","remH1","cStep2","cStep3","w1CStep.cnt","w1FStep.cnt")
+		if( 4<sum(1==colSum[workCol]) ){	fltLst[[aIdx]]<-c(fltLst[[aIdx]],"voidCol.01") }
+		workCol <- c("nbor","spanM","quoAll","quoPtn","zw")
+		if( 3<sum(1==colSum[workCol]) ){	fltLst[[aIdx]]<-c(fltLst[[aIdx]],"voidCol.01.a") }
+		workCol <- c("remH0","remH1","cStep2","cStep3","w1CStep.cnt","w1FStep.cnt")
+		if( 3<sum(1==colSum[workCol]) ){	fltLst[[aIdx]]<-c(fltLst[[aIdx]],"voidCol.01.b") }
+
+
+		if( 4<colSum["nbor"]	){	fltLst[[aIdx]]<-c(fltLst[[aIdx]],"nbor.00") }
+		if( 4<colSum["spanM"]	){	fltLst[[aIdx]]<-c(fltLst[[aIdx]],"nbor.00") }
+		if( 5<colSum["quoAll"]	){	fltLst[[aIdx]]<-c(fltLst[[aIdx]],"quoAll.00") }
+		if( 3<colSum["quoPtn"]	){	fltLst[[aIdx]]<-c(fltLst[[aIdx]],"quoPtn.00") }
+		if( 2<colSum["zw"]		){	fltLst[[aIdx]]<-c(fltLst[[aIdx]],"zw.00") }
+		if( 1<colSum["remH0"]	){	fltLst[[aIdx]]<-c(fltLst[[aIdx]],"remH0.00") }
+		if( 1<colSum["remH1"]	){	fltLst[[aIdx]]<-c(fltLst[[aIdx]],"remH1.00") }
+		if( 1<sum(colSum[c("remH0","remH1")]) ){	fltLst[[aIdx]]<-c(fltLst[[aIdx]],"remHn.00") }
+		if( 2<colSum["cStep2"]	){	fltLst[[aIdx]]<-c(fltLst[[aIdx]],"cStep2.00") }
+		if( 1<colSum["cStep3"]	){	fltLst[[aIdx]]<-c(fltLst[[aIdx]],"cStep3.00") }
+		if( 2<colSum["w1CStep.cnt"] ){	fltLst[[aIdx]]<-c(fltLst[[aIdx]],"w1CStep.cnt.00") }
+		if( 4<colSum["w1FStep.cnt"] ){	fltLst[[aIdx]]<-c(fltLst[[aIdx]],"w1FStep.cnt.00") }
+
+		ceilThld <- c( 4,4, 4,3, 2, 1,1, 2,1, 2,4 )
+		names(ceilThld) <- c("nbor","spanM","quoAll","quoPtn","zw","remH0","remH1","cStep2","cStep3","w1CStep.cnt","w1FStep.cnt")
+		if( 3<sum(ceilThld<=colSum[names(ceilThld)]) ){	fltLst[[aIdx]]<-c(fltLst[[aIdx]],"ceilThld.00") }
+
 	}
 	# debug
 	# table(do.call(c,fltLst,))	;fltCnt <- sapply(fltLst,length)	;table(fltCnt)	;dbgIdx <- which(fltCnt>0)
-	# dbgIdx<-which(sapply(fltLst,function(p){any(p=="0130")}))		;aIdx <- dbgIdx[1]
+	# dbgIdx<-which(sapply(fltLst,function(p){any(p=="remHn.00")}))		;aIdx <- dbgIdx[1]
 
 	fltCnt <- sapply(fltLst,length)
 	allIdxF <- allIdxF[fltCnt==0]
@@ -2807,9 +2843,9 @@ fltScoreMtx		<- function( ccObjLst ,allIdxF ){
 
 	return( rObj )
 
-} # fltScoreMtx()
+} # fltScoreMtx.static()
 
-fltScoreMtx2		<- function( ccObjLst ,allIdxF ){
+fltScoreMtx2.static	<- function( ccObjLst ,allIdxF ){
 
 	allIdxF.len <- length( allIdxF )
 	scoreMtx2Lst <- lapply( ccObjLst ,function(p){ p$cccObj$scoreMtx2 })
@@ -2826,11 +2862,21 @@ fltScoreMtx2		<- function( ccObjLst ,allIdxF ){
 		for( phIdx in phName ){
 			scoreMtx2[phIdx,] <- scoreMtx2Lst[[phIdx]][aIdx,]
 			scoreMtx2.evt[phIdx,] <- scoreMtx2[phIdx,] >= c( 3, 2, 2, 1, 1, 100,100, 2, 2 )	# rebL.cnt,rebR.cnt은 100으로
+			#	"rebV" "rebC" "rebC2" "rebL" "rebR" "rebL.cnt" "rebR.cnt" "inc.raw" "inc.cStep"
 		}
 
 		evtCnt <- apply( scoreMtx2.evt ,1 ,sum )
 		if( any(3<=evtCnt) ){	fltLst[[aIdx]]<-c(fltLst[[aIdx]],"0010") }
 		if( 5<sum(evtCnt) ){	fltLst[[aIdx]]<-c(fltLst[[aIdx]],"0020") }
+
+		colSum <- apply( scoreMtx2 ,2 ,sum )
+		workCol <- c("inc.raw", "inc.cStep")
+		if( 1<sum(0==colSum[workCol]) ){	fltLst[[aIdx]]<-c(fltLst[[aIdx]],"voidCol.00") }
+
+		colSum <- apply( scoreMtx2 ,2 ,function(cv){any(cv>1)} )
+		workCol <- c("rebC","rebC2","inc.raw", "inc.cStep")
+		if( 2<sum(colSum[workCol]) ){	fltLst[[aIdx]]<-c(fltLst[[aIdx]],"evtCol.00") }
+
 
 		# # -[rebV]--------------------------------------------------------------
 		if( 7>sum(scoreMtx2[,"rebV"]) ){	fltLst[[aIdx]]<-c(fltLst[[aIdx]],"0030") }
@@ -2880,15 +2926,173 @@ fltScoreMtx2		<- function( ccObjLst ,allIdxF ){
 
 	return( rObj )
 
-} # fltScoreMtx2()
+} # fltScoreMtx2.static()
+
+fltScoreMtx3.static	<- function( ccObjLst ,allIdxF ){
+
+	allIdxF.len <- length( allIdxF )
+	scoreMtx3Lst <- lapply( ccObjLst ,function(p){ p$cccObj$scoreMtx3 })
+	phName <- attributes(scoreMtx3Lst)$names
+	colName <- colnames(scoreMtx3Lst[[1]])
+
+	scoreMtx3 <- matrix( NA, nrow=length(phName), ncol=length(colName) )
+	rownames(scoreMtx3) <- phName	;colnames(scoreMtx3)=colName
+	scoreMtx3.evt <- scoreMtx3
+
+	fltLst <- vector( "list",allIdxF.len )
+	for( aIdx in seq_len(allIdxF.len) ){
+		scoreMtx3[,] <- 0		;scoreMtx3.evt[,] <- 0
+		for( phIdx in phName ){
+			scoreMtx3[phIdx,] <- scoreMtx3Lst[[phIdx]][aIdx,]
+			scoreMtx3.evt[phIdx,] <- scoreMtx3[phIdx,] >= c( 1, 1, 2, 2, 2, 2 )	# 
+			#	rebPtn.1 rebPtn.n rebC.C1 rebC.F1 rebC.C2 rebC.F2
+		}
+
+		evtCnt <- apply( scoreMtx3.evt ,1 ,sum )
+		# if( any(3<=evtCnt) ){	fltLst[[aIdx]]<-c(fltLst[[aIdx]],"0010") }
+		# if( 5<sum(evtCnt) ){	fltLst[[aIdx]]<-c(fltLst[[aIdx]],"0020") }
+
+		colSum <- apply( scoreMtx3 ,2 ,sum )
+		workCol <- c("rebPtn.1","rebC.C1","rebC.F1","rebC.C2","rebC.F2")
+		if( 2<sum(0==colSum[workCol]) ){	fltLst[[aIdx]]<-c(fltLst[[aIdx]],"voidCol.00") }
+
+		colSum <- apply( scoreMtx3 ,2 ,function(cv){any(cv>1)} )
+		workCol <- c("rebC.C1","rebC.F1","rebC.C2","rebC.F2")
+		if( 2<sum(colSum[workCol]) ){	fltLst[[aIdx]]<-c(fltLst[[aIdx]],"evtCol.00") }
 
 
+		# -[rebPtn.1]--------------------------------------------------------------
+		if( 2<sum(scoreMtx3[,"rebPtn.1"]) ){	fltLst[[aIdx]]<-c(fltLst[[aIdx]],"rebPtn.1.00") }
+
+		# # -[rebC.X1 : rebC.C1, rebC.F1]--------------------------------------------------------------
+		workCol <- c("rebC.C1","rebC.F1")
+		if( 2>sum(scoreMtx3[,"rebC.C1"]) ){	fltLst[[aIdx]]<-c(fltLst[[aIdx]],"rebC.X1.00") }
+		# flg <- scoreMtx3[,"rebV"] >= 3
+		# 	if( 2 < sum(flg) ){	fltLst[[aIdx]]<-c(fltLst[[aIdx]],"0040") }
+		# 	# banArea <- c("basic","nextZW","nextQuo10","nextBin","nextRebNum","nextCStepBin","nextFStepBin")
+		# 	# if( any(flg[banArea]) ){	fltLst[[aIdx]]<-c(fltLst[[aIdx]],"0050") }
+		# flg <- scoreMtx3[,"rebV"] == 2
+		# 	if( 5 < sum(flg) ){	fltLst[[aIdx]]<-c(fltLst[[aIdx]],"0060") }
+
+		# # -[rebC.X2 : rebC.C2, rebC.F2]--------------------------------------------------------------
+		workCol <- c("rebC.C2","rebC.F2")
+		if( 2>sum(scoreMtx3[,"rebC.C2"]) ){	fltLst[[aIdx]]<-c(fltLst[[aIdx]],"rebC.X2.00") }
+
+	}
+	# debug
+	# table(do.call(c,fltLst,))	;fltCnt <- sapply(fltLst,length)	;table(fltCnt)	;dbgIdx <- which(fltCnt>0)
+	# dbgIdx<-which(sapply(fltLst,function(p){any(p=="0130")}))		;aIdx <- dbgIdx[1]
+
+	fltCnt <- sapply(fltLst,length)
+	allIdxF <- allIdxF[fltCnt==0]
+	rObj <- list( allIdxF=allIdxF ,fltCnt=fltCnt ,fltLst=fltLst )
+
+	return( rObj )
+
+} # fltScoreMtx3.static()
 
 
+fltScoreMtx4.static	<- function( ccObjLst ,allIdxF ){
 
-fltCStepValMtx		<- function( ccObjLst ,allIdxF ){
+	allIdxF.len <- length( allIdxF )
+	scoreMtx4Lst <- lapply( ccObjLst ,function(p){ p$cccObj$scoreMtx4 })
+	phName <- attributes(scoreMtx4Lst)$names
+	colName <- colnames(scoreMtx4Lst[[1]])
 
-} # fltCStepValMtx()
+	scoreMtx4 <- matrix( NA, nrow=length(phName), ncol=length(colName) )
+	rownames(scoreMtx4) <- phName	;colnames(scoreMtx4)=colName
+	scoreMtx4.evt <- scoreMtx4
+
+	fltLst <- vector( "list",allIdxF.len )
+	for( aIdx in seq_len(allIdxF.len) ){
+		scoreMtx4[,] <- 0		;scoreMtx4.evt[,] <- 0
+		for( phIdx in phName ){
+			scoreMtx4[phIdx,] <- scoreMtx4Lst[[phIdx]][aIdx,]
+			scoreMtx4.evt[phIdx,] <- scoreMtx4[phIdx,] >= c( 1,1,1,  1,1,1,  1, 2,2,2 )	# 
+			#	incRaw3     incC3     incF3   incRaw2     incC2     incF2     (1,6) nextVal.r nextVal.c nextVal.f 
+		}
+
+		evtCnt <- apply( scoreMtx4.evt ,1 ,sum )
+
+		colSum <- apply( scoreMtx4 ,2 ,sum )
+		workCol <- c("incRaw2","incC2","incF2","nextVal.r","nextVal.c","nextVal.f")
+		if( 2<sum(0==colSum[workCol]) ){	fltLst[[aIdx]]<-c(fltLst[[aIdx]],"voidCol.00") }
+
+		colSum <- apply( scoreMtx4 ,2 ,sum )
+		workCol <- c("incC2","incF2","(1,6)","nextVal.r","nextVal.c","nextVal.f")
+		if( 2<sum(1==colSum[workCol]) ){	fltLst[[aIdx]]<-c(fltLst[[aIdx]],"voidCol.01") }
+
+		colSum <- apply( scoreMtx4 ,2 ,sum )
+		workCol <- c("incRaw2","incC2","incF2","(1,6)","nextVal.r","nextVal.c","nextVal.f")
+		if( 1>sum(1==colSum[workCol]) ){	fltLst[[aIdx]]<-c(fltLst[[aIdx]],"voidCol.01a") }
+
+		colSum <- apply( scoreMtx4 ,2 ,function(cv){any(cv>1)} )
+		workCol <- c("nextVal.r","nextVal.c","nextVal.f")
+		if( 2<sum(colSum[workCol]) ){	fltLst[[aIdx]]<-c(fltLst[[aIdx]],"evtCol.00") }
+
+		# # -[incX2 : incRaw2 ,incC2 ,incF2]--------------------------------------------------------------
+		workCol <- c("incRaw2","incC2","incF2")
+		if( 1>sum(scoreMtx4[,workCol]) ){	fltLst[[aIdx]]<-c(fltLst[[aIdx]],"incX2.00") }
+
+	}
+	# debug
+	# table(do.call(c,fltLst,))	;fltCnt <- sapply(fltLst,length)	;table(fltCnt)	;dbgIdx <- which(fltCnt>0)
+	# dbgIdx<-which(sapply(fltLst,function(p){any(p=="voidCol.01")}))		;aIdx <- dbgIdx[1]
+
+	fltCnt <- sapply(fltLst,length)
+	allIdxF <- allIdxF[fltCnt==0]
+	rObj <- list( allIdxF=allIdxF ,fltCnt=fltCnt ,fltLst=fltLst )
+
+	return( rObj )
+
+} # fltScoreMtx4.static()
+
+fltCStepValMtx.static	<- function( ccObjLst ,allIdxF ){
+
+	allIdxF.len <- length( allIdxF )
+	cStepValMtxLst <- lapply( ccObjLst ,function(p){ p$cccObj$cStepValMtx })
+	phName <- attributes(cStepValMtxLst)$names
+	colName <- colnames(cStepValMtxLst[[1]])
+
+	cStepValMtx <- matrix( NA, nrow=length(phName), ncol=length(colName) )
+	rownames(cStepValMtx) <- phName	;colnames(cStepValMtx)=colName
+	cStepValMtx.evt <- cStepValMtx
+
+	fltLst <- vector( "list",allIdxF.len )
+	for( aIdx in seq_len(allIdxF.len) ){
+		cStepValMtx[,] <- 0		;cStepValMtx.evt[,] <- 0
+		for( phIdx in phName ){
+			cStepValMtx[phIdx,] <- cStepValMtxLst[[phIdx]][aIdx,]
+			# cStepValMtx.evt[phIdx,] <- cStepValMtx[phIdx,] >= c( 1,1,1,  1,1,1,  1, 2,2,2 )	# 
+			#	c31 c32 c33 c34 	c21 c22 c23 c24 c25 	max2 min2
+		}
+
+		evtCnt <- apply( cStepValMtx.evt ,1 ,sum )
+
+		colSum <- apply( cStepValMtx ,2 ,sum )
+		workCol <- c("c21","c22","c23","c24","c25")
+		# if( 2<sum(0==colSum[workCol]) ){	fltLst[[aIdx]]<-c(fltLst[[aIdx]],"voidCol.00") }
+
+		colSum <- apply( cStepValMtx ,2 ,sum )
+		workCol <- c("c21","c22","c23","c24","c25")
+		if( 2<sum(1==colSum[workCol]) ){	fltLst[[aIdx]]<-c(fltLst[[aIdx]],"voidCol.01") }
+
+		colSum <- apply( cStepValMtx ,2 ,function(cv){any(cv>1)} )
+		workCol <- c("c21","c22","c23","c24","c25")
+		if( 3<sum(0<colSum[workCol]) ){	fltLst[[aIdx]]<-c(fltLst[[aIdx]],"evtCol.00") }
+
+	}
+	# debug
+	# table(do.call(c,fltLst,))	;fltCnt <- sapply(fltLst,length)	;table(fltCnt)	;dbgIdx <- which(fltCnt>0)
+	# dbgIdx<-which(sapply(fltLst,function(p){any(p=="voidCol.01")}))		;aIdx <- dbgIdx[1]
+
+	fltCnt <- sapply(fltLst,length)
+	allIdxF <- allIdxF[fltCnt==0]
+	rObj <- list( allIdxF=allIdxF ,fltCnt=fltCnt ,fltLst=fltLst )
+
+	return( rObj )
+
+} # fltCStepValMtx.static()
 
 # done		fCut.basic() 사용
 rmvRaw <- function( gEnv ,allIdxF ){

@@ -1198,6 +1198,54 @@ fCutU.getChkNextPtn4FV.u.availLst <- function( lastCode ){
 
 } # fCutU.getChkNextPtn4FV.u.availLst
 
+fCutU.getNextSeq <- function( pMtx ){
+
+	lenCol <- ncol(pMtx)	;lenRow <- nrow(pMtx)
+
+	rObj <- list()
+	if( 2>lenRow ){
+		rObj$filt <- function( aCode ){	return( 0 )	}
+		return( rObj )
+	}
+
+	palette <- unique(pMtx[lenRow,])
+	palColLst <- vector("list",length(palette))	;names(palColLst) <- palette
+	for( idx in 1:length(palette) ){
+		color <- NA
+		for( rIdx in (lenRow-1):1 ){
+			fIdx <- which( pMtx[rIdx,]==palette[idx] )
+			if( 0<length(fIdx) ){
+				color <- unique(pMtx[(rIdx+1),fIdx])
+				break
+			}
+		}
+		palColLst[[idx]] <- color
+	}
+
+	checkMtx <- matrix( NA ,nrow=1 ,ncol=lenCol )	;colnames(checkMtx) <- pMtx[lenRow,]
+	for( idx in 1:length(palette) ){
+		palCol <- palColLst[[idx]]
+		colFlag <- colnames(checkMtx) == as.character(palette[idx]) 
+		checkMtx[ ,colFlag ] <- palColLst[[idx]][1]
+		if( 1<length(palCol) ){
+			for( dIdx in 2:length(palCol) ){
+				tmpCheckMtx <- checkMtx
+				tmpCheckMtx[ ,colFlag ] <- palColLst[[idx]][dIdx]
+				checkMtx <- rbind( checkMtx, tmpCheckMtx )
+			}
+		}
+		
+	}
+
+	rObj$checkMtx <- checkMtx
+	rObj$filt <- function( aCode ){
+		matCnt <- apply( rObj$checkMtx ,1 ,function(checkVal){ sum(checkVal==aCode,na.rm=T ) } )
+		return( max(matCnt) )
+	} # rObj$filt()
+
+	return( rObj )
+
+}	# fCutU.getNextSeq()
 
 
 
@@ -1839,7 +1887,7 @@ fCutU.ccc.score4 <- function( gEnv, allIdxF, zMtx ){
 	} # getFreqVal.fStep()
 
 	cName <- c("incRaw3","incC3","incF3","incRaw2","incC2","incF2","(1,6)")
-	# 	cName <- c( cName ,c(,"incRaw.r","incC.r","incF.r") )
+	cName <- c( cName ,c("nextVal.r","nextVal.c","nextVal.f") )
 	scoreMtx <- matrix( 0, nrow=length(allIdxF), ncol=length(cName) )
 	colnames( scoreMtx ) <- cName
 	#	incRaw,incC,incF : raw,cStep,fStep의 일정증감.
@@ -1850,6 +1898,9 @@ fCutU.ccc.score4 <- function( gEnv, allIdxF, zMtx ){
 	freqVal.raw		<- getFreqVal.raw( stdMI )
 	freqVal.cStep	<- getFreqVal.cStep( stdMI )
 	freqVal.fStep	<- getFreqVal.fStep( stdMI )
+	nextSeq.raw		<- fCutU.getNextSeq( stdMI$rawTail )
+	nextSeq.cStep	<- fCutU.getNextSeq( stdMI$cStepTail )
+	nextSeq.fStep	<- fCutU.getNextSeq( stdMI$fStepTail )
 	if( TRUE ){
 		for( aIdx in seq_len(length(allIdxF)) ){
 			aZoid <- gEnv$allZoidMtx[allIdxF[aIdx],]
@@ -1866,6 +1917,10 @@ fCutU.ccc.score4 <- function( gEnv, allIdxF, zMtx ){
 				scoreMtx[aIdx,"incRaw3"] <- freqVal.raw$filt( aZoid	,pThld=3 )$flag
 				scoreMtx[aIdx,"incC3"] <- freqVal.cStep$filt( aCStep ,pThld=3  )$flag
 				scoreMtx[aIdx,"incF3"] <- freqVal.fStep$filt( aFStep ,pThld=3  )$flag
+
+				scoreMtx[aIdx,"nextVal.r"] <- nextSeq.raw$filt( aZoid	)
+				scoreMtx[aIdx,"nextVal.c"] <- nextSeq.cStep$filt( aCStep )
+				scoreMtx[aIdx,"nextVal.f"] <- nextSeq.fStep$filt( aFStep )
 			}
 		} # for
 	}

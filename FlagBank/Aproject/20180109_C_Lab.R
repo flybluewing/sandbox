@@ -10,6 +10,7 @@ rm(allIdxLst)
 
 build.u0.saveStdZoidFltRst <- function( pHSpan ){
     #   pHSpan <- goldRstSpan
+    
     for( workH in pHSpan ){
         cat(sprintf("workH %d ----------------------------------\n",workH))
         source(sprintf("./toFinal/toZ%d_H.R",workH))	# working
