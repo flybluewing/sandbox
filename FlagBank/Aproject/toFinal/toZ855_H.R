@@ -2614,7 +2614,7 @@ fCutCnt.nextColVal_6 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 #------------------------------------------------------------------------
 #========================================================================
 
-
+#	static과 custom 분리필요
 fltCntMtx		<- function( ccObjLst ,allIdxF ){
 	# 	# w1, w2는 이전에서 정산되어 있어야 한다.
 
@@ -2750,8 +2750,8 @@ fltCntMtx		<- function( ccObjLst ,allIdxF ){
 
 } # fltCntMtx()
 
+#	static과 custom 분리필요
 fltScoreMtx.static		<- function( ccObjLst ,allIdxF ){
-
 	allIdxF.len <- length( allIdxF )
 	scoreMtxLst <- lapply( ccObjLst ,function(p){ p$cccObj$scoreMtx })
 	phName <- attributes(scoreMtxLst)$names
@@ -2813,8 +2813,9 @@ fltScoreMtx.static		<- function( ccObjLst ,allIdxF ){
 
 } # fltScoreMtx.static()
 
+#	static과 custom 분리필요
 fltScoreMtx2.static	<- function( ccObjLst ,allIdxF ){
-
+	
 	allIdxF.len <- length( allIdxF )
 	scoreMtx2Lst <- lapply( ccObjLst ,function(p){ p$cccObj$scoreMtx2 })
 	phName <- attributes(scoreMtx2Lst)$names
@@ -2844,6 +2845,18 @@ fltScoreMtx2.static	<- function( ccObjLst ,allIdxF ){
 		colSum <- apply( scoreMtx2 ,2 ,function(cv){any(cv>1)} )
 		workCol <- c("rebC","rebC2","inc.raw", "inc.cStep")
 		if( 2<sum(colSum[workCol]) ){	fltLst[[aIdx]]<-c(fltLst[[aIdx]],"evtCol.00") }
+
+		colSum <- apply( scoreMtx2 ,2 ,function(cv){any(cv>1)} )
+		evtCnt <- rep( 0, 6 )
+			evtCnt[1] <- sum(scoreMtx2[,"rebV"]>1)
+			if( any(scoreMtx2[,"rebV"]>=3) ) evtCnt[1] <- 100
+			evtCnt[2] <- sum(scoreMtx2[,"rebC"]>1)
+			evtCnt[3] <- sum(scoreMtx2[,"rebC2"]>1)
+			evtCnt[4] <- sum(scoreMtx2[,c("rebL","rebR")]>0)
+			evtCnt[5] <- sum(scoreMtx2[,"inc.raw"]>1)
+			evtCnt[6] <- sum(scoreMtx2[,"inc.cStep"]>1)
+		if( 3<sum(evtCnt>=c(3,1,1,1,1,1)) ){	fltLst[[aIdx]]<-c(fltLst[[aIdx]],"evtCol.01") }
+		if( 0==sum(evtCnt>=c(3,1,1,1,1,1)) ){	fltLst[[aIdx]]<-c(fltLst[[aIdx]],"evtCol.01.a") }
 
 
 		# # -[rebV]--------------------------------------------------------------
@@ -2928,6 +2941,16 @@ fltScoreMtx3.static	<- function( ccObjLst ,allIdxF ){
 		workCol <- c("rebC.C1","rebC.F1","rebC.C2","rebC.F2")
 		if( 2<sum(colSum[workCol]) ){	fltLst[[aIdx]]<-c(fltLst[[aIdx]],"evtCol.00") }
 
+		colSum <- apply( scoreMtx3 ,2 ,function(cv){sum(cv==1)} )
+		workCol <- c("rebC.C1","rebC.F1","rebC.C2","rebC.F2")
+		if(  6>sum(colSum[workCol]) ){	fltLst[[aIdx]]<-c(fltLst[[aIdx]],"evtCol.01") }
+		if(  2>sum(colSum[c("rebC.C1","rebC.F1")]) ){	fltLst[[aIdx]]<-c(fltLst[[aIdx]],"evtCol.01.a") }
+		if(  2>sum(colSum[c("rebC.C2","rebC.F2")]) ){	fltLst[[aIdx]]<-c(fltLst[[aIdx]],"evtCol.01.b") }
+		if( 17<sum(colSum[workCol]) ){	fltLst[[aIdx]]<-c(fltLst[[aIdx]],"evtCol.02") }
+
+		colSum <- apply( scoreMtx3 ,2 ,function(cv){sum(cv>=2)} )
+		workCol <- c("rebC.C1","rebC.F1","rebC.C2","rebC.F2")
+		if(  3<sum(colSum[workCol]) ){	fltLst[[aIdx]]<-c(fltLst[[aIdx]],"evtCol.10") }
 
 		# -[rebPtn.1]--------------------------------------------------------------
 		if( 2<sum(scoreMtx3[,"rebPtn.1"]) ){	fltLst[[aIdx]]<-c(fltLst[[aIdx]],"rebPtn.1.00") }
@@ -2935,12 +2958,6 @@ fltScoreMtx3.static	<- function( ccObjLst ,allIdxF ){
 		# # -[rebC.X1 : rebC.C1, rebC.F1]--------------------------------------------------------------
 		workCol <- c("rebC.C1","rebC.F1")
 		if( 2>sum(scoreMtx3[,"rebC.C1"]) ){	fltLst[[aIdx]]<-c(fltLst[[aIdx]],"rebC.X1.00") }
-		# flg <- scoreMtx3[,"rebV"] >= 3
-		# 	if( 2 < sum(flg) ){	fltLst[[aIdx]]<-c(fltLst[[aIdx]],"0040") }
-		# 	# banArea <- c("basic","nextZW","nextQuo10","nextBin","nextRebNum","nextCStepBin","nextFStepBin")
-		# 	# if( any(flg[banArea]) ){	fltLst[[aIdx]]<-c(fltLst[[aIdx]],"0050") }
-		# flg <- scoreMtx3[,"rebV"] == 2
-		# 	if( 5 < sum(flg) ){	fltLst[[aIdx]]<-c(fltLst[[aIdx]],"0060") }
 
 		# # -[rebC.X2 : rebC.C2, rebC.F2]--------------------------------------------------------------
 		workCol <- c("rebC.C2","rebC.F2")
@@ -2958,7 +2975,6 @@ fltScoreMtx3.static	<- function( ccObjLst ,allIdxF ){
 	return( rObj )
 
 } # fltScoreMtx3.static()
-
 
 fltScoreMtx4.static	<- function( ccObjLst ,allIdxF ){
 
@@ -2996,7 +3012,17 @@ fltScoreMtx4.static	<- function( ccObjLst ,allIdxF ){
 
 		colSum <- apply( scoreMtx4 ,2 ,function(cv){any(cv>1)} )
 		workCol <- c("nextVal.r","nextVal.c","nextVal.f")
-		if( 2<sum(colSum[workCol]) ){	fltLst[[aIdx]]<-c(fltLst[[aIdx]],"evtCol.00") }
+		if( 2<sum(colSum[workCol]) ){	fltLst[[aIdx]]<-c(fltLst[[aIdx]],"evtCol.10") }
+
+		colSum <- apply( scoreMtx4 ,2 ,function(cv){sum(cv>=2)} )
+		workCol <- c("nextVal.r","nextVal.c","nextVal.f")
+		if( 3<sum(colSum[workCol]) ){	fltLst[[aIdx]]<-c(fltLst[[aIdx]],"evtCol.11.gt") }
+
+		colSum <- apply( scoreMtx4 ,2 ,function(cv){sum(cv==1)} )
+		workCol <- c("nextVal.r","nextVal.c","nextVal.f")
+		if(  4>sum(colSum[workCol]) ){	fltLst[[aIdx]]<-c(fltLst[[aIdx]],"evtCol.11.lt") }
+		if( 17<sum(colSum[workCol]) ){	fltLst[[aIdx]]<-c(fltLst[[aIdx]],"evtCol.11.gt") }
+
 
 		# # -[incX2 : incRaw2 ,incC2 ,incF2]--------------------------------------------------------------
 		workCol <- c("incRaw2","incC2","incF2")
@@ -3061,6 +3087,7 @@ fltCStepValMtx.static	<- function( ccObjLst ,allIdxF ){
 	return( rObj )
 
 } # fltCStepValMtx.static()
+
 
 # UNdone		fCut.basic() 사용
 rmvRaw <- function( gEnv ,allIdxF ){

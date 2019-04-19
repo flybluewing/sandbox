@@ -70,19 +70,19 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 	}
 
 	fltCnt <- rep( 0, length(allIdxF) )
-	rstObj	<- fltCntMtx(		ccObjLst	,allIdxF )
+	rstObj	<- ff0.fltCntMtx(		ccObjLst	,allIdxF )
 	fltCnt <- fltCnt + rstObj$fltCnt
 	
-	rstObj	<- fltScoreMtx.static(		ccObjLst	,allIdxF )
+	rstObj	<- ff0.fltScoreMtx.static(		ccObjLst	,allIdxF )
 	fltCnt <- fltCnt + rstObj$fltCnt
-	rstObj	<- fltScoreMtx2.static(		ccObjLst	,allIdxF )
+	rstObj	<- ff0.fltScoreMtx2.static(		ccObjLst	,allIdxF )
 	fltCnt <- fltCnt + rstObj$fltCnt
-	rstObj	<- fltScoreMtx3.static(		ccObjLst	,allIdxF )
+	rstObj	<- ff0.fltScoreMtx3.static(		ccObjLst	,allIdxF )
 	fltCnt <- fltCnt + rstObj$fltCnt
-	rstObj	<- fltScoreMtx4.static(		ccObjLst	,allIdxF )
+	rstObj	<- ff0.fltScoreMtx4.static(		ccObjLst	,allIdxF )
 	fltCnt <- fltCnt + rstObj$fltCnt
 
-	rstObj	<- fltCStepValMtx.static(	ccObjLst	,allIdxF )
+	rstObj	<- ff0.fltCStepValMtx.static(	ccObjLst	,allIdxF )
 	fltCnt <- fltCnt + rstObj$fltCnt
 
 	allIdxF <- allIdxF[fltCnt==0]
