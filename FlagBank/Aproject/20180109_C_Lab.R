@@ -128,6 +128,7 @@ if( FALSE ){ # cStep, fStep 에서 w1,w2 포함 제외 -> lab.getMtxLst() 에서 처리.
 }
 
 
+
 # testMtx ---------------------------------------------------------------------------
 logObj <- k.getFlogObj( "./report/logObj.txt" )        ;logObj$fLogStr("start", pTime=T ,pAppend=F )
 phName.short <- gsub("^next","",rstObj$phName)

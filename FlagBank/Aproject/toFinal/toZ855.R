@@ -86,8 +86,26 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 	rstObj	<- ff0.fltCStepValMtx.static(	ccObjLst	,allIdxF )
 	fltCnt <- fltCnt + rstObj$fltCnt
 
-	# CUSTOM --------------------------------------------------------
+	# allIdxF <- allIdxF[fltCnt==0]
 
+	# CUSTOM --------------------------------------------------------
+	fltCnt <- rep( 0, length(allIdxF) )
+	rstObj	<- fltCntMtx.lastPtn(		ccObjLst	,allIdxF )
+	fltCnt <- fltCnt + rstObj$fltCnt
+
+	rstObj	<- fltScoreMtx.lastPtn(		ccObjLst	,allIdxF )
+	fltCnt <- fltCnt + rstObj$fltCnt
+	rstObj	<- fltScoreMtx2.lastPtn(	ccObjLst	,allIdxF )
+	fltCnt <- fltCnt + rstObj$fltCnt
+	rstObj	<- fltScoreMtx3.lastPtn(	ccObjLst	,allIdxF )
+	fltCnt <- fltCnt + rstObj$fltCnt
+	rstObj	<- fltScoreMtx4.lastPtn(	ccObjLst	,allIdxF )
+	fltCnt <- fltCnt + rstObj$fltCnt
+
+	rstObj	<- fltCStepValMtx.lastPtn(	ccObjLst	,allIdxF )
+	fltCnt <- fltCnt + rstObj$fltCnt
+
+	allIdxF <- allIdxF[fltCnt==0]
 
     return( rObj )
 
