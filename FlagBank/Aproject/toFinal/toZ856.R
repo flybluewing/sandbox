@@ -4,7 +4,7 @@ source(sprintf("./toFinal/toZ%d_H.R",workH))	# working
 
 load( sprintf("Obj_allIdxLstZ%d.save",workH-1) )
 load(sprintf("./save/Obj_gEnvZ%d.save",workH-1))
-allZoidGrpName <-"allZoid.idx0"						#	        
+allZoidGrpName <-"allZoid.idx0"						#         986907         2013376         1424489 
 allIdx <- allIdxLst[[allZoidGrpName]]		# allIdx <- c( allIdxLst[["allZoid.idx0"]] ,allIdxLst[["allZoid.idx1"]])
 allIdxF <- 1000:1010		;stdZoid <- NULL
 # 참고 자료 --------------------------------------------------------------------	
