@@ -986,8 +986,6 @@ fCutCnt.nextZW <- function( gEnv ,allIdxF ,rpt=FALSE ){
 			if( aCStep[5]%in%c(  5, 2   ) ) cnt<-cnt+1
 
 			cnt.w1 <- cccObj$scoreMtx[idx,"w1CStep.cnt"]	# fv in cStep
-			#	unique	()
-			#	unique	[]()
 			# -------------------------------------------------------------------------------------
 			#     FV :    1 (4)   2 (5)   3 (3)   4 (2)   6 (3)   7 (4)   9 (2)   10 (2) 
 
@@ -2370,7 +2368,7 @@ fCutCnt.nextColVal_4 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 			if( fCutU.hasPtn(c(  4, 6 ),aFStep) )	cnt.w1<-cnt.w1+1
 			if( 1<sum(aFStep[1:2+1]==c(  4, 6 )) )	cnt.w1<-cnt.w1+1
 			#	unique	(  4*,  6*, -14, -15 ) ( 9,14,15 )
-			#	unique	[]( 10,  4*,  6*,  0,  6,  5)  [2:6](  1,  4*,  6*, 14 )
+			#	unique	[]( 10,  4*,  6*,  0,  6,  5)  [3:6](  1,  4*,  6*, 14 )
 			# -------------------------------------------------------------------------------------
 			#     FV :    0 (3)   1 (2)   4 (2)   6 (4)   10 (2)   14 (3)   15 (2) 
 
@@ -2898,7 +2896,7 @@ fltCStepValMtx.lastPtn	<- function( ccObjLst ,allIdxF ){
 } # fltCStepValMtx.lastPtn()
 
 
-# UNdone		fCut.basic() 사용
+# done		fCut.basic() 사용
 rmvRaw <- function( gEnv ,allIdxF ){
     initSize <- length(allIdxF)
 	hasPtnCnt <- function( aCode ,ptnLst ){
@@ -2923,29 +2921,31 @@ rmvRaw <- function( gEnv ,allIdxF ){
 		# 	if( 2<sum(aZoid[c( 6,4,3 )]==c( 43,36,26 )) ){	surviveFlg[idx]<-FALSE	;next }
 		#	이번엔 죄다 5,6 컬럼들 뿐이라서..
 
-		# -	a,b,b.. a?	nextColVal_1 nextColVal_2 nextColVal_5
-			if( 2<sum(aZoid[c( 6,6,1,2 )]==c( 36,42, 2,10 )) ){	surviveFlg[idx]<-FALSE	;next }
+		# -	a,b,b.. a?	nextQuo10 nextColVal_4
+			if( 2<sum(aZoid[c( 4,3 )]==c( 38,12 )) ){	surviveFlg[idx]<-FALSE	;next }
 		#	a,b,b.. b?
-			if( 2<sum(aZoid[c( 6,6,1,2 )]==c( 38,45,12,18 )) ){	surviveFlg[idx]<-FALSE	;next }
-		# -	a,a,b.. b?	nextBin nextColVal_2
-			if( 2<sum(aZoid[c( 1,2 )]==c( 15,16 )) ){	surviveFlg[idx]<-FALSE	;next }
-		# -	q,a,b,a.. q?	basic nextZW nextColVal_3
-			if( 2<sum(aZoid[c( 4,6,2,1,4 )]==c( 28,39, 9, 3,20 )) ){	surviveFlg[idx]<-FALSE	;next }
-		#	q,a,b,a.. b?
-			if( 2<sum(aZoid[c( 4,6,2,1,4 )]==c( 30,35,10, 2,12 )) ){	surviveFlg[idx]<-FALSE	;next }
+			if( 2<sum(aZoid[c( 4,3 )]==c( 26,26 )) ){	surviveFlg[idx]<-FALSE	;next }
+		# -	a,a,b.. a?	nextBin nextColVal_5
+			if( 2<sum(aZoid[c( 6,4 )]==c( 43,18 )) ){	surviveFlg[idx]<-FALSE	;next }
+		# -	a,a,b.. b?
+			if( 2<sum(aZoid[c( 6,4 )]==c( 36,28 )) ){	surviveFlg[idx]<-FALSE	;next }
+		# -	q,a,b,a.. q?	basic nextZW nextCStepBin nextColVal_5
+			if( 2<sum(aZoid[c( 6,5,1,6 )]==c( 35,31,17,43 )) ){	surviveFlg[idx]<-FALSE	;next }
 		#	q,a,b,a.. a?
-			if( 2<sum(aZoid[c( 4,6,2,1,4 )]==c( 26,44,30, 8,25 )) ){	surviveFlg[idx]<-FALSE	;next }
-		# -	a,a+1,b,a+2?	nextQuo10 nextBin nextFStepBin nextColVal_2
-			if( 2<sum(aZoid[c( 5,2,6,3 )]==c( 43,12,38,14 )) ){	surviveFlg[idx]<-FALSE	;next }
+			if( 2<sum(aZoid[c( 6,5,1,6 )]==c( 44,26, 5,42 )) ){	surviveFlg[idx]<-FALSE	;next }
+		#	q,a,b,a.. b?
+			if( 2<sum(aZoid[c( 6,5,1,6 )]==c( 43,40,13,38 )) ){	surviveFlg[idx]<-FALSE	;next }
+		# -	a,a+1,b,a+2?
+			# if( 2<sum(aZoid[c( ,,,, )]==c( ,,,, )) ){	surviveFlg[idx]<-FALSE	;next }
 
 		#	bin pattern
-		# if( all(aBin[ -4]==c( 0,0,1,1,0 )) ){	surviveFlg[idx]<-FALSE	;next }	# nextRebNum
-		# if( all(aBin[ -4]==c( 0,1,0,0,1 )) ){	surviveFlg[idx]<-FALSE	;next }	# nextRebNum symm
-		# if( all(aBin[ -5]==c( 0,1,0,0,1 )) ){	surviveFlg[idx]<-FALSE	;next }	# nextFStepBin
-		# if( all(aBin[ -5]==c( 0,0,0,0,1 )) ){	surviveFlg[idx]<-FALSE	;next }	# nextFStepBin symm
-		# if( all(aBin[ -4]==c( 1,0,1,0,1 )) ){	surviveFlg[idx]<-FALSE	;next }	# nextColVal_2
-		# if( all(aBin[ -4]==c( 0,0,0,1,0 )) ){	surviveFlg[idx]<-FALSE	;next }	# nextColVal_2	symm
-		# if( all(aBin[1:6]==c( 0,0,0,0,1,0 )) ){	surviveFlg[idx]<-FALSE	;next }	# nextColVal_5
+		if( all(aBin[1:6]==c(  1, 0, 1, 0, 0, 1 )) ){	surviveFlg[idx]<-FALSE	;next }	# nextZW
+		if( all(aBin[ -3]==c(  0, 0, 0, 1, 0 )) ){	surviveFlg[idx]<-FALSE	;next }	# nextRebNum
+		if( all(aBin[c(-1,-4)]==c(  0, 1, 1, 1 )) ){	surviveFlg[idx]<-FALSE	;next }	# nextFStepBin
+		if( all(aBin[1:6]==c(  0, 1, 1, 0, 0, 1 )) ){	surviveFlg[idx]<-FALSE	;next }	# nextColVal_2
+		if( all(aBin[ -2]==c(  1, 1, 0, 1, 1 )) ){	surviveFlg[idx]<-FALSE	;next }	# nextColVal_3
+		if( all(aBin[ -6]==c(  1, 0, 1, 0, 0 )) ){	surviveFlg[idx]<-FALSE	;next }	# nextColVal_4
+		if( all(aBin[ -2]==c(  0, 1, 0, 1, 1 )) ){	surviveFlg[idx]<-FALSE	;next }	# nextColVal_5
 
 		# fCutCnt.basic()
 			#     16 20 24 28 36 39    | 4  4  4  8  3 |                        |0 1 3 2 0 |1 3 2
@@ -2954,9 +2954,9 @@ rmvRaw <- function( gEnv ,allIdxF ){
 			#      2  8 23 26 27 44    | 6 15  3  1 17 | -9  -9  -5  -4  -6   9 |2 0 3 0 1 |2 3 1
 			#     20 25 31 32 36 43    | 5  6  1  4  7 | 18  17   8   6   9  -1 |0 0 2 3 1 |2 3 1
 			#      8 15 17 19 43 44(1) | 7  2  2 24  1 |-12 -10 -14 -13   7   1 |1 3 0 0 2 |1 3 2
-			# if( 1<sum( aZoid[c(,)]*c(,)==aZoid[c(,)] ) ){	surviveFlg[idx]<-FALSE	;next }
-			# if( all(aRem[c(,)]==aRem[c(,)]) ){	surviveFlg[idx]<-FALSE	;next }
-			# if( all(aZoid[c(,)]==c(,)) ){	surviveFlg[idx]<-FALSE	;next }
+			if( all(aZoid[5:6]==c(44,45)) ){	surviveFlg[idx]<-FALSE	;next }
+			if( all(aZoid[c(1,6)]==c( 1,23)) ){	surviveFlg[idx]<-FALSE	;next }		# zw 22
+			if( all(aZoid[c(1,6)]==c( 1,39)) ){	surviveFlg[idx]<-FALSE	;next }		# zw 38
 
 		# fCutCnt.nextZW
 			#      1 28 35 41 43 44    |27  7  6  2  1 |                        |1 0 1 1 3 |1 1 1 3
@@ -2965,9 +2965,7 @@ rmvRaw <- function( gEnv ,allIdxF ){
 			#      4  6 15 25 26 33    | 2  9 10  1  7 | -4  -6  -4   4  -5  -2 |2 1 2 1 0 |2 1 2 1
 			#     13 14 19 26 40 43(1) | 1  5  7 14  3 |  9   8   4   1  14  10 |0 3 1 0 2 |3 1 2
 			#      1  9 11 14 26 28(2) | 8  2  3 12  2 |-12  -5  -8 -12 -14 -15 |2 2 2 0 0 |2 2 2
-			# if( 1<sum( aZoid[c(,)]*c(,)==aZoid[c(,)] ) ){	surviveFlg[idx]<-FALSE	;next }
-			# if( all(aRem[c(,)]==aRem[c(,)]) ){	surviveFlg[idx]<-FALSE	;next }
-			# if( all(aZoid[c(,)]==c(,)) ){	surviveFlg[idx]<-FALSE	;next }
+			if( all(aZoid[c(1,6)]==c( 4,33)) ){	surviveFlg[idx]<-FALSE	;next }		# zw 29
 
 		# fCutCnt.nextQuo10
 			#      5  6 11 14 21 41    | 1  5  3  7 20 |                        |2 2 1 0 1 |2 2 1 1
@@ -2976,9 +2974,9 @@ rmvRaw <- function( gEnv ,allIdxF ){
 			#      2 21 28 38 42 45(1) |19  7 10  4  3 |-12   1   5   7   5   7 |1 0 2 1 2 |1 2 1 2
 			#     13 14 19 26 40 43    | 1  5  7 14  3 | 11  -7  -9 -12  -2  -2 |0 3 1 0 2 |3 1 2
 			#     14 18 22 26 31 44(2) | 4  4  4  5 13 |  1   4   3   0  -9   1 |0 2 2 1 1 |2 2 1 1
-			# if( 1<sum( aZoid[c(,)]*c(,)==aZoid[c(,)] ) ){	surviveFlg[idx]<-FALSE	;next }
-			# if( all(aRem[c(,)]==aRem[c(,)]) ){	surviveFlg[idx]<-FALSE	;next }
-			# if( all(aZoid[c(,)]==c(,)) ){	surviveFlg[idx]<-FALSE	;next }
+			if( all(aZoid[c(1,6)]==c(15,45)) ){	surviveFlg[idx]<-FALSE	;next }
+			if( all(aZoid[c(1,6)]==c( 2,45)) ){	surviveFlg[idx]<-FALSE	;next }		# zw	43
+			if( all(aZoid[c(1,6)]==c(14,44)) ){	surviveFlg[idx]<-FALSE	;next }		# zw	30
 
 		# fCutCnt.nextBin
 			#      2  3 12 20 27 38    | 1  9  8  7 11 |                        |2 1 2 1 0 |2 1 2 1
@@ -2987,9 +2985,11 @@ rmvRaw <- function( gEnv ,allIdxF ){
 			#     10 15 21 35 38 43(1) | 5  6 14  3  5 |  5   6   9   5  -1   0 |0 2 1 2 1 |2 1 2 1
 			#      5 10 13 21 39 43(3) | 5  3  8 18  4 | -5  -5  -8 -14   1   0 |1 2 1 1 1 |1 2 1 1 1
 			#     13 16 24 25 33 36(1) | 3  8  1  8  3 |  8   6  11   4  -6  -7 |0 2 2 2 0 |2 2 2
-			# if( 1<sum( aZoid[c(,)]*c(,)==aZoid[c(,)] ) ){	surviveFlg[idx]<-FALSE	;next }
-			# if( all(aRem[c(,)]==aRem[c(,)]) ){	surviveFlg[idx]<-FALSE	;next }
-			# if( all(aZoid[c(,)]==c(,)) ){	surviveFlg[idx]<-FALSE	;next }
+			if( all(aRem[c(1,2)]==aRem[c(5,6)]) ){	surviveFlg[idx]<-FALSE	;next }
+			if( all(aZoid[c(1,5,6)]==c( 5,39,43)) ){	surviveFlg[idx]<-FALSE	;next }
+			if( all(aZoid[c(2,3)]==c(11,14)) ){	surviveFlg[idx]<-FALSE	;next }
+			if( all(aZoid[c(1,6)]==c( 5,43)) ){	surviveFlg[idx]<-FALSE	;next }		# zw	38
+			if( all(aZoid[c(1,6)]==c( 2,38)) ){	surviveFlg[idx]<-FALSE	;next }		# zw	36
 
 		# fCutCnt.nextRebNum
 			#      5  7 20 22 37 42    | 2 13  2 15  5 |                        |2 0 2 1 1 |2 2 1 1
@@ -2998,55 +2998,78 @@ rmvRaw <- function( gEnv ,allIdxF ){
 			#      7 10 17 29 33 44(3) | 3  7 12  4 11 | -3 -10 -16  -7  -8   0 |1 2 1 1 1 |1 2 1 1 1
 			#     15 27 33 35 43 45(1) |12  6  2  8  2 |  8  17  16   6  10   1 |0 1 1 2 2 |1 1 2 2
 			#     11 24 32 33 35 40(2) |13  8  1  2  5 | -4  -3  -1  -2  -8  -5 |0 1 1 3 1 |1 1 3 1
-			# if( 1<sum( aZoid[c(,)]*c(,)==aZoid[c(,)] ) ){	surviveFlg[idx]<-FALSE	;next }
-			# if( all(aRem[c(,)]==aRem[c(,)]) ){	surviveFlg[idx]<-FALSE	;next }
-			# if( all(aZoid[c(,)]==c(,)) ){	surviveFlg[idx]<-FALSE	;next }
-
+			if( all(aZoid[c(1,6)]==c( 7,44)) ){	surviveFlg[idx]<-FALSE	;next }		# zw	37
 
 		# fCutCnt.nextCStepBin
-			# if( 1<sum( aZoid[c(,)]*c(,)==aZoid[c(,)] ) ){	surviveFlg[idx]<-FALSE	;next }
-			# if( all(aRem[c(,)]==aRem[c(,)]) ){	surviveFlg[idx]<-FALSE	;next }
-			# if( all(aZoid[c(,)]==c(,)) ){	surviveFlg[idx]<-FALSE	;next }
-
+			#      7 22 24 31 34 36    |15  2  7  3  2 |                        |1 0 2 3 0 |1 2 3
+			#     10 15 21 35 38 43    | 5  6 14  3  5 |  3  -7  -3   4   4   7 |0 2 1 2 1 |2 1 2 1
+			#     17 25 28 37 43 44(1) | 8  3  9  6  1 |  7  10   7   2   5   1 |0 1 2 1 2 |1 2 1 2
+			#      5 10 13 21 39 43(1) | 5  3  8 18  4 |-12 -15 -15 -16  -4  -1 |1 2 1 1 1 |1 2 1 1 1
+			#     13 16 24 25 33 36(1) | 3  8  1  8  3 |  8   6  11   4  -6  -7 |0 2 2 2 0 |2 2 2
+			#      5 13 17 29 34 39(1) | 8  4 12  5  5 | -8  -3  -7   4   1   3 |1 2 1 2 0 |1 2 1 2
 
 		# fCutCnt.nextFStepBin
-			# if( 1<sum( aZoid[c(,)]*c(,)==aZoid[c(,)] ) ){	surviveFlg[idx]<-FALSE	;next }
-			# if( all(aRem[c(,)]==aRem[c(,)]) ){	surviveFlg[idx]<-FALSE	;next }
-			# if( all(aZoid[c(,)]==c(,)) ){	surviveFlg[idx]<-FALSE	;next }
-
+			#      1  3  7  8 24 42    | 2  4  1 16 18 |                        |4 0 1 0 1 |4 1 1
+			#      4 13 18 31 33 45    | 9  5 13  2 12 |  3  10  11  23   9   3 |1 2 0 2 1 |1 2 2 1
+			#     14 21 29 31 32 37(1) | 7  8  2  1  5 | 10   8  11   0  -1  -8 |0 1 2 3 0 |1 2 3
+			#      3  4  9 24 25 33    | 1  5 15  1  8 |-11 -17 -20  -7  -7  -4 |3 0 2 1 0 |3 2 1
+			#     12 14 21 30 39 43    | 2  7  9  9  4 |  9  10  12   6  14  10 |0 2 1 2 1 |2 1 2 1
+			#      2  8 33 35 37 41    | 6 25  2  2  4 |-10  -6  12   5  -2  -2 |2 0 0 3 1 |2 3 1
 
 		# fCutCnt.nextColVal_1
-			# if( 1<sum( aZoid[c(,)]*c(,)==aZoid[c(,)] ) ){	surviveFlg[idx]<-FALSE	;next }
-			# if( all(aRem[c(,)]==aRem[c(,)]) ){	surviveFlg[idx]<-FALSE	;next }
-			# if( all(aZoid[c(,)]==c(,)) ){	surviveFlg[idx]<-FALSE	;next }
+			#      7 10 17 29 33 44    | 3  7 12  4 11 |                        |1 2 1 1 1 |1 2 1 1 1
+			#     15 19 21 34 41 44(1) | 4  2 13  7  3 |  8   9   4   5   8   0 |0 2 1 1 2 |2 1 1 2
+			#     12 15 18 28 34 42(2) | 3  3 10  6  8 | -3  -4  -3  -6  -7  -2 |0 3 1 1 1 |3 1 1 1
+			#      6 12 17 21 34 37(2) | 6  5  4 13  3 | -6  -3  -1  -7   0  -5 |1 2 1 2 0 |1 2 1 2
+			#      1  3 12 14 16 43(1) | 2  9  2  2 27 | -5  -9  -5  -7 -18   6 |2 3 0 0 1 |2 3 1
+			#     13 16 24 25 33 36(1) | 3  8  1  8  3 | 12  13  12  11  17  -7 |0 2 2 2 0 |2 2 2
+			if( all(aRem[c(1,2)]==aRem[c(5,6)]) ){	surviveFlg[idx]<-FALSE	;next }
+			if( all(aZoid[c(1,6)]==c( 4,37)) ){	surviveFlg[idx]<-FALSE	;next }		# zw	33
 
 		# fCutCnt.nextColVal_2
-			# if( 1<sum( aZoid[c(,)]*c(,)==aZoid[c(,)] ) ){	surviveFlg[idx]<-FALSE	;next }
-			# if( all(aRem[c(,)]==aRem[c(,)]) ){	surviveFlg[idx]<-FALSE	;next }
-			# if( all(aZoid[c(,)]==c(,)) ){	surviveFlg[idx]<-FALSE	;next }
+			#     11 12 29 33 38 42    | 1 17  4  5  4 |                        |0 2 1 2 1 |2 1 2 1
+			#      3 10 23 24 31 39    | 7 13  1  7  8 | -8  -2  -6  -9  -7  -3 |1 1 2 2 0 |1 1 2 2
+			#      5  6 13 16 27 28    | 1  7  3 11  1 |  2  -4 -10  -8  -4 -11 |2 2 2 0 0 |2 2 2
+			#      6  7 18 19 30 38(1) | 1 11  1 11  8 |  1   1   5   3   3  10 |2 2 0 2 0 |2 2 2
+			#     16 25 33 38 40 45(1) | 9  8  5  2  5 | 10  18  15  19  10   7 |0 1 1 2 2 |1 1 2 2
+			#     13 16 24 25 33 36(3) | 3  8  1  8  3 | -3  -9  -9 -13  -7  -9 |0 2 2 2 0 |2 2 2
+			if( all(aRem[c(1,2)]==aRem[c(5,6)]) ){	surviveFlg[idx]<-FALSE	;next }
+			if( all(aZoid[c(1,6)]==c( 5,41)) ){	surviveFlg[idx]<-FALSE	;next }		# zw	36
 
 		# fCutCnt.nextColVal_3
-			# if( 1<sum( aZoid[c(,)]*c(,)==aZoid[c(,)] ) ){	surviveFlg[idx]<-FALSE	;next }
-			# if( all(aRem[c(,)]==aRem[c(,)]) ){	surviveFlg[idx]<-FALSE	;next }
-			# if( all(aZoid[c(,)]==c(,)) ){	surviveFlg[idx]<-FALSE	;next }
+			#     13 15 18 24 27 41    | 2  3  6  3 14 |                        |0 3 2 0 1 |3 2 1
+			#     13 14 26 28 30 36(1) | 1 12  2  2  6 |  0  -1   8   4   3  -5 |0 2 2 2 0 |2 2 2
+			#      5  6 11 14 21 41(1) | 1  5  3  7 20 | -8  -8 -15 -14  -9   5 |2 2 1 0 1 |2 2 1 1
+			#      6 21 35 36 37 41(3) |15 14  1  1  4 |  1  15  24  22  16   0 |1 0 1 3 1 |1 1 3 1
+			#      3  9 11 12 13 19    | 6  2  1  1  6 | -3 -12 -24 -24 -24 -22 |2 4 0 0 0 |2 4
+			#     16 20 24 28 36 39    | 4  4  4  8  3 | 13  11  13  16  23  20 |0 1 3 2 0 |1 3 2
 
 		# fCutCnt.nextColVal_4
-			# if( 1<sum( aZoid[c(,)]*c(,)==aZoid[c(,)] ) ){	surviveFlg[idx]<-FALSE	;next }
-			# if( all(aRem[c(,)]==aRem[c(,)]) ){	surviveFlg[idx]<-FALSE	;next }
-			# if( all(aZoid[c(,)]==c(,)) ){	surviveFlg[idx]<-FALSE	;next }
-
+			#      3  6 10 30 34 37    | 3  4 20  4  3 |                        |2 1 0 3 0 |2 1 3
+			#      3  4 16 20 28 44(1) | 1 12  4  8 16 |  0  -2   6 -10  -6   7 |2 1 2 0 1 |2 1 2 1
+			#      6 18 31 34 38 45    |12 13  3  4  7 |  3  14  15  14  10   1 |1 1 0 3 1 |1 1 3 1
+			#      2  6  7 12 19 45(2) | 4  1  5  7 26 | -4 -12 -24 -22 -19   0 |3 2 0 0 1 |3 2 1
+			#      3 10 13 26 34 38    | 7  3 13  8  4 |  1   4   6  14  15  -7 |1 2 1 2 0 |1 2 1 2
+			#     13 14 19 26 40 43(2) | 1  5  7 14  3 | 10   4   6   0   6   5 |0 3 1 0 2 |3 1 2
 
 		# fCutCnt.nextColVal_5
-			# if( 1<sum( aZoid[c(,)]*c(,)==aZoid[c(,)] ) ){	surviveFlg[idx]<-FALSE	;next }
-			# if( all(aRem[c(,)]==aRem[c(,)]) ){	surviveFlg[idx]<-FALSE	;next }
-			# if( all(aZoid[c(,)]==c(,)) ){	surviveFlg[idx]<-FALSE	;next }
-
+			#     17 23 27 35 38 43    | 6  4  8  3  5 |                        |0 1 2 2 1 |1 2 2 1
+			#      3 11 14 15 32 36    | 8  3  1 17  4 |-14 -12 -13 -20  -6  -7 |1 3 0 2 0 |1 3 2
+			#     12 14 21 30 39 43(1) | 2  7  9  9  4 |  9   3   7  15   7   7 |0 2 1 2 1 |2 1 2 1
+			#     10 11 12 18 24 42(1) | 1  1  6  6 18 | -2  -3  -9 -12 -15  -1 |0 4 1 0 1 |4 1 1
+			#      5  6 16 18 37 38(1) | 1 10  2 19  1 | -5  -5   4   0  13  -4 |2 2 0 2 0 |2 2 2
+			#     12 16 26 28 30 42(1) | 4 10  2  2 12 |  7  10  10  10  -7   4 |0 2 2 1 1 |2 2 1 1
+			if( all(aRem[c(1,2)]==aRem[c(6,3)]) ){	surviveFlg[idx]<-FALSE	;next }
+			if( all(aZoid[c(1,6)]==c(12,43)) ){	surviveFlg[idx]<-FALSE	;next }		# zw	31
 
 		# fCutCnt.nextColVal_6
-			# if( 1<sum( aZoid[c(,)]*c(,)==aZoid[c(,)] ) ){	surviveFlg[idx]<-FALSE	;next }
-			# if( all(aRem[c(,)]==aRem[c(,)]) ){	surviveFlg[idx]<-FALSE	;next }
-			# if( all(aZoid[c(,)]==c(,)) ){	surviveFlg[idx]<-FALSE	;next }
-
+			#     10 11 12 18 24 42    | 1  1  6  6 18 |                        |0 4 1 0 1 |4 1 1
+			#      2 21 28 38 42 45(1) |19  7 10  4  3 | -8  10  16  20  18   3 |1 0 2 1 2 |1 2 1 2
+			#      9 18 20 24 27 36    | 9  2  4  3  9 |  7  -3  -8 -14 -15  -9 |1 1 3 1 0 |1 1 3 1
+			#      4  7 13 29 31 39    | 3  6 16  2  8 | -5 -11  -7   5   4   3 |2 1 1 2 0 |2 1 1 2
+			#     11 17 28 30 33 35    | 6 11  2  3  2 |  7  10  15   1   2  -4 |0 2 1 3 0 |2 1 3
+			#     20 25 31 32 36 43    | 5  6  1  4  7 |  9   8   3   2   3   8 |0 0 2 3 1 |2 3 1
+			if( all(aZoid[c(1,6)]==c( 9,31)) ){	surviveFlg[idx]<-FALSE	;next }		# zw	22
 
 			# if( 1<sum( aZoid[c(,)]*c(,)==aZoid[c(,)] ) ){	surviveFlg[idx]<-FALSE	;next }
 			# if( all(aRem[c(,)]==aRem[c(,)]) ){	surviveFlg[idx]<-FALSE	;next }
@@ -3071,7 +3094,7 @@ rmvRaw <- function( gEnv ,allIdxF ){
 
 }	# rmvRaw()
 
-# UNdone		fCut.basic() 사용
+# done		fCut.basic() 사용
 rmvColValSeqNext <- function( gEnv ,allIdxF ){
 
     initSize <- length(allIdxF)
@@ -3088,14 +3111,11 @@ rmvColValSeqNext <- function( gEnv ,allIdxF ){
 		aRem <- aZoid %% 10
 
 		# anaColEndPtn()
-		if( 2<sum(aZoid==c( 17,14,NA,16,18,41 ) ,na.rm=T) ){	surviveFlg[idx]<-FALSE	;next }
-		if( 2<sum(aZoid==c(  4,26,NA,15,29,33 ) ,na.rm=T) ){	surviveFlg[idx]<-FALSE	;next }
-		if( 2<sum(aZoid==c(  5,19,NA,25,20,42 ) ,na.rm=T) ){	surviveFlg[idx]<-FALSE	;next }
-		if( 2<sum(aZoid==c(  5, 4,NA,21,29,41 ) ,na.rm=T) ){	surviveFlg[idx]<-FALSE	;next }
-		# if( 1<sum(aZoid==c( NA,NA,NA,NA,NA,NA ) ,na.rm=T) ){	surviveFlg[idx]<-FALSE	;next }
-
-		if( aZoid[2]%in%c(  6    ) ) {	surviveFlg[idx]<-FALSE	;next } # unique 6  10,a,9,a,8,a,7,a,..?
-
+		if( 2<sum(aZoid==c(  2,34,16,NA,38,45 ) ,na.rm=T) ){	surviveFlg[idx]<-FALSE	;next }
+		if( 2<sum(aZoid==c( 14,20,20,NA,41,31 ) ,na.rm=T) ){	surviveFlg[idx]<-FALSE	;next }
+		if( 2<sum(aZoid==c( 11,22,12,NA,39,41 ) ,na.rm=T) ){	surviveFlg[idx]<-FALSE	;next }
+		if( 2<sum(aZoid==c( NA,38,17,NA,39,40 ) ,na.rm=T) ){	surviveFlg[idx]<-FALSE	;next }
+		if( 2<sum(aZoid==c( 33,33,NA,NA,43,41 ) ,na.rm=T) ){	surviveFlg[idx]<-FALSE	;next }
 
 
 		# cnt <- 0
@@ -3111,30 +3131,34 @@ rmvColValSeqNext <- function( gEnv ,allIdxF ){
 
 		# colValSeqNext( ,pColSize=2 )
 		#	3개 이상 일치.
-		score <- sum(aCStep==c(  1, 5, 8, 2, 5 ),na.rm=T)
+		score <- sum(aCStep==c(  3, 6, 2,NA,18 ),na.rm=T)
 		if(2<score){	surviveFlg[idx]<-FALSE	;next }
-		score <- sum(aCStep==c(  1, 3, 3, 3,12 ),na.rm=T)
+		score <- sum(aCStep==c( 20, 5, 9,NA, 4 ),na.rm=T)
 		if(2<score){	surviveFlg[idx]<-FALSE	;next }
-		score <- sum(aCStep==c( 16, 2,13, 5, 1 ),na.rm=T)
+		score <- sum(aCStep==c(  5,16, 1,NA, 5 ),na.rm=T)
 		if(2<score){	surviveFlg[idx]<-FALSE	;next }
-		score <- sum(aCStep==c(  2,NA, 1, 1,NA ),na.rm=T)
+		score <- sum(aCStep==c(  3, 2, 8,NA, 4 ),na.rm=T)
 		if(2<score){	surviveFlg[idx]<-FALSE	;next }
-		score <- sum(aCStep==c(  1,NA, 1,12,NA ),na.rm=T)
+		score <- sum(aCStep==c( 16, 3, 7,NA, 5 ),na.rm=T)
 		if(2<score){	surviveFlg[idx]<-FALSE	;next }
-		score <- sum(aCStep==c(  8,NA, 6, 5,NA ),na.rm=T)
+		score <- sum(aCStep==c(  8, 6, 5,NA, 2 ),na.rm=T)
 		if(2<score){	surviveFlg[idx]<-FALSE	;next }
-		score <- sum(aCStep==c(  2,NA, 3,13,NA ),na.rm=T)
+		score <- sum(aCStep==c(  3,12,12,NA, 2 ),na.rm=T)
 		if(2<score){	surviveFlg[idx]<-FALSE	;next }
-		score <- sum(aCStep==c(  5,NA, 3, 6,NA ),na.rm=T)
+		score <- sum(aCStep==c( NA, 3,14,NA, 5 ),na.rm=T)
 		if(2<score){	surviveFlg[idx]<-FALSE	;next }
-		score <- sum(aCStep==c(  4,NA, 4, 2,NA ),na.rm=T)
+		score <- sum(aCStep==c( NA,10,20,NA, 4 ),na.rm=T)
 		if(2<score){	surviveFlg[idx]<-FALSE	;next }
-		score <- sum(aCStep==c(  3,NA, 3, 2,NA ),na.rm=T)
+		score <- sum(aCStep==c( NA, 7, 6,NA, 2 ),na.rm=T)
+		if(2<score){	surviveFlg[idx]<-FALSE	;next }
+		score <- sum(aCStep==c( NA,19,11,NA, 5 ),na.rm=T)
 		if(2<score){	surviveFlg[idx]<-FALSE	;next }
 
-		if( fCutU.hasPtn(c( 1, 7,13, 1),aCStep,thld=3,fixIdx=1) ) {	surviveFlg[idx]<-FALSE	;next }	# unique
-		if( 1<sum( aCStep[c(4,5)]*c(4,1)==aCStep[c(3,2)] ) )	{	surviveFlg[idx]<-FALSE	;next }
-
+		#	unique	3>[]( 5, 1,16,NA,NA )
+		if( 3<=sum(aCStep==c( 5, 1,16,NA,NA ),na.rm=T) ){	surviveFlg[idx]<-FALSE	;next }
+		# unique 3<=sum(aCStep==c( NA,11,NA,NA,32 ),na.rm=T)
+		if( 3<=sum(aCStep==c( NA,11,NA,NA,32  ),na.rm=T) ){	surviveFlg[idx]<-FALSE	;next }
+		if( 1<sum( aCStep[ 3 ]*c(4,9)==aCStep[c(2,5)] ) ){	surviveFlg[idx]<-FALSE	;next }	# unique
 
 
 		cnt <- 0
@@ -3143,9 +3167,14 @@ rmvColValSeqNext <- function( gEnv ,allIdxF ){
 
 		# colValSeqNext( ,pColSize=3 )
 		#        *  *  *     *  *  *     *  *  *     *  *  *
-		# [  1]  1  9 12                            29 32 44
-		if( all(aZoid[1:3+0]==c(  1, 9,12 )) ){	surviveFlg[idx]<-FALSE	;next }
-		if( all(aZoid[1:3+3]==c( 29,32,44 )) ){	surviveFlg[idx]<-FALSE	;next }
+		# [  1]             11 16 18                        
+		# [  2]              1 13 33                        
+		# [  3]              2  5 11                        
+		# [  4]             27 34 42 
+		if( all(aZoid[1:3+1]==c( 11, 16, 18 )) ){	surviveFlg[idx]<-FALSE	;next }
+		if( all(aZoid[1:3+1]==c(  1, 13, 33 )) ){	surviveFlg[idx]<-FALSE	;next }
+		if( all(aZoid[1:3+1]==c(  2,  5, 11 )) ){	surviveFlg[idx]<-FALSE	;next }
+		if( all(aZoid[1:3+1]==c( 27, 34, 42 )) ){	surviveFlg[idx]<-FALSE	;next }
 
 	}
 	#	table( surviveFlg )	;dbgIdx <- head(which(!surviveFlg))	;dbgZoid <- gEnv$allZoidMtx[allIdxF[dbgIdx],,drop=F]
@@ -3156,7 +3185,7 @@ rmvColValSeqNext <- function( gEnv ,allIdxF ){
 
 }	# rmvColValSeqNext()
 
-# UNdone		fCut.basic() 사용
+# done		fCut.basic() 사용
 rmvColValSeqNext.cStep <- function( gEnv ,allIdxF ){
 
     initSize <- length(allIdxF)
@@ -3194,23 +3223,23 @@ rmvColValSeqNext.cStep <- function( gEnv ,allIdxF ){
 		aCStep <- aZoid[2:6] - aZoid[1:5]
 
 		# anaColEndPtn()
-		# if( 1<sum( aCStep[c(1,2)]*c(1,1)==aCStep[c(3,5)] ) ){	surviveFlg[idx]<-FALSE	;next }
-		# if( 1<sum( aCStep[c(1,3)]*c(4,4)==aCStep[c(2,5)] ) ){	surviveFlg[idx]<-FALSE	;next }
+		if( 1<sum( aCStep[ 2 ]*c(1,2,1)==aCStep[c(3,4,5)] ) ){	surviveFlg[idx]<-FALSE	;next }
+		if( 1<sum( aCStep[c(2,3)]*c(2,1)==aCStep[c(4,5)] ) ){	surviveFlg[idx]<-FALSE	;next }
 
-		if( aCStep[1]%in%c(  3  ) ) {	surviveFlg[idx]<-FALSE	;next }	# double( 3 )
-		if( 1<sum( aCStep[ 2 ]*c(1,6)==aCStep[c(3,4)] ) )	{	surviveFlg[idx]<-FALSE	;next }
+		#	unique	3<=[]( NA, 4, 4, 5, 4 )
+		#	unique	3<=[]( 17,11, 7,20,10 )
 
 		cnt <- 0
 		if( 2 < cnt ){	surviveFlg[idx]<-FALSE	;next }
 
-		ptnLst <- list( c(1,4) ,c(5,2) )
-		if( 1<hasPtnCnt(aCStep,ptnLst) ){	surviveFlg[idx]<-FALSE	;next }
 
 		# colValSeqNext( ,pColSize=3 )
-		#        *  *  *     *  *  *     *  *  *   
-		# [  1]             12 13  1     5 17  6
-		if( all(aZoid[1:3+1]==c( 12,13, 1 )) ){	surviveFlg[idx]<-FALSE	;next }
-		if( all(aZoid[1:3+2]==c(  5,17, 6 )) ){	surviveFlg[idx]<-FALSE	;next }
+		#        *  *  *     *  *  *     *  *  *
+		# [  1]  5  3 14                 5  4  1
+		# [  2]  9  1 24                        
+		if( all(aCStep[1:3+0]==c(  5,  3, 14 )) ){	surviveFlg[idx]<-FALSE	;next }
+		if( all(aCStep[1:3+0]==c(  9,  1, 24 )) ){	surviveFlg[idx]<-FALSE	;next }
+		if( all(aCStep[1:3+2]==c(  5,  4,  1 )) ){	surviveFlg[idx]<-FALSE	;next }
 
 		if( !is.null(valMtx) ){
 			# matCnt 작업을 루프문으로 바꾼 것.
@@ -3228,7 +3257,7 @@ rmvColValSeqNext.cStep <- function( gEnv ,allIdxF ){
 
 }	# rmvColValSeqNext.cStep()
 
-# UNdone		fCut.basic() 사용
+# done		fCut.basic() 사용
 rmvCStep <- function( gEnv ,allIdxF ){
 
     initSize <- length(allIdxF)
@@ -3245,155 +3274,150 @@ rmvCStep <- function( gEnv ,allIdxF ){
 		aZoid <- gEnv$allZoidMtx[allIdxF[idx],]
 		aCStep <- aZoid[2:6] - aZoid[1:5]
 
-		#	a,b,b.. a?	basic nextZW nextRebNum nextColVal_1 nextColVal_4 nextColVal_5
-			if( 2<sum(aCStep[c( 1,3,1, 2,3,4 ,1,1 )]==c( 4, 2,13,  4, 1, 1, 2,8)) ){	surviveFlg[idx]<-FALSE	;next }
-		#	a,b,b.. b?
-			if( 2<sum(aCStep[c( 1,3,1, 2,3,4 ,1,1 )]==c( 6, 1, 2,  3,16, 3, 6,6)) ){	surviveFlg[idx]<-FALSE	;next }
-		#	a,a,b.. b?	nextQuo10 nextFStepBin nextColVal_5
-			if( 2<sum(aCStep[c( 5,3,2 )]==c( 2,6,1 )) ){	surviveFlg[idx]<-FALSE	;next }
-			if( 3<sum(aCStep[c( 5,3,2 )]==c( 5,4,6 )) ){	surviveFlg[idx]<-FALSE	;next }
-		#	q,a,b,a.. q? nextQuo10 nextCStepBin nextColVal_6
-			if( 2<sum(aCStep[c( 2,5,2,4 )]==c( 3,5,6,4 )) ){	surviveFlg[idx]<-FALSE	;next }
-			if( 2<sum(aCStep[c( 2,5,2,4 )]==c( 7,8,2,2 )) ){	surviveFlg[idx]<-FALSE	;next }
+		#	a,b,b.. a?	
+			if( 2<sum(aCStep[c( 6,2,3 )]==c( 8, 1, 6 )) ){	surviveFlg[idx]<-FALSE	;next }	# a
+			if( 2<sum(aCStep[c( 6,2,3 )]==c( 4,10, 2 )) ){	surviveFlg[idx]<-FALSE	;next }	# b
+		#	a,a,b.. a?
+			if( 2<sum(aCStep[c( 6,1,3,4,1 )]==c(  3, 5, 1, 1, 1 )) ){	surviveFlg[idx]<-FALSE	;next }	# a
+			if( 2<sum(aCStep[c( 6,1,3,4,1 )]==c( 13, 3, 4, 8, 4 )) ){	surviveFlg[idx]<-FALSE	;next }	# b
+		#	q,a,b,a.. q? 
+			if( 2<sum(aCStep[c( 6,3,2 )]==c(  8, 3, 2 )) ){	surviveFlg[idx]<-FALSE	;next }	# q
+			if( 2<sum(aCStep[c( 6,3,2 )]==c( 27, 1, 6 )) ){	surviveFlg[idx]<-FALSE	;next }	# a
+			if( 2<sum(aCStep[c( 6,3,2 )]==c(  3, 5,11 )) ){	surviveFlg[idx]<-FALSE	;next }	# b
 
 		# fCutCnt.basic()
-			if( 1<sum( aCStep[ 3 ]*c(2,5)==aCStep[c(1,2)] ) )	{	surviveFlg[idx]<-FALSE	;next }
-			#	unique	(  4, 4*, 6*, 18) ( 4,NA, 3, 5 )
-			#	unique	[2:5](  6*,15*, 3, 1)  [2:5](  6,15*, 3*, 1)
-			#			[1:4]( 15*, 3*, 1, 17)
-			#			[1:6](  6*,15*, 3, 1,17) [1:6](  6,15*, 3*, 1,17)
-			if( fCutU.hasPtn(c(  4, 4, 6, 18 ),aCStep,thld=3,fixIdx=2:3) ){	surviveFlg[idx]<-FALSE	;next }
-			if( fCutU.hasPtn(c(  4,NA, 3, 5 ),aCStep) ){	surviveFlg[idx]<-FALSE	;next }
-			if( all(aCStep[2:3]==c(  6,15 )) && any(aCStep[c(4,5)]==c(3, 1)) ) {	surviveFlg[idx]<-FALSE	;next }
-			if( all(aCStep[3:4]==c( 15, 3 )) && any(aCStep[c(2,5)]==c(6, 1)) ) {	surviveFlg[idx]<-FALSE	;next }
-			if( all(aCStep[1:2]==c( 15, 3 )) && any(aCStep[c(3,4)]==c(1,17)) ) {	surviveFlg[idx]<-FALSE	;next }
-			if( all(aCStep[1:2]==c(  6,15 )) && any(aCStep[3:5]==c( 3, 1,17)) ) {	surviveFlg[idx]<-FALSE	;next }
-			if( all(aCStep[2:3]==c( 15, 3 )) && any(aCStep[c(1,4,5)]==c( 6, 1,17)) ) {	surviveFlg[idx]<-FALSE	;next }
+			if( 1<sum( aCStep[ 2 ]*c( 1,12)==aCStep[c(3,4)] ) )	{	surviveFlg[idx]<-FALSE	;next }
+			#	unique	( 13, 1, 2) ( 3, 2, 1 ) ( 4, 4,NA, 7 ) ( 4*, 4*, 6,18 )
+			#			( 4*, 4*, 4, 2,23 ) ( 4, 4*, 4*, 2,23 )
+			#	unique	[2:3]( 3,17)	2/3,2/17
+			if( fCutU.hasPtn(c( 13, 1, 2 ),aCStep) ){	surviveFlg[idx]<-FALSE	;next }
+			if( fCutU.hasPtn(c(  3, 2, 1 ),aCStep) ){	surviveFlg[idx]<-FALSE	;next }
+			if( fCutU.hasPtn(c(  4, 4,NA, 7 ),aCStep) ){	surviveFlg[idx]<-FALSE	;next }
+			if( fCutU.hasPtn(c(  4, 4, 6,18 ),aCStep,thld=3,fixIdx=1:2) ){	surviveFlg[idx]<-FALSE	;next }
+			if( fCutU.hasPtn(c(  4, 4, 4, 2,23 ),aCStep,thld=3,fixIdx=1:2) ){	surviveFlg[idx]<-FALSE	;next }
+			if( fCutU.hasPtn(c(  4, 4, 4, 2,23 ),aCStep,thld=3,fixIdx=2:3) ){	surviveFlg[idx]<-FALSE	;next }
+			if( all(aCStep[2:3]==c(  3,17 )) ) {	surviveFlg[idx]<-FALSE	;next }
 
 		# fCutCnt.nextZW
-			#	unique	( 4, 7*, 3*,13, 1)
-			#	unique	[1:6]( 17, 4*, 1*, 10, 2) 
-			#			[3:5]( 7,NA, 2)  <-- 3/(NA, 4, 1)/( 4,NA, 1) ...  3/(NA, 7, 2)/( 7,NA, 2)
-			#			[1:6]( 4, 7,NA,NA,15)	[1:6](21*, 4*, 1, 4, 2)
-			#			[c(2,3,5)]( 3, 2, 5)
-			if( fCutU.hasPtn(c( 4,7,3,13, 1),aCStep,thld=3,fixIdx=2:3) ){	surviveFlg[idx]<-FALSE	;next }
-			if( fCutU.hasPtn(c( 4,7,NA,NA,15),aCStep,thld=3,fixIdx=2:3) ){	surviveFlg[idx]<-FALSE	;next }
-			if( all(aCStep[1:2]==c(21, 4)) && any(aCStep[3:5]==c(1,4,2)) ) {	surviveFlg[idx]<-FALSE	;next }
-			if( all(aCStep[c(3,5)]==c(7,2)) ) {	surviveFlg[idx]<-FALSE	;next }
-			if( all(aCStep[2:3]==c(4, 1)) && any(aCStep[c(1,4,5)]==c(17,10, 2)) ) {	surviveFlg[idx]<-FALSE	;next }
-			if( all(aCStep[c(2,3,5)]==c( 3,2,5 )) ) {	surviveFlg[idx]<-FALSE	;next }
-			if( all(aCStep[c(2,5)]==c( 7,8 )) ) {	surviveFlg[idx]<-FALSE	;next }
+			if( 1<sum( aCStep[ 5 ]*c(4,1,6)==aCStep[c(1,2,4)] ) )	{	surviveFlg[idx]<-FALSE	;next }
 
 		# fCutCnt.nextQuo10
-			if( 1<sum( aCStep[c(4,5)]*c(4,1)==aCStep[c(2,3)] ) )	{	surviveFlg[idx]<-FALSE	;next }
-			#	unique	( 7,15,21 )
-			if( fCutU.hasPtn(c(  7,15,21 ),aCStep) ){	surviveFlg[idx]<-FALSE	;next }
+			if( 1<sum( aCStep[ 1 ]*c(1,1)==aCStep[c(2,3)] ) )	{	surviveFlg[idx]<-FALSE	;next }
+			#	unique	( 7, 3, 9 ) ( 5, 7, 2 )
+			#	unique	[1:4]( 7*, 10*,  4,  3 )	[1:4]( 7,10*, 4*, 3 )
+			#	unique	( 4, 5 ) ( 5,13 )
+			if( fCutU.hasPtn(c(  7, 3, 9 ),aCStep) ){	surviveFlg[idx]<-FALSE	;next }
+			if( fCutU.hasPtn(c(  5, 7, 2 ),aCStep) ){	surviveFlg[idx]<-FALSE	;next }
+			if( all(aCStep[1:2]==c( 7,10)) && any(aCStep[c(3,4)]==c( 4, 3)) ) {	surviveFlg[idx]<-FALSE	;next }
+			if( all(aCStep[2:3]==c(10, 4)) && any(aCStep[c(1,4)]==c( 7, 3)) ) {	surviveFlg[idx]<-FALSE	;next }
+			ptnLst <- list( c( 4, 5) ,c( 5,13) )
+			if( 1<hasPtnCnt(aCStep,ptnLst) ){	surviveFlg[idx]<-FALSE	;next }
 
 		# fCutCnt.nextBin
-			#	unique	( 8, 6, 3 ) ( 4, 2,13) ( 2,13, 7) (13, 7, 3)
-			#	unique	[2:5]( 4*, 2*,13, 7) [2:5]( 4, 2*,13*, 7)	[4:5](13, 7)
-			#			[3:5]( 3,NA, 3) <-- (7,6)/(6,*,6) ... (7,3)/(3,*,3)
-			if( fCutU.hasPtn(c(  8, 6, 3 ),aCStep) ){	surviveFlg[idx]<-FALSE	;next }
-			if( fCutU.hasPtn(c(  4, 2,13 ),aCStep) ){	surviveFlg[idx]<-FALSE	;next }
-			if( fCutU.hasPtn(c(  2,13, 7 ),aCStep) ){	surviveFlg[idx]<-FALSE	;next }
-			if( fCutU.hasPtn(c( 13, 7, 3 ),aCStep) ){	surviveFlg[idx]<-FALSE	;next }
-			if( all(aCStep[4:5]==c( 13, 7 )) ) {	surviveFlg[idx]<-FALSE	;next }
-			if( all(aCStep[c(3,5)]==c(  3, 3 )) ) {	surviveFlg[idx]<-FALSE	;next }
-			if( all(aCStep[2:3]==c(4, 2)) && any(aCStep[c(4,5)]==c(13, 7)) ) {	surviveFlg[idx]<-FALSE	;next }
-			if( all(aCStep[3:4]==c(2,13)) && any(aCStep[c(2,5)]==c(4,7)) ) {	surviveFlg[idx]<-FALSE	;next }
+			if( 1<sum( aCStep[c(1,2)]*c(1,1)==aCStep[c(5,4 )] ) )	{	surviveFlg[idx]<-FALSE	;next }
+			#	unique	( 3, 8,NA,12) ( 2, 3, 5 )
+			#	unique	[2:4]( 1,a,1 ) [1:4]( 8*, 1*, 8, 3 ) [c(1,5)]==c( 8, 8)
+			if( fCutU.hasPtn(c(  3, 8,NA,12 ),aCStep) ){	surviveFlg[idx]<-FALSE	;next }
+			if( fCutU.hasPtn(c( 2,3,5 ),aCStep) ){	surviveFlg[idx]<-FALSE	;next }
+			if( all(aCStep[1:5]==c( 8, 8 )) ) {	surviveFlg[idx]<-FALSE	;next }
+			if( all(aCStep[1:2]==c( 8, 1 )) && any(aCStep[c(3,4)]==c(8,3)) ) {	surviveFlg[idx]<-FALSE	;next }
+			if( all(aCStep[c(2,5)]==c( 3, 4 )) ) {	surviveFlg[idx]<-FALSE	;next }
+			if( all(aCStep[c(1,3)+0]==c(1,1)) ) {	surviveFlg[idx]<-FALSE	;next }
+			if( all(aCStep[c(1,3)+1]==c(1,1)) ) {	surviveFlg[idx]<-FALSE	;next }
+			if( all(aCStep[c(1,3)+2]==c(1,1)) ) {	surviveFlg[idx]<-FALSE	;next }
+			if( all(aCStep[ 5 ]==c( 2 )) ) {	surviveFlg[idx]<-FALSE	;next }
 
 		# fCutCnt.nextRebNum
-			#	unique	( 2, 3,NA,NA, 2)
-			#	unique	[1:5](13*,  7*,  3,  5,  9)
-			if( fCutU.hasPtn(c( 2, 3,NA,NA, 2),aCStep) ){	surviveFlg[idx]<-FALSE	;next }
-			if( all(aCStep[1:2]==c(13, 7)) && any(aCStep[3:5]==c(3,5,9)) ) {	surviveFlg[idx]<-FALSE	;next }
+			#	unique	( 6,NA, 1, 5 )
+			#	unique	[3:5](10,13, 3)
+			if( fCutU.hasPtn(c(  6,NA, 1, 5 ),aCStep) ){	surviveFlg[idx]<-FALSE	;next }
+			if( all(aCStep[3:5]==c(10,13, 3)) ) {	surviveFlg[idx]<-FALSE	;next }
+			if( all(aCStep[c(3,5)]==c( 1, 1 )) ) {	surviveFlg[idx]<-FALSE	;next }
 
 		# fCutCnt.nextCStepBin
-			if( 1<sum( aCStep[ 4 ]*c(4,8)==aCStep[c(2,3)] ) )	{	surviveFlg[idx]<-FALSE	;next }
-			#	unique	( 18, 8, 3) ( 8, 6, 3) ( 5, 8,16) ( 8,16, 2) (16, 2, 9)
-			#	unique	[2:5]( 5*, 8*,16, 2) [2:5]( 5, 8*,16*, 2)
-			#	unique	( 8,16) ( 6, 2) ( 7, 3)
-			if( fCutU.hasPtn(c(18, 8, 3),aCStep) ){	surviveFlg[idx]<-FALSE	;next }
-			if( fCutU.hasPtn(c( 8, 6, 3),aCStep) ){	surviveFlg[idx]<-FALSE	;next }
-			if( fCutU.hasPtn(c( 5, 8,16),aCStep) ){	surviveFlg[idx]<-FALSE	;next }
-			if( fCutU.hasPtn(c( 8,16, 2),aCStep) ){	surviveFlg[idx]<-FALSE	;next }
-			if( fCutU.hasPtn(c(16, 2, 9),aCStep) ){	surviveFlg[idx]<-FALSE	;next }
-			if( all(aCStep[2:3]==c(5, 8)) && any(aCStep[c(4,5)]==c(16, 2)) ) {	surviveFlg[idx]<-FALSE	;next }
-			if( all(aCStep[3:4]==c(8,16)) && any(aCStep[c(2,5)]==c(5,2)) ) {	surviveFlg[idx]<-FALSE	;next }
-			ptnLst <- list( c( 8,16) ,c( 6, 2) ,c( 7, 3) )
-			if( 1<hasPtnCnt(aCStep,ptnLst) ){	surviveFlg[idx]<-FALSE	;next }
+			if( 1<sum( aCStep[ 2 ]*c(2,3)==aCStep[c(1,3)] ) )	{	surviveFlg[idx]<-FALSE	;next }
+			if( 1<sum( aCStep[c(2,4)]*c(2,1)==aCStep[c(1,5)] ) )	{	surviveFlg[idx]<-FALSE	;next }
+			if( 1<sum( aCStep[c(2,4)]*c(3,1)==aCStep[c(3,5)] ) )	{	surviveFlg[idx]<-FALSE	;next }
+			#	unique	( 3, 8,NA,12 )
+			#	unique	[1:4]( 4*,12*, 5, 5) [4:5]( 3, 3) # 5/3
+			if( fCutU.hasPtn(c(  3, 8,NA,12 ),aCStep) ){	surviveFlg[idx]<-FALSE	;next }
+			if( all(aCStep[4:5]==c( 3,3 )) ) {	surviveFlg[idx]<-FALSE	;next }
+			if( all(aCStep[1:2]==c( 4,12 )) && any(aCStep[c(3,4)]==c( 5,5 )) ) {	surviveFlg[idx]<-FALSE	;next }
 
 		# fCutCnt.nextFStepBin
-			if( 1<sum( aCStep[ 5 ]*c(4,2,1)==aCStep[c(1,2,5)] ) )	{	surviveFlg[idx]<-FALSE	;next }
-			if( 1<sum( aCStep[c(5,2)]*c(1,2)==aCStep[c(4,1)] ) )	{	surviveFlg[idx]<-FALSE	;next }
-			#	unique	(  1, 3,NA,NA, 5)
-			#	unique	[1:5](12*, 6*, 4, 3, 3)
-			if( fCutU.hasPtn(c( 1, 3,NA,NA, 5),aCStep) ){	surviveFlg[idx]<-FALSE	;next }
-			if( all(aCStep[1:2]==c(12, 6)) ) {	surviveFlg[idx]<-FALSE	;next }
-			if( all(aCStep[1:2]==c(12, 6)) && any(aCStep[c(3,4,5)]==c(4,3,3)) ) {	surviveFlg[idx]<-FALSE	;next }
+			if( 1<sum( aCStep[ 3 ]*c(3,1,2)==aCStep[c(1,4,5)] ) )	{	surviveFlg[idx]<-FALSE	;next }
+			if( 1<sum( aCStep[c(3,4)]*c(3,2)==aCStep[c(2,5)] ) )	{	surviveFlg[idx]<-FALSE	;next }
+			#	unique	( 7*,10*,16, 7 )
+			#	unique	[3:4]( 6, 6)
+			if( fCutU.hasPtn(c( 7,10,16, 7 ),aCStep,thld=3,fixIdx=1:2) ){	surviveFlg[idx]<-FALSE	;next }
+			if( all(aCStep[3:4]==c( 6,6 )) ) {	surviveFlg[idx]<-FALSE	;next }
+			if( all(aCStep[c(2,5)]==c( 6,3 )) ) {	surviveFlg[idx]<-FALSE	;next }
 
 		# fCutCnt.nextColVal_1
-			if( 1<sum( aCStep[ 4 ]*c(2,1)==aCStep[c(1,2)] ) )	{	surviveFlg[idx]<-FALSE	;next }
-			#	unique	( 7*, 3*,16*, 3*, 8) ( 7,NA,18, 3*, 5*) ( 5*, 6*, 8,13, 1)
-			#	unique	[1:5]( 5,  6, 11,  8*,  3*)	[1:5](  6*, 3*,16, 3, 5)
-			#	unique	( 4, 4, a, a)
-			if( fCutU.hasPtn(c(  7, 3,16, 3, 8 ),aCStep,thld=3,fixIdx=c(1,2)) ){	surviveFlg[idx]<-FALSE	;next }
-			if( fCutU.hasPtn(c(  7, 3,16, 3, 8 ),aCStep,thld=3,fixIdx=c(2,3)) ){	surviveFlg[idx]<-FALSE	;next }
-			if( fCutU.hasPtn(c(  7, 3,16, 3, 8 ),aCStep,thld=3,fixIdx=c(3,4)) ){	surviveFlg[idx]<-FALSE	;next }
-			if( fCutU.hasPtn(c(  7, 3,16, 3, 8 ),aCStep,thld=3,fixIdx=c(1,3)) ){	surviveFlg[idx]<-FALSE	;next }
-			if( fCutU.hasPtn(c(  7, 3,16, 3, 8 ),aCStep,thld=3,fixIdx=c(2,4)) ){	surviveFlg[idx]<-FALSE	;next }
-			if( fCutU.hasPtn(c(  7, 3,16, 3, 8 ),aCStep,thld=3,fixIdx=c(1,4)) ){	surviveFlg[idx]<-FALSE	;next }
-			if( fCutU.hasPtn(c(  7,NA,18, 3, 5 ),aCStep,thld=3,fixIdx=c(4,5)) ){	surviveFlg[idx]<-FALSE	;next }
-			if( fCutU.hasPtn(c(  5, 6, 8,13, 1 ),aCStep,thld=3,fixIdx=c(1,2)) ){	surviveFlg[idx]<-FALSE	;next }
-			if( all(aCStep[4:5]==c(8,3)) && any(aCStep[c(1,2,3)]==c( 5, 6,11)) ) {	surviveFlg[idx]<-FALSE	;next }
-			if( all(aCStep[1:2]==c(6,3)) && any(aCStep[c(3,4,5)]==c(16, 3,5)) ) {	surviveFlg[idx]<-FALSE	;next }
-			if( all(aCStep[1:2]==c(4,4)) && (aCStep[3]==aCStep[4]) ) {	surviveFlg[idx]<-FALSE	;next }
-			if( all(aCStep[2:3]==c(4,4)) && (aCStep[4]==aCStep[5]) ) {	surviveFlg[idx]<-FALSE	;next }
+			if( 1<sum( aCStep[c(1,2)]*c(1,1)==aCStep[c(5,4)] ) )	{	surviveFlg[idx]<-FALSE	;next }
+			#	unique	( 3, 7, 14)
+			if( fCutU.hasPtn(c(  3, 7, 14 ),aCStep) ){	surviveFlg[idx]<-FALSE	;next }
 
 		# fCutCnt.nextColVal_2
+			if( 1<sum( aCStep[c(1,2)]*c(1,1)==aCStep[c(5,4)] ) )	{	surviveFlg[idx]<-FALSE	;next }
+			#	unique	( a,1,a ) ( 1, 9, 3 ) ( 3, 5, 1 )
+			#	unique	[1:3]( 1, 8, 3 ) [1:3]( 5, 2, 5 ) [2:4]( 8,a,8 )
+			if( fCutU.hasPtn(c( 1, 9, 3 ),aCStep) ){	surviveFlg[idx]<-FALSE	;next }
+			if( fCutU.hasPtn(c( 3, 5, 1 ),aCStep) ){	surviveFlg[idx]<-FALSE	;next }
+			cenIdx <- 2		;if( aCStep[cenIdx]==1 && (aCStep[cenIdx-1]==aCStep[cenIdx+1]) ){	surviveFlg[idx]<-FALSE	;next }
+			cenIdx <- 3		;if( aCStep[cenIdx]==1 && (aCStep[cenIdx-1]==aCStep[cenIdx+1]) ){	surviveFlg[idx]<-FALSE	;next }
+			cenIdx <- 4		;if( aCStep[cenIdx]==1 && (aCStep[cenIdx-1]==aCStep[cenIdx+1]) ){	surviveFlg[idx]<-FALSE	;next }
+			if( all(aCStep[1:3]==c( 1, 8, 3 )) ) {	surviveFlg[idx]<-FALSE	;next }
+			if( all(aCStep[1:3]==c( 5, 2, 5 )) ) {	surviveFlg[idx]<-FALSE	;next }
+			if( all(aCStep[c(2,4)]==c( 8,8 )) ) {	surviveFlg[idx]<-FALSE	;next }
 
 		# fCutCnt.nextColVal_3
-			#	unique	( 14, 5, 8*, 1*)	( 14,10, 1 )	( 8, 7, 7 )
-			#	unique	[2:5]( 3, 6*, 2*, 16)	[1:4]( 9,10*, 1*, 7)
-			#	unique	( 9, 1) ( 5, 7) ( 8,12)
-			if( fCutU.hasPtn(c( 14, 5, 8, 1 ),aCStep,thld=3,fixIdx=3:4) ){	surviveFlg[idx]<-FALSE	;next }
-			if( fCutU.hasPtn(c( 14,10, 1 ),aCStep) ){	surviveFlg[idx]<-FALSE	;next }
-			if( fCutU.hasPtn(c(  8, 7, 7 ),aCStep) ){	surviveFlg[idx]<-FALSE	;next }
-			if( all(aCStep[2:3]==c( 6, 2)) && any(aCStep[c(2,5)]==c( 3,16)) ) {	surviveFlg[idx]<-FALSE	;next }
-			if( all(aCStep[2:3]==c(10, 1)) && any(aCStep[c(1,4)]==c(9,7)) ) {	surviveFlg[idx]<-FALSE	;next }
-			ptnLst <- list( c(9,1) ,c(5,7) ,c( 8,12) )
-			if( 1<hasPtnCnt(aCStep,ptnLst) ){	surviveFlg[idx]<-FALSE	;next }
+			if( 1<sum( aCStep[ 1 ]*c(1,1,2)==aCStep[c(2,3,4)] ) )	{	surviveFlg[idx]<-FALSE	;next }
+			if( 1<sum( aCStep[c(1,3)]*c(1,2)==aCStep[c(2,4)] ) )	{	surviveFlg[idx]<-FALSE	;next }
+			if( 1<sum( aCStep[c(1,2)]*c(1,2)==aCStep[c(3,4)] ) )	{	surviveFlg[idx]<-FALSE	;next }
+			#	unique	( 1, 1, 8 )
+			#	unique	[1:5]( 4, 4, 4*, 8*, 3)
+			#	unique	[2]( 1 )  # 2/1/1  2/3/1  2/4/?
+			#			[5]( 1 )	# 3/1
+			#			[1:3]( 6, 6, 6 )
+			if( fCutU.hasPtn(c( 1, 1, 8 ),aCStep) ){	surviveFlg[idx]<-FALSE	;next }
+			if( all(aCStep[3:4]==c( 4, 8 )) && any(aCStep[c(1,2,5)]==c(4,4,3)) ) {	surviveFlg[idx]<-FALSE	;next }
+			if( all(aCStep[1:3]==c( 6, 6, 6 )) ) {	surviveFlg[idx]<-FALSE	;next }
+			if( any(aCStep[c(2)]==c( 1 )) ) {	surviveFlg[idx]<-FALSE	;next }
 
 		# fCutCnt.nextColVal_4
-			if( 1<sum( aCStep[c(4,5)]*c(2,1)==aCStep[c(1,3)] ) )	{	surviveFlg[idx]<-FALSE	;next }
-			#	unique	( 27,NA, 4, 4) ( 6*,10*,NA, 4, 3) ( 9*, 3*,13, 6, 4)
-			#	unique	[2:4]( 2,a,2 ) 
-			if( fCutU.hasPtn(c( 27,NA, 4, 4 ),aCStep) ){	surviveFlg[idx]<-FALSE	;next }
-			if( fCutU.hasPtn(c(  6,10,NA, 4, 3 ),aCStep,thld=3,fixIdx=1:2) ){	surviveFlg[idx]<-FALSE	;next }
-			if( fCutU.hasPtn(c(  9, 3,13, 6, 4 ),aCStep,thld=3,fixIdx=1:2) ){	surviveFlg[idx]<-FALSE	;next }
-			if( all(aCStep[c(2,4)]==c(2,2)) ) {	surviveFlg[idx]<-FALSE	;next }
+			#	unique	( 1*, 5*, 7, 2 )	( 1, 5*, 7*, 2 )	( 1*, 5, 7*, 2 ) ( 7, 3,13 ) ( 4, 8,10 ) ( 4,13, 3 )
+			#	unique	2 < [1:3]( 3,13, 8)  [1:4]( 3*,13, 8, 4*)  [1:4]( 3,13*, 8, 4*)  [1:4]( 3,13, 8*, 4*)
+			#			[3:5]( 4, 1, 5*)
+			if( fCutU.hasPtn(c( 1, 5, 7, 2 ),aCStep,thld=3,fixIdx=1:2) ){	surviveFlg[idx]<-FALSE	;next }
+			if( fCutU.hasPtn(c( 1, 5, 7, 2 ),aCStep,thld=3,fixIdx=2:3) ){	surviveFlg[idx]<-FALSE	;next }
+			if( fCutU.hasPtn(c( 1, 5, 7, 2 ),aCStep,thld=3,fixIdx=c(1,3)) ){	surviveFlg[idx]<-FALSE	;next }
+			if( fCutU.hasPtn(c( 7, 3,13 ),aCStep) ){	surviveFlg[idx]<-FALSE	;next }
+			if( fCutU.hasPtn(c( 4, 8,10 ),aCStep) ){	surviveFlg[idx]<-FALSE	;next }
+			if( fCutU.hasPtn(c( 4,13, 3 ),aCStep) ){	surviveFlg[idx]<-FALSE	;next }
+			if( all(aCStep[1:3]==c( 3,13, 8 )) ) {	surviveFlg[idx]<-FALSE	;next }
+			if( all(aCStep[c(1,4)]==c(  3, 4 )) && any(aCStep[c(2,3)]==c( 13, 8)) ) {	surviveFlg[idx]<-FALSE	;next }
+			if( all(aCStep[c(2,4)]==c( 13, 4 )) && any(aCStep[c(1,3)]==c( 13, 8)) ) {	surviveFlg[idx]<-FALSE	;next }
+			if( all(aCStep[c(3,4)]==c(  8, 4 )) && any(aCStep[c(1,2)]==c(  3,13)) ) {	surviveFlg[idx]<-FALSE	;next }
+			if( all(aCStep[5]==c( 5 )) && any(aCStep[c(3,4)]==c( 4, 1)) ) {	surviveFlg[idx]<-FALSE	;next }
 
 		# fCutCnt.nextColVal_5
-			if( 1<sum( aCStep[ 3 ]*c(3,3)==aCStep[c(1,2)] ) )	{	surviveFlg[idx]<-FALSE	;next }
-			#	unique	( 6, 3,16 ) (12, 3, 8) ( 8, 1*,10*,NA,15 )
-			#	unique	[1:6]( 5,  2*,  1*,  5, 15)
-			#	unique	2>sum(  6, 6,13,NA,(13, 6) )
-			if( fCutU.hasPtn(c(  6, 3,16 ),aCStep) ){	surviveFlg[idx]<-FALSE	;next }
-			if( fCutU.hasPtn(c( 12, 3, 8 ),aCStep) ){	surviveFlg[idx]<-FALSE	;next }
-			if( fCutU.hasPtn(c(  8, 1,10,NA,15 ),aCStep,thld=3,fixIdx=2:3) ){	surviveFlg[idx]<-FALSE	;next }
-			if( all(aCStep[2:3]==c(2,1)) && any(aCStep[c(1,4,5)]==c(5,5,15)) ) {	surviveFlg[idx]<-FALSE	;next }
-			if( 2<sum(aCStep==c( 6, 6,13,NA,13 ),na.rm=T) ) {	surviveFlg[idx]<-FALSE	;next }
-			if( 2<sum(aCStep==c( 6, 6,13,NA, 6 ),na.rm=T) ) {	surviveFlg[idx]<-FALSE	;next }
+			if( 1<sum( aCStep[ 3 ]*c(2,5,1,6)==aCStep[c(1,2,4,5)] ) )	{	surviveFlg[idx]<-FALSE	;next }
+			if( 1<sum( aCStep[c(1,3)]*c(3,1)==aCStep[c(5,4)] ) )	{	surviveFlg[idx]<-FALSE	;next }
+			if( 1<sum( aCStep[c(1,3)]*c(3,5)==aCStep[c(5,2)] ) )	{	surviveFlg[idx]<-FALSE	;next }
+			#	if( 1<sum( aCStep[c(2,3)]*c(5,6)==aCStep[c(2,5)] ) )	{	surviveFlg[idx]<-FALSE	;next }
+			#	unique	( 7,10*, 2*,NA,23)
+			#	unique	[]( 4,10*, 2*, 2,12 )	[1:3]( 2, 2,12 )
+			if( fCutU.hasPtn(c(  7,10, 2,NA,23 ),aCStep,thld=3,fixIdx=2:3 ) ){	surviveFlg[idx]<-FALSE	;next }
+			if( all(aCStep[1:3]==c( 2, 2,12 )) ) {	surviveFlg[idx]<-FALSE	;next }
+			if( all(aCStep[2:3]==c( 10, 2 )) && any(aCStep[c(1,4,5)]==c( 4, 2,12)) ) {	surviveFlg[idx]<-FALSE	;next }
 
 		# fCutCnt.nextColVal_6
-			if( 1<sum( aCStep[c(4,5)]*c(2,1)==aCStep[c(1,3)] ) )	{	surviveFlg[idx]<-FALSE	;next }
-			#	unique	( 5, 3, 1 ) ( 11,NA, 4, 3 )
-			#	unique	[1:4]( 11, 2, 3*, 2*) [1:5](11,NA, 3,NA,NA) [1:5](NA,NA, 3,NA, 3)
-			if( fCutU.hasPtn(c(  5, 3, 1 ),aCStep) ){	surviveFlg[idx]<-FALSE	;next }
+			#	unique	( 11,NA, 4, 3 )
+			#	unique	[1:4]( 6, 1, 4*, 7* )
 			if( fCutU.hasPtn(c( 11,NA, 4, 3 ),aCStep) ){	surviveFlg[idx]<-FALSE	;next }
-			if( all(aCStep[c(3,5)]==c( 3, 3 )) ) {	surviveFlg[idx]<-FALSE	;next }
-			if( all(aCStep[c(1,3)]==c(11, 3 )) ) {	surviveFlg[idx]<-FALSE	;next }
-			if( all(aCStep[3:4]==c( 3, 2 )) && any(aCStep[c(1,2)]==c(11, 2)) ) {	surviveFlg[idx]<-FALSE	;next }
+			if( all(aCStep[3:4]==c( 4,7 )) && any(aCStep[c(1,2)]==c( 6,1 )) ) {	surviveFlg[idx]<-FALSE	;next }
+			if( all(aCStep[ 4 ]==c( 5 )) ) {	surviveFlg[idx]<-FALSE	;next }
 
 			# if( fCutU.hasPtn(c( ,, ),aCStep) ){	surviveFlg[idx]<-FALSE	;next }
 			# if( all(aCStep[:]==c( , )) ) {	surviveFlg[idx]<-FALSE	;next }
@@ -3414,7 +3438,7 @@ rmvCStep <- function( gEnv ,allIdxF ){
 
 }	# rmvCStep()
 
-# UNdone		fCut.basic() 사용
+# done		fCut.basic() 사용
 rmvFStep <- function( gEnv ,allIdxF ){
 
     initSize <- length(allIdxF)
@@ -3430,75 +3454,70 @@ rmvFStep <- function( gEnv ,allIdxF ){
 		aZoid <- gEnv$allZoidMtx[allIdxF[idx],]
 
 		aFStep <- aZoid - stdMILst[["basic"]]$lastZoid
-			if( 1<sum( aFStep[ 6 ]*c(-1,-1)==aFStep[c(1,2)] ) ){	surviveFlg[idx]<-FALSE	;next }
+		#	if( fCutU.hasPtn(c( ,, ),aFStep) ){	surviveFlg[idx]<-FALSE	;next }
+		#	if( all(aFStep[:]==c(,)) && any(aFStep[c(,)]==c(,))) {	surviveFlg[idx]<-FALSE	;next }
 
 		aFStep <- aZoid - stdMILst[["nextZW"]]$lastZoid
-			if( 1<sum( aFStep[ 1 ]*c(4,3)==aFStep[c(2,6)] ) ){	surviveFlg[idx]<-FALSE	;next }
-			if( 1<sum( aFStep[c(1,3)]*c(4,1)==aFStep[c(2,4)] ) ){	surviveFlg[idx]<-FALSE	;next }
-			if( 1<sum( aFStep[c(1,3)]*c(3,1)==aFStep[c(6,4)] ) ){	surviveFlg[idx]<-FALSE	;next }
+			if( 1<sum( aFStep[c(1,2)]*c(1,3)==aFStep[c(4,6)] ) ) {	surviveFlg[idx]<-FALSE	;next }
+		#	if( fCutU.hasPtn(c( ,, ),aFStep) ){	surviveFlg[idx]<-FALSE	;next }
+		#	if( all(aFStep[:]==c(,)) && any(aFStep[c(,)]==c(,))) {	surviveFlg[idx]<-FALSE	;next }
 
 		aFStep <- aZoid - stdMILst[["nextQuo10"]]$lastZoid
-			if( 1<sum( aFStep[c(1,3)]*c(-1,-1)==aFStep[c(2,6)] ) ){	surviveFlg[idx]<-FALSE	;next }
+			if( 1<sum( aFStep[c(1,3)]*c(1,-3)==aFStep[c(6,5)] ) ) {	surviveFlg[idx]<-FALSE	;next }
+			#	unique	( -11,-18,-20, -2*, -2*) ( 1*, 3*, -1, -5,-16)
+			#	unique	[2:6](-12,   1,   5,   7*,   5*)
+			if( fCutU.hasPtn(c( -11,-18,-20, -2, -2 ),aFStep,thld=3,fixIdx=4:5) ){	surviveFlg[idx]<-FALSE	;next }
+			if( fCutU.hasPtn(c(   1, 3, -1, -5,-16 ),aFStep,thld=3,fixIdx=1:2) ){	surviveFlg[idx]<-FALSE	;next }
+			if( all(aFStep[5:6]==c(7,5)) && any(aFStep[c(2,3,4)]==c(-12, 1, 5))) {	surviveFlg[idx]<-FALSE	;next }
 
 		aFStep <- aZoid - stdMILst[["nextBin"]]$lastZoid
-			if( 1<sum( aFStep[ 3 ]*c(4,6)==aFStep[c(2,6)] ) ){	surviveFlg[idx]<-FALSE	;next }
-			if( 1<sum( aFStep[c(1,3)]*c(1,4)==aFStep[c(5,2)] ) ){	surviveFlg[idx]<-FALSE	;next }
-			#	unique	( 14, 2*, 9*,14)
-			#	unique	[2:6](13, 8*, 2*, 9,13)
-			if( fCutU.hasPtn(c( 14, 2, 9,14 ),aFStep,thld=3,fixIdx=2:3) ){	surviveFlg[idx]<-FALSE	;next }
-			if( all(aFStep[2:3]==c(8,2)) && any(aFStep[c(1,4,5)]==c(13, 9,13))) {	surviveFlg[idx]<-FALSE	;next }
+			if( 1<sum( aFStep[c(4,5)]*c( 2,-1)==aFStep[c(1,2)] ) ) {	surviveFlg[idx]<-FALSE	;next }
 
 		aFStep <- aZoid - stdMILst[["nextRebNum"]]$lastZoid
-			#	unique	( 6, 6, 7)
-			if( 1<sum( aFStep[c(1,3)]*c(1,1)==aFStep[c(2,6)] ) ){	surviveFlg[idx]<-FALSE	;next }
-			if( fCutU.hasPtn(c( 6,6,7 ),aFStep) ){	surviveFlg[idx]<-FALSE	;next }
+			if( 1<sum( aFStep[ 4 ]*c(2,4)==aFStep[c(1,5)] ) ) {	surviveFlg[idx]<-FALSE	;next }
 
 		aFStep <- aZoid - stdMILst[["nextCStepBin"]]$lastZoid
-			#	unique	( 1*, 1*, 3, 12) ( 1, 1*, 3*, 12)
-			#	unique	[1:4](  2,  9*, 13*,  12)
-			if( fCutU.hasPtn(c(  1, 1, 3, 12 ),aFStep,thld=3,fixIdx=1:2) ){	surviveFlg[idx]<-FALSE	;next }
-			if( fCutU.hasPtn(c(  1, 1, 3, 12 ),aFStep,thld=3,fixIdx=2:3) ){	surviveFlg[idx]<-FALSE	;next }
-			if( all(aFStep[2:3]==c( 9,13)) && any(aFStep[c(1,4)]==c( 2,12))) {	surviveFlg[idx]<-FALSE	;next }
+			if( 1<sum( aFStep[c(4,6)]*c(-2,-1)==aFStep[c(1,2)] ) ) {	surviveFlg[idx]<-FALSE	;next }
+			#	unique	(-13,-16, 3*, 1*)
+			if( fCutU.hasPtn(c( -13,-16, 3, 1 ),aFStep,thld=3,fixIdx=3:4 ) ){	surviveFlg[idx]<-FALSE	;next }
 
 		aFStep <- aZoid - stdMILst[["nextFStepBin"]]$lastZoid
+			if( 1<sum( aFStep[c(2,5)]*c(-2, 1)==aFStep[c(3,6)] ) ) {	surviveFlg[idx]<-FALSE	;next }
+			if( 1<sum( aFStep[c(2,4)]*c(-2,-2)==aFStep[c(3,1)] ) ) {	surviveFlg[idx]<-FALSE	;next }
+			if( 1<sum( aFStep[c(5,4)]*c( 1,-2)==aFStep[c(6,1)] ) ) {	surviveFlg[idx]<-FALSE	;next }
 
 		aFStep <- aZoid - stdMILst[["nextColVal_1"]]$lastZoid
-			if( 1<sum( aFStep[ 2 ]*c(1,1,1)==aFStep[c(3,4,5)] ) ){	surviveFlg[idx]<-FALSE	;next }
-			if( 1<sum( aFStep[c(2,3)]*c(1,1)==aFStep[c(4,5)] ) ){	surviveFlg[idx]<-FALSE	;next }
-			if( 1<sum( aFStep[c(2,4)]*c(1,1)==aFStep[c(3,5)] ) ){	surviveFlg[idx]<-FALSE	;next }
-			#	unique	(11, 4, 2)
-			#	unique	[1:3]( -3, -3, 0)
-			if( fCutU.hasPtn(c( 11, 4, 2 ),aFStep) ){	surviveFlg[idx]<-FALSE	;next }
-			if( all(aFStep[1:3]==c(-3, -3, 0)) ) {	surviveFlg[idx]<-FALSE	;next }
+			#	unique	( 2, -3, -6 )
+			if( fCutU.hasPtn(c(  2,-3, 6 ),aFStep) ){	surviveFlg[idx]<-FALSE	;next }
 
 		aFStep <- aZoid - stdMILst[["nextColVal_2"]]$lastZoid
-			if( 1<sum( aFStep[ 5 ]*c(-4, 3, 8)==aFStep[c(1,2,3)] ) ){	surviveFlg[idx]<-FALSE	;next }
+			if( 1<sum( aFStep[ 1 ]*c(3,3,3)==aFStep[c(2,3,6)] ) ) {	surviveFlg[idx]<-FALSE	;next }
+			if( 1<sum( aFStep[ 2 ]*c(1,1)==aFStep[c(3,6)] ) ) {	surviveFlg[idx]<-FALSE	;next }
+			if( 1<sum( aFStep[c(1,2)]*c(3,1)==aFStep[c(3,6)] ) ) {	surviveFlg[idx]<-FALSE	;next }
+			#	unique	(-10,NA, -8, -9 )
+			if( fCutU.hasPtn(c( -10,NA, -8, -9 ),aFStep) ){	surviveFlg[idx]<-FALSE	;next }
 
 		aFStep <- aZoid - stdMILst[["nextColVal_3"]]$lastZoid
-			if( 1<sum( aFStep[c(1,2)]*c(-2, 1)==aFStep[c(6,5)] ) ){	surviveFlg[idx]<-FALSE	;next }
-			#	unique	( -4,-6*,-6*,16,NA,-11) (-11, -3, -5) ( -2*,-5*,-20, 3)
-			#	unique	[2:6]( -3*, -2*, -5,-13,  2)
-			if( fCutU.hasPtn(c(  -4,-6,-6,16,NA,-11 ),aFStep,thld=3,fixIdx=2:3 ) ){	surviveFlg[idx]<-FALSE	;next }
-			if( fCutU.hasPtn(c( -11, -3, -5 ),aFStep) ){	surviveFlg[idx]<-FALSE	;next }
-			if( fCutU.hasPtn(c(  -2,-5,-20, 3 ),aFStep,thld=3,fixIdx=1:2 ) ){	surviveFlg[idx]<-FALSE	;next }
-			if( all(aFStep[2:3]==c(-3,-2)) && any(aFStep[c(4,5,6)]==c(-5,-13, 2))) {	surviveFlg[idx]<-FALSE	;next }
 
 		aFStep <- aZoid - stdMILst[["nextColVal_4"]]$lastZoid
-			if( 1<sum( aFStep[c(1,3)]*c(1,4)==aFStep[c(2,5)] ) ){	surviveFlg[idx]<-FALSE	;next }
-			#	unique	(  9*, 6*,14, 3, 8) (  1,12, 6*, 9*,14, 1)
-			#	unique	[2:6](  5*, 9*, 6,10, 7)
-			if( fCutU.hasPtn(c(  9, 6,14, 3, 8 ),aFStep,thld=3,fixIdx=1:2 ) ){	surviveFlg[idx]<-FALSE	;next }
-			if( fCutU.hasPtn(c(  1,12, 6, 9,14, 1 ),aFStep,thld=3,fixIdx=3:4 ) ){	surviveFlg[idx]<-FALSE	;next }
-			if( all(aFStep[2:3]==c(5,9)) && any(aFStep[4:6]==c( 6,10, 7))) {	surviveFlg[idx]<-FALSE	;next }
+			if( 1<sum( aFStep[c(5,6)]*c(1,2)==aFStep[c(3,1)] ) ) {	surviveFlg[idx]<-FALSE	;next }
+			#	unique	(  4*,  6*, -14, -15 ) ( 9,14,15 )
+			#	unique	[]( 10,  4*,  6*,  0,  6,  5)  [3:6](  1,  4*,  6*, 14 )
+			if( fCutU.hasPtn(c(  4,  6, -14, -15 ),aFStep,thld=3,fixIdx=1:2) ){	surviveFlg[idx]<-FALSE	;next }
+			if( fCutU.hasPtn(c(  9,14,15 ),aFStep) ){	surviveFlg[idx]<-FALSE	;next }
+			if( all(aFStep[2:3]==c(4,6)) && any(aFStep[c(1,4,5,6)]==c(10, 0, 6, 5))) {	surviveFlg[idx]<-FALSE	;next }
+			if( all(aFStep[4:5]==c(4,6)) && any(aFStep[c(3,6)]==c( 1,14))) {	surviveFlg[idx]<-FALSE	;next }
 
 		aFStep <- aZoid - stdMILst[["nextColVal_5"]]$lastZoid
+			if( 1<sum( aFStep[ 2 ]*c(1,1)==aFStep[c(3,4)] ) ) {	surviveFlg[idx]<-FALSE	;next }
+			if( 1<sum( aFStep[c(1,2)]*c(-1, 1)==aFStep[c(5,3)] ) ) {	surviveFlg[idx]<-FALSE	;next }
+			if( 1<sum( aFStep[c(1,2)]*c(-1, 1)==aFStep[c(5,4)] ) ) {	surviveFlg[idx]<-FALSE	;next }
 
 		aFStep <- aZoid - stdMILst[["nextColVal_6"]]$lastZoid
-			#	unique	( 15,NA, 1*, 2*,11 ) (5, 4, 5)
-			#	unique	[4:6]( 7,-3,-8)
-			if( fCutU.hasPtn(c( 15,NA, 1, 2,11 ),aFStep,thld=3,fixIdx=3:4) ){	surviveFlg[idx]<-FALSE	;next }
-			if( fCutU.hasPtn(c( 5, 4, 5 ),aFStep) ){	surviveFlg[idx]<-FALSE	;next }
-			if( all(aFStep[4:6]==c( 7,-3,-8)) ) {	surviveFlg[idx]<-FALSE	;next }
+			if( 1<sum( aFStep[ 5 ]*c(3,1)==aFStep[c(1,3)] ) ) {	surviveFlg[idx]<-FALSE	;next }
+			if( 1<sum( aFStep[ 4 ]*c(4,4)==aFStep[c(2,6)] ) ) {	surviveFlg[idx]<-FALSE	;next }
+			if( 1<sum( aFStep[c(2,3)]*c(1,1)==aFStep[c(6,5)] ) ) {	surviveFlg[idx]<-FALSE	;next }
+			# if( 1<sum( aFStep[c(2,3)]*c(3,4)==aFStep[c(1,2)] ) ) {	surviveFlg[idx]<-FALSE	;next }
 
 		#	if( fCutU.hasPtn(c( ,, ),aFStep) ){	surviveFlg[idx]<-FALSE	;next }
 		#	if( all(aFStep[:]==c(,)) && any(aFStep[c(,)]==c(,))) {	surviveFlg[idx]<-FALSE	;next }
@@ -3639,7 +3658,7 @@ rmvFV3 <- function( gEnv ,allIdxF ){
 	return( allIdxF )
 }	# rmvFV3()
 
-# UNdone		fCut.basic() 사용
+# done		fCut.basic() 사용
 rmvQuo10 <- function( gEnv ,allIdxF ){
 
     initSize <- length(allIdxF)
@@ -3652,51 +3671,56 @@ rmvQuo10 <- function( gEnv ,allIdxF ){
 
 		# if( all(quoSize==c( ,,, )) ){	surviveFlg[idx]<-FALSE	;next }
 
-		# fCutCnt.nextRebNum
-			#      5 12 14 32 34 42    | 7  2 18  2  8 |                        |1 2 0 2 1 |1 2 2 1
-			#     19 28 31 38 43 44    | 9  3  7  5  1 | 14  16  17   6   9   2 |0 1 1 2 2 |1 1 2 2
-			#      3  5  8 19 38 42(2) | 2  3 11 19  4 |-16 -23 -23 -19  -5  -2 |3 1 0 1 1 |3 1 1 1
-			#      8 21 28 31 36 45(1) |13  7  3  5  9 |  5  16  20  12  -2   3 |1 0 2 2 1 |1 2 2 1
-			#      2  4  5 17 27 32    | 2  1 12 10  5 | -6 -17 -23 -14  -9 -13 |3 1 1 1 0 |3 1 1 1
-			#      8 10 13 36 37 40    | 2  3 23  1  3 |  6   6   8  19  10   8 |1 2 0 2 1 |1 2 2 1
+		# fCutCnt.basic
+			#     16 20 24 28 36 39    | 4  4  4  8  3 |                        |0 1 3 2 0 |1 3 2
+			#     14 18 22 26 31 44    | 4  4  4  5 13 | -2  -2  -2  -2  -5   5 |0 2 2 1 1 |2 2 1 1
+			#     11 17 28 30 33 35    | 6 11  2  3  2 | -3  -1   6   4   2  -9 |0 2 1 3 0 |2 1 3
+			#      2  8 23 26 27 44    | 6 15  3  1 17 | -9  -9  -5  -4  -6   9 |2 0 3 0 1 |2 3 1
+			#     20 25 31 32 36 43    | 5  6  1  4  7 | 18  17   8   6   9  -1 |0 0 2 3 1 |2 3 1
+			#      8 15 17 19 43 44(1) | 7  2  2 24  1 |-12 -10 -14 -13   7   1 |1 3 0 0 2 |1 3 2
+				#	unique	(0 2 3 1) rebind as reverse. (2 1 3 0) reverse again?
+			if( all(quoSize[2:5]==c(0,3,1,2)) ){	surviveFlg[idx]<-FALSE	;next }
+
+		# fCutCnt.nextRebNum (zw)
+			#      5  7 20 22 37 42    | 2 13  2 15  5 |                        |2 0 2 1 1 |2 2 1 1
+			#      1  2  4 23 31 34    | 1  2 19  8  3 | -4  -5 -16   1  -6  -8 |3 0 1 2 0 |3 1 2
+			#     10 20 33 36 41 44    |10 13  3  5  3 |  9  18  29  13  10  10 |0 1 1 2 2 |1 1 2 2
+			#      7 10 17 29 33 44(3) | 3  7 12  4 11 | -3 -10 -16  -7  -8   0 |1 2 1 1 1 |1 2 1 1 1
+			#     15 27 33 35 43 45(1) |12  6  2  8  2 |  8  17  16   6  10   1 |0 1 1 2 2 |1 1 2 2
+			#     11 24 32 33 35 40(2) |13  8  1  2  5 | -4  -3  -1  -2  -8  -5 |0 1 1 3 1 |1 1 3 1
+				#	unique	(0 1 1 2 2) rebind. ban (0 1 1 2 2),(2 0 2 1 1)
 			if( all(quoSize==c(0,1,1,2,2)) ){	surviveFlg[idx]<-FALSE	;next }
+			if( all(quoSize==c(2,0,2,1,1)) ){	surviveFlg[idx]<-FALSE	;next }
 
-		# fCutCnt.nextColVal_1
-		#      2  7 19 25 29 36    | 5 12  6  4  7 |                        |2 1 2 1 0 |2 1 2 1
-		#     10 15 21 35 38 43    | 5  6 14  3  5 |  8   8   2  10   9   7 |0 2 1 2 1 |2 1 2 1
-		#     12 17 23 34 42 45    | 5  6 11  8  3 |  2   2   2  -1   4   2 |0 2 1 1 2 |2 1 1 2
-		#     17 21 25 26 27 36(1) | 4  4  1  1  9 |  5   4   2  -8 -15  -9 |0 1 4 1 0 |1 4 1
-		#      9 14 17 33 36 38(2) | 5  3 16  3  2 | -8  -7  -8   7   9   2 |1 2 0 3 0 |1 2 3
-		#      5 11 14 30 33 38(3) | 6  3 16  3  5 | -4  -3  -3  -3  -3   0 |1 2 0 3 0 |1 2 3
-			if( all(quoSize==c(1,2,0,3,0)) ){	surviveFlg[idx]<-FALSE	;next }
-			if( all(quoSize==c(0,1,4,1,0)) ){	surviveFlg[idx]<-FALSE	;next }
+		# fCutCnt.nextCStepBin
+			#      7 22 24 31 34 36    |15  2  7  3  2 |                        |1 0 2 3 0 |1 2 3
+			#     10 15 21 35 38 43    | 5  6 14  3  5 |  3  -7  -3   4   4   7 |0 2 1 2 1 |2 1 2 1
+			#     17 25 28 37 43 44(1) | 8  3  9  6  1 |  7  10   7   2   5   1 |0 1 2 1 2 |1 2 1 2
+			#      5 10 13 21 39 43(1) | 5  3  8 18  4 |-12 -15 -15 -16  -4  -1 |1 2 1 1 1 |1 2 1 1 1
+			#     13 16 24 25 33 36(1) | 3  8  1  8  3 |  8   6  11   4  -6  -7 |0 2 2 2 0 |2 2 2
+			#      5 13 17 29 34 39(1) | 8  4 12  5  5 | -8  -3  -7   4   1   3 |1 2 1 2 0 |1 2 1 2
+					#	unique (1 2 1 2) rebind. ban (2 1 1 1)
+			if( all(quoSize[1:4]==c(2,1,1,1)) ){	surviveFlg[idx]<-FALSE	;next }
 
-		# fCutCnt.nextColVal_3
-		#      4 12 24 33 38 45    | 8 12  9  5  7 |                        |1 1 1 2 1 |1 1 1 2 1
-		#      4  8 18 19 39 44(1) | 4 10  1 20  5 |  0  -4  -6 -14   1  -1 |2 2 0 1 1 |2 2 1 1
-		#      2  3 12 20 27 38    | 1  9  8  7 11 | -2  -5  -6   1 -12  -6 |2 1 2 1 0 |2 1 2 1
-		#      4  6 15 25 26 33    | 2  9 10  1  7 |  2   3   3   5  -1  -5 |2 1 2 1 0 |2 1 2 1
-		#      1  4 10 12 28 45(1) | 3  6  2 16 17 | -3  -2  -5 -13   2  12 |2 2 1 0 1 |2 2 1 1
-		#      6 10 18 25 34 35(1) | 4  8  7  9  1 |  5   6   8  13   6 -10 |1 2 1 2 0 |1 2 1 2
-			if( all(quoSize==c(1,2,1,2,0)) ){	surviveFlg[idx]<-FALSE	;next }
+		# fCutCnt.nextColVal_2
+			#     11 12 29 33 38 42    | 1 17  4  5  4 |                        |0 2 1 2 1 |2 1 2 1
+			#      3 10 23 24 31 39    | 7 13  1  7  8 | -8  -2  -6  -9  -7  -3 |1 1 2 2 0 |1 1 2 2
+			#      5  6 13 16 27 28    | 1  7  3 11  1 |  2  -4 -10  -8  -4 -11 |2 2 2 0 0 |2 2 2
+			#      6  7 18 19 30 38(1) | 1 11  1 11  8 |  1   1   5   3   3  10 |2 2 0 2 0 |2 2 2
+			#     16 25 33 38 40 45(1) | 9  8  5  2  5 | 10  18  15  19  10   7 |0 1 1 2 2 |1 1 2 2
+			#     13 16 24 25 33 36(3) | 3  8  1  8  3 | -3  -9  -9 -13  -7  -9 |0 2 2 2 0 |2 2 2
+					#	(2 2 2 0) rebind. ban (2 2 0 2)
+			if( all(quoSize[2:5]==c(2,2,0,2)) ){	surviveFlg[idx]<-FALSE	;next }
 
 		# fCutCnt.nextColVal_4
-			#      1 10 13 26 32 36    | 9  3 13  6  4 |                        |1 2 1 2 0 |1 2 1 2
-			#      3 12 13 18 31 32(2) | 9  1  5 13  1 |  2   2   0  -8  -1  -4 |1 3 0 2 0 |1 3 2
-			#     12 18 19 29 31 39(3) | 6  1 10  2  8 |  9   6   6  11   0   7 |0 3 1 2 0 |3 1 2
-			#      7  9 24 29 34 38(1) | 2 15  5  5  4 | -5  -9   5   0   3  -1 |2 0 2 2 0 |2 2 2
-			#     12 18 30 39 41 42    | 6 12  9  2  1 |  5   9   6  10   7   4 |0 2 0 2 2 |2 2 2
-			#     11 17 28 30 33 35(1) | 6 11  2  3  2 | -1  -1  -2  -9  -8  -7 |0 2 1 3 0 |2 1 3
-			if( all(quoSize[2:5]==c(0,2,1,3)) ){	surviveFlg[idx]<-FALSE	;next }
-
-		# fCutCnt.nextColVal_5 (zw)
-			#     23 27 28 38 42 43    | 4  1 10  4  1 |                        |0 0 3 1 2 |3 1 2
-			#      6  7 11 17 33 44    | 1  4  6 16 11 |-17 -20 -17 -21  -9   1 |2 2 0 1 1 |2 2 1 1
-			#     11 16 18 19 24 39(1) | 5  2  1  5 15 |  5   9   7   2  -9  -5 |0 4 1 1 0 |4 1 1
-			#      2 10 11 19 35 39(3) | 8  1  8 16  4 | -9  -6  -7   0  11   0 |1 3 0 2 0 |1 3 2
-			#     12 18 19 29 31 39(2) | 6  1 10  2  8 | 10   8   8  10  -4   0 |0 3 1 2 0 |3 1 2
-			#     12 18 24 26 39 40(3) | 6  6  2 13  1 |  0   0   5  -3   8   1 |0 2 2 1 1 |2 2 1 1
-			if( all(quoSize[1:4]==c(4,1,1,0)) ){	surviveFlg[idx]<-FALSE	;next }
+			#      3  6 10 30 34 37    | 3  4 20  4  3 |                        |2 1 0 3 0 |2 1 3
+			#      3  4 16 20 28 44(1) | 1 12  4  8 16 |  0  -2   6 -10  -6   7 |2 1 2 0 1 |2 1 2 1
+			#      6 18 31 34 38 45    |12 13  3  4  7 |  3  14  15  14  10   1 |1 1 0 3 1 |1 1 3 1
+			#      2  6  7 12 19 45(2) | 4  1  5  7 26 | -4 -12 -24 -22 -19   0 |3 2 0 0 1 |3 2 1
+			#      3 10 13 26 34 38    | 7  3 13  8  4 |  1   4   6  14  15  -7 |1 2 1 2 0 |1 2 1 2
+			#     13 14 19 26 40 43(2) | 1  5  7 14  3 | 10   4   6   0   6   5 |0 3 1 0 2 |3 1 2
+					#	unique (2 1 2 0) rebind.  ban (3 2 0 0)
+			if( all(quoSize[2:5]==c(3,2,0,0)) ){	surviveFlg[idx]<-FALSE	;next }
 
 		# fCutCnt.
 			# if( all(quoSize==c(,,,,)) ){	surviveFlg[idx]<-FALSE	;next }
@@ -3711,20 +3735,20 @@ rmvQuo10 <- function( gEnv ,allIdxF ){
 
 }	# rmvQuo10()
 
-# UNdone		fCut.basic() 사용
+# done		fCut.basic() 사용
 rmvZW <- function( gEnv ,allIdxF ){
 
 	initSize <- length(allIdxF)
 	# fCutCnt.nextQuo10
 
 	# Gold : 발생하더라도 이전에 발생한 영역에서 재발되지는 않겠지...
-	#	"nextRebNum( 37 )","nextColVal_1(  )","nextColVal_5( 29,26 )","nextFStepBin(  )"
+	#	"nextRebNum( 28,37 )","nextColVal_1(  )","nextColVal_5(  )","nextFStepBin( )"
 	zw <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function(aZoid){aZoid[6]-aZoid[1]})
-	allIdxF <- allIdxF[!( zw%in%c( 37,29,26 ) )]
+	allIdxF <- allIdxF[!( zw%in%c( 28,37 ) )]
 
-	# unique	nextBin
-	zw <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function(aZoid){aZoid[6]-aZoid[1]})
-	allIdxF <- allIdxF[!( zw%in%c( 29 ) )]
+	# unique
+	# zw <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function(aZoid){aZoid[6]-aZoid[1]})
+	# allIdxF <- allIdxF[!( zw%in%c( 29 ) )]
 
 	cat(sprintf("  survive %d from %d \n",length(allIdxF),initSize))
 	return( allIdxF )
