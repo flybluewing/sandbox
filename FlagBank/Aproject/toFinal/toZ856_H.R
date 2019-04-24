@@ -2621,6 +2621,7 @@ fCutCnt.nextColVal_6 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 			if( aCStep[3]%in%c( 6       ) ) cnt<-cnt+1
 			if( aCStep[4]%in%c( 3, 6, 5 ) ) cnt<-cnt+1
 			if( aCStep[5]%in%c(         ) ) cnt<-cnt+1
+			#	unique	[4]( 5 )
 
 			cnt.w1 <- cccObj$scoreMtx[idx,"w1CStep.cnt"]	# fv in cStep
 			if( fCutU.hasPtn(c(  4, 3 ),aCStep) )	cnt.w1<-cnt.w1+1
@@ -2938,136 +2939,114 @@ rmvRaw <- function( gEnv ,allIdxF ){
 			if( 2<sum(aZoid[c( 5,2,6,3 )]==c( 43,12,38,14 )) ){	surviveFlg[idx]<-FALSE	;next }
 
 		#	bin pattern
-		if( all(aBin[ -4]==c( 0,0,1,1,0 )) ){	surviveFlg[idx]<-FALSE	;next }	# nextRebNum
-		if( all(aBin[ -4]==c( 0,1,0,0,1 )) ){	surviveFlg[idx]<-FALSE	;next }	# nextRebNum symm
-		if( all(aBin[ -5]==c( 0,1,0,0,1 )) ){	surviveFlg[idx]<-FALSE	;next }	# nextFStepBin
-		if( all(aBin[ -5]==c( 0,0,0,0,1 )) ){	surviveFlg[idx]<-FALSE	;next }	# nextFStepBin symm
-		if( all(aBin[ -4]==c( 1,0,1,0,1 )) ){	surviveFlg[idx]<-FALSE	;next }	# nextColVal_2
-		if( all(aBin[ -4]==c( 0,0,0,1,0 )) ){	surviveFlg[idx]<-FALSE	;next }	# nextColVal_2	symm
-		if( all(aBin[1:6]==c( 0,0,0,0,1,0 )) ){	surviveFlg[idx]<-FALSE	;next }	# nextColVal_5
+		# if( all(aBin[ -4]==c( 0,0,1,1,0 )) ){	surviveFlg[idx]<-FALSE	;next }	# nextRebNum
+		# if( all(aBin[ -4]==c( 0,1,0,0,1 )) ){	surviveFlg[idx]<-FALSE	;next }	# nextRebNum symm
+		# if( all(aBin[ -5]==c( 0,1,0,0,1 )) ){	surviveFlg[idx]<-FALSE	;next }	# nextFStepBin
+		# if( all(aBin[ -5]==c( 0,0,0,0,1 )) ){	surviveFlg[idx]<-FALSE	;next }	# nextFStepBin symm
+		# if( all(aBin[ -4]==c( 1,0,1,0,1 )) ){	surviveFlg[idx]<-FALSE	;next }	# nextColVal_2
+		# if( all(aBin[ -4]==c( 0,0,0,1,0 )) ){	surviveFlg[idx]<-FALSE	;next }	# nextColVal_2	symm
+		# if( all(aBin[1:6]==c( 0,0,0,0,1,0 )) ){	surviveFlg[idx]<-FALSE	;next }	# nextColVal_5
 
 		# fCutCnt.basic()
-			#      1  2 16 22 38 39    | 1 14  6 16  1 |                        |2 1 1 2 0 |2 1 1 2
-			#      5 13 17 29 34 39(1) | 8  4 12  5  5 |  4  11   1   7  -4   0 |1 2 1 2 0 |1 2 1 2
-			#     16 20 24 28 36 39(1) | 4  4  4  8  3 | 11   7   7  -1   2   0 |0 1 3 2 0 |1 3 2
+			#     16 20 24 28 36 39    | 4  4  4  8  3 |                        |0 1 3 2 0 |1 3 2
 			#     14 18 22 26 31 44    | 4  4  4  5 13 | -2  -2  -2  -2  -5   5 |0 2 2 1 1 |2 2 1 1
 			#     11 17 28 30 33 35    | 6 11  2  3  2 | -3  -1   6   4   2  -9 |0 2 1 3 0 |2 1 3
 			#      2  8 23 26 27 44    | 6 15  3  1 17 | -9  -9  -5  -4  -6   9 |2 0 3 0 1 |2 3 1
-			if( 1<sum( aZoid[ 1 ]*c(4,13,22)==aZoid[c(2,4,6)] ) ){	surviveFlg[idx]<-FALSE	;next }
-			if( all(aZoid[c(4,6)]==c(28,29)) ){	surviveFlg[idx]<-FALSE	;next }
-			if( all(aZoid[c(4,6)]==c(30,35)) ){	surviveFlg[idx]<-FALSE	;next }
-			if( all(aZoid[c(4,6)]==c(26,44)) ){	surviveFlg[idx]<-FALSE	;next }
-			if( all(aZoid[c(1,6)]==c(16,39)) ){	surviveFlg[idx]<-FALSE	;next }	# zw
+			#     20 25 31 32 36 43    | 5  6  1  4  7 | 18  17   8   6   9  -1 |0 0 2 3 1 |2 3 1
+			#      8 15 17 19 43 44(1) | 7  2  2 24  1 |-12 -10 -14 -13   7   1 |1 3 0 0 2 |1 3 2
+			# if( 1<sum( aZoid[c(,)]*c(,)==aZoid[c(,)] ) ){	surviveFlg[idx]<-FALSE	;next }
+			# if( all(aRem[c(,)]==aRem[c(,)]) ){	surviveFlg[idx]<-FALSE	;next }
+			# if( all(aZoid[c(,)]==c(,)) ){	surviveFlg[idx]<-FALSE	;next }
 
 		# fCutCnt.nextZW
-			#      2 10 16 19 34 45    | 8  6  3 15 11 |                        |1 3 0 1 1 |1 3 1 1
-			#      2  6 13 16 29 30(2) | 4  7  3 13  1 |  0  -4  -3  -3  -5 -15 |2 2 1 1 0 |2 2 1 1
-			#      7  9 12 14 23 28    | 2  3  2  9  5 |  5   3  -1  -2  -6  -2 |2 2 2 0 0 |2 2 2
-			#      9 30 34 35 39 41(1) |21  4  1  4  2 |  2  21  22  21  16  13 |1 0 0 4 1 |1 4 1
-			#      6 10 17 18 21 29    | 4  7  1  3  8 | -3 -20 -17 -17 -18 -12 |1 3 2 0 0 |1 3 2
-			#     11 30 34 35 42 44    |19  4  1  7  2 |  5  20  17  17  21  15 |0 1 0 3 2 |1 3 2
+			#      1 28 35 41 43 44    |27  7  6  2  1 |                        |1 0 1 1 3 |1 1 1 3
+			#      2 11 17 18 21 27    | 9  6  1  3  6 |  1 -17 -18 -23 -22 -17 |1 3 2 0 0 |1 3 2
+			#      8 12 19 21 31 35(1) | 4  7  2 10  4 |  6   1   2   3  10   8 |1 2 1 2 0 |1 2 1 2
+			#      4  6 15 25 26 33    | 2  9 10  1  7 | -4  -6  -4   4  -5  -2 |2 1 2 1 0 |2 1 2 1
+			#     13 14 19 26 40 43(1) | 1  5  7 14  3 |  9   8   4   1  14  10 |0 3 1 0 2 |3 1 2
+			#      1  9 11 14 26 28(2) | 8  2  3 12  2 |-12  -5  -8 -12 -14 -15 |2 2 2 0 0 |2 2 2
+			# if( 1<sum( aZoid[c(,)]*c(,)==aZoid[c(,)] ) ){	surviveFlg[idx]<-FALSE	;next }
+			# if( all(aRem[c(,)]==aRem[c(,)]) ){	surviveFlg[idx]<-FALSE	;next }
+			# if( all(aZoid[c(,)]==c(,)) ){	surviveFlg[idx]<-FALSE	;next }
 
 		# fCutCnt.nextQuo10
-			#      1  8 17 34 39 45    | 7  9 17  5  6 |                        |2 1 0 2 1 |2 1 2 1
-			#      3  4  9 24 25 33    | 1  5 15  1  8 |  2  -4  -8 -10 -14 -12 |3 0 2 1 0 |3 2 1
-			#      1  7 22 33 37 40(1) | 6 15 11  4  3 | -2   3  13   9  12   7 |2 0 1 2 1 |2 1 2 1
-			#      6  7 19 21 41 43(1) | 1 12  2 20  2 |  5   0  -3 -12   4   3 |2 1 1 0 2 |2 1 1 2
-			#     11 30 34 35 42 44    |19  4  1  7  2 |  5  23  15  14   1   1 |0 1 0 3 2 |1 3 2
-			#     16 25 33 38 40 45    | 9  8  5  2  5 |  5  -5  -1   3  -2   1 |0 1 1 2 2 |1 1 2 2
+			#      5  6 11 14 21 41    | 1  5  3  7 20 |                        |2 2 1 0 1 |2 2 1 1
+			#      2  6  7 12 19 45(1) | 4  1  5  7 26 | -3   0  -4  -2  -2   4 |3 2 0 0 1 |3 2 1
+			#     14 20 23 31 37 38    | 6  3  8  6  1 | 12  14  16  19  18  -7 |0 1 2 3 0 |1 2 3
+			#      2 21 28 38 42 45(1) |19  7 10  4  3 |-12   1   5   7   5   7 |1 0 2 1 2 |1 2 1 2
+			#     13 14 19 26 40 43    | 1  5  7 14  3 | 11  -7  -9 -12  -2  -2 |0 3 1 0 2 |3 1 2
+			#     14 18 22 26 31 44(2) | 4  4  4  5 13 |  1   4   3   0  -9   1 |0 2 2 1 1 |2 2 1 1
+			# if( 1<sum( aZoid[c(,)]*c(,)==aZoid[c(,)] ) ){	surviveFlg[idx]<-FALSE	;next }
+			# if( all(aRem[c(,)]==aRem[c(,)]) ){	surviveFlg[idx]<-FALSE	;next }
+			# if( all(aZoid[c(,)]==c(,)) ){	surviveFlg[idx]<-FALSE	;next }
 
 		# fCutCnt.nextBin
-			#      2 16 17 32 39 45    |14  1 15  7  6 |                        |1 2 0 2 1 |1 2 2 1
-			#      5  6 11 17 38 44(1) | 1  5  6 21  6 |  3 -10  -6 -15  -1  -1 |2 2 0 1 1 |2 2 1 1
-			#      7  8 20 29 33 38(1) | 1 12  9  4  5 |  2   2   9  12  -5  -6 |2 0 2 2 0 |2 2 2
-			#      2 10 16 19 34 45    | 8  6  3 15 11 | -5   2  -4 -10   1   7 |1 3 0 1 1 |1 3 1 1
-			#      2 11 19 25 28 32(2) | 9  8  6  3  4 |  0   1   3   6  -6 -13 |1 2 2 1 0 |1 2 2 1
-			#     15 19 21 34 41 44(1) | 4  2 13  7  3 | 13   8   2   9  13  12 |0 2 1 1 2 |2 1 1 2
-			if( all(aRem[c(3,4)]==aRem[c(5,6)]) ){	surviveFlg[idx]<-FALSE	;next }
-			if( all(aZoid[c(1,6)]==c(15,44)) ){	surviveFlg[idx]<-FALSE	;next }	# zw
-			if( all(aZoid[c(1,6)]==c( 2,32)) ){	surviveFlg[idx]<-FALSE	;next }	# zw
+			#      2  3 12 20 27 38    | 1  9  8  7 11 |                        |2 1 2 1 0 |2 1 2 1
+			#      2  6 13 16 29 30(1) | 4  7  3 13  1 |  0   3   1  -4   2  -8 |2 2 1 1 0 |2 2 1 1
+			#      5  9 12 30 39 43(1) | 4  3 18  9  4 |  3   3  -1  14  10  13 |2 1 0 2 1 |2 1 2 1
+			#     10 15 21 35 38 43(1) | 5  6 14  3  5 |  5   6   9   5  -1   0 |0 2 1 2 1 |2 1 2 1
+			#      5 10 13 21 39 43(3) | 5  3  8 18  4 | -5  -5  -8 -14   1   0 |1 2 1 1 1 |1 2 1 1 1
+			#     13 16 24 25 33 36(1) | 3  8  1  8  3 |  8   6  11   4  -6  -7 |0 2 2 2 0 |2 2 2
+			# if( 1<sum( aZoid[c(,)]*c(,)==aZoid[c(,)] ) ){	surviveFlg[idx]<-FALSE	;next }
+			# if( all(aRem[c(,)]==aRem[c(,)]) ){	surviveFlg[idx]<-FALSE	;next }
+			# if( all(aZoid[c(,)]==c(,)) ){	surviveFlg[idx]<-FALSE	;next }
 
 		# fCutCnt.nextRebNum
-			#      5 12 14 32 34 42    | 7  2 18  2  8 |                        |1 2 0 2 1 |1 2 2 1
-			#     19 28 31 38 43 44    | 9  3  7  5  1 | 14  16  17   6   9   2 |0 1 1 2 2 |1 1 2 2
-			#      3  5  8 19 38 42(2) | 2  3 11 19  4 |-16 -23 -23 -19  -5  -2 |3 1 0 1 1 |3 1 1 1
-			#      8 21 28 31 36 45(1) |13  7  3  5  9 |  5  16  20  12  -2   3 |1 0 2 2 1 |1 2 2 1
-			#      2  4  5 17 27 32    | 2  1 12 10  5 | -6 -17 -23 -14  -9 -13 |3 1 1 1 0 |3 1 1 1
-			#      8 10 13 36 37 40    | 2  3 23  1  3 |  6   6   8  19  10   8 |1 2 0 2 1 |1 2 2 1
-			if( all(aZoid[c(1,6)]==c( 3,42)) ){	surviveFlg[idx]<-FALSE	;next }	# zw
+			#      5  7 20 22 37 42    | 2 13  2 15  5 |                        |2 0 2 1 1 |2 2 1 1
+			#      1  2  4 23 31 34    | 1  2 19  8  3 | -4  -5 -16   1  -6  -8 |3 0 1 2 0 |3 1 2
+			#     10 20 33 36 41 44    |10 13  3  5  3 |  9  18  29  13  10  10 |0 1 1 2 2 |1 1 2 2
+			#      7 10 17 29 33 44(3) | 3  7 12  4 11 | -3 -10 -16  -7  -8   0 |1 2 1 1 1 |1 2 1 1 1
+			#     15 27 33 35 43 45(1) |12  6  2  8  2 |  8  17  16   6  10   1 |0 1 1 2 2 |1 1 2 2
+			#     11 24 32 33 35 40(2) |13  8  1  2  5 | -4  -3  -1  -2  -8  -5 |0 1 1 3 1 |1 1 3 1
+			# if( 1<sum( aZoid[c(,)]*c(,)==aZoid[c(,)] ) ){	surviveFlg[idx]<-FALSE	;next }
+			# if( all(aRem[c(,)]==aRem[c(,)]) ){	surviveFlg[idx]<-FALSE	;next }
+			# if( all(aZoid[c(,)]==c(,)) ){	surviveFlg[idx]<-FALSE	;next }
+
 
 		# fCutCnt.nextCStepBin
-			#      7  8 20 29 33 38    | 1 12  9  4  5 |                        |2 0 2 2 0 |2 2 2
-			#      7 17 19 30 36 38(2) |10  2 11  6  2 |  0   9  -1   1   3   0 |1 2 0 3 0 |1 2 3
-			#      2 10 16 19 34 45(1) | 8  6  3 15 11 | -5  -7  -3 -11  -2   7 |1 3 0 1 1 |1 3 1 1
-			#      2 11 19 25 28 32(2) | 9  8  6  3  4 |  0   1   3   6  -6 -13 |1 2 2 1 0 |1 2 2 1
-			#     15 19 21 34 41 44(1) | 4  2 13  7  3 | 13   8   2   9  13  12 |0 2 1 1 2 |2 1 1 2
-			#      3  8 16 32 34 43(1) | 5  8 16  2  9 |-12 -11  -5  -2  -7  -1 |2 1 0 2 1 |2 1 2 1
-			if( 1<sum( aZoid[ 2 ]*c(2,4)==aZoid[c(3,4)] ) ){	surviveFlg[idx]<-FALSE	;next }
+			# if( 1<sum( aZoid[c(,)]*c(,)==aZoid[c(,)] ) ){	surviveFlg[idx]<-FALSE	;next }
+			# if( all(aRem[c(,)]==aRem[c(,)]) ){	surviveFlg[idx]<-FALSE	;next }
+			# if( all(aZoid[c(,)]==c(,)) ){	surviveFlg[idx]<-FALSE	;next }
+
 
 		# fCutCnt.nextFStepBin
-			#     10 14 22 24 28 37    | 4  8  2  4  9 |                        |0 2 3 1 0 |2 3 1
-			#     13 14 17 32 41 42(1) | 1  3 15  9  1 |  3   0  -5   8  13   5 |0 3 0 1 2 |3 1 2
-			#      6  7 10 16 38 41(1) | 1  3  6 22  3 | -7  -7  -7 -16  -3  -1 |2 2 0 1 1 |2 2 1 1
-			#      5 13 17 23 28 36    | 8  4  6  5  8 | -1   6   7   7 -10  -5 |1 2 2 1 0 |1 2 2 1
-			#      4  5  6 12 25 37(1) | 1  1  6 13 12 | -1  -8 -11 -11  -3   1 |3 1 1 1 0 |3 1 1 1
-			#     14 26 32 36 39 42    |12  6  4  3  3 | 10  21  26  24  14   5 |0 1 1 3 1 |1 1 3 1
-			if( all(aRem[c(2,3)]==aRem[c(4,6)]) ){	surviveFlg[idx]<-FALSE	;next }
+			# if( 1<sum( aZoid[c(,)]*c(,)==aZoid[c(,)] ) ){	surviveFlg[idx]<-FALSE	;next }
+			# if( all(aRem[c(,)]==aRem[c(,)]) ){	surviveFlg[idx]<-FALSE	;next }
+			# if( all(aZoid[c(,)]==c(,)) ){	surviveFlg[idx]<-FALSE	;next }
+
 
 		# fCutCnt.nextColVal_1
-			#      2  7 19 25 29 36    | 5 12  6  4  7 |                        |2 1 2 1 0 |2 1 2 1
-			#     10 15 21 35 38 43    | 5  6 14  3  5 |  8   8   2  10   9   7 |0 2 1 2 1 |2 1 2 1
-			#     12 17 23 34 42 45    | 5  6 11  8  3 |  2   2   2  -1   4   2 |0 2 1 1 2 |2 1 1 2
-			#     17 21 25 26 27 36(1) | 4  4  1  1  9 |  5   4   2  -8 -15  -9 |0 1 4 1 0 |1 4 1
-			#      9 14 17 33 36 38(2) | 5  3 16  3  2 | -8  -7  -8   7   9   2 |1 2 0 3 0 |1 2 3
-			#      5 11 14 30 33 38(3) | 6  3 16  3  5 | -4  -3  -3  -3  -3   0 |1 2 0 3 0 |1 2 3
-			if( 1<sum( aZoid[c(1,2)]*c(6,3)==aZoid[c(4,5)] ) ){	surviveFlg[idx]<-FALSE	;next }
-			if( all(aZoid[c(1,6)]==c( 5,38)) ){	surviveFlg[idx]<-FALSE	;next }	# zw
-			if( all(aZoid[c(1,6)]==c(17,36)) ){	surviveFlg[idx]<-FALSE	;next }	# zw
+			# if( 1<sum( aZoid[c(,)]*c(,)==aZoid[c(,)] ) ){	surviveFlg[idx]<-FALSE	;next }
+			# if( all(aRem[c(,)]==aRem[c(,)]) ){	surviveFlg[idx]<-FALSE	;next }
+			# if( all(aZoid[c(,)]==c(,)) ){	surviveFlg[idx]<-FALSE	;next }
+
 		# fCutCnt.nextColVal_2
-			#      5 21 27 34 44 45    |16  6  7 10  1 |                        |1 0 2 1 2 |1 2 1 2
-			#     13 14 26 28 30 36    | 1 12  2  2  6 |  8  -7  -1  -6 -14  -9 |0 2 2 2 0 |2 2 2
-			#      7 22 24 31 34 36(1) |15  2  7  3  2 | -6   8  -2   3   4   0 |1 0 2 3 0 |1 2 3
-			#      2 10 12 31 33 42(1) | 8  2 19  2  9 | -5 -12 -12   0  -1   6 |1 2 0 2 1 |1 2 2 1
-			#      9 10 13 28 38 45(1) | 1  3 15 10  7 |  7   0   1  -3   5   3 |1 2 1 1 1 |1 2 1 1 1
-			#      1 16 29 33 40 45(1) |15 13  4  7  5 | -8   6  16   5   2   0 |1 1 1 1 2 |1 1 1 1 2
-			if( all(aZoid[c(1,6)]==c( 1,45)) ){	surviveFlg[idx]<-FALSE	;next }	# zw
-			if( all(aZoid[c(1,6)]==c( 2,42)) ){	surviveFlg[idx]<-FALSE	;next }	# zw
+			# if( 1<sum( aZoid[c(,)]*c(,)==aZoid[c(,)] ) ){	surviveFlg[idx]<-FALSE	;next }
+			# if( all(aRem[c(,)]==aRem[c(,)]) ){	surviveFlg[idx]<-FALSE	;next }
+			# if( all(aZoid[c(,)]==c(,)) ){	surviveFlg[idx]<-FALSE	;next }
+
 		# fCutCnt.nextColVal_3
-			#      4 12 24 33 38 45    | 8 12  9  5  7 |                        |1 1 1 2 1 |1 1 1 2 1
-			#      4  8 18 19 39 44(1) | 4 10  1 20  5 |  0  -4  -6 -14   1  -1 |2 2 0 1 1 |2 2 1 1
-			#      2  3 12 20 27 38    | 1  9  8  7 11 | -2  -5  -6   1 -12  -6 |2 1 2 1 0 |2 1 2 1
-			#      4  6 15 25 26 33    | 2  9 10  1  7 |  2   3   3   5  -1  -5 |2 1 2 1 0 |2 1 2 1
-			#      1  4 10 12 28 45(1) | 3  6  2 16 17 | -3  -2  -5 -13   2  12 |2 2 1 0 1 |2 2 1 1
-			#      6 10 18 25 34 35(1) | 4  8  7  9  1 |  5   6   8  13   6 -10 |1 2 1 2 0 |1 2 1 2
-			#	unique	: 29,44,29... zh==44 && aZoid[c(1,6)] üũ
-			if( all(aZoid[c(1,6)]==c( 1,45)) ){	surviveFlg[idx]<-FALSE	;next }	# zw
+			# if( 1<sum( aZoid[c(,)]*c(,)==aZoid[c(,)] ) ){	surviveFlg[idx]<-FALSE	;next }
+			# if( all(aRem[c(,)]==aRem[c(,)]) ){	surviveFlg[idx]<-FALSE	;next }
+			# if( all(aZoid[c(,)]==c(,)) ){	surviveFlg[idx]<-FALSE	;next }
 
 		# fCutCnt.nextColVal_4
-			#      1 10 13 26 32 36    | 9  3 13  6  4 |                        |1 2 1 2 0 |1 2 1 2
-			#      3 12 13 18 31 32(2) | 9  1  5 13  1 |  2   2   0  -8  -1  -4 |1 3 0 2 0 |1 3 2
-			#     12 18 19 29 31 39(3) | 6  1 10  2  8 |  9   6   6  11   0   7 |0 3 1 2 0 |3 1 2
-			#      7  9 24 29 34 38(1) | 2 15  5  5  4 | -5  -9   5   0   3  -1 |2 0 2 2 0 |2 2 2
-			#     12 18 30 39 41 42    | 6 12  9  2  1 |  5   9   6  10   7   4 |0 2 0 2 2 |2 2 2
-			#     11 17 28 30 33 35(1) | 6 11  2  3  2 | -1  -1  -2  -9  -8  -7 |0 2 1 3 0 |2 1 3
+			# if( 1<sum( aZoid[c(,)]*c(,)==aZoid[c(,)] ) ){	surviveFlg[idx]<-FALSE	;next }
+			# if( all(aRem[c(,)]==aRem[c(,)]) ){	surviveFlg[idx]<-FALSE	;next }
+			# if( all(aZoid[c(,)]==c(,)) ){	surviveFlg[idx]<-FALSE	;next }
+
 
 		# fCutCnt.nextColVal_5
-			#     23 27 28 38 42 43    | 4  1 10  4  1 |                        |0 0 3 1 2 |3 1 2
-			#      6  7 11 17 33 44    | 1  4  6 16 11 |-17 -20 -17 -21  -9   1 |2 2 0 1 1 |2 2 1 1
-			#     11 16 18 19 24 39(1) | 5  2  1  5 15 |  5   9   7   2  -9  -5 |0 4 1 1 0 |4 1 1
-			#      2 10 11 19 35 39(3) | 8  1  8 16  4 | -9  -6  -7   0  11   0 |1 3 0 2 0 |1 3 2
-			#     12 18 19 29 31 39(2) | 6  1 10  2  8 | 10   8   8  10  -4   0 |0 3 1 2 0 |3 1 2
-			#     12 18 24 26 39 40(3) | 6  6  2 13  1 |  0   0   5  -3   8   1 |0 2 2 1 1 |2 2 1 1
-			if( all(aZoid[c(1,2)]==c( 2,10)) ){	surviveFlg[idx]<-FALSE	;next }
-			if( all(aZoid[c(1,2)]==c(12,18)) ){	surviveFlg[idx]<-FALSE	;next }
-			if( all(aZoid[c(1,6)]==c(12,40)) ){	surviveFlg[idx]<-FALSE	;next }	# zw
+			# if( 1<sum( aZoid[c(,)]*c(,)==aZoid[c(,)] ) ){	surviveFlg[idx]<-FALSE	;next }
+			# if( all(aRem[c(,)]==aRem[c(,)]) ){	surviveFlg[idx]<-FALSE	;next }
+			# if( all(aZoid[c(,)]==c(,)) ){	surviveFlg[idx]<-FALSE	;next }
+
 
 		# fCutCnt.nextColVal_6
-			#      5  7 11 16 41 45    | 2  4  5 25  4 |                        |2 2 0 0 2 |2 2 2
-			#     10 11 12 18 24 42(1) | 1  1  6  6 18 |  5   4   1   2 -17  -3 |0 4 1 0 1 |4 1 1
-			#      2 21 28 38 42 45(1) |19  7 10  4  3 | -8  10  16  20  18   3 |1 0 2 1 2 |1 2 1 2
-			#      9 18 20 24 27 36    | 9  2  4  3  9 |  7  -3  -8 -14 -15  -9 |1 1 3 1 0 |1 1 3 1
-			#      4  7 13 29 31 39    | 3  6 16  2  8 | -5 -11  -7   5   4   3 |2 1 1 2 0 |2 1 1 2
-			#     11 17 28 30 33 35    | 6 11  2  3  2 |  7  10  15   1   2  -4 |0 2 1 3 0 |2 1 3
+			# if( 1<sum( aZoid[c(,)]*c(,)==aZoid[c(,)] ) ){	surviveFlg[idx]<-FALSE	;next }
+			# if( all(aRem[c(,)]==aRem[c(,)]) ){	surviveFlg[idx]<-FALSE	;next }
+			# if( all(aZoid[c(,)]==c(,)) ){	surviveFlg[idx]<-FALSE	;next }
+
 
 			# if( 1<sum( aZoid[c(,)]*c(,)==aZoid[c(,)] ) ){	surviveFlg[idx]<-FALSE	;next }
 			# if( all(aRem[c(,)]==aRem[c(,)]) ){	surviveFlg[idx]<-FALSE	;next }
