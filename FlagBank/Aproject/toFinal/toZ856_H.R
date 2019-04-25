@@ -3275,15 +3275,15 @@ rmvCStep <- function( gEnv ,allIdxF ){
 		aCStep <- aZoid[2:6] - aZoid[1:5]
 
 		#	a,b,b.. a?	
-			if( 2<sum(aCStep[c( 6,2,3 )]==c( 8, 1, 6 )) ){	surviveFlg[idx]<-FALSE	;next }	# a
-			if( 2<sum(aCStep[c( 6,2,3 )]==c( 4,10, 2 )) ){	surviveFlg[idx]<-FALSE	;next }	# b
+			if( 2<sum(aCStep[c( 5,2,3 )]==c( 8, 1, 6 )) ){	surviveFlg[idx]<-FALSE	;next }	# a
+			if( 2<sum(aCStep[c( 5,2,3 )]==c( 4,10, 2 )) ){	surviveFlg[idx]<-FALSE	;next }	# b
 		#	a,a,b.. a?
-			if( 2<sum(aCStep[c( 6,1,3,4,1 )]==c(  3, 5, 1, 1, 1 )) ){	surviveFlg[idx]<-FALSE	;next }	# a
-			if( 2<sum(aCStep[c( 6,1,3,4,1 )]==c( 13, 3, 4, 8, 4 )) ){	surviveFlg[idx]<-FALSE	;next }	# b
+			if( 2<sum(aCStep[c( 5,1,3,4,1 )]==c(  3, 5, 1, 1, 1 )) ){	surviveFlg[idx]<-FALSE	;next }	# a
+			if( 2<sum(aCStep[c( 5,1,3,4,1 )]==c( 13, 3, 4, 8, 4 )) ){	surviveFlg[idx]<-FALSE	;next }	# b
 		#	q,a,b,a.. q? 
-			if( 2<sum(aCStep[c( 6,3,2 )]==c(  8, 3, 2 )) ){	surviveFlg[idx]<-FALSE	;next }	# q
-			if( 2<sum(aCStep[c( 6,3,2 )]==c( 27, 1, 6 )) ){	surviveFlg[idx]<-FALSE	;next }	# a
-			if( 2<sum(aCStep[c( 6,3,2 )]==c(  3, 5,11 )) ){	surviveFlg[idx]<-FALSE	;next }	# b
+			if( 2<sum(aCStep[c( 5,3,2 )]==c(  8, 3, 2 )) ){	surviveFlg[idx]<-FALSE	;next }	# q
+			if( 2<sum(aCStep[c( 5,3,2 )]==c( 27, 1, 6 )) ){	surviveFlg[idx]<-FALSE	;next }	# a
+			if( 2<sum(aCStep[c( 5,3,2 )]==c(  3, 5,11 )) ){	surviveFlg[idx]<-FALSE	;next }	# b
 
 		# fCutCnt.basic()
 			if( 1<sum( aCStep[ 2 ]*c( 1,12)==aCStep[c(3,4)] ) )	{	surviveFlg[idx]<-FALSE	;next }
@@ -3319,7 +3319,7 @@ rmvCStep <- function( gEnv ,allIdxF ){
 			#	unique	[2:4]( 1,a,1 ) [1:4]( 8*, 1*, 8, 3 ) [c(1,5)]==c( 8, 8)
 			if( fCutU.hasPtn(c(  3, 8,NA,12 ),aCStep) ){	surviveFlg[idx]<-FALSE	;next }
 			if( fCutU.hasPtn(c( 2,3,5 ),aCStep) ){	surviveFlg[idx]<-FALSE	;next }
-			if( all(aCStep[1:5]==c( 8, 8 )) ) {	surviveFlg[idx]<-FALSE	;next }
+			if( all(aCStep[c(1,5)]==c( 8, 8 )) ) {	surviveFlg[idx]<-FALSE	;next }
 			if( all(aCStep[1:2]==c( 8, 1 )) && any(aCStep[c(3,4)]==c(8,3)) ) {	surviveFlg[idx]<-FALSE	;next }
 			if( all(aCStep[c(2,5)]==c( 3, 4 )) ) {	surviveFlg[idx]<-FALSE	;next }
 			if( all(aCStep[c(1,3)+0]==c(1,1)) ) {	surviveFlg[idx]<-FALSE	;next }
