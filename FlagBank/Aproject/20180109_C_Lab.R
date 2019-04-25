@@ -1,4 +1,4 @@
-lastH <- 854
+lastH <- 855
 # fullRstSpan, goldRstSpan ----------------------------------------------------------
 fullRstSpan <- 826:lastH
 loadObjNm <- load( sprintf("Obj_allIdxLstZ%d.save",lastH) )
@@ -18,7 +18,7 @@ build.u0.saveStdZoidFltRst <- function( pHSpan ){
     }
 } # build.u0.saveStdZoidFltRst
 
-lab.getMtxLst <- function( pHSpan ){
+lab.getMtxLst <- function( pHSpan ,pIdStr ){
 
     # rptLst ----------------------------------------------------------------------------
     rptLst <- list()
@@ -99,7 +99,8 @@ lab.getMtxLst <- function( pHSpan ){
 
     } # for(zhIdx) -- mtxInfoLst
 
-    rObj <- list( mtxInfoLst=mtxInfoLst ,hSpan=hSpan ,zhName=zhName ,phName=phName
+    rObj <- list( idStr=pIdStr
+                    ,mtxInfoLst=mtxInfoLst ,hSpan=hSpan ,zhName=zhName ,phName=phName
                     ,name.cntMtx=name.cntMtx
                     ,name.auxCntMtx=name.auxCntMtx
                     ,name.cccObj.scoreMtx=name.cccObj.scoreMtx
@@ -109,24 +110,272 @@ lab.getMtxLst <- function( pHSpan ){
                     ,name.cccObj.cStepValMtx=name.cccObj.cStepValMtx
                  )
 
+    rObj$getMtx.byPhase <- function( ){
+        # ( hist, filter )
+
+        mtxObj <- list()
+        # cntMtx/auxCntMtx --------------------------------------
+        mtxLst <- list()    # phase
+        for( phIdx in rObj$phName ){
+            rowLst <- lapply( rObj$mtxInfoLst ,function( mtxInfo ){ mtxInfo$cntMtx[phIdx,] })
+            mtxLst[[phIdx]] <-  do.call(rbind,rowLst)
+        }
+        mtxObj$cntMtxLst <- mtxLst
+
+        # scoreMtx --------------------------------------
+        mtxLst <- list()    # phase
+        for( phIdx in rObj$phName ){
+            rowLst <- lapply( rObj$mtxInfoLst ,function( mtxInfo ){ mtxInfo$scoreMtx[phIdx,] })
+            mtxLst[[phIdx]] <-  do.call(rbind,rowLst)
+        }
+        mtxObj$scoreMtxLst <- mtxLst
+
+        # scoreMtx2 --------------------------------------
+        mtxLst <- list()    # phase
+        for( phIdx in rObj$phName ){
+            rowLst <- lapply( rObj$mtxInfoLst ,function( mtxInfo ){ mtxInfo$scoreMtx2[phIdx,] })
+            mtxLst[[phIdx]] <-  do.call(rbind,rowLst)
+        }
+        mtxObj$scoreMtx2Lst <- mtxLst
+
+        # scoreMtx3 --------------------------------------
+        mtxLst <- list()    # phase
+        for( phIdx in rObj$phName ){
+            rowLst <- lapply( rObj$mtxInfoLst ,function( mtxInfo ){ mtxInfo$scoreMtx3[phIdx,] })
+            mtxLst[[phIdx]] <-  do.call(rbind,rowLst)
+        }
+        mtxObj$scoreMtx3Lst <- mtxLst
+
+        # scoreMtx4 --------------------------------------
+        mtxLst <- list()    # phase
+        for( phIdx in rObj$phName ){
+            rowLst <- lapply( rObj$mtxInfoLst ,function( mtxInfo ){ mtxInfo$scoreMtx4[phIdx,] })
+            mtxLst[[phIdx]] <-  do.call(rbind,rowLst)
+        }
+        mtxObj$scoreMtx4Lst <- mtxLst
+
+        # cStepValMtx --------------------------------------
+        mtxLst <- list()    # phase
+        for( phIdx in rObj$phName ){
+            rowLst <- lapply( rObj$mtxInfoLst ,function( mtxInfo ){ mtxInfo$cStepValMtx[phIdx,] })
+            mtxLst[[phIdx]] <-  do.call(rbind,rowLst)
+        }
+        mtxObj$cStepValMtxLst <- mtxLst
+
+        return( mtxObj )
+    }   # rObj$getMtx.byPh()
+
+    rObj$getMtx.byFilter <- function( ){
+        # ( hist, phase )
+        mtxObj <- list()
+        # cntMtx/auxCntMtx --------------------------------------
+        mtxLst <- list()    # filter
+        for( fIdx in rObj$name.cntMtx ){
+            rowLst <- lapply( rObj$mtxInfoLst ,function( mtxInfo ){ mtxInfo$cntMtx[,fIdx] })
+            mtxLst[[fIdx]] <-  do.call(rbind,rowLst)
+        }
+        mtxObj$cntMtxLst <- mtxLst
+
+        # scoreMtx --------------------------------------
+        mtxLst <- list()    # filter
+        for( fIdx in rObj$name.scoreMtx ){
+            rowLst <- lapply( rObj$mtxInfoLst ,function( mtxInfo ){ mtxInfo$scoreMtx[,fIdx] })
+            mtxLst[[fIdx]] <-  do.call(rbind,rowLst)
+        }
+        mtxObj$scoreMtxLst <- mtxLst
+
+        # scoreMtx2 --------------------------------------
+        mtxLst <- list()    # filter
+        for( fIdx in rObj$name.scoreMtx2 ){
+            rowLst <- lapply( rObj$mtxInfoLst ,function( mtxInfo ){ mtxInfo$scoreMtx2[,fIdx] })
+            mtxLst[[fIdx]] <-  do.call(rbind,rowLst)
+        }
+        mtxObj$scoreMtx2Lst <- mtxLst
+
+        # scoreMtx3 --------------------------------------
+        mtxLst <- list()    # filter
+        for( fIdx in rObj$name.scoreMtx3 ){
+            rowLst <- lapply( rObj$mtxInfoLst ,function( mtxInfo ){ mtxInfo$scoreMtx3[,fIdx] })
+            mtxLst[[fIdx]] <-  do.call(rbind,rowLst)
+        }
+        mtxObj$scoreMtx3Lst <- mtxLst
+
+        # scoreMtx4 --------------------------------------
+        mtxLst <- list()    # filter
+        for( fIdx in rObj$name.scoreMtx4 ){
+            rowLst <- lapply( rObj$mtxInfoLst ,function( mtxInfo ){ mtxInfo$scoreMtx4[,fIdx] })
+            mtxLst[[fIdx]] <-  do.call(rbind,rowLst)
+        }
+        mtxObj$scoreMtx4Lst <- mtxLst
+
+        # cStepValMtx --------------------------------------
+        mtxLst <- list()    # filter
+        for( fIdx in rObj$name.cStepValMtx ){
+            rowLst <- lapply( rObj$mtxInfoLst ,function( mtxInfo ){ mtxInfo$cStepValMtx[,fIdx] })
+            mtxLst[[fIdx]] <-  do.call(rbind,rowLst)
+        }
+        mtxObj$cStepValMtxLst <- mtxLst
+
+        return( mtxObj )
+
+    }   # rObj$getMtx.byPh()
+
+    rObj$checkLastDup <- function( flagMtx ,show=T ){
+
+        # flagMtx <- rstObj$getMtx.byPhase()$cntMtx$basic
+        # flagMtx[flagMtx==0] <- NA
+
+        rowLen <- nrow(flagMtx) ;colLen <- ncol(flagMtx)
+        rName <- rownames(flagMtx)
+        if( 2>rowLen ){
+            return(" not enough data")
+        }
+
+        rptStr <- NULL
+        for( rIdx in 2:rowLen ){
+            matCnt <- sum(flagMtx[rIdx,]==flagMtx[rIdx-1,] ,na.rm=T)
+            totCnt.cur <- colLen - sum( is.na(flagMtx[rIdx,]) )
+            totCnt.lst <- colLen - sum( is.na(flagMtx[rIdx-1,]) )
+            allMatch <- (totCnt>0) && (totCnt.cur==totCnt.lst) && (totCnt.cur==matCnt)
+            rstStr <- sprintf("%7dth row  mat %d in (%d->%d) %s %s (dist 1)"
+                            ,rIdx, matCnt, totCnt.lst, totCnt.cur
+                            , ifelse(allMatch,"*"," ") ,ifelse( matCnt>0 && !is.null(rName),rName[rIdx] ,"    " )
+                        )
+            rptStr <- c( rptStr ,rstStr )
+            if( show )
+                cat(sprintf("%s \n",rstStr))
+        }
+
+        return( rptStr )
+
+    } # rObj$checkLastDup()
+
+    rObj$checkPastDup <- function( flagMtx ,show=T ){
+
+        rowLen <- nrow(flagMtx) ;colLen <- ncol(flagMtx)
+        rName <- rownames(flagMtx)
+        if( 2>rowLen ){
+            return(" not enough data")
+        }
+
+        rptStr <- NULL
+        for( rIdx in 2:rowLen ){
+            rstStr <- sprintf("%7dth row %s",rIdx ,ifelse(!is.null(rName),rName[rIdx],"    ") )
+            if( show )
+                cat(sprintf("%s \n",rstStr))
+
+            for( tIdx in 1:(rIdx-1) ){
+                matCnt <- sum(flagMtx[rIdx,]==flagMtx[tIdx,] ,na.rm=T)
+                if( 0==matCnt )
+                    next
+
+                totCnt.cur <- colLen - sum( is.na(flagMtx[rIdx,]) )
+                totCnt.tgt <- colLen - sum( is.na(flagMtx[tIdx,]) )
+                allMatch <- (totCnt>0) && (totCnt.cur==totCnt.tgt) && (totCnt.cur==matCnt)
+                rstStr <- sprintf("    %7dth mat %d in %d->%d %s %s (dist %d)"
+                                ,tIdx, matCnt, totCnt.tgt, totCnt.cur
+                                ,ifelse(allMatch,"*"," ") ,ifelse( matCnt>0 && !is.null(rName),rName[tIdx] ,"    " )
+                                ,rIdx-tIdx
+                            )
+                rptStr <- c( rptStr ,rstStr )
+                if( show )
+                    cat(sprintf("%s \n",rstStr))
+
+            }
+        }
+
+        return( rptStr )
+
+    } # rObj$checkPastDup()
+
     return( rObj )
 
 }   # lab.getMtxLst( )
 
-rstObj <- lab.getMtxLst( goldRstSpan )
-#   rstObj <- lab.getMtxLst( grp2RstSpan )
-#   rstObj <- lab.getMtxLst( fullRstSpan )
-if( FALSE ){ # cStep, fStep 에서 w1,w2 포함 제외 -> lab.getMtxLst() 에서 처리.
-    for( nIdx in rstObj$zhName ){
-        cntMtx <- rstObj$mtxInfoLst[[nIdx]]$cntMtx
-        scoreMtx <- rstObj$mtxInfoLst[[nIdx]]$scoreMtx
-        rstObj$mtxInfoLst[[nIdx]]$cntMtx[,"cStep"] <- cntMtx[,"cStep"] - cntMtx[,"cStep.w1"] - cntMtx[,"cStep.w2"]
-        rstObj$mtxInfoLst[[nIdx]]$cntMtx[,"fStep"] <- cntMtx[,"fStep"] - cntMtx[,"fStep.w1"] - cntMtx[,"fStep.w2"]
-        rstObj$mtxInfoLst[[nIdx]]$cntMtx[,"cStep.w1"] <- cntMtx[,"cStep.w1"] - scoreMtx[,"w1CStep.cnt"]
-        rstObj$mtxInfoLst[[nIdx]]$cntMtx[,"fStep.w1"] <- cntMtx[,"fStep.w1"] - scoreMtx[,"w1FStep.cnt"]
-    }
+rstObj <- lab.getMtxLst( goldRstSpan ,pIdStr="goldRstSpan" )
+#   rstObj <- lab.getMtxLst( grp2RstSpan ,pIdStr="grp2RstSpan" )
+#   rstObj <- lab.getMtxLst( fullRstSpan ,pIdStr="fullRstSpan" )
+if( FALSE ){ 
+    # cStep, fStep 에서 w1,w2 포함 제외 -> lab.getMtxLst() 에서 처리.
+    # for( nIdx in rstObj$zhName ){
+    #     cntMtx <- rstObj$mtxInfoLst[[nIdx]]$cntMtx
+    #     scoreMtx <- rstObj$mtxInfoLst[[nIdx]]$scoreMtx
+    #     rstObj$mtxInfoLst[[nIdx]]$cntMtx[,"cStep"] <- cntMtx[,"cStep"] - cntMtx[,"cStep.w1"] - cntMtx[,"cStep.w2"]
+    #     rstObj$mtxInfoLst[[nIdx]]$cntMtx[,"fStep"] <- cntMtx[,"fStep"] - cntMtx[,"fStep.w1"] - cntMtx[,"fStep.w2"]
+    #     rstObj$mtxInfoLst[[nIdx]]$cntMtx[,"cStep.w1"] <- cntMtx[,"cStep.w1"] - scoreMtx[,"w1CStep.cnt"]
+    #     rstObj$mtxInfoLst[[nIdx]]$cntMtx[,"fStep.w1"] <- cntMtx[,"fStep.w1"] - scoreMtx[,"w1FStep.cnt"]
+    # }
 }
 
+
+checkLastDup <- function( flagMtx ,show=T ){
+
+    # flagMtx <- rstObj$getMtx.byPhase()$cntMtx$basic
+    # flagMtx[flagMtx==0] <- NA
+
+    rowLen <- nrow(flagMtx) ;colLen <- ncol(flagMtx)
+    rName <- rownames(flagMtx)
+    if( 2>rowLen ){
+        return(" not enough data")
+    }
+
+    rptStr <- NULL
+    for( rIdx in 2:rowLen ){
+        matCnt <- sum(flagMtx[rIdx,]==flagMtx[rIdx-1,] ,na.rm=T)
+        totCnt.cur <- colLen - sum( is.na(flagMtx[rIdx,]) )
+        totCnt.lst <- colLen - sum( is.na(flagMtx[rIdx-1,]) )
+        allMatch <- (totCnt>0) && (totCnt.cur==totCnt.lst) && (totCnt.cur==matCnt)
+        rstStr <- sprintf("%7dth row  mat %d in (%d->%d) %s %s (dist 1)"
+                        ,rIdx, matCnt, totCnt.lst, totCnt.cur
+                        , ifelse(allMatch,"*"," ") ,ifelse( matCnt>0 && !is.null(rName),rName[rIdx] ,"    " )
+                    )
+        rptStr <- c( rptStr ,rstStr )
+        if( show )
+            cat(sprintf("%s \n",rstStr))
+    }
+
+    return( rptStr )
+
+} # checkLastDup()
+
+
+checkPastDup <- function( flagMtx ,show=T ){
+
+    rowLen <- nrow(flagMtx) ;colLen <- ncol(flagMtx)
+    rName <- rownames(flagMtx)
+    if( 2>rowLen ){
+        return(" not enough data")
+    }
+
+    rptStr <- NULL
+    for( rIdx in 2:rowLen ){
+        rstStr <- sprintf("%7dth row %s",rIdx ,ifelse(!is.null(rName),rName[rIdx],"    ") )
+        if( show )
+            cat(sprintf("%s \n",rstStr))
+
+        for( tIdx in 1:(rIdx-1) ){
+            matCnt <- sum(flagMtx[rIdx,]==flagMtx[tIdx,] ,na.rm=T)
+            if( 0==matCnt )
+                next
+
+            totCnt.cur <- colLen - sum( is.na(flagMtx[rIdx,]) )
+            totCnt.tgt <- colLen - sum( is.na(flagMtx[tIdx,]) )
+            allMatch <- (totCnt>0) && (totCnt.cur==totCnt.tgt) && (totCnt.cur==matCnt)
+            rstStr <- sprintf("    %7dth mat %d in %d->%d %s %s (dist %d)"
+                            ,tIdx, matCnt, totCnt.tgt, totCnt.cur
+                            ,ifelse(allMatch,"*"," ") ,ifelse( matCnt>0 && !is.null(rName),rName[tIdx] ,"    " )
+                            ,rIdx-tIdx
+                        )
+            rptStr <- c( rptStr ,rstStr )
+            if( show )
+                cat(sprintf("%s \n",rstStr))
+
+        }
+    }
+
+    return( rptStr )
+
+} # checkPastDup()
 
 
 # testMtx ---------------------------------------------------------------------------
