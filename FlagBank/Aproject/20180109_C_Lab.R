@@ -178,7 +178,7 @@ lab.getMtxLst <- function( pHSpan ,pIdStr ){
 
         # scoreMtx --------------------------------------
         mtxLst <- list()    # filter
-        for( fIdx in rObj$name.scoreMtx ){
+        for( fIdx in rObj$name.cccObj.scoreMtx ){
             rowLst <- lapply( rObj$mtxInfoLst ,function( mtxInfo ){ mtxInfo$scoreMtx[,fIdx] })
             mtxLst[[fIdx]] <-  do.call(rbind,rowLst)
         }
@@ -186,7 +186,7 @@ lab.getMtxLst <- function( pHSpan ,pIdStr ){
 
         # scoreMtx2 --------------------------------------
         mtxLst <- list()    # filter
-        for( fIdx in rObj$name.scoreMtx2 ){
+        for( fIdx in rObj$name.cccObj.scoreMtx2 ){
             rowLst <- lapply( rObj$mtxInfoLst ,function( mtxInfo ){ mtxInfo$scoreMtx2[,fIdx] })
             mtxLst[[fIdx]] <-  do.call(rbind,rowLst)
         }
@@ -194,7 +194,7 @@ lab.getMtxLst <- function( pHSpan ,pIdStr ){
 
         # scoreMtx3 --------------------------------------
         mtxLst <- list()    # filter
-        for( fIdx in rObj$name.scoreMtx3 ){
+        for( fIdx in rObj$name.cccObj.scoreMtx3 ){
             rowLst <- lapply( rObj$mtxInfoLst ,function( mtxInfo ){ mtxInfo$scoreMtx3[,fIdx] })
             mtxLst[[fIdx]] <-  do.call(rbind,rowLst)
         }
@@ -202,7 +202,7 @@ lab.getMtxLst <- function( pHSpan ,pIdStr ){
 
         # scoreMtx4 --------------------------------------
         mtxLst <- list()    # filter
-        for( fIdx in rObj$name.scoreMtx4 ){
+        for( fIdx in rObj$name.cccObj.scoreMtx4 ){
             rowLst <- lapply( rObj$mtxInfoLst ,function( mtxInfo ){ mtxInfo$scoreMtx4[,fIdx] })
             mtxLst[[fIdx]] <-  do.call(rbind,rowLst)
         }
@@ -210,7 +210,7 @@ lab.getMtxLst <- function( pHSpan ,pIdStr ){
 
         # cStepValMtx --------------------------------------
         mtxLst <- list()    # filter
-        for( fIdx in rObj$name.cStepValMtx ){
+        for( fIdx in rObj$name.cccObj.cStepValMtx ){
             rowLst <- lapply( rObj$mtxInfoLst ,function( mtxInfo ){ mtxInfo$cStepValMtx[,fIdx] })
             mtxLst[[fIdx]] <-  do.call(rbind,rowLst)
         }
@@ -786,10 +786,8 @@ for( cnIdx in rstObj$name.cccObj.cStepValMtx ){
 
 #- [getMtx.byPhase()] ------------------------------------------------------------------------------
 logObj <- k.getFlogObj( "./report/testRst_byPhase.txt" )        ;logObj$fLogStr("start", pTime=T ,pAppend=F )
-
 mtxLst <- rstObj$getMtx.byPhase()	# mtxLst[["cntMtxLst"]]$basic
 
-#   cntMtx
 mtxLstName <- "cntMtxLst"
 logObj$fLogStr(sprintf("< %s > ---------------------------------------------------",mtxLstName))
 for( phIdx in rstObj$phName ){
@@ -810,7 +808,7 @@ for( phIdx in rstObj$phName ){
         logObj$fLogStr(sprintf("%s\n",paste(rptStr,collapse="\n")))
 
         logObj$fLogStr(sprintf("* colSet00 Happen: %s",paste(colSet,collapse=",")))
-        flagMtx[flagMtx==0] <- NA
+        flagMtx <- mtx[,colSet]    ;flagMtx[flagMtx==0] <- NA
         logObj$fLogStr("rstObj$checkLastDup()")
         rptStr <- rstObj$checkLastDup( flagMtx ,show=F )
         logObj$fLogStr(sprintf("%s\n",paste(rptStr,collapse="\n")))
@@ -832,7 +830,7 @@ for( phIdx in rstObj$phName ){
         logObj$fLogStr(sprintf("%s\n",paste(rptStr,collapse="\n")))
 
         logObj$fLogStr(sprintf("* colSet01 Happen: %s",paste(colSet,collapse=",")))
-        flagMtx[flagMtx==0] <- NA
+        flagMtx <- mtx[,colSet]    ;flagMtx[flagMtx==0] <- NA
         logObj$fLogStr("rstObj$checkLastDup()")
         rptStr <- rstObj$checkLastDup( flagMtx ,show=F )
         logObj$fLogStr(sprintf("%s\n",paste(rptStr,collapse="\n")))
@@ -842,6 +840,423 @@ for( phIdx in rstObj$phName ){
     }
 }
 
+mtxLstName <- "scoreMtxLst"
+logObj$fLogStr(sprintf("< %s > ---------------------------------------------------",mtxLstName))
+for( phIdx in rstObj$phName ){
+    #   reb nbor spanM quoAll quoPtn zw remH0 remH1 cStep2 cStep3 w1CStep.cnt w1FStep.cnt w1CStep.matLen w1FStep.matLen
+    logObj$fLogStr(sprintf("phName:%s",phIdx))
+    mtx <- mtxLst[[mtxLstName]][[phIdx]]
+
+    colSet <- c("nbor","spanM","quoAll","quoPtn","zw","remH0","remH1","cStep2","cStep3","w1CStep.cnt","w1FStep.cnt")
+    {   colEH  <- c( 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 )   # event horizen
+        logObj$fLogStr(sprintf("* colSet00 Event: %s(%s)",paste(colSet,collapse=","),paste(colEH,collapse=",")))
+        flagMtx <- t(apply( mtx[,colSet] ,1 ,function(rData){rData>=colEH}))
+        flagMtx[!flagMtx] <- NA
+        logObj$fLogStr("rstObj$checkLastDup()")
+        rptStr <- rstObj$checkLastDup( flagMtx ,show=F )
+        logObj$fLogStr(sprintf("%s\n",paste(rptStr,collapse="\n")))
+        logObj$fLogStr("rstObj$checkPastDup()")
+        rptStr <- rstObj$checkPastDup( flagMtx ,show=F )
+        logObj$fLogStr(sprintf("%s\n",paste(rptStr,collapse="\n")))
+
+        logObj$fLogStr(sprintf("* colSet00 Happen: %s",paste(colSet,collapse=",")))
+        flagMtx <- mtx[,colSet]    ;flagMtx[flagMtx==0] <- NA
+        logObj$fLogStr("rstObj$checkLastDup()")
+        rptStr <- rstObj$checkLastDup( flagMtx ,show=F )
+        logObj$fLogStr(sprintf("%s\n",paste(rptStr,collapse="\n")))
+        logObj$fLogStr("rstObj$checkPastDup()")
+        rptStr <- rstObj$checkPastDup( flagMtx ,show=F )
+        logObj$fLogStr(sprintf("%s\n",paste(rptStr,collapse="\n")))
+    }
+
+}
+
+mtxLstName <- "scoreMtx2Lst"
+logObj$fLogStr(sprintf("< %s > ---------------------------------------------------",mtxLstName))
+for( phIdx in rstObj$phName ){
+    #   rebV rebC rebC2 rebL rebR rebL.cnt rebR.cnt inc.raw inc.cStep
+    logObj$fLogStr(sprintf("phName:%s",phIdx))
+    mtx <- mtxLst[[mtxLstName]][[phIdx]]
+
+    colSet <- c("rebV","rebC","rebC2","rebL","rebR","inc.raw","inc.cStep")
+    {   colEH  <- c( 3, 2, 2, 1, 1, 1, 1 )   # event horizen
+        logObj$fLogStr(sprintf("* colSet00 Event: %s(%s)",paste(colSet,collapse=","),paste(colEH,collapse=",")))
+        flagMtx <- t(apply( mtx[,colSet] ,1 ,function(rData){rData>=colEH}))
+        flagMtx[!flagMtx] <- NA
+        logObj$fLogStr("rstObj$checkLastDup()")
+        rptStr <- rstObj$checkLastDup( flagMtx ,show=F )
+        logObj$fLogStr(sprintf("%s\n",paste(rptStr,collapse="\n")))
+        logObj$fLogStr("rstObj$checkPastDup()")
+        rptStr <- rstObj$checkPastDup( flagMtx ,show=F )
+        logObj$fLogStr(sprintf("%s\n",paste(rptStr,collapse="\n")))
+
+        logObj$fLogStr(sprintf("* colSet00 Happen: %s",paste(colSet,collapse=",")))
+        flagMtx <- mtx[,colSet]    ;flagMtx[flagMtx==0] <- NA
+        logObj$fLogStr("rstObj$checkLastDup()")
+        rptStr <- rstObj$checkLastDup( flagMtx ,show=F )
+        logObj$fLogStr(sprintf("%s\n",paste(rptStr,collapse="\n")))
+        logObj$fLogStr("rstObj$checkPastDup()")
+        rptStr <- rstObj$checkPastDup( flagMtx ,show=F )
+        logObj$fLogStr(sprintf("%s\n",paste(rptStr,collapse="\n")))
+    }
+
+}
+
+mtxLstName <- "scoreMtx3Lst"
+logObj$fLogStr(sprintf("< %s > ---------------------------------------------------",mtxLstName))
+for( phIdx in rstObj$phName ){
+    #   rebPtn.1 rebPtn.n rebC.C1 rebC.F1 rebC.C2 rebC.F2
+    logObj$fLogStr(sprintf("phName:%s",phIdx))
+    mtx <- mtxLst[[mtxLstName]][[phIdx]]
+
+    colSet <- c("rebPtn.1","rebC.C1","rebC.F1","rebC.C2","rebC.F2")  # rebPtn.n 는 무의미한 듯 하여 제외.
+    {   colEH  <- c(     1,        2,        2,        2,        2)   # event horizen
+        logObj$fLogStr(sprintf("* colSet00 Event: %s(%s)",paste(colSet,collapse=","),paste(colEH,collapse=",")))
+        flagMtx <- t(apply( mtx[,colSet] ,1 ,function(rData){rData>=colEH}))
+        flagMtx[!flagMtx] <- NA
+        logObj$fLogStr("rstObj$checkLastDup()")
+        rptStr <- rstObj$checkLastDup( flagMtx ,show=F )
+        logObj$fLogStr(sprintf("%s\n",paste(rptStr,collapse="\n")))
+        logObj$fLogStr("rstObj$checkPastDup()")
+        rptStr <- rstObj$checkPastDup( flagMtx ,show=F )
+        logObj$fLogStr(sprintf("%s\n",paste(rptStr,collapse="\n")))
+
+        logObj$fLogStr(sprintf("* colSet00 Happen: %s",paste(colSet,collapse=",")))
+        flagMtx <- mtx[,colSet]    ;flagMtx[flagMtx==0] <- NA
+        logObj$fLogStr("rstObj$checkLastDup()")
+        rptStr <- rstObj$checkLastDup( flagMtx ,show=F )
+        logObj$fLogStr(sprintf("%s\n",paste(rptStr,collapse="\n")))
+        logObj$fLogStr("rstObj$checkPastDup()")
+        rptStr <- rstObj$checkPastDup( flagMtx ,show=F )
+        logObj$fLogStr(sprintf("%s\n",paste(rptStr,collapse="\n")))
+    }
+
+}
+
+mtxLstName <- "scoreMtx4Lst"
+logObj$fLogStr(sprintf("< %s > ---------------------------------------------------",mtxLstName))
+for( phIdx in rstObj$phName ){
+    #   incRaw3 incC3 incF3 incRaw2 incC2 incF2 (1,6) nextVal.r nextVal.c nextVal.f
+    logObj$fLogStr(sprintf("phName:%s",phIdx))
+    mtx <- mtxLst[[mtxLstName]][[phIdx]]
+
+    colSet <- c("incRaw3","incC3","incF3","incRaw2","incC2","incF2","(1,6)","nextVal.r","nextVal.c","nextVal.f")
+    {   colEH  <- c( 2,2,2,2,2, 2,2,2,2,2 )   # event horizen
+        logObj$fLogStr(sprintf("* colSet00 Event: %s(%s)",paste(colSet,collapse=","),paste(colEH,collapse=",")))
+        flagMtx <- t(apply( mtx[,colSet] ,1 ,function(rData){rData>=colEH}))
+        flagMtx[!flagMtx] <- NA
+        logObj$fLogStr("rstObj$checkLastDup()")
+        rptStr <- rstObj$checkLastDup( flagMtx ,show=F )
+        logObj$fLogStr(sprintf("%s\n",paste(rptStr,collapse="\n")))
+        logObj$fLogStr("rstObj$checkPastDup()")
+        rptStr <- rstObj$checkPastDup( flagMtx ,show=F )
+        logObj$fLogStr(sprintf("%s\n",paste(rptStr,collapse="\n")))
+
+        logObj$fLogStr(sprintf("* colSet00 Happen: %s",paste(colSet,collapse=",")))
+        flagMtx <- mtx[,colSet]    ;flagMtx[flagMtx==0] <- NA
+        logObj$fLogStr("rstObj$checkLastDup()")
+        rptStr <- rstObj$checkLastDup( flagMtx ,show=F )
+        logObj$fLogStr(sprintf("%s\n",paste(rptStr,collapse="\n")))
+        logObj$fLogStr("rstObj$checkPastDup()")
+        rptStr <- rstObj$checkPastDup( flagMtx ,show=F )
+        logObj$fLogStr(sprintf("%s\n",paste(rptStr,collapse="\n")))
+    }
+
+    colSet <- c("incRaw3","incC3","incF3","incRaw2","incC2","incF2")
+    {   colEH  <- c( 2,2,2 ,2,2,2 )   # event horizen
+        logObj$fLogStr(sprintf("* colSet00 Event: %s(%s)",paste(colSet,collapse=","),paste(colEH,collapse=",")))
+        flagMtx <- t(apply( mtx[,colSet] ,1 ,function(rData){rData>=colEH}))
+        flagMtx[!flagMtx] <- NA
+        logObj$fLogStr("rstObj$checkLastDup()")
+        rptStr <- rstObj$checkLastDup( flagMtx ,show=F )
+        logObj$fLogStr(sprintf("%s\n",paste(rptStr,collapse="\n")))
+        logObj$fLogStr("rstObj$checkPastDup()")
+        rptStr <- rstObj$checkPastDup( flagMtx ,show=F )
+        logObj$fLogStr(sprintf("%s\n",paste(rptStr,collapse="\n")))
+
+        logObj$fLogStr(sprintf("* colSet00 Happen: %s",paste(colSet,collapse=",")))
+        flagMtx <- mtx[,colSet]    ;flagMtx[flagMtx==0] <- NA
+        logObj$fLogStr("rstObj$checkLastDup()")
+        rptStr <- rstObj$checkLastDup( flagMtx ,show=F )
+        logObj$fLogStr(sprintf("%s\n",paste(rptStr,collapse="\n")))
+        logObj$fLogStr("rstObj$checkPastDup()")
+        rptStr <- rstObj$checkPastDup( flagMtx ,show=F )
+        logObj$fLogStr(sprintf("%s\n",paste(rptStr,collapse="\n")))
+    }
+
+    colSet <- c("(1,6)","nextVal.r","nextVal.c","nextVal.f")
+    {   colEH  <- c( 2,2,2,2 )   # event horizen
+        logObj$fLogStr(sprintf("* colSet00 Event: %s(%s)",paste(colSet,collapse=","),paste(colEH,collapse=",")))
+        flagMtx <- t(apply( mtx[,colSet] ,1 ,function(rData){rData>=colEH}))
+        flagMtx[!flagMtx] <- NA
+        logObj$fLogStr("rstObj$checkLastDup()")
+        rptStr <- rstObj$checkLastDup( flagMtx ,show=F )
+        logObj$fLogStr(sprintf("%s\n",paste(rptStr,collapse="\n")))
+        logObj$fLogStr("rstObj$checkPastDup()")
+        rptStr <- rstObj$checkPastDup( flagMtx ,show=F )
+        logObj$fLogStr(sprintf("%s\n",paste(rptStr,collapse="\n")))
+
+        logObj$fLogStr(sprintf("* colSet00 Happen: %s",paste(colSet,collapse=",")))
+        flagMtx <- mtx[,colSet]    ;flagMtx[flagMtx==0] <- NA
+        logObj$fLogStr("rstObj$checkLastDup()")
+        rptStr <- rstObj$checkLastDup( flagMtx ,show=F )
+        logObj$fLogStr(sprintf("%s\n",paste(rptStr,collapse="\n")))
+        logObj$fLogStr("rstObj$checkPastDup()")
+        rptStr <- rstObj$checkPastDup( flagMtx ,show=F )
+        logObj$fLogStr(sprintf("%s\n",paste(rptStr,collapse="\n")))
+    }
+
+}
+
+mtxLstName <- "cStepValMtxLst"
+logObj$fLogStr(sprintf("< %s > ---------------------------------------------------",mtxLstName))
+for( phIdx in rstObj$phName ){
+    #   c31 c32 c33 c34 c21 c22 c23 c24 c25 max2 min2
+    logObj$fLogStr(sprintf("phName:%s",phIdx))
+    mtx <- mtxLst[[mtxLstName]][[phIdx]]
+
+    colSet <- c("c31","c32","c33","c34" ,"c21","c22","c23","c24","c25", "max2","min2" )
+    {
+        logObj$fLogStr(sprintf("* colSet00 Happen: %s",paste(colSet,collapse=",")))
+        flagMtx <- mtx[,colSet]    ;flagMtx[flagMtx==0] <- NA
+        logObj$fLogStr("rstObj$checkLastDup()")
+        rptStr <- rstObj$checkLastDup( flagMtx ,show=F )
+        logObj$fLogStr(sprintf("%s\n",paste(rptStr,collapse="\n")))
+        logObj$fLogStr("rstObj$checkPastDup()")
+        rptStr <- rstObj$checkPastDup( flagMtx ,show=F )
+        logObj$fLogStr(sprintf("%s\n",paste(rptStr,collapse="\n")))
+    }
+
+    colSet <- c("c21","c22","c23","c24","c25" )
+    {
+        logObj$fLogStr(sprintf("* colSet00 Happen: %s",paste(colSet,collapse=",")))
+        flagMtx <- mtx[,colSet]    ;flagMtx[flagMtx==0] <- NA
+        logObj$fLogStr("rstObj$checkLastDup()")
+        rptStr <- rstObj$checkLastDup( flagMtx ,show=F )
+        logObj$fLogStr(sprintf("%s\n",paste(rptStr,collapse="\n")))
+        logObj$fLogStr("rstObj$checkPastDup()")
+        rptStr <- rstObj$checkPastDup( flagMtx ,show=F )
+        logObj$fLogStr(sprintf("%s\n",paste(rptStr,collapse="\n")))
+    }
+
+}
 
 
+#- [getMtx.byFilter()] ------------------------------------------------------------------------------
+logObj <- k.getFlogObj( "./report/testRst_byFilter.txt" )        ;logObj$fLogStr("start", pTime=T ,pAppend=F )
+mtxLst <- rstObj$getMtx.byFilter()	# mtxLst[["cntMtxLst"]]$raw
+
+mtxLstName <- "cntMtxLst"
+fltNames <- c("raw","rem","cStep","fStep","raw.w1","cStep.w1","cStep.w2","fStep.w1","fStep.w2")
+colEH    <- c(    2,    3,      2,      2,       1,         2,         2,         2,        2 )
+names(colEH) <- fltNames
+logObj$fLogStr(sprintf("< %s > ---------------------------------------------------",mtxLstName))
+for( fIdx in fltNames ){
+
+    logObj$fLogStr(sprintf("filter:%s",fIdx))
+    mtx <- mtxLst[[mtxLstName]][[fIdx]]
+
+    {   logObj$fLogStr(sprintf("* Event (threshold:%d)",colEH[fIdx]))
+        flagMtx <- t(apply( mtx ,1 ,function(rData){rData>=colEH[fIdx]}))
+        flagMtx[!flagMtx] <- NA
+        logObj$fLogStr("rstObj$checkLastDup()")
+        rptStr <- rstObj$checkLastDup( flagMtx ,show=F )
+        logObj$fLogStr(sprintf("%s\n",paste(rptStr,collapse="\n")))
+        logObj$fLogStr("rstObj$checkPastDup()")
+        rptStr <- rstObj$checkPastDup( flagMtx ,show=F )
+        logObj$fLogStr(sprintf("%s\n",paste(rptStr,collapse="\n")))
+
+        logObj$fLogStr(sprintf("* Happen  "))
+        flagMtx[flagMtx==0] <- NA
+        logObj$fLogStr("rstObj$checkLastDup()")
+        rptStr <- rstObj$checkLastDup( flagMtx ,show=F )
+        logObj$fLogStr(sprintf("%s\n",paste(rptStr,collapse="\n")))
+        logObj$fLogStr("rstObj$checkPastDup()")
+        rptStr <- rstObj$checkPastDup( flagMtx ,show=F )
+        logObj$fLogStr(sprintf("%s\n",paste(rptStr,collapse="\n")))
+    }
+
+}
+fIdx <- "rem"  # rebV 가 2인 경우들에 대한 별도 체크.
+logObj$fLogStr(sprintf("filter:%s 별도 추가체크 ",fIdx))
+mtx <- mtxLst[[mtxLstName]][[fIdx]]
+{   logObj$fLogStr(sprintf("* Event (threshold:%d)", 2 ))
+    flagMtx <- t(apply( mtx ,1 ,function(rData){rData==2 }))
+    flagMtx[!flagMtx] <- NA
+    logObj$fLogStr("rstObj$checkLastDup()")
+    rptStr <- rstObj$checkLastDup( flagMtx ,show=F )
+    logObj$fLogStr(sprintf("%s\n",paste(rptStr,collapse="\n")))
+    logObj$fLogStr("rstObj$checkPastDup()")
+    rptStr <- rstObj$checkPastDup( flagMtx ,show=F )
+    logObj$fLogStr(sprintf("%s\n",paste(rptStr,collapse="\n")))
+}
+
+
+mtxLstName <- "scoreMtxLst"
+fltNames <- c("reb","nbor","spanM","quoAll","quoPtn","zw","remH0","remH1","cStep2","cStep3","w1CStep.cnt","w1FStep.cnt")
+colEH    <- c(    1,     2,      2,       1,       1,   1,      1,      1,       1,      1,             2,            2)
+names(colEH) <- fltNames
+logObj$fLogStr(sprintf("< %s > ---------------------------------------------------",mtxLstName))
+for( fIdx in fltNames ){
+
+    logObj$fLogStr(sprintf("filter:%s",fIdx))
+    mtx <- mtxLst[[mtxLstName]][[fIdx]]
+
+    {   logObj$fLogStr(sprintf("* Event (threshold:%d)",colEH[fIdx]))
+        flagMtx <- t(apply( mtx ,1 ,function(rData){rData>=colEH[fIdx]}))
+        flagMtx[!flagMtx] <- NA
+        logObj$fLogStr("rstObj$checkLastDup()")
+        rptStr <- rstObj$checkLastDup( flagMtx ,show=F )
+        logObj$fLogStr(sprintf("%s\n",paste(rptStr,collapse="\n")))
+        logObj$fLogStr("rstObj$checkPastDup()")
+        rptStr <- rstObj$checkPastDup( flagMtx ,show=F )
+        logObj$fLogStr(sprintf("%s\n",paste(rptStr,collapse="\n")))
+
+        logObj$fLogStr(sprintf("* Happen  "))
+        flagMtx[flagMtx==0] <- NA
+        logObj$fLogStr("rstObj$checkLastDup()")
+        rptStr <- rstObj$checkLastDup( flagMtx ,show=F )
+        logObj$fLogStr(sprintf("%s\n",paste(rptStr,collapse="\n")))
+        logObj$fLogStr("rstObj$checkPastDup()")
+        rptStr <- rstObj$checkPastDup( flagMtx ,show=F )
+        logObj$fLogStr(sprintf("%s\n",paste(rptStr,collapse="\n")))
+    }
+
+}
+
+mtxLstName <- "scoreMtx2Lst"
+fltNames <- c( "rebV","rebC","rebC2","rebL","rebR","inc.raw","inc.cStep")
+colEH    <- c(      3,     2,      2,     1,     1,        2,          2)
+names(colEH) <- fltNames
+logObj$fLogStr(sprintf("< %s > ---------------------------------------------------",mtxLstName))
+for( fIdx in fltNames ){
+    #   basic nextZW nextQuo10 nextBin nextRebNum nextCStepBin nextFStepBin 
+    #   nextColVal_1 nextColVal_2 nextColVal_3 nextColVal_4 nextColVal_5 nextColVal_6
+
+    logObj$fLogStr(sprintf("filter:%s",fIdx))
+    mtx <- mtxLst[[mtxLstName]][[fIdx]]
+
+    {   logObj$fLogStr(sprintf("* Event (threshold:%d)",colEH[fIdx]))
+        flagMtx <- t(apply( mtx ,1 ,function(rData){rData>=colEH[fIdx]}))
+        flagMtx[!flagMtx] <- NA
+        logObj$fLogStr("rstObj$checkLastDup()")
+        rptStr <- rstObj$checkLastDup( flagMtx ,show=F )
+        logObj$fLogStr(sprintf("%s\n",paste(rptStr,collapse="\n")))
+        logObj$fLogStr("rstObj$checkPastDup()")
+        rptStr <- rstObj$checkPastDup( flagMtx ,show=F )
+        logObj$fLogStr(sprintf("%s\n",paste(rptStr,collapse="\n")))
+
+        logObj$fLogStr(sprintf("* Happen  "))
+        flagMtx[flagMtx==0] <- NA
+        logObj$fLogStr("rstObj$checkLastDup()")
+        rptStr <- rstObj$checkLastDup( flagMtx ,show=F )
+        logObj$fLogStr(sprintf("%s\n",paste(rptStr,collapse="\n")))
+        logObj$fLogStr("rstObj$checkPastDup()")
+        rptStr <- rstObj$checkPastDup( flagMtx ,show=F )
+        logObj$fLogStr(sprintf("%s\n",paste(rptStr,collapse="\n")))
+    }
+}
+fIdx <- "rebV"  # rebV 가 2인 경우들에 대한 별도 체크.
+logObj$fLogStr(sprintf("filter:%s 별도 추가체크 ",fIdx))
+mtx <- mtxLst[[mtxLstName]][[fIdx]]
+{   logObj$fLogStr(sprintf("* Event (threshold:%d)", 2 ))
+    flagMtx <- t(apply( mtx ,1 ,function(rData){rData==2 }))
+    flagMtx[!flagMtx] <- NA
+    logObj$fLogStr("rstObj$checkLastDup()")
+    rptStr <- rstObj$checkLastDup( flagMtx ,show=F )
+    logObj$fLogStr(sprintf("%s\n",paste(rptStr,collapse="\n")))
+    logObj$fLogStr("rstObj$checkPastDup()")
+    rptStr <- rstObj$checkPastDup( flagMtx ,show=F )
+    logObj$fLogStr(sprintf("%s\n",paste(rptStr,collapse="\n")))
+}
+
+
+mtxLstName <- "scoreMtx3Lst"
+fltNames <- c( "rebPtn.1", "rebPtn.n", "rebC.C1", "rebC.F1", "rebC.C2", "rebC.F2" )
+colEH    <- c(          1,          1,         2,         2,         2,         2 )
+names(colEH) <- fltNames
+logObj$fLogStr(sprintf("< %s > ---------------------------------------------------",mtxLstName))
+for( fIdx in fltNames ){
+
+    logObj$fLogStr(sprintf("filter:%s",fIdx))
+    mtx <- mtxLst[[mtxLstName]][[fIdx]]
+
+    {   logObj$fLogStr(sprintf("* Event (threshold:%d)",colEH[fIdx]))
+        flagMtx <- t(apply( mtx ,1 ,function(rData){rData>=colEH[fIdx]}))
+        flagMtx[!flagMtx] <- NA
+        logObj$fLogStr("rstObj$checkLastDup()")
+        rptStr <- rstObj$checkLastDup( flagMtx ,show=F )
+        logObj$fLogStr(sprintf("%s\n",paste(rptStr,collapse="\n")))
+        logObj$fLogStr("rstObj$checkPastDup()")
+        rptStr <- rstObj$checkPastDup( flagMtx ,show=F )
+        logObj$fLogStr(sprintf("%s\n",paste(rptStr,collapse="\n")))
+
+        logObj$fLogStr(sprintf("* Happen  "))
+        flagMtx[flagMtx==0] <- NA
+        logObj$fLogStr("rstObj$checkLastDup()")
+        rptStr <- rstObj$checkLastDup( flagMtx ,show=F )
+        logObj$fLogStr(sprintf("%s\n",paste(rptStr,collapse="\n")))
+        logObj$fLogStr("rstObj$checkPastDup()")
+        rptStr <- rstObj$checkPastDup( flagMtx ,show=F )
+        logObj$fLogStr(sprintf("%s\n",paste(rptStr,collapse="\n")))
+    }
+
+}
+
+mtxLstName <- "scoreMtx4Lst"
+fltNames <- c("incRaw3","incC3","incF3","incRaw2","incC2","incF2","(1,6)","nextVal.r","nextVal.c","nextVal.f")
+colEH    <- c(        1,      1,      1,        1,      1,      1,     2,           2,          2,          2)
+names(colEH) <- fltNames
+logObj$fLogStr(sprintf("< %s > ---------------------------------------------------",mtxLstName))
+for( fIdx in fltNames ){
+
+    logObj$fLogStr(sprintf("filter:%s",fIdx))
+    mtx <- mtxLst[[mtxLstName]][[fIdx]]
+
+    {   logObj$fLogStr(sprintf("* Event (threshold:%d)",colEH[fIdx]))
+        flagMtx <- t(apply( mtx ,1 ,function(rData){rData>=colEH[fIdx]}))
+        flagMtx[!flagMtx] <- NA
+        logObj$fLogStr("rstObj$checkLastDup()")
+        rptStr <- rstObj$checkLastDup( flagMtx ,show=F )
+        logObj$fLogStr(sprintf("%s\n",paste(rptStr,collapse="\n")))
+        logObj$fLogStr("rstObj$checkPastDup()")
+        rptStr <- rstObj$checkPastDup( flagMtx ,show=F )
+        logObj$fLogStr(sprintf("%s\n",paste(rptStr,collapse="\n")))
+
+        logObj$fLogStr(sprintf("* Happen  "))
+        flagMtx[flagMtx==0] <- NA
+        logObj$fLogStr("rstObj$checkLastDup()")
+        rptStr <- rstObj$checkLastDup( flagMtx ,show=F )
+        logObj$fLogStr(sprintf("%s\n",paste(rptStr,collapse="\n")))
+        logObj$fLogStr("rstObj$checkPastDup()")
+        rptStr <- rstObj$checkPastDup( flagMtx ,show=F )
+        logObj$fLogStr(sprintf("%s\n",paste(rptStr,collapse="\n")))
+    }
+
+}
+
+
+mtxLstName <- "cStepValMtxLst"
+fltNames <- c("c31","c32","c33","c34","c21","c22","c23","c24","c25","max2","min2")
+logObj$fLogStr(sprintf("< %s > ---------------------------------------------------",mtxLstName))
+for( fIdx in fltNames ){
+    #   basic nextZW nextQuo10 nextBin nextRebNum nextCStepBin nextFStepBin 
+    #   nextColVal_1 nextColVal_2 nextColVal_3 nextColVal_4 nextColVal_5 nextColVal_6
+
+    logObj$fLogStr(sprintf("filter:%s",fIdx))
+    mtx <- mtxLst[[mtxLstName]][[fIdx]]
+
+    {   logObj$fLogStr(sprintf("* Event : skip...",colEH[fIdx]))
+
+        logObj$fLogStr(sprintf("* Happen  "))
+        flagMtx[flagMtx==0] <- NA
+        logObj$fLogStr("rstObj$checkLastDup()")
+        rptStr <- rstObj$checkLastDup( flagMtx ,show=F )
+        logObj$fLogStr(sprintf("%s\n",paste(rptStr,collapse="\n")))
+        logObj$fLogStr("rstObj$checkPastDup()")
+        rptStr <- rstObj$checkPastDup( flagMtx ,show=F )
+        logObj$fLogStr(sprintf("%s\n",paste(rptStr,collapse="\n")))
+    }
+
+}
 
