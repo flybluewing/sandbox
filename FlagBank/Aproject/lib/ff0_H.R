@@ -750,3 +750,11 @@ ff0.fltCStepValMtx.static	<- function( ccObjLst ,allIdxF ){
 
 } # ff0.fltCStepValMtx.static()
 
+
+if( FALSE ){	#  "./save/stdZoidFltRst/Obj_rstObj.goldRstSpan.save"
+
+	load("./save/stdZoidFltRst/Obj_rstObj.goldRstSpan.save")
+	mtxLst <- rstObj$getMtx.byPhase()	# mtxLst[["cntMtxLst"]]$basic
+
+
+}	# Obj_rstObj.goldRstSpan.save
