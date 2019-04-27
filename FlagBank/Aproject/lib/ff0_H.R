@@ -751,6 +751,42 @@ ff0.fltCStepValMtx.static	<- function( ccObjLst ,allIdxF ){
 } # ff0.fltCStepValMtx.static()
 
 
+ff0.noPastRebound.byFilter <- function( ccObjLst, allIdxF, rstObj ){
+	#	load("./save/stdZoidFltRst/Obj_rstObj.goldRstSpan.save")
+	mtxLst <- rstObj$getMtx.byFilter()	# mtxLst[["cntMtxLst"]]$basic
+
+	allIdxF.len <- length(allIdxF)
+
+	redLst		<- vector("list",allIdxF.len)
+	yellowLst	<- vector("list",allIdxF.len)
+
+	# cntMtx --------------------------------------
+	tableName <- "cntMtx"	;lstName <- sprintf("%sLst",tableName)
+	fltNames <- c("raw","rem","cStep","fStep","raw.w1","cStep.w1","cStep.w2","fStep.w1","fStep.w2")
+	colEH    <- c(    2,    3,      2,      2,       1,         2,         2,         2,        2 )
+	names(colEH) <- fltNames
+	for( fIdx in fltNames ){
+		lst <- lapply( ccObjLst,function(p){p$cntMtx[,fIdx]})
+		aMtx <- do.call( cbind ,lst )
+
+		# event
+		flagMtx <- mtxLst[[lstName]][[fIdx]] >= colEH[fIdx]
+
+		# QQE work		
+	}
+
+	# scoreMtx --------------------------------------
+	# scoreMtx2 --------------------------------------
+	# scoreMtx3 --------------------------------------
+	# scoreMtx4 --------------------------------------
+	# cStepValMtx --------------------------------------
+
+
+	rObj <- list( redCnt=sapply(redLst,length) ,yellowCnt=sapply(yellowLst,length) )
+	return( rObj )
+
+} # ff0.noPastRebound.byFilter()
+
 if( FALSE ){	#  "./save/stdZoidFltRst/Obj_rstObj.goldRstSpan.save"
 
 	load("./save/stdZoidFltRst/Obj_rstObj.goldRstSpan.save")
