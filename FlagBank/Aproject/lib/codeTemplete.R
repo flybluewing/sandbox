@@ -16,8 +16,12 @@ cntMtx.colName <- c( "raw","rawFV","rem","cStep","fStep"
 fCutCnt.next181006 <- function( gEnv ,allIdxF ,rpt=FALSE ){
 
 	zMtx <- fCutU.getXXXX( gEnv )$zMtx	# rptObj<-anaQuoTbl( zMtx )
-	if( 0==nrow(zMtx) ) return( rep(0,length(allIdxF)) )
-
+	if( 0==nrow(zMtx) ){
+		cccObj <- fCutU.commonCutCnt( gEnv ,allIdxF ,zMtx )
+		auxCntMtx <- matrix( 0 ,nrow=length(allIdxF) ,ncol=2 )	;colnames(auxCntMtx)=c("auxZW","auxQuo")
+		cntMtx <- matrix( 0 ,nrow=length(allIdxF) ,ncol=length(cntMtx.colName) )
+		return( list( cccObj=cccObj	,auxCntMtx=auxCntMtx ,cntMtx=cntMtx	) )	# lastZoid´Â cccObj ¾È¿¡..
+	}
 	stdMI <- fCutU.getMtxInfo( zMtx )
 	# rptObj<-anaMtx(stdMI$rawTail,stdZoid);u0.zoidMtx_ana.rpt( stdMI$rawTail )
 

@@ -1353,7 +1353,7 @@ fCutU.commonCutCnt <- function( gEnv, allIdxF ,zMtx
 		flgCnt[!flag] <- flgCnt[!flag] + 1
 		if( pScoreMtx ) scoreMtx[,"quoPtn"] <- !flag
 	}
-	if( pZWidth ){
+	if( pZWidth && stdMI$mtxLen>0 ){
 		lastZW <- stdMI$lastZoid[6] - stdMI$lastZoid[1]
 		flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
 						return( lastZW!=(aZoid[6]-aZoid[1]) )
@@ -1385,68 +1385,69 @@ fCutU.commonCutCnt <- function( gEnv, allIdxF ,zMtx
 					})	;kIdx<-anaFlagFnd(!flag,rpt)
 		flgCnt[!flag] <- flgCnt[!flag] + 1
 		if( pScoreMtx ) scoreMtx[,"remH1"] <- !flag
+
+		flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+						aCode <- aZoid[2:6] - aZoid[1:5]
+						for( cIdx in 1:4 ){	# cStep 반복. 동일 재현이 2개 붙어서 발생.
+							fnd <- fCutU.hasPtn( stdMI$cStep[cIdx+0:1] ,aCode )
+							if( fnd ) return( FALSE )
+						}
+						return( TRUE )
+					})	;kIdx<-anaFlagFnd(!flag,rpt)
+		flgCnt[!flag] <- flgCnt[!flag] + 1
+		if( pScoreMtx ) scoreMtx[,"cStep2"] <- !flag
+		flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+						cnt <- sum( stdMI$cStep==(aZoid[2:6]-aZoid[1:5]) )
+						return( 3 > cnt )	# cStep 반복 전체갯수는 3개 이하.(2가 너무 많다보니 변경.)
+					})	;kIdx<-anaFlagFnd(!flag,rpt)
+		flgCnt[!flag] <- flgCnt[!flag] + 1
+		if( pScoreMtx ) scoreMtx[,"cStep3"] <- !flag
+
+		wCObj <- fCutU.getChkNextPtn4FV.cStep( stdMI$rawTail )
+		wFObj <- fCutU.getChkNextPtn4FV.fStep( stdMI$rawTail )
+		for( idx in seq_len(length(allIdxF)) ){
+			aZoid <- gEnv$allZoidMtx[allIdxF[idx],]
+			#	scoreMtx	"w1CStep.cnt","w1FStep.cnt","w1CStep.matLen","w1FStep.matLen"
+			aCStep <- aZoid[2:6] - aZoid[1:5]
+			chkObj.c <- wCObj$check(aCStep)
+			scoreMtx[idx,"w1CStep.cnt"] <- chkObj.c$flgCnt
+			scoreMtx[idx,"w1CStep.matLen"] <- ifelse( 0<length(chkObj.c$matchCnt) ,max(chkObj.c$matchCnt) ,0 )
+
+			aFStep <- aZoid - stdMI$lastZoid
+			chkObj.f <- wFObj$check(aFStep)
+			scoreMtx[idx,"w1FStep.cnt"] <- chkObj.f$flgCnt
+			scoreMtx[idx,"w1FStep.matLen"] <- ifelse( 0<length(chkObj.f$matchCnt) ,max(chkObj.f$matchCnt) ,0 )
+		}
+
+		# cName <- c("c31","c32","c33","c34","c21","c22","c23","c24","c25","max2","min2")
+		# cStepValMtx <- matrix( 0 ,nrow=length(allIdxF) ,ncol=length(cName) )
+		for( idx in 1:4 ){
+			colSpan <- 0:2+idx	# column span of cStepMtx
+
+			logId <- sprintf("c3%d",idx)
+			obj <- fCutU.getChkCStepValReb( zMtx[,colSpan,drop=F] )
+			cStepValMtx[,logId] <- obj$match( gEnv$allZoidMtx[allIdxF,colSpan,drop=F] )
+		}
+		for( idx in 1:5 ){
+			colSpan <- 0:1+idx	# column span of cStepMtx
+
+			logId <- sprintf("c2%d",idx)
+			obj <- fCutU.getChkCStepValReb( zMtx[,colSpan,drop=F] )
+			cStepValMtx[,logId] <- obj$match( gEnv$allZoidMtx[allIdxF,colSpan,drop=F] )
+		}
+		cStepMax2 <- sort(stdMI$lastZoid[2:6]-stdMI$lastZoid[1:5] ,decreasing=T)[1:2]
+		flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+						return( !all( cStepMax2 == sort( aZoid[2:6]-aZoid[1:5] ,decreasing=T)[1:2] ) )
+					})	;kIdx<-anaFlagFnd(!flag,rpt)
+		cStepValMtx[,"max2"] <- !flag
+		flgCnt[!flag] <- flgCnt[!flag] + 1
+		cStepMin2 <- sort(stdMI$lastZoid[2:6]-stdMI$lastZoid[1:5] )[1:2]
+		flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
+						return( !all( cStepMax2 == sort( aZoid[2:6]-aZoid[1:5] )[1:2] ) )
+					})	;kIdx<-anaFlagFnd(!flag,rpt)
+		cStepValMtx[,"min2"] <- !flag
+		flgCnt[!flag] <- flgCnt[!flag] + 1
 	}
-    flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
-					aCode <- aZoid[2:6] - aZoid[1:5]
-					for( cIdx in 1:4 ){	# cStep 반복. 동일 재현이 2개 붙어서 발생.
-						fnd <- fCutU.hasPtn( stdMI$cStep[cIdx+0:1] ,aCode )
-						if( fnd ) return( FALSE )
-					}
-					return( TRUE )
-				})	;kIdx<-anaFlagFnd(!flag,rpt)
-    flgCnt[!flag] <- flgCnt[!flag] + 1
-	if( pScoreMtx ) scoreMtx[,"cStep2"] <- !flag
-    flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
-					cnt <- sum( stdMI$cStep==(aZoid[2:6]-aZoid[1:5]) )
-					return( 3 > cnt )	# cStep 반복 전체갯수는 3개 이하.(2가 너무 많다보니 변경.)
-				})	;kIdx<-anaFlagFnd(!flag,rpt)
-    flgCnt[!flag] <- flgCnt[!flag] + 1
-	if( pScoreMtx ) scoreMtx[,"cStep3"] <- !flag
-
-	wCObj <- fCutU.getChkNextPtn4FV.cStep( stdMI$rawTail )
-	wFObj <- fCutU.getChkNextPtn4FV.fStep( stdMI$rawTail )
-	for( idx in seq_len(length(allIdxF)) ){
-		aZoid <- gEnv$allZoidMtx[allIdxF[idx],]
-		#	scoreMtx	"w1CStep.cnt","w1FStep.cnt","w1CStep.matLen","w1FStep.matLen"
-		aCStep <- aZoid[2:6] - aZoid[1:5]
-		chkObj.c <- wCObj$check(aCStep)
-		scoreMtx[idx,"w1CStep.cnt"] <- chkObj.c$flgCnt
-		scoreMtx[idx,"w1CStep.matLen"] <- ifelse( 0<length(chkObj.c$matchCnt) ,max(chkObj.c$matchCnt) ,0 )
-
-		aFStep <- aZoid - stdMI$lastZoid
-		chkObj.f <- wFObj$check(aFStep)
-		scoreMtx[idx,"w1FStep.cnt"] <- chkObj.f$flgCnt
-		scoreMtx[idx,"w1FStep.matLen"] <- ifelse( 0<length(chkObj.f$matchCnt) ,max(chkObj.f$matchCnt) ,0 )
-	}
-
-	# cName <- c("c31","c32","c33","c34","c21","c22","c23","c24","c25","max2","min2")
-	# cStepValMtx <- matrix( 0 ,nrow=length(allIdxF) ,ncol=length(cName) )
-	for( idx in 1:4 ){
-		colSpan <- 0:2+idx	# column span of cStepMtx
-
-		logId <- sprintf("c3%d",idx)
-		obj <- fCutU.getChkCStepValReb( zMtx[,colSpan,drop=F] )
-		cStepValMtx[,logId] <- obj$match( gEnv$allZoidMtx[allIdxF,colSpan,drop=F] )
-	}
-	for( idx in 1:5 ){
-		colSpan <- 0:1+idx	# column span of cStepMtx
-
-		logId <- sprintf("c2%d",idx)
-		obj <- fCutU.getChkCStepValReb( zMtx[,colSpan,drop=F] )
-		cStepValMtx[,logId] <- obj$match( gEnv$allZoidMtx[allIdxF,colSpan,drop=F] )
-	}
-	cStepMax2 <- sort(stdMI$lastZoid[2:6]-stdMI$lastZoid[1:5] ,decreasing=T)[1:2]
-	flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
-					return( !all( cStepMax2 == sort( aZoid[2:6]-aZoid[1:5] ,decreasing=T)[1:2] ) )
-				})	;kIdx<-anaFlagFnd(!flag,rpt)
-	cStepValMtx[,"max2"] <- !flag
-    flgCnt[!flag] <- flgCnt[!flag] + 1
-	cStepMin2 <- sort(stdMI$lastZoid[2:6]-stdMI$lastZoid[1:5] )[1:2]
-	flag <- apply( gEnv$allZoidMtx[allIdxF,,drop=F] ,1 ,function( aZoid ){
-					return( !all( cStepMax2 == sort( aZoid[2:6]-aZoid[1:5] )[1:2] ) )
-				})	;kIdx<-anaFlagFnd(!flag,rpt)
-	cStepValMtx[,"min2"] <- !flag
-    flgCnt[!flag] <- flgCnt[!flag] + 1
 
 	rObj <- list( flgCnt=flgCnt ,scoreMtx=scoreMtx ,cStepValMtx=cStepValMtx ,lastZoid=stdMI$lastZoid )
 	rObj$scoreMtx2 <- fCutU.ccc.score2( gEnv ,allIdxF ,zMtx )
@@ -1690,6 +1691,8 @@ fCutU.ccc.score3 <- function( gEnv, allIdxF, zMtx ){
 	colnames( scoreMtx ) <- cName
 	#	rebC.Cn/rebC.Cn : rebC의 CStep,FStep 버전 (h-1,h-2)
 
+	if( 0==nrow(zMtx) ){ return( scoreMtx ) }
+
 	stdMI <- fCutU.getMtxInfo( zMtx )
 	rowLen <- nrow(stdMI$rawTail)
 
@@ -1892,6 +1895,8 @@ fCutU.ccc.score4 <- function( gEnv, allIdxF, zMtx ){
 	colnames( scoreMtx ) <- cName
 	#	incRaw,incC,incF : raw,cStep,fStep의 일정증감.
 	#		*.r	: 대칭 방향에서의 일정증감.
+
+	if( 0==nrow(zMtx) ){ return( scoreMtx ) }
 
 	stdMI <- fCutU.getMtxInfo( zMtx )
 	rowLen <- nrow(stdMI$rawTail)
