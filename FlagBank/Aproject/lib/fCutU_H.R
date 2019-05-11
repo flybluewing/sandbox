@@ -384,6 +384,24 @@ fCutU.hist.banValScan.grp <- function( gEnv ){ # < official >
 	return( list(fltPos=fltPos ,rstLst=rstLst) )
 } # hist.banValScan.grp()
 
+fCutU.overlapSpan <- function( spanLen ,colIdx.pre ,colIdx.post ){
+	# spanLen <- 5		;colIdx.pre<-4		;colIdx.post<-2
+	rObj <- list()
+
+	lMargin <- min( colIdx.pre ,colIdx.post ) -1
+	rMargin <- min( spanLen-colIdx.pre ,spanLen-colIdx.post )
+	
+	rObj$span.pre <- (colIdx.pre-lMargin):(colIdx.pre+rMargin)
+	rObj$span.post <- (colIdx.post-lMargin):(colIdx.post+rMargin)
+
+	rObj$info <- c( spanLen ,colIdx.pre ,colIdx.post ,lMargin ,rMargin )
+	names( rObj$info ) <- c( "spanLen" ,"colIdx.pre" ,"colIdx.post" ,"lMargin" ,"rMargin" )
+
+	return( rObj )
+
+}	# fCutU.overlapSpan()
+
+
 # zoidMtx <- gEnv$allZoidMtx[allIdxF,]	;logId="allZoid.idx1"
 fCutU.logAllZoidMtx <- function( zoidMtx ,logId ){
 
@@ -1579,7 +1597,7 @@ fCutU.ccc.score2 <- function( gEnv, allIdxF, zMtx ){
 
 
 	cName <- c("rebV","rebC","rebC2","rebL","rebR","rebL.cnt","rebR.cnt")
-	cName <- c( cName ,c("inc.raw","inc.cStep") )
+	cName <- c( cName ,c("inc.r","inc.c","inc.r2","inc.c2","inc.r3","inc.c3") )
 	scoreMtx <- matrix( 0, nrow=length(allIdxF), ncol=length(cName) )
 	colnames( scoreMtx ) <- cName
 		#	rebV	: 값 재발 수
@@ -1596,12 +1614,36 @@ fCutU.ccc.score2 <- function( gEnv, allIdxF, zMtx ){
 								vDiff <- stdMI$lastZoid - zMtx[stdMI$mtxLen-1,]
 								stdMI$lastZoid+vDiff
 							}
+		inc.stdRaw2		<- if( 4>stdMI$mtxLen ){ NULL 
+							} else {
+								vDiff <- zMtx[stdMI$mtxLen-1,] - zMtx[stdMI$mtxLen-3,]
+								zMtx[stdMI$mtxLen-1,]+vDiff
+							}
+		inc.stdRaw3		<- if( 6>stdMI$mtxLen ){ NULL 
+							} else {
+								vDiff <- zMtx[stdMI$mtxLen-2,] - zMtx[stdMI$mtxLen-5,]
+								zMtx[stdMI$mtxLen-2,]+vDiff
+							}
 		inc.stdCStep	<- if( 2>stdMI$mtxLen ){ NULL 
 							} else {
 								h2Zoid <- zMtx[stdMI$mtxLen-1,]
 								vDiff <- stdMI$cStep - (h2Zoid[2:6]-h2Zoid[1:5])
 								stdMI$cStep+vDiff
 							}
+		inc.stdCStep2	<- if( 4>stdMI$mtxLen ){ NULL 
+							} else {
+								cStep <- zMtx[,2:6] - zMtx[,1:5]
+								vDiff <- cStep[stdMI$mtxLen-1,] - cStep[stdMI$mtxLen-3,]
+								cStep[stdMI$mtxLen-1,]+vDiff
+							}
+		inc.stdCStep3	<- if( 6>stdMI$mtxLen ){ NULL 
+							} else {
+								cStep <- zMtx[,2:6] - zMtx[,1:5]
+								vDiff <- cStep[stdMI$mtxLen-2,] - cStep[stdMI$mtxLen-5,]
+								cStep[stdMI$mtxLen-2,]+vDiff
+							}
+
+
 		rawLen <- nrow( stdMI$rawTail )
 		for( aIdx in seq_len(length(allIdxF)) ){
 			aZoid <- gEnv$allZoidMtx[allIdxF[aIdx],]
@@ -1620,12 +1662,14 @@ fCutU.ccc.score2 <- function( gEnv, allIdxF, zMtx ){
 				scoreMtx[aIdx,"rebR.cnt"] <- sum( !is.na(slideObj$rMtx["val",]) )
 			}
 
-			if( !is.null(inc.stdRaw) ){
-				scoreMtx[aIdx,"inc.raw"]	<- sum(aZoid==inc.stdRaw ,na.rm=T)
-			}
-			if( !is.null(inc.stdCStep) ){
-				scoreMtx[aIdx,"inc.cStep"]	<- sum(aCStep==inc.stdCStep ,na.rm=T)
-			}
+			if( !is.null(inc.stdRaw ) )	scoreMtx[aIdx,"inc.r"]	<- sum(aZoid==inc.stdRaw  ,na.rm=T)
+			if( !is.null(inc.stdRaw2) )	scoreMtx[aIdx,"inc.r2"]	<- sum(aZoid==inc.stdRaw2 ,na.rm=T)
+			if( !is.null(inc.stdRaw3) )	scoreMtx[aIdx,"inc.r3"]	<- sum(aZoid==inc.stdRaw3 ,na.rm=T)
+
+			if( !is.null(inc.stdCStep ) )	scoreMtx[aIdx,"inc.c"]	<- sum(aCStep==inc.stdCStep  ,na.rm=T)
+			if( !is.null(inc.stdCStep2) )	scoreMtx[aIdx,"inc.c2"]	<- sum(aCStep==inc.stdCStep2 ,na.rm=T)
+			if( !is.null(inc.stdCStep3) )	scoreMtx[aIdx,"inc.c3"]	<- sum(aCStep==inc.stdCStep3 ,na.rm=T)
+
 		}
 	}	# reb3V ,reb2C
 	#	dbgN<-"rebV"	;table(scoreMtx[,dbgN])	;dbgIdx<-head(which(scoreMtx[,dbgN]==1))	;aIdx<-dbgIdx[1]
@@ -1685,8 +1729,76 @@ fCutU.ccc.score3 <- function( gEnv, allIdxF, zMtx ){
 
 		return( matLst )
 	} # getRebPtn.n()
+	getSeqPtn <- function( mtx ){
+		rObj <- list( )
+		rowLen <- nrow( mtx )	;colLen <- ncol(mtx)
+		if( 2>rowLen ){
+			rObj$filt <- function( aCode ){ return( list( matCnt=0 ) ) }
+			return( rObj )
+		}
+
+		banLst <- list()
+		for( cIdx in 1:colLen ){	# lastCode
+			lc <- mtx[rowLen,cIdx]
+			fColIdx <- integer(0)
+			fRowIdx <- integer(0)
+			dbgStr <- ""
+			for( rIdx in (rowLen-1):1 ){
+				fColIdx <- which(mtx[rIdx,]==lc)
+				if( 0<length(fColIdx) ){
+					fRowIdx <- rIdx
+					dbgStr <- sprintf("col:%d(val:%d)  found in row:%d col:%s",cIdx,lc,fRowIdx,paste(fColIdx,collapse=","))
+					break
+				}
+			}
+
+			dbgStr <- ""
+			for( fcIdx in fColIdx ){
+				olSpan <- fCutU.overlapSpan( colLen ,colIdx.pre=fcIdx ,colIdx.post=cIdx )
+				if( 1>sum(olSpan$info[c("lMargin","rMargin")]) )	next
+
+				valInc <- mtx[fRowIdx+1,olSpan$span.pre]-mtx[fRowIdx,olSpan$span.pre]
+				banVal <- mtx[rowLen,olSpan$span.post]+valInc
+				fixPoint <- banVal	;fixPoint[-(olSpan$info["lMargin"]+1)] <- NA
+				dbgStr <- sprintf("colIdx:%d(val:%d) from (%d,%d)  %s/%s --> %s/%s..?",cIdx,lc,fRowIdx,fcIdx
+									,paste(mtx[fRowIdx  ,olSpan$span.pre],collapse=",")
+									,paste(mtx[fRowIdx+1,olSpan$span.pre],collapse=",")
+									,paste(mtx[rowLen,olSpan$span.post],collapse=",")
+									,paste(banVal,collapse=",")
+								)
+				banObj <- list( banVal=banVal ,banSpan=olSpan$span.post ,fixPoint=fixPoint ,dbgStr=dbgStr )
+				banLst[[1+length(banLst)]] <- banObj
+			}
+			
+		}
+
+		rObj$banLst <- banLst
+
+		rObj$filt <- function( aCode ){
+			rstObj <- list( matCnt=0 )
+			if( 0==length(rObj$banLst) ) return( rstObj )
+
+			matCnt <- sapply( rObj$banLst ,function( banInfo ){
+				cnt <- sum( aCode[banInfo$banSpan] == banInfo$banVal )
+				flagFixPoint <- all(aCode[banInfo$banSpan]==banInfo$fixPoint,na.rm=T)
+				if( flagFixPoint ){
+					return( cnt )
+				} else {
+					return( 0 )
+				}
+			})
+
+			rstObj$matCnt = matCnt
+			return( rstObj )
+		}
+
+		return( rObj )
+	} # getSeqPtn()
+
 
 	cName <- c("rebPtn.1","rebPtn.n","rebC.C1","rebC.F1","rebC.C2","rebC.F2")
+	cName <- c( cName ,"snMax.r" ,"snFCnt.r" ,"snMax.c" ,"snFCnt.c" )	# seqNext Cnt - Max val, Flag Cnt
+
 	scoreMtx <- matrix( 0, nrow=length(allIdxF), ncol=length(cName) )
 	colnames( scoreMtx ) <- cName
 	#	rebC.Cn/rebC.Cn : rebC의 CStep,FStep 버전 (h-1,h-2)
@@ -1698,6 +1810,8 @@ fCutU.ccc.score3 <- function( gEnv, allIdxF, zMtx ){
 
 	rebPtn.1 <- getRebPtn.1( stdMI )
 	rebPtn.n <- getRebPtn.n( stdMI )
+	seqNextPtn.raw		<- getSeqPtn( stdMI$rawTail )
+	seqNextPtn.cStep	<- getSeqPtn( stdMI$cStepTail )
 	if( TRUE ){
 		for( aIdx in seq_len(length(allIdxF)) ){
 			aZoid <- gEnv$allZoidMtx[allIdxF[aIdx],]
@@ -1727,6 +1841,17 @@ fCutU.ccc.score3 <- function( gEnv, allIdxF, zMtx ){
 								})
 					scoreMtx[aIdx,"rebPtn.n"] <- sum( flag )
 				}
+
+				#	"sncMax.raw" ,"sncFCnt.raw" 
+				snMatCnt.raw <- seqNextPtn.raw$filt( aZoid )$matCnt
+				scoreMtx[aIdx,"snMax.r"] <- max( snMatCnt.raw )
+				scoreMtx[aIdx,"snFCnt.r"] <- sum( snMatCnt.raw>=2 )
+
+				#	"sncMax.cStep" ,"sncFCnt.cStep"
+				snMatCnt.cStep <- seqNextPtn.cStep$filt( aZoid )$matCnt
+				scoreMtx[aIdx,"snMax.c"] <- max( snMatCnt.cStep )
+				scoreMtx[aIdx,"snFCnt.c"] <- sum( snMatCnt.cStep>=2 )
+
 			}
 		} # for
 	}

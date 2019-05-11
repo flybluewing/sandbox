@@ -105,7 +105,7 @@ ff0.byOnePhase.cut <- function( ccObj ,phName=NULL ){
     for( rIdx in 1:nrow(cntMtx) ){  # scoreMtx2
         score <- scoreMtx2[rIdx,]
         # rebV rebC rebL rebR rebL.cnt rebR.cnt inc.raw inc.cStep
-        flag <- score[c("rebV","rebC","rebC2","rebL","rebR","inc.raw", "inc.cStep")] >= c( 4, 3, 3, 2, 2, 3, 2 )
+        flag <- score[c("rebV","rebC","rebC2","rebL","rebR","inc.r", "inc.c","inc.r2", "inc.c2","inc.r3", "inc.c3")] >= c( 4, 3, 3, 2, 2, 3, 2, 3, 3, 3, 3 )
         if( any(flag) ){    filtedLst[[rIdx]] <- c(filtedLst[[rIdx]],"scoreMtx2.evtA01.out")    ;filtedFlg[ rIdx ] <- TRUE
         }
         if( 1<sum(score[c("rebC","rebC2")==2]) ){    
@@ -477,7 +477,7 @@ ff0.fltScoreMtx.static		<- function( ccObjLst ,allIdxF ){
 
 #	static과 custom 분리필요
 ff0.fltScoreMtx2.static	<- function( ccObjLst ,allIdxF ){
-	
+
 	allIdxF.len <- length( allIdxF )
 	scoreMtx2Lst <- lapply( ccObjLst ,function(p){ p$cccObj$scoreMtx2 })
 	phName <- attributes(scoreMtx2Lst)$names
@@ -492,8 +492,8 @@ ff0.fltScoreMtx2.static	<- function( ccObjLst ,allIdxF ){
 		scoreMtx2[,] <- 0		;scoreMtx2.evt[,] <- 0
 		for( phIdx in phName ){
 			scoreMtx2[phIdx,] <- scoreMtx2Lst[[phIdx]][aIdx,]
-			scoreMtx2.evt[phIdx,] <- scoreMtx2[phIdx,] >= c( 3, 2, 2, 1, 1, 100,100, 2, 2 )	# rebL.cnt,rebR.cnt은 100으로
-			#	"rebV" "rebC" "rebC2" "rebL" "rebR" "rebL.cnt" "rebR.cnt" "inc.raw" "inc.cStep"
+			scoreMtx2.evt[phIdx,] <- scoreMtx2[phIdx,] >= c( 3, 2, 2, 1, 1, 100,100, 2, 2, 2, 2, 2, 2 )	# rebL.cnt,rebR.cnt은 100으로
+			#	"rebV" "rebC" "rebC2" "rebL" "rebR" "rebL.cnt" "rebR.cnt" "inc.r" "inc.c" "inc.r2" "inc.c2" "inc.r3" "inc.c3"
 		}
 
 		evtCnt <- apply( scoreMtx2.evt ,1 ,sum )
@@ -501,11 +501,11 @@ ff0.fltScoreMtx2.static	<- function( ccObjLst ,allIdxF ){
 		if( 5<sum(evtCnt) ){	fltLst[[aIdx]]<-c(fltLst[[aIdx]],"0020") }
 
 		colSum <- apply( scoreMtx2 ,2 ,sum )
-		workCol <- c("inc.raw", "inc.cStep")
+		workCol <- c("inc.r", "inc.c")
 		if( 1<sum(0==colSum[workCol]) ){	fltLst[[aIdx]]<-c(fltLst[[aIdx]],"voidCol.00") }
 
 		colSum <- apply( scoreMtx2 ,2 ,function(cv){any(cv>1)} )
-		workCol <- c("rebC","rebC2","inc.raw", "inc.cStep")
+		workCol <- c("rebC","rebC2","inc.r", "inc.c")
 		if( 2<sum(colSum[workCol]) ){	fltLst[[aIdx]]<-c(fltLst[[aIdx]],"evtCol.00") }
 
 		colSum <- apply( scoreMtx2 ,2 ,function(cv){any(cv>1)} )
@@ -515,8 +515,8 @@ ff0.fltScoreMtx2.static	<- function( ccObjLst ,allIdxF ){
 			evtCnt[2] <- sum(scoreMtx2[,"rebC"]>1)
 			evtCnt[3] <- sum(scoreMtx2[,"rebC2"]>1)
 			evtCnt[4] <- sum(scoreMtx2[,c("rebL","rebR")]>0)
-			evtCnt[5] <- sum(scoreMtx2[,"inc.raw"]>1)
-			evtCnt[6] <- sum(scoreMtx2[,"inc.cStep"]>1)
+			evtCnt[5] <- sum(scoreMtx2[,"inc.r"]>1)
+			evtCnt[6] <- sum(scoreMtx2[,"inc.c"]>1)
 		if( 3<sum(evtCnt>=c(3,1,1,1,1,1)) ){	fltLst[[aIdx]]<-c(fltLst[[aIdx]],"evtCol.01") }
 		if( 0==sum(evtCnt>=c(3,1,1,1,1,1)) ){	fltLst[[aIdx]]<-c(fltLst[[aIdx]],"evtCol.01.a") }
 
@@ -549,14 +549,14 @@ ff0.fltScoreMtx2.static	<- function( ccObjLst ,allIdxF ){
 		# # -[rebR]--------------------------------------------------------------
 		if( 1<sum(scoreMtx2[,"rebR"]) ){	fltLst[[aIdx]]<-c(fltLst[[aIdx]],"0110") }
 
-		# # -[inc.raw]-----------------------------------------------------------
-		if( 6<sum(scoreMtx2[,"inc.raw"]) ){	fltLst[[aIdx]]<-c(fltLst[[aIdx]],"0120") }
-		flg <- scoreMtx2[,"inc.raw"] >= 2
+		# # -[inc.r]-----------------------------------------------------------
+		if( 6<sum(scoreMtx2[,"inc.r"]) ){	fltLst[[aIdx]]<-c(fltLst[[aIdx]],"0120") }
+		flg <- scoreMtx2[,"inc.r"] >= 2
 			banArea <- c("basic","nextZW","nextQuo10","nextBin","nextRebNum","nextCStepBin","nextFStepBin")
 			if( any(flg[banArea]) ){	fltLst[[aIdx]]<-c(fltLst[[aIdx]],"0130") }
 
-		# # -[inc.cStep]---------------------------------------------------------
-		if( 6<sum(scoreMtx2[,"inc.cStep"]) ){	fltLst[[aIdx]]<-c(fltLst[[aIdx]],"0140") }
+		# # -[inc.c]---------------------------------------------------------
+		if( 6<sum(scoreMtx2[,"inc.c"]) ){	fltLst[[aIdx]]<-c(fltLst[[aIdx]],"0140") }
 
 	}
 	# debug
@@ -587,8 +587,8 @@ ff0.fltScoreMtx3.static	<- function( ccObjLst ,allIdxF ){
 		scoreMtx3[,] <- 0		;scoreMtx3.evt[,] <- 0
 		for( phIdx in phName ){
 			scoreMtx3[phIdx,] <- scoreMtx3Lst[[phIdx]][aIdx,]
-			scoreMtx3.evt[phIdx,] <- scoreMtx3[phIdx,] >= c( 1, 1, 2, 2, 2, 2 )	# 
-			#	rebPtn.1 rebPtn.n rebC.C1 rebC.F1 rebC.C2 rebC.F2
+			scoreMtx3.evt[phIdx,] <- scoreMtx3[phIdx,] >= c( 1, 1,  2, 2, 2, 2,  2, 2, 2, 2 )	# 
+			#	rebPtn.1 rebPtn.n  rebC.C1 rebC.F1 rebC.C2 rebC.F2  snMax.r snFCnt.r snMax.c snFCnt.c
 		}
 
 		evtCnt <- apply( scoreMtx3.evt ,1 ,sum )
