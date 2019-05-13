@@ -1,4 +1,4 @@
-lastH <- 855
+lastH <- 858
 # fullRstSpan, goldRstSpan ----------------------------------------------------------
 fullRstSpan <- 826:lastH
 loadObjNm <- load( sprintf("Obj_allIdxLstZ%d.save",lastH) )
@@ -241,9 +241,15 @@ lab.getMtxLst <- function( pHSpan ,pIdStr ){
                             ,rIdx, matCnt, totCnt.lst, totCnt.cur
                             , ifelse(allMatch,"*"," ") ,ifelse( matCnt>0 && !is.null(rName),rName[rIdx] ,"    " )
                         )
-            rptStr <- c( rptStr ,rstStr )
-            if( show )
+            if( matCnt>0 ){
+                rptStr <- c( rptStr ,rstStr )
+            }
+            if( show ){
                 cat(sprintf("%s \n",rstStr))
+            }
+        }
+        if( 0==length(rptStr) ){
+            rptStr <- "    Nothing found in last match"
         }
 
         return( rptStr )
@@ -260,8 +266,7 @@ lab.getMtxLst <- function( pHSpan ,pIdStr ){
 
         rptStr <- NULL
         for( rIdx in 2:rowLen ){
-            rstStr <- sprintf("%7dth row %s",rIdx ,ifelse(!is.null(rName),rName[rIdx],"    ") )
-            rptStr <- c( rptStr ,rstStr )
+            curRowStr <- sprintf("%7dth row %s",rIdx ,ifelse(!is.null(rName),rName[rIdx],"    ") )
             if( show )
                 cat(sprintf("%s \n",rstStr))
 
@@ -278,7 +283,9 @@ lab.getMtxLst <- function( pHSpan ,pIdStr ){
                                 ,ifelse(allMatch,"*"," ") ,ifelse( matCnt>0 && !is.null(rName),rName[tIdx] ,"    " )
                                 ,rIdx-tIdx
                             )
-                rptStr <- c( rptStr ,rstStr )
+                if( matCnt>0 ){
+                    rptStr <- c( rptStr ,curRowStr ,rstStr )
+                }
                 if( show )
                     cat(sprintf("%s \n",rstStr))
 
