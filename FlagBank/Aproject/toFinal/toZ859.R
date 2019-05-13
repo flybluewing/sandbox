@@ -89,21 +89,31 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 	# allIdxF <- allIdxF[fltCnt==0]
 
 	# CUSTOM --------------------------------------------------------
-	fltCnt <- rep( 0, length(allIdxF) )
-	rstObj	<- fltCntMtx.lastPtn(		ccObjLst	,allIdxF )
-	fltCnt <- fltCnt + rstObj$fltCnt
+	#	fltCnt <- rep( 0, length(allIdxF) )
+	stdFiltedGroupId <- 0
+	if( 0==stdFiltedGroupId ){
+		rstObjName <- sprintf("./save/stdZoidFltRst/Obj_rstObj.%d.save",stdFiltedGroupId)
+		cat(sprintf("  -- loading %s \n",rstObjName))
+		objName <- load( rstObjName )
+		mtxLst.byPh <- rstObj$getMtx.byPhase()
+		mtxLst.byFlt <- rstObj$getMtx.byFilter()
 
-	rstObj	<- fltScoreMtx.lastPtn(		ccObjLst	,allIdxF )
-	fltCnt <- fltCnt + rstObj$fltCnt
-	rstObj	<- fltScoreMtx2.lastPtn(	ccObjLst	,allIdxF )
-	fltCnt <- fltCnt + rstObj$fltCnt
-	rstObj	<- fltScoreMtx3.lastPtn(	ccObjLst	,allIdxF )
-	fltCnt <- fltCnt + rstObj$fltCnt
-	rstObj	<- fltScoreMtx4.lastPtn(	ccObjLst	,allIdxF )
-	fltCnt <- fltCnt + rstObj$fltCnt
+		obj <- ref0.lastPtn_cntMtx( ccObjLst ,allIdxF ,mtxLst.byPh[["cntMtxLst"]] ,mtxLst.byFlt[["cntMtxLst"]] )
+		fltCnt <- fltCnt + rstObj$fltCnt
+		# obj <- ref0.lastPtn_scoreMtx( ccObjLst ,allIdxF )
+		# fltCnt <- fltCnt + rstObj$fltCnt
+		# obj <- ref0.lastPtn_scoreMtx2( ccObjLst ,allIdxF )
+		# fltCnt <- fltCnt + rstObj$fltCnt
+		# obj <- ref0.lastPtn_scoreMtx3( ccObjLst ,allIdxF )
+		# fltCnt <- fltCnt + rstObj$fltCnt
+		# obj <- ref0.lastPtn_scoreMtx4( ccObjLst ,allIdxF )
+		# fltCnt <- fltCnt + rstObj$fltCnt
 
-	rstObj	<- fltCStepValMtx.lastPtn(	ccObjLst	,allIdxF )
-	fltCnt <- fltCnt + rstObj$fltCnt
+		# obj <- ref0.lastPtn_CStepValMtx( ccObjLst ,allIdxF )
+		# fltCnt <- fltCnt + rstObj$fltCnt
+	} else {
+
+	}
 
 	allIdxF <- allIdxF[fltCnt==0]
 
