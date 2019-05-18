@@ -402,6 +402,39 @@ fCutU.overlapSpan <- function( spanLen ,colIdx.pre ,colIdx.post ){
 }	# fCutU.overlapSpan()
 
 
+
+fCutU.checkOverlap4Mtx <- function( mtx ,val ,maxDepth=5 ){
+
+	cName <- c("valCnt","lstCnt","lstMtch","lstMtch.hpn","maxMtch")
+		# valCnt : val에서 존재하는 값의 갯수.
+		# lstCnt : 가장 최근의 hpn 갯수.(hpn 0가 드문 경우의 체크를 위해.)
+		# lstMtch : mtx 마지막 행과 val과의 일치 수
+		# lstMtch.hpn : mtx에서 마지막 발생이 나타난 행과 val과의 일치
+		#		(mtx 마지막 행에 hpn이 있다면 lstMtch와 lstMtch.hpn은 같다.)
+		# maxMtch	: 최대 일치 수
+	matInfo <- rep( 0 ,length(cName) )		;names(matInfo) <- cName
+
+	valCnt <- sum(!is.na(val))
+	matCnt <- rep( 0 ,length(srchSpan) )
+	srchDepth <- ifelse( maxDepth<nrow(mtx) ,maxDepth ,nrow(mtx) )
+	for( idx in 1:srchDepth ){
+		if( valCnt==sum(!is.na(mtx[nrow(mtx)-idx+1,])) ){
+			matCnt[idx] <- sum(mtx[nrow(mtx)-idx+1, ]==val,na.rm=T)
+		}
+	}
+
+	matInfo["valCnt"] <- valCnt
+	matInfo["lstCnt"] <- sum(!is.na(mtx[nrow(mtx), ]))
+	matInfo["lstMtch"] <- matCnt[1]
+	hpnIdx <- which(matCnt>0)
+	matInfo["lstMtch.hpn"] <- ifelse( 0<length(hpnIdx) ,matCnt[hpnIdx] ,matCnt[1] )
+	matInfo["maxMtch"] <- max(matCnt)
+
+	return( matInfo )
+
+} # fCutU.checkOverlap4Mtx()
+
+
 # zoidMtx <- gEnv$allZoidMtx[allIdxF,]	;logId="allZoid.idx1"
 fCutU.logAllZoidMtx <- function( zoidMtx ,logId ){
 

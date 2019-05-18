@@ -1,10 +1,10 @@
-# Z855
-workH <- 855	;rpt=TRUE
+# Z860
+workH <- 860	;rpt=TRUE
 source(sprintf("./toFinal/toZ%d_H.R",workH))	# working
 
 load( sprintf("Obj_allIdxLstZ%d.save",workH-1) )
 load(sprintf("./save/Obj_gEnvZ%d.save",workH-1))
-allZoidGrpName <-"allZoid.idx0"						#	        
+allZoidGrpName <-"allZoid.idx0"						#
 allIdx <- allIdxLst[[allZoidGrpName]]		# allIdx <- c( allIdxLst[["allZoid.idx0"]] ,allIdxLst[["allZoid.idx1"]])
 allIdxF <- 1000:1010		;stdZoid <- NULL
 # 참고 자료 --------------------------------------------------------------------	
@@ -12,10 +12,9 @@ fCutU.rptColValSeqNext( gEnv ,allIdxF ,sprintf("toZ%d",workH) )
 
 
 # simMode start ----------------------------------------------------
-	aZoid <- stdZoid <- c(  8,15,17,19,43,44 ) # ZH 855 채워넣을 것.
-	allIdxF <- allIdx <- stdIdx <- 5654693
-		# which(apply(gEnv$allZoidMtx,1,function(zoid){all(zoid==stdZoid)}))
-	u0.saveStdZoidFltRst( workH )
+	# aZoid <- stdZoid <- c( ,,,,,, ) # ZH 860 채워넣을 것.
+	# allIdxF <- allIdx <- stdIdx <- which(apply(gEnv$allZoidMtx,1,function(zoid){all(zoid==stdZoid)}))
+	# u0.saveStdZoidFltRst( workH )
 # simMode end   ----------------------------------------------------
 
 finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
@@ -55,8 +54,7 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 	allIdxFObj$filtByOnePhase <- allIdxF
 
 	# u0.getPhObjLst( gEnv ,allIdxF ) -------------------------------------
-		ccObjLst <- u0.getPhObjLst( gEnv ,allIdxF )
-	tDiff <- Sys.time() - tStmp
+	ccObjLst <- u0.getPhObjLst( gEnv ,allIdxF )
 
 	if( TRUE ){	# cntMtx[,c("cStep","fStep")] <-- w1,w2 제거
 		for( phIdx in attributes(ccObjLst)$names ){
@@ -69,13 +67,13 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 	}
 	save( ccObjLst ,file="Obj_ccObjLst.save" )
 	save( allIdxF ,file="Obj_allIdxF.save" )
-	#	load("Obj_ccObjLst.save")	;load("Obj_allIdxF.save")
+	tDiff <- Sys.time() - tStmp
 
 	# STATIC --------------------------------------------------------
 	fltCnt <- rep( 0, length(allIdxF) )
 	rstObj	<- ff0.fltCntMtx(		ccObjLst	,allIdxF )
 	fltCnt <- fltCnt + rstObj$fltCnt
-
+	
 	rstObj	<- ff0.fltScoreMtx.static(		ccObjLst	,allIdxF )
 	fltCnt <- fltCnt + rstObj$fltCnt
 	rstObj	<- ff0.fltScoreMtx2.static(		ccObjLst	,allIdxF )
@@ -91,22 +89,31 @@ finalCut <- function( gEnv ,allIdx ,allZoidGrpName ){
 	# allIdxF <- allIdxF[fltCnt==0]
 
 	# CUSTOM --------------------------------------------------------
-	#	go toZ859_H.R
-	# fltCnt <- rep( 0, length(allIdxF) )
-	# rstObj	<- fltCntMtx.lastPtn(		ccObjLst	,allIdxF )
-	# fltCnt <- fltCnt + rstObj$fltCnt
+	#	fltCnt <- rep( 0, length(allIdxF) )
+	stdFiltedGroupId <- 0
+	if( 0==stdFiltedGroupId ){
+		rstObjName <- sprintf("./save/stdZoidFltRst/Obj_rstObj.%d.save",stdFiltedGroupId)
+		cat(sprintf("  -- loading %s \n",rstObjName))
+		objName <- load( rstObjName )
+		mtxLst.byPh <- rstObj$getMtx.byPhase()
+		mtxLst.byFlt <- rstObj$getMtx.byFilter()
 
-	# rstObj	<- fltScoreMtx.lastPtn(		ccObjLst	,allIdxF )
-	# fltCnt <- fltCnt + rstObj$fltCnt
-	# rstObj	<- fltScoreMtx2.lastPtn(	ccObjLst	,allIdxF )
-	# fltCnt <- fltCnt + rstObj$fltCnt
-	# rstObj	<- fltScoreMtx3.lastPtn(	ccObjLst	,allIdxF )
-	# fltCnt <- fltCnt + rstObj$fltCnt
-	# rstObj	<- fltScoreMtx4.lastPtn(	ccObjLst	,allIdxF )
-	# fltCnt <- fltCnt + rstObj$fltCnt
+		obj <- ref0.lastPtn_cntMtx( ccObjLst ,allIdxF ,mtxLst.byPh[["cntMtxLst"]] ,mtxLst.byFlt[["cntMtxLst"]] )
+		fltCnt <- fltCnt + rstObj$fltCnt
+		# obj <- ref0.lastPtn_scoreMtx( ccObjLst ,allIdxF )
+		# fltCnt <- fltCnt + rstObj$fltCnt
+		# obj <- ref0.lastPtn_scoreMtx2( ccObjLst ,allIdxF )
+		# fltCnt <- fltCnt + rstObj$fltCnt
+		# obj <- ref0.lastPtn_scoreMtx3( ccObjLst ,allIdxF )
+		# fltCnt <- fltCnt + rstObj$fltCnt
+		# obj <- ref0.lastPtn_scoreMtx4( ccObjLst ,allIdxF )
+		# fltCnt <- fltCnt + rstObj$fltCnt
 
-	# rstObj	<- fltCStepValMtx.lastPtn(	ccObjLst	,allIdxF )
-	# fltCnt <- fltCnt + rstObj$fltCnt
+		# obj <- ref0.lastPtn_CStepValMtx( ccObjLst ,allIdxF )
+		# fltCnt <- fltCnt + rstObj$fltCnt
+	} else {
+
+	}
 
 	allIdxF <- allIdxF[fltCnt==0]
 
