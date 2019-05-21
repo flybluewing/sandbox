@@ -96,11 +96,20 @@ colnames( allIdxLst$infoMtx ) <- c("stdFiltedCnt","rebCnt")
 
 save( allIdxLst, file=sprintf("Obj_allIdxLst%s.save",saveId) )
 
+# Review ---------------------------------------------------------------------------------------
+{
+    reviewSpan <- 19:0
+    hSpan <- nrow(gEnv$zhF) - reviewSpan
+    lst <- fRstLst[length(fRstLst)-reviewSpan]
+    flt <- do.call( c ,lst )
+    tbl <- table(flt)
+    tbl[order(tbl,decreasing=T)]
 
-
-
-
-
+    for( idx in 1:length(hSpan) ){
+        rptStr <- sprintf( "H%d(%d)    %s\n",hSpan[idx] ,stdFiltedCnt[as.character(hSpan[idx])] ,paste(lst[[idx]],collapse=" ") )
+        cat( rptStr )
+    }
+}
 
 
 
@@ -137,7 +146,6 @@ allIdxObj.0428.1$allIdxF.7.eadge <- curEadgeObj$allIdx
 save( allIdxObj.0428.1 ,file="./toFinal/Obj_allIdxObj.0428.1.save" )
 tDiff <- Sys.time() - tStmp
 sapply( allIdxObj.0428.1 ,length )
-
 
 
 
