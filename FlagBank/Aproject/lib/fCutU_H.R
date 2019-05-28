@@ -1299,6 +1299,207 @@ fCutU.getNextSeq <- function( pMtx ){
 }	# fCutU.getNextSeq()
 
 
+fCutU.getCntMtxObj <- function( stdMI ){
+
+	pMtx <- stdMI$cStepTail
+	#	pMtx[3,1]<-6	;pMtx[3,3]<-6	;pMtx[1,2]<-6	;pMtx[1,4:5]<-c(6,3)	;pMtx[6,3] <- 2
+		# 836  8  6  3  6  3
+		# 837 23  3  2  3 12
+		# 838  6  3  6  3  2
+		# 839  6  2  1  1  6
+		# 840  2  7 17  1 14
+		# 841  6  3  2  3  5
+
+
+} # fCutU.getCntMtxObj()
+
+
+fCutU.getFiltObjPair <- function( pMtx ){
+	# QQE:todo pMtx 데이터가 없는 경우를 위해 처리 필요.
+
+	getOverlapSpan <- function( a1, a2, aLen, nCol ){
+		#	a1.row < a2.row
+		if( nCol < (max(a1,a2)+aLen-1) ) return(NULL)
+
+		a1.span <- NULL		;a2.span <- NULL
+		a1.fixIdx<- NULL	;a2.fixIdx<-NULL
+		if( a1 >= a2 ){
+			leftMargin <- a2-1
+			rightMargin <- nCol - (a1+aLen-1)
+			a1.span <- (a1-leftMargin):nCol
+			a2.span <- 1:(a2+aLen-1 + rightMargin)
+		} else {
+			leftMargin <- a1-1
+			rightMargin <- nCol - (a2+aLen-1)
+			a1.span <- 1:(a1+aLen-1 +rightMargin)
+			a2.span <- (a2-leftMargin):nCol
+		}
+
+		return( list(a1.span=a1.span ,a2.span=a2.span ,fixIdx=(1:aLen+leftMargin) ) )
+	}
+
+	getOverlapSpan( 1, 4, 2, 5 )
+
+
+	#	"fv:1" "fv:2" "fv:3" "fv:6"
+		# 836  .  6  .  6  .
+		# 837  .  .  .  .  .
+		# 838  6  .  6  .  .
+		# 839  6  .  .  .  6
+		# 840  .  .  .  .  .
+		# 841  6  .  .  .  .
+	fvLineLst <- fCutU.getFallower( pMtx )
+
+	#	Same pattern
+		# 836  .  .  .  .  .
+		# 837  .  .  .  .  .
+		# 838  6  3  6  3  .
+		# 839  .  .  .  .  .
+		# 840  .  .  .  .  .
+		# 841  6  3  .  .  .
+	piMtx <- NULL	#	cName <- c(v1 v2 rf cf1 cf2 rs cs1 cs2 hpn)
+	for( fIdx in seq_len(length(fvLineLst)) ){	# fIdx <- 2
+		fvLine <- fvLineLst[[fIdx]]
+		#	(pFV,*)
+		for( mIdx in seq_len(length(fvLine[["(pFV,*)"]])) ){
+			wMtx <- fvLine[["(pFV,*)"]][[mIdx]]
+			tbl <- table(wMtx[,"v2"])
+			if( !any(tbl>1) ) next
+
+			tbl.fv <- as.integer(names(tbl[tbl>1]))
+			for( fcvIdx in tbl.fv ){	# fcvIdx <- tbl.fv[1]
+				mtx <- wMtx[which(wMtx[,"v2"]==fcvIdx),]
+				cName <- c("v1","v2","rf","cf1","cf2","rs","cs1","cs2","hpn")
+				pairInfo <- rep( 0 ,length(cName) )		;names(pairInfo)<-cName
+				pairInfo["hpn"] <- nrow(mtx)
+				pairInfo[c("v1","v2")] <- mtx[1,c("v1","v2")]	;pairInfo[c("rf","rs")] <- c( mtx[1,"rIdx"] ,mtx[2,"rIdx"] )
+				pairInfo[c("cf1","cf2")] <- mtx[1,c("cIdx1","cIdx2")]	;pairInfo[c("cs1","cs2")] <- mtx[1,c("cIdx1","cIdx2")]
+				piMtx <- rbind( piMtx ,pairInfo )
+			}
+		}
+
+		#	(*,pFV)
+		for( mIdx in seq_len(length(fvLine[["(*,pFV)"]])) ){
+			wMtx <- fvLine[["(*,pFV)"]][[mIdx]]
+			tbl <- table(wMtx[,"v1"])
+			if( !any(tbl>1) ) next
+
+			tbl.fv <- as.integer(names(tbl[tbl>1]))
+			for( fcvIdx in tbl.fv ){	# 	fcvIdx <- tbl.fv[1]
+				mtx <- wMtx[which(wMtx[,"v1"]==fcvIdx),]
+				cName <- c("v1","v2","rf","cf1","cf2","rs","cs1","cs2","hpn")
+				pairInfo <- rep( 0 ,length(cName) )		;names(pairInfo)<-cName
+				pairInfo["hpn"] <- nrow(mtx)
+				pairInfo[c("v1","v2")] <- mtx[1,c("v1","v2")]	;pairInfo[c("rf","rs")] <- c( mtx[1,"rIdx"] ,mtx[2,"rIdx"] )
+				pairInfo[c("cf1","cf2")] <- mtx[1,c("cIdx1","cIdx2")]	;pairInfo[c("cs1","cs2")] <- mtx[1,c("cIdx1","cIdx2")]
+				piMtx <- rbind( piMtx ,pairInfo )
+			}
+		}
+
+	}
+	# remove duplicatred row
+	dFlag <- rep( F ,nrow(piMtx) )
+	for( idx.1 in 1:(nrow(piMtx)-1) ){
+		if( dFlag[idx.1] )	next
+
+		for( idx.2 in (idx.1+1):nrow(piMtx) ){
+			if( all(piMtx[idx.1,]==piMtx[idx.2,]) ) dFlag[idx.2]<-T
+		}
+	}
+	piMtx <- piMtx[!dFlag,]
+
+	# qqe:todo bug check ----- piMtx[c(2,3,5,6),]
+
+	pBanInfoLst <- apply( piMtx ,1 ,function(piInfo){
+        #  v1 v2 rf cf1 cf2 rs cs1 cs2 hpn
+        #   2  3  6   3   4  2   3   4   2
+		banObj <- list( pairInfo=piInfo )
+		olSpan <- getOverlapSpan( piInfo["cs1"] ,piInfo["cf1"] ,2 ,ncol(pMtx) )
+
+		#	incPtn	: 1,2,3,2 -> 3,2,3,4 ----> 5?,2,3,6?
+		vDiff <- pMtx[piInfo["rf"],olSpan$a2.span] - pMtx[piInfo["rs"],olSpan$a1.span]
+		banObj$incPtn.banVal <- pMtx[piInfo["rf"],olSpan$a2.span]+vDiff
+		banObj$incPtn.fixIdx <- olSpan$fixIdx
+
+		#	rebPtn
+		step <- nrow(pMtx) - piInfo["rf"] + 1
+		banObj$rebPtn.banVal <- pMtx[piInfo["rs"]+step,olSpan$a1.span]
+		banObj$rebPtn.fixIdx <- piInfo[c("cf1","cf2")]
+
+		return( banObj )
+	})
+
+
+} # fCutU.getFiltObjPair()
+
+fCutU.getFallower <- function( pMtx ){
+
+	getTree <- function( truncLst ,cIdxs ,rIdx ){
+		if( 0==length(cIdxs) ) return( truncLst )
+
+		rLst <- list()
+		for( cIdx in cIdxs ){
+			idxMtx <- matrix( c(rIdx,cIdx) ,nrow=1 )
+			wLst <- truncLst
+			if( 0==length(wLst) ){	wLst[[1]] <- idxMtx
+			} else {
+				for( lIdx in 1:length(wLst) )	wLst[[lIdx]] <- rbind(wLst[[lIdx]],idxMtx)
+			}
+			rLst <- append( rLst ,wLst )
+		}
+
+		return( rLst )
+	} # getTree()
+
+	mtxN <- dim(pMtx)	;names(mtxN)<-c("r","c")
+	tbl <- table(pMtx)
+	fV <- as.integer(names(tbl))[tbl>1]
+
+	fvInfoLst <- list()	#	"tLst"    "(pFV,*)" 	"(*,pFV)"
+	for( fvIdx in fV ){
+		infoObj <- list()
+
+		tLst <- list()	# trunc List
+		for( rIdx in mtxN["r"]:1 ){
+			tLst <- getTree( tLst ,which(pMtx[rIdx,]==fvIdx) ,rIdx )
+		}
+		infoObj[["tLst"]] <- tLst
+
+		#	(pFV,*)
+		valLst <- lapply( tLst ,function( idxMtx ){
+			cNames <- c("rIdx","v1","v2","cIdx1","cIdx2")
+			rMtx <- matrix( 0 ,nrow=nrow(idxMtx) ,ncol=length(cNames) )	;colnames(rMtx)<-cNames
+			rMtx[,"v1"]<-fvIdx	;rMtx[,"rIdx"]<-idxMtx[,1]	;rMtx[,"cIdx1"]<-idxMtx[,2]
+			# ---
+			for( idx in 1:nrow(idxMtx) ){
+				rMtx[idx,"cIdx2"]		<- if( mtxN["c"]==idxMtx[idx,2] ) NA else idxMtx[idx,2]+1
+				rMtx[idx,"v2"]	<- if( mtxN["c"]==idxMtx[idx,2] ) NA else pMtx[ idxMtx[idx,1],idxMtx[idx,2]+1 ]
+			}
+			return( rMtx )
+		})
+		infoObj[["(pFV,*)"]] <- valLst
+
+		#	(*,pFV)
+		valLst <- lapply( tLst ,function( idxMtx ){
+			cNames <- c("rIdx","v1","v2","cIdx1","cIdx2")
+			rMtx <- matrix( 0 ,nrow=nrow(idxMtx) ,ncol=length(cNames) )	;colnames(rMtx)<-cNames
+			rMtx[,"v2"]<-fvIdx	;rMtx[,"rIdx"]<-idxMtx[,1]	;rMtx[,"cIdx2"]<-idxMtx[,2]
+			# ---
+			for( idx in 1:nrow(idxMtx) ){
+				rMtx[idx,"cIdx1"]	<- if( 1==idxMtx[idx,2] ) NA else idxMtx[idx,2]-1
+				rMtx[idx,"v1"]		<- if( 1==idxMtx[idx,2] ) NA else pMtx[ idxMtx[idx,1],idxMtx[idx,2]-1 ]
+			}
+			return( rMtx )
+		})
+		infoObj[["(*,pFV)"]] <- valLst
+
+		fvInfoLst[[sprintf("fv:%d",fvIdx)]] <- infoObj
+	}
+
+	return( fvInfoLst )
+
+} # fCutU.getFallower()
+
 
 #	toZnnn.R 에서의 finalCut() 함수에서 사용.
 #		주의 : NA 은 미발생 허용을 의미.
