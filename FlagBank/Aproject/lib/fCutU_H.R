@@ -1338,9 +1338,6 @@ fCutU.getFiltObjPair <- function( pMtx ){
 		return( list(a1.span=a1.span ,a2.span=a2.span ,fixIdx=(1:aLen+leftMargin) ) )
 	}
 
-	getOverlapSpan( 1, 4, 2, 5 )
-
-
 	#	"fv:1" "fv:2" "fv:3" "fv:6"
 		# 836  .  6  .  6  .
 		# 837  .  .  .  .  .
@@ -1373,7 +1370,7 @@ fCutU.getFiltObjPair <- function( pMtx ){
 				pairInfo <- rep( 0 ,length(cName) )		;names(pairInfo)<-cName
 				pairInfo["hpn"] <- nrow(mtx)
 				pairInfo[c("v1","v2")] <- mtx[1,c("v1","v2")]	;pairInfo[c("rf","rs")] <- c( mtx[1,"rIdx"] ,mtx[2,"rIdx"] )
-				pairInfo[c("cf1","cf2")] <- mtx[1,c("cIdx1","cIdx2")]	;pairInfo[c("cs1","cs2")] <- mtx[1,c("cIdx1","cIdx2")]
+				pairInfo[c("cf1","cf2")] <- mtx[1,c("cIdx1","cIdx2")]	;pairInfo[c("cs1","cs2")] <- mtx[2,c("cIdx1","cIdx2")]
 				piMtx <- rbind( piMtx ,pairInfo )
 			}
 		}
@@ -1391,13 +1388,13 @@ fCutU.getFiltObjPair <- function( pMtx ){
 				pairInfo <- rep( 0 ,length(cName) )		;names(pairInfo)<-cName
 				pairInfo["hpn"] <- nrow(mtx)
 				pairInfo[c("v1","v2")] <- mtx[1,c("v1","v2")]	;pairInfo[c("rf","rs")] <- c( mtx[1,"rIdx"] ,mtx[2,"rIdx"] )
-				pairInfo[c("cf1","cf2")] <- mtx[1,c("cIdx1","cIdx2")]	;pairInfo[c("cs1","cs2")] <- mtx[1,c("cIdx1","cIdx2")]
+				pairInfo[c("cf1","cf2")] <- mtx[1,c("cIdx1","cIdx2")]	;pairInfo[c("cs1","cs2")] <- mtx[2,c("cIdx1","cIdx2")]
 				piMtx <- rbind( piMtx ,pairInfo )
 			}
 		}
 
 	}
-	# remove duplicatred row
+	# piMtx : remove duplicatred row
 	dFlag <- rep( F ,nrow(piMtx) )
 	for( idx.1 in 1:(nrow(piMtx)-1) ){
 		if( dFlag[idx.1] )	next
@@ -1408,9 +1405,23 @@ fCutU.getFiltObjPair <- function( pMtx ){
 	}
 	piMtx <- piMtx[!dFlag,]
 
-	# qqe:todo bug check ----- piMtx[c(2,3,5,6),]
+	# piMtx.f : remove mis guided row
+	idStr <- sprintf("%d_%d",piMtx[,"v1"],piMtx[,"v2"])
+	idStr.span <- unique(idStr)
+	piMtx.f <- NULL	# for문 내부 주석 참고.
+	for( id in idStr.span ){
+		# 837  .  3  2  .  .	(3,2)->(3,6)->(3,2) 흐름과
+		# 838  .  3  6  3  2	(3,2)->(3,2)->(3,2) 흐름,
+		# 840  .  .  .  .  .	(3,5)->(3,2)->(3,2) 라는 각각의 흐름 때문에 
+		# 841  .  3  2  3  5	(3,2) 발생 row가 흐름별로 달리 나타나는 문제를 정리.	
+		mtx <- piMtx[idStr==id,,drop=F]
+		rf.max <- max(mtx[,"rf"])	;rs.max <- max(mtx[,"rs"])	;hpn.max <- max(mtx[,"hpn"])
+		latest.pi <- mtx[ mtx[,"rf"]==rf.max & mtx[,"rs"]==rs.max, ,drop=F ][1, ]
+		latest.pi["hpn"] <- hpn.max
+		piMtx.f <- rbind(piMtx.f,latest.pi)
+	}
 
-	pBanInfoLst <- apply( piMtx ,1 ,function(piInfo){
+	pBanInfoLst <- apply( piMtx.f ,1 ,function(piInfo){
         #  v1 v2 rf cf1 cf2 rs cs1 cs2 hpn
         #   2  3  6   3   4  2   3   4   2
 		banObj <- list( pairInfo=piInfo )
@@ -1428,6 +1439,9 @@ fCutU.getFiltObjPair <- function( pMtx ){
 
 		return( banObj )
 	})
+	names(pBanInfoLst) <- sapply( pBanInfoLst ,function(banInfo){ paste(banInfo$pairInfo[c("v1","v2")],collapse="-") })
+
+	#	 pattern
 
 
 } # fCutU.getFiltObjPair()
