@@ -1441,8 +1441,13 @@ fCutU.getFiltObjPair <- function( pMtx ){
 	})
 	names(pBanInfoLst) <- sapply( pBanInfoLst ,function(banInfo){ paste(banInfo$pairInfo[c("v1","v2")],collapse="-") })
 
-	#	 pattern
-
+	#	 increase pattern
+		# 838  6  .  6  .  .
+		# 839  6  2  .  .  .
+		# 840  .  .  .  .  .
+		# 841  6  3  .  .  .
+	iiMtx <- NULL	# increase info
+	
 
 } # fCutU.getFiltObjPair()
 
