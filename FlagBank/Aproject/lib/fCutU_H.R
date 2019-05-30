@@ -1314,7 +1314,7 @@ fCutU.getCntMtxObj <- function( stdMI ){
 } # fCutU.getCntMtxObj()
 
 
-fCutU.getFiltObjPair <- function( pMtx ){
+fCutU.getFiltObjPair <- function( pMtx ,debug=F ){
 	# QQE:todo pMtx 데이터가 없는 경우를 위해 처리 필요.
 
 	getOverlapSpan <- function( a1, a2, aLen, nCol ){
@@ -1337,6 +1337,38 @@ fCutU.getFiltObjPair <- function( pMtx ){
 
 		return( list(a1.span=a1.span ,a2.span=a2.span ,fixIdx=(1:aLen+leftMargin) ) )
 	}
+	scanStream <- function( vals ,infoDf ){
+		vals.len <- length(vals)	# 2 이상 보장
+
+		ptnDf <- NULL
+
+		fStep <- vals[1:(vals.len-1)] - vals[2:vals.len]
+		if( 1==abs(fStep[1]) ){	# code="fStep1"		3,4,5
+			df <- data.frame( banVal=vals[1]+fStep[1] ,code="fStep.1" ,multi=F ,code.sub=NA ,desc="2?,3,4,5" )
+			if( 1<length(fStep) && fStep[1]==fStep[2] )	df$multi=T	# 다수발생 여부.
+
+			df <- cbind( df, infoDf )
+			ptnDf <- rbind(ptnDf,df)
+
+		} else if( 1<length(fStep) && (fStep[1]==fStep[2]) ){	#code="fStep.n"		3, 5, 7
+			# n 중가가 2번 이상.
+			df <- data.frame( banVal=vals[1]+fStep[1] ,code="fStep.n" ,multi=F ,code.sub=NA ,desc="1?,3,5,7" )
+			if( 2<length(fStep) && fStep[2]==fStep[3] )	df$multi=T	# 다수발생 여부.
+
+			df <- cbind( df, infoDf )
+			ptnDf <- rbind(ptnDf,df)
+		}
+
+		if( 2<vals.len && (0==fStep[1]) && (0!=fStep[2]) ){	# code="bRebind"	4, 4, 5
+			df <- data.frame( banVal=vals[3] ,code="bRebind" ,multi=F ,code.sub=NA ,desc="5?,4,4,5")
+			df <- cbind( df, infoDf )
+			ptnDf <- rbind(ptnDf,df)
+		}
+
+		return( ptnDf )
+	}
+
+	rObj <- list( pBanInfoLst=NULL ,fvLineLst=NULL )	# for self-descriptive
 
 	#	"fv:1" "fv:2" "fv:3" "fv:6"
 		# 836  .  6  .  6  .
@@ -1346,8 +1378,9 @@ fCutU.getFiltObjPair <- function( pMtx ){
 		# 840  .  .  .  .  .
 		# 841  6  .  .  .  .
 	fvLineLst <- fCutU.getFallower( pMtx )
+	if( debug )	rObj$fvLineLst <- fvLineLst
 
-	#	Same pattern
+	#	<pBanInfoLst> Same pattern
 		# 836  .  .  .  .  .
 		# 837  .  .  .  .  .
 		# 838  6  3  6  3  .
@@ -1394,60 +1427,118 @@ fCutU.getFiltObjPair <- function( pMtx ){
 		}
 
 	}
-	# piMtx : remove duplicatred row
-	dFlag <- rep( F ,nrow(piMtx) )
-	for( idx.1 in 1:(nrow(piMtx)-1) ){
-		if( dFlag[idx.1] )	next
+	if( !is.null(piMtx) ){
+		# piMtx : remove duplicatred row
+		dFlag <- rep( F ,nrow(piMtx) )
+		for( idx.1 in 1:(nrow(piMtx)-1) ){
+			if( dFlag[idx.1] )	next
 
-		for( idx.2 in (idx.1+1):nrow(piMtx) ){
-			if( all(piMtx[idx.1,]==piMtx[idx.2,]) ) dFlag[idx.2]<-T
+			for( idx.2 in (idx.1+1):nrow(piMtx) ){
+				if( all(piMtx[idx.1,]==piMtx[idx.2,]) ) dFlag[idx.2]<-T
+			}
+		}
+		piMtx <- piMtx[!dFlag,]
+
+		# piMtx.f : remove mis guided row
+		idStr <- sprintf("%d_%d",piMtx[,"v1"],piMtx[,"v2"])
+		idStr.span <- unique(idStr)
+		piMtx.f <- NULL	# for문 내부 주석 참고.
+		for( id in idStr.span ){
+			# 837  .  3  2  .  .	(3,2)->(3,6)->(3,2) 흐름과
+			# 838  .  3  6  3  2	(3,2)->(3,2)->(3,2) 흐름,
+			# 840  .  .  .  .  .	(3,5)->(3,2)->(3,2) 라는 각각의 흐름 때문에 
+			# 841  .  3  2  3  5	(3,2) 발생 row가 흐름별로 달리 나타나는 문제를 정리.	
+			mtx <- piMtx[idStr==id,,drop=F]
+			rf.max <- max(mtx[,"rf"])	;rs.max <- max(mtx[,"rs"])	;hpn.max <- max(mtx[,"hpn"])
+			latest.pi <- mtx[ mtx[,"rf"]==rf.max & mtx[,"rs"]==rs.max, ,drop=F ][1, ]
+			latest.pi["hpn"] <- hpn.max
+			piMtx.f <- rbind(piMtx.f,latest.pi)
+		}
+
+		# final : rObj$pBanInfoLst <- pBanInfoLst
+		if( !is.null(piMtx.f) ){
+			pBanInfoLst <- apply( piMtx.f ,1 ,function(piInfo){
+				#  v1 v2 rf cf1 cf2 rs cs1 cs2 hpn
+				#   2  3  6   3   4  2   3   4   2
+				banObj <- list( pairInfo=piInfo )
+				olSpan <- getOverlapSpan( piInfo["cs1"] ,piInfo["cf1"] ,2 ,ncol(pMtx) )
+
+				#	incPtn	: 1,2,3,2 -> 3,2,3,4 ----> 5?,2,3,6?
+				vDiff <- pMtx[piInfo["rf"],olSpan$a2.span] - pMtx[piInfo["rs"],olSpan$a1.span]
+				banObj$incPtn.banVal <- pMtx[piInfo["rf"],olSpan$a2.span]+vDiff
+				banObj$incPtn.fixIdx <- olSpan$fixIdx
+
+				#	rebPtn
+				step <- nrow(pMtx) - piInfo["rf"] + 1
+				banObj$rebPtn.banVal <- pMtx[piInfo["rs"]+step,olSpan$a1.span]
+				banObj$rebPtn.fixIdx <- piInfo[c("cf1","cf2")]
+
+				return( banObj )
+			})
+			names(pBanInfoLst) <- sapply( pBanInfoLst ,function(banInfo){ paste(banInfo$pairInfo[c("v1","v2")],collapse="-") })
+			rObj$pBanInfoLst <- pBanInfoLst
 		}
 	}
-	piMtx <- piMtx[!dFlag,]
 
-	# piMtx.f : remove mis guided row
-	idStr <- sprintf("%d_%d",piMtx[,"v1"],piMtx[,"v2"])
-	idStr.span <- unique(idStr)
-	piMtx.f <- NULL	# for문 내부 주석 참고.
-	for( id in idStr.span ){
-		# 837  .  3  2  .  .	(3,2)->(3,6)->(3,2) 흐름과
-		# 838  .  3  6  3  2	(3,2)->(3,2)->(3,2) 흐름,
-		# 840  .  .  .  .  .	(3,5)->(3,2)->(3,2) 라는 각각의 흐름 때문에 
-		# 841  .  3  2  3  5	(3,2) 발생 row가 흐름별로 달리 나타나는 문제를 정리.	
-		mtx <- piMtx[idStr==id,,drop=F]
-		rf.max <- max(mtx[,"rf"])	;rs.max <- max(mtx[,"rs"])	;hpn.max <- max(mtx[,"hpn"])
-		latest.pi <- mtx[ mtx[,"rf"]==rf.max & mtx[,"rs"]==rs.max, ,drop=F ][1, ]
-		latest.pi["hpn"] <- hpn.max
-		piMtx.f <- rbind(piMtx.f,latest.pi)
-	}
 
-	pBanInfoLst <- apply( piMtx.f ,1 ,function(piInfo){
-        #  v1 v2 rf cf1 cf2 rs cs1 cs2 hpn
-        #   2  3  6   3   4  2   3   4   2
-		banObj <- list( pairInfo=piInfo )
-		olSpan <- getOverlapSpan( piInfo["cs1"] ,piInfo["cf1"] ,2 ,ncol(pMtx) )
-
-		#	incPtn	: 1,2,3,2 -> 3,2,3,4 ----> 5?,2,3,6?
-		vDiff <- pMtx[piInfo["rf"],olSpan$a2.span] - pMtx[piInfo["rs"],olSpan$a1.span]
-		banObj$incPtn.banVal <- pMtx[piInfo["rf"],olSpan$a2.span]+vDiff
-		banObj$incPtn.fixIdx <- olSpan$fixIdx
-
-		#	rebPtn
-		step <- nrow(pMtx) - piInfo["rf"] + 1
-		banObj$rebPtn.banVal <- pMtx[piInfo["rs"]+step,olSpan$a1.span]
-		banObj$rebPtn.fixIdx <- piInfo[c("cf1","cf2")]
-
-		return( banObj )
-	})
-	names(pBanInfoLst) <- sapply( pBanInfoLst ,function(banInfo){ paste(banInfo$pairInfo[c("v1","v2")],collapse="-") })
-
-	#	 increase pattern
+	#	<iBanInfoLst> increase pattern
 		# 838  6  .  6  .  .
 		# 839  6  2  .  .  .
 		# 840  .  .  .  .  .
 		# 841  6  3  .  .  .
-	iiMtx <- NULL	# increase info
-	
+	iiDf <- NULL	# increase info
+					#	  banVal    code multi code.sub     desc
+	for( lIdx in seq_len(length(fvLineLst)) ){
+		fvLine <- fvLineLst[[lIdx]]
+
+		for( mIdx in seq_len(length(fvLine[["(pFV,*)"]])) ){
+			mtx <- fvLine[["(pFV,*)"]][[mIdx]]
+			vals <- mtx[,"v2"]
+			if( 0<length(which(is.na(vals))) ){
+				naIdx <- which(is.na(vals))
+				if( 3>naIdx[1] )	next
+
+				vals <- vals[ 1:(naIdx[1]-1) ]
+			}
+
+			infoDf <- data.frame( mIdx=sprintf("%s(pFV,*) %3d",names(fvLineLst)[lIdx],mIdx) ,vals=paste(vals,collapse=",") )
+			banDf <- scanStream(vals,infoDf)
+			if( !is.null(banDf) ){
+				banPairMtx <- cbind( mtx[1,"v1"] ,banDf$banVal )	;colnames(banPairMtx)<-c("v1","v2")
+				banDf <- cbind( banPairMtx ,banDf )
+				iiDf <- rbind(iiDf ,banDf)
+			}
+		}
+
+		for( mIdx in seq_len(length(fvLine[["(*,pFV)"]])) ){
+			mtx <- fvLine[["(*,pFV)"]][[mIdx]]
+			vals <- mtx[,"v1"]
+			if( 0<length(which(is.na(vals))) ){
+				naIdx <- which(is.na(vals))
+				if( 3>naIdx[1] )	next
+
+				vals <- vals[ 1:(naIdx[1]-1) ]
+			}
+
+			infoDf <- data.frame( mIdx=sprintf("%s(*,pFV) %3d",names(fvLineLst)[lIdx],mIdx) ,vals=paste(vals,collapse=",") )
+			banDf <- scanStream(vals ,infoDf)
+			if( !is.null(banDf) ){
+				banPairMtx <- cbind( banDf$banVal,mtx[1,"v1"] )	;colnames(banPairMtx)<-c("v1","v2")
+				banDf <- cbind( banPairMtx ,banDf )
+				iiDf <- rbind(iiDf ,banDf)
+			}
+		}
+
+	}
+
+	# 1 3 9 11
+
+	#	<sBanInfoLst> symmetry pattern
+		# 838  6  .  7  1  .
+		# 839  6  2  7  3  .
+		# 840  .  .  .  .  .	바로 이전 패턴의 재현이 2개 이상 동시발생?
+		# 841  6  3  .  7  4	(6,2)-(6,3)-(6,2?)	(7,3)-(7,4)-(7,3?)
+
 
 } # fCutU.getFiltObjPair()
 
