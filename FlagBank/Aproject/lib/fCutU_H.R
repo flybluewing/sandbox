@@ -1367,8 +1367,33 @@ fCutU.getFiltObjPair <- function( pMtx ,debug=F ){
 
 		return( ptnDf )
 	}
+	removeDup <- function( df ,fixCol=NULL ){
+		rSize <- nrow(df)
+		if( 2>rSize ) return( df )
 
-	rObj <- list( pBanInfoLst=NULL ,fvLineLst=NULL )	# for self-descriptive
+		if( is.null(fixCol) )	fixCol <- 1:ncol(df)
+
+		surFlag <- rep( T ,rSize )
+		for( idx1 in 1:(rSize-1) ){
+			if( !surFlag[idx1] )	next
+
+			for( idx2 in (idx1+1):rSize ){
+				matchFlag <- df[idx1,fixCol]==df[idx2,fixCol]
+				if( any(is.na(matchFlag)) ){
+					naIdx <- which(is.na(matchFlag))
+					if( all(matchFlag[-naIdx]) && all(is.na(df[idx1,naIdx])) && all(is.na(df[idx2,naIdx])) ){
+						surFlag[idx2] <- F
+					}
+				} else if( all(matchFlag) ){
+					surFlag[idx2] <- F
+				}
+			}
+		}
+
+		return( df[surFlag,] )
+	}
+
+	rObj <- list( pBanInfoLst=NULL ,iBanInfoLst=NULL ,fvLineLst=NULL )	# for self-descriptive
 
 	#	"fv:1" "fv:2" "fv:3" "fv:6"
 		# 836  .  6  .  6  .
@@ -1486,8 +1511,51 @@ fCutU.getFiltObjPair <- function( pMtx ,debug=F ){
 		# 839  6  2  .  .  .
 		# 840  .  .  .  .  .
 		# 841  6  3  .  .  .
-	iiDf <- NULL	# increase info
-					#	  banVal    code multi code.sub     desc
+	iBanInfoLst <- list()	# increase info
+	#	inc1Df	2?,3,4
+	inc1Df <- NULL
+	for( lIdx in seq_len(length(fvLineLst)) ){
+		fvLine <- fvLineLst[[lIdx]]
+		for( mIdx in seq_len(length(fvLine[["(pFV,*)"]])) ){
+			mtx <- fvLine[["(pFV,*)"]][[mIdx]]
+			if( (nrow(mtx)<2) || any(is.na(mtx[1:2,"v2"])) )	next
+
+			if( 1==abs(mtx[1,"v2"]-mtx[2,"v2"]) ){	# add inc1Df
+				fStep <- mtx[1,"v2"]-mtx[2,"v2"]
+				df <- data.frame( v1=mtx[1,"v1"] ,v2=(mtx[1,"v2"]+fStep) 
+							,cIdx1.f=mtx[1,"cIdx2"]		,cIdx2.f=mtx[2,"cIdx2"]
+							,valStr=sprintf("(%d,%d)(%d,%d)",mtx[1,"v1"],mtx[1,"v2"],mtx[2,"v1"],mtx[2,"v2"])
+							,cordStr=sprintf("%s(%d,%d:%d)(%d,%d:%d)"	,names(fvLineLst)[lIdx]
+											,mtx[1,"rIdx"],mtx[1,"cIdx1"],mtx[1,"cIdx2"] 
+											,mtx[2,"rIdx"],mtx[2,"cIdx1"],mtx[2,"cIdx2"]
+										)
+						)
+				inc1Df <- rbind( inc1Df ,df )
+			}
+		}
+
+		for( mIdx in seq_len(length(fvLine[["(*,pFV)"]])) ){
+			mtx <- fvLine[["(*,pFV)"]][[mIdx]]
+			if( (nrow(mtx)<2) || any(is.na(mtx[1:2,"v1"])) )	next
+
+			if( 1==abs(mtx[1,"v1"]-mtx[2,"v1"]) ){	# add inc1Df
+				fStep <- mtx[1,"v1"]-mtx[2,"v1"]
+				df <- data.frame( v1=(mtx[1,"v1"]+fStep) ,v2=mtx[1,"v2"]
+							,cIdx1.f=mtx[1,"cIdx1"]		,cIdx2.f=mtx[2,"cIdx1"]
+							,valStr=sprintf("(%d,%d)(%d,%d)",mtx[1,"v1"],mtx[1,"v2"],mtx[2,"v1"],mtx[2,"v2"])
+							,cordStr=sprintf("%s(%d,%d:%d)(%d,%d:%d)"	,names(fvLineLst)[lIdx]
+											,mtx[1,"rIdx"],mtx[1,"cIdx1"],mtx[1,"cIdx2"] 
+											,mtx[2,"rIdx"],mtx[2,"cIdx1"],mtx[2,"cIdx2"]
+										)
+						)
+				inc1Df <- rbind( inc1Df ,df )
+			}
+		}		
+	}
+	inc1Df <- removeDup(inc1Df)
+	if( 0<nrow(inc1Df) )	iBanInfoLst$inc1Df <- inc1Df
+	
+
 	for( lIdx in seq_len(length(fvLineLst)) ){
 		fvLine <- fvLineLst[[lIdx]]
 
