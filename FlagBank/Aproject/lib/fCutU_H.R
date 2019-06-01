@@ -1305,8 +1305,8 @@ fCutU.getCntMtxObj <- function( stdMI ){
 	#	pMtx[3,1]<-6	;pMtx[3,3]<-6	;pMtx[1,2]<-6	;pMtx[1,4:5]<-c(6,3)	;pMtx[6,3] <- 2
 		# 836  8  6  3  6  3
 		# 837 23  3  2  3 12
-		# 838  6  3  6  3  2
-		# 839  6  2  1  1  6
+		# 838  6  3  1  8  2
+		# 839  6  2  1  1  4
 		# 840  2  7 17  1 14
 		# 841  6  3  2  3  5
 
@@ -1454,15 +1454,7 @@ fCutU.getFiltObjPair <- function( pMtx ,debug=F ){
 	}
 	if( !is.null(piMtx) ){
 		# piMtx : remove duplicatred row
-		dFlag <- rep( F ,nrow(piMtx) )
-		for( idx.1 in 1:(nrow(piMtx)-1) ){
-			if( dFlag[idx.1] )	next
-
-			for( idx.2 in (idx.1+1):nrow(piMtx) ){
-				if( all(piMtx[idx.1,]==piMtx[idx.2,]) ) dFlag[idx.2]<-T
-			}
-		}
-		piMtx <- piMtx[!dFlag,]
+		piMtx <- removeDup(piMtx)
 
 		# piMtx.f : remove mis guided row
 		idStr <- sprintf("%d_%d",piMtx[,"v1"],piMtx[,"v2"])
@@ -1511,7 +1503,7 @@ fCutU.getFiltObjPair <- function( pMtx ,debug=F ){
 		# 839  6  2  .  .  .
 		# 840  .  .  .  .  .
 		# 841  6  3  .  .  .
-	iBanInfoLst <- list()	# increase info
+	rObj$iBanInfoLst <- list()	# increase info
 	#	inc1Df	2?,3,4
 	inc1Df <- NULL
 	for( lIdx in seq_len(length(fvLineLst)) ){
@@ -1550,62 +1542,96 @@ fCutU.getFiltObjPair <- function( pMtx ,debug=F ){
 						)
 				inc1Df <- rbind( inc1Df ,df )
 			}
-		}		
+		}
 	}
 	inc1Df <- removeDup(inc1Df)
-	if( 0<nrow(inc1Df) )	iBanInfoLst$inc1Df <- inc1Df
-	
+	if( 0<nrow(inc1Df) )	rObj$iBanInfoLst$inc1Df <- inc1Df
 
+	#	incNDf	2?,3,4,5	2?,4,6,8
+	incNDf <- NULL
 	for( lIdx in seq_len(length(fvLineLst)) ){
 		fvLine <- fvLineLst[[lIdx]]
-
 		for( mIdx in seq_len(length(fvLine[["(pFV,*)"]])) ){
 			mtx <- fvLine[["(pFV,*)"]][[mIdx]]
-			vals <- mtx[,"v2"]
-			if( 0<length(which(is.na(vals))) ){
-				naIdx <- which(is.na(vals))
-				if( 3>naIdx[1] )	next
+			if( (nrow(mtx)<3) || any(is.na(mtx[1:3,"v2"])) )	next
 
-				vals <- vals[ 1:(naIdx[1]-1) ]
-			}
-
-			infoDf <- data.frame( mIdx=sprintf("%s(pFV,*) %3d",names(fvLineLst)[lIdx],mIdx) ,vals=paste(vals,collapse=",") )
-			banDf <- scanStream(vals,infoDf)
-			if( !is.null(banDf) ){
-				banPairMtx <- cbind( mtx[1,"v1"] ,banDf$banVal )	;colnames(banPairMtx)<-c("v1","v2")
-				banDf <- cbind( banPairMtx ,banDf )
-				iiDf <- rbind(iiDf ,banDf)
+			fStep <- mtx[1:2,"v2"] - mtx[2:3,"v2"]
+			if( fStep[1]==fStep[2] ){	# add incNDf
+				df <- data.frame( v1=mtx[1,"v1"] ,v2=( mtx[1,"v2"]+fStep[1] )
+							,cIdx1.f=mtx[1,"cIdx2"]		,cIdx2.f=mtx[2,"cIdx2"]	,cIdx3.f=mtx[3,"cIdx2"]
+							,valStr=sprintf("(%d,%d)(%d,%d)(%d,%d)",mtx[1,"v1"],mtx[1,"v2"],mtx[2,"v1"],mtx[2,"v2"],mtx[3,"v1"],mtx[3,"v2"] )
+							,cordStr=sprintf("%s(%d,%d:%d)(%d,%d:%d)(%d,%d:%d)"	,names(fvLineLst)[lIdx]
+											,mtx[1,"rIdx"],mtx[1,"cIdx1"],mtx[1,"cIdx2"] 
+											,mtx[2,"rIdx"],mtx[2,"cIdx1"],mtx[2,"cIdx2"]
+											,mtx[3,"rIdx"],mtx[3,"cIdx1"],mtx[3,"cIdx2"]
+										)
+						)
+				incNDf <- rbind( incNDf ,df )
 			}
 		}
 
 		for( mIdx in seq_len(length(fvLine[["(*,pFV)"]])) ){
 			mtx <- fvLine[["(*,pFV)"]][[mIdx]]
-			vals <- mtx[,"v1"]
-			if( 0<length(which(is.na(vals))) ){
-				naIdx <- which(is.na(vals))
-				if( 3>naIdx[1] )	next
+			if( (nrow(mtx)<3) || any(is.na(mtx[1:3,"v1"])) )	next
 
-				vals <- vals[ 1:(naIdx[1]-1) ]
+			fStep <- mtx[1:2,"v1"] - mtx[2:3,"v1"]
+			if( fStep[1]==fStep[2] ){	# add incNDf
+				df <- data.frame( v1=(mtx[1,"v1"]+fStep[1]) ,v2=mtx[1,"v2"]
+							,cIdx1.f=mtx[1,"cIdx2"]		,cIdx2.f=mtx[2,"cIdx2"]	,cIdx3.f=mtx[3,"cIdx2"]
+							,valStr=sprintf("(%d,%d)(%d,%d)(%d,%d)",mtx[1,"v1"],mtx[1,"v2"],mtx[2,"v1"],mtx[2,"v2"],mtx[3,"v1"],mtx[3,"v2"] )
+							,cordStr=sprintf("%s(%d,%d:%d)(%d,%d:%d)(%d,%d:%d)"	,names(fvLineLst)[lIdx]
+											,mtx[1,"rIdx"],mtx[1,"cIdx1"],mtx[1,"cIdx2"] 
+											,mtx[2,"rIdx"],mtx[2,"cIdx1"],mtx[2,"cIdx2"]
+											,mtx[3,"rIdx"],mtx[3,"cIdx1"],mtx[3,"cIdx2"]
+										)
+						)
+				incNDf <- rbind( incNDf ,df )
 			}
+		}
+	}
+	incNDf <- removeDup(incNDf)
+	if( 0<nrow(incNDf) )	rObj$iBanInfoLst$incNDf <- incNDf
 
-			infoDf <- data.frame( mIdx=sprintf("%s(*,pFV) %3d",names(fvLineLst)[lIdx],mIdx) ,vals=paste(vals,collapse=",") )
-			banDf <- scanStream(vals ,infoDf)
-			if( !is.null(banDf) ){
-				banPairMtx <- cbind( banDf$banVal,mtx[1,"v1"] )	;colnames(banPairMtx)<-c("v1","v2")
-				banDf <- cbind( banPairMtx ,banDf )
-				iiDf <- rbind(iiDf ,banDf)
+	#	<sBanInfoLst> symmetry pattern   Z842
+		# 836  8  6  3  6  3
+		# 837 23  3  2  3 12
+		# 838  6  3  6  3  2
+		# 839  6  2  1  1  6
+		# 840  2  7 17  1 14	바로 이전 패턴의 재현이 2개 이상 동시발생?
+		# 841  6  3  2  3  5	(6,2)-(6,3)-(6,2?)	(2,1)-(2,3)-(2,1?)
+	pairPtnLst <- list()
+	for( lIdx in seq_len(length(fvLineLst)) ){
+		fvLine <- fvLineLst[[lIdx]]
+		for( mIdx in seq_len(length(fvLine[["(pFV,*)"]])) ){
+			mtx <- fvLine[["(pFV,*)"]][[mIdx]]
+			for( mrIdx in 1:nrow(mtx) ){
+				if( mrIdx>length(pairPtnLst) ){
+					pairPtnLst[[mrIdx]] <- matrix( 0, nrow=0,ncol=2 )
+				}
+
+				if( any(is.na(mtx[,c("v1","v2")])) ){	next
+				} else {
+					pairPtnLst[[mrIdx]] <- rbind( pairPtnLst[[mrIdx]], mtx[mrIdx,c("v1","v2")] )
+				}
 			}
 		}
 
+		for( mIdx in seq_len(length(fvLine[["(*,pFV)"]])) ){
+			mtx <- fvLine[["(*,pFV)"]][[mIdx]]
+			for( mrIdx in 1:nrow(mtx) ){
+				if( mrIdx>length(pairPtnLst) ){
+					pairPtnLst[[mrIdx]] <- matrix( 0, nrow=0,ncol=2 )
+				}
+
+				if( any(is.na(mtx[,c("v1","v2")])) ){	next
+				} else {
+					pairPtnLst[[mrIdx]] <- rbind( pairPtnLst[[mrIdx]], mtx[mrIdx,c("v1","v2")] )
+				}
+			}
+		}
 	}
-
-	# 1 3 9 11
-
-	#	<sBanInfoLst> symmetry pattern
-		# 838  6  .  7  1  .
-		# 839  6  2  7  3  .
-		# 840  .  .  .  .  .	바로 이전 패턴의 재현이 2개 이상 동시발생?
-		# 841  6  3  .  7  4	(6,2)-(6,3)-(6,2?)	(7,3)-(7,4)-(7,3?)
+	rObj$pairPtnLst <- lapply( pairPtnLst ,removeDup )
+	#	QQE:todo 데이터 확인.
 
 
 } # fCutU.getFiltObjPair()
