@@ -1705,13 +1705,15 @@ fCutU.getFallower <- function( pMtx ){
 
 } # fCutU.getFallower()
 
-
-fCutU.rptGrpSum <- function( aCode ){
+#	그룹 sum패턴 존재 확인 : sum(aCStep[c( , )])==sum(aCStep[c( , )])
+#		forReport : T이면 보고만, F이면 필터링용 객체 반환.
+fCutU.rptGrpSum <- function( aCode ,forReport=T ){
+	#	aCode <- c( -4, -2, 16, 14, 24 )
 	aLen <- length( aCode )
 	colCord <- 1:aLen
 	eadge <- aLen %/% 2
 
-	sumDf <- NULL
+	sumLst <- list()
 	for( grp1Size in 2:eadge ){
 		grp1Mtx <- combinations( aLen ,grp1Size )
 		for( rIdx1 in 1:nrow(grp1Mtx) ){
@@ -1721,20 +1723,55 @@ fCutU.rptGrpSum <- function( aCode ){
 				for( rIdx2 in 1:nrow(grp2Mtx) ){
 					cord1 <- grp1Mtx[rIdx1,]
 					cord2 <- leftCol[ grp2Mtx[rIdx2,] ]
-					oneDf <- data.frame( sum1=sum(aCode[cord1])	
-									,cord1=paste(cord1 ,collapse=",")	,cord1Val=paste(aCode[cord1],collapse=",")
-									,sum2=sum(aCode[cord2]) 
-									,cord2=paste(cord2 ,collapse=",")	,cord2Val=paste(aCode[cord2],collapse=",")
-								)
-					sumDf <- rbind( sumDf ,oneDf )
+					cord.str <- c( paste( cord1,collapse="," ), paste( cord2,collapse="," ) )
+					cordVal1 <- aCode[cord1]
+					cordVal2 <- aCode[cord2]
+
+					uId <- NULL
+					if( 1==order(cord.str)[1] ){
+						uId <- sprintf("(%s/%s)",cord.str[1],cord.str[2])
+					} else {
+						uId <- sprintf("(%s/%s)",cord.str[2],cord.str[1])
+					}
+
+					if( 1<length(sumLst) && any(names(sumLst)==uId) ) next
+					if( sum(aCode[cord1]) != sum(aCode[cord2]) ) next
+					if( any(0==cordVal1) || any(0==cordVal2) ) next
+					if( 0<length(intersect(cordVal1,cordVal2)) ) next
+
+					sumInfo <- list( sumVal=c(sum(aCode[cord1]),sum(aCode[cord2])) 
+										,cord1=cord1	,cord2=cord2
+										,cordValStr=c( paste(cordVal1,collapse=",") ,cord2Val=paste(cordVal2,collapse=",") )
+									)
+
+					vals <- abs(c(cordVal1,cordVal2))	# (-2,-6)/( 4, 4 ) 처럼 최저값의 배수로 끝나는 패턴인지
+					if( 1<min(vals) ){
+						if( all( (vals%%min(vals)) == 0 ) ){
+							sumInfo$warn1 <- sprintf("warn1 - multiple of %d",min(vals))
+						}
+					}
+
+					sumLst[[uId]] <- sumInfo
 				}
 			}
 		}
 	}
 
-	# QQE working	
-	cat( rptStr )
+	rptStr <- NULL
+	for( uIdx in names(sumLst) ){
+		sumInfo <- sumLst[[uIdx]]
+		str <- sprintf("    %s sum:%d %s\n",uIdx,sumInfo$sumVal[1]
+					,ifelse( is.null(sumInfo$warn1) , "", sumInfo$warn1 )
+				)
+		rptStr <- c( rptStr ,str )
+	}
 
+	if( forReport ){
+		cat( paste(rptStr,collapse="") )
+	} else {
+		rObj <- list( sumLst=sumLst )
+		return( rObj )
+	}
 } # fCutU.rptGrpSum()
 
 #	toZnnn.R 에서의 finalCut() 함수에서 사용.
