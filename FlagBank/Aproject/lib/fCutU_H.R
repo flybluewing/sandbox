@@ -1303,6 +1303,7 @@ fCutU.getCntMtxObj <- function( stdMI ){
 
 	pMtx <- stdMI$cStepTail
 	#	pMtx[3,1]<-6	;pMtx[3,3]<-6	;pMtx[1,2]<-6	;pMtx[1,4:5]<-c(6,3)	;pMtx[6,3] <- 2
+		# Z842
 		# 836  8  6  3  6  3
 		# 837 23  3  2  3 12
 		# 838  6  3  1  8  2
@@ -1704,6 +1705,37 @@ fCutU.getFallower <- function( pMtx ){
 
 } # fCutU.getFallower()
 
+
+fCutU.rptGrpSum <- function( aCode ){
+	aLen <- length( aCode )
+	colCord <- 1:aLen
+	eadge <- aLen %/% 2
+
+	sumDf <- NULL
+	for( grp1Size in 2:eadge ){
+		grp1Mtx <- combinations( aLen ,grp1Size )
+		for( rIdx1 in 1:nrow(grp1Mtx) ){
+			leftCol <- (1:aLen)[ -grp1Mtx[rIdx1,] ]
+			for( grp2Size in 2:length(leftCol) ){
+				grp2Mtx <- combinations( length(leftCol) ,grp2Size )
+				for( rIdx2 in 1:nrow(grp2Mtx) ){
+					cord1 <- grp1Mtx[rIdx1,]
+					cord2 <- leftCol[ grp2Mtx[rIdx2,] ]
+					oneDf <- data.frame( sum1=sum(aCode[cord1])	
+									,cord1=paste(cord1 ,collapse=",")	,cord1Val=paste(aCode[cord1],collapse=",")
+									,sum2=sum(aCode[cord2]) 
+									,cord2=paste(cord2 ,collapse=",")	,cord2Val=paste(aCode[cord2],collapse=",")
+								)
+					sumDf <- rbind( sumDf ,oneDf )
+				}
+			}
+		}
+	}
+
+	# QQE working	
+	cat( rptStr )
+
+} # fCutU.rptGrpSum()
 
 #	toZnnn.R 에서의 finalCut() 함수에서 사용.
 #		주의 : NA 은 미발생 허용을 의미.
