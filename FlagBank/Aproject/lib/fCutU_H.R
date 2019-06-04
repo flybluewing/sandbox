@@ -1632,8 +1632,71 @@ fCutU.getFiltObjPair <- function( pMtx ,debug=F ){
 		}
 	}
 	rObj$pairPtnLst <- lapply( pairPtnLst ,removeDup )
+	names(rObj$pairPtnLst) <- sprintf("%dth Gen",1:length(rObj$pairPtnLst))
 	#	QQE:todo 데이터 확인.
 
+	#	<ptn4Lst> pair 주변 4개 길이의 재현 배제
+		# 836  8  6  3  6  3
+		# 837 23  3  2  3 12	4개 길이의 재현 배제
+		# 838  6  3  6  3  2	ex : 3
+		# 839  6  2  1  1  6		3,2 --> 6th row 6,3,2,3   3,2,3,5
+		# 840  2  7 17  1 14				3th row 6,3,6,3   3,6,3,2
+		# 841  6  3  2  3  5				1st row 8,6,3,6   6,3,6,3(eadge)
+	cWidth <- ncol(pMtx)
+	ptn4Lst <- list()
+	for( lIdx in seq_len(length(fvLineLst)) ){
+		fvLine <- fvLineLst[[lIdx]]
+		for( mIdx in seq_len(length(fvLine[["(pFV,*)"]])) ){
+			mtx <- fvLine[["(pFV,*)"]][[mIdx]]
+			for( mrIdx in 1:nrow(mtx) ){
+				if( cWidth==mtx[mrIdx,"cIdx1"] ) next
+
+				ptn <- list( rIdx=mtx[mrIdx,"rIdx"] ,cIdx=c(mtx[mrIdx,"cIdx1"],mtx[mrIdx,"cIdx2"]) )
+				if( 1==mtx[mrIdx,"cIdx1"] ){	ptn$cSpan <- 1:4
+				} else if( cWidth==(mtx[mrIdx,"cIdx1"]+1) ){	ptn$cSpan <- (cWidth-4:1+1) 
+				} else {	ptn$cSpan <- (mtx[mrIdx,"cIdx1"]-1):(mtx[mrIdx,"cIdx2"]+1) }
+
+				ptn$cVal <- pMtx[ ptn$rIdx ,ptn$cIdx ]
+				ptn$cSpanVal <- pMtx[ ptn$rIdx ,ptn$cSpan ]
+				ptn4Lst[[1+length(ptn4Lst)]] <- ptn
+			}
+		}
+
+		for( mIdx in seq_len(length(fvLine[["(*,pFV)"]])) ){
+			mtx <- fvLine[["(*,pFV)"]][[mIdx]]
+			for( mrIdx in 1:nrow(mtx) ){
+				if( 1==mtx[mrIdx,"cIdx2"] ) next
+
+				ptn <- list( rIdx=mtx[mrIdx,"rIdx"] ,cIdx=c(mtx[mrIdx,"cIdx1"],mtx[mrIdx,"cIdx2"]) )
+				if( 2==mtx[mrIdx,"cIdx2"] ){	ptn$cSpan <- 1:4
+				} else if( cWidth==mtx[mrIdx,"cIdx2"] ){	ptn$cSpan <- (cWidth-4:1+1) 
+				} else {	ptn$cSpan <- (mtx[mrIdx,"cIdx1"]-1):(mtx[mrIdx,"cIdx2"]+1) }
+
+				ptn$cVal <- pMtx[ ptn$rIdx ,ptn$cIdx ]
+				ptn$cSpanVal <- pMtx[ ptn$rIdx ,ptn$cSpan ]
+				ptn4Lst[[1+length(ptn4Lst)]] <- ptn
+			}
+		}
+	}
+	if( 1<length(ptn4Lst) ){	# remove Duplicated
+		uIdx <- sapply( ptn4Lst ,function(ptn){
+					sprintf("%d/%s",ptn$rIdx,paste(ptn$cIdx,collapse=","))
+		})
+		dupFlag <- rep( F, length(uIdx) )
+		for( idx1 in 1:(length(uIdx)-1) ){
+			if( dupFlag[idx1] ) next
+			for( idx2 in (idx1+1):length(uIdx) ){
+				if( uIdx[idx1]==uIdx[idx2] ) dupFlag[idx2] <- T
+			}
+		}
+		ptn4Lst <- ptn4Lst[!dupFlag]
+	}
+	rObj$ptn4Lst <- ptn4Lst
+	names(rObj$ptn4Lst) <- sapply( rObj$ptn4Lst ,function(ptn){
+					sprintf("(%d/%s)",ptn$rIdx,paste(ptn$cIdx,collapse=","))
+	})
+
+	# QQE working
 
 } # fCutU.getFiltObjPair()
 
