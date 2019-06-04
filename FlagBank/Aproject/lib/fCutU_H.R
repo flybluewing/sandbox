@@ -1316,7 +1316,6 @@ fCutU.getCntMtxObj <- function( stdMI ){
 
 
 fCutU.getFiltObjPair <- function( pMtx ,debug=F ){
-	# QQE:todo pMtx 데이터가 없는 경우를 위해 처리 필요.
 
 	getOverlapSpan <- function( a1, a2, aLen, nCol ){
 		#	a1.row < a2.row
@@ -1394,7 +1393,12 @@ fCutU.getFiltObjPair <- function( pMtx ,debug=F ){
 		return( df[surFlag,] )
 	}
 
-	rObj <- list( pBanInfoLst=NULL ,iBanInfoLst=NULL ,fvLineLst=NULL )	# for self-descriptive
+	rObj <- list( pBanInfoLst=list() ,iBanInfoLst=list() ,pairPtnLst=list() ,ptn4Lst=list() )	# for self-descriptive
+	if( 2>nrow(pMtx) ){
+		# QQE:todo pMtx 데이터가 없는 경우를 위해 처리 필요.
+		rObj$filt <- function(aCode){ return(NULL) }
+		return( rObj )
+	}
 
 	#	"fv:1" "fv:2" "fv:3" "fv:6"
 		# 836  .  6  .  6  .
@@ -1593,7 +1597,7 @@ fCutU.getFiltObjPair <- function( pMtx ,debug=F ){
 	incNDf <- removeDup(incNDf)
 	if( 0<nrow(incNDf) )	rObj$iBanInfoLst$incNDf <- incNDf
 
-	#	<sBanInfoLst> symmetry pattern   Z842
+	#	<pairPtnLst> symmetry pattern   Z842
 		# 836  8  6  3  6  3
 		# 837 23  3  2  3 12
 		# 838  6  3  6  3  2
@@ -1696,7 +1700,19 @@ fCutU.getFiltObjPair <- function( pMtx ,debug=F ){
 					sprintf("(%d/%s)",ptn$rIdx,paste(ptn$cIdx,collapse=","))
 	})
 
-	# QQE working
+	rObj$filt <- function( aCode ){
+		# pBanInfoLst
+		pairBanDf <- NULL
+		if( 0<length(rObj$pBanInfoLst) ){
+
+		} # pBanInfoLst
+
+		# iBanInfoLst
+		# pairPtnLst
+		# ptn4Lst
+	} # rObj$filt()
+
+	return( rObj )
 
 } # fCutU.getFiltObjPair()
 
