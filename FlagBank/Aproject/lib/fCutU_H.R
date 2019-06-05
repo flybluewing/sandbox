@@ -1394,6 +1394,18 @@ fCutU.getFiltObjPair <- function( pMtx ,debug=F ){
 	}
 
 	rObj <- list( pBanInfoLst=list() ,iBanInfoLst=list() ,pairPtnLst=list() ,ptn4Lst=list() )	# for self-descriptive
+	rObj$findPtn <- function( aCode ,ptn ){	# 발견 위치 idx 반환
+		aLen <- length(aCode)	;pLen <- length(ptn)
+		fndMtx <- matrix( 0, nrow=0, ncol=pLen )
+		for( idx in 1:(aLen-pLen+1)){
+			scanSpan <- idx + 0:(pLen-1)
+			if( all(aCode[scanSpan]==ptn) ){
+				fndMtx <- rbind( fndMtx , scanSpan )
+			}
+		}
+		return( fndMtx )
+	}
+
 	if( 2>nrow(pMtx) ){
 		# QQE:todo pMtx 데이터가 없는 경우를 위해 처리 필요.
 		rObj$filt <- function(aCode){ return(NULL) }
@@ -1492,7 +1504,9 @@ fCutU.getFiltObjPair <- function( pMtx ,debug=F ){
 
 				#	rebPtn
 				step <- nrow(pMtx) - piInfo["rf"] + 1
-				banObj$rebPtn.banVal <- pMtx[piInfo["rs"]+step,olSpan$a1.span]
+				banObj$rebPtn.banCol <- olSpan$a2.span
+				banObj$rebPtn.banVal <- rep( NA, ncol(pMtx) )
+				banObj$rebPtn.banVal[banObj$rebPtn.banCol] <- pMtx[piInfo["rs"]+step,olSpan$a1.span]
 				banObj$rebPtn.fixIdx <- piInfo[c("cf1","cf2")]
 
 				return( banObj )
@@ -1702,15 +1716,73 @@ fCutU.getFiltObjPair <- function( pMtx ,debug=F ){
 
 	rObj$filt <- function( aCode ){
 		# pBanInfoLst
-		pairBanDf <- NULL
+		pairBanLst <- NULL
 		if( 0<length(rObj$pBanInfoLst) ){
+			for( lIdx in 1:length(rObj$pBanInfoLst) ){
+				pBI <- rObj$pBanInfoLst[[lIdx]]	# banInfo
+				pI	<- pBI$pairInfo
+				
+				# typ="rebPair"
+				foundIdxMtx <- rObj$findPtn( aCode ,pI[c("v1","v2")] )
+				if( 0<nrow(foundIdxMtx) ){
+					rebLastCol <- apply( foundIdxMtx ,1 ,function(fIdx){all(fIdx==pI[c("cf1","cf2")])} )
+					df <- data.frame( typ="rebPair" ,id=lIdx 
+									,info=sprintf("val:%s(%d/%s)",paste(pI[c("v1","v2")],collapse=","),pI["rf"],paste(pI[c("cf1","cf2")],collapse=",")) 
+					)
+					cut.incPtn3<-F	;cut.incPtn4<-F		# thld 크기 차이
+					if( 2<length(pBI$incPtn.banVal) ){
+						cut.incPtn3=fCutU.hasPtn(pBI$incPtn.banVal,aCode,thld=3,fixIdx=pBI$incPtn.fixIdx)
+						cut.incPtn4=fCutU.hasPtn(pBI$incPtn.banVal,aCode,thld=4,fixIdx=pBI$incPtn.fixIdx)	
+					}
+					cut.df <- data.frame( cut.hpn=pI["hpn"]	,cut.lastCol=any(rebLastCol) ,cut.multiFnd=(1<nrow(foundIdxMtx))
+									,cut.incPtn3=cut.incPtn3	,cut.incPtn4=cut.incPtn4
+					)
+					pairBanLst[[1+length(pairBanLst)]] <- list( fndDf=df ,cutDf=cut.df )
+				}
 
+				# typ="pairNextPtn"
+				if( all(pBI$rebPtn.banVal[pBI$rebPtn.fixIdx]==aCode[pBI$rebPtn.fixIdx]) ){
+					df <- data.frame( typ="pairNextPtn" ,id=lIdx 
+									,info=sprintf("val:%s(%d/%s)",paste(pI[c("v1","v2")],collapse=","),pI["rf"],paste(pI[c("cf1","cf2")],collapse=",")) 
+					)
+					cut.extMatNum <- 0
+					# QQE work
+					# if( 2<length(pBI$rebPtn.banCol) ){
+
+					# }
+					pairBanLst[[1+length(pairBanLst)]] <- list( fndDf=df ,cutDf=cut.df )
+				}
+			}
 		} # pBanInfoLst
 
 		# iBanInfoLst
 		# pairPtnLst
 		# ptn4Lst
 	} # rObj$filt()
+
+	rObj$explain <- function( part="pBanInfoLst" ){
+		rptStr <- NULL
+		if( part=="pBanInfoLst" ){
+			infoStr <- sapply( rObj$pBanInfoLst ,function( banInfo ){
+				pairInfo <- banInfo$pairInfo
+				sprintf("val:%s   cord:(%d/%s),(%d/%s) happen:%d   incPtn:%s(fix:%s)  rebPtn:%s(fix:%s)" 
+					,paste(pairInfo[c("v1","v2")],collapse=",")
+					,pairInfo["rf"],paste(pairInfo[c("cf1","cf2")],collapse=",")
+					,pairInfo["rs"],paste(pairInfo[c("cs1","cs2")],collapse=",")
+					,pairInfo["hpn"]
+					,paste(banInfo$incPtn.banVal,collapse=",")	,paste(banInfo$incPtn.fixIdx,collapse=",")
+					,paste(banInfo$rebPtn.banVal,collapse=",")	,paste(banInfo$rebPtn.fixIdx,collapse=",")
+				)
+			})
+			if( 0<length(infoStr) ){
+				rptStr <- c( rptStr ,"pBanInfoLst")
+				infoStr <- paste( sprintf("  %dth %s",1:length(infoStr),infoStr) ,collapse="\n")
+				rptStr <- c( rptStr ,infoStr )
+			}
+		}
+		rptStr <- paste( rptStr ,collapse="\n" )
+		cat( sprintf("%s\n",rptStr) )
+	}
 
 	return( rObj )
 
