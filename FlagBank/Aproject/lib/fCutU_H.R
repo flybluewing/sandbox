@@ -1394,7 +1394,7 @@ fCutU.getFiltObjPair <- function( pMtx ,debug=F ){
 	}
 
 	rObj <- list( pBanInfoLst=list() ,iBanInfoLst=list() ,pairPtnLst=list() ,ptn4Lst=list() )	# for self-descriptive
-	rObj$findPtn <- function( aCode ,ptn ){	# 발견 위치 idx 반환
+	rObj$findPtn <- function( aCode ,ptn ){	# 발견 위치 idx 반환. fCutU.hasPtn()는 존재 여부만 판단할 뿐이라..
 		aLen <- length(aCode)	;pLen <- length(ptn)
 		fndMtx <- matrix( 0, nrow=0, ncol=pLen )
 		for( idx in 1:(aLen-pLen+1)){
@@ -1522,7 +1522,38 @@ fCutU.getFiltObjPair <- function( pMtx ,debug=F ){
 		# 839  6  2  .  .  .
 		# 840  .  .  .  .  .
 		# 841  6  3  .  .  .
-	rObj$iBanInfoLst <- list()	# increase info
+	iBanInfoLst <- list()	# increase info
+	for( lIdx in seq_len(length(fvLineLst)) ){
+		fvLine <- fvLineLst[[lIdx]]
+		for( mIdx in seq_len(length(fvLine[["(pFV,*)"]])) ){
+			mtx <- fvLine[["(pFV,*)"]][[mIdx]]
+
+			if( (nrow(mtx)<2) || any(is.na(mtx[1:2,"v2"])) )	next
+			if( 1==abs(mtx[1,"v2"]-mtx[2,"v2"]) ){	# add inc1Df
+				fStep <- mtx[1,"v2"]-mtx[2,"v2"]	# +- 문제때문..
+				df <- data.frame( v1=mtx[1,"v1"] ,v2=(mtx[1,"v2"]+fStep) ,baseCol="v1"	,fStep=fStep
+							,cIdx1.f=mtx[1,"cIdx1"]	,cIdx2.f=mtx[1,"cIdx2"]	,cIdx1.s=mtx[2,"cIdx1"]	,cIdx2.s=mtx[2,"cIdx2"]
+							,valStr=sprintf("(%d,%d)(%d,%d)",mtx[1,"v1"],mtx[1,"v2"],mtx[2,"v1"],mtx[2,"v2"])
+							,cordStr=sprintf("%s(%d,%d:%d)(%d,%d:%d)"	,names(fvLineLst)[lIdx]
+											,mtx[1,"rIdx"],mtx[1,"cIdx1"],mtx[1,"cIdx2"] 
+											,mtx[2,"rIdx"],mtx[2,"cIdx1"],mtx[2,"cIdx2"]
+										)
+						)
+				banObj <- list( incInfoDf=df )
+				# QQE working incPtn
+
+				iBanInfoLst[[1+length(iBanInfoLst)]] <- list( df=df )
+				inc1Df <- rbind( inc1Df ,df )
+			}
+
+			if( (nrow(mtx)<3) || any(is.na(mtx[1:3,"v2"])) )	next
+			# QQE : keep going
+		}
+
+	}
+	rObj$iBanInfoLst <- iBanInfoLst	# increase info
+	# ---------------------------------------------------
+
 	#	inc1Df	2?,3,4
 	inc1Df <- NULL
 	for( lIdx in seq_len(length(fvLineLst)) ){
@@ -1576,7 +1607,7 @@ fCutU.getFiltObjPair <- function( pMtx ,debug=F ){
 
 			fStep <- mtx[1:2,"v2"] - mtx[2:3,"v2"]
 			if( fStep[1]==fStep[2] ){	# add incNDf
-				df <- data.frame( v1=mtx[1,"v1"] ,v2=( mtx[1,"v2"]+fStep[1] )
+				df <- data.frame( v1=mtx[1,"v1"] ,v2=( mtx[1,"v2"]+fStep[1] ) ,incVal=fStep[1]
 							,cIdx1.f=mtx[1,"cIdx2"]		,cIdx2.f=mtx[2,"cIdx2"]	,cIdx3.f=mtx[3,"cIdx2"]
 							,valStr=sprintf("(%d,%d)(%d,%d)(%d,%d)",mtx[1,"v1"],mtx[1,"v2"],mtx[2,"v1"],mtx[2,"v2"],mtx[3,"v1"],mtx[3,"v2"] )
 							,cordStr=sprintf("%s(%d,%d:%d)(%d,%d:%d)(%d,%d:%d)"	,names(fvLineLst)[lIdx]
@@ -1715,8 +1746,9 @@ fCutU.getFiltObjPair <- function( pMtx ,debug=F ){
 	})
 
 	rObj$filt <- function( aCode ){
+		rstObj <- list()
 		# pBanInfoLst
-		pairBanLst <- NULL
+		pairBanLst <- list()
 		if( 0<length(rObj$pBanInfoLst) ){
 			for( lIdx in 1:length(rObj$pBanInfoLst) ){
 				pBI <- rObj$pBanInfoLst[[lIdx]]	# banInfo
@@ -1736,26 +1768,53 @@ fCutU.getFiltObjPair <- function( pMtx ,debug=F ){
 					}
 					cut.df <- data.frame( cut.hpn=pI["hpn"]	,cut.lastCol=any(rebLastCol) ,cut.multiFnd=(1<nrow(foundIdxMtx))
 									,cut.incPtn3=cut.incPtn3	,cut.incPtn4=cut.incPtn4
+									,thldInfo=sprintf("cut.incPtn3=T ,cut.incPtn3=T")
 					)
-					pairBanLst[[1+length(pairBanLst)]] <- list( fndDf=df ,cutDf=cut.df )
+					pairBanLst[[sprintf("%d rebPair",lIdx)]] <- list( fndDf=df ,cutDf=cut.df )
 				}
 
 				# typ="pairNextPtn"
 				if( all(pBI$rebPtn.banVal[pBI$rebPtn.fixIdx]==aCode[pBI$rebPtn.fixIdx]) ){
 					df <- data.frame( typ="pairNextPtn" ,id=lIdx 
-									,info=sprintf("val:%s(%d/%s)",paste(pI[c("v1","v2")],collapse=","),pI["rf"],paste(pI[c("cf1","cf2")],collapse=",")) 
+									,info=sprintf("from pair %s(%d/%s)",paste(pI[c("v1","v2")],collapse=","),pI["rf"],paste(pI[c("cf1","cf2")],collapse=",")) 
 					)
 					cut.extMatNum <- 0
-					# QQE work
-					# if( 2<length(pBI$rebPtn.banCol) ){
-
-					# }
-					pairBanLst[[1+length(pairBanLst)]] <- list( fndDf=df ,cutDf=cut.df )
+					if( 2<length(pBI$rebPtn.banCol) ){
+						banCol <- setdiff( pBI$rebPtn.banCol ,pBI$rebPtn.fixIdx )
+						cut.extMatNum <- sum( pBI$rebPtn.banVal[banCol]==aCode[banCol] )
+					}
+					cut.df <- data.frame( cut.extMatNum=cut.extMatNum 
+									,thldInfo=sprintf("cut.extMatNum>0")
+								)
+					pairBanLst[[sprintf("%d pairNextPtn",lIdx)]] <- list( fndDf=df ,cutDf=cut.df )
 				}
 			}
-		} # pBanInfoLst
+		} # pBanInfoLst -> pairBanLst
+		rstObj$pairBanLst <- pairBanLst
 
 		# iBanInfoLst
+		iBanLst <- list()
+		if( 1<length(rObj$iBanInfoLst) ){
+			inc1Df <- rObj$iBanInfoLst$inc1Df
+			for( rIdx in seq_len(nrow(inc1Df))  ){
+				foundIdxMtx <- rObj$findPtn( aCode ,inc1Df[rIdx,c("v1","v2")] )
+				if( 1<nrow(foundIdxMtx) ){
+					rebLastCol <- apply( foundIdxMtx ,1 ,function(fIdx){all(fIdx[1]==inc1Df[rIdx,"cIdx1.f"])} )
+					df <- data.frame( typ="inc1Df"	,id=lIdx
+									,info=sprintf("val:%s",inc1Df[rIdx,"valStr"])
+					)
+					cut.df <- data.frame( cut.
+
+					)
+					iBanLst[[sprintf("%d inc1Df",lIdx)]] <- list( fndDf=df ,cutDf=cut.df )
+				}
+			}
+			incNDf <- rObj$iBanInfoLst$incNDf
+			for( rIdx in seq_len(nrow(incNDf))  ){
+
+			}
+		}
+
 		# pairPtnLst
 		# ptn4Lst
 	} # rObj$filt()
