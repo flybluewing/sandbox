@@ -1539,14 +1539,40 @@ fCutU.getFiltObjPair <- function( pMtx ,debug=F ){
 											,mtx[2,"rIdx"],mtx[2,"cIdx1"],mtx[2,"cIdx2"]
 										)
 						)
-				banObj <- list( incInfoDf=df )
-				# QQE working incPtn
+				banObj <- list( typ="incN" ,incInfoDf=df )
 
-				iBanInfoLst[[1+length(iBanInfoLst)]] <- list( df=df )
-				inc1Df <- rbind( inc1Df ,df )
+				olSpan <- getOverlapSpan( df$cIdx1.s ,df$cIdx1.f ,2 ,ncol(pMtx) )
+				vDiff <- pMtx[mtx[1,"rIdx"],olSpan$a2.span] - pMtx[mtx[2,"rIdx"],olSpan$a1.span]
+				banObj$incPtn.banVal <- pMtx[mtx[1,"rIdx"],olSpan$a2.span] + vDiff
+				banObj$incPtn.fixIdx <- olSpan$fixIdx
+
+				banObj$multiHpn <- F
+				if( nrow(mtx)>=3 )	banObj$multiHpn <- fStep==(mtx[2,"v2"]-mtx[3,"v2"])
+
+				iBanInfoLst[[1+length(iBanInfoLst)]] <- banObj
 			}
 
 			if( (nrow(mtx)<3) || any(is.na(mtx[1:3,"v2"])) )	next
+			fStep <- mtx[1:2,"v2"]-mtx[2:3,"v2"]
+			if( fStep[1]==fStep[2] ){
+				df <- data.frame( v1=mtx[1,"v1"] ,v2=(mtx[1,"v2"]+fStep[1]) ,baseCol="v1"	,fStep=fStep[1]
+							,cIdx1.f=mtx[1,"cIdx1"]	,cIdx2.f=mtx[1,"cIdx2"]	,cIdx1.s=mtx[2,"cIdx1"]	,cIdx2.s=mtx[2,"cIdx2"]
+							,valStr=sprintf("(%d,%d)(%d,%d)",mtx[1,"v1"],mtx[1,"v2"],mtx[2,"v1"],mtx[2,"v2"])
+							,cordStr=sprintf("%s(%d,%d:%d)(%d,%d:%d)"	,names(fvLineLst)[lIdx]
+											,mtx[1,"rIdx"],mtx[1,"cIdx1"],mtx[1,"cIdx2"] 
+											,mtx[2,"rIdx"],mtx[2,"cIdx1"],mtx[2,"cIdx2"]
+										)
+						)
+				banObj <- list( typ="incN" ,incInfoDf=df )
+
+				olSpan <- getOverlapSpan( df$cIdx1.s ,df$cIdx1.f ,2 ,ncol(pMtx) )
+				vDiff <- pMtx[mtx[1,"rIdx"],olSpan$a2.span] - pMtx[mtx[2,"rIdx"],olSpan$a1.span]
+				banObj$incPtn.banVal <- pMtx[mtx[1,"rIdx"],olSpan$a2.span] + vDiff
+				banObj$incPtn.fixIdx <- olSpan$fixIdx
+
+				banObj$multiHpn <- F
+				if( nrow(mtx)>=4 )	banObj$multiHpn <- fStep[1]==(mtx[3,"v2"]-mtx[4,"v2"])
+			}
 			# QQE : keep going
 		}
 
@@ -1594,8 +1620,10 @@ fCutU.getFiltObjPair <- function( pMtx ,debug=F ){
 			}
 		}
 	}
-	inc1Df <- removeDup(inc1Df)
-	if( 0<nrow(inc1Df) )	rObj$iBanInfoLst$inc1Df <- inc1Df
+	if( !is.null(inc1Df) ){
+		inc1Df <- removeDup(inc1Df)
+		if( 0<nrow(inc1Df) )	rObj$iBanInfoLst$inc1Df <- inc1Df
+	}
 
 	#	incNDf	2?,3,4,5	2?,4,6,8
 	incNDf <- NULL
@@ -1639,8 +1667,10 @@ fCutU.getFiltObjPair <- function( pMtx ,debug=F ){
 			}
 		}
 	}
-	incNDf <- removeDup(incNDf)
-	if( 0<nrow(incNDf) )	rObj$iBanInfoLst$incNDf <- incNDf
+	if( !is.null(incNDf) ){
+		incNDf <- removeDup(incNDf)
+		if( 0<nrow(incNDf) )	rObj$iBanInfoLst$incNDf <- incNDf
+	}
 
 	#	<pairPtnLst> symmetry pattern   Z842
 		# 836  8  6  3  6  3
