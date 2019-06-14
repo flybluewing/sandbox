@@ -1539,7 +1539,7 @@ fCutU.getFiltObjPair <- function( pMtx ,debug=F ){
 											,mtx[2,"rIdx"],mtx[2,"cIdx1"],mtx[2,"cIdx2"]
 										)
 						)
-				banObj <- list( typ="incN" ,incInfoDf=df )
+				banObj <- list( typ="inc1" ,incInfoDf=df )
 
 				olSpan <- getOverlapSpan( df$cIdx1.s ,df$cIdx1.f ,2 ,ncol(pMtx) )
 				vDiff <- pMtx[mtx[1,"rIdx"],olSpan$a2.span] - pMtx[mtx[2,"rIdx"],olSpan$a1.span]
@@ -1547,7 +1547,7 @@ fCutU.getFiltObjPair <- function( pMtx ,debug=F ){
 				banObj$incPtn.fixIdx <- olSpan$fixIdx
 
 				banObj$multiHpn <- F
-				if( nrow(mtx)>=3 )	banObj$multiHpn <- fStep==(mtx[2,"v2"]-mtx[3,"v2"])
+				if( nrow(mtx)>=3 && !is.na(mtx[3,"v2"]) )	banObj$multiHpn <- fStep==(mtx[2,"v2"]-mtx[3,"v2"])
 
 				iBanInfoLst[[1+length(iBanInfoLst)]] <- banObj
 			}
@@ -1571,12 +1571,79 @@ fCutU.getFiltObjPair <- function( pMtx ,debug=F ){
 				banObj$incPtn.fixIdx <- olSpan$fixIdx
 
 				banObj$multiHpn <- F
-				if( nrow(mtx)>=4 )	banObj$multiHpn <- fStep[1]==(mtx[3,"v2"]-mtx[4,"v2"])
+				if( nrow(mtx)>=4 && !is.na(mtx[4,"v2"]) )	banObj$multiHpn <- fStep[1]==(mtx[3,"v2"]-mtx[4,"v2"])
+
+				iBanInfoLst[[1+length(iBanInfoLst)]] <- banObj
 			}
-			# QQE : keep going
+
+		}
+
+		for( mIdx in seq_len(length(fvLine[["(*,pFV)"]])) ){
+			mtx <- fvLine[["(*,pFV)"]][[mIdx]]
+
+			if( (nrow(mtx)<2) || any(is.na(mtx[1:2,"v1"])) )	next
+			if( 1==abs(mtx[1,"v1"]-mtx[2,"v1"]) ){	# add inc1Df
+				fStep <- mtx[1,"v1"]-mtx[2,"v1"]	# +- 문제때문..
+				df <- data.frame( v1=(mtx[1,"v1"]+fStep) ,v2=mtx[1,"v2"] ,baseCol="v2"	,fStep=fStep
+							,cIdx1.f=mtx[1,"cIdx1"]	,cIdx2.f=mtx[1,"cIdx2"]	,cIdx1.s=mtx[2,"cIdx1"]	,cIdx2.s=mtx[2,"cIdx2"]
+							,valStr=sprintf("(%d,%d)(%d,%d)",mtx[1,"v1"],mtx[1,"v2"],mtx[2,"v1"],mtx[2,"v2"])
+							,cordStr=sprintf("%s(%d,%d:%d)(%d,%d:%d)"	,names(fvLineLst)[lIdx]
+											,mtx[1,"rIdx"],mtx[1,"cIdx1"],mtx[1,"cIdx2"] 
+											,mtx[2,"rIdx"],mtx[2,"cIdx1"],mtx[2,"cIdx2"]
+										)
+						)
+				banObj <- list( typ="inc1" ,incInfoDf=df )
+
+				olSpan <- getOverlapSpan( df$cIdx1.s ,df$cIdx1.f ,2 ,ncol(pMtx) )
+				vDiff <- pMtx[mtx[1,"rIdx"],olSpan$a2.span] - pMtx[mtx[2,"rIdx"],olSpan$a1.span]
+				banObj$incPtn.banVal <- pMtx[mtx[1,"rIdx"],olSpan$a2.span] + vDiff
+				banObj$incPtn.fixIdx <- olSpan$fixIdx
+
+				banObj$multiHpn <- F
+				if( nrow(mtx)>=3 && !is.na(mtx[3,"v1"]) )	banObj$multiHpn <- fStep==(mtx[2,"v1"]-mtx[3,"v1"])
+
+				iBanInfoLst[[1+length(iBanInfoLst)]] <- banObj
+			}
+
+			if( (nrow(mtx)<3) || any(is.na(mtx[1:3,"v1"])) )	next
+			fStep <- mtx[1:2,"v1"]-mtx[2:3,"v1"]
+			if( fStep[1]==fStep[2] ){
+				df <- data.frame( v1=(mtx[1,"v1"]+fStep[1]) ,v2=mtx[1,"v2"] ,baseCol="v2"	,fStep=fStep[1]
+							,cIdx1.f=mtx[1,"cIdx1"]	,cIdx2.f=mtx[1,"cIdx2"]	,cIdx1.s=mtx[2,"cIdx1"]	,cIdx2.s=mtx[2,"cIdx2"]
+							,valStr=sprintf("(%d,%d)(%d,%d)",mtx[1,"v1"],mtx[1,"v2"],mtx[2,"v1"],mtx[2,"v2"])
+							,cordStr=sprintf("%s(%d,%d:%d)(%d,%d:%d)"	,names(fvLineLst)[lIdx]
+											,mtx[1,"rIdx"],mtx[1,"cIdx1"],mtx[1,"cIdx2"] 
+											,mtx[2,"rIdx"],mtx[2,"cIdx1"],mtx[2,"cIdx2"]
+										)
+						)
+				banObj <- list( typ="incN" ,incInfoDf=df )
+
+				olSpan <- getOverlapSpan( df$cIdx1.s ,df$cIdx1.f ,2 ,ncol(pMtx) )
+				vDiff <- pMtx[mtx[1,"rIdx"],olSpan$a2.span] - pMtx[mtx[2,"rIdx"],olSpan$a1.span]
+				banObj$incPtn.banVal <- pMtx[mtx[1,"rIdx"],olSpan$a2.span] + vDiff
+				banObj$incPtn.fixIdx <- olSpan$fixIdx
+
+				banObj$multiHpn <- F
+				if( nrow(mtx)>=4 && !is.na(mtx[4,"v1"]) )	banObj$multiHpn <- fStep[1]==(mtx[3,"v1"]-mtx[4,"v1"])
+
+				iBanInfoLst[[1+length(iBanInfoLst)]] <- banObj
+			}
+
 		}
 
 	}
+	# 중복 제거 및 multiHpn 정리(True값이 존재하면 T로 통일.)
+	dupILst <-	lapply( iBanInfoLst ,function(iBan){ 
+					idStr <-	sprintf( "%s  %s %s" ,iBan$typ ,iBan$incInfoDf[,"valStr"] ,iBan$incInfoDf[,"cordStr"] )
+					list( idStr=idStr ,multiHpn=iBan$multiHpn )
+				})
+	names(dupILst) <- sapply(dupILst,function(p){p$idStr})
+	idStr.uni <- unique( sapply(dupILst ,function(p){p$idStr}) )
+	for( idStr in idStr.uni ){
+		multiHpn <- sapply( dupILst[idStr] ,function(p){p$multiHpn} )
+	} # working
+
+
 	rObj$iBanInfoLst <- iBanInfoLst	# increase info
 	# ---------------------------------------------------
 
