@@ -1735,6 +1735,7 @@ fCutU.getFiltObjPair <- function( pMtx ,debug=F ){
 
 				ptn$cVal <- pMtx[ ptn$rIdx ,ptn$cIdx ]
 				ptn$cSpanVal <- pMtx[ ptn$rIdx ,ptn$cSpan ]
+				ptn$infoStr <- sprintf("(%d/%s) %s",ptn$rIdx,paste(ptn$cIdx,collapse=","),paste(ptn$cSpanVal,collapse=",")  )
 				ptn4Lst[[1+length(ptn4Lst)]] <- ptn
 			}
 		}
@@ -1751,6 +1752,7 @@ fCutU.getFiltObjPair <- function( pMtx ,debug=F ){
 
 				ptn$cVal <- pMtx[ ptn$rIdx ,ptn$cIdx ]
 				ptn$cSpanVal <- pMtx[ ptn$rIdx ,ptn$cSpan ]
+				ptn$infoStr <- sprintf("(%d/%s) %s",ptn$rIdx,paste(ptn$cIdx,collapse=","),paste(ptn$cSpanVal,collapse=",")  )
 				ptn4Lst[[1+length(ptn4Lst)]] <- ptn
 			}
 		}
@@ -1868,7 +1870,19 @@ fCutU.getFiltObjPair <- function( pMtx ,debug=F ){
 		pairPtnLst[["(*,pFV)"]] <- fCnt2
 		rstObj$iBanLst <- pairPtnLst
 
-		# ptn4Lst
+		ptn4Str <- character(0)
+		for( lIdx in seq_len(length(rObj$ptn4Lst)) ){
+			ptn4 <- rObj$ptn4Lst[[lIdx]]
+			if( !all(ptn4$cVal==aCode[ptn4$cIdx]) ) next
+
+			if( all(ptn4$cSpanVal==aCode[ptn4$cSpan]) ){
+				ptn4Str <- c( ptn4Str ,ptn4$infoStr )
+			}
+		}
+		rstObj$ptn4Str <- ptn4Str
+
+		return( rstObj )
+
 	} # rObj$filt()
 
 	rObj$explain <- function( part=NULL ){
@@ -1931,6 +1945,14 @@ fCutU.getFiltObjPair <- function( pMtx ,debug=F ){
 			})
 			if( 0<length(infoStr) ){
 				infoStr <- paste( sprintf("  (*,pFV) %dth gen %s",1:length(infoStr),infoStr) ,collapse="\n")
+				rptStr <- c( rptStr ,infoStr )
+			}
+		}
+		if( is.null(part) || part=="ptn4Lst" ){
+			rptStr <- c( rptStr ,"ptn4Lst")
+			infoStr <- sapply( rObj$ptn4Lst ,function( ptn4 ){ ptn4$infoStr })
+			if( 0<length(infoStr) ){
+				infoStr <- paste( sprintf("  %dth %s",1:length(infoStr),infoStr) ,collapse="\n")
 				rptStr <- c( rptStr ,infoStr )
 			}
 		}
