@@ -2033,14 +2033,13 @@ fCutU.getFallower <- function( pMtx ){
 
 } # fCutU.getFallower()
 
-
 fCutU.rawBanVal <- function( pMtx ){
 	#	pMtx <- stdMI$rawTail
 
 	rObj <- list()
 
 	banDf <- u0.zoidMtx_ana(pMtx)
-	banDf <- banDf[1<=banDf$banVal | banDf$banVal<=45 ,]
+	banDf <- banDf[1<=banDf$banVal & banDf$banVal<=45 ,]
 
 	banValLst <- list()
 	for( idx in 1:ncol(pMtx) ){
@@ -2060,8 +2059,24 @@ fCutU.rawBanVal <- function( pMtx ){
 
 	rObj$banValLst <- banValLst
 
-	rObj$filt <- function(){
+	rObj$filt <- function( aCode ){
+		rstObj <- list()
 
+		cName <- c("col","val","hpnCnt")
+		fndMtx <- matrix( 0, nrow=0, ncol=length(cName) )	;colnames(fndMtx)<-cName
+		for( lIdx in seq_len(length(rObj$banValLst)) ){
+			mtx <- rObj$banValLst[[lIdx]]
+			fndIdx <- which(aCode[lIdx]==mtx["val",])
+			if( 0<length(fndIdx) ){
+				fndMtx <- rbind( fndMtx ,c(lIdx,mtx[,fndIdx]) )
+			}
+		}
+
+		hpnCnt <- c( nrow(fndMtx) ,sum(2==fndMtx[,"hpnCnt"]) ,sum(3<=fndMtx[,"hpnCnt"]) )
+		names(hpnCnt) <- c("hpn","doubleF","moreThanTripleF")
+
+		rstObj <- list( hpnCnt=hpnCnt ,fndMtx=fndMtx )
+		return( rstObj )
 	}
 	rObj$explain <- function( ){
 		rptStr <- character(0)
@@ -2076,6 +2091,71 @@ fCutU.rawBanVal <- function( pMtx ){
 	return( rObj )
 }
 
+fCutU.remBanVal <- function( pMtx ){
+
+	banDf <- u0.zoidMtx_ana( pMtx%%10 )
+	banDf <- banDf[-1<banDf$banVal & banDf$banVal<11 ,]
+	banDf[banDf$banVal==10,"banVal"] <- 0
+
+	banValLst <- list()
+	for( idx in 1:ncol(pMtx) ){
+		banValLst[[idx]] <- matrix( 0, ncol=0, nrow=2 )
+		rownames(banValLst[[idx]]) <- c("val","hpnCnt")
+	}
+
+	for( rIdx in seq_len(nrow(banDf)) ){
+		mtx <- banValLst[[banDf[rIdx,]$tgt.col]]
+		fndCol <- which( mtx["val",]==banDf[rIdx,"banVal"] )
+		if( 0==length(fndCol) ){
+			banValLst[[banDf[rIdx,]$tgt.col]] <- cbind( mtx ,c(banDf[rIdx,"banVal"],1) )
+		} else {
+			banValLst[[banDf[rIdx,]$tgt.col]]["hpnCnt",fndCol] <- 1 + banValLst[[banDf[rIdx,]$tgt.col]]["hpnCnt",fndCol]
+		}
+	}
+
+	rObj <- list( banValLst=banValLst )
+	rObj$exctValLst <- fCutU.rawBanVal(pMtx)$banValLst
+
+	rObj$filt <- function( aCode ){
+		rstObj <- list()
+
+		aRem <- aCode %% 10
+		cName <- c("col","val","hpnCnt")
+		fndMtx <- matrix( 0, nrow=0, ncol=length(cName) )	;colnames(fndMtx)<-cName
+		for( lIdx in seq_len(length(rObj$banValLst)) ){
+			mtx <- rObj$banValLst[[lIdx]]
+			exctMtx <- rObj$exctValLst[[lIdx]]
+			
+			exctFnd <- which( aCode[lIdx]==exctMtx["val",] )
+			if( 0<length(exctFnd) ) next
+
+			fndIdx <- which(aRem[lIdx]==mtx["val",])
+			if( 0<length(fndIdx) ){
+				fndMtx <- rbind( fndMtx ,c(lIdx,mtx[,fndIdx]) )
+			}
+		}
+
+		hpnCnt <- c( nrow(fndMtx) ,sum(2==fndMtx[,"hpnCnt"]) ,sum(3<=fndMtx[,"hpnCnt"]) )
+		names(hpnCnt) <- c("hpn","doubleF","moreThanTripleF")
+
+		rstObj <- list( hpnCnt=hpnCnt ,fndMtx=fndMtx )
+		return( rstObj )
+	}
+	rObj$explain <- function( ){
+		rptStr <- character(0)
+		for( idx in seq_len(length(rObj$banValLst)) ){
+			mtx <- rObj$banValLst[[idx]]
+			exctMtx <- rObj$exctValLst[[idx]]
+			str <- apply( mtx ,2 ,function(rData){ sprintf("%d(%d)",rData[1],rData[2]) })
+			exctStr <- apply( exctMtx ,2, function(rData){ sprintf("%d",rData[1]) })
+			str <- sprintf("  %dth col %s  / exct:%s\n",idx,paste( str ,collapse=", " ),paste( exctStr ,collapse=", " ))
+			rptStr <- c( rptStr ,str )
+		}
+		cat( paste(rptStr,collapse="") )
+	}
+
+
+}
 
 #	그룹 sum패턴 존재 확인 : sum(aCStep[c( , )])==sum(aCStep[c( , )])
 #		forReport : T이면 보고만, F이면 필터링용 객체 반환.
