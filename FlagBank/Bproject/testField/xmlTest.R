@@ -3,7 +3,7 @@ setwd("C:\\zproject\\ISLRgit\\FlagBank\\Bproject\\testField")
 #   http://www.omegahat.net/RSXML/Tour.pdf
 #       An Introduction to the XML package for R
 #
-#       - https://www.rdocumentation.org/packages/XML/versions/3.98-1.20/topics/saveXML
+#       - https://www.rdocumentation.org/packages/XML
 #
 library(XML)
 
