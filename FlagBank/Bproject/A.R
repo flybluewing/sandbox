@@ -1,0 +1,39 @@
+source("A_H.R")
+workH <- 861
+#source(sprintf("./toFinal/toZ%d_H.R",workH))	# working
+
+load(sprintf("./save/Obj_allIdxLstZ%d.save",workH-1) )
+load(sprintf("./save/Obj_fRstLstZ%d.save",workH-1) )
+load(sprintf("./save/Obj_gEnvZ%d.save",workH-1))
+
+stdMI.grp <- bUtil.getStdMILst( gEnv ,fRstLst )
+#   create fMtxLst
+#   loading fmFiltLst config 
+
+
+for( allZoidGrpName in c("allZoid.idx0","allZoid.idx1","allZoid.idx2") ){
+
+    allIdx <- allIdxLst[[allZoidGrpName]]		# allIdx <- c( allIdxLst[["allZoid.idx0"]] ,allIdxLst[["allZoid.idx1"]])
+    if( FALSE ) allIdx <- 1:100                 # 기능 점검 시 사용.
+
+    # User Define Filtering.
+
+    #   fmFiltLst : allZoidGrpName에 맞는 fMtx의 filter 생성.
+
+    #   stdAssessAllZoid( gEnv ,allIdx ,workH ,fMtxLst ,fmFiltLst )
+
+}
+
+
+
+#   fMtx에 대해서만 처리.
+stdAssessAllZoid <- function( gEnv ,allIdx ,fMtxLst ,fmFiltLst ,workH=NULL ,simul=F ){
+    #   simul : T이면 allIdx들에 대한 필터링 결과만 반환. F이면 실제 삭제.
+    #   fmFiltLst : fMtx들에 대한 
+
+
+
+
+}   # stdAssessAllZoid()
+
+

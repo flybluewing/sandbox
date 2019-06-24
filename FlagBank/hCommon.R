@@ -4,7 +4,7 @@ library(snowfall)
 library(gtools)
 library(pryr)
 library(magrittr)
-
+library(XML)
 
 # 공통 함수/헤더파일 파일 로딩.
 source("kCommon.R")
