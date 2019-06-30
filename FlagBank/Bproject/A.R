@@ -1,5 +1,5 @@
 source("A_H.R")
-workH <- 861
+workH <- 860
 #source(sprintf("./toFinal/toZ%d_H.R",workH))	# working
 
 load(sprintf("./save/Obj_allIdxLstZ%d.save",workH-1) )

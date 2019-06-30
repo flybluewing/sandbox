@@ -2,8 +2,9 @@
 #	fMtx 박스 생성
 
 
-bFMtx.score2 <- function( stdMIObj ,zMtx ){
+bFMtx.score2 <- function( stdMIObj ){
 	# stdMIObj	: stdMI ,zMtx
+	#		stdMIObj <- stdMI.grp$basic[[1]]
 
 	#	...ab. <-- left slide ( k, a, b 패턴에 대한 V 값)
 	#   ..k...
@@ -202,7 +203,18 @@ bFMtx.score2 <- function( stdMIObj ,zMtx ){
 		}
 
 		for( aIdx in 1:aLen ){
+			aZoid <- aZoidMtx[aIdx,]
+			aCStep <- aZoid[2:6] - aZoid[1:5]
+			aFStep <- aZoid - rObj$lastZoid
 			#	working
+			scoreMtx[aIdx,"rebV.r"] <- length( intersect(rObj$lastZoid, aZoid) )
+
+			# scoreMtx[aIdx,"rebL"] <- QQE
+			# scoreMtx[aIdx,"rebR"] <- 
+
+			scoreMtx[aIdx,"rebC.r"] <- sum( rObj$lastZoid==aZoid )
+			scoreMtx[aIdx,"rebC.c"] <- sum( rObj$lastCStep==aCStep )
+			scoreMtx[aIdx,"rebC.f"] <- sum( rObj$lastFStep==aFStep )
 
 			if( makeInfoStr ){
 
