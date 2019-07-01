@@ -14,7 +14,7 @@ stdMI.grp <- bUtil.getStdMILst( gEnv ,fRstLst )
 for( allZoidGrpName in c("allZoid.idx0","allZoid.idx1","allZoid.idx2") ){
 
     allIdx <- allIdxLst[[allZoidGrpName]]		# allIdx <- c( allIdxLst[["allZoid.idx0"]] ,allIdxLst[["allZoid.idx1"]])
-    if( FALSE ) allIdx <- 1:100                 # 기능 점검 시 사용.
+    if( FALSE ) allIdx <- sample(200000:800000,10,replace=F)  # 기능 점검 시 사용.
 
     # User Define Filtering.
 
