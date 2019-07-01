@@ -233,4 +233,134 @@ bFMtx.score2 <- function( stdMIObj ){
 		return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
 	}
 	return( rObj )
-}
+} # bFMtx.score2( )
+
+
+bFMtx.score3 <- function( stdMIObj ){
+
+	# zMtx : 각 ph에서의 히스토리.
+	#	zMtx <- gEnv$zhF
+	getRebPtn.1 <- function( stdMI ){
+		rObj <- list( matInfo=matrix(0,nrow=0,ncol=4) )
+		rowLen <- nrow( stdMI$rawTail )
+		if( 2>rowLen ) return( rObj )
+
+		matLst <- list()
+		for( rIdx in rowLen:2 ){
+			cVal <- intersect(stdMI$rawTail[rIdx,] ,stdMI$rawTail[rIdx-1,])
+			if( 1!=length(cVal) ) next
+
+			matLst[[1+length(matLst)]] <- c( rIdx, cVal
+												, which(stdMI$rawTail[rIdx-1,]==cVal) 
+												, which(stdMI$rawTail[rIdx  ,]==cVal)
+											)
+		}
+
+		if( 0<length(matLst) ){
+			matInfo <- do.call( rbind ,matLst )
+			colnames( matInfo ) <- c("row","val","fromC","toC")
+			rObj$matInfo <- matInfo
+		}
+		return( rObj )
+	} # getRebPtn.1()
+	getRebPtn.n <- function( stdMI ){
+		rObj <- list( matLst=list() )
+		rowLen <- nrow( stdMI$rawTail )
+		if( 2>rowLen ) return( rObj )
+
+		matLst <- list()	;matInfo <- NULL
+		for( rIdx in rowLen:2 ){
+			cVal <- intersect(stdMI$rawTail[rIdx,] ,stdMI$rawTail[rIdx-1,])
+			if( 2>length(cVal) ) next
+
+			matMtx <- matrix( NA, nrow=2, ncol=length(cVal) )
+			rownames(matMtx) <- c("from","to")	;colnames(matMtx) <- paste("val",cVal)
+			for( idx in seq_len(length(cVal)) ){
+				val <- cVal[idx]
+				matMtx["from",idx] <- which(stdMI$rawTail[rIdx-1,]==val)
+				matMtx["to"  ,idx] <- which(stdMI$rawTail[rIdx  ,]==val)
+			}
+			matInfo <- c( matInfo ,sprintf("%d:%s",rIdx,paste(cVal,collapse=",")) )
+			matLst[[1+length(matLst)]] <- matMtx
+		}
+		names(matLst) <- matInfo
+
+		return( matLst )
+	} # getRebPtn.n()
+	getSeqPtn <- function( mtx ){
+		rObj <- list( )
+		rowLen <- nrow( mtx )	;colLen <- ncol(mtx)
+		if( 2>rowLen ){
+			rObj$filt <- function( aCode ){ return( list( matCnt=0 ) ) }
+			return( rObj )
+		}
+
+		banLst <- list()
+		for( cIdx in 1:colLen ){	# lastCode
+			lc <- mtx[rowLen,cIdx]
+			fColIdx <- integer(0)
+			fRowIdx <- integer(0)
+			dbgStr <- ""
+			for( rIdx in (rowLen-1):1 ){
+				fColIdx <- which(mtx[rIdx,]==lc)
+				if( 0<length(fColIdx) ){
+					fRowIdx <- rIdx
+					dbgStr <- sprintf("col:%d(val:%d)  found in row:%d col:%s",cIdx,lc,fRowIdx,paste(fColIdx,collapse=","))
+					break
+				}
+			}
+
+			dbgStr <- ""
+			for( fcIdx in fColIdx ){
+				olSpan <- fCutU.overlapSpan( colLen ,colIdx.pre=fcIdx ,colIdx.post=cIdx )
+				if( 1>sum(olSpan$info[c("lMargin","rMargin")]) )	next
+
+				valInc <- mtx[fRowIdx+1,olSpan$span.pre]-mtx[fRowIdx,olSpan$span.pre]
+				banVal <- mtx[rowLen,olSpan$span.post]+valInc
+				fixPoint <- banVal	;fixPoint[-(olSpan$info["lMargin"]+1)] <- NA
+				dbgStr <- sprintf("colIdx:%d(val:%d) from (%d,%d)  %s/%s --> %s/%s..?",cIdx,lc,fRowIdx,fcIdx
+									,paste(mtx[fRowIdx  ,olSpan$span.pre],collapse=",")
+									,paste(mtx[fRowIdx+1,olSpan$span.pre],collapse=",")
+									,paste(mtx[rowLen,olSpan$span.post],collapse=",")
+									,paste(banVal,collapse=",")
+								)
+				banObj <- list( banVal=banVal ,banSpan=olSpan$span.post ,fixPoint=fixPoint ,dbgStr=dbgStr )
+				banLst[[1+length(banLst)]] <- banObj
+			}
+			
+		}
+
+		rObj$banLst <- banLst
+
+		rObj$filt <- function( aCode ){
+			rstObj <- list( matCnt=0 )
+			if( 0==length(rObj$banLst) ) return( rstObj )
+
+			matCnt <- sapply( rObj$banLst ,function( banInfo ){
+				cnt <- sum( aCode[banInfo$banSpan] == banInfo$banVal )
+				flagFixPoint <- all(aCode[banInfo$banSpan]==banInfo$fixPoint,na.rm=T)
+				if( flagFixPoint ){
+					return( cnt )
+				} else {
+					return( 0 )
+				}
+			})
+
+			rstObj$matCnt = matCnt
+			return( rstObj )
+		}
+
+		return( rObj )
+	} # getSeqPtn()
+
+
+	# working
+
+	rObj <- list()
+
+	rObj$fMtxObj <- function( aZoidMtx ,makeInfoStr=F ){
+	}
+	return( rObj )
+
+} # bFMtx.score3( )
+
