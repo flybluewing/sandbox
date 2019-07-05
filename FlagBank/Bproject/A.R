@@ -7,6 +7,8 @@ load(sprintf("./save/Obj_fRstLstZ%d.save",workH-1) )
 load(sprintf("./save/Obj_gEnvZ%d.save",workH-1))
 
 stdMI.grp <- bUtil.getStdMILst( gEnv ,fRstLst )
+filter.grp <- getFilter.grp( stdMI.grp )
+
 #   create fMtxLst
 #   loading fmFiltLst config 
 

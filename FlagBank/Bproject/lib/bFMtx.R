@@ -1,5 +1,23 @@
-
 #	fMtx 박스 생성
+
+getFilter.grp <- function( stdMI.grp ){
+
+	getMtxObjLst <- function( stdMIObj ){
+		mtxObjLst <- list()
+		mtxObjLst[[1+length(mtxObjLst)]] <- bFMtx.score2( stdMIObj )
+		mtxObjLst[[1+length(mtxObjLst)]] <- bFMtx.score3( stdMIObj )
+		names(mtxObjLst) <- sapply(mtxObjLst,function(p){p$idStr})
+		return( mtxObjLst )
+	}
+
+	rObj <- list()
+	rObj$basic <- lapply( stdMI.grp$basic ,getMtxObjLst )
+	rObj$bDup <- lapply( stdMI.grp$bDup ,getMtxObjLst )
+	rObj$mf <- lapply( stdMI.grp$mf ,getMtxObjLst )
+
+	return( rObj )
+}
+
 
 
 bFMtx.score2 <- function( stdMIObj ){
@@ -124,7 +142,7 @@ bFMtx.score2 <- function( stdMIObj ){
 
 	stdMI <- stdMIObj$stdMI
 	zMtx <- stdMIObj$zMtx
-	rObj <- list( lastZoid=stdMI$lastZoid ,lastCStep=stdMI$cStep ,lastFStep=stdMI$fStep )
+	rObj <- list( idStr="score2" ,lastZoid=stdMI$lastZoid ,lastCStep=stdMI$cStep ,lastFStep=stdMI$fStep )
 
 	if( TRUE ){
 		rObj$lastZoid.H2	<-	if( 2>stdMI$mtxLen ) NULL	 else stdMI$rawTail[nrow(stdMI$rawTail)-1,]
@@ -353,12 +371,76 @@ bFMtx.score3 <- function( stdMIObj ){
 		return( rObj )
 	} # getSeqPtn()
 
+	stdMI <- stdMIObj$stdMI
+	zMtx <- stdMIObj$zMtx
+	rObj <- list( 	idStr="score3"
+					,lastZoid=stdMI$lastZoid
+					,rebPtn.1=getRebPtn.1(stdMI)	,rebPtn.n=getRebPtn.n( stdMI )
+					,seqNextPtn.raw=getSeqPtn( stdMI$rawTail )	,seqNextPtn.cStep=getSeqPtn( stdMI$cStepTail )
+				)
 
-	# working
-
-	rObj <- list()
-
+	#	cName <- c("rebPtn.1","rebPtn.n","snMax.r" ,"snFCnt.r" ,"snMax.c" ,"snFCnt.c")
 	rObj$fMtxObj <- function( aZoidMtx ,makeInfoStr=F ){
+		aLen <- nrow(aZoidMtx)
+		cName <- c("rebPtn.1","rebPtn.n","snMax.r" ,"snFCnt.r" ,"snMax.c" ,"snFCnt.c")
+		scoreMtx <- matrix( 0, nrow=aLen, ncol=length(cName) )	;colnames(scoreMtx) <- cName
+
+		infoMtx <- NULL
+		if( makeInfoStr ){
+			cName <- c("rebPtn.1","rebPtn.n","snXXX.r","snXXX.c")
+			infoMtx <- matrix( "" ,nrow=aLen ,ncol=length(cName) )	;colnames(infoMtx) <- cName
+		}
+		for( aIdx in 1:aLen ){
+			aZoid <- aZoidMtx[aIdx,]
+			aCStep <- aZoid[2:6] - aZoid[1:5]
+			aFStep <- aZoid - rObj$lastZoid
+
+			# rebPtn.1
+			infoStr.rebPtn.1 <- ""
+			if( 0<nrow(rObj$rebPtn.1$matInfo) ){
+				reb.lastZoid <- rObj$lastZoid[rObj$rebPtn.1$matInfo[,"fromC"]]
+				reb.aZoid <- aZoid[rObj$rebPtn.1$matInfo[,"toC"]]
+				scoreMtx[aIdx,"rebPtn.1"] <- sum( reb.aZoid==reb.lastZoid )
+				if( 0<scoreMtx[aIdx,"rebPtn.1"] ){
+					fromCol <- rObj$rebPtn.1$matInfo[,"fromC"][reb.aZoid==reb.lastZoid]
+					toCol <- rObj$rebPtn.1$matInfo[,"toC"][reb.aZoid==reb.lastZoid]
+					infoStr.rebPtn.1 <- sprintf("reb col: (%s)->(%s)",paste(fromCol,collapse=","),paste(toCol,collapse=","))
+				}
+			}
+
+			# rebPtn.n
+			infoStr.rebPtn.n <- ""
+			if( length(rObj$rebPtn.n)>0 ){
+				flag <- sapply( rObj$rebPtn.n ,function( matMtx ){
+								fromVal <- rObj$lastZoid[matMtx["from",]]
+								toVal <- aZoid[matMtx["to",]]
+								return( all(fromVal==toVal) )
+							})
+				scoreMtx[aIdx,"rebPtn.n"] <- sum( flag )
+				if( 0<scoreMtx[aIdx,"rebPtn.n"] ){
+					infoStr.rebPtn.n <- sprintf("%s",paste(names(flag)[flag],collapse=" "))
+				}
+			}
+
+			#	"sncMax.raw" ,"sncFCnt.raw" 
+			snMatCnt.raw <- rObj$seqNextPtn.raw$filt( aZoid )$matCnt
+			scoreMtx[aIdx,"snMax.r"] <- max( snMatCnt.raw )
+			scoreMtx[aIdx,"snFCnt.r"] <- sum( snMatCnt.raw>=2 )
+
+			#	"sncMax.cStep" ,"sncFCnt.cStep"
+			snMatCnt.cStep <- rObj$seqNextPtn.cStep$filt( aZoid )$matCnt
+			scoreMtx[aIdx,"snMax.c"] <- max( snMatCnt.cStep )
+			scoreMtx[aIdx,"snFCnt.c"] <- sum( snMatCnt.cStep>=2 )
+
+			if( makeInfoStr ){
+				infoMtx[aIdx,"rebPtn.1"] <- infoStr.rebPtn.1
+				infoMtx[aIdx,"rebPtn.n"] <- infoStr.rebPtn.n
+				infoMtx[aIdx,"snXXX.r"] <- if( 0==sum(snMatCnt.raw) ) "" else sprintf("matCnt:%s",paste(snMatCnt.raw,collapse=" "))
+				infoMtx[aIdx,"snXXX.c"] <- if( 0==sum(snMatCnt.cStep) ) "" else sprintf("matCnt:%s",paste(snMatCnt.cStep,collapse=" "))
+			}
+
+		}
+		return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
 	}
 	return( rObj )
 
