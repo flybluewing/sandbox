@@ -9,6 +9,13 @@ load(sprintf("./save/Obj_gEnvZ%d.save",workH-1))
 stdMI.grp <- bUtil.getStdMILst( gEnv ,fRstLst )
 filter.grp <- getFilter.grp( stdMI.grp )
 
+if(FALSE){
+    stdZoid <- c( 8,22,35,38,39,41)
+    aZoidMtx <- matrix( stdZoid ,nrow=1 )
+    # 문제가 있다. allIdx를 넘겼어야 한다.
+    scoreMtx.grp <- getScoreMtx.grp( aZoidMtx )
+}
+
 #   create fMtxLst
 #   loading fmFiltLst config 
 

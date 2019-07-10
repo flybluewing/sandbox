@@ -1,4 +1,40 @@
 #	fMtx 박스 생성
+getScoreMtx.grp <- function( aZoidMtx ,filter.grp ,cutter.grp=NULL ){
+	#	aZoidMtx <- matrix( c( 8,22,35,38,39,41) ,nrow=1 )
+
+	rObj <- list( basic=list() ,bDup=list() ,mf=list() )
+
+	for( nIdx in names(filter.grp$basic) ){
+		scoreMtxLst <- list()
+		for( nIdx.s in names(filter.grp$basic[[nIdx]]) ){
+			filterObj <- filter.grp$basic[[nIdx]][[nIdx.s]]
+			scoreMtxObj <- filterObj$fMtxObj( aZoidMtx ,makeInfoStr=is.null(cutter.grp) )
+
+			#	QQE:todo cutter.grp 적용이 가능하도록 기능 추가할 것.
+			scoreMtxLst[[nIdx.s]] <- scoreMtxObj
+		}
+		rObj$basic[[nIdx]] <- scoreMtxLst
+	}
+
+	for( nIdx.s in names(filter.grp$bDup) ){
+		filterObj <- filter.grp$bDup[[nIdx.s]]
+		scoreMtxObj <- filterObj$fMtxObj( aZoidMtx ,makeInfoStr=is.null(cutter.grp) )
+
+		#	QQE:todo cutter.grp 적용이 가능하도록 기능 추가할 것.
+		rObj$bDup[[nIdx.s]] <- scoreMtxObj
+	}
+
+	for( nIdx.s in names(filter.grp$mf) ){
+		filterObj <- filter.grp$mf[[nIdx.s]]
+		scoreMtxObj <- filterObj$fMtxObj( aZoidMtx ,makeInfoStr=is.null(cutter.grp) )
+
+		#	QQE:todo cutter.grp 적용이 가능하도록 기능 추가할 것.
+		rObj$mf[[nIdx.s]] <- scoreMtxObj
+	}
+
+	return(rObj)
+
+} # getScoreMtx.grp()
 
 getFilter.grp <- function( stdMI.grp ){
 

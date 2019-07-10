@@ -14,3 +14,5 @@ source("../Aproject/lib/ff0_H.R")
 # source("./lib/refine0_H.R") ;source("./lib/refine1_H.R") ;source("./lib/refine2_H.R") ;source("./lib/refine3_H.R") ;source("./lib/refine4_H.R")
 
 source("./lib/bUtil.R")
+source("./lib/bFMtx.R")
+
