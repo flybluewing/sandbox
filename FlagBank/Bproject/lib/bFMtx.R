@@ -1,13 +1,8 @@
 #	fMtx 박스 생성
-getScoreMtx.grp <- function( aZoidMtx ,filter.grp ,cutter.grp=NULL ){
+getScoreMtx.grp.4H <- function( aZoid ,filter.grp ,cutter.grp=NULL ){
 	#	aZoidMtx <- matrix( c( 8,22,35,38,39,41) ,nrow=1 )
-	#	aZoidMtx <- gEnv$allZoidMtx[allIdxF,]
-	pseudoFilter <- function( flag ){
-		fIndices <- sample( length(flag) ,sample(3) )
-		flag[fIndices] <- F
-		return(flag)
-	}
 
+	aZoidMtx <- matrix( aZoid ,nrow=1 )
 
 	rObj <- list( basic=list() ,bDup=list() ,mf=list() )
 
@@ -41,7 +36,7 @@ getScoreMtx.grp <- function( aZoidMtx ,filter.grp ,cutter.grp=NULL ){
 
 	return(rObj)
 
-} # getScoreMtx.grp()
+} # getScoreMtx.grp.4H()
 
 getFilter.grp <- function( stdMI.grp ){
 
