@@ -7,6 +7,7 @@ load(sprintf("./save/Obj_fRstLstZ%d.save",lastH) )
 load(sprintf("./save/Obj_gEnvZ%d.save",lastH))
 
 names(fRstLst) <- names(allIdxLst$stdFiltedCnt)
+fRstLst.hSpan <- as.integer(names(fRstLst))
 
 
 baseSpan <- 800:lastH
@@ -27,17 +28,31 @@ for( sfnIdx in c("D0000.A","A0100.A","AP000.E") ){
 }
 
 
+scoreMtxLst <- list()
 for( sfcIdx in names(sfcHLst) ){    # sfcIdx <- names(sfcHLst)[2]
+
+    scoreMtx.grp.lst <- list()
     for( hIdx in sfcHLst[[sfcIdx]] ){   # hIdx <- hSpan[1]
         stdZoid <- gEnv$zhF[hIdx ,]
         wEnv <- gEnv
         wEnv$zhF <- gEnv$zhF[1:(hIdx-1),]
-        baseSpan[baseSpan<hIdx]
+
+        fRstLst.w <- fRstLst[as.character(fRstLst.hSpan[fRstLst.hSpan<hIdx])]
+
+        stdMI.grp <- bUtil.getStdMILst( wEnv ,fRstLst.w )
+        filter.grp <- getFilter.grp( stdMI.grp )
+
+        # QQE Todo
+        # Error in if (2 > stdMI$mtxLen) NULL else stdMI$rawTail[nrow(stdMI$rawTail) -  : 
+        #   인자의 길이가 0
+
+        scoreMtx.grp <- getScoreMtx.grp.4H( stdZoid ,filter.grp )
+        scoreMtx.grp.lst[[sprintf("hIdx:%d",hIdx)]] <- scoreMtx.grp
     }
+
+    scoreMtxLst[[sfcIdx]] <- scoreMtx.grp.lst
 }
 
-stdMI.grp <- bUtil.getStdMILst( gEnv ,fRstLst )
-filter.grp <- getFilter.grp( stdMI.grp )
 
 if(FALSE){
 
