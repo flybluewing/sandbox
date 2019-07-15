@@ -214,7 +214,8 @@ bFMtx.score2 <- function( stdMIObj ){
 										vDiff <- cStep[stdMI$mtxLen-2,] - cStep[stdMI$mtxLen-5,]
 										cStep[stdMI$mtxLen-2,]+vDiff
 							}
-		fStepLen <- nrow(stdMI$fStepTail)
+
+		fStepLen <- ifelse( is.null(stdMI$fStepTail) ,0 ,nrow(stdMI$fStepTail) )
 		inc.stdFStep	<- if( 2>fStepLen ){ NULL 
 							} else {	vDiff <- stdMI$fStep - stdMI$fStepTail[fStepLen-1,]
 										stdMI$fStep+vDiff
@@ -251,6 +252,13 @@ bFMtx.score2 <- function( stdMIObj ){
 			cName <- c("rebSlide")
 			infoMtx <- matrix( "" ,nrow=aLen ,ncol=length(cName) )	;colnames(infoMtx) <- cName
 		}
+
+		if( is.null(rObj$lastZoid) ){
+			if( makeInfoStr )	infoMtx[,] <- "0 row zMtx"
+
+			return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
+		}
+
 
 		for( aIdx in 1:aLen ){
 			aZoid <- aZoidMtx[aIdx,]
@@ -345,7 +353,8 @@ bFMtx.score3 <- function( stdMIObj ){
 	} # getRebPtn.n()
 	getSeqPtn <- function( mtx ){
 		rObj <- list( )
-		rowLen <- nrow( mtx )	;colLen <- ncol(mtx)
+		rowLen <- ifelse( is.null(mtx) ,0 ,nrow( mtx ) )
+		colLen <- ifelse( is.null(mtx) ,0 ,ncol( mtx ) )
 		if( 2>rowLen ){
 			rObj$filt <- function( aCode ){ return( list( matCnt=0 ) ) }
 			return( rObj )
@@ -428,6 +437,12 @@ bFMtx.score3 <- function( stdMIObj ){
 			cName <- c("rebPtn.1","rebPtn.n","snXXX.r","snXXX.c")
 			infoMtx <- matrix( "" ,nrow=aLen ,ncol=length(cName) )	;colnames(infoMtx) <- cName
 		}
+		if( is.null(rObj$lastZoid) ){
+			if( makeInfoStr )	infoMtx[,] <- "0 row zMtx"
+
+			return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
+		}
+
 		for( aIdx in 1:aLen ){
 			aZoid <- aZoidMtx[aIdx,]
 			aCStep <- aZoid[2:6] - aZoid[1:5]
