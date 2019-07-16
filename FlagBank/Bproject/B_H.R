@@ -14,7 +14,7 @@ B.makeHMtxLst <- function( gEnv, allIdxLst, fRstLst, lastH=NULL ){
 
     fRstLst.hSpan <- as.integer(names(fRstLst))
 
-    baseSpan <- 650:lastH
+    baseSpan <- 800:lastH
     stdFiltedCnt <- allIdxLst$stdFiltedCnt[as.character(baseSpan)]
 
     # ----------------------------------------------------
@@ -83,3 +83,16 @@ B.makeHMtxLst <- function( gEnv, allIdxLst, fRstLst, lastH=NULL ){
 
 } # B.makeHMtxLst()
 
+B.rptHMtxLst <- function( hMtxLst ){
+
+    log.meta <- k.getFlogObj( sprintf("./report/HMtxLst/%d_metaInfo.txt",hMtxLst$lastH) )
+    log.meta$fLogStr("start", pTime=T ,pAppend=F )
+    log.meta$fLogStr( sprintf("lastH : %d",hMtxLst$lastH) )
+    for( nIdx in names(hMtxLst$sfcHLst) ){
+        hStr <- paste(hMtxLst$sfcHLst[[nIdx]],collapse=" ")
+        log.meta$fLogStr( sprintf("    %s - %s",nIdx,hStr) )
+    }
+
+    # QQE working
+
+} # B.rptHMtxLst()
