@@ -180,7 +180,8 @@ bFMtx.score2 <- function( stdMIObj ){
 
 	stdMI <- stdMIObj$stdMI
 	zMtx <- stdMIObj$zMtx
-	rObj <- list( idStr="score2" ,lastZoid=stdMI$lastZoid ,lastCStep=stdMI$cStep ,lastFStep=stdMI$fStep )
+	zMtx.size <- nrow(zMtx)
+	rObj <- list( idStr="score2" ,lastZoid=stdMI$lastZoid ,lastCStep=stdMI$cStep ,lastFStep=stdMI$fStep ,zMtx.size=zMtx.size )
 
 	if( TRUE ){
 		rObj$lastZoid.H2	<-	if( 2>stdMI$mtxLen ) NULL	 else stdMI$rawTail[nrow(stdMI$rawTail)-1,]
@@ -249,13 +250,12 @@ bFMtx.score2 <- function( stdMIObj ){
 
 		infoMtx <- NULL
 		if( makeInfoStr ){
-			cName <- c("rebSlide")
+			cName <- c("rebSlide","zMtx.size")
 			infoMtx <- matrix( "" ,nrow=aLen ,ncol=length(cName) )	;colnames(infoMtx) <- cName
+			infoMtx[,"zMtx.size"] <- rObj$zMtx.size
 		}
 
-		if( is.null(rObj$lastZoid) ){
-			if( makeInfoStr )	infoMtx[,] <- "0 row zMtx"
-
+		if( 0==rObj$zMtx.size ){
 			return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
 		}
 
@@ -266,8 +266,10 @@ bFMtx.score2 <- function( stdMIObj ){
 			aFStep <- aZoid - rObj$lastZoid
 			#	working
 			scoreMtx[aIdx,"rebV.r"] <- length( intersect(rObj$lastZoid, aZoid) )
-			scoreMtx[aIdx,"rebL"] <- sum(aZoid[rObj$slideObj$lMtx["col",]]==rObj$slideObj$lMtx["val",] ,na.rm=T )
-			scoreMtx[aIdx,"rebR"] <- sum(aZoid[rObj$slideObj$rMtx["col",]]==rObj$slideObj$rMtx["val",] ,na.rm=T )
+			if( !is.null(rObj$slideObj) ){
+				scoreMtx[aIdx,"rebL"] <- sum(aZoid[rObj$slideObj$lMtx["col",]]==rObj$slideObj$lMtx["val",] ,na.rm=T )
+				scoreMtx[aIdx,"rebR"] <- sum(aZoid[rObj$slideObj$rMtx["col",]]==rObj$slideObj$rMtx["val",] ,na.rm=T )
+			}
 
 			scoreMtx[aIdx,"rebC.r"] <- sum( rObj$lastZoid==aZoid )
 			scoreMtx[aIdx,"rebC.c"] <- sum( rObj$lastCStep==aCStep )
@@ -287,10 +289,13 @@ bFMtx.score2 <- function( stdMIObj ){
 			scoreMtx[aIdx,"inc.f3"] <- sum( rObj$inc.stdFStep3==aFStep )
 
 			if( makeInfoStr ){
-				infoMtx[aIdx,"rebSlide"] <- sprintf("cnt rebL:%d rebR:%d"
-												,sum(!is.na(rObj$slideObj$lMtx["val",]))
-												,sum(!is.na(rObj$slideObj$rMtx["val",]))
-											)
+				if( is.null(rObj$slideObj) ){ infoMtx[aIdx,"rebSlide"] <- "N/A"
+				} else {
+					infoMtx[aIdx,"rebSlide"] <- sprintf("cnt rebL:%d rebR:%d"
+													,sum(!is.na(rObj$slideObj$lMtx["val",]))
+													,sum(!is.na(rObj$slideObj$rMtx["val",]))
+												)
+				}
 			}
 		}
 
@@ -328,7 +333,7 @@ bFMtx.score3 <- function( stdMIObj ){
 		return( rObj )
 	} # getRebPtn.1()
 	getRebPtn.n <- function( stdMI ){
-		rObj <- list( matLst=list() )
+		rObj <- list( )
 		rowLen <- nrow( stdMI$rawTail )
 		if( 2>rowLen ) return( rObj )
 
@@ -420,7 +425,7 @@ bFMtx.score3 <- function( stdMIObj ){
 
 	stdMI <- stdMIObj$stdMI
 	zMtx <- stdMIObj$zMtx
-	rObj <- list( 	idStr="score3"
+	rObj <- list( 	idStr="score3"	,zMtx.size=nrow(zMtx)
 					,lastZoid=stdMI$lastZoid
 					,rebPtn.1=getRebPtn.1(stdMI)	,rebPtn.n=getRebPtn.n( stdMI )
 					,seqNextPtn.raw=getSeqPtn( stdMI$rawTail )	,seqNextPtn.cStep=getSeqPtn( stdMI$cStepTail )
@@ -434,12 +439,11 @@ bFMtx.score3 <- function( stdMIObj ){
 
 		infoMtx <- NULL
 		if( makeInfoStr ){
-			cName <- c("rebPtn.1","rebPtn.n","snXXX.r","snXXX.c")
+			cName <- c("rebPtn.1","rebPtn.n","snXXX.r","snXXX.c","zMtx.size")
 			infoMtx <- matrix( "" ,nrow=aLen ,ncol=length(cName) )	;colnames(infoMtx) <- cName
+			infoMtx[,"zMtx.size"] <- rObj$zMtx.size
 		}
-		if( is.null(rObj$lastZoid) ){
-			if( makeInfoStr )	infoMtx[,] <- "0 row zMtx"
-
+		if( 0==rObj$zMtx.size ){
 			return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
 		}
 
@@ -486,8 +490,8 @@ bFMtx.score3 <- function( stdMIObj ){
 			scoreMtx[aIdx,"snFCnt.c"] <- sum( snMatCnt.cStep>=2 )
 
 			if( makeInfoStr ){
-				infoMtx[aIdx,"rebPtn.1"] <- infoStr.rebPtn.1
-				infoMtx[aIdx,"rebPtn.n"] <- infoStr.rebPtn.n
+				infoMtx[aIdx,"rebPtn.1"] <- if( nrow(rObj$rebPtn.1$matInfo) >0 ) infoStr.rebPtn.1 else NA
+				infoMtx[aIdx,"rebPtn.n"] <- if( length(rObj$rebPtn.n) >0 ) infoStr.rebPtn.n else NA
 				infoMtx[aIdx,"snXXX.r"] <- if( 0==sum(snMatCnt.raw) ) "" else sprintf("matCnt:%s",paste(snMatCnt.raw,collapse=" "))
 				infoMtx[aIdx,"snXXX.c"] <- if( 0==sum(snMatCnt.cStep) ) "" else sprintf("matCnt:%s",paste(snMatCnt.cStep,collapse=" "))
 			}

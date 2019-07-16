@@ -485,7 +485,7 @@ fCutU.getMtxInfo <- function( zMtx ){
 
 	rObj$quo10 <- fCutU.getQuoObj(lastZoid)
 	rObj$cStep <- if( 0<rObj$mtxLen ) lastZoid[2:6]-lastZoid[1:5] else NULL
-	rObj$fStep <- if( 0<rObj$mtxLen ) lastZoid-zMtx[rObj$mtxLen-1,] else NULL
+	rObj$fStep <- if( 1<rObj$mtxLen ) lastZoid-zMtx[rObj$mtxLen-1,] else NULL
 	rObj$rawTail <- tail(zMtx)
 
 	rObj$getCStepMtx <- function( rawMtx ){
@@ -504,7 +504,7 @@ fCutU.getMtxInfo <- function( zMtx ){
 	} # rObj$getFStepMtx()
 
 	rObj$cStepTail <- if( 0<rObj$mtxLen ) tail(rObj$getCStepMtx(zMtx)) else NULL
-	rObj$fStepTail <- if( 0<rObj$mtxLen ) tail(rObj$getFStepMtx(zMtx)) else NULL
+	rObj$fStepTail <- if( 1<rObj$mtxLen ) tail(rObj$getFStepMtx(zMtx)) else NULL
 
 	rObj$quoTail <- t(apply( rObj$rawTail ,1 ,function(zoid){ fCutU.getQuoObj(zoid)$size }))
 	rObj$quoRebPtn <- fCutU.chkRowPtnReb( rObj$quoTail )

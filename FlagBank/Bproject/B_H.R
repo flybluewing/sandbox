@@ -47,7 +47,7 @@ B.makeHMtx <- function( gEnv, allIdxLst, fRstLst, lastH=NULL ){
             stdMI.grp <- bUtil.getStdMILst( wEnv ,fRstLst.w )
             filter.grp <- getFilter.grp( stdMI.grp )
 
-            # QQE Todo  sfcIdx<-"sfcLate"   ;hIdx <- 857
+            # QQE Todo  sfcIdx<-"sfc2"   ;hIdx <- 840
             # Error in if (2 > stdMI$mtxLen) NULL else stdMI$rawTail[nrow(stdMI$rawTail) -  : 
             #   인자의 길이가 0
 
