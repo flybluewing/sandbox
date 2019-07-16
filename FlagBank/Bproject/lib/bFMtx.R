@@ -490,10 +490,10 @@ bFMtx.score3 <- function( stdMIObj ){
 			scoreMtx[aIdx,"snFCnt.c"] <- sum( snMatCnt.cStep>=2 )
 
 			if( makeInfoStr ){
-				infoMtx[aIdx,"rebPtn.1"] <- if( nrow(rObj$rebPtn.1$matInfo) >0 ) infoStr.rebPtn.1 else NA
-				infoMtx[aIdx,"rebPtn.n"] <- if( length(rObj$rebPtn.n) >0 ) infoStr.rebPtn.n else NA
-				infoMtx[aIdx,"snXXX.r"] <- if( 0==sum(snMatCnt.raw) ) "" else sprintf("matCnt:%s",paste(snMatCnt.raw,collapse=" "))
-				infoMtx[aIdx,"snXXX.c"] <- if( 0==sum(snMatCnt.cStep) ) "" else sprintf("matCnt:%s",paste(snMatCnt.cStep,collapse=" "))
+				infoMtx[aIdx,"rebPtn.1"] <- if( nrow(rObj$rebPtn.1$matInfo) >0 ) infoStr.rebPtn.1 else "N/A"
+				infoMtx[aIdx,"rebPtn.n"] <- if( length(rObj$rebPtn.n) >0 ) infoStr.rebPtn.n else "N/A"
+				infoMtx[aIdx,"snXXX.r"] <- if( 0==sum(snMatCnt.raw) ) "N/A" else sprintf("matCnt:%s",paste(snMatCnt.raw,collapse=" "))
+				infoMtx[aIdx,"snXXX.c"] <- if( 0==sum(snMatCnt.cStep) ) "N/A" else sprintf("matCnt:%s",paste(snMatCnt.cStep,collapse=" "))
 			}
 
 		}
