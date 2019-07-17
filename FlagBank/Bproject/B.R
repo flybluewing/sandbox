@@ -6,8 +6,11 @@ load(sprintf("./save/Obj_allIdxLstZ%d.save",lastH) )
 load(sprintf("./save/Obj_fRstLstZ%d.save",lastH) )
 load(sprintf("./save/Obj_gEnvZ%d.save",lastH))
 
+
+# Remove before flight
+#   B_H.R   Q_RBF
 hMtxLst <- B.makeHMtxLst( gEnv, allIdxLst, fRstLst )
-byFCol <- B.getHMtxLst_byFCol( hMtxLst$scoreMtxLst )
+byFCol <- B.getHMtxLst_byFCol( hMtxLst )
 
 save( hMtxLst ,file=sprintf("./save/HMtxLst/Obj_hMtxLst_%d.save",hMtxLst$lastH) )
 #   load(sprintf("./save/HMtxLst/Obj_hMtxLst_%d.save",lastH))

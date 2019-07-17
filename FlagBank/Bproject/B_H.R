@@ -19,17 +19,21 @@ B.makeHMtxLst <- function( gEnv, allIdxLst, fRstLst, lastH=NULL ){
 
     # ----------------------------------------------------
     sfcHLst <- list(    sfcLate= baseSpan[length(baseSpan)] - 10:0
-                        ,sfc0=as.integer(names(stdFiltedCnt)[stdFiltedCnt==0])
-                        ,sfc1=as.integer(names(stdFiltedCnt)[stdFiltedCnt==1])
-                        ,sfc2=as.integer(names(stdFiltedCnt)[stdFiltedCnt==2])
+                        #   Q_RBF
+                        # ,sfc0=as.integer(names(stdFiltedCnt)[stdFiltedCnt==0])
+                        # ,sfc1=as.integer(names(stdFiltedCnt)[stdFiltedCnt==1])
+                        # ,sfc2=as.integer(names(stdFiltedCnt)[stdFiltedCnt==2])
                     )
-    stdFilter <- c("D0000.A","A0100.A","AP000.E")
+
+    #   Q_RBF
+    #       stdFilter <- c("D0000.A","A0100.A","AP000.E")
+    stdFilter <- c("D0000.A")
     for( sfnIdx in stdFilter ){
         #   sfnIdx <- "D0000.A"
         hSpan <- baseSpan[sapply( fRstLst[as.character(baseSpan)] ,function(p){ sfnIdx %in% p } )]
         hSpan.NG <- hSpan+1
         hSpan.NG <- hSpan.NG[hSpan.NG<=lastH]
-        sfcHLst[[sprintf("NG:%s",sfnIdx)]] <- hSpan.NG
+        sfcHLst[[sprintf("NG%s",sfnIdx)]] <- hSpan.NG
     }
 
 
@@ -79,29 +83,39 @@ B.makeHMtxLst <- function( gEnv, allIdxLst, fRstLst, lastH=NULL ){
         scoreMtxLst[[sfcIdx]] <- basicHMtxLst
     }
 
-    rObj <- list( sfcHLst=sfcHLst ,lastH=lastH ,sMtxName=names(scoreMtxLst[[1]][[1]]) ,scoreMtxLst=scoreMtxLst )
-    return( rObj )
-
-} # B.makeHMtxLst()
-
-B.getHMtxLst_byFCol <- function( scoreMtxLst ){ # scoreMtxLst <- hMtxLst$scoreMtxLst
-
-    rLst <- list()
-
-    colNameLst <- lapply( scoreMtxLst[[1]][[1]] ,function( pLst ){
+    mtxInfoLst <- lapply( scoreMtxLst[[1]][[1]] ,function( pLst ){
                         colnames(pLst$scoreMtx)
                     })
     phaseName <- names(scoreMtxLst[[1]])
 
+    rObj <- list( sfcHLst=sfcHLst ,lastH=lastH
+                    ,mtxInfoLst=mtxInfoLst  ,phaseName=phaseName
+                    ,scoreMtxLst=scoreMtxLst 
+                )
+    return( rObj )
+
+} # B.makeHMtxLst()
+
+B.getHMtxLst_byFCol <- function( hMtxLst ){ # scoreMtxLst <- hMtxLst$scoreMtxLst
+
+    rLst <- list()
+
+    scoreMtxLst <- hMtxLst$scoreMtxLst
+    mtxInfoLst <- hMtxLst$mtxInfoLst
+    colNameLst <- lapply( scoreMtxLst[[1]][[1]] ,function( pLst ){
+                        colnames(pLst$scoreMtx)
+                    })
+    phaseName <- hMtxLst$phaseName
+
     for( hnIdx in names(scoreMtxLst) ){ # hnIdx <- names(scoreMtxLst)[1]
         scmLst <- list()
         rowSize <- nrow(scoreMtxLst[[hnIdx]][[1]][[1]]$scoreMtx)
-        for( scmIdx in names(colNameLst) ){ # scmIdx <- names(colNameLst)[1]
+        for( scmIdx in names(mtxInfoLst) ){ # scmIdx <- names(mtxInfoLst)[1]
             byColMtxLst <- list()
-            for( cnIdx in colNameLst[[scmIdx]] ){   # cnIdx <- colNameLst[[scmIdx]][1]
+            for( cnIdx in mtxInfoLst[[scmIdx]] ){   # cnIdx <- mtxInfoLst[[scmIdx]][1]
                 mtx <- matrix( 0, nrow=rowSize, ncol=length(phaseName) )
                 colnames(mtx) <- phaseName
-                rownames(mtx) <- rownames(scoreMtxLst[[hnIdx]][[pnIdx]][[scmIdx]]$scoreMtx)
+                rownames(mtx) <- rownames(scoreMtxLst[[hnIdx]][[1]][[scmIdx]]$scoreMtx)
                 for( pnIdx in phaseName ){  # pnIdx <- phaseName[1]
                     mtx[,pnIdx] <- scoreMtxLst[[hnIdx]][[pnIdx]][[scmIdx]]$scoreMtx[,cnIdx]
                 }
@@ -120,13 +134,65 @@ B.rptHMtxLst <- function( hMtxLst ){
     log.meta <- k.getFlogObj( sprintf("./report/HMtxLst/%d_metaInfo.txt",hMtxLst$lastH) )
     log.meta$fLogStr("start", pTime=T ,pAppend=F )
     log.meta$fLogStr( sprintf("lastH : %d",hMtxLst$lastH) )
-    log.meta$fLogStr( sprintf("scoreMtx : %s",paste(hMtxLst$sMtxName,collapse=" ") ) )
+    log.meta$fLogStr( sprintf("phase : %s",paste(hMtxLst$phaseName,collapse=" ") ) )
+    log.meta$fLogStr( "scoreMtx" )
+    for( nIdx in names(hMtxLst$mtxInfoLst) ){
+        log.meta$fLogStr( sprintf("    %s : %s",nIdx,paste(hMtxLst$mtxInfoLst[[nIdx]],collapse=" ")) )
+    }
     log.meta$fLogStr( "sfcHLst" )
     for( nIdx in names(hMtxLst$sfcHLst) ){
         hStr <- paste(hMtxLst$sfcHLst[[nIdx]],collapse=" ")
         log.meta$fLogStr( sprintf("    %s - %s",nIdx,hStr) )
     }
 
+    hNames <- names(hMtxLst$scoreMtxLst)
+    mtxInfoLst <- hMtxLst$mtxInfoLst
+    mtxName <- names(mtxInfoLst)
+    phaseName <- hMtxLst$phaseName
+
+    # [hMtxLst$scoreMtxLst] -----------------------------
+    #   h * fCol for each phase
+    for( hnIdx in hNames ){ # hnIdx <- hNames[1]
+        lLst <- lapply( mtxName ,function( mName ){
+                            s <- k.getFlogObj( sprintf("./report/HMtxLst/%d_%s_%s_scoreMtx.txt",hMtxLst$lastH,hnIdx,mName) )
+                            i <- k.getFlogObj( sprintf("./report/HMtxLst/%d_%s_%s_infoMtx.txt",hMtxLst$lastH,hnIdx,mName) )
+                            s$fLogStr( sprintf("%s(%s)",mName,hnIdx) , pTime=T ,pAppend=F )
+                            i$fLogStr( sprintf("%s(%s)",mName,hnIdx) , pTime=T ,pAppend=F )
+                            return( list(s=s,i=i) )
+                        })
+        names(lLst) <- mtxName
+
+        for( pnIdx in phaseName ){  # pnIdx <- phaseName[1]
+            for( mnIdx in mtxName ){ # mnIdx <- mtxName[1]
+                scoreMtx <- hMtxLst$scoreMtx[[hnIdx]][[pnIdx]][[mnIdx]]$scoreMtx
+                lLst[[mnIdx]]$s$fLogStr(sprintf("%s----------------------",pnIdx))
+                lLst[[mnIdx]]$s$fLogMtx( scoreMtx )
+
+                infoMtx <- hMtxLst$scoreMtx[[hnIdx]][[pnIdx]][[mnIdx]]$infoMtx
+                if( is.null(infoMtx) ){
+                    lLst[[mnIdx]]$i$fLogStr(sprintf("%s----------------------",pnIdx))
+                    lLst[[mnIdx]]$i$fLogMtx( infoMtx )
+                }
+            } # mnIdx
+        }
+    }
+
+    # [byFCol ] -----------------------------
+    #   h * phase for each scoreMtx col
+    byFCol <- B.getHMtxLst_byFCol( hMtxLst )
+    for( hnIdx in hNames ){ # hnIdx <- hNames[1]
+        names(byFCol[[hnIdx]])
+        for( mnIdx in mtxName ){ # mnIdx <- mtxName[1]
+            
+            colNames <- mtxInfoLst[[mnIdx]]
+            for( cIdx in seq_len(length(colNames)) ){ # cIdx <- 1
+                cnIdx <- colNames[cIdx]
+                mtx <- byFCol[[hnIdx]][[mnIdx]][[cnIdx]]
+
+            }
+        }
+
+    }
 
     # QQE working
 
