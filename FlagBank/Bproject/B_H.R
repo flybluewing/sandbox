@@ -75,23 +75,58 @@ B.makeHMtxLst <- function( gEnv, allIdxLst, fRstLst, lastH=NULL ){
             }
             basicHMtxLst[[nIdx]] <- mtxLst
         }
+
         scoreMtxLst[[sfcIdx]] <- basicHMtxLst
     }
 
-    rObj <- list( sfcHLst=sfcHLst ,lastH=lastH ,scoreMtxLst=scoreMtxLst )
+    rObj <- list( sfcHLst=sfcHLst ,lastH=lastH ,sMtxName=names(scoreMtxLst[[1]][[1]]) ,scoreMtxLst=scoreMtxLst )
     return( rObj )
 
 } # B.makeHMtxLst()
+
+B.getHMtxLst_byFCol <- function( scoreMtxLst ){ # scoreMtxLst <- hMtxLst$scoreMtxLst
+
+    rLst <- list()
+
+    colNameLst <- lapply( scoreMtxLst[[1]][[1]] ,function( pLst ){
+                        colnames(pLst$scoreMtx)
+                    })
+    phaseName <- names(scoreMtxLst[[1]])
+
+    for( hnIdx in names(scoreMtxLst) ){ # hnIdx <- names(scoreMtxLst)[1]
+        scmLst <- list()
+        rowSize <- nrow(scoreMtxLst[[hnIdx]][[1]][[1]]$scoreMtx)
+        for( scmIdx in names(colNameLst) ){ # scmIdx <- names(colNameLst)[1]
+            byColMtxLst <- list()
+            for( cnIdx in colNameLst[[scmIdx]] ){   # cnIdx <- colNameLst[[scmIdx]][1]
+                mtx <- matrix( 0, nrow=rowSize, ncol=length(phaseName) )
+                colnames(mtx) <- phaseName
+                rownames(mtx) <- rownames(scoreMtxLst[[hnIdx]][[pnIdx]][[scmIdx]]$scoreMtx)
+                for( pnIdx in phaseName ){  # pnIdx <- phaseName[1]
+                    mtx[,pnIdx] <- scoreMtxLst[[hnIdx]][[pnIdx]][[scmIdx]]$scoreMtx[,cnIdx]
+                }
+                byColMtxLst[[cnIdx]] <- mtx
+            }
+            scmLst[[scmIdx]] <- byColMtxLst
+        }
+        rLst[[hnIdx]] <- scmLst
+    }
+
+    return( rLst )
+} # B.getHMtxLst_byFCol()
 
 B.rptHMtxLst <- function( hMtxLst ){
 
     log.meta <- k.getFlogObj( sprintf("./report/HMtxLst/%d_metaInfo.txt",hMtxLst$lastH) )
     log.meta$fLogStr("start", pTime=T ,pAppend=F )
     log.meta$fLogStr( sprintf("lastH : %d",hMtxLst$lastH) )
+    log.meta$fLogStr( sprintf("scoreMtx : %s",paste(hMtxLst$sMtxName,collapse=" ") ) )
+    log.meta$fLogStr( "sfcHLst" )
     for( nIdx in names(hMtxLst$sfcHLst) ){
         hStr <- paste(hMtxLst$sfcHLst[[nIdx]],collapse=" ")
         log.meta$fLogStr( sprintf("    %s - %s",nIdx,hStr) )
     }
+
 
     # QQE working
 
