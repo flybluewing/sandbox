@@ -186,7 +186,8 @@ bFMtx.score2 <- function( stdMIObj ){
 	if( TRUE ){
 		rObj$lastZoid.H2	<-	if( 2>stdMI$mtxLen ) NULL	 else stdMI$rawTail[nrow(stdMI$rawTail)-1,]
 		rObj$lastCStep.H2	<-	if( 2>stdMI$mtxLen ) NULL	 else stdMI$cStepTail[nrow(stdMI$cStepTail)-1,]
-		rObj$lastFStep.H2	<-	if( 2>stdMI$mtxLen ) NULL	 else stdMI$fStepTail[nrow(stdMI$fStepTail)-1,]
+		rObj$lastFStep.H2	<-	if( 3>stdMI$mtxLen ) NULL	 else stdMI$fStepTail[nrow(stdMI$fStepTail)-1,]
+									# fStepTail[1,] Àº NA
 
 		inc.stdRaw		<- if( 2>stdMI$mtxLen ){ NULL 
 							} else {	vDiff <- stdMI$lastZoid - zMtx[stdMI$mtxLen-1,]
@@ -216,23 +217,19 @@ bFMtx.score2 <- function( stdMIObj ){
 										cStep[stdMI$mtxLen-2,]+vDiff
 							}
 
-		fStepLen <- ifelse( is.null(stdMI$fStepTail) ,0 ,nrow(stdMI$fStepTail) )
+		fStepLen <- ifelse( is.null(stdMI$fStepTail) ,0 ,nrow(stdMI$fStepTail)-1 )	# # fStepTail[1,] Àº NA
 		inc.stdFStep	<- if( 2>fStepLen ){ NULL 
-							} else {	vDiff <- stdMI$fStep - stdMI$fStepTail[fStepLen-1,]
+							} else {	vDiff <- stdMI$fStep - stdMI$fStepTail[fStepLen,]
 										stdMI$fStep+vDiff
 							}
 		inc.stdFStep2	<- if( 4>fStepLen ){ NULL 
-							} else {	vDiff <- stdMI$fStepTail[fStepLen-1,] - stdMI$fStepTail[fStepLen-3,]
+							} else {	vDiff <- stdMI$fStepTail[fStepLen,] - stdMI$fStepTail[fStepLen,]
 										stdMI$fStepTail[fStepLen-1,]+vDiff
-							}
-		inc.stdFStep3	<- if( 6>fStepLen ){ NULL 
-							} else {	vDiff <- stdMI$fStepTail[fStepLen-2,] - stdMI$fStepTail[fStepLen-5,]
-										stdMI$fStepTail[fStepLen-2,]+vDiff
 							}
 
 		rObj$inc.stdRaw <- inc.stdRaw	;rObj$inc.stdRaw2 <- inc.stdRaw2	;rObj$inc.stdRaw3 <- inc.stdRaw3
 		rObj$inc.stdCStep <- inc.stdCStep	;rObj$inc.stdCStep2 <- inc.stdCStep2	;rObj$inc.stdCStep3 <- inc.stdCStep3
-		rObj$inc.stdFStep <- inc.stdFStep	;rObj$inc.stdFStep2 <- inc.stdFStep2	;rObj$inc.stdFStep3 <- inc.stdFStep3
+		rObj$inc.stdFStep <- inc.stdFStep	;rObj$inc.stdFStep2 <- inc.stdFStep2
 
 		rObj$slideObj <- getSlideReb( zMtx )
 		
@@ -245,7 +242,7 @@ bFMtx.score2 <- function( stdMIObj ){
 		#	fMtxObj <- list( scoreMtx ,infoMtx )
 		aLen <- nrow(aZoidMtx)
 		cName <- c("rebV.r","rebL","rebR","rebC.r","rebC.c","rebC.f","rebC2.r","rebC2.c","rebC2.f")
-		cName <- c( cName, c("inc.r","inc.c","inc.f","inc.r2","inc.c2","inc.f2","inc.r3","inc.c3","inc.f3") )
+		cName <- c( cName, c("inc.r","inc.c","inc.f","inc.r2","inc.c2","inc.f2","inc.r3","inc.c3") )
 		scoreMtx <- matrix( 0, nrow=aLen, ncol=length(cName) )	;colnames(scoreMtx) <- cName
 
 		infoMtx <- NULL
@@ -258,7 +255,6 @@ bFMtx.score2 <- function( stdMIObj ){
 		if( 0==rObj$zMtx.size ){
 			return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
 		}
-
 
 		for( aIdx in 1:aLen ){
 			aZoid <- aZoidMtx[aIdx,]
@@ -286,7 +282,6 @@ bFMtx.score2 <- function( stdMIObj ){
 			scoreMtx[aIdx,"inc.f2"] <- sum( rObj$inc.stdFStep2==aFStep )
 			scoreMtx[aIdx,"inc.r3"] <- sum( rObj$inc.stdRaw3==aZoid )
 			scoreMtx[aIdx,"inc.c3"] <- sum( rObj$inc.stdCStep3==aCStep )
-			scoreMtx[aIdx,"inc.f3"] <- sum( rObj$inc.stdFStep3==aFStep )
 
 			if( makeInfoStr ){
 				if( is.null(rObj$slideObj) ){ infoMtx[aIdx,"rebSlide"] <- "N/A"

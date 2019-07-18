@@ -66,6 +66,13 @@ B.makeHMtxLst <- function( gEnv, allIdxLst, fRstLst, lastH=NULL ){
                 for( rIdx in seq_len(length(scoreMtx.grp.lst)) ){
                     scoreObj <- scoreMtx.grp.lst[[rIdx]]$basic[[nIdx]][[smnIdx]]
                     scoreMtx <- rbind( scoreMtx ,scoreObj$scoreMtx[1,] )
+                    if( any(is.na(scoreObj$scoreMtx[1,])) ){
+                        hStr <- sfcHLst[[sfcIdx]][rIdx]
+                        colStr <- paste( names(scoreObj$scoreMtx[1,])[which(is.na(scoreObj$scoreMtx[1,]))],collapse=",")
+                        k.FLogStr(sprintf("WARN : NA - %s, %s, %s(%s), %s",sfcIdx,nIdx,smnIdx,colStr,hStr)
+                                    ,pConsole=T
+                                )
+                    }
                     if( !is.null(scoreObj$infoMtx) ){
                         infoMtx <- rbind( infoMtx ,scoreObj$infoMtx[1,] )
                     }
