@@ -1,5 +1,68 @@
 
 
+
+bUtil.getCtrlCfg <- function( hVal ){
+
+    hVal.len <- length(hVal)
+    vUnq <- sort(unique(hVal),decreasing=T)
+    vTbl <- table(hVal)[as.character(vUnq)]
+    vTbl.len <- length(vTbl)
+
+    maxMin <- vUnq[c(1,vTbl.len)] # valRange 범위 내에서만 허용.(2개 모두 같은 값일수도 있다.)
+    evtVal <- integer(0)    # event로서 다룰 값.(주로 maxMin값이지만 발생빈도가 낮은 값.)
+    extVal <- integer(0)    # min,max값이었으나, 발생 빈도가 1개라 maxMin에서 제외된 값.
+
+    if( (10<=hVal.len) && (2<=vTbl.len) ){
+        extVal.size <- hVal.len %/% 10
+        if( extVal.size >= vTbl[as.character(maxMin[1])] ){
+            extVal <- c( extVal ,maxMin[1] )
+            maxMin[1] <- vUnq[1+1]
+        }
+        if( extVal.size >= vTbl[as.character(maxMin[2])] ){
+            extVal <- c( extVal ,maxMin[2] )
+            maxMin[2] <- vUnq[vTbl.len-1]
+        }
+
+        evtVal.size <- hVal.len %/% 5
+        if( evtVal.size >= vTbl[as.character(maxMin[1])] ){
+            evtVal <- c( evtVal ,maxMin[1] )
+        }
+        if( evtVal.size >= vTbl[as.character(maxMin[2])] ){
+            evtVal <- c( evtVal ,maxMin[2] )
+        }
+    }
+
+    rObj <- list( maxMin=maxMin ,evtVal=evtVal ,extVal=extVal ,hVal.len=hVal.len )
+    rObj$toString <- function(){
+        rptStr <- sprintf("maxMin:%d~%d  evtVal:%s  extVal:%s  hVal.len:%d",maxMin[1],maxMin[2]
+                        ,paste( evtVal,collapse=",")    ,paste( extVal,collapse=",")
+                        ,hVal.len
+                    )
+        return( rptStr )
+    }
+
+    return( rObj )
+
+} # bUtil.getCtrlCfg( )
+
+bUtil.filtByCtrlCfg <- function( val ,ctrlCfg ){
+
+	val.len <- length(val)
+
+	cName <- c("survive","evt","ext")
+	flagMtx <- matrix( F, nrow=val.len, ncol=length(cName) )
+	colnames(flagMtx) <- cName
+
+	for( idx in seq_len(val.len) ){
+		flagMtx[idx,"survive"] <- (ctrlCfg$maxMin[1]>=val[idx]) && (val[idx]>=ctrlCfg$maxMin[2])
+		flagMtx[idx,"evt"] <- val[idx] %in% ctrlCfg$evt
+		flagMtx[idx,"ext"] <- val[idx] %in% ctrlCfg$ext		
+	}
+
+	return( flagMtx )
+} # bUtil.filtByCtrlCfg()
+
+
 bUtil.getStdMILst <- function( gEnv ,fRstLst ){
 
     # stdMI.basic <- fCutU.getStdMI( gEnv )
