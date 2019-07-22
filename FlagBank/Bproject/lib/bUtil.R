@@ -1,5 +1,11 @@
 
 
+bUtil.makeStdCtrlCfgGrp <- function( hMtxLst ){
+	rObj <- list( createInfo=sprintf("lastH:%d when %s",hMtxLst$lastH,Sys.time()) )
+	#  qqe work
+	return( rObj )
+}
+
 
 bUtil.getCtrlCfg <- function( hVal ){
 
@@ -61,7 +67,6 @@ bUtil.filtByCtrlCfg <- function( val ,ctrlCfg ){
 
 	return( flagMtx )
 } # bUtil.filtByCtrlCfg()
-
 
 bUtil.getStdMILst <- function( gEnv ,fRstLst ){
 

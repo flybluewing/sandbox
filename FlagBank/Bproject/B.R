@@ -47,6 +47,8 @@ if(FALSE){  # working code
     #   ctrlCfg 생성(default 상태)
     ctrlCfg <- bUtil.getCtrlCfg( hVal )
 
+    # bUtil.makeStdCtrlCfgGrp()
+
     #   ctrlCfg를 사용한 필터링.
     flagMtx <- bUtil.filtByCtrlCfg( hVal ,ctrlCfg )
 }
