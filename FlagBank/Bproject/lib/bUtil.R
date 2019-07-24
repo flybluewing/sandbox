@@ -1,13 +1,60 @@
 
 
 bUtil.makeStdCtrlCfgGrp <- function( hMtxLst ){
+	
 	rObj <- list( createInfo=sprintf("lastH:%d when %s",hMtxLst$lastH,Sys.time()) )
+
+	
+	#	names(hMtxLst$sfcHLst)	# "sfcLate"   "NGD0000.A"
+
 	#  qqe work
 	return( rObj )
 }
 
 
+bUtil.stdCtrlCfg.scoreMtx <- function( scoreMtx ){
+	rObj <- list()
+
+	# [,n] - column direction
+	colDirLst <- list()
+	for( cnIdx in colnames(scoreMtx) ){
+		colDirLst[[cnIdx]] <- bUtil.getCtrlCfg( scoreMtx[,cnIdx] )
+	}
+	rObj$colDirLst <- colDirLst
+
+	# [,n-1],[,n] - rebind pattern from pre column
+	rpCLst <- list()	# rebind pattern, column direction
+	rObj$rpCLst <- rpCLst
+
+	# [m-1,],[m,] - rebind pattern from pre row 
+	rpRLst <- list()	# rebind pattern, row direction
+	rObj$rpRLst <- rpRLst
+
+	return( rObj )
+
+} # bUtil.stdCtrlCfg.scoreMtx()
+
+bUtil.stdCtrlCfg.h_ph4FCol <- function( scoreMtx ){	
+	# qqe work
+	rObj <- list()
+	return( rObj )
+} # bUtil.stdCtrlCfg.h_ph4FCol()
+
+bUtil.stdCtrlCfg.h_ph4FCol <- function( scoreMtx ){
+	# qqe work
+	rObj <- list()
+	return( rObj )
+} # bUtil.stdCtrlCfg.h_ph4FCol()
+
 bUtil.getCtrlCfg <- function( hVal ){
+
+    toString <- function(){
+        rptStr <- sprintf("maxMin:%d~%d  evtVal:%s  extVal:%s  hVal.len:%d",maxMin[1],maxMin[2]
+                        ,paste( evtVal,collapse=",")    ,paste( extVal,collapse=",")
+                        ,hVal.len
+                    )
+        return( rptStr )
+    }
 
     hVal.len <- length(hVal)
     vUnq <- sort(unique(hVal),decreasing=T)
@@ -38,14 +85,7 @@ bUtil.getCtrlCfg <- function( hVal ){
         }
     }
 
-    rObj <- list( maxMin=maxMin ,evtVal=evtVal ,extVal=extVal ,hVal.len=hVal.len )
-    rObj$toString <- function(){
-        rptStr <- sprintf("maxMin:%d~%d  evtVal:%s  extVal:%s  hVal.len:%d",maxMin[1],maxMin[2]
-                        ,paste( evtVal,collapse=",")    ,paste( extVal,collapse=",")
-                        ,hVal.len
-                    )
-        return( rptStr )
-    }
+    rObj <- list( maxMin=maxMin ,evtVal=evtVal ,extVal=extVal ,hVal.len=hVal.len ,description=toString() )
 
     return( rObj )
 
