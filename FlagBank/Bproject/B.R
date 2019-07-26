@@ -31,25 +31,26 @@ if(FALSE){  # working code
     scoreMtx <- hMtxLst[["scoreMtxLst"]][["sfcLate"]][["basic"]][["score2"]]$scoreMtx
     # > scoreMtx
     #         rebV.r rebL rebR rebC.r rebC.c rebC.f rebC2.r rebC2.c rebC2.f inc.r inc.c inc.f inc.r2 inc.c2 inc.f2 inc.r3 inc.c3
-    #     849      1    0    0      1      0      0       0       0       0     0     0     0      1      0      3      0      0
-    #     850      1    0    0      1      1      1       1       0       0     1     0     0      0      0      0      1      0
-    #     851      0    0    0      0      3      0       0       2       0     0     1     0      0      0      0      0      0
-    #     852      0    0    0      0      0      0       0       0       1     0     0     0      0      1      0      0      0
-    #     853      0    0    1      0      1      0       2       0       0     0     1     0      0      0      0      0      0
-    #     854      0    0    0      0      0      0       0       0       0     0     0     0      1      0      0      0      0
     #     855      1    1    0      0      0      0       1       0       0     0     0     0      1      1      0      0      0
     #     856      2    0    0      2      1      0       0       1       0     0     0     0      0      0      0      0      0
     #     857      1    0    0      0      0      0       0       0       1     0     0     0      0      0      0      0      0
     #     858      1    0    0      0      2      0       0       0       0     0     0     0      0      0      0      1      0
     #     859      2    0    0      2      1      0       0       0       0     0     0     0      0      0      2      0      0
 
-    hVal <- scoreMtx[,"rebC.c"]
-    #   ctrlCfg 생성(default 상태)
-    ctrlCfg <- bUtil.getCtrlCfg( hVal )
+    # 기본 필터링 설정값 형성.
+    stdCtrlCfgGrp <- bUtil.makeStdCtrlCfgGrp(hMtxLst)
+    #   todo : stdCtrlCfgGrp 의 XML 입출력 작성.
 
-    # bUtil.makeStdCtrlCfgGrp()
+    # TODO : ctrlCfgGrp를 이용한 필터링 객체 설정.
 
-    #   ctrlCfg를 사용한 필터링.
-    flagMtx <- bUtil.filtByCtrlCfg( hVal ,ctrlCfg )
+    # TODO : mtxLst의 가장 최근 값( pattern rebound 체크용) 가져오는 루틴 작성.
+
+    # TODO : aZoid,stdZoid에 대한 필터링 코드 작성.
+    #       예시코드 : ctrlCfg를 사용한 필터링.
+    #               flagMtx <- bUtil.filtByCtrlCfg( hVal ,ctrlCfg )
+
+
+    # TODO : stdZoid 필터링 결과 리뷰
+
 }
 
