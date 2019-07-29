@@ -39,7 +39,8 @@ if(FALSE){  # working code
 
     # 기본 필터링 설정값 형성.
     stdCtrlCfgGrp <- bUtil.makeStdCtrlCfgGrp(hMtxLst)
-    #   todo : stdCtrlCfgGrp 의 XML 입출력 작성.
+
+    
 
     # TODO : ctrlCfgGrp를 이용한 필터링 객체 설정.
 
@@ -51,6 +52,8 @@ if(FALSE){  # working code
 
 
     # TODO : stdZoid 필터링 결과 리뷰
+    #   aZoid에 대한 scoreMtx 생성
+    #       
 
 }
 
