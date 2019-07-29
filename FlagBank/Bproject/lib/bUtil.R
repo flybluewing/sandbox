@@ -1,5 +1,11 @@
 
 
+
+bUtil.filtAZoidMtx <- function( gEnv ,allIdxF ,filtGrp ){
+	#	filtGrp <- bFCust.getFCustGrp( stdCtrlCfgGrp )
+} # bUtil.filtAZoidMtx( )
+
+
 bUtil.makeStdCtrlCfgGrp <- function( hMtxLst ){
 
 	rObj <- list( createInfo=sprintf("lastH:%d when %s",hMtxLst$lastH,Sys.time()) )

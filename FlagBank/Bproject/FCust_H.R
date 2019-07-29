@@ -41,7 +41,7 @@ bFCust.getFCustGrp <- function( stdCtrlCfgGrp ){
 			# 	hIdxLst[[hIdxName]] <- bUtil.stdCtrlCfg.h_ph4FCol( mtx )
 			# }
 
-            mLst[[mName]] <- list( std=stdLst ,fCol=fColLst ,hIdxLst)
+            mLst[[mName]] <- list( stdLst=stdLst ,fCol=fColLst ,hIdxLst=hIdxLst)
 		} # for(mName)
 
 		filterLst[[hName]] <- mLst

@@ -633,3 +633,15 @@ kLog.getPerStr <- function( frag ,tot ,pUseName=TRUE ,pLong=FALSE ) {
 } # kLog.getPerStr()
 
 
+k.getIdx_AllZoidMtx <- function( gEnv ,aZoid ){
+
+	aIdx <- NULL
+	for( idx in 1:nrow(gEnv$allZoidMtx) ){
+		if( all(gEnv$allZoidMtx[idx,]==aZoid) ){
+			aIdx <- idx
+			break
+		}
+	}
+	return( aIdx )
+} # k.getIdx_AllZoidMtx
+
