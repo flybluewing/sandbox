@@ -1,9 +1,9 @@
 
 
 
-bUtil.filtAZoidMtx <- function( gEnv ,allIdxF ,filtGrp ){
-	#	filtGrp <- bFCust.getFCustGrp( stdCtrlCfgGrp )
-} # bUtil.filtAZoidMtx( )
+bUtil.cutAZoidMtx <- function( gEnv ,allIdxF ,cutGrp ){
+	#	cutGrp <- bFCust.getFCustGrp( stdCtrlCfgGrp )
+} # bUtil.cutAZoidMtx( )
 
 
 bUtil.makeStdCtrlCfgGrp <- function( hMtxLst ){

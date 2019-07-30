@@ -9,7 +9,7 @@ bFCust.getFCustGrp <- function( stdCtrlCfgGrp ){
 
     ctrlCfgLst <- stdCtrlCfgGrp$ctrlCfgLst
 
-	filterLst <- list()
+	cutterLst <- list()
 	for( hName in names(rObj$sfcHLst) ){	# hName <- names(rObj$sfcHLst)[1]
         mLst <- list()
         for( mName in names(rObj$mtxInfoLst) ){	# mName <- names(rObj$mtxInfoLst)[1]
@@ -21,8 +21,8 @@ bFCust.getFCustGrp <- function( stdCtrlCfgGrp ){
                 for( fcName in rObj$mtxInfoLst[[mName]] ){ # fcName <- rObj$mtxInfoLst[[mName]][1]
 					ctrlCfg <- ctrlCfgLst[[hName]][[mName]][["stdLst"]][[pName]][["colDirLst"]][[fcName]]
 					# 정의 내역이 있으면 정의내역을 stdLst에 붙이고
-					# 없으면 bFCust.defaultStdColFilter( ... )
-					fcLst[[fcName]] <- bFCust.defaultStdColFilter( ctrlCfg ,hName, mName, pName, auxInfo=c(fCol=fcName) )
+					# 없으면 bFCust.defaultStdColCutter( ... )
+					fcLst[[fcName]] <- bFCust.defaultStdColCutter( ctrlCfg ,hName, mName, pName, auxInfo=c(fCol=fcName) )
                 }
 	            #   work : n개 이상 컬럼에 대한 통제가 정의되어 있으면 pLst에 추가.
 
@@ -44,30 +44,30 @@ bFCust.getFCustGrp <- function( stdCtrlCfgGrp ){
             mLst[[mName]] <- list( stdLst=stdLst ,fCol=fColLst ,hIdxLst=hIdxLst)
 		} # for(mName)
 
-		filterLst[[hName]] <- mLst
+		cutterLst[[hName]] <- mLst
     }
 
-    rObj$filterLst <- filterLst
+    rObj$cutterLst <- cutterLst
     return( rObj )
 
 } # bFCust.getFCustGrp( )
 
 
-bFCust.defaultStdColFilter <- function( ctrlCfg ,hName, mName, pName, auxInfo=c(auxInfo="") ){
+bFCust.defaultStdColCutter <- function( ctrlCfg ,hName, mName, pName, auxInfo=c(auxInfo="") ){
 
 	rObj <- list(	description=ctrlCfg$description
 					,maxMin=ctrlCfg$maxMin ,evtVal=ctrlCfg$evtVal ,extVal=ctrlCfg$extVal 
 	)
-	rObj$idObj <- c( typ="stdColFilt"	,hName=hName	,mName=mName	,pName=pName	,auxInfo )
+	rObj$idObj <- c( typ="stdColCut"	,hName=hName	,mName=mName	,pName=pName	,auxInfo )
 
-	rObj$filt <- function( val ){
+	rObj$cut <- function( val ){
 
 		val.len <- length( val )
 
 		extMaxMin <- range( c(rObj$maxMin,rObj$extVal) )[2:1]
 
 		surDf <- data.frame( surv=rep(F,val.len) ,evt=rep(NA,val.len) ,info=rep(NA,val.len) )
-		filtLst <- vector("list",val.len)
+		cutLst <- vector("list",val.len)
 		for( idx in seq_len(val.len) ){
 
 			if( val[idx] %in% rObj$evtVal )	surDf[idx,"evt"] <- val[idx]
@@ -80,17 +80,17 @@ bFCust.defaultStdColFilter <- function( ctrlCfg ,hName, mName, pName, auxInfo=c(
 				if( (extMaxMin[1]>=val[idx]) && (val[idx]>=extMaxMin[2]) ){ 
 					surDf[idx,"info"] <- sprintf("%d in ext(%d~%d)",val[idx],extMaxMin[1],extMaxMin[2]) 
 				}
-				filtLst[[idx]] <- rObj$idObj
+				cutLst[[idx]] <- rObj$idObj
 			}
 
 		}
 
-		rstObj <- list( surDf=surDf ,filtLst=filtLst ,)
+		rstObj <- list( surDf=surDf ,cutLst=cutLst )
 		return( rstObj )
 	}
 	return( rObj )
 
-} # bFCust.defaultStdColFilter()
+} # bFCust.defaultStdColCutter()
 
 
 
