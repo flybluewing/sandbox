@@ -20,7 +20,7 @@ bUtil.cut <- function( scoreMtx.grp ,cut.grp ,fHName ,anaOnly=F ){
                 cutLst <- cut.grp$cutterLst[[hName]][[mName]]$stdLst[[pName]]
                 scoreMtx <- scoreMtx.grp$basic[[pName]][[mName]]$scoreMtx
                 for( cnIdx in names(cutLst) ){  # cnIdx <- names(cutLst)[1]
-                    cutRstObj <- cutLst[[cnIdx]]$cut( scoreMtx ,surFlag )
+                    cutRstObj <- cutLst[[cnIdx]]$cut( scoreMtx ,!surFlag )
                     if( anaOnly && !cutRstObj$surDf[1,"surv"] ){
                         cutInfoLst[[1+length(cutInfoLst)]] <- cutRstObj$cutLst[[1]]
                     }
@@ -36,7 +36,7 @@ bUtil.cut <- function( scoreMtx.grp ,cut.grp ,fHName ,anaOnly=F ){
         }
     }
 
-    return( list( surFlag=surFlag ,cutInfoLst ) )
+    return( list( surFlag=surFlag ,cutInfoLst=cutInfoLst ) )
 
 } # bUtil.cut()
 

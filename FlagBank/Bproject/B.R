@@ -57,6 +57,7 @@ if(FALSE){  # working code
     fHName <- c( "sfcLate",   "NGD0000.A")  # fHName 분석하는 루틴 필요.
 
     stdZoid <-  c( 4, 8,18,25,27,32)    # H860
+    #   stdZoid <- gEnv$zhF[nrow(gEnv$zhF),]
     stdIdx <- k.getIdx_AllZoidMtx( gEnv, stdZoid )
     allIdxF <- stdIdx + (0:10*200000)
     # bUtil.cutAZoidMtx( gEnv ,allIdxF ,cutGrp )
