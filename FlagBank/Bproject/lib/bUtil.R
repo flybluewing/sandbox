@@ -5,7 +5,7 @@ bUtil.cut <- function( scoreMtx.grp ,cut.grp ,fHName ,anaOnly=F ){
 
     # scoreMtx.grp <- wScoreMtx.grp ;anaOnly=T
     scMtxName <- names(cut.grp$mtxInfoLst)
-    datLen <- nrow(scoreMtx.grp$basic[[pName]][[mName]]$scoreMtx)
+    datLen <- nrow(scoreMtx.grp$basic[[1]][[1]]$scoreMtx)
     cutInfoLst <- NULL
     if( anaOnly ){
         datLen <- 1

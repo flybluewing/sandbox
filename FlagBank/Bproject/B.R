@@ -75,7 +75,7 @@ if(FALSE){  # working code
     #   aZoid에 대한 scoreMtx 생성
     #
 
-    
 
 }
 
+#   source("header.r")
