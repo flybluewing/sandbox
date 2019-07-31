@@ -1,3 +1,4 @@
+source("header.r")
 source("B_H.R")
 lastH <- 859
 #source(sprintf("./toFinal/toZ%d_H.R",workH))	# working
@@ -44,7 +45,7 @@ if(FALSE){  # working code
     # ctrlCfgGrp를 이용한 필터링 객체 설정.
     #   TODO : 최근 hMtxLst도 넣어줘야 한다.
     #          사용자 정의 filt 대체 적용 필요.
-    cutGrp <- bFCust.getFCustGrp( stdCtrlCfgGrp )
+    cut.grp <- bFCust.getFCustGrp( stdCtrlCfgGrp )
 
 
     # TODO : mtxLst의 가장 최근 값( pattern rebound 체크용) 가져오는 루틴 작성.
@@ -53,18 +54,28 @@ if(FALSE){  # working code
     #       예시코드 : ctrlCfg를 사용한 필터링.
     #               flagMtx <- bUtil.filtByCtrlCfg( hVal ,ctrlCfg )
 
+    fHName <- c( "sfcLate",   "NGD0000.A")  # fHName 분석하는 루틴 필요.
+
     stdZoid <-  c( 4, 8,18,25,27,32)    # H860
     stdIdx <- k.getIdx_AllZoidMtx( gEnv, stdZoid )
     allIdxF <- stdIdx + (0:10*200000)
     # bUtil.cutAZoidMtx( gEnv ,allIdxF ,cutGrp )
 
-    wStdMI.grp <- bUtil.getStdMILst( gEnv ,fRstLst )
-    wFilter.grp <- getFilter.grp( wStdMI.grp )
-    wScoreMtx.grp <- getScoreMtx.grp.4H( stdZoid ,wFilter.grp )
+    wScoreMtx.grp <- NULL
+    if( TRUE ){
+        wStdMI.grp <- bUtil.getStdMILst( gEnv ,fRstLst )
+        wFilter.grp <- getFilter.grp( wStdMI.grp )
+        wScoreMtx.grp <- getScoreMtx.grp.4H( stdZoid ,wFilter.grp )
 
+        cutRst <- bUtil.cut( wScoreMtx.grp ,cut.grp ,fHName ,anaOnly=T )
+    }
+
+    
     # TODO : stdZoid 필터링 결과 리뷰
     #   aZoid에 대한 scoreMtx 생성
-    #       
+    #
+
+    
 
 }
 

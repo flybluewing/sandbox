@@ -1,5 +1,46 @@
 
 
+bUtil.cut <- function( scoreMtx.grp ,cut.grp ,fHName ,anaOnly=F ){    
+    #   anaOnly=T : scoreMtx[1,] 만 분석하며, 그 대신 cutting 정보를 추가한다.
+
+    # scoreMtx.grp <- wScoreMtx.grp ;anaOnly=T
+    scMtxName <- names(cut.grp$mtxInfoLst)
+    datLen <- nrow(scoreMtx.grp$basic[[pName]][[mName]]$scoreMtx)
+    cutInfoLst <- NULL
+    if( anaOnly ){
+        datLen <- 1
+        cutInfoLst <- list()
+    }
+
+    surFlag <- rep( T ,datLen )
+    for( hName in fHName ){ # hName <- fHName[1]
+        for( mName in scMtxName ){ # mName <- scMtxName[1]
+            #   "stdLst"  "fCol"    "hIdxLst"
+            for( pName in cut.grp$phaseName ){   # pName <- cut.grp$phaseName[1]
+                cutLst <- cut.grp$cutterLst[[hName]][[mName]]$stdLst[[pName]]
+                scoreMtx <- scoreMtx.grp$basic[[pName]][[mName]]$scoreMtx
+                for( cnIdx in names(cutLst) ){  # cnIdx <- names(cutLst)[1]
+                    cutRstObj <- cutLst[[cnIdx]]$cut( scoreMtx ,surFlag )
+                    if( anaOnly && !cutRstObj$surDf[1,"surv"] ){
+                        cutInfoLst[[1+length(cutInfoLst)]] <- cutRstObj$cutLst[[1]]
+                    }
+                    if( !anaOnly ){
+                        surFlag <- surFlag & cutRstObj$surDf[,"surv"]
+                    }
+                }
+            }
+
+            # Todo  fCol
+
+            # Todo  hIdxLst
+        }
+    }
+
+    return( list( surFlag=surFlag ,cutInfoLst ) )
+
+} # bUtil.cut()
+
+
 
 bUtil.cutAZoidMtx <- function( gEnv ,allIdxF ,cutGrp ){
 	#	cutGrp <- bFCust.getFCustGrp( stdCtrlCfgGrp )
