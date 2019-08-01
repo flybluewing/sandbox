@@ -340,13 +340,13 @@ B.rptScoreMtx.grp <- function( scoreMtx.grp ,rIdx=1 ,file="scoreMtx.grp" ){
 
     # basic
     log.meta$fLogStr("<Basic phase> ---------------------------------------------------")
-    for( pName in names(stdMI.grp$basic) ){ # pName <- names(stdMI.grp$basic)[1]
+    for( pName in names(scoreMtx.grp$basic) ){ # pName <- names(scoreMtx.grp$basic)[1]
         for( mName in names(scoreMtx.grp$basic[[pName]]) ){ # mName <- names(scoreMtx.grp$basic[[pName]])[1]
             scoreMtx <- scoreMtx.grp$basic[[pName]][[mName]]$scoreMtx[rIdx,,drop=F]
             rownames(scoreMtx) <- paste(rIdx,"st",sep="")
             
             log.meta$fLogStr( sprintf("  %s / %s",pName,mName) )
-            log.meta$fLogMtx( stdMI$rawTail ,pIndent="    " )
+            log.meta$fLogMtx( scoreMtx ,pIndent="    " )
         }
     }
 

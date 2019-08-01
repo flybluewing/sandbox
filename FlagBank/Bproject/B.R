@@ -69,6 +69,11 @@ if(FALSE){  # working code
         wScoreMtx.grp <- getScoreMtx.grp.4H( stdZoid ,wFilter.grp )
 
         cutRst <- bUtil.cut( wScoreMtx.grp ,cut.grp ,fHName ,anaOnly=T )
+
+        # report example =================================================
+        # B.rptStdMI.grp( wStdMI.grp )
+        # B.rptScoreMtx.grp( wScoreMtx.grp )
+        # B.rptCut.grp( cut.grp )
     }
 
     
