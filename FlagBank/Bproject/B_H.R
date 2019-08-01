@@ -304,3 +304,84 @@ B.rptHMtxLst <- function( hMtxLst ){
 
 } # B.rptHMtxLst()
 
+B.rptStdMI.grp <- function( stdMI.grp ,file="stdMI.grp" ){
+
+    log.meta <- k.getFlogObj( sprintf("./report/workRpt/%s.txt",file) )
+    log.meta$fLogStr("start", pTime=T ,pAppend=F )
+
+    # basic
+    log.meta$fLogStr("<Basic phase> ---------------------------------------------------")
+    for( pName in names(stdMI.grp$basic) ){ # pName <- names(stdMI.grp$basic)[1]
+        stdMI <- stdMI.grp$basic[[pName]]$stdMI
+        log.meta$fLogStr( sprintf("  phase:%s",pName) )
+        log.meta$fLogStr( sprintf("    rem : %s",paste(stdMI$rem,collapse=",") ) )
+        log.meta$fLogStr( sprintf("    rawTail") )
+        log.meta$fLogMtx( stdMI$rawTail ,pIndent="        " )
+        log.meta$fLogStr( sprintf("    cStepTail") )
+        log.meta$fLogMtx( stdMI$cStepTail ,pIndent="        " )
+        log.meta$fLogStr( sprintf("    fStepTail") )
+        log.meta$fLogMtx( stdMI$fStepTail ,pIndent="        " )
+    }
+
+    # bDup
+    log.meta$fLogStr("<bDup phase> ---------------------------------------------------")
+    log.meta$fLogStr("    working")
+
+    # mf
+    log.meta$fLogStr("<mf phase> ---------------------------------------------------")
+    log.meta$fLogStr("    working")
+
+} # B.rptStdMI.grp()
+
+B.rptScoreMtx.grp <- function( scoreMtx.grp ,rIdx=1 ,file="scoreMtx.grp" ){
+
+    log.meta <- k.getFlogObj( sprintf("./report/workRpt/%s.txt",file) )
+    log.meta$fLogStr("start", pTime=T ,pAppend=F )
+
+    # basic
+    log.meta$fLogStr("<Basic phase> ---------------------------------------------------")
+    for( pName in names(stdMI.grp$basic) ){ # pName <- names(stdMI.grp$basic)[1]
+        for( mName in names(scoreMtx.grp$basic[[pName]]) ){ # mName <- names(scoreMtx.grp$basic[[pName]])[1]
+            scoreMtx <- scoreMtx.grp$basic[[pName]][[mName]]$scoreMtx[rIdx,,drop=F]
+            rownames(scoreMtx) <- paste(rIdx,"st",sep="")
+            
+            log.meta$fLogStr( sprintf("  %s / %s",pName,mName) )
+            log.meta$fLogMtx( stdMI$rawTail ,pIndent="    " )
+        }
+    }
+
+    # bDup
+    log.meta$fLogStr("<bDup phase> ---------------------------------------------------")
+    log.meta$fLogStr("    working")
+
+    # mf
+    log.meta$fLogStr("<mf phase> ---------------------------------------------------")
+    log.meta$fLogStr("    working")
+
+} # B.rptScoreMtx.grp
+
+B.rptCut.grp <- function( cut.grp ,file="cut.grp" ){
+
+    log.meta <- k.getFlogObj( sprintf("./report/workRpt/%s.txt",file) )
+    log.meta$fLogStr("start", pTime=T ,pAppend=F )
+
+    for( hName in names(cut.grp$sfcHLst) ){ # hName <- names(cut.grp$sfcHLst)[1]
+        for( mName in names(cut.grp$mtxInfoLst) ){  # mName <- names(cut.grp$mtxInfoLst)[1]
+            #   "stdLst"  "fCol"    "hIdxLst"
+            stdLst <- cut.grp$cutterLst[[hName]][[mName]]$stdLst
+            for( pName in names(stdLst) ){  # pName <- names(stdLst)[1]
+                log.meta$fLogStr( sprintf("%s - stdLst:%s/%s",hName,mName,pName) )
+                for( cutName in names(stdLst[[pName]]) ){   # cutName <- names(stdLst[[pName]])[1]
+                    log.meta$fLogStr( sprintf("    <%s>\t%s",cutName,stdLst[[pName]][[cutName]]$description) )
+                }
+            }
+
+            fCol <- cut.grp$cutterLst[[hName]][[mName]]$fCol
+            log.meta$fLogStr( sprintf("%s - fCol:%s/",hName,mName) )
+
+            hIdxLst <- cut.grp$cutterLst[[hName]][[mName]]$hIdxLst
+            log.meta$fLogStr( sprintf("%s - hIdxLst:%s/",hName,mName) )
+        }
+    }
+
+} # B.rptCut.grp
