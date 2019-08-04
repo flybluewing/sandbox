@@ -74,8 +74,11 @@ if(FALSE){  # working code
         # B.rptStdMI.grp( wStdMI.grp )
         # B.rptScoreMtx.grp( wScoreMtx.grp )
         # B.rptCut.grp( cut.grp )
+        # B.rptCutRst( cutRst )
     }
 
+    # custom ctrlCfg
+    # stdColCut/sfcLate/score2/basic/inc.f/inc.f  (typ/hName/mName/pName/fcName/fCol)
     
     # TODO : stdZoid 필터링 결과 리뷰
     #   aZoid에 대한 scoreMtx 생성

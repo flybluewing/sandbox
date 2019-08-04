@@ -65,7 +65,7 @@ B.makeHMtxLst <- function( gEnv, allIdxLst, fRstLst, lastH=NULL ){
     stdFiltedCnt <- allIdxLst$stdFiltedCnt[as.character(baseSpan)]
 
     # ----------------------------------------------------
-    sfcHLst <- list(    sfcLate= baseSpan[length(baseSpan)] - 10:0
+    sfcHLst <- list(    sfcLate= baseSpan[length(baseSpan)] - 20:0
                         #   Q_RBF
                         # ,sfc0=as.integer(names(stdFiltedCnt)[stdFiltedCnt==0])
                         # ,sfc1=as.integer(names(stdFiltedCnt)[stdFiltedCnt==1])
@@ -83,6 +83,8 @@ B.makeHMtxLst <- function( gEnv, allIdxLst, fRstLst, lastH=NULL ){
         sfcHLst[[sprintf("NG%s",sfnIdx)]] <- hSpan.NG
     }
 
+    cnt <- sapply(sfcHLst,length)
+    cat(sprintf("   %s\n",paste(paste(names(cnt),cnt,sep=":") ,collapse="   " ) ))
 
     scoreMtxLst <- list()
     for( sfcIdx in names(sfcHLst) ){    # sfcIdx <- names(sfcHLst)[2]
@@ -385,3 +387,19 @@ B.rptCut.grp <- function( cut.grp ,file="cut.grp" ){
     }
 
 } # B.rptCut.grp
+
+B.rptCutRst <- function( cutRst ,file="cutRst" ){
+
+    log.meta <- k.getFlogObj( sprintf("./report/workRpt/%s.txt",file) )
+    log.meta$fLogStr("start", pTime=T ,pAppend=F )
+
+    cutInfoLst <- cutRst$cutInfoLst
+
+    for( idx in seq_len(length(cutInfoLst)) ){
+        log.meta$fLogStr( sprintf("%3dth   %s  (%s)",idx
+            ,paste(cutInfoLst[[idx]],collapse="/")
+            ,paste(names(cutInfoLst[[idx]]),collapse="/")
+        ) )
+    }
+
+} # B.rptCutRst()
