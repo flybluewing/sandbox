@@ -20,9 +20,10 @@ bFCust.getFCustGrp <- function( stdCtrlCfgGrp ){
 				fcLst <- list()
                 for( fcName in rObj$mtxInfoLst[[mName]] ){ # fcName <- rObj$mtxInfoLst[[mName]][1]
 					ctrlCfg <- ctrlCfgLst[[hName]][[mName]][["stdLst"]][[pName]][["colDirLst"]][[fcName]]
+					tgtId <- c(hName=hName, mName=mName, pName=pName, fcName=fcName)
 					# 정의 내역이 있으면 정의내역을 stdLst에 붙이고
 					# 없으면 bFCust.defaultStdColCutter( ... )
-					fcLst[[fcName]] <- bFCust.defaultStdColCutter( ctrlCfg ,hName, mName, pName, fcName, auxInfo=c(fCol=fcName) )
+					fcLst[[fcName]] <- bFCust.defaultStdColCutter( ctrlCfg ,tgtId ,auxInfo=c(fCol=fcName) )
                 }
 	            #   work : n개 이상 컬럼에 대한 통제가 정의되어 있으면 pLst에 추가.
 
@@ -53,12 +54,12 @@ bFCust.getFCustGrp <- function( stdCtrlCfgGrp ){
 } # bFCust.getFCustGrp( )
 
 
-bFCust.defaultStdColCutter <- function( ctrlCfg ,hName, mName, pName, fcName, auxInfo=c(auxInfo="") ){
+bFCust.defaultStdColCutter <- function( ctrlCfg ,tgtId=c(hName="", mName="", pName="", fcName=""), auxInfo=c(auxInfo="") ){
 
 	rObj <- list(	description=ctrlCfg$description
 					,maxMin=ctrlCfg$maxMin ,evtVal=ctrlCfg$evtVal ,extVal=ctrlCfg$extVal 
 	)
-	rObj$idObj <- c( typ="stdColCut"	,hName=hName	,mName=mName	,pName=pName	,fcName=fcName	,auxInfo )
+	rObj$idObj <- c( typ="stdColCut"	,tgtId	,auxInfo )
 
 	rObj$cut <- function( scoreMtx ,alreadyDead=NULL ){
 
@@ -104,18 +105,25 @@ bFCust.defaultStdColCutter <- function( ctrlCfg ,hName, mName, pName, fcName, au
 
 bFCust.getCust <- function(){
 
-	fLst <- list()
-	fLst[[1+length(fLst)]] <- bFCust.A_score2_A_inc.f( )
-	fLst[[1+length(fLst)]] <- test_bFCust.sfcHLst_score2_A_inc.f( )
+	fLst_1Col <- list()
+	fLst_1Col[[1+length(fLst_1Col)]] <- bFCust.A_score2_A_inc.f( )
+	fLst_1Col[[1+length(fLst_1Col)]] <- test_bFCust.sfcHLst_score2_A_inc.f( )
 
-	rObj <- list( fLst=fLst )
-	rObj$getCustF <- function( hName, mName, pName, fcName ){
-		#	hName=""; mName=""; pName=""; fcName=""
-		# fFLst <- list()	# found fLst
-		# for( idx in seq_len(length(rObj$fLst)) ){
+	rObj <- list( fLst_1Col=fLst_1Col )
+	rObj$getCustF_1Col <- function( ctrlCfg ,tgtId=c(hName="", mName="", pName="", fcName="") ,auxInfo=c(auxInfo="") ){
+		# tgtId=c(hName="sfcHLst", mName="score2", pName="basic", fcName="inc.f")
+		fFLst <- list()	# found fLst
+		for( idx in seq_len(length(rObj$fLst_1Col)) ){
+			fF <- rObj$fLst_1Col[[idx]]$createCutter( ctrlCfg ,tgtId )
+			if( !(fF$defId["hName"]=="*" || fF$defId["hName"]==tgtId["hName"]) ) next
+			if( !(fF$defId["mName"]=="*" || fF$defId["mName"]==tgtId["mName"]) ) next
+			if( !(fF$defId["pName"]=="*" || fF$defId["pName"]==tgtId["pName"]) ) next
+			if( !(fF$defId["fcName"]=="*" || fF$defId["fcName"]==tgtId["fcName"]) ) next
 
-		# }
+			fFLst[[1+length(fFLst)]] <- fF
+		}
 
+		retrun( fFLst )
 	} # rObj$getCustF()
 
 	return( rObj )
@@ -131,17 +139,22 @@ bFCust.A_score2_A_inc.f <- function(  ){
 								,rObj$maxMin["max"]	,rObj$maxMin["min"] 
 								,paste(rObj$evtVal,collapse=",") ,paste(rObj$extVal,collapse=",")
 							)
-	rObj$createCutter <- function( ctrlCfg ,hName, mName, pName, fcName ,auxInfo=c(auxInfo="") ){
-		#	hName="testNA"; mName="testNA"; pName="testNA"; fcName="testNA"; auxInfo=c(auxInfo="")
-		idObj <- rObj$defId
-		if( idObj["hName"]!=hName ) idObj["hName"] <- sprintf("(%s)%s",idObj["hName"],hName)
-		if( idObj["mName"]!=mName ) idObj["mName"] <- sprintf("(%s)%s",idObj["mName"],mName)
-		if( idObj["pName"]!=pName ) idObj["pName"] <- sprintf("(%s)%s",idObj["pName"],pName)
-		if( idObj["fcName"]!=fcName ) idObj["fcName"] <- sprintf("(%s)%s",idObj["fcName"],fcName)
-		idObj <- c( idObj ,auxInfo )
+	rObj$createCutter <- function( ctrlCfg ,tgtId=c(hName="", mName="", pName="", fcName="") ,auxInfo=c(auxInfo="") ){
 
 		cutterObj <- rObj
-		cutterObj$idObj <- idObj
+
+		#	hName="testNA"; mName="testNA"; pName="testNA"; fcName="testNA"; auxInfo=c(auxInfo="")
+		idObjDesc <- rObj$defId
+		if( idObjDesc["hName"]!=tgtId["hName"] ) idObjDesc["hName"] <- sprintf("(%s)%s",idObjDesc["hName"],tgtId["hName"])
+		if( idObjDesc["mName"]!=tgtId["mName"] ) idObjDesc["mName"] <- sprintf("(%s)%s",idObjDesc["mName"],tgtId["mName"])
+		if( idObjDesc["pName"]!=tgtId["pName"] ) idObjDesc["pName"] <- sprintf("(%s)%s",idObjDesc["pName"],tgtId["pName"])
+		if( idObjDesc["fcName"]!=tgtId["fcName"] ) idObjDesc["fcName"] <- sprintf("(%s)%s",idObjDesc["fcName"],tgtId["fcName"])
+		idObjDesc <- c( idObjDesc ,auxInfo )
+		cutterObj$idObjDesc <- idObjDesc
+
+		cutterObj$idObj <- rObj$defId
+		cutterObj$idObj[names(tgtId)] <- tgtId
+
 		cutterObj$cut <- function( scoreMtx ,alreadyDead=NULL ){
 
 			val <- scoreMtx[,cutterObj$idObj["fcName"]]
@@ -181,30 +194,37 @@ bFCust.A_score2_A_inc.f <- function(  ){
 
 		} # cutterObj$cut()
 
+		return(cutterObj)
 	}
 
+	return(rObj)
 } # bFCust.A_score2_A_inc.f( )
 
 
 test_bFCust.sfcHLst_score2_A_inc.f <- function(  ){
 
 	rObj <- list( maxMin=c(max=3,min=0) ,evtVal=c(2,3) ,extVal=integer(0) )
-	rObj$defId <- c( typ="cust"	,hName="sfcHLst"	,mName="score2"	,pName="*"	,fcName="inc.f" )
+	rObj$defId <- c( typ="cust"	,hName="sfcHLst"	,mName="score2"	,pName="nextZW"	,fcName="inc.f" )
 	rObj$description <- sprintf("(cust)maxMin:%d~%d  evtVal:%s  extVal:%s  "
 								,rObj$maxMin["max"]	,rObj$maxMin["min"] 
 								,paste(rObj$evtVal,collapse=",") ,paste(rObj$extVal,collapse=",")
 							)
-	rObj$createCutter <- function( ctrlCfg ,hName, mName, pName, fcName ,auxInfo=c(auxInfo="") ){
-		#	hName="testNA"; mName="testNA"; pName="testNA"; fcName="testNA"; auxInfo=c(auxInfo="")
-		idObj <- rObj$defId
-		if( idObj["hName"]!=hName ) idObj["hName"] <- sprintf("(%s)%s",idObj["hName"],hName)
-		if( idObj["mName"]!=mName ) idObj["mName"] <- sprintf("(%s)%s",idObj["mName"],mName)
-		if( idObj["pName"]!=pName ) idObj["pName"] <- sprintf("(%s)%s",idObj["pName"],pName)
-		if( idObj["fcName"]!=fcName ) idObj["fcName"] <- sprintf("(%s)%s",idObj["fcName"],fcName)
-		idObj <- c( idObj ,auxInfo )
+	rObj$createCutter <- function( ctrlCfg ,tgtId=c(hName="", mName="", pName="", fcName="") ,auxInfo=c(auxInfo="") ){
 
 		cutterObj <- rObj
-		cutterObj$idObj <- idObj
+
+		#	hName="testNA"; mName="testNA"; pName="testNA"; fcName="testNA"; auxInfo=c(auxInfo="")
+		idObjDesc <- rObj$defId
+		if( idObjDesc["hName"]!=tgtId["hName"] ) idObjDesc["hName"] <- sprintf("(%s)%s",idObjDesc["hName"],tgtId["hName"])
+		if( idObjDesc["mName"]!=tgtId["mName"] ) idObjDesc["mName"] <- sprintf("(%s)%s",idObjDesc["mName"],tgtId["mName"])
+		if( idObjDesc["pName"]!=tgtId["pName"] ) idObjDesc["pName"] <- sprintf("(%s)%s",idObjDesc["pName"],tgtId["pName"])
+		if( idObjDesc["fcName"]!=tgtId["fcName"] ) idObjDesc["fcName"] <- sprintf("(%s)%s",idObjDesc["fcName"],tgtId["fcName"])
+		idObjDesc <- c( idObjDesc ,auxInfo )
+		cutterObj$idObjDesc <- idObjDesc
+
+		cutterObj$idObj <- rObj$defId
+		cutterObj$idObj[names(tgtId)] <- tgtId
+
 		cutterObj$cut <- function( scoreMtx ,alreadyDead=NULL ){
 
 			val <- scoreMtx[,cutterObj$idObj["fcName"]]
@@ -244,8 +264,10 @@ test_bFCust.sfcHLst_score2_A_inc.f <- function(  ){
 
 		} # cutterObj$cut()
 
+		return( cutterObj )
 	}
 
+	return(rObj)
 } # bFCust.A_score2_A_inc.f( )
 
 
