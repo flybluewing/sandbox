@@ -107,8 +107,8 @@ bFCust.getCust <- function(){
 
 	fLst_1Col <- list()
 	fLst_1Col[[1+length(fLst_1Col)]] <- bFCust.A_score2_A_inc.f( )
-	fLst_1Col[[1+length(fLst_1Col)]] <- T1_bFCust.A_score2_A_inc.f( )
-	fLst_1Col[[1+length(fLst_1Col)]] <- T2_bFCust.A_score2_A_inc.f( )
+	# fLst_1Col[[1+length(fLst_1Col)]] <- T1_bFCust.A_score2_A_inc.f( )
+	# fLst_1Col[[1+length(fLst_1Col)]] <- T2_bFCust.A_score2_A_inc.f( )
 
 	rObj <- list( fLst_1Col=fLst_1Col )
 	rObj$getCustF_1Col <- function( ctrlCfg ,tgtId=c(hName="", mName="", pName="", fcName="") ,auxInfo=c(auxInfo="") ){
@@ -131,25 +131,21 @@ bFCust.getCust <- function(){
 		selVal <- sapply( fFLst ,function(fLst){ fLst$defId["hName"] })
 		if( any(selVal==tgtId["hName"]) ){
 			fFLst <- fFLst[ selVal==tgtId["hName"] ]
-			if( 1==length(fFLst) ) return( fFLst )
 		}
 
 		selVal <- sapply( fFLst ,function(fLst){ fLst$defId["mName"] })
 		if( any(selVal==tgtId["mName"]) ){
 			fFLst <- fFLst[ selVal==tgtId["mName"] ]
-			if( 1==length(fFLst) ) return( fFLst )
 		}
 
 		selVal <- sapply( fFLst ,function(fLst){ fLst$defId["pName"] })
 		if( any(selVal==tgtId["pName"]) ){
 			fFLst <- fFLst[ selVal==tgtId["pName"] ]
-			if( 1==length(fFLst) ) return( fFLst )
 		}
 
 		selVal <- sapply( fFLst ,function(fLst){ fLst$defId["fcName"] })
 		if( any(selVal==tgtId["fcName"]) ){
 			fFLst <- fFLst[ selVal==tgtId["fcName"] ]
-			if( 1==length(fFLst) ) return( fFLst )
 		}
 
 		#	하나만 있는 경우
@@ -234,11 +230,11 @@ bFCust.A_score2_A_inc.f <- function(  ){
 	return(rObj)
 } # bFCust.A_score2_A_inc.f( )
 
-#	c( typ="cust"	,hName="*"	,mName="score2"	,pName="*"	,fcName="inc.f" )
+#	c( typ="cust"	,hName="sfcHLst"	,mName="score2"	,pName="*"	,fcName="inc.f" )
 T1_bFCust.A_score2_A_inc.f <- function(  ){
 
 	rObj <- list( maxMin=c(max=3,min=0) ,evtVal=c(2,3) ,extVal=integer(0) )
-	rObj$defId <- c( typ="cust"	,hName="*"	,mName="score2"	,pName="*"	,fcName="inc.f" )
+	rObj$defId <- c( typ="cust"	,hName="sfcHLst"	,mName="score2"	,pName="*"	,fcName="inc.f" )
 	rObj$description <- sprintf("(cust)maxMin:%d~%d  evtVal:%s  extVal:%s  "
 								,rObj$maxMin["max"]	,rObj$maxMin["min"] 
 								,paste(rObj$evtVal,collapse=",") ,paste(rObj$extVal,collapse=",")
@@ -304,11 +300,11 @@ T1_bFCust.A_score2_A_inc.f <- function(  ){
 	return(rObj)
 } # bFCust.A_score2_A_inc.f( )
 
-#	c( typ="cust"	,hName="*"	,mName="score2"	,pName="*"	,fcName="inc.f" )
+#	c( typ="cust"	,hName="sfcHLst"	,mName="score2"	,pName="basic"	,fcName="*" )
 T2_bFCust.A_score2_A_inc.f <- function(  ){
 
 	rObj <- list( maxMin=c(max=3,min=0) ,evtVal=c(2,3) ,extVal=integer(0) )
-	rObj$defId <- c( typ="cust"	,hName="*"	,mName="score2"	,pName="*"	,fcName="inc.f" )
+	rObj$defId <- c( typ="cust"	,hName="sfcHLst"	,mName="score2"	,pName="basic"	,fcName="*" )
 	rObj$description <- sprintf("(cust)maxMin:%d~%d  evtVal:%s  extVal:%s  "
 								,rObj$maxMin["max"]	,rObj$maxMin["min"] 
 								,paste(rObj$evtVal,collapse=",") ,paste(rObj$extVal,collapse=",")
