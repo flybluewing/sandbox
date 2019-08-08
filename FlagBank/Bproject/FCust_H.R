@@ -1,6 +1,6 @@
 
 #   stdCtrlCfgGrp <- bUtil.makeStdCtrlCfgGrp(hMtxLst)
-bFCust.getFCustGrp <- function( stdCtrlCfgGrp ){
+bFCust.getFCustGrp <- function( stdCtrlCfgGrp ,hMtxLst ){
 
     rObj <- list(   sfcHLst = stdCtrlCfgGrp$sfcHLst
                     ,mtxInfoLst = stdCtrlCfgGrp$mtxInfoLst

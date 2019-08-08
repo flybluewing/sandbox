@@ -249,3 +249,17 @@ bUtil.getStdMILst <- function( gEnv ,fRstLst ){
     return( rObj )
 
 }	# bUtil.getStdMILst()
+
+bUtil.getSfcLstName <- function( lastStdFilted ,curStdFilted ,cut.grp ){
+	#	lastStdFilted <- fRstLst.w[[length(fRstLst.w)]]
+	#	cut.grp <- bFCust.getFCustGrp( stdCtrlCfgGrp ,curHMtxLst ) 
+
+	#	B.makeHMtxLst() 의 sfcHLst 생성 코드 참고할 것.
+	fHName <- c( "sfcLate" ,sprintf("sfc%d",length(lastStdFilted)) ,paste("NG",curStdFilted,sep="") )
+
+	fHName <- intersect( fHName ,names(cut.grp$sfcHLst) )
+
+	return( fHName )
+} # bUtil.getSfcLstName()
+
+

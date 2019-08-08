@@ -61,13 +61,13 @@ B.makeHMtxLst <- function( gEnv, allIdxLst, fRstLst, lastH=NULL ){
 
     fRstLst.hSpan <- as.integer(names(fRstLst))
 
-    baseSpan <- 800:lastH
+    baseSpan <- 700:lastH
     stdFiltedCnt <- allIdxLst$stdFiltedCnt[as.character(baseSpan)]
 
     # ----------------------------------------------------
     sfcHLst <- list(    sfcLate= baseSpan[length(baseSpan)] - 20:0
+                        ,sfc0=as.integer(names(stdFiltedCnt)[stdFiltedCnt==0])
                         #   Q_RBF
-                        # ,sfc0=as.integer(names(stdFiltedCnt)[stdFiltedCnt==0])
                         # ,sfc1=as.integer(names(stdFiltedCnt)[stdFiltedCnt==1])
                         # ,sfc2=as.integer(names(stdFiltedCnt)[stdFiltedCnt==2])
                     )

@@ -24,41 +24,60 @@ if( FALSE ){ # report sample
 
 if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
 
+    names(fRstLst) <- names(allIdxLst$stdFiltedCnt)
+
     configH <- lastH-20    # configH는 기본 cutting값을 얻기 위하는 시점에 따라 조절.
     hMtxLst <- B.makeHMtxLst( gEnv, allIdxLst, fRstLst, lastH=configH )
     stdCtrlCfgGrp <- bUtil.makeStdCtrlCfgGrp(hMtxLst)
     save( stdCtrlCfgGrp ,file=sprintf("./save/HMtxLst/Obj_stdCtrlCfgGrp_%d.save",configH) )
     #   load(sprintf("./save/HMtxLst/Obj_stdCtrlCfgGrp_%d.save",configH))
     
-    for( curHIdx in (lastH- 15:0) ){
+    testSpan <- (lastH - 5:0)
+    cutRstLst <- list()
+    for( curHIdx in testSpan ){    # curHIdx <- testSpan[1]
 
-        #   gEnv.w, allIdxLst.w, fRstLst.w 모두 curHIdx 시점에 맞게 변경 요.
-        gEnv.w <- gEnv
-        allIdxLst.w <- allIdxLst
-        fRstLst.w <- fRstLst
+        wLastH <-curHIdx-1
+        wLastSpan <- 1:which(names(fRstLst)==workLastH)
 
-        curHMtxLst <- B.makeHMtxLst( gEnv.w, allIdxLst.w, fRstLst.w, lastH=curHIdx )
-        cut.grp <- bFCust.getFCustGrp( stdCtrlCfgGrp )  # curHMtxLst 적용 추가 필요.
+        # ------------------------------------------------------------------------
+        # cut.grp : cutter grp 을 얻어내자.
+        gEnv.w <- gEnv              ;gEnv.w$zhF <- gEnv$zhF[1:wLastH,]
+        allIdxLst.w <- allIdxLst    ;allIdxLst.w$stdFiltedCnt <- allIdxLst$stdFiltedCnt[wLastSpan]
+                                    allIdxLst.w$infoMtx <- allIdxLst$infoMtx[wLastSpan,]
+        fRstLst.w <- fRstLst[wLastSpan]
 
-        stdZoid <-  c( 4, 8,18,25,27,32)    # H860
-        #   stdZoid <- gEnv$zhF[nrow(gEnv$zhF),]
+        curHMtxLst <- B.makeHMtxLst( gEnv.w, allIdxLst.w, fRstLst.w )   
+            # B.makeHMtxLst() 의 lastH는 allIdxLst.w$stdFiltedCnt에 의존한다.
+
+        cut.grp <- bFCust.getFCustGrp( stdCtrlCfgGrp ,curHMtxLst )  # curHMtxLst 적용 추가 필요.
+
+        # ------------------------------------------------------------------------
+        # 이제, 현재 stdZoid의 특성(sfcHLst, scoreMtx)을 얻자.
+        stdZoid <- gEnv$zhF[curHIdx,]
         stdIdx <- k.getIdx_AllZoidMtx( gEnv, stdZoid )
-        fHName <- c( "sfcLate",   "NGD0000.A")  # fHName 분석하는 루틴 필요.
+        curStdFilted <- fRstLst[[as.character(curHIdx)]]    #   평가가 아닌 실제에선, remLst 으로부터 가져올 것.
+        fHName <- bUtil.getSfcLstName( fRstLst.w[[length(fRstLst.w)]] ,curStdFilted ,cut.grp )
 
-        # wStdMI.grp <- bUtil.getStdMILst( gEnv ,fRstLst )
-        # wFilter.grp <- getFilter.grp( wStdMI.grp )
-        # wScoreMtx.grp <- getScoreMtx.grp.4H( stdZoid ,wFilter.grp )
+        stdMI.grp <- bUtil.getStdMILst( gEnv.w ,fRstLst.w )
+        filter.grp <- getFilter.grp( stdMI.grp )
+        scoreMtx.grp <- getScoreMtx.grp.4H( stdZoid ,filter.grp )
+            #   평가용이므로 getScoreMtx.grp.4H() 가 사용됨.   .4H !
 
-        # cutRst <- bUtil.cut( wScoreMtx.grp ,cut.grp ,fHName ,anaOnly=T )
+        cutRst <- bUtil.cut( scoreMtx.grp ,cut.grp ,fHName ,anaOnly=T ) 
+            #   anaOnly=TRUE 에서, cutRst$surFlag는 항상 TRUE임을 유의.
+            # report example =================================================
+                # B.rptStdMI.grp( stdMI.grp )
+                # B.rptScoreMtx.grp( scoreMtx.grp )
+                # B.rptCut.grp( cut.grp )
+                # B.rptCutRst( cutRst )
 
 
-        # report example =================================================
-            # B.rptStdMI.grp( wStdMI.grp )
-            # B.rptScoreMtx.grp( wScoreMtx.grp )
-            # B.rptCut.grp( cut.grp )
-            # B.rptCutRst( cutRst )
+        # ------------------------------------------------------------------------
+        cutRstLst[[1+length(cutRstLst)]] <- cutRst
 
     } # curHIdx
+
+    cutRstLst
 
 }
 
