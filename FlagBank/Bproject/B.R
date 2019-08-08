@@ -32,7 +32,7 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
     save( stdCtrlCfgGrp ,file=sprintf("./save/HMtxLst/Obj_stdCtrlCfgGrp_%d.save",configH) )
     #   load(sprintf("./save/HMtxLst/Obj_stdCtrlCfgGrp_%d.save",configH))
     
-    testSpan <- (lastH - 5:0)
+    testSpan <- (lastH - 5:0)   # configH 보다는 큰 시점에서 시작해야 함을 유의.
     cutRstLst <- list()
     for( curHIdx in testSpan ){    # curHIdx <- testSpan[1]
 
@@ -77,9 +77,31 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
 
     } # curHIdx
 
-    cutRstLst
+    save( cutRstLst ,file=sprintf("./save/HMtxLst/Obj_cutRstLst%d.save",configH) )
+
+    # TODO : report cutRstLst
 
 }
+
+
+
+if( FALSE ){    # 실전 추출 예제 코드
+
+    configH <- 839  # 지정된 지점을 반복사용하므로..
+    load(sprintf("./save/HMtxLst/Obj_stdCtrlCfgGrp_%d.save",configH))   # stdCtrlCfgGrp
+
+    hMtxLst <- B.makeHMtxLst( gEnv, allIdxLst, fRstLst )
+    cut.grp <- bFCust.getFCustGrp( stdCtrlCfgGrp ,hMtxLst )
+
+    allIdx <- allIdxLst[["allZoid.idx0"]]   # stdFiltedCnt 그룹에 따라서 각각 시행.
+
+    stdFilted.NG <- c("D0000.A","A0100.A","AP000.E")   #   B.makeHMtxLst() 의 sfcHLst 생성코드 참고.(변수 stdFilter)
+    for( sfIdx in stdFilted.NG ){   # sfIdx <- stdFilted.NG[1]
+        allIdxF <- allIdx   # TODO : remLst를 이용하여, allIdx 중 sfIdx에 해당하는 것들만 긁어냄.
+    }
+
+}
+
 
 
 
