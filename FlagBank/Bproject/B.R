@@ -87,18 +87,41 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
 
 if( FALSE ){    # 실전 추출 예제 코드
 
+    # remLst
+    load(sprintf("./save/Obj_remLstZ%d.save",lastH) )
+
     configH <- 839  # 지정된 지점을 반복사용하므로..
-    load(sprintf("./save/HMtxLst/Obj_stdCtrlCfgGrp_%d.save",configH))   # stdCtrlCfgGrp
+    
+    # stdCtrlCfgGrp
+    load(sprintf("./save/HMtxLst/Obj_stdCtrlCfgGrp_%d.save",configH))
 
     hMtxLst <- B.makeHMtxLst( gEnv, allIdxLst, fRstLst )
     cut.grp <- bFCust.getFCustGrp( stdCtrlCfgGrp ,hMtxLst )
 
-    allIdx <- allIdxLst[["allZoid.idx0"]]   # stdFiltedCnt 그룹에 따라서 각각 시행.
+    stdMI.grp <- bUtil.getStdMILst( gEnv ,fRstLst )
+    filter.grp <- getFilter.grp( stdMI.grp )
 
-    stdFilted.NG <- c("D0000.A","A0100.A","AP000.E")   #   B.makeHMtxLst() 의 sfcHLst 생성코드 참고.(변수 stdFilter)
+    # --------------------------------------------------------------------
+    # stdFiltedCnt 그룹에 따라서 각각 시행.
+    #   - "allZoid.idx0","allZoid.idx1","allZoid.idx2","allZoid.idx3"
+    #   - 그룹 특성에 따라 stdFilted.NG 에서
+    #       하나 소속되지 않은 aZoid, 혹은 다수가 소속된 aZoid도 있을 수 있다.
+    # --------------------------------------------------------------------
+    #   allIdxLst[["allZoid.idx0"]] 
+    stdFilted.NG <- c("D0000.A","A0100.A","AP000.E")
+        #   B.makeHMtxLst() 의 sfcHLst 생성코드 참고.(변수 stdFilter)
+
+    allIdx <- allIdxLst[["allZoid.idx2"]]
+    allIdxF <- allIdx
     for( sfIdx in stdFilted.NG ){   # sfIdx <- stdFilted.NG[1]
-        allIdxF <- allIdx   # TODO : remLst를 이용하여, allIdx 중 sfIdx에 해당하는 것들만 긁어냄.
+        #   stdFilted.NG 에 소속되지 않은 allIdx 그룹에 대해서도 처리 필요하다.
+        allIdxF <- intersect( allIdxF ,remLst[[sfIdx]] )
+
+        # scoreMtx.grp <- getScoreMtx.grp( gEnv$allZoidMtx[allIdxF,,drop=F] ,filter.grp )
+        # cutRst <- bUtil.cut( scoreMtx.grp ,cut.grp ,fHName ) # fHName 이 애매해졌다..
+        # allIdxF <- allIdxF[cutRst$surFlag]
     }
+
 
 }
 
