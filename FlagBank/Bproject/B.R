@@ -101,26 +101,54 @@ if( FALSE ){    # 실전 추출 예제 코드
     stdMI.grp <- bUtil.getStdMILst( gEnv ,fRstLst )
     filter.grp <- getFilter.grp( stdMI.grp )
 
+    # ====================================================================
+    #   Cutting
+    # --------------------------------------------------------------------
+    stdFilted.NG <- c("D0000.A","A0100.A","AP000.E")
+        #   B.makeHMtxLst() 의 sfcHLst 생성코드 참고.(변수 stdFilter)
     # --------------------------------------------------------------------
     # stdFiltedCnt 그룹에 따라서 각각 시행.
     #   - "allZoid.idx0","allZoid.idx1","allZoid.idx2","allZoid.idx3"
     #   - 그룹 특성에 따라 stdFilted.NG 에서
     #       하나 소속되지 않은 aZoid, 혹은 다수가 소속된 aZoid도 있을 수 있다.
     # --------------------------------------------------------------------
-    #   allIdxLst[["allZoid.idx0"]] 
-    stdFilted.NG <- c("D0000.A","A0100.A","AP000.E")
-        #   B.makeHMtxLst() 의 sfcHLst 생성코드 참고.(변수 stdFilter)
-
     allIdx <- allIdxLst[["allZoid.idx2"]]
+
     allIdxF <- allIdx
+    # --------------------------------------------------------------------
+    # * 처음엔 curStdFilted 가 없는 것으로 속여서 cutting
+    fHName <- bUtil.getSfcLstName( fRstLst[[length(fRstLst)]] ,curStdFilted=character(0) ,cut.grp )
+    scoreMtx.grp <- getScoreMtx.grp( gEnv$allZoidMtx[allIdxF,,drop=F] ,filter.grp )
+    cutRst <- bUtil.cut( scoreMtx.grp ,cut.grp ,fHName )
+    allIdxF <- allIdxF[cutRst$surFlag]
+    rptStr <- sprintf( "Initial cut : %d -> %d \n" ,length(allIdx) ,length(allIdxF) )
+    cat( rptStr )
+    allIdx <- allIdxF
+
+    # --------------------------------------------------------------------
+    # * stdFiled 한가지씩 적용
     for( sfIdx in stdFilted.NG ){   # sfIdx <- stdFilted.NG[1]
-        #   stdFilted.NG 에 소속되지 않은 allIdx 그룹에 대해서도 처리 필요하다.
         allIdxF <- intersect( allIdxF ,remLst[[sfIdx]] )
 
-        # scoreMtx.grp <- getScoreMtx.grp( gEnv$allZoidMtx[allIdxF,,drop=F] ,filter.grp )
-        # cutRst <- bUtil.cut( scoreMtx.grp ,cut.grp ,fHName ) # fHName 이 애매해졌다..
-        # allIdxF <- allIdxF[cutRst$surFlag]
+        scoreMtx.grp <- getScoreMtx.grp( gEnv$allZoidMtx[allIdxF,,drop=F] ,filter.grp )
+        fHName <- bUtil.getSfcLstName( fRstLst[[length(fRstLst)]] ,curStdFilted=sfIdx ,cut.grp )
+        cutRst <- bUtil.cut( scoreMtx.grp ,cut.grp ,fHName )
+        allIdxF <- allIdxF[cutRst$surFlag]
+        rptStr <- sprintf( "        left : %d (for stdFilted %s)\n" ,length(allIdxF),sfIdx )
+        cat( rptStr )
     }
+
+    # --------------------------------------------------------------------
+    # * stdFilted 가 없는 aZoid들.
+    allIdxF.0 <- allIdxF
+    for( sfIdx in stdFilted.NG ){
+        allIdxF.0 <- setdiff( allIdxF.0 ,remLst[[sfIdx]] )
+    }
+    scoreMtx.grp <- getScoreMtx.grp( gEnv$allZoidMtx[allIdxF.0,,drop=F] ,filter.grp )
+    fHName <- bUtil.getSfcLstName( fRstLst[[length(fRstLst)]] ,curStdFilted=sfIdx ,cut.grp )
+    cutRst <- bUtil.cut( scoreMtx.grp ,cut.grp ,fHName )
+    allIdxF <- allIdxF[cutRst$surFlag]
+
 
 
 }
