@@ -257,9 +257,9 @@ bUtil.getSfcLstName <- function( lastStdFilted ,curStdFilted ,cut.grp ){
 	#	B.makeHMtxLst() 의 sfcHLst 생성 코드 참고할 것.
 	fHName <- c( "sfcLate" )
 
-	if( 0 < length(lastStdFilted) ) fHName <- c( fHName  ,sprintf("sfc%d",length(lastStdFilted)) )
+	if( 0 < length(curStdFilted) ) fHName <- c( fHName  ,sprintf("sfc%d",length(curStdFilted)) )
 
-	if( 0 < length(curStdFilted) ) fHName <- c( fHName  ,paste("NG",curStdFilted,sep="") )
+	if( 0 < length(lastStdFilted) ) fHName <- c( fHName  ,paste("NG",lastStdFilted,sep="") )
 
 	fHName <- intersect( fHName ,names(cut.grp$sfcHLst) )
 

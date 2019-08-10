@@ -37,7 +37,7 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
     for( curHIdx in testSpan ){    # curHIdx <- testSpan[1]
 
         wLastH <-curHIdx-1
-        wLastSpan <- 1:which(names(fRstLst)==workLastH)
+        wLastSpan <- 1:which(names(fRstLst)==wLastH)
 
         # ------------------------------------------------------------------------
         # cut.grp : cutter grp 을 얻어내자.
