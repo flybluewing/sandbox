@@ -1,11 +1,11 @@
 source("header.r")
 source("B_H.R")
-lastH <- 859    # 최종 데이터의 로딩기준이지, 작업시점(workH)은 다를 수 있다.
+lastH <- 860    # 최종 데이터의 로딩기준이지, 작업시점(workH)은 다를 수 있다.
 #source(sprintf("./toFinal/toZ%d_H.R",workH))	# working
 
-load(sprintf("./save/Obj_allIdxLstZ%d.save",lastH) )
-load(sprintf("./save/Obj_fRstLstZ%d.save",lastH) )
-load(sprintf("./save/Obj_gEnvZ%d.save",lastH))
+load(sprintf("../Aproject/Obj_allIdxLstZ%d.save",lastH) )
+load(sprintf("../Aproject/save/Obj_fRstLstZ%d.save",lastH) )
+load(sprintf("../Aproject/save/Obj_gEnvZ%d.save",lastH))
 
 # Remove before flight
 #   B_H.R   -  경고! 실제 동작에서는 Q_RBF 해제할 것.
@@ -31,8 +31,8 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
     stdCtrlCfgGrp <- bUtil.makeStdCtrlCfgGrp(hMtxLst)
     save( stdCtrlCfgGrp ,file=sprintf("./save/HMtxLst/Obj_stdCtrlCfgGrp_%d.save",configH) )
     #   load(sprintf("./save/HMtxLst/Obj_stdCtrlCfgGrp_%d.save",configH))
-    
-    testSpan <- (lastH - 5:0)   # configH 보다는 큰 시점에서 시작해야 함을 유의.
+
+    testSpan <- (lastH - 15:0)   # configH 보다는 큰 시점에서 시작해야 함을 유의.
     cutRstLst <- list()
     for( curHIdx in testSpan ){    # curHIdx <- testSpan[1]
 
@@ -50,6 +50,7 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
             # B.makeHMtxLst() 의 lastH는 allIdxLst.w$stdFiltedCnt에 의존한다.
 
         cut.grp <- bFCust.getFCustGrp( stdCtrlCfgGrp ,curHMtxLst )  # curHMtxLst 적용 추가 필요.
+            #   B.rptCut.grp( cut.grp )
 
         # ------------------------------------------------------------------------
         # 이제, 현재 stdZoid의 특성(sfcHLst, scoreMtx)을 얻자.
@@ -76,10 +77,12 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
         cutRstLst[[1+length(cutRstLst)]] <- cutRst
 
     } # curHIdx
+    names(cutRstLst) <- paste("H",testSpan,sep="")
 
     save( cutRstLst ,file=sprintf("./save/HMtxLst/Obj_cutRstLst%d.save",configH) )
+        # "./save/HMtxLst/Obj_cutRstLst840.save"
 
-    # TODO : report cutRstLst
+    # B.rptCutRstLst( cutRstLst )
 
 }
 

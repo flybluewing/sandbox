@@ -403,3 +403,34 @@ B.rptCutRst <- function( cutRst ,file="cutRst" ){
     }
 
 } # B.rptCutRst()
+
+
+B.rptCutRstLst <- function( cutRstLst ,file="cutRstLst" ){
+
+    log.meta <- k.getFlogObj( sprintf("./report/workRpt/%s.txt",file) )
+    log.meta$fLogStr("start", pTime=T ,pAppend=F )
+
+    cutCnt <- sapply( cutRstLst ,function(p){length(p$cutInfoLst)})
+    cntTbl <- table( cutCnt )
+    # perStr <- kLog.getPerStr( cntTbl ,sum(cntTbl) ) #  ,pLong=T
+    # log.meta$fLogStr( sprintf("\t%s",paste(perStr,collapse=" ")) )
+    cntStr <- paste(names(cntTbl),cntTbl,sep=":")
+    log.meta$fLogStr( sprintf("\t%s",paste(cntStr,collapse=" ")) )
+
+    log.meta$fLogStr("\n\n")
+    for( nIdx in names(cutRstLst) ){   # nIdx <- names(cutRstLst)[1]
+        cutRst <- cutRstLst[[nIdx]]
+        log.meta$fLogStr( sprintf("<%s>",nIdx) )
+
+        cutLen <- length(cutRst$cutInfoLst) 
+        if( 0 == cutLen )    next
+
+        for( idx in 1:cutLen ){
+            cutInfo <- cutRst$cutInfoLst[[idx]]
+            log.meta$fLogStr( sprintf("  %4d %s",idx,paste(names(cutInfo),collapse="\t") ) )
+            log.meta$fLogStr( sprintf("       %s",    paste(cutInfo,collapse="\t") ) )
+        }
+
+    }
+
+} # B.rptCutRstLst()

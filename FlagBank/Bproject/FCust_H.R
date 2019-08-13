@@ -8,6 +8,7 @@ bFCust.getFCustGrp <- function( stdCtrlCfgGrp ,hMtxLst ){
     )
 
     ctrlCfgLst <- stdCtrlCfgGrp$ctrlCfgLst
+	custObj <- bFCust.getCust()
 
 	cutterLst <- list()
 	for( hName in names(rObj$sfcHLst) ){	# hName <- names(rObj$sfcHLst)[1]
@@ -21,9 +22,15 @@ bFCust.getFCustGrp <- function( stdCtrlCfgGrp ,hMtxLst ){
                 for( fcName in rObj$mtxInfoLst[[mName]] ){ # fcName <- rObj$mtxInfoLst[[mName]][1]
 					ctrlCfg <- ctrlCfgLst[[hName]][[mName]][["stdLst"]][[pName]][["colDirLst"]][[fcName]]
 					tgtId <- c(hName=hName, mName=mName, pName=pName, fcName=fcName)
-					# 정의 내역이 있으면 정의내역을 stdLst에 붙이고
-					# 없으면 bFCust.defaultStdColCutter( ... )
-					fcLst[[fcName]] <- bFCust.defaultStdColCutter( ctrlCfg ,tgtId ,auxInfo=c(fCol=fcName) )
+
+					fLst <- custObj$getCustF_1Col( ctrlCfg ,tgtId ,auxInfo=c(fCol=fcName) )
+					if( 0<length(fLst) ){
+						# 일단 컬럼 하나 당 cutting 함수 하나씩이라고 가정.
+						fcLst[[fcName]] <- fLst[[1]]	# fcLst[[fcName]]$idObjDesc
+					} else {
+						fcLst[[fcName]] <- bFCust.defaultStdColCutter( ctrlCfg ,tgtId ,auxInfo=c(fCol=fcName) )
+					}
+
                 }
 	            #   work : n개 이상 컬럼에 대한 통제가 정의되어 있으면 pLst에 추가.
 
@@ -106,9 +113,9 @@ bFCust.defaultStdColCutter <- function( ctrlCfg ,tgtId=c(hName="", mName="", pNa
 bFCust.getCust <- function(){
 
 	fLst_1Col <- list()
-	fLst_1Col[[1+length(fLst_1Col)]] <- bFCust.A_score2_A_inc.f( )
-	# fLst_1Col[[1+length(fLst_1Col)]] <- T1_bFCust.A_score2_A_inc.f( )
-	# fLst_1Col[[1+length(fLst_1Col)]] <- T2_bFCust.A_score2_A_inc.f( )
+	fLst_1Col[[1+length(fLst_1Col)]] <- bFCust.A_score2_A_A( )
+	fLst_1Col[[1+length(fLst_1Col)]] <- bFCust.A_score2_A_rebL( )
+	fLst_1Col[[1+length(fLst_1Col)]] <- bFCust.A_score2_A_rebR( )
 
 	rObj <- list( fLst_1Col=fLst_1Col )
 	rObj$getCustF_1Col <- function( ctrlCfg ,tgtId=c(hName="", mName="", pName="", fcName="") ,auxInfo=c(auxInfo="") ){
@@ -151,7 +158,7 @@ bFCust.getCust <- function(){
 		#	하나만 있는 경우
 		#	둘 있는 경우
 		#	아무것도 없는 경우.
-		retrun( fFLst )
+		return( fFLst )
 	} # rObj$getCustF()
 
 	return( rObj )
@@ -160,18 +167,18 @@ bFCust.getCust <- function(){
 
 #	[Col Cutter]
 
-#	c( typ="cust"	,hName="*"	,mName="score2"	,pName="*"	,fcName="inc.f" )
-bFCust.A_score2_A_inc.f <- function(  ){
+#	c( typ="cust"	,hName="*"	,mName="score2"	,pName="*"	,fcName="*" )
+bFCust.A_score2_A_A <- function(  ){
 
-	rObj <- list( maxMin=c(max=3,min=0) ,evtVal=c(2,3) ,extVal=integer(0) )
-	rObj$defId <- c( typ="cust"	,hName="*"	,mName="score2"	,pName="*"	,fcName="inc.f" )
+	rObj <- list( maxMin=c(max=2,min=0) ,evtVal=c(2) ,extVal=integer(0) )
+	rObj$defId <- c( typ="cust"	,hName="*"	,mName="score2"	,pName="*"	,fcName="*" )
 	rObj$description <- sprintf("(cust)maxMin:%d~%d  evtVal:%s  extVal:%s  "
 								,rObj$maxMin["max"]	,rObj$maxMin["min"] 
 								,paste(rObj$evtVal,collapse=",") ,paste(rObj$extVal,collapse=",")
 							)
 	rObj$createCutter <- function( ctrlCfg ,tgtId=c(hName="", mName="", pName="", fcName="") ,auxInfo=c(auxInfo="") ){
 
-		cutterObj <- rObj
+		cutterObj <- rObj	;cutterObj$createCutter <- NULL
 
 		#	hName="testNA"; mName="testNA"; pName="testNA"; fcName="testNA"; auxInfo=c(auxInfo="")
 		idObjDesc <- rObj$defId
@@ -214,7 +221,7 @@ bFCust.A_score2_A_inc.f <- function(  ){
 					if( (extMaxMin[1]>=val[idx]) && (val[idx]>=extMaxMin[2]) ){ 
 						surDf[idx,"info"] <- sprintf("%d in ext(%d~%d)",val[idx],extMaxMin[1],extMaxMin[2]) 
 					}
-					cutLst[[idx]] <- cutterObj$idObj
+					cutLst[[idx]] <- cutterObj$idObjDesc
 				}
 
 			}
@@ -228,20 +235,21 @@ bFCust.A_score2_A_inc.f <- function(  ){
 	}
 
 	return(rObj)
-} # bFCust.A_score2_A_inc.f( )
+} # bFCust.A_score2_A_A( )
 
-#	c( typ="cust"	,hName="sfcHLst"	,mName="score2"	,pName="*"	,fcName="inc.f" )
-T1_bFCust.A_score2_A_inc.f <- function(  ){
 
-	rObj <- list( maxMin=c(max=3,min=0) ,evtVal=c(2,3) ,extVal=integer(0) )
-	rObj$defId <- c( typ="cust"	,hName="sfcHLst"	,mName="score2"	,pName="*"	,fcName="inc.f" )
+#	c( typ="cust"	,hName="*"	,mName="score2"	,pName="*"	,fcName="rebL" )
+bFCust.A_score2_A_rebL <- function(  ){
+
+	rObj <- list( maxMin=c(max=1,min=0) ,evtVal=c(1) ,extVal=integer(0) )
+	rObj$defId <- c( typ="cust"	,hName="*"	,mName="score2"	,pName="*"	,fcName="rebL" )
 	rObj$description <- sprintf("(cust)maxMin:%d~%d  evtVal:%s  extVal:%s  "
 								,rObj$maxMin["max"]	,rObj$maxMin["min"] 
 								,paste(rObj$evtVal,collapse=",") ,paste(rObj$extVal,collapse=",")
 							)
 	rObj$createCutter <- function( ctrlCfg ,tgtId=c(hName="", mName="", pName="", fcName="") ,auxInfo=c(auxInfo="") ){
 
-		cutterObj <- rObj
+		cutterObj <- rObj	;cutterObj$createCutter <- NULL
 
 		#	hName="testNA"; mName="testNA"; pName="testNA"; fcName="testNA"; auxInfo=c(auxInfo="")
 		idObjDesc <- rObj$defId
@@ -284,7 +292,7 @@ T1_bFCust.A_score2_A_inc.f <- function(  ){
 					if( (extMaxMin[1]>=val[idx]) && (val[idx]>=extMaxMin[2]) ){ 
 						surDf[idx,"info"] <- sprintf("%d in ext(%d~%d)",val[idx],extMaxMin[1],extMaxMin[2]) 
 					}
-					cutLst[[idx]] <- cutterObj$idObj
+					cutLst[[idx]] <- cutterObj$idObjDesc
 				}
 
 			}
@@ -298,20 +306,20 @@ T1_bFCust.A_score2_A_inc.f <- function(  ){
 	}
 
 	return(rObj)
-} # bFCust.A_score2_A_inc.f( )
+} # bFCust.A_score2_A_rebL( )
 
-#	c( typ="cust"	,hName="sfcHLst"	,mName="score2"	,pName="basic"	,fcName="*" )
-T2_bFCust.A_score2_A_inc.f <- function(  ){
+#	c( typ="cust"	,hName="*"	,mName="score2"	,pName="*"	,fcName="rebR" )
+bFCust.A_score2_A_rebR <- function(  ){
 
-	rObj <- list( maxMin=c(max=3,min=0) ,evtVal=c(2,3) ,extVal=integer(0) )
-	rObj$defId <- c( typ="cust"	,hName="sfcHLst"	,mName="score2"	,pName="basic"	,fcName="*" )
+	rObj <- list( maxMin=c(max=1,min=0) ,evtVal=c(1) ,extVal=integer(0) )
+	rObj$defId <- c( typ="cust"	,hName="*"	,mName="score2"	,pName="*"	,fcName="rebR" )
 	rObj$description <- sprintf("(cust)maxMin:%d~%d  evtVal:%s  extVal:%s  "
 								,rObj$maxMin["max"]	,rObj$maxMin["min"] 
 								,paste(rObj$evtVal,collapse=",") ,paste(rObj$extVal,collapse=",")
 							)
 	rObj$createCutter <- function( ctrlCfg ,tgtId=c(hName="", mName="", pName="", fcName="") ,auxInfo=c(auxInfo="") ){
 
-		cutterObj <- rObj
+		cutterObj <- rObj	;cutterObj$createCutter <- NULL
 
 		#	hName="testNA"; mName="testNA"; pName="testNA"; fcName="testNA"; auxInfo=c(auxInfo="")
 		idObjDesc <- rObj$defId
@@ -354,7 +362,7 @@ T2_bFCust.A_score2_A_inc.f <- function(  ){
 					if( (extMaxMin[1]>=val[idx]) && (val[idx]>=extMaxMin[2]) ){ 
 						surDf[idx,"info"] <- sprintf("%d in ext(%d~%d)",val[idx],extMaxMin[1],extMaxMin[2]) 
 					}
-					cutLst[[idx]] <- cutterObj$idObj
+					cutLst[[idx]] <- cutterObj$idObjDesc
 				}
 
 			}
@@ -368,74 +376,6 @@ T2_bFCust.A_score2_A_inc.f <- function(  ){
 	}
 
 	return(rObj)
-} # bFCust.A_score2_A_inc.f( )
+} # bFCust.A_score2_A_rebR( )
 
-
-
-
-Sample_bFCust.A_score2_A_inc.f <- function( ctrlCfg ,hName, mName, pName, fcName ,auxInfo=c(auxInfo="") ){
-	#	hName="testNA"; mName="testNA"; pName="testNA"; fcName="testNA"; auxInfo=c(auxInfo="")
-
-	toString <- function( rObj ){
-		rptStr <- sprintf("(cust)maxMin:%d~%d  evtVal:%s  extVal:%s  "
-				,rObj$maxMin["max"]	,rObj$maxMin["min"] ,paste(rObj$evtVal,collapse=",") ,paste(rObj$extVal,collapse=",")
-			)
-		return( rptStr )
-	}
-	getIdObj <- function( rObj ,hName	,mName	,pName	,fcName	,auxInfo ){
-		idObj <- rObj$defId
-		if( idObj["hName"]!=hName ) idObj["hName"] <- sprintf("(%s)%s",idObj["hName"],hName)
-		if( idObj["mName"]!=mName ) idObj["mName"] <- sprintf("(%s)%s",idObj["mName"],mName)
-		if( idObj["pName"]!=pName ) idObj["pName"] <- sprintf("(%s)%s",idObj["pName"],pName)
-		if( idObj["fcName"]!=fcName ) idObj["fcName"] <- sprintf("(%s)%s",idObj["fcName"],fcName)
-
-		idObj <- c( idObj ,auxInfo )
-		return( idObj )
-	}
-
-	rObj <- list( maxMin=c(max=3,min=0) ,evtVal=c(2,3) ,extVal=integer(0) )
-	rObj$defId <- c( typ="cust"	,hName="sfcLst"	,mName="score2"	,pName="*"	,fcName="inc.f" )
-	rObj$description <- toString(rObj)
-	rObj$idObj <- getIdObj( rObj ,hName=hName	,mName=mName	,pName=pName	,fcName=fcName	,auxInfo )
-
-	rObj$cut <- function( scoreMtx ,alreadyDead=NULL ){
-
-		val <- scoreMtx[,rObj$idObj["fcName"]]
-		val.len <- length( val )
-		if( is.null(alreadyDead) ){
-			alreadyDead <- rep( F, val.len )
-		}
-
-		extMaxMin <- range( c(rObj$maxMin,rObj$extVal) )[2:1]
-
-		surDf <- data.frame( surv=rep(F,val.len) ,evt=rep(NA,val.len) ,info=rep(NA,val.len) )
-		cutLst <- vector("list",val.len)
-		for( idx in seq_len(val.len) ){
-			if( alreadyDead[idx] ){
-				surDf[idx,"surv"] <- F
-				surDf[idx,"info"] <- sprintf("%d, already dead",val[idx])
-				next
-			}
-
-			if( val[idx] %in% rObj$evtVal )	surDf[idx,"evt"] <- val[idx]
-
-			surDf[idx,"info"] <- sprintf("%d",val[idx])
-
-			if( (rObj$maxMin[1]>=val[idx]) && (val[idx]>=rObj$maxMin[2]) ){ 
-				surDf[idx,"surv"] <- T
-			} else {
-				if( (extMaxMin[1]>=val[idx]) && (val[idx]>=extMaxMin[2]) ){ 
-					surDf[idx,"info"] <- sprintf("%d in ext(%d~%d)",val[idx],extMaxMin[1],extMaxMin[2]) 
-				}
-				cutLst[[idx]] <- rObj$idObj
-			}
-
-		}
-
-		rstObj <- list( surDf=surDf ,cutLst=cutLst )
-		return( rstObj )
-	}
-	return( rObj )
-
-}
 
