@@ -4,7 +4,7 @@ getScoreMtx.grp.4H <- function( aZoid ,filter.grp ,cutter.grp=NULL ){
 	#	aZoidMtx <- matrix( c( 8,22,35,38,39,41) ,nrow=1 )
 
 	aZoidMtx <- matrix( aZoid ,nrow=1 )
-	return( getScoreMtx.grp(aZoidMtx,) )
+	return( getScoreMtx.grp(aZoidMtx,filter.grp,cutter.grp) )
 
 } # getScoreMtx.grp.4H()
 

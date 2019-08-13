@@ -407,22 +407,101 @@ B.rptCutRst <- function( cutRst ,file="cutRst" ){
 
 B.rptCutRstLst <- function( cutRstLst ,file="cutRstLst" ){
 
+    getPortion <- function( fieldName ,cutRstLst ,headLen=NULL ){
+        # fieldName <- "typ"
+        cutRstLst.len <- length(cutRstLst)
+
+        valLst <- list()
+        for( nIdx in names(cutRstLst) ){
+            cutRst <- cutRstLst[[nIdx]]
+            vals <- ""
+            for( lIdx in seq_len(length(cutRst$cutInfoLst)) ){
+                cutInfo <- cutRst$cutInfoLst[[lIdx]]
+                if( fieldName %in% names(cutInfo) ){
+                    vals <- c(vals,cutInfo[fieldName])
+                }
+            }
+            valLst[[nIdx]] <- vals
+        }
+        names(valLst) <- names(cutRstLst)
+
+        allVal <- do.call( c ,valLst )
+        if( 0==length(allVal) ){
+            return( NULL )
+        }
+
+        val.uniq <- unique(allVal)
+        val.uniq <- val.uniq[sapply(val.uniq,nchar)>0]
+        
+        valCnt <- rep( 0, length(val.uniq) )    ;names(valCnt) <- val.uniq
+        for( vIdx in val.uniq ){
+            for( nIdx in names(valLst) ){
+                if( vIdx %in% valLst[[nIdx]] ){
+                    valCnt[vIdx] <- valCnt[vIdx] + 1
+                }
+            }
+        }
+        valCnt <- valCnt[order(valCnt,decreasing=T)]
+        if( !is.null(headLen) && (headLen<length(valCnt)) ){
+            valCnt <- valCnt[1:headLen]
+        }
+
+        portion <- (valCnt*100)/cutRstLst.len
+
+        rptStrPer <- sprintf("%3.1f%%",portion)
+        rptStrCnt <- sprintf("(%d/%d)",valCnt,cutRstLst.len)
+        rptStr <- paste( sprintf("%s:",names(portion)),rptStrPer,rptStrCnt,sep="" )
+        rptStr <- paste( rptStr ,collapse="  " )
+
+        return( list(rptStr=rptStr,portion=portion,valCnt=valCnt,totCnt=cutRstLst.len) )
+    } # getPortion()
+
     log.meta <- k.getFlogObj( sprintf("./report/workRpt/%s.txt",file) )
     log.meta$fLogStr("start", pTime=T ,pAppend=F )
 
+    log.meta$fLogStr("[Portion]============================================")
+    log.meta$fLogStr("  <typ>")
+    porObj <- getPortion( "typ" ,cutRstLst ,headLen=5 )
+    if( !is.null(porObj) ){
+        log.meta$fLogStr( sprintf("    %s",porObj$rptStr) )
+    }
+    log.meta$fLogStr("  <hName>")
+    porObj <- getPortion( "hName" ,cutRstLst ,headLen=5 )
+    if( !is.null(porObj) ){
+        log.meta$fLogStr( sprintf("    %s",porObj$rptStr) )
+    }
+    log.meta$fLogStr("  <mName>")
+    porObj <- getPortion( "mName" ,cutRstLst ,headLen=5 )
+    if( !is.null(porObj) ){
+        log.meta$fLogStr( sprintf("    %s",porObj$rptStr) )
+    }
+    log.meta$fLogStr("  <pName>")
+    porObj <- getPortion( "pName" ,cutRstLst ,headLen=5 )
+    if( !is.null(porObj) ){
+        log.meta$fLogStr( sprintf("    %s",porObj$rptStr) )
+    }
+    log.meta$fLogStr("  <fcName>")
+    porObj <- getPortion( "fcName" ,cutRstLst ,headLen=5 )
+    if( !is.null(porObj) ){
+        log.meta$fLogStr( sprintf("    %s",porObj$rptStr) )
+    }
+ 
+    log.meta$fLogStr("[cutCnt]============================================")
     cutCnt <- sapply( cutRstLst ,function(p){length(p$cutInfoLst)})
     cntTbl <- table( cutCnt )
     # perStr <- kLog.getPerStr( cntTbl ,sum(cntTbl) ) #  ,pLong=T
     # log.meta$fLogStr( sprintf("\t%s",paste(perStr,collapse=" ")) )
-    cntStr <- paste(names(cntTbl),cntTbl,sep=":")
-    log.meta$fLogStr( sprintf("\t%s",paste(cntStr,collapse=" ")) )
+    cntStr <- paste(sprintf("cnt%s",names(cntTbl)),cntTbl,sep=": ")
+    cntStr <- paste( cntStr ,sprintf("(%.1f%%)",(cntTbl*100)/sum(cntTbl)) ,sep="" )
+    log.meta$fLogStr( sprintf("\t%s",paste(cntStr,collapse="   ")) )
 
+    # ====================================================================
     log.meta$fLogStr("\n\n")
     for( nIdx in names(cutRstLst) ){   # nIdx <- names(cutRstLst)[1]
         cutRst <- cutRstLst[[nIdx]]
         log.meta$fLogStr( sprintf("<%s>",nIdx) )
 
-        cutLen <- length(cutRst$cutInfoLst) 
+        cutLen <- length(cutRst$cutInfoLst)
         if( 0 == cutLen )    next
 
         for( idx in 1:cutLen ){

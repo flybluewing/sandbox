@@ -80,9 +80,9 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
     names(cutRstLst) <- paste("H",testSpan,sep="")
 
     save( cutRstLst ,file=sprintf("./save/HMtxLst/Obj_cutRstLst%d.save",configH) )
-        # "./save/HMtxLst/Obj_cutRstLst840.save"
+        # load("./save/HMtxLst/Obj_cutRstLst840.save")
 
-    # B.rptCutRstLst( cutRstLst )
+    B.rptCutRstLst( cutRstLst )
 
 }
 
