@@ -486,9 +486,9 @@ B.rptCutRstLst <- function( cutRstLst ,file="cutRstLst" ){
         log.meta$fLogStr( sprintf("    %s",porObj$rptStr) )
     }
  
-    log.meta$fLogStr("[cutCnt]============================================")
     cutCnt <- sapply( cutRstLst ,function(p){length(p$cutInfoLst)})
     cntTbl <- table( cutCnt )
+    log.meta$fLogStr(sprintf("[cutCnt(total %d)]============================================",sum(cntTbl)))
     # perStr <- kLog.getPerStr( cntTbl ,sum(cntTbl) ) #  ,pLong=T
     # log.meta$fLogStr( sprintf("\t%s",paste(perStr,collapse=" ")) )
     cntStr <- paste(sprintf("cnt%s",names(cntTbl)),cntTbl,sep=": ")
@@ -513,3 +513,5 @@ B.rptCutRstLst <- function( cutRstLst ,file="cutRstLst" ){
     }
 
 } # B.rptCutRstLst()
+
+

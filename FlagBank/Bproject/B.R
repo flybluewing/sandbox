@@ -32,7 +32,7 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
     save( stdCtrlCfgGrp ,file=sprintf("./save/HMtxLst/Obj_stdCtrlCfgGrp_%d.save",configH) )
     #   load(sprintf("./save/HMtxLst/Obj_stdCtrlCfgGrp_%d.save",configH))
 
-    testSpan <- (lastH - 15:0)   # configH 보다는 큰 시점에서 시작해야 함을 유의.
+    testSpan <- (lastH - 18:0)   # configH 보다는 큰 시점에서 시작해야 함을 유의.
     cutRstLst <- list()
     for( curHIdx in testSpan ){    # curHIdx <- testSpan[1]
 
@@ -78,6 +78,7 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
 
     } # curHIdx
     names(cutRstLst) <- paste("H",testSpan,sep="")
+    names(cutRstLst) <- paste( names(cutRstLst) ,allIdxLst$stdFiltedCnt[as.character(testSpan)] ,sep="_" )
 
     save( cutRstLst ,file=sprintf("./save/HMtxLst/Obj_cutRstLst%d.save",configH) )
         # load("./save/HMtxLst/Obj_cutRstLst840.save")
