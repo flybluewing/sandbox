@@ -1,14 +1,14 @@
 #	fMtx 박스 생성
 
-getScoreMtx.grp.4H <- function( aZoid ,filter.grp ,cutter.grp=NULL ){
+getScoreMtx.grp.4H <- function( aZoid ,filter.grp ){
 	#	aZoidMtx <- matrix( c( 8,22,35,38,39,41) ,nrow=1 )
 
 	aZoidMtx <- matrix( aZoid ,nrow=1 )
-	return( getScoreMtx.grp(aZoidMtx,filter.grp,cutter.grp) )
+	return( getScoreMtx.grp(aZoidMtx,filter.grp,makeInfoStr=T) )
 
 } # getScoreMtx.grp.4H()
 
-getScoreMtx.grp <- function( aZoidMtx ,filter.grp ,cutter.grp=NULL ){
+getScoreMtx.grp <- function( aZoidMtx ,filter.grp ,makeInfoStr=F ,cutter.grp=NULL ){
 
 	rObj <- list( basic=list() ,bDup=list() ,mf=list() )
 
@@ -16,9 +16,10 @@ getScoreMtx.grp <- function( aZoidMtx ,filter.grp ,cutter.grp=NULL ){
 		scoreMtxLst <- list()
 		for( nIdx.s in names(filter.grp$basic[[nIdx]]) ){
 			filterObj <- filter.grp$basic[[nIdx]][[nIdx.s]]
-			scoreMtxObj <- filterObj$fMtxObj( aZoidMtx ,makeInfoStr=is.null(cutter.grp) )
+			scoreMtxObj <- filterObj$fMtxObj( aZoidMtx ,makeInfoStr=makeInfoStr )
 
 			#	QQE:todo cutter.grp 적용이 가능하도록 기능 추가할 것.
+			#		- scoreMtx 계산 즉시 cutting..
 			scoreMtxLst[[nIdx.s]] <- scoreMtxObj
 		}
 		rObj$basic[[nIdx]] <- scoreMtxLst
