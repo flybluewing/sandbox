@@ -40,6 +40,9 @@ bFCust.getFCustGrp <- function( stdCtrlCfgGrp ,hMtxLst ){
 					}
 
                 }
+				# for each row
+				fcLst <- append(fcLst ,custObj$getCustF_NCol( tbtId=c(hName=hName, mName=mName, pName=pName) ) ) 
+
 	            #   work : n개 이상 컬럼에 대한 통제가 정의되어 있으면 pLst에 추가.
 
 				stdLst[[pName]] <- fcLst
@@ -122,7 +125,7 @@ bFCust.getCust <- function(){
 
 	rObj <- list()
 
-	rObj$fLst_1Col <- list()
+	rObj$fLst_1Col <- list()	# check each col value in one row
 	if( TRUE ){
 		rObj$fLst_1Col[[1+length(rObj$fLst_1Col)]] <- bFCust.A_score2_A_A( )
 		rObj$fLst_1Col[[1+length(rObj$fLst_1Col)]] <- bFCust.A_score2_A_rebVR( )
@@ -151,34 +154,47 @@ bFCust.getCust <- function(){
 		#		- 우선순위는 hName, mName, pName, fcName
 
 		selVal <- sapply( fFLst ,function(fLst){ fLst$defId["hName"] })
-		if( any(selVal==tgtId["hName"]) ){
-			fFLst <- fFLst[ selVal==tgtId["hName"] ]
-		}
+		if( any(selVal==tgtId["hName"]) )	fFLst <- fFLst[ selVal==tgtId["hName"] ]
 
 		selVal <- sapply( fFLst ,function(fLst){ fLst$defId["mName"] })
-		if( any(selVal==tgtId["mName"]) ){
-			fFLst <- fFLst[ selVal==tgtId["mName"] ]
-		}
+		if( any(selVal==tgtId["mName"]) )	fFLst <- fFLst[ selVal==tgtId["mName"] ]
 
 		selVal <- sapply( fFLst ,function(fLst){ fLst$defId["pName"] })
-		if( any(selVal==tgtId["pName"]) ){
-			fFLst <- fFLst[ selVal==tgtId["pName"] ]
-		}
+		if( any(selVal==tgtId["pName"]) )	fFLst <- fFLst[ selVal==tgtId["pName"] ]
 
 		selVal <- sapply( fFLst ,function(fLst){ fLst$defId["fcName"] })
-		if( any(selVal==tgtId["fcName"]) ){
-			fFLst <- fFLst[ selVal==tgtId["fcName"] ]
-		}
+		if( any(selVal==tgtId["fcName"]) )	fFLst <- fFLst[ selVal==tgtId["fcName"] ]
 
 		return( fFLst )
 	} # rObj$getCustF()
 
-	rObj$fLst_NCol <- list()
+	rObj$fLst_NCol <- list()	# check by row
 	if( TRUE ){
-		# rObj$fLst_NCol[[1+length(rObj$fLst_NCol)]] <- 
+		rObj$fLst_NCol[[1+length(rObj$fLst_NCol)]] <- bFCust.A_score2_A_Row01()
 	}
 	rObj$getCustF_NCol <- function( tgtId=c(hName="", mName="", pName="") ,auxInfo=c(auxInfo="") ){
+		# tgtId=c(hName="sfcHLst", mName="score2", pName="basic")
 		fFLst <- list()	# found fLst
+		for( idx in seq_len(length(rObj$fLst_1Col)) ){
+			fF <- rObj$fLst_1Col[[idx]]$createCutter( ctrlCfg ,tgtId )
+			if( !(fF$defId["hName"]=="*" || fF$defId["hName"]==tgtId["hName"]) ) next
+			if( !(fF$defId["mName"]=="*" || fF$defId["mName"]==tgtId["mName"]) ) next
+			if( !(fF$defId["pName"]=="*" || fF$defId["pName"]==tgtId["pName"]) ) next
+
+			fFLst[[1+length(fFLst)]] <- fF
+		}
+		if( 0==length(fFLst) ) return( fFLst )
+
+		selVal <- sapply( fFLst ,function(fLst){ fLst$defId["hName"] })
+		if( any(selVal==tgtId["hName"]) )	fFLst <- fFLst[ selVal==tgtId["hName"] ]
+
+		selVal <- sapply( fFLst ,function(fLst){ fLst$defId["mName"] })
+		if( any(selVal==tgtId["mName"]) )	fFLst <- fFLst[ selVal==tgtId["mName"] ]
+
+		selVal <- sapply( fFLst ,function(fLst){ fLst$defId["pName"] })
+		if( any(selVal==tgtId["pName"]) )	fFLst <- fFLst[ selVal==tgtId["pName"] ]
+
+		names( fFLst ) <- paste("NCol",1:length(fFLst),sep="")
 		return( fFLst )
 	} # rObj$getCustF_NCol()
 

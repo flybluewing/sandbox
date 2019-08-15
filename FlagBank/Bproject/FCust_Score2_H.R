@@ -287,15 +287,30 @@ bFCust.A_score2_A_Row01 <- function(  ){
 	rObj$description <- sprintf("(cust)  ")
 
 	rObj$cutFLst <- list()
-	rObj$cutFLst[[1+length(rObj$cutFLst)]] <- function( smRow ){	# scoreMtx row
+	rObj$cutFLst[[1+length(rObj$cutFLst)]] <- function( smRow ){	# smRow:scoreMtx row
 		crObj <- list( cutFlag=F ,cId="01" ) # cut result object, cut Id
 		return( crObj )
 	} # rObj$cutFLst[1]( )
 	rObj$cutFLst[[1+length(rObj$cutFLst)]] <- function( smRow ){	# for testing
-		crObj <- list( cutFlag=F ,cId="Test" ) # cut result object, cut Id
+
+		crObj <- list( cutFlag=F ,cId="Test.rebC" ) # cut result object, cut Id
+		evtThld <- c("rebC.r"=2,"rebC.c"=2)
+
+		evtFlag <- smRow[names(evtThld)] == evtThld
+		if( any(evtFlag) ) crObj$cutFlag <- TRUE
+
 		return( crObj )
 	} # rObj$cutFLst[1]( )
+	rObj$cutFLst[[1+length(rObj$cutFLst)]] <- function( smRow ){	# for testing
 
+		crObj <- list( cutFlag=F ,cId="Test.rebLR" ) # cut result object, cut Id
+		evtThld <- c("rebL"=1,"rebR"=1)
+
+		evtFlag <- smRow[names(evtThld)] == evtThld
+		if( any(evtFlag) ) crObj$cutFlag <- TRUE
+
+		return( crObj )
+	} # rObj$cutFLst[1]( )
 
 	# QQE working
 
