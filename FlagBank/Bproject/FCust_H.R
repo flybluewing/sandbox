@@ -41,7 +41,7 @@ bFCust.getFCustGrp <- function( stdCtrlCfgGrp ,hMtxLst ){
 
                 }
 				# for each row
-				fcLst <- append(fcLst ,custObj$getCustF_NCol( tbtId=c(hName=hName, mName=mName, pName=pName) ) ) 
+				fcLst <- append(fcLst ,custObj$getCustF_NCol( tgtId=c(hName=hName, mName=mName, pName=pName) ) ) 
 
 	            #   work : n개 이상 컬럼에 대한 통제가 정의되어 있으면 pLst에 추가.
 
@@ -175,8 +175,8 @@ bFCust.getCust <- function(){
 	rObj$getCustF_NCol <- function( tgtId=c(hName="", mName="", pName="") ,auxInfo=c(auxInfo="") ){
 		# tgtId=c(hName="sfcHLst", mName="score2", pName="basic")
 		fFLst <- list()	# found fLst
-		for( idx in seq_len(length(rObj$fLst_1Col)) ){
-			fF <- rObj$fLst_1Col[[idx]]$createCutter( ctrlCfg ,tgtId )
+		for( idx in seq_len(length(rObj$fLst_NCol)) ){
+			fF <- rObj$fLst_NCol[[idx]]$createCutter( tgtId ,auxInfo )
 			if( !(fF$defId["hName"]=="*" || fF$defId["hName"]==tgtId["hName"]) ) next
 			if( !(fF$defId["mName"]=="*" || fF$defId["mName"]==tgtId["mName"]) ) next
 			if( !(fF$defId["pName"]=="*" || fF$defId["pName"]==tgtId["pName"]) ) next

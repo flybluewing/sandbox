@@ -283,7 +283,7 @@ bFCust.A_score2_A_rebR <- function(  ){
 #	[score2:Col Cutter] ------------------------------------------------------------------
 bFCust.A_score2_A_Row01 <- function(  ){
 	rObj <- list( )
-	rObj$defId <- c( typ="cust"	,hName="*"	,mName="score2"	,pName="*"	,rFId="Row01" )	# row filt ID
+	rObj$defId <- c( typ="cust_NCol"	,hName="*"	,mName="score2"	,pName="*"	,rFId="Row01" )	# row filt ID
 	rObj$description <- sprintf("(cust)  ")
 
 	rObj$cutFLst <- list()
@@ -294,10 +294,10 @@ bFCust.A_score2_A_Row01 <- function(  ){
 	rObj$cutFLst[[1+length(rObj$cutFLst)]] <- function( smRow ){	# for testing
 
 		crObj <- list( cutFlag=F ,cId="Test.rebC" ) # cut result object, cut Id
-		evtThld <- c("rebC.r"=2,"rebC.c"=2)
+		evtThld <- c("rebC.r"=0,"rebC.c"=1)
 
 		evtFlag <- smRow[names(evtThld)] == evtThld
-		if( any(evtFlag) ) crObj$cutFlag <- TRUE
+		if( all(evtFlag) ) crObj$cutFlag <- TRUE
 
 		return( crObj )
 	} # rObj$cutFLst[1]( )
@@ -317,7 +317,7 @@ bFCust.A_score2_A_Row01 <- function(  ){
 	rObj$createCutter <- function( tgtId=c(hName="", mName="", pName="") ,auxInfo=c(auxInfo="") ){
 
 		cutterObj <- rObj
-		cutterObj$createCutter <- NULL	;cutterObj$cutFLst <- NULL
+		cutterObj$createCutter <- NULL
 
 		#	hName="testNA"; mName="testNA"; pName="testNA"; fcName="testNA"; auxInfo=c(auxInfo="")
 		idObjDesc <- rObj$defId
@@ -348,8 +348,8 @@ bFCust.A_score2_A_Row01 <- function(  ){
 				lst <- lapply( rObj$cutFLst ,function( pFunc ){ pFunc( scoreMtx[idx,] ) } )
 				cutFlag <- sapply( lst ,function(p){ p$cutFlag })
 				if( any(cutFlag) ){
-					fId <- sapply( lst[cutFlag] ,function(p){p$cId})
-					surDf[idx,"info"] <- sprintf("cut Id : ",paste(cId,collapse=",") )
+					firedCId <- sapply( lst[cutFlag] ,function(p){p$cId})
+					surDf[idx,"info"] <- sprintf("cut Id : %s",paste(firedCId,collapse=",") )
 					cutLst[[idx]] <- c( cutterObj$idObjDesc ,cutId=surDf[idx,"info"] )
 				} else {
 					surDf[idx,"surv"] <- T
