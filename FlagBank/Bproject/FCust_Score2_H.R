@@ -371,7 +371,65 @@ bFCust.A_score2_A_Row01 <- function(  ){
 
 
 
+bFCust.A_score2_A_rReb01 <- function(  ){
+	rObj <- list( )
+	rObj$defId <- c( typ="cust_RReb"	,hName="*"	,mName="score2"	,pName="*"	,rFId="rReb01" )	# row filt ID
+	rObj$description <- sprintf("(cust)  ")
 
+	rObj$createCutter <- function( hMtxLst ,tgtId=c(hName="", mName="", pName="") ,auxInfo=c(auxInfo="") ){
+
+		cutterObj <- rObj
+		cutterObj$createCutter <- NULL
+
+		#	hName="testNA"; mName="testNA"; pName="testNA"; fcName="testNA"; auxInfo=c(auxInfo="")
+		idObjDesc <- rObj$defId
+		if( idObjDesc["hName"]!=tgtId["hName"] ) idObjDesc["hName"] <- sprintf("(%s)%s",idObjDesc["hName"],tgtId["hName"])
+		if( idObjDesc["mName"]!=tgtId["mName"] ) idObjDesc["mName"] <- sprintf("(%s)%s",idObjDesc["mName"],tgtId["mName"])
+		if( idObjDesc["pName"]!=tgtId["pName"] ) idObjDesc["pName"] <- sprintf("(%s)%s",idObjDesc["pName"],tgtId["pName"])
+		idObjDesc <- c( idObjDesc ,auxInfo )
+		cutterObj$idObjDesc <- idObjDesc
+
+		cutterObj$idObj <- rObj$defId
+		cutterObj$idObj[names(tgtId)] <- tgtId
+
+		cutterObj$cut <- function( scoreMtx ,alreadyDead=NULL ){
+			val.len <- nrow( scoreMtx )
+			if( is.null(alreadyDead) ){
+				alreadyDead <- rep( F, val.len )
+			}
+
+			surDf <- data.frame( surv=rep(F,val.len) ,info=rep(NA,val.len) )
+			cutLst <- vector("list",val.len)
+			for( idx in seq_len(val.len) ){
+				if( alreadyDead[idx] ){
+					surDf[idx,"surv"] <- F
+					surDf[idx,"info"] <- sprintf("%d, already dead",val[idx])
+					next
+				}
+
+				# lst <- lapply( rObj$cutFLst ,function( pFunc ){ pFunc( scoreMtx[idx,] ) } )
+				# cutFlag <- sapply( lst ,function(p){ p$cutFlag })
+				# if( any(cutFlag) ){
+				# 	firedCId <- sapply( lst[cutFlag] ,function(p){p$cId})
+				# 	surDf[idx,"info"] <- sprintf("cut Id : %s",paste(firedCId,collapse=",") )
+				# 	cutLst[[idx]] <- c( cutterObj$idObjDesc ,cutId=surDf[idx,"info"] )
+				# } else {
+				# 	surDf[idx,"surv"] <- T
+				# }
+
+			}
+
+			rstObj <- list( surDf=surDf ,cutLst=cutLst )
+			return( rstObj )
+
+		} # cutterObj$cut()
+
+		return(cutterObj)
+
+	}
+
+	return( rObj )
+} # bFCust.A_score2_A_rReb01()
 
 
 
