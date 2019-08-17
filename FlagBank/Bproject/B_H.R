@@ -148,6 +148,10 @@ B.makeHMtxLst <- function( gEnv, allIdxLst, fRstLst, lastH=NULL ){
                     ,mtxInfoLst=mtxInfoLst  ,phaseName=phaseName
                     ,scoreMtxLst=scoreMtxLst 
                 )
+    rObj$getScoreMtxObj <- function( hName, mName, pName ){
+        return( rObj$scoreMtxLst[[hName]][[pName]][[mName]] )
+    }
+
     return( rObj )
 
 } # B.makeHMtxLst()

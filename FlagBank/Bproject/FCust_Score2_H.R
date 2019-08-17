@@ -376,6 +376,26 @@ bFCust.A_score2_A_rReb01 <- function(  ){
 	rObj$defId <- c( typ="cust_RReb"	,hName="*"	,mName="score2"	,pName="*"	,rFId="rReb01" )	# row filt ID
 	rObj$description <- sprintf("(cust)  ")
 
+	rObj$evtLst <- list("rebV.r"=c(2,3) ,"rebL"=1 ,"rebR"=1
+						,"rebC.r"=2 ,"rebC.c"=2 ,"rebC.f"=2 
+						,"rebC2.r"=2 ,"rebC2.c"=2 ,"rebC2.f"=2 
+						,"inc.r"=2 ,"inc.c"=2 ,"inc.f"=2 
+						,"inc.r2"=2 ,"inc.c2"=2 ,"inc.f2"=2 
+						,"inc.r3"=2 ,"inc.c3"=2
+					)
+	rObj$getLastVal <- function( scoreMtx ,evtLst=NULL ){
+		lastVal <- scoreMtx[ nrow(scoreMtx), ]
+		if( is.null(evtLst) )	return( lastVal )
+
+		lastVal <- lastVal[names(evtLst)]
+		for( nIdx in names(evtLst) ){
+			if( !(lastVal[nIdx] %in% evtLst[[nIdx]]) ) lastVal[nIdx] <- NA
+		}
+
+		return( lastVal )
+	} # rObj$getLastVal()
+
+
 	rObj$createCutter <- function( hMtxLst ,tgtId=c(hName="", mName="", pName="") ,auxInfo=c(auxInfo="") ){
 
 		cutterObj <- rObj
@@ -392,6 +412,24 @@ bFCust.A_score2_A_rReb01 <- function(  ){
 		cutterObj$idObj <- rObj$defId
 		cutterObj$idObj[names(tgtId)] <- tgtId
 
+		scoreMtxObj <- hMtxLst$getScoreMtxObj( tgtId["hName"] ,tgtId["mName"] ,tgtId["pName"] )
+		scoreMtx <- if( is.null(scoreMtxObj) ) NULL else scoreMtxObj$scoreMtx	;cutterObj$scoreMtx <- scoreMtx	# for debug later..
+
+		cutterObj$checkLst <- list()
+		if( !is.null(scoreMtx) ){	# build checkLst
+			#	fireThld 는 fire가 일어날 동일 패턴 수. NA이면 전부 매치.
+
+			evtChkInfo <- list( idStr="01" ,fireThld=NA ,evtLst=rObj$evtLst[c("rebV.r","rebL","rebR")] )
+			evtChkInfo$evtLast <- rObj$getLastVal( scoreMtx ,evtChkInfo$evtVal )
+			cutterObj$evtChkLst[[1+length(cutterObj$evtChkLst)]] <- evtChkInfo
+
+			# 기타등등..
+		}
+
+		cutterObj$checkRow <- function( smRow ){	# scoreMtx row
+			# cutterObj$checkLst 설정내역을 흝어가며 체크.
+		}
+
 		cutterObj$cut <- function( scoreMtx ,alreadyDead=NULL ){
 			val.len <- nrow( scoreMtx )
 			if( is.null(alreadyDead) ){
@@ -407,6 +445,8 @@ bFCust.A_score2_A_rReb01 <- function(  ){
 					next
 				}
 
+
+				#	cutterObj$checkRow() 함수 적용.
 				# lst <- lapply( rObj$cutFLst ,function( pFunc ){ pFunc( scoreMtx[idx,] ) } )
 				# cutFlag <- sapply( lst ,function(p){ p$cutFlag })
 				# if( any(cutFlag) ){
