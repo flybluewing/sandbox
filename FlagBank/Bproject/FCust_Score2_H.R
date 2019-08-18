@@ -383,23 +383,18 @@ bFCust.A_score2_A_rReb01 <- function(  ){
 						,"inc.r2"=2 ,"inc.c2"=2 ,"inc.f2"=2 
 						,"inc.r3"=2 ,"inc.c3"=2
 					)
-	rObj$getLastVal <- function( scoreMtx ,evtLst=NULL ){
-		lastVal <- scoreMtx[ nrow(scoreMtx), ]
-		if( is.null(evtLst) )	return( lastVal )
-
-		lastVal <- lastVal[names(evtLst)]
-		for( nIdx in names(evtLst) ){
-			if( !(lastVal[nIdx] %in% evtLst[[nIdx]]) ) lastVal[nIdx] <- NA
-		}
-
-		return( lastVal )
-	} # rObj$getLastVal()
-
 
 	rObj$createCutter <- function( hMtxLst ,tgtId=c(hName="", mName="", pName="") ,auxInfo=c(auxInfo="") ){
 
 		cutterObj <- rObj
 		cutterObj$createCutter <- NULL
+		cutterObj$getEvtVal <- function( src ,evtLst ){
+			evtVal <- src[names(evtLst)]
+			for( nIdx in names(evtLst) ){
+				if( !(evtVal[nIdx] %in% evtLst[[nIdx]]) ) evtVal[nIdx] <- NA
+			}
+			return( evtVal )
+		} # cutterObj$getLastVal()
 
 		#	hName="testNA"; mName="testNA"; pName="testNA"; fcName="testNA"; auxInfo=c(auxInfo="")
 		idObjDesc <- rObj$defId
@@ -413,21 +408,48 @@ bFCust.A_score2_A_rReb01 <- function(  ){
 		cutterObj$idObj[names(tgtId)] <- tgtId
 
 		scoreMtxObj <- hMtxLst$getScoreMtxObj( tgtId["hName"] ,tgtId["mName"] ,tgtId["pName"] )
-		scoreMtx <- if( is.null(scoreMtxObj) ) NULL else scoreMtxObj$scoreMtx	;cutterObj$scoreMtx <- scoreMtx	# for debug later..
+		scoreMtx <- if( is.null(scoreMtxObj) ) NULL else scoreMtxObj$scoreMtx
+		cutterObj$scoreMtx <- scoreMtx	# just for debug later..
 
 		cutterObj$checkLst <- list()
 		if( !is.null(scoreMtx) ){	# build checkLst
 			#	fireThld 는 fire가 일어날 동일 패턴 수. NA이면 전부 매치.
+			scoreMtx.last <- scoreMtx[nrow(scoreMtx),]
 
-			evtChkInfo <- list( idStr="01" ,fireThld=NA ,evtLst=rObj$evtLst[c("rebV.r","rebL","rebR")] )
-			evtChkInfo$evtLast <- rObj$getLastVal( scoreMtx ,evtChkInfo$evtVal )
+			evtChkInfo <- list( cutId="01" ,fireThld=NA ,evtLst=rObj$evtLst[c("rebV.r","rebL","rebR")] )
+			evtChkInfo$evtLast <- cutterObj$getEvtVal( scoreMtx.last ,evtChkInfo$evtLst )
 			cutterObj$evtChkLst[[1+length(cutterObj$evtChkLst)]] <- evtChkInfo
 
+			evtChkInfo <- list( cutId="evtAll" ,fireThld=NA ,evtLst=rObj$evtLst )
+			evtChkInfo$evtLast <- cutterObj$getEvtVal( scoreMtx.last ,evtChkInfo$evtLst )
+			cutterObj$evtChkLst[[1+length(cutterObj$evtChkLst)]] <- evtChkInfo
 			# 기타등등..
+
+			names(cutterObj$evtChkLst) <- sapply( cutterObj$evtChkLst ,function(p){p$cutId})
+			for( nIdx in names(cutterObj$evtChkLst) ){
+				cutterObj$evtChkLst[[nIdx]]$evtNaMask <- !is.na(cutterObj$evtChkLst[[nIdx]]$evtLast)
+			}
 		}
 
 		cutterObj$checkRow <- function( smRow ){	# scoreMtx row
+			# 속도 최적화 면에서는 아주 안 좋지만, 일단 기능과 성능 확인이 급하니..
 			# cutterObj$checkLst 설정내역을 흝어가며 체크.
+
+			firedCutId <- character(0)
+			for( idx in seq_len(length(cutterObj$evtChkLst)) ){
+				evtChkInfo <- cutterObj$evtChkLst[[idx]]
+				src <- cutterObj$getEvtVal( smRow ,evtChkInfo$evtLst )
+				chk <- (src==evtChkInfo$evtLast)[evtChkInfo$evtNaMask]
+				
+				if( any(is.na(chk)) ) next	# src 에 포함되었던 NA
+
+				if( all(chk) ) firedCutId <- c( firedCutId ,evtChkInfo$cutId )
+			}
+
+			chkRstObj <- list( firedCutId ,cutFlag=(length(firedCutId)>0) )
+
+			return( firedCutId )
+			#	return : cutFlag firedCutId
 		}
 
 		cutterObj$cut <- function( scoreMtx ,alreadyDead=NULL ){
@@ -445,17 +467,13 @@ bFCust.A_score2_A_rReb01 <- function(  ){
 					next
 				}
 
-
-				#	cutterObj$checkRow() 함수 적용.
-				# lst <- lapply( rObj$cutFLst ,function( pFunc ){ pFunc( scoreMtx[idx,] ) } )
-				# cutFlag <- sapply( lst ,function(p){ p$cutFlag })
-				# if( any(cutFlag) ){
-				# 	firedCId <- sapply( lst[cutFlag] ,function(p){p$cId})
-				# 	surDf[idx,"info"] <- sprintf("cut Id : %s",paste(firedCId,collapse=",") )
-				# 	cutLst[[idx]] <- c( cutterObj$idObjDesc ,cutId=surDf[idx,"info"] )
-				# } else {
-				# 	surDf[idx,"surv"] <- T
-				# }
+				chkRst <- cutterObj$checkRow( scoreMtx[idx,] )
+				if( chkRst$cutFlag ){
+					surDf[idx,"info"] <- sprintf("cut Id : %s",paste(chkRst$firedCutId,collapse=",") )
+					cutLst[[idx]] <- c( cutterObj$idObjDesc ,cutId=surDf[idx,"info"] )
+				} else {
+					surDf[idx,"surv"] <- T	
+				}
 
 			}
 
