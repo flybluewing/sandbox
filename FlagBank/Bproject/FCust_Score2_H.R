@@ -411,7 +411,7 @@ bFCust.A_score2_A_rReb01 <- function(  ){
 		scoreMtx <- if( is.null(scoreMtxObj) ) NULL else scoreMtxObj$scoreMtx
 		cutterObj$scoreMtx <- scoreMtx	# just for debug later..
 
-		cutterObj$checkLst <- list()
+		cutterObj$evtChkLst <- list()
 		if( !is.null(scoreMtx) ){	# build checkLst
 			#	fireThld 는 fire가 일어날 동일 패턴 수. NA이면 전부 매치.
 			scoreMtx.last <- scoreMtx[nrow(scoreMtx),]
@@ -423,6 +423,7 @@ bFCust.A_score2_A_rReb01 <- function(  ){
 			evtChkInfo <- list( cutId="evtAll" ,fireThld=NA ,evtLst=rObj$evtLst )
 			evtChkInfo$evtLast <- cutterObj$getEvtVal( scoreMtx.last ,evtChkInfo$evtLst )
 			cutterObj$evtChkLst[[1+length(cutterObj$evtChkLst)]] <- evtChkInfo
+
 			# 기타등등..
 
 			names(cutterObj$evtChkLst) <- sapply( cutterObj$evtChkLst ,function(p){p$cutId})
@@ -438,18 +439,29 @@ bFCust.A_score2_A_rReb01 <- function(  ){
 			firedCutId <- character(0)
 			for( idx in seq_len(length(cutterObj$evtChkLst)) ){
 				evtChkInfo <- cutterObj$evtChkLst[[idx]]
+				if( all(is.na(evtChkInfo$evtLast)) ) next	# evtChkInfo$evtNaMask는 모두 F
+
 				src <- cutterObj$getEvtVal( smRow ,evtChkInfo$evtLst )
 				chk <- (src==evtChkInfo$evtLast)[evtChkInfo$evtNaMask]
-				
-				if( any(is.na(chk)) ) next	# src 에 포함되었던 NA
+				if( 0==length(chk) ) next
 
-				if( all(chk) ) firedCutId <- c( firedCutId ,evtChkInfo$cutId )
+				naFlag <- is.na(chk)
+				if( all(!naFlag) ){
+					firedCutId <- c( firedCutId ,evtChkInfo$cutId )
+				} else {
+					if( is.na(evtChkInfo$fireThld) ) next
+
+					chkCnt <- sum(!naFlag)
+					if( chkCnt >= evtChkInfo$fireThld ){
+						firedCutId <- c( firedCutId ,evtChkInfo$cutId )
+					}
+				}
+
 			}
 
-			chkRstObj <- list( firedCutId ,cutFlag=(length(firedCutId)>0) )
+			chkRstObj <- list( firedCutId=firedCutId ,cutFlag=(length(firedCutId)>0) )
 
-			return( firedCutId )
-			#	return : cutFlag firedCutId
+			return( chkRstObj )
 		}
 
 		cutterObj$cut <- function( scoreMtx ,alreadyDead=NULL ){
@@ -489,6 +501,82 @@ bFCust.A_score2_A_rReb01 <- function(  ){
 	return( rObj )
 } # bFCust.A_score2_A_rReb01()
 
+bFCust.A_score2_A_rRebAA <- function(  ){
+	rObj <- list( )
+	rObj$defId <- c( typ="cust_RReb"	,hName="*"	,mName="score2"	,pName="*"	,rFId="rRebAA" )	# row filt ID
+	rObj$description <- sprintf("(cust)  ")
+
+	rObj$createCutter <- function( hMtxLst ,tgtId=c(hName="", mName="", pName="") ,auxInfo=c(auxInfo="") ){
+
+		cutterObj <- rObj
+		cutterObj$createCutter <- NULL
+		cutterObj$getEvtVal <- function( src ,evtLst ){
+			evtVal <- src[names(evtLst)]
+			for( nIdx in names(evtLst) ){
+				if( !(evtVal[nIdx] %in% evtLst[[nIdx]]) ) evtVal[nIdx] <- NA
+			}
+			return( evtVal )
+		} # cutterObj$getLastVal()
+
+		#	hName="testNA"; mName="testNA"; pName="testNA"; fcName="testNA"; auxInfo=c(auxInfo="")
+		idObjDesc <- rObj$defId
+		if( idObjDesc["hName"]!=tgtId["hName"] ) idObjDesc["hName"] <- sprintf("(%s)%s",idObjDesc["hName"],tgtId["hName"])
+		if( idObjDesc["mName"]!=tgtId["mName"] ) idObjDesc["mName"] <- sprintf("(%s)%s",idObjDesc["mName"],tgtId["mName"])
+		if( idObjDesc["pName"]!=tgtId["pName"] ) idObjDesc["pName"] <- sprintf("(%s)%s",idObjDesc["pName"],tgtId["pName"])
+		idObjDesc <- c( idObjDesc ,auxInfo )
+		cutterObj$idObjDesc <- idObjDesc
+
+		cutterObj$idObj <- rObj$defId
+		cutterObj$idObj[names(tgtId)] <- tgtId
+
+		scoreMtxObj <- hMtxLst$getScoreMtxObj( tgtId["hName"] ,tgtId["mName"] ,tgtId["pName"] )
+		if( is.null(scoreMtxObj) ){
+			cutterObj$lastRow <- NULL
+		} else {
+			cutterObj$lastRow <- scoreMtx[nrow(scoreMtx),]
+		}
+
+		cutterObj$cut <- function( scoreMtx ,alreadyDead=NULL ){
+			val.len <- nrow( scoreMtx )
+			if( is.null(alreadyDead) ){
+				alreadyDead <- rep( F, val.len )
+			}
+
+			surDf <- data.frame( surv=rep(F,val.len) ,info=rep(NA,val.len) )
+			cutLst <- vector("list",val.len)
+			for( idx in seq_len(val.len) ){
+				if( alreadyDead[idx] ){
+					surDf[idx,"surv"] <- F
+					surDf[idx,"info"] <- sprintf("%d, already dead",val[idx])
+					next
+				}
+
+				if( is.null(cutterObj$lastRow) ){
+					surDf[idx,"surv"] <- T
+					next
+				}
+
+				matFlag <- all( cutterObj$lastRow==scoreMtx[idx,] )
+				if( all(matFlag) ){
+					surDf[idx,"info"] <- sprintf("cut Id : %s",cutterObj$idObjDesc["rFId"] )
+					cutLst[[idx]] <- c( cutterObj$idObjDesc ,cutId=surDf[idx,"info"] )
+				} else {
+					surDf[idx,"surv"] <- T	
+				}
+
+			}
+
+			rstObj <- list( surDf=surDf ,cutLst=cutLst )
+			return( rstObj )
+
+		} # cutterObj$cut()
+
+		return(cutterObj)
+
+	}
+
+	return( rObj )
+} # bFCust.A_score2_A_rRebAA()
 
 
 

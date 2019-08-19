@@ -200,7 +200,8 @@ bFCust.getCust <- function(){
 
 	rObj$fLst_rReb <- list()
 	if( TRUE ){
-		#	rObj$fLst_rReb[[1+length(rObj$fLst_rReb)]] <- bFCust.A_score2_A_rReb01...
+		rObj$fLst_rReb[[1+length(rObj$fLst_rReb)]] <- bFCust.A_score2_A_rReb01()
+		rObj$fLst_rReb[[1+length(rObj$fLst_rReb)]] <- bFCust.A_score2_A_rRebAA()
 	}
 	rObj$getCustF_RReb <- function( hMtxLst ,tgtId=c(hName="", mName="", pName="") ,auxInfo=c(auxInfo="") ){
 		# tgtId=c(hName="sfcHLst", mName="score2", pName="basic")
