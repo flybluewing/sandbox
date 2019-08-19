@@ -287,30 +287,16 @@ bFCust.A_score2_A_Row01 <- function(  ){
 	rObj$description <- sprintf("(cust)  ")
 
 	rObj$cutFLst <- list()
-	rObj$cutFLst[[1+length(rObj$cutFLst)]] <- function( smRow ){	# smRow:scoreMtx row
-		crObj <- list( cutFlag=F ,cId="01" ) # cut result object, cut Id
-		return( crObj )
-	} # rObj$cutFLst[1]( )
-	rObj$cutFLst[[1+length(rObj$cutFLst)]] <- function( smRow ){	# for testing
+	# rObj$cutFLst[[1+length(rObj$cutFLst)]] <- function( smRow ){	# for testing
 
-		crObj <- list( cutFlag=F ,cId="Test.rebC" ) # cut result object, cut Id
-		evtThld <- c("rebC.r"=0,"rebC.c"=1)
+	# 	crObj <- list( cutFlag=F ,cId="Test.rebC" ) # cut result object, cut Id
+	# 	evtThld <- c("rebC.r"=0,"rebC.c"=1)
 
-		evtFlag <- smRow[names(evtThld)] == evtThld
-		if( all(evtFlag) ) crObj$cutFlag <- TRUE
+	# 	evtFlag <- smRow[names(evtThld)] == evtThld
+	# 	if( all(evtFlag) ) crObj$cutFlag <- TRUE
 
-		return( crObj )
-	} # rObj$cutFLst[1]( )
-	rObj$cutFLst[[1+length(rObj$cutFLst)]] <- function( smRow ){	# for testing
-
-		crObj <- list( cutFlag=F ,cId="Test.rebLR" ) # cut result object, cut Id
-		evtThld <- c("rebL"=1,"rebR"=1)
-
-		evtFlag <- smRow[names(evtThld)] == evtThld
-		if( any(evtFlag) ) crObj$cutFlag <- TRUE
-
-		return( crObj )
-	} # rObj$cutFLst[1]( )
+	# 	return( crObj )
+	# } # rObj$cutFLst[1]( )
 
 	# QQE working
 
@@ -533,7 +519,7 @@ bFCust.A_score2_A_rRebAA <- function(  ){
 		if( is.null(scoreMtxObj) ){
 			cutterObj$lastRow <- NULL
 		} else {
-			cutterObj$lastRow <- scoreMtx[nrow(scoreMtx),]
+			cutterObj$lastRow <- scoreMtxObj$scoreMtx[nrow(scoreMtxObj$scoreMtx),]
 		}
 
 		cutterObj$cut <- function( scoreMtx ,alreadyDead=NULL ){

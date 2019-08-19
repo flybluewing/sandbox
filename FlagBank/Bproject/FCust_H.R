@@ -41,7 +41,9 @@ bFCust.getFCustGrp <- function( stdCtrlCfgGrp ,hMtxLst ){
 
                 }
 				# for each row
-				fcLst <- append(fcLst ,custObj$getCustF_NCol( tgtId=c(hName=hName, mName=mName, pName=pName) ) ) 
+				tgtId <- c(hName=hName, mName=mName, pName=pName)
+				fcLst <- append(fcLst ,custObj$getCustF_NCol(tgtId) ) 
+				fcLst <- append(fcLst ,custObj$getCustF_RReb(hMtxLst,tgtId) ) 
 
 	            #   work : n개 이상 컬럼에 대한 통제가 정의되어 있으면 pLst에 추가.
 
