@@ -45,18 +45,18 @@ bFCust.getFCustGrp <- function( stdCtrlCfgGrp ,hMtxLst ){
 				fcLst <- append(fcLst ,custObj$getCustF_NCol(tgtId) ) 
 				fcLst <- append(fcLst ,custObj$getCustF_RReb(hMtxLst,tgtId) ) 
 
-	            #   work : n개 이상 컬럼에 대한 통제가 정의되어 있으면 pLst에 추가.
-
 				stdLst[[pName]] <- fcLst
 			}
 
 			fColLst <- list()
+			fColObj <- B.getHMtxLst_byFCol( hMtxLst )
 			# for( fcName in rObj$mtxInfoLst[[mName]] ){	# fcName <- rObj$mtxInfoLst[[mName]][1]
 			# 	mtx <- byFCol[[hName]][[mName]][[fcName]]	# h * phase
 			# 	fColLst[[fcName]] <- bUtil.stdCtrlCfg.h_ph4FCol( mtx )
 			# }
 
 			hIdxLst <- list()
+			hIdxObj <- B.getHMtxLst_byHIdx( hMtxLst )
 			# for( hIdxName in as.character(rObj$sfcHLst[[hName]]) ){	# hIdxName <- as.character(rObj$sfcHLst[[hName]])[1]
 			# 	mtx <- byHIdx[[hName]][[mName]][[hIdxName]]	# fCol * phase
 			# 	hIdxLst[[hIdxName]] <- bUtil.stdCtrlCfg.h_ph4FCol( mtx )

@@ -45,6 +45,19 @@ getScoreMtx.grp <- function( aZoidMtx ,filter.grp ,makeInfoStr=F ,cutter.grp=NUL
 
 } # getScoreMtx.grp()
 
+getScoreMtx.grp_byFCol <- function( scoreMtx.grp ){
+	#	scoreMtx.grp <- getScoreMtx.grp( aZoidMtx, ... )
+
+} # getScoreMtx.grp_byFCol( )
+
+
+#	byHIdx이긴 하지만, 사실은 각 scoreMtxN 에 대한 [col,phase] 테이블이다.
+#	즉 allIdx 단위별로 List가 만들어짐.
+getScoreMtx.grp_byHIdx <- function( scoreMtx.grp ){ # 
+	#	scoreMtx.grp <- getScoreMtx.grp( aZoidMtx, ... )
+
+} # getScoreMtx.grp_byHIdx( )
+
 
 
 getFilter.grp <- function( stdMI.grp ){
