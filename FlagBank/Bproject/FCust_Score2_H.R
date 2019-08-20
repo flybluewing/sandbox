@@ -358,6 +358,8 @@ bFCust.A_score2_A_Row01 <- function(  ){
 
 
 bFCust.A_score2_A_rReb01 <- function(  ){
+	#	row rebind라고는 했지만 사실 seq 이다. 
+	#	즉 이전 evt 컬럼이 다음에도 동일 evt가 일어나는지 체크(다음에서 추가적으로 발생하는 evt는 상관없음.)
 	rObj <- list( )
 	rObj$defId <- c( typ="cust_RReb"	,hName="*"	,mName="score2"	,pName="*"	,rFId="rReb01" )	# row filt ID
 	rObj$description <- sprintf("(cust)  ")
@@ -402,11 +404,31 @@ bFCust.A_score2_A_rReb01 <- function(  ){
 			#	fireThld 는 fire가 일어날 동일 패턴 수. NA이면 전부 매치.
 			scoreMtx.last <- scoreMtx[nrow(scoreMtx),]
 
-			evtChkInfo <- list( cutId="01" ,fireThld=NA ,evtLst=rObj$evtLst[c("rebV.r","rebL","rebR")] )
+			evtChkInfo <- list( cutId="01" ,fireThld=2 ,evtLst=rObj$evtLst[c("rebV.r","rebL","rebR")] )
 			evtChkInfo$evtLast <- cutterObj$getEvtVal( scoreMtx.last ,evtChkInfo$evtLst )
 			cutterObj$evtChkLst[[1+length(cutterObj$evtChkLst)]] <- evtChkInfo
 
-			evtChkInfo <- list( cutId="evtAll" ,fireThld=NA ,evtLst=rObj$evtLst )
+			evtChkInfo <- list( cutId="02" ,fireThld=2 ,evtLst=rObj$evtLst[c("rebC.r","rebC.c","rebC.f")] )
+			evtChkInfo$evtLast <- cutterObj$getEvtVal( scoreMtx.last ,evtChkInfo$evtLst )
+			cutterObj$evtChkLst[[1+length(cutterObj$evtChkLst)]] <- evtChkInfo
+
+			evtChkInfo <- list( cutId="03" ,fireThld=2 ,evtLst=rObj$evtLst[c("rebC2.r","rebC2.c","rebC2.f")] )
+			evtChkInfo$evtLast <- cutterObj$getEvtVal( scoreMtx.last ,evtChkInfo$evtLst )
+			cutterObj$evtChkLst[[1+length(cutterObj$evtChkLst)]] <- evtChkInfo
+
+			evtChkInfo <- list( cutId="04" ,fireThld=2 ,evtLst=rObj$evtLst[c("inc.r","inc.c","inc.f")] )
+			evtChkInfo$evtLast <- cutterObj$getEvtVal( scoreMtx.last ,evtChkInfo$evtLst )
+			cutterObj$evtChkLst[[1+length(cutterObj$evtChkLst)]] <- evtChkInfo
+
+			evtChkInfo <- list( cutId="05" ,fireThld=2 ,evtLst=rObj$evtLst[c("inc.r2","inc.c2","inc.f2")] )
+			evtChkInfo$evtLast <- cutterObj$getEvtVal( scoreMtx.last ,evtChkInfo$evtLst )
+			cutterObj$evtChkLst[[1+length(cutterObj$evtChkLst)]] <- evtChkInfo
+
+			evtChkInfo <- list( cutId="06" ,fireThld=2 ,evtLst=rObj$evtLst[c("rebL","rebR","inc.r3","inc.c3")] )
+			evtChkInfo$evtLast <- cutterObj$getEvtVal( scoreMtx.last ,evtChkInfo$evtLst )
+			cutterObj$evtChkLst[[1+length(cutterObj$evtChkLst)]] <- evtChkInfo
+
+			evtChkInfo <- list( cutId="evtAll" ,fireThld=2 ,evtLst=rObj$evtLst )
 			evtChkInfo$evtLast <- cutterObj$getEvtVal( scoreMtx.last ,evtChkInfo$evtLst )
 			cutterObj$evtChkLst[[1+length(cutterObj$evtChkLst)]] <- evtChkInfo
 
@@ -425,22 +447,16 @@ bFCust.A_score2_A_rReb01 <- function(  ){
 			firedCutId <- character(0)
 			for( idx in seq_len(length(cutterObj$evtChkLst)) ){
 				evtChkInfo <- cutterObj$evtChkLst[[idx]]
-				if( all(is.na(evtChkInfo$evtLast)) ) next	# evtChkInfo$evtNaMask는 모두 F
+				if( 0==sum(evtChkInfo$evtNaMask) ) next
+
+				fireThld <- evtChkInfo$fireThld
+				if( is.na(fireThld) ) fireThld <- sum(evtChkInfo$evtNaMask)
 
 				src <- cutterObj$getEvtVal( smRow ,evtChkInfo$evtLst )
 				chk <- (src==evtChkInfo$evtLast)[evtChkInfo$evtNaMask]
-				if( 0==length(chk) ) next
 
-				naFlag <- is.na(chk)
-				if( all(!naFlag) ){
+				if( fireThld <= sum(chk,na.rm=T) ){
 					firedCutId <- c( firedCutId ,evtChkInfo$cutId )
-				} else {
-					if( is.na(evtChkInfo$fireThld) ) next
-
-					chkCnt <- sum(!naFlag)
-					if( chkCnt >= evtChkInfo$fireThld ){
-						firedCutId <- c( firedCutId ,evtChkInfo$cutId )
-					}
 				}
 
 			}
