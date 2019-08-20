@@ -31,8 +31,10 @@ bUtil.cut <- function( scoreMtx.grp ,cut.grp ,fHName ,anaOnly=F ){
             }
 
             # Todo  fCol
+			#	getScoreMtx.grp_byFCol
 
             # Todo  hIdxLst
+			#	getScoreMtx.grp_byHIdx
         }
     }
 

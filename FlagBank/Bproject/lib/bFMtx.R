@@ -46,15 +46,59 @@ getScoreMtx.grp <- function( aZoidMtx ,filter.grp ,makeInfoStr=F ,cutter.grp=NUL
 } # getScoreMtx.grp()
 
 getScoreMtx.grp_byFCol <- function( scoreMtx.grp ){
-	#	scoreMtx.grp <- getScoreMtx.grp( aZoidMtx, ... )
+	#	scoreMtx.grp <- getScoreMtx.grp( gEnv$allZoidMtx[allIdxF,] ,filter.grp )
+	#	scoreMtx의 각 fCol 별 Mtx. column은 phase.
+	#		(Column이 phase 이므로 기본 phase만 가능하다.)
+	phaseName <- names(scoreMtx.grp$basic)
+	mtxInfoLst <- lapply(scoreMtx.grp$basic$basic ,function( scoreObj ){ colnames(scoreObj$scoreMtx) })
+	rowSize <- nrow(scoreMtx.grp$basic[["basic"]][[1]]$scoreMtx)
+
+	# hMtx_byFCol[["sfcLate"]][["score2"]][["rebV.r"]]
+	mLst <- list()
+	for( mName in names(mtxInfoLst) ){	# mName <- names(mtxInfoLst)[1]
+		fColLst <- list()
+		for( fcName in mtxInfoLst[[mName]] ){	# fcName <- mtxInfoLst[[mName]][1]
+			mtx <- matrix( 0, nrow=rowSize, ncol=length(phaseName) )
+			colnames(mtx) <- phaseName
+			for( pName in phaseName ){	# pName <- phaseName[1]
+				mtx[,pName] <- scoreMtx.grp$basic[[pName]][[mName]]$scoreMtx[,fcName]
+			}
+			fColLst[[fcName]] <- mtx
+		}
+		mLst[[mName]] <- fColLst
+	}
+
+	return( mLst )
 
 } # getScoreMtx.grp_byFCol( )
 
 
 #	byHIdx이긴 하지만, 사실은 각 scoreMtxN 에 대한 [col,phase] 테이블이다.
 #	즉 allIdx 단위별로 List가 만들어짐.
-getScoreMtx.grp_byHIdx <- function( scoreMtx.grp ){ # 
-	#	scoreMtx.grp <- getScoreMtx.grp( aZoidMtx, ... )
+getScoreMtx.grp_byHIdx <- function( scoreMtx.grp ){
+	#	scoreMtx.grp <- getScoreMtx.grp( gEnv$allZoidMtx[allIdxF,] ,filter.grp )
+	#	aZoid, scoreMtx별로 [fCol,phName] 구조.
+	#		(Column이 phase 이므로 기본 phase만 가능하다.)
+	phaseName <- names(scoreMtx.grp$basic)
+	mtxInfoLst <- lapply(scoreMtx.grp$basic$basic ,function( scoreObj ){ colnames(scoreObj$scoreMtx) })
+	rowSize <- nrow(scoreMtx.grp$basic[["basic"]][[1]]$scoreMtx)
+
+	# hMtx_byHIdx[["sfcLate"]][["score2"]][["820"]]
+	mLst <- list()
+	for( mName in names(mtxInfoLst) ){	# mName <- names(mtxInfoLst)[1]
+		aZoidLst <- list()
+		for( aIdx in seq_len(rowSize) ){ # aIdx <- 1
+			mtx <- matrix( 0, nrow=length(mtxInfoLst[[mName]]), ncol=length(phaseName) )
+			colnames(mtx) <- phaseName	;rownames(mtx) <- mtxInfoLst[[mName]]
+			for( pName in phaseName ){	# pName <- phaseName[1]
+				mtx[,pName] <- scoreMtx.grp$basic[[pName]][[mName]]$scoreMtx[aIdx,]
+			}
+			aZoidLst[[aIdx]] <- mtx
+		}
+		mLst[[mName]] <- azoidLst
+	}
+
+	return( mLst )
 
 } # getScoreMtx.grp_byHIdx( )
 
