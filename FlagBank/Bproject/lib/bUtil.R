@@ -1,6 +1,6 @@
 
 
-bUtil.cut <- function( scoreMtx.grp ,cut.grp ,fHName ,anaOnly=F ){    
+bUtil.cut <- function( scoreMtx.grp ,cut.grp ,fHName ,anaOnly=F ){
     #   anaOnly=T : scoreMtx[1,] 만 분석하며, 그 대신 cutting 정보를 추가한다.
 
     # scoreMtx.grp <- wScoreMtx.grp ;anaOnly=T
@@ -33,7 +33,7 @@ bUtil.cut <- function( scoreMtx.grp ,cut.grp ,fHName ,anaOnly=F ){
 			#   "fColLst" ------------------------------------------
 			mtxGrp <- getScoreMtx.grp_byFCol( scoreMtx.grp )
             for( fcName in cut.grp$mtxInfoLst[[mName]] ){	# fcName <- cut.grp$mtxInfoLst[[mName]][1]
-				cutLst <- cut.grp$cutterLst[[hName]][[mName]]$fColLst[[pName]]
+				cutLst <- cut.grp$cutterLst[[hName]][[mName]]$fColLst[[fcName]]
 				scoreMtx <- mtxGrp[[mName]][[fcName]]
                 for( cnIdx in names(cutLst) ){  # cnIdx <- names(cutLst)[1]
                     cutRstObj <- cutLst[[cnIdx]]$cut( scoreMtx ,!surFlag )

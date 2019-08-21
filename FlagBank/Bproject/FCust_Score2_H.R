@@ -591,7 +591,7 @@ bFCust.byFCol_A_score2_rebVR <- function( ){
 	rObj$cutFLst[[1+length(rObj$cutFLst)]] <- function( smRow ){	# for testing
 
 		crObj <- list( cutFlag=F ,cId="Test.phase" ) # cut result object, cut Id
-		evtThld <- c("basic"=2,"ZW"=1)
+		evtThld <- c("basic"=2,"nextZW"=1)
 
 		evtFlag <- smRow[names(evtThld)] == evtThld
 		if( all(evtFlag) ) crObj$cutFlag <- TRUE
@@ -599,7 +599,8 @@ bFCust.byFCol_A_score2_rebVR <- function( ){
 		return( crObj )
 	} # rObj$cutFLst[1]( )
 
-	rObj$createCutter <- function( tgtId=c(hName="", mName="", fcName="") ,auxInfo=c(auxInfo="") ){
+	rObj$createCutter <- function( lastMtx=NULL ,tgtId=c(hName="", mName="", fcName="") ,auxInfo=c(auxInfo="") ){
+		#	사실 lastMtx는 여기에서 필요 없는데, 다른 함수들과 파라미터 맞추느라..
 
 		cutterObj <- rObj
 		cutterObj$createCutter <- NULL
@@ -638,6 +639,9 @@ bFCust.byFCol_A_score2_rebVR <- function( ){
 					surDf[idx,"surv"] <- T
 				}
 			}
+
+			rstObj <- list( surDf=surDf ,cutLst=cutLst )
+			return( rstObj )
 
 		} # cutterObj$cut()
 

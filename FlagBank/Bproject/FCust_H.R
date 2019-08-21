@@ -52,10 +52,9 @@ bFCust.getFCustGrp <- function( stdCtrlCfgGrp ,hMtxLst ){
 			fColObj <- B.getHMtxLst_byFCol( hMtxLst )
 			for( fcName in rObj$mtxInfoLst[[mName]] ){	# fcName <- rObj$mtxInfoLst[[mName]][1]
 				lastMtx <- fColObj[[hName]][[mName]][[fcName]]	# h * phase
-				#	fColLst[[fcName]] <- bUtil.stdCtrlCfg.h_ph4FCol( mtx )
 				tgtId <- c(hName=hName, mName=mName, fcName=fcName)
 				fcLst <- list()
-				fcLst <- append(fcLst ,custObj$getCustF_byFCol(tgtId) ) 
+				fcLst <- append(fcLst ,custObj$getCustF_byFCol( lastMtx, tgtId) ) 
 				fColLst[[fcName]] <- fcLst
 			}
 
@@ -66,7 +65,7 @@ bFCust.getFCustGrp <- function( stdCtrlCfgGrp ,hMtxLst ){
 				#	fColLst[[fcName]] <- bUtil.stdCtrlCfg.h_ph4FCol( mtx )
 				tgtId <- c(hName=hName, mName=mName)
 				fcLst <- list()
-				fcLst <- append(fcLst ,custObj$getCustF_byHIdx(tgtId) ) 
+				fcLst <- append(fcLst ,custObj$getCustF_byHIdx( lastMtx, tgtId) ) 
 				hIdxLst[[fcName]] <- fcLst
 			}
 
@@ -145,7 +144,6 @@ bFCust.getCust <- function(){
 		rObj$fLst_1Col[[1+length(rObj$fLst_1Col)]] <- bFCust.A_score3_A_rebPtnN( )
 		rObj$fLst_1Col[[1+length(rObj$fLst_1Col)]] <- bFCust.A_score3_A_snFCntR( )
 	}
-
 	rObj$getCustF_1Col <- function( ctrlCfg ,tgtId=c(hName="", mName="", pName="", fcName="") ,auxInfo=c(auxInfo="") ){
 		# tgtId=c(hName="sfcHLst", mName="score2", pName="basic", fcName="inc.f")
 		fFLst <- list()	# found fLst
@@ -213,11 +211,11 @@ bFCust.getCust <- function(){
 		rObj$fLst_rReb[[1+length(rObj$fLst_rReb)]] <- bFCust.A_score2_A_rReb01()
 		rObj$fLst_rReb[[1+length(rObj$fLst_rReb)]] <- bFCust.A_score2_A_rRebAA()
 	}
-	rObj$getCustF_RReb <- function( hMtxLst ,tgtId=c(hName="", mName="", pName="") ,auxInfo=c(auxInfo="") ){
+	rObj$getCustF_RReb <- function( lastMtx ,tgtId=c(hName="", mName="", pName="") ,auxInfo=c(auxInfo="") ){
 		# tgtId=c(hName="sfcHLst", mName="score2", pName="basic")
 		fFLst <- list()	# found fLst
 		for( idx in seq_len(length(rObj$fLst_rReb)) ){
-			fF <- rObj$fLst_rReb[[idx]]$createCutter( hMtxLst ,tgtId ,auxInfo )
+			fF <- rObj$fLst_rReb[[idx]]$createCutter( lastMtx ,tgtId ,auxInfo )
 			if( !(fF$defId["hName"]=="*" || fF$defId["hName"]==tgtId["hName"]) ) next
 			if( !(fF$defId["mName"]=="*" || fF$defId["mName"]==tgtId["mName"]) ) next
 			if( !(fF$defId["pName"]=="*" || fF$defId["pName"]==tgtId["pName"]) ) next
@@ -243,11 +241,11 @@ bFCust.getCust <- function(){
 	if( TRUE ){
 		rObj$fLst_byFCol[[1+length(rObj$fLst_byFCol)]] <- bFCust.byFCol_A_score2_rebVR()
 	}
-	rObj$getCustF_byFCol <- function( hMtxLst ,tgtId=c(hName="", mName="", fcName="") ,auxInfo=c(auxInfo="") ){
+	rObj$getCustF_byFCol <- function( lastMtx ,tgtId=c(hName="", mName="", fcName="") ,auxInfo=c(auxInfo="") ){
 		# tgtId=c(hName="sfcHLst", mName="score2", fcName="rebV.r")
 		fFLst <- list()	# found fLst
-		for( idx in seq_len(length(rObj$fLst_rReb)) ){
-			fF <- rObj$fLst_rReb[[idx]]$createCutter( hMtxLst ,tgtId ,auxInfo )
+		for( idx in seq_len(length(rObj$fLst_byFCol)) ){
+			fF <- rObj$fLst_byFCol[[idx]]$createCutter( lastMtx ,tgtId ,auxInfo )
 			if( !(fF$defId["hName"]=="*" || fF$defId["hName"]==tgtId["hName"]) ) next
 			if( !(fF$defId["mName"]=="*" || fF$defId["mName"]==tgtId["mName"]) ) next
 			if( !(fF$defId["fcName"]=="*" || fF$defId["fcName"]==tgtId["fcName"]) ) next
@@ -273,8 +271,24 @@ bFCust.getCust <- function(){
 	if( TRUE ){
 		# rObj$fLst_byHIdx[[1+length(rObj$fLst_byHIdx)]] <- bFCust.A_score2_A_...()
 	}
-	rObj$getCustF_byHIdx <- function( hMtxLst ,tgtId=c(hName="", mName="", fcName="") ,auxInfo=c(auxInfo="") ){
-		return( list() )
+	rObj$getCustF_byHIdx <- function( hMtxLst ,tgtId=c(hName="", mName="") ,auxInfo=c(auxInfo="") ){
+		fFLst <- list()	# found fLst
+		for( idx in seq_len(length(rObj$fLst_byHIdx)) ){
+			fF <- rObj$getCustF_byHIdx[[idx]]$createCutter( hMtxLst ,tgtId ,auxInfo )
+			if( !(fF$defId["hName"]=="*" || fF$defId["hName"]==tgtId["hName"]) ) next
+			if( !(fF$defId["mName"]=="*" || fF$defId["mName"]==tgtId["mName"]) ) next
+			fFLst[[1+length(fFLst)]] <- fF
+		}
+		if( 0==length(fFLst) ) return( fFLst )
+
+		selVal <- sapply( fFLst ,function(fLst){ fLst$defId["hName"] })
+		if( any(selVal==tgtId["hName"]) )	fFLst <- fFLst[ selVal==tgtId["hName"] ]
+
+		selVal <- sapply( fFLst ,function(fLst){ fLst$defId["mName"] })
+		if( any(selVal==tgtId["mName"]) )	fFLst <- fFLst[ selVal==tgtId["mName"] ]
+
+		names( fFLst ) <- paste("byHIdx",1:length(fFLst),sep="")
+		return( fFLst )
 	} # rObj$getCustF_byHIdx()
 
 	return( rObj )
