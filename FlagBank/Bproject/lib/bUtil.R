@@ -15,7 +15,7 @@ bUtil.cut <- function( scoreMtx.grp ,cut.grp ,fHName ,anaOnly=F ){
     surFlag <- rep( T ,datLen )
     for( hName in fHName ){ # hName <- fHName[1]
         for( mName in scMtxName ){ # mName <- scMtxName[1]
-            #   "stdLst"  "fCol"    "hIdxLst"
+            #   "stdLst" -------------------------------------------
             for( pName in cut.grp$phaseName ){   # pName <- cut.grp$phaseName[1]
                 cutLst <- cut.grp$cutterLst[[hName]][[mName]]$stdLst[[pName]]
                 scoreMtx <- scoreMtx.grp$basic[[pName]][[mName]]$scoreMtx
@@ -30,11 +30,38 @@ bUtil.cut <- function( scoreMtx.grp ,cut.grp ,fHName ,anaOnly=F ){
                 }
             }
 
-            # Todo  fCol
-			#	getScoreMtx.grp_byFCol
+			#   "fColLst" ------------------------------------------
+			mtxGrp <- getScoreMtx.grp_byFCol( scoreMtx.grp )
+            for( fcName in cut.grp$mtxInfoLst[[mName]] ){	# fcName <- cut.grp$mtxInfoLst[[mName]][1]
+				cutLst <- cut.grp$cutterLst[[hName]][[mName]]$fColLst[[pName]]
+				scoreMtx <- mtxGrp[[mName]][[fcName]]
+                for( cnIdx in names(cutLst) ){  # cnIdx <- names(cutLst)[1]
+                    cutRstObj <- cutLst[[cnIdx]]$cut( scoreMtx ,!surFlag )
+                    if( anaOnly && !cutRstObj$surDf[1,"surv"] ){
+                        cutInfoLst[[1+length(cutInfoLst)]] <- cutRstObj$cutLst[[1]]
+                    }
+                    if( !anaOnly ){
+                        surFlag <- surFlag & cutRstObj$surDf[,"surv"]
+                    }
+                }
+			}
 
-            # Todo  hIdxLst
-			#	getScoreMtx.grp_byHIdx
+			#   "hIdxLst" ------------------------------------------
+			mtxGrp <- getScoreMtx.grp_byHIdx( scoreMtx.grp )
+			for( aIdx in seq_len(datLen) ){	# aIdx <- 1
+				# cutLst <- cut.grp$cutterLst[[hName]][[mName]]$hIdxLst[[aIdx]]
+				# scoreMtx <- mtxGrp[["score2"]][[aIdx]]
+                # for( cnIdx in names(cutLst) ){  # cnIdx <- names(cutLst)[1]
+                #     cutRstObj <- cutLst[[cnIdx]]$cut( scoreMtx ,!surFlag )
+                #     if( anaOnly && !cutRstObj$surDf[1,"surv"] ){
+                #         cutInfoLst[[1+length(cutInfoLst)]] <- cutRstObj$cutLst[[1]]
+                #     }
+                #     if( !anaOnly ){
+                #         surFlag <- surFlag & cutRstObj$surDf[,"surv"]
+                #     }
+                # }
+			}
+
         }
     }
 

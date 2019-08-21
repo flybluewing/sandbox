@@ -45,6 +45,8 @@ getScoreMtx.grp <- function( aZoidMtx ,filter.grp ,makeInfoStr=F ,cutter.grp=NUL
 
 } # getScoreMtx.grp()
 
+
+
 getScoreMtx.grp_byFCol <- function( scoreMtx.grp ){
 	#	scoreMtx.grp <- getScoreMtx.grp( gEnv$allZoidMtx[allIdxF,] ,filter.grp )
 	#	scoreMtx의 각 fCol 별 Mtx. column은 phase.
@@ -72,7 +74,6 @@ getScoreMtx.grp_byFCol <- function( scoreMtx.grp ){
 
 } # getScoreMtx.grp_byFCol( )
 
-
 #	byHIdx이긴 하지만, 사실은 각 scoreMtxN 에 대한 [col,phase] 테이블이다.
 #	즉 allIdx 단위별로 List가 만들어짐.
 getScoreMtx.grp_byHIdx <- function( scoreMtx.grp ){
@@ -95,7 +96,7 @@ getScoreMtx.grp_byHIdx <- function( scoreMtx.grp ){
 			}
 			aZoidLst[[aIdx]] <- mtx
 		}
-		mLst[[mName]] <- azoidLst
+		mLst[[mName]] <- aZoidLst
 	}
 
 	return( mLst )

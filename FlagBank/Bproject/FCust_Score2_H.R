@@ -1,5 +1,5 @@
 
-#	[score2:Col Cutter] ------------------------------------------------------------------
+#	[score2:Col Cutter(1 col)] ------------------------------------------------------------------
 #	c( typ="cust"	,hName="*"	,mName="score2"	,pName="*"	,fcName="*" )
 bFCust.A_score2_A_A <- function(  ){
 
@@ -280,13 +280,14 @@ bFCust.A_score2_A_rebR <- function(  ){
 	return(rObj)
 } # bFCust.A_score2_A_rebR( )
 
-#	[score2:Col Cutter] ------------------------------------------------------------------
+#	[score2:Col Cutter(N col)] ------------------------------------------------------------------
 bFCust.A_score2_A_Row01 <- function(  ){
 	rObj <- list( )
 	rObj$defId <- c( typ="cust_NCol"	,hName="*"	,mName="score2"	,pName="*"	,rFId="Row01" )	# row filt ID
 	rObj$description <- sprintf("(cust)  ")
 
 	rObj$cutFLst <- list()
+	# Sample code ================================================================
 	# rObj$cutFLst[[1+length(rObj$cutFLst)]] <- function( smRow ){	# for testing
 
 	# 	crObj <- list( cutFlag=F ,cId="Test.rebC" ) # cut result object, cut Id
@@ -297,8 +298,6 @@ bFCust.A_score2_A_Row01 <- function(  ){
 
 	# 	return( crObj )
 	# } # rObj$cutFLst[1]( )
-
-	# QQE working
 
 	rObj$createCutter <- function( tgtId=c(hName="", mName="", pName="") ,auxInfo=c(auxInfo="") ){
 
@@ -318,9 +317,7 @@ bFCust.A_score2_A_Row01 <- function(  ){
 
 		cutterObj$cut <- function( scoreMtx ,alreadyDead=NULL ){
 			val.len <- nrow( scoreMtx )
-			if( is.null(alreadyDead) ){
-				alreadyDead <- rep( F, val.len )
-			}
+			if( is.null(alreadyDead) )	alreadyDead <- rep( F, val.len )
 
 			surDf <- data.frame( surv=rep(F,val.len) ,info=rep(NA,val.len) )
 			cutLst <- vector("list",val.len)
@@ -356,7 +353,7 @@ bFCust.A_score2_A_Row01 <- function(  ){
 } # bFCust.A_score2_A_Row01()
 
 
-
+#	[score2:Col Cutter(Rebound/Sequencial)] -----------------------------------------------------
 bFCust.A_score2_A_rReb01 <- function(  ){
 	#	row rebind라고는 했지만 사실 seq 이다. 
 	#	즉 이전 evt 컬럼이 다음에도 동일 evt가 일어나는지 체크(다음에서 추가적으로 발생하는 evt는 상관없음.)
@@ -580,5 +577,75 @@ bFCust.A_score2_A_rRebAA <- function(  ){
 	return( rObj )
 } # bFCust.A_score2_A_rRebAA()
 
+#	[score2:byFCol(Rebound/Sequencial)] ---------------------------------------------------------
+#		- nRow 대상이긴 하지만, mtx는 각 scoreMtx 의 fCol 별로 생성된다는 점을 주의
+#		- column이 phase이므로 pName 구분이 없고, tgtId에서도 pName이 빠진다. 대신 fcName 필요.
+bFCust.byFCol_A_score2_rebVR <- function( ){
+
+	rObj <- list( )
+	rObj$defId <- c( typ="cust_byFCol"	,hName="*"	,mName="score2"	,fcName="rebV.r"  )
+	rObj$description <- sprintf("(cust)  ")
+
+	rObj$cutFLst <- list()
+	# Sample code ================================================================
+	rObj$cutFLst[[1+length(rObj$cutFLst)]] <- function( smRow ){	# for testing
+
+		crObj <- list( cutFlag=F ,cId="Test.phase" ) # cut result object, cut Id
+		evtThld <- c("basic"=2,"ZW"=1)
+
+		evtFlag <- smRow[names(evtThld)] == evtThld
+		if( all(evtFlag) ) crObj$cutFlag <- TRUE
+
+		return( crObj )
+	} # rObj$cutFLst[1]( )
+
+	rObj$createCutter <- function( tgtId=c(hName="", mName="", fcName="") ,auxInfo=c(auxInfo="") ){
+
+		cutterObj <- rObj
+		cutterObj$createCutter <- NULL
+
+		#	hName="testNA"; mName="testNA"; pName="testNA"; fcName="testNA"; auxInfo=c(auxInfo="")
+		idObjDesc <- rObj$defId
+		if( idObjDesc["hName"]!=tgtId["hName"] ) idObjDesc["hName"] <- sprintf("(%s)%s",idObjDesc["hName"],tgtId["hName"])
+		if( idObjDesc["mName"]!=tgtId["mName"] ) idObjDesc["mName"] <- sprintf("(%s)%s",idObjDesc["mName"],tgtId["mName"])
+		if( idObjDesc["fcName"]!=tgtId["fcName"] ) idObjDesc["fcName"] <- sprintf("(%s)%s",idObjDesc["fcName"],tgtId["fcName"])
+		idObjDesc <- c( idObjDesc ,auxInfo )
+		cutterObj$idObjDesc <- idObjDesc
+
+		cutterObj$idObj <- rObj$defId
+		cutterObj$idObj[names(tgtId)] <- tgtId
+
+		cutterObj$cut <- function( scoreMtx ,alreadyDead=NULL ){
+			val.len <- nrow( scoreMtx )
+			if( is.null(alreadyDead) )	alreadyDead <- rep( F, val.len )
+
+			surDf <- data.frame( surv=rep(F,val.len) ,info=rep(NA,val.len) )
+			cutLst <- vector("list",val.len)
+			for( idx in seq_len(val.len) ){
+				if( alreadyDead[idx] ){
+					surDf[idx,"surv"] <- F
+					surDf[idx,"info"] <- sprintf("%d, already dead",val[idx])
+					next
+				}
+
+				lst <- lapply( rObj$cutFLst ,function( pFunc ){ pFunc( scoreMtx[idx,] ) } )
+				cutFlag <- sapply( lst ,function(p){ p$cutFlag })
+				if( any(cutFlag) ){
+					firedCId <- sapply( lst[cutFlag] ,function(p){p$cId})
+					surDf[idx,"info"] <- sprintf("cut Id : %s",paste(firedCId,collapse=",") )
+					cutLst[[idx]] <- c( cutterObj$idObjDesc ,cutId=surDf[idx,"info"] )
+				} else {
+					surDf[idx,"surv"] <- T
+				}
+			}
+
+		} # cutterObj$cut()
+
+		return(cutterObj)
+	}
+
+	return( rObj )
+} # bFCust.byFCol_A_score2_rebVR( )
 
 
+#	[score2:byHIdx(...)] ---------------------------------------------------------
