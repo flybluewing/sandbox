@@ -651,6 +651,109 @@ bFCust.byFCol_A_score2_rebVR <- function( ){
 	return( rObj )
 } # bFCust.byFCol_A_score2_rebVR( )
 
+bFCust.byFCol_A_score2_A_rReb01 <- function( ){
+	#	row rebind라고는 했지만 사실 seq 이다. 
+	#	즉 이전 evt 발생 phase에서 다음에도 동일 evt가 일어나는지 체크(다음에서 추가적으로 발생하는 evt는 상관없음.)
+	rObj <- list( )
+	rObj$defId <- c( typ="cust_byFCol"	,hName="*"	,mName="score2"	,pName="*"	,fcName="rebV.r" )	# row filt ID
+	rObj$description <- sprintf("(cust)  ")
+
+	rObj$evtLst <- list("rebV.r"=c(2,3) ,"rebL"=1 ,"rebR"=1
+						,"rebC.r"=2 ,"rebC.c"=2 ,"rebC.f"=2 ,"rebC2.r"=2 ,"rebC2.c"=2 ,"rebC2.f"=2 
+						,"inc.r"=2 ,"inc.c"=2 ,"inc.f"=2 ,"inc.r2"=2 ,"inc.c2"=2 ,"inc.f2"=2 
+						,"inc.r3"=2 ,"inc.c3"=2
+					)
+	rObj$fireThld.min <- c("rebV.r"=2 ,"rebL"=2 ,"rebR"=2
+						,"rebC.r"=2 ,"rebC.c"=2 ,"rebC.f"=2 ,"rebC2.r"=2 ,"rebC2.c"=2 ,"rebC2.f"=2 
+						,"inc.r"=2 ,"inc.c"=2 ,"inc.f"=2 ,"inc.r2"=2 ,"inc.c2"=2 ,"inc.f2"=2 
+						,"inc.r3"=2 ,"inc.c3"=2
+					)
+
+
+	rObj$createCutter <- function( lastMtx ,tgtId=c(hName="", mName="", fcName="") ,auxInfo=c(auxInfo="") ){
+
+		cutterObj <- rObj
+		cutterObj$createCutter <- NULL	;cutterObj$evtLst <- NULL
+
+		#	hName="testNA"; mName="testNA"; pName="testNA"; fcName="testNA"; auxInfo=c(auxInfo="")
+		idObjDesc <- rObj$defId
+		if( idObjDesc["hName"]!=tgtId["hName"] ) idObjDesc["hName"] <- sprintf("(%s)%s",idObjDesc["hName"],tgtId["hName"])
+		if( idObjDesc["mName"]!=tgtId["mName"] ) idObjDesc["mName"] <- sprintf("(%s)%s",idObjDesc["mName"],tgtId["mName"])
+		if( idObjDesc["fcName"]!=tgtId["fcName"] ) idObjDesc["fcName"] <- sprintf("(%s)%s",idObjDesc["fcName"],tgtId["fcName"])
+		idObjDesc <- c( idObjDesc ,auxInfo )
+		cutterObj$idObjDesc <- idObjDesc
+
+		cutterObj$idObj <- rObj$defId
+		cutterObj$idObj[names(tgtId)] <- tgtId
+
+		cutterObj$lastMtx <- lastMtx	# just for debug later..
+		cutterObj$evtVal <- rObj$evtLst[[ tgtId["fcName"] ]]
+		cutterObj$lastEvt <- lastMtx[nrow(lastMtx),]
+		cutterObj$lastEvt[ cutterObj$lastEvt %in% cutterObj$evtVal ] <- NA
+		cutterObj$evtNaMask <- !is.na(cutterObj$lastEvt)
+		cutterObj$fireThld.min <- rObj$fireThld.min[ tgtId["fcName"] ]
+
+		cutterObj$cut <- function( scoreMtx ,alreadyDead=NULL ){
+			val.len <- nrow( scoreMtx )
+			if( is.null(alreadyDead) )	alreadyDead <- rep( F, val.len )
+
+			surDf <- data.frame( surv=rep(F,val.len) ,info=rep(NA,val.len) )
+			cutLst <- vector("list",val.len)
+			for( idx in seq_len(val.len) ){
+				if( alreadyDead[idx] ){
+					surDf[idx,"surv"] <- F
+					surDf[idx,"info"] <- sprintf("%d, already dead",val[idx])
+					next
+				}
+
+				chkRst <- cutterObj$checkRow( scoreMtx[idx,] )
+				if( chkRst$cutFlag ){
+					surDf[idx,"info"] <- sprintf("cut Id : %s(thld min:%d)",cutterObj$idObj["fcName"],cutterObj$fireThld.min )
+					cutLst[[idx]] <- c( cutterObj$idObjDesc ,cutId=surDf[idx,"info"] )
+				} else {
+					surDf[idx,"surv"] <- T	
+				}
+			}
+
+			rstObj <- list( surDf=surDf ,cutLst=cutLst )
+			return( rstObj )
+
+		} # cutterObj$cut()
+
+		cutterObj$checkRow <- function( smRow ){
+
+			# firedCutId <- character(0)
+			# for( idx in seq_len(length(cutterObj$evtChkLst)) ){
+			# 	evtChkInfo <- cutterObj$evtChkLst[[idx]]
+			# 	if( 0==sum(evtChkInfo$evtNaMask) ) next
+
+			# 	fireThld <- evtChkInfo$fireThld
+			# 	if( is.na(fireThld) ) fireThld <- sum(evtChkInfo$evtNaMask)
+
+			# 	src <- cutterObj$getEvtVal( smRow ,evtChkInfo$evtLst )
+			# 	chk <- (src==evtChkInfo$evtLast)[evtChkInfo$evtNaMask]
+
+			# 	if( fireThld <= sum(chk,na.rm=T) ){
+			# 		firedCutId <- c( firedCutId ,evtChkInfo$cutId )
+			# 	}
+
+			# }
+
+			# chkRstObj <- list( firedCutId=firedCutId ,cutFlag=(length(firedCutId)>0) )
+
+			return( chkRstObj )
+
+		}
+
+		return(cutterObj)
+	}
+
+
+} # bFCust.byFCol_A_score2_A_rReb01( )
+
+
+
+
 
 #	[score2:byHIdx(...)] ---------------------------------------------------------
 
