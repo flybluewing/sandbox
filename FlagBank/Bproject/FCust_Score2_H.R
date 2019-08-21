@@ -588,16 +588,16 @@ bFCust.byFCol_A_score2_rebVR <- function( ){
 
 	rObj$cutFLst <- list()
 	# Sample code ================================================================
-	rObj$cutFLst[[1+length(rObj$cutFLst)]] <- function( smRow ){	# for testing
+	# rObj$cutFLst[[1+length(rObj$cutFLst)]] <- function( smRow ){	# for testing
 
-		crObj <- list( cutFlag=F ,cId="Test.phase" ) # cut result object, cut Id
-		evtThld <- c("basic"=2,"nextZW"=1)
+	# 	crObj <- list( cutFlag=F ,cId="Test.phase" ) # cut result object, cut Id
+	# 	evtThld <- c("basic"=2,"nextZW"=1)
 
-		evtFlag <- smRow[names(evtThld)] == evtThld
-		if( all(evtFlag) ) crObj$cutFlag <- TRUE
+	# 	evtFlag <- smRow[names(evtThld)] == evtThld
+	# 	if( all(evtFlag) ) crObj$cutFlag <- TRUE
 
-		return( crObj )
-	} # rObj$cutFLst[1]( )
+	# 	return( crObj )
+	# } # rObj$cutFLst[1]( )
 
 	rObj$createCutter <- function( lastMtx=NULL ,tgtId=c(hName="", mName="", fcName="") ,auxInfo=c(auxInfo="") ){
 		#	사실 lastMtx는 여기에서 필요 없는데, 다른 함수들과 파라미터 맞추느라..
@@ -653,3 +653,5 @@ bFCust.byFCol_A_score2_rebVR <- function( ){
 
 
 #	[score2:byHIdx(...)] ---------------------------------------------------------
+
+
