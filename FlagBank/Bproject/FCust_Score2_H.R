@@ -1,3 +1,8 @@
+FCust_score2EvtLst <- list("rebV.r"=c(2,3) ,"rebL"=1 ,"rebR"=1
+								,"rebC.r"=2 ,"rebC.c"=2 ,"rebC.f"=2 ,"rebC2.r"=2 ,"rebC2.c"=2 ,"rebC2.f"=2 
+								,"inc.r"=2 ,"inc.c"=2 ,"inc.f"=2 ,"inc.r2"=2 ,"inc.c2"=2 ,"inc.f2"=2 
+								,"inc.r3"=2 ,"inc.c3"=2
+							)
 
 #	[score2:Col Cutter(1 col)] ------------------------------------------------------------------
 #	c( typ="cust"	,hName="*"	,mName="score2"	,pName="*"	,fcName="*" )
@@ -361,13 +366,7 @@ bFCust.A_score2_A_rReb01 <- function(  ){
 	rObj$defId <- c( typ="cust_RReb"	,hName="*"	,mName="score2"	,pName="*"	,rFId="rReb01" )	# row filt ID
 	rObj$description <- sprintf("(cust)  ")
 
-	rObj$evtLst <- list("rebV.r"=c(2,3) ,"rebL"=1 ,"rebR"=1
-						,"rebC.r"=2 ,"rebC.c"=2 ,"rebC.f"=2 
-						,"rebC2.r"=2 ,"rebC2.c"=2 ,"rebC2.f"=2 
-						,"inc.r"=2 ,"inc.c"=2 ,"inc.f"=2 
-						,"inc.r2"=2 ,"inc.c2"=2 ,"inc.f2"=2 
-						,"inc.r3"=2 ,"inc.c3"=2
-					)
+	rObj$evtLst <- FCust_score2EvtLst
 
 	rObj$createCutter <- function( hMtxLst ,tgtId=c(hName="", mName="", pName="") ,auxInfo=c(auxInfo="") ){
 
@@ -571,7 +570,6 @@ bFCust.A_score2_A_rRebAA <- function(  ){
 		} # cutterObj$cut()
 
 		return(cutterObj)
-
 	}
 
 	return( rObj )
@@ -642,7 +640,6 @@ bFCust.byFCol_A_score2_rebVR <- function( ){
 
 			rstObj <- list( surDf=surDf ,cutLst=cutLst )
 			return( rstObj )
-
 		} # cutterObj$cut()
 
 		return(cutterObj)
@@ -658,17 +655,12 @@ bFCust.byFCol_A_score2_A_rReb01 <- function( ){
 	rObj$defId <- c( typ="cust_byFCol"	,hName="*"	,mName="score2"	,pName="*"	,fcName="rebV.r" )	# row filt ID
 	rObj$description <- sprintf("(cust)  ")
 
-	rObj$evtLst <- list("rebV.r"=c(2,3) ,"rebL"=1 ,"rebR"=1
-						,"rebC.r"=2 ,"rebC.c"=2 ,"rebC.f"=2 ,"rebC2.r"=2 ,"rebC2.c"=2 ,"rebC2.f"=2 
-						,"inc.r"=2 ,"inc.c"=2 ,"inc.f"=2 ,"inc.r2"=2 ,"inc.c2"=2 ,"inc.f2"=2 
-						,"inc.r3"=2 ,"inc.c3"=2
-					)
+	rObj$evtLst <- FCust_score2EvtLst
 	rObj$fireThld.min <- c("rebV.r"=2 ,"rebL"=2 ,"rebR"=2
 						,"rebC.r"=2 ,"rebC.c"=2 ,"rebC.f"=2 ,"rebC2.r"=2 ,"rebC2.c"=2 ,"rebC2.f"=2 
 						,"inc.r"=2 ,"inc.c"=2 ,"inc.f"=2 ,"inc.r2"=2 ,"inc.c2"=2 ,"inc.f2"=2 
 						,"inc.r3"=2 ,"inc.c3"=2
 					)
-
 
 	rObj$createCutter <- function( lastMtx ,tgtId=c(hName="", mName="", fcName="") ,auxInfo=c(auxInfo="") ){
 
@@ -708,7 +700,7 @@ bFCust.byFCol_A_score2_A_rReb01 <- function( ){
 
 				chkRst <- cutterObj$checkRow( scoreMtx[idx,] )
 				if( chkRst$cutFlag ){
-					surDf[idx,"info"] <- sprintf("cut Id : %s(thld min:%d)",cutterObj$idObj["fcName"],cutterObj$fireThld.min )
+					surDf[idx,"info"] <- sprintf("cut Id : rReb01(thld min:%d)",cutterObj$fireThld.min )
 					cutLst[[idx]] <- c( cutterObj$idObjDesc ,cutId=surDf[idx,"info"] )
 				} else {
 					surDf[idx,"surv"] <- T	
@@ -732,7 +724,7 @@ bFCust.byFCol_A_score2_A_rReb01 <- function( ){
 				matFlag <- (smRow==cutterObj$lastEvt)[cutterObj$evtNaMask]
 				if( fireThld.min <= sum(matFlag) ){
 					chkRstObj$cutFlag = TRUE
-					chkRstObj$fureCutId = c( chkRstObj$fureCutId ,"evtReb" )
+					chkRstObj$fireCutId = c( chkRstObj$fireCutId ,"evtReb" )
 				}
 			}
 
@@ -744,13 +736,135 @@ bFCust.byFCol_A_score2_A_rReb01 <- function( ){
 		return(cutterObj)
 	}
 
-
+	return( rObj )
 } # bFCust.byFCol_A_score2_A_rReb01( )
 
+bFCust.byFCol_A_score2_A_rRebAA <- function( ){
+	rObj <- list( )
+	rObj$defId <- c( typ="cust_byFCol"	,hName="*"	,mName="score2"	,fcName="*"  )
+	rObj$description <- sprintf("(cust)  ")
 
+	# last score에서, happen 수가 fireThld.min이상 존재할 때에만 완전 매치여부 확인.
+	rObj$fireThld.min <- c("rebV.r"=2 ,"rebL"=2 ,"rebR"=2
+						,"rebC.r"=2 ,"rebC.c"=2 ,"rebC.f"=2 ,"rebC2.r"=2 ,"rebC2.c"=2 ,"rebC2.f"=2 
+						,"inc.r"=2 ,"inc.c"=2 ,"inc.f"=2 ,"inc.r2"=2 ,"inc.c2"=2 ,"inc.f2"=2 
+						,"inc.r3"=2 ,"inc.c3"=2
+					)
+
+	rObj$createCutter <- function( lastMtx ,tgtId=c(hName="", mName="", pName="") ,auxInfo=c(auxInfo="") ){
+
+		cutterObj <- rObj
+		cutterObj$createCutter <- NULL	;cutterObj$evtLst <- NULL
+
+		#	hName="testNA"; mName="testNA"; pName="testNA"; fcName="testNA"; auxInfo=c(auxInfo="")
+		idObjDesc <- rObj$defId
+		if( idObjDesc["hName"]!=tgtId["hName"] ) idObjDesc["hName"] <- sprintf("(%s)%s",idObjDesc["hName"],tgtId["hName"])
+		if( idObjDesc["mName"]!=tgtId["mName"] ) idObjDesc["mName"] <- sprintf("(%s)%s",idObjDesc["mName"],tgtId["mName"])
+		if( idObjDesc["fcName"]!=tgtId["fcName"] ) idObjDesc["fcName"] <- sprintf("(%s)%s",idObjDesc["fcName"],tgtId["fcName"])
+		idObjDesc <- c( idObjDesc ,auxInfo )
+		cutterObj$idObjDesc <- idObjDesc
+
+		cutterObj$idObj <- rObj$defId
+		cutterObj$idObj[names(tgtId)] <- tgtId
+
+		cutterObj$defId["fcName"] <- tgtId["fcName"]
+			# 주의 : defId에서의 "*" 값은 타 정의된 cutter 함수가 있으면 제거된다.
+			#		때문에 무조건 살리기 위해서는 fcName값을 강제 설정해야만 한다.
+			#		이런 경우, fcName 별 별도 로직을 추가하려면 createCutter() 함수 내에서 구현해야 한다.
+
+		cutterObj$lastRow <- lastMtx[nrow(lastMtx),]
+		cutterObj$fireThld.min <- rObj$fireThld.min[tgtId["fcName"]]
+		cutterObj$activated <- sum(cutterObj$lastRow>0) >= cutterObj$fireThld.min
+
+		cutterObj$cut <- function( scoreMtx ,alreadyDead=NULL ){
+
+			val.len <- nrow( scoreMtx )
+			if( is.null(alreadyDead) ){
+				alreadyDead <- rep( F, val.len )
+			}
+
+			surDf <- data.frame( surv=rep(F,val.len) ,info=rep(NA,val.len) )
+			cutLst <- vector("list",val.len)
+			for( idx in seq_len(val.len) ){
+				if( alreadyDead[idx] ){
+					surDf[idx,"surv"] <- F
+					surDf[idx,"info"] <- sprintf("%d, already dead",val[idx])
+					next
+				}
+
+				if( !cutterObj$activated || is.null(cutterObj$lastRow) ){
+					surDf[idx,"surv"] <- T
+					next
+				}
+
+				matFlag <- all( cutterObj$lastRow==scoreMtx[idx,] )
+				if( all(matFlag) ){
+					surDf[idx,"info"] <- sprintf("cut Id : rRebAA" )
+					cutLst[[idx]] <- c( cutterObj$idObjDesc ,cutId=surDf[idx,"info"] )
+				} else {
+					surDf[idx,"surv"] <- T	
+				}
+
+			}
+
+			rstObj <- list( surDf=surDf ,cutLst=cutLst )
+
+			return( rstObj )
+		} # cutterObj$cut()
+
+		return(cutterObj)
+	}
+
+	return( rObj )
+} # bFCust.byFCol_A_score2_A_rRebAA( )
 
 
 
 #	[score2:byHIdx(...)] ---------------------------------------------------------
+#		- [fCol,phName] 
+#       - 개개 score의 최대 최소값이나, evt 발생등은 이미 앞에서 모두 확인되었다.)
+#		  따라서 col 방향, row 방향, mtx전체에 대한 rebPtn 체크.
+#			(fCol 별 evt 기준 때문에 scoreMtx 개개별로 작성 필요.)
 
+bFCust.byHIdx_A_score2 <- function( ){
 
+	rObj <- list( )
+	rObj$defId <- c( typ="cust_byHIdx"	,hName="*"	,mName="score2" )
+	rObj$description <- sprintf("(cust)  ")
+
+	rObj$evtLst <- FCust_score2EvtLst
+
+	rObj$createCutter <- function( lastMtx=NULL ,tgtId=c(hName="", mName="") ,auxInfo=c(auxInfo="") ){
+
+		cutterObj <- rObj
+		cutterObj$createCutter <- NULL
+
+		#	hName="testNA"; mName="testNA"; pName="testNA"; fcName="testNA"; auxInfo=c(auxInfo="")
+		idObjDesc <- rObj$defId
+		if( idObjDesc["hName"]!=tgtId["hName"] ) idObjDesc["hName"] <- sprintf("(%s)%s",idObjDesc["hName"],tgtId["hName"])
+		if( idObjDesc["mName"]!=tgtId["mName"] ) idObjDesc["mName"] <- sprintf("(%s)%s",idObjDesc["mName"],tgtId["mName"])
+		idObjDesc <- c( idObjDesc ,auxInfo )
+		cutterObj$idObjDesc <- idObjDesc
+
+		cutterObj$idObj <- rObj$defId
+		cutterObj$idObj[names(tgtId)] <- tgtId
+
+		cutterObj$lastMtx <- lastMtx
+		cutterObj$mtxFireThld.min <- 2
+		# Todo 
+		# cutterObj$evtMtx <- ...
+		# cutterObj$mtxMatch.activated <- ...
+
+		cutterObj$cut <- function( scoreMtx ){
+			# scoreMtx 는 1개 aZoid에 관한 [fCol,phase] mtx임을 유의.
+			# 	(즉, 이 함수는 한 개 aZoid에 대한 처리로직이다.)
+
+			rstObj <- list( surDf=surDf ,cutLst=cutLst )
+			return( rstObj )
+		} # cutterObj$cut()
+
+		return(cutterObj)
+	}
+
+	return( rObj )
+} # bFCust.byHIdx_A_score2

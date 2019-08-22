@@ -32,9 +32,7 @@ testSpan <- 300:nrow(zhF)
 
 filtFuncLst <- getFiltLst.base()
 
-k.FLogStr(sprintf("Start filt (filt number:%d ,saveId:%s)"
-			,length(filtFuncLst),saveId)
-		)
+k.FLogStr(sprintf("Start filt (filt number:%d ,saveId:%s)",length(filtFuncLst),saveId)	)
 
 # =====================================================================================
 # 이전 Zoid History들의 필터링 테스트.
@@ -64,6 +62,9 @@ for( hIdx in testSpan ){ # 35분 정도 소요.(388 ZH, 21 Filt)
 	}
 
 } # hIdx
+
+names( fRstLst ) <- testSpan
+
 
 save( fRstLst ,file=sprintf("./save/Obj_fRstLst%s.save",saveId) )
 # load("Obj_fRstLst.save")

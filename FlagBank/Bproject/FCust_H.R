@@ -240,6 +240,8 @@ bFCust.getCust <- function(){
 	rObj$fLst_byFCol <- list()
 	if( TRUE ){
 		rObj$fLst_byFCol[[1+length(rObj$fLst_byFCol)]] <- bFCust.byFCol_A_score2_rebVR()
+		rObj$fLst_byFCol[[1+length(rObj$fLst_byFCol)]] <- bFCust.byFCol_A_score2_A_rReb01()
+		rObj$fLst_byFCol[[1+length(rObj$fLst_byFCol)]] <- bFCust.byFCol_A_score2_A_rRebAA()
 	}
 	rObj$getCustF_byFCol <- function( lastMtx ,tgtId=c(hName="", mName="", fcName="") ,auxInfo=c(auxInfo="") ){
 		# tgtId=c(hName="sfcHLst", mName="score2", fcName="rebV.r")
