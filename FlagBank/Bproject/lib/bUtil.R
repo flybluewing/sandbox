@@ -50,7 +50,9 @@ bUtil.cut <- function( scoreMtx.grp ,cut.grp ,fHName ,anaOnly=F ){
 			mtxGrp <- getScoreMtx.grp_byHIdx( scoreMtx.grp )
 			for( aIdx in seq_len(datLen) ){	# aIdx <- 1
 				# 이전과 달리, 1개 aZoid에 대한 처리임을 주의.
-				if( !anaOnly && !surFlag[aIdx] ) next
+				if( !surFlag[aIdx] && !anaOnly ) next
+
+				
 
 				# cutLst <- cut.grp$cutterLst[[hName]][[mName]]$hIdxLst[[aIdx]]
 				# scoreMtx <- mtxGrp[["score2"]][[aIdx]]

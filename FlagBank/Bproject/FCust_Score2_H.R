@@ -858,6 +858,14 @@ bFCust.byHIdx_A_score2 <- function( ){
 		cutterObj$cut <- function( scoreMtx ){
 			# scoreMtx 는 1개 aZoid에 관한 [fCol,phase] mtx임을 유의.
 			# 	(즉, 이 함수는 한 개 aZoid에 대한 처리로직이다.)
+			testChk <- c("basic"=1,"Quo10"=1,"nextColVal_1"=1,"nextColVal_2"=2,"nextColVal_3"=3,"nextColVal_4"=2,,"nextColVal_5"=0)
+			# 		basic ZW Quo10 Bin RebNum CBin FBin cv1 cv2 cv3 cv4 cv5 cv6
+			# rebV.r      1  0     1   1      0    1    1   1   2   2   2   0   0
+			flag <- testChk == scoreMtx["rebV.r",names(testChk)]
+			cutLst <- list()
+			# if( all(flag) ){
+
+			# } working
 
 			rstObj <- list( surDf=surDf ,cutLst=cutLst )
 			return( rstObj )
