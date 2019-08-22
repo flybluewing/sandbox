@@ -689,7 +689,7 @@ bFCust.byFCol_A_score2_A_rReb01 <- function( ){
 		cutterObj$lastMtx <- lastMtx	# just for debug later..
 		cutterObj$evtVal <- rObj$evtLst[[ tgtId["fcName"] ]]
 		cutterObj$lastEvt <- lastMtx[nrow(lastMtx),]
-		cutterObj$lastEvt[ cutterObj$lastEvt %in% cutterObj$evtVal ] <- NA
+		cutterObj$lastEvt[ !(cutterObj$lastEvt %in% cutterObj$evtVal) ] <- NA
 		cutterObj$evtNaMask <- !is.na(cutterObj$lastEvt)
 		cutterObj$fireThld.min <- rObj$fireThld.min[ tgtId["fcName"] ]
 
@@ -722,27 +722,23 @@ bFCust.byFCol_A_score2_A_rReb01 <- function( ){
 
 		cutterObj$checkRow <- function( smRow ){
 
-			# firedCutId <- character(0)
-			# for( idx in seq_len(length(cutterObj$evtChkLst)) ){
-			# 	evtChkInfo <- cutterObj$evtChkLst[[idx]]
-			# 	if( 0==sum(evtChkInfo$evtNaMask) ) next
+			chkRstObj <- list( cutFlag=FALSE ,fireCutId=character(0) )
 
-			# 	fireThld <- evtChkInfo$fireThld
-			# 	if( is.na(fireThld) ) fireThld <- sum(evtChkInfo$evtNaMask)
+			# event Check -------------------------------------------------------------
+			fireThld.min <- cutterObj$fireThld.min
+			if( is.na(fireThld.min) ) fireThld.min <- sum(cutterObj$evtNaMask)
 
-			# 	src <- cutterObj$getEvtVal( smRow ,evtChkInfo$evtLst )
-			# 	chk <- (src==evtChkInfo$evtLast)[evtChkInfo$evtNaMask]
+			if( 0<sum(cutterObj$evtNaMask) && fireThld.min<=sum(cutterObj$evtNaMask) ){
+				matFlag <- (smRow==cutterObj$lastEvt)[cutterObj$evtNaMask]
+				if( fireThld.min <= sum(matFlag) ){
+					chkRstObj$cutFlag = TRUE
+					chkRstObj$fureCutId = c( chkRstObj$fureCutId ,"evtReb" )
+				}
+			}
 
-			# 	if( fireThld <= sum(chk,na.rm=T) ){
-			# 		firedCutId <- c( firedCutId ,evtChkInfo$cutId )
-			# 	}
-
-			# }
-
-			# chkRstObj <- list( firedCutId=firedCutId ,cutFlag=(length(firedCutId)>0) )
+			# 기타 추가 reb Check -------------------------------------------------------------
 
 			return( chkRstObj )
-
 		}
 
 		return(cutterObj)
