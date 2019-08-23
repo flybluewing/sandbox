@@ -52,19 +52,17 @@ bUtil.cut <- function( scoreMtx.grp ,cut.grp ,fHName ,anaOnly=F ){
 				# 이전과 달리, 1개 aZoid에 대한 처리임을 주의.
 				if( !surFlag[aIdx] && !anaOnly ) next
 
-				
-
-				# cutLst <- cut.grp$cutterLst[[hName]][[mName]]$hIdxLst[[aIdx]]
-				# scoreMtx <- mtxGrp[["score2"]][[aIdx]]
-                # for( cnIdx in names(cutLst) ){  # cnIdx <- names(cutLst)[1]
-                #     cutRstObj <- cutLst[[cnIdx]]$cut( scoreMtx ,!surFlag )
-                #     if( anaOnly && !cutRstObj$surDf[1,"surv"] ){
-                #         cutInfoLst[[1+length(cutInfoLst)]] <- cutRstObj$cutLst[[1]]
-                #     }
-                #     if( !anaOnly ){
-                #         surFlag <- surFlag & cutRstObj$surDf[,"surv"]
-                #     }
-                # }
+				cutLst <- cut.grp$cutterLst[[hName]][[mName]]$hIdxLst
+				scoreMtx <- mtxGrp[[mName]][[aIdx]]
+                for( cnIdx in names(cutLst) ){  # cnIdx <- names(cutLst)[1]
+                    cutRstObj <- cutLst[[cnIdx]]$cut( scoreMtx )
+                    if( anaOnly && !cutRstObj$surDf[1,"surv"] ){
+                        cutInfoLst[[1+length(cutInfoLst)]] <- cutRstObj$cutLst[[1]]
+                    }
+                    if( !anaOnly ){
+                        surFlag <- surFlag & cutRstObj$surDf[,"surv"]
+                    }
+                }
 			}
 
         }

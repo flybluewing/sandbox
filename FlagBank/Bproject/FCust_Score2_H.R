@@ -834,7 +834,8 @@ bFCust.byHIdx_A_score2 <- function( ){
 
 	rObj$evtLst <- FCust_score2EvtLst
 
-	rObj$createCutter <- function( lastMtx=NULL ,tgtId=c(hName="", mName="") ,auxInfo=c(auxInfo="") ){
+	rObj$createCutter <- function( mtxLst=NULL ,tgtId=c(hName="", mName="") ,auxInfo=c(auxInfo="") ){
+		#	mtxLst : 사실상 맨 마지막 mtx만 필요하긴 한데, 차후 h간 연속발생 갯수도 체크할 기능을 만들 수 있게 하기 위해 전체 list를 받음.
 
 		cutterObj <- rObj
 		cutterObj$createCutter <- NULL
@@ -849,8 +850,8 @@ bFCust.byHIdx_A_score2 <- function( ){
 		cutterObj$idObj <- rObj$defId
 		cutterObj$idObj[names(tgtId)] <- tgtId
 
-		cutterObj$lastMtx <- lastMtx
-		cutterObj$mtxFireThld.min <- 2
+		mtxLen <- length(mtxLst)
+		cutterObj$lastMtx <- mtxLst[[mtxLen]]
 		# Todo 
 		# cutterObj$evtMtx <- ...
 		# cutterObj$mtxMatch.activated <- ...
@@ -858,14 +859,19 @@ bFCust.byHIdx_A_score2 <- function( ){
 		cutterObj$cut <- function( scoreMtx ){
 			# scoreMtx 는 1개 aZoid에 관한 [fCol,phase] mtx임을 유의.
 			# 	(즉, 이 함수는 한 개 aZoid에 대한 처리로직이다.)
-			testChk <- c("basic"=1,"Quo10"=1,"nextColVal_1"=1,"nextColVal_2"=2,"nextColVal_3"=3,"nextColVal_4"=2,,"nextColVal_5"=0)
+			#	단 surDf는 data.frame형태를 유지해준다. 다른 cut함수들 결과와의 호환성 유지를 위해.
+			testChk <- c("basic"=1,"nextQuo10"=1,"nextColVal_1"=1,"nextColVal_2"=2,"nextColVal_3"=3,"nextColVal_4"=2,"nextColVal_5"=0)
 			# 		basic ZW Quo10 Bin RebNum CBin FBin cv1 cv2 cv3 cv4 cv5 cv6
 			# rebV.r      1  0     1   1      0    1    1   1   2   2   2   0   0
 			flag <- testChk == scoreMtx["rebV.r",names(testChk)]
-			cutLst <- list()
-			# if( all(flag) ){
-
-			# } working
+			surDf <- data.frame( surv=rep(F,1) ,info=rep(NA,1) )
+			matFlag <- all( cutterObj$lastRow==scoreMtx[idx,] )
+			if( all(matFlag) ){
+				surDf[idx,"info"] <- sprintf("cut Id : test" )
+				cutLst[[idx]] <- c( cutterObj$idObjDesc ,cutId=surDf[idx,"info"] )
+			} else {
+				surDf[idx,"surv"] <- T	
+			}
 
 			rstObj <- list( surDf=surDf ,cutLst=cutLst )
 			return( rstObj )

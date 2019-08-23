@@ -60,14 +60,8 @@ bFCust.getFCustGrp <- function( stdCtrlCfgGrp ,hMtxLst ){
 
 			hIdxLst <- list()
 			hIdxObj <- B.getHMtxLst_byHIdx( hMtxLst )
-			for( fcName in rObj$mtxInfoLst[[mName]] ){	# fcName <- rObj$mtxInfoLst[[mName]][1]
-				lastMtx <- hIdxObj[[hName]][[mName]][[fcName]]	# h * phase
-				#	fColLst[[fcName]] <- bUtil.stdCtrlCfg.h_ph4FCol( mtx )
-				tgtId <- c(hName=hName, mName=mName)
-				fcLst <- list()
-				fcLst <- append(fcLst ,custObj$getCustF_byHIdx( lastMtx, tgtId) ) 
-				hIdxLst[[fcName]] <- fcLst
-			}
+			tgtId <- c(hName=hName, mName=mName)
+			hIdxLst <- append(hIdxLst ,custObj$getCustF_byHIdx( mtxLst=hIdxObj[[hName]][[mName]], tgtId) ) 
 
             mLst[[mName]] <- list( stdLst=stdLst ,fColLst=fColLst ,hIdxLst=hIdxLst)
 		} # for(mName)
@@ -271,12 +265,12 @@ bFCust.getCust <- function(){
 
 	rObj$fLst_byHIdx <- list()
 	if( TRUE ){
-		# rObj$fLst_byHIdx[[1+length(rObj$fLst_byHIdx)]] <- bFCust.A_score2_A_...()
+		rObj$fLst_byHIdx[[1+length(rObj$fLst_byHIdx)]] <- bFCust.byHIdx_A_score2()
 	}
-	rObj$getCustF_byHIdx <- function( hMtxLst ,tgtId=c(hName="", mName="") ,auxInfo=c(auxInfo="") ){
+	rObj$getCustF_byHIdx <- function( mtxLst ,tgtId=c(hName="", mName="") ,auxInfo=c(auxInfo="") ){
 		fFLst <- list()	# found fLst
 		for( idx in seq_len(length(rObj$fLst_byHIdx)) ){
-			fF <- rObj$getCustF_byHIdx[[idx]]$createCutter( hMtxLst ,tgtId ,auxInfo )
+			fF <- rObj$fLst_byHIdx[[idx]]$createCutter( mtxLst ,tgtId ,auxInfo )
 			if( !(fF$defId["hName"]=="*" || fF$defId["hName"]==tgtId["hName"]) ) next
 			if( !(fF$defId["mName"]=="*" || fF$defId["mName"]==tgtId["mName"]) ) next
 			fFLst[[1+length(fFLst)]] <- fF
