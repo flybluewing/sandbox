@@ -833,12 +833,49 @@ bFCust.byHIdx_A_score2 <- function( ){
 	rObj$description <- sprintf("(cust)  ")
 
 	rObj$evtLst <- FCust_score2EvtLst
+	rObj$getMtxEvt_byRow <- function( srcMtxLst ){	# [fCol,phase]
+		
+		mtxLen <- length(srcMtxLst)
+
+		eMtxLst <- lapply( srcMtxLst ,function( srcMtx ){
+							rMtx <- srcMtx
+							for( rnIdx in rownames(srcMtx) ){ # rnIdx <- rownames(srcMtx)[1]
+								for( cIdx in 1:ncol(srcMtx) ){
+									if( !(rMtx[rnIdx,cIdx] %in% rObj$evtLst[[rnIdx]]) ){
+										rMtx[rnIdx,cIdx] <- NA
+									}
+								}
+							}
+							return( rMtx )
+		})
+		eMtxLst <- eMtxLst[mtxLen:1]	# 작업 편의를 위해 순서를 바꾸자.
+
+		lastMtx <- eMtxLst[[1]]
+		rebCntMtx <- lastMtx
+		rebCntMtx[!is.na(rebCntMtx)] <- 0
+		if( 1<mtxLen ){
+			maskMtx <- !is.na(rebCntMtx)
+			for( idx in 2:mtxLen){
+				matMtx <- lastMtx==eMtxLst[[idx]]
+				incFlag <- matMtx
+				incFlag [is.na(incFlag)] <- F
+				incFlag[ !maskMtx ] <- FALSE
+				if( all(!incFlag) ) break
+
+				rebCntMtx[ incFlag ] <- 1 + rebCntMtx[ incFlag ]
+
+				maskMtx <- incFlag
+			}
+		}
+
+		return( list(lastMtx=lastMtx ,rebCntMtx=rebCntMtx ,maskMtx=!is.na(lastMtx)) )
+	} # rObj$getMtxEvt_byRow()
 
 	rObj$createCutter <- function( mtxLst=NULL ,tgtId=c(hName="", mName="") ,auxInfo=c(auxInfo="") ){
 		#	mtxLst : 사실상 맨 마지막 mtx만 필요하긴 한데, 차후 h간 연속발생 갯수도 체크할 기능을 만들 수 있게 하기 위해 전체 list를 받음.
 
 		cutterObj <- rObj
-		cutterObj$createCutter <- NULL
+		cutterObj$createCutter <- NULL	;cutterObj$evtLst <- NULL	;cutterObj$getMtxEvt_byRow <- NULL
 
 		#	hName="testNA"; mName="testNA"; pName="testNA"; fcName="testNA"; auxInfo=c(auxInfo="")
 		idObjDesc <- rObj$defId
@@ -850,35 +887,89 @@ bFCust.byHIdx_A_score2 <- function( ){
 		cutterObj$idObj <- rObj$defId
 		cutterObj$idObj[names(tgtId)] <- tgtId
 
-		mtxLen <- length(mtxLst)
-		cutterObj$lastMtx <- mtxLst[[mtxLen]]
-		# Todo 
-		# cutterObj$evtMtx <- ...
-		# cutterObj$mtxMatch.activated <- ...
+		cutterObj$evt <- rObj$getMtxEvt_byRow( mtxLst ) 
 
 		cutterObj$cut <- function( scoreMtx ){
 			# scoreMtx 는 1개 aZoid에 관한 [fCol,phase] mtx임을 유의.
 			# 	(즉, 이 함수는 한 개 aZoid에 대한 처리로직이다.)
-			#	단 surDf는 data.frame형태를 유지해준다. 다른 cut함수들 결과와의 호환성 유지를 위해.
-			testChk <- c("basic"=1,"nextQuo10"=1,"nextColVal_1"=1,"nextColVal_2"=2,"nextColVal_3"=3,"nextColVal_4"=2,"nextColVal_5"=0)
-			# 		basic ZW Quo10 Bin RebNum CBin FBin cv1 cv2 cv3 cv4 cv5 cv6
-			# rebV.r      1  0     1   1      0    1    1   1   2   2   2   0   0
-			flag <- testChk == scoreMtx["rebV.r",names(testChk)]
+			#	단 surDf와 cutLst는 다른 cut함수들 결과와의 호환성 유지를 위해 구조유지.
+			cutId <- character(0)
+
+			for( cutIdx in names(cutterObj$cutLst) ){ # cutIdx <- names(cutterObj$cutLst)[1]
+				flag <- cutterObj$cutLst[[cutIdx]]( scoreMtx )
+				if( flag ) cutId <- c( cutId ,cutIdx )
+			}
+
 			surDf <- data.frame( surv=rep(F,1) ,info=rep(NA,1) )
-			matFlag <- all( cutterObj$lastRow==scoreMtx[idx,] )
-			if( all(matFlag) ){
-				surDf[idx,"info"] <- sprintf("cut Id : test" )
-				cutLst[[idx]] <- c( cutterObj$idObjDesc ,cutId=surDf[idx,"info"] )
+			cutLst <- vector("list",1)
+			if( 0<length(cutId) ){
+				surDf[1,"info"] <- sprintf("cut Id : %s",paste(cutId,collapse=",") )
+				cutLst[[1]] <- c( cutterObj$idObjDesc ,cutId=surDf[1,"info"] )
 			} else {
-				surDf[idx,"surv"] <- T	
+				surDf[1,"surv"] <- T	
 			}
 
 			rstObj <- list( surDf=surDf ,cutLst=cutLst )
 			return( rstObj )
 		} # cutterObj$cut()
 
+		cutterObj$cutLst <- list()
+		cutterObj$cutLst[["matEvt"]] <- function( scoreMtx ){
+			rCutId <- character(0)
+
+			srcEvt <- scoreMtx
+			for( rnIdx in rownames(scoreMtx) ){ # rnIdx <- rownames(scoreMtx)[1]
+				for( cIdx in 1:ncol(scoreMtx) ){
+					if( !(srcEvt[rnIdx,cIdx] %in% rObj$evtLst[[rnIdx]]) ){
+						srcEvt[rnIdx,cIdx] <- NA
+					}
+				}
+			}
+
+			matMtx <- srcEvt == cutterObj$evt$lastMtx
+			matMtx[is.na(matMtx)] <- FALSE
+
+			# match happen count ----------------------------------
+			#	testing
+			if( 1<=sum( matMtx ) ) rCutId <- c( rCutId, "matHpnCnt" )
+
+			# match happen count ----------------------------------
+			rebCnt <- cutterObj$evt$rebCntMtx[matMtx]
+			if( any(rebCnt>1) ) rCutId <- c( rCutId, "matRebCnt" )
+
+			return( FALSE )
+		}
+		cutterObj$cutLst[["test"]] <- function( scoreMtx ){
+			#	curHIdx <- 840
+			# 		basic ZW Quo10 Bin RebNum CBin FBin cv1 cv2 cv3 cv4 cv5 cv6
+			# rebV.r      1  0     1   1      0    1    1   1   2   2   2   0   0
+			testChk <- c("basic"=1,"nextQuo10"=1,"nextColVal_1"=1,"nextColVal_2"=2,"nextColVal_3"=3,"nextColVal_4"=2,"nextColVal_5"=0)
+
+			flag <- testChk == scoreMtx["rebV.r",names(testChk)]
+			matFlag <- all( cutterObj$lastRow==scoreMtx[1,] )
+			return( all(matFlag) )
+		}
+
 		return(cutterObj)
 	}
 
 	return( rObj )
 } # bFCust.byHIdx_A_score2
+
+
+
+getEvtMtx_byRow <- function( evtLst ,srcMtx ){
+	# evtLst <- FCust_score2EvtLst	;srcMtx <- scoreMtx
+	rMtx <- srcMtx
+	for( rnIdx in rownames(srcMtx) ){ # rnIdx <- rownames(srcMtx)[1]
+		for( cIdx in 1:ncol(srcMtx) ){
+			if( !(rMtx[rnIdx,cIdx] %in% evtLst[[rnIdx]]) ){
+				rMtx[rnIdx,cIdx] <- NA
+			}
+		}
+	}
+	return( rMtx )
+} # getEvtMtx
+
+
+

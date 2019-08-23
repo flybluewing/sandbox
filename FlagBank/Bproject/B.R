@@ -34,7 +34,7 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
 
     testSpan <- (lastH - 18:0)   # configH 보다는 큰 시점에서 시작해야 함을 유의.
     cutRstLst <- list()
-    for( curHIdx in testSpan ){    # curHIdx <- testSpan[1]
+    for( curHIdx in testSpan ){    # curHIdx <- testSpan[1] # 842
 
         wLastH <-curHIdx-1
         wLastSpan <- 1:which(names(fRstLst)==wLastH)
