@@ -897,7 +897,7 @@ bFCust.byHIdx_A_score2 <- function( ){
 
 			for( cutIdx in names(cutterObj$cutLst) ){ # cutIdx <- names(cutterObj$cutLst)[1]
 				flag <- cutterObj$cutLst[[cutIdx]]( scoreMtx )
-				if( flag ) cutId <- c( cutId ,cutIdx )
+				cutId <- c( cutId ,cutIdx )
 			}
 
 			surDf <- data.frame( surv=rep(F,1) ,info=rep(NA,1) )
@@ -931,24 +931,24 @@ bFCust.byHIdx_A_score2 <- function( ){
 
 			# match happen count ----------------------------------
 			#	testing
-			if( 1<=sum( matMtx ) ) rCutId <- c( rCutId, "matHpnCnt" )
+			if( 2<=sum( matMtx ) ) rCutId <- c( rCutId, "matHpnCnt" )
 
 			# match happen count ----------------------------------
 			rebCnt <- cutterObj$evt$rebCntMtx[matMtx]
 			if( any(rebCnt>1) ) rCutId <- c( rCutId, "matRebCnt" )
 
-			return( FALSE )
+			return( rCutId )
 		}
-		cutterObj$cutLst[["test"]] <- function( scoreMtx ){
-			#	curHIdx <- 840
-			# 		basic ZW Quo10 Bin RebNum CBin FBin cv1 cv2 cv3 cv4 cv5 cv6
-			# rebV.r      1  0     1   1      0    1    1   1   2   2   2   0   0
-			testChk <- c("basic"=1,"nextQuo10"=1,"nextColVal_1"=1,"nextColVal_2"=2,"nextColVal_3"=3,"nextColVal_4"=2,"nextColVal_5"=0)
+		# cutterObj$cutLst[["test"]] <- function( scoreMtx ){
+		# 	#	curHIdx <- 840
+		# 	# 		basic ZW Quo10 Bin RebNum CBin FBin cv1 cv2 cv3 cv4 cv5 cv6
+		# 	# rebV.r      1  0     1   1      0    1    1   1   2   2   2   0   0
+		# 	testChk <- c("basic"=1,"nextQuo10"=1,"nextColVal_1"=1,"nextColVal_2"=2,"nextColVal_3"=3,"nextColVal_4"=2,"nextColVal_5"=0)
 
-			flag <- testChk == scoreMtx["rebV.r",names(testChk)]
-			matFlag <- all( cutterObj$lastRow==scoreMtx[1,] )
-			return( all(matFlag) )
-		}
+		# 	flag <- testChk == scoreMtx["rebV.r",names(testChk)]
+		# 	matFlag <- all( cutterObj$lastRow==scoreMtx[1,] )
+		# 	return( all(matFlag) )
+		# }
 
 		return(cutterObj)
 	}
