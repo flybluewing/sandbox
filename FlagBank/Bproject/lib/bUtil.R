@@ -299,3 +299,11 @@ bUtil.getSfcLstName <- function( lastStdFilted ,curStdFilted ,cut.grp ){
 } # bUtil.getSfcLstName()
 
 
+bUtil.in <- function( val ,eadge=c(min=0,max=0) ){
+	# minEadge, maxEadge 범위 내 포함되면 true
+	rst <- val >= eadge["min"]
+	rst <- rst & ( val <= eadge["max"] )
+	names(rst) <- val
+	return( rst )
+} # bUtil.in()
+

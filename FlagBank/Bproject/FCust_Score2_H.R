@@ -868,7 +868,7 @@ bFCust.byHIdx_A_score2 <- function( ){
 			}
 		}
 
-		return( list(lastMtx=lastMtx ,rebCntMtx=rebCntMtx ,maskMtx=!is.na(lastMtx)) )
+		return( list(lastMtx=lastMtx ,rebCntMtx=rebCntMtx ,maskMtx=!is.na(lastMtx) ,lastMtxRaw=srcMtxLst[[mtxLen]]) )
 	} # rObj$getMtxEvt_byRow()
 
 	rObj$createCutter <- function( mtxLst=NULL ,tgtId=c(hName="", mName="") ,auxInfo=c(auxInfo="") ){
@@ -896,8 +896,7 @@ bFCust.byHIdx_A_score2 <- function( ){
 			cutId <- character(0)
 
 			for( cutIdx in names(cutterObj$cutLst) ){ # cutIdx <- names(cutterObj$cutLst)[1]
-				flag <- cutterObj$cutLst[[cutIdx]]( scoreMtx )
-				cutId <- c( cutId ,cutIdx )
+				cutId <- c( cutId ,cutterObj$cutLst[[cutIdx]]( scoreMtx ) )
 			}
 
 			surDf <- data.frame( surv=rep(F,1) ,info=rep(NA,1) )
@@ -914,7 +913,7 @@ bFCust.byHIdx_A_score2 <- function( ){
 		} # cutterObj$cut()
 
 		cutterObj$cutLst <- list()
-		cutterObj$cutLst[["matEvt"]] <- function( scoreMtx ){
+		cutterObj$cutLst[["F_matEvt"]] <- function( scoreMtx ){
 			rCutId <- character(0)
 
 			srcEvt <- scoreMtx
@@ -930,25 +929,53 @@ bFCust.byHIdx_A_score2 <- function( ){
 			matMtx[is.na(matMtx)] <- FALSE
 
 			# match happen count ----------------------------------
-			#	testing
-			if( 2<=sum( matMtx ) ) rCutId <- c( rCutId, "matHpnCnt" )
+			if( 3<=sum( matMtx ) ) rCutId <- c( rCutId, sprintf("matHpnCnt.%d",sum( matMtx )) )
 
-			# match happen count ----------------------------------
+			# match happen count(sequencial rebind) ----------------------------------
 			rebCnt <- cutterObj$evt$rebCntMtx[matMtx]
-			if( any(rebCnt>1) ) rCutId <- c( rCutId, "matRebCnt" )
+			if( any(rebCnt>2) ) rCutId <- c( rCutId, sprintf("matRebCnt.%d/%d",sum(rebCnt>1),max(rebCnt)) )
+
+			# raw idff -------------------------------------------
+			nMatchCnt <- sum(scoreMtx!=cutterObj$evt$lastMtxRaw)
+			surWindow <- c(min=50,max=70)
+			if( !bUtil.in(nMatchCnt,surWindow) ) rCutId <- c( rCutId, sprintf("rawDiffCnt.%d(%d~%d)",nMatchCnt,surWindow["min"],surWindow["max"]) )
+
 
 			return( rCutId )
 		}
-		# cutterObj$cutLst[["test"]] <- function( scoreMtx ){
-		# 	#	curHIdx <- 840
-		# 	# 		basic ZW Quo10 Bin RebNum CBin FBin cv1 cv2 cv3 cv4 cv5 cv6
-		# 	# rebV.r      1  0     1   1      0    1    1   1   2   2   2   0   0
-		# 	testChk <- c("basic"=1,"nextQuo10"=1,"nextColVal_1"=1,"nextColVal_2"=2,"nextColVal_3"=3,"nextColVal_4"=2,"nextColVal_5"=0)
+		cutterObj$cutLst[["F_colMat"]] <- function( scoreMtx ){
+			rCutId <- character(0)
 
-		# 	flag <- testChk == scoreMtx["rebV.r",names(testChk)]
-		# 	matFlag <- all( cutterObj$lastRow==scoreMtx[1,] )
-		# 	return( all(matFlag) )
-		# }
+			# match happen count ----------------------------------
+			surWindow <- c(min=0,max=1)	# survive window
+			srcEvt <- scoreMtx
+			for( rnIdx in rownames(scoreMtx) ){ # rnIdx <- rownames(scoreMtx)[1]
+				for( cIdx in 1:ncol(scoreMtx) ){
+					if( !(srcEvt[rnIdx,cIdx] %in% rObj$evtLst[[rnIdx]]) ){
+						srcEvt[rnIdx,cIdx] <- NA
+					}
+				}
+			}
+			for( cIdx in 2:ncol(scoreMtx) ){
+				matCnt <- sum( srcEvt[,cIdx-1]==srcEvt[,cIdx] ,na.rm=T )
+				if( !bUtil.in(matCnt,surWindow) ){
+					rCutId <- c( rCutId, sprintf("colEvtMat.%d(%d~%d)",matCnt,surWindow["min"],surWindow["max"]) )
+					break
+				}
+			}
+
+			# raw match -------------------------------------------
+			surWindow <- c(min=1,max=10)	# survive window
+			for( cIdx in 2:ncol(scoreMtx) ){
+				matCnt <- sum( scoreMtx[,cIdx-1]!=scoreMtx[,cIdx] )
+				if( !bUtil.in(matCnt,surWindow) ){
+					rCutId <- c( rCutId, sprintf("colRawDiff.%d(%d~%d)",matCnt,surWindow["min"],surWindow["max"]) )
+					break
+				}
+			}
+
+			return( rCutId )
+		}
 
 		return(cutterObj)
 	}

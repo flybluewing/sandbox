@@ -5,6 +5,7 @@ lastH <- 860    # 최종 데이터의 로딩기준이지, 작업시점(workH)은 다를 수 있다.
 
 load(sprintf("../Aproject/Obj_allIdxLstZ%d.save",lastH) )
 load(sprintf("../Aproject/save/Obj_fRstLstZ%d.save",lastH) )
+names(fRstLst) <- names(allIdxLst$stdFiltedCnt)
 load(sprintf("../Aproject/save/Obj_gEnvZ%d.save",lastH))
 
 # Remove before flight
@@ -32,6 +33,11 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
     save( stdCtrlCfgGrp ,file=sprintf("./save/HMtxLst/Obj_stdCtrlCfgGrp_%d.save",configH) )
     #   load(sprintf("./save/HMtxLst/Obj_stdCtrlCfgGrp_%d.save",configH))
 
+    # 반복 테스트를 위한 속도향상을 위해..
+    testData.grp <- get_testData.grp( testSpan ,gEnv ,allIdxLst ,fRstLst )
+    #   save( testData.grp ,file="Obj_testData.grp.save" )
+    #   load( "Obj_testData.grp.save" )
+
     testSpan <- (lastH - 18:0)   # configH 보다는 큰 시점에서 시작해야 함을 유의.
     cutRstLst <- list()
     for( curHIdx in testSpan ){    # curHIdx <- testSpan[1] # 842
@@ -46,7 +52,7 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
                                     allIdxLst.w$infoMtx <- allIdxLst$infoMtx[wLastSpan,]
         fRstLst.w <- fRstLst[wLastSpan]
 
-        curHMtxLst <- B.makeHMtxLst( gEnv.w, allIdxLst.w, fRstLst.w )   
+        curHMtxLst <- testData.grp$curHMtxLst.grp[[as.character(curHIdx)]]
             # B.makeHMtxLst() 의 lastH는 allIdxLst.w$stdFiltedCnt에 의존한다.
 
         cut.grp <- bFCust.getFCustGrp( stdCtrlCfgGrp ,curHMtxLst )  # curHMtxLst 적용 추가 필요.
@@ -55,7 +61,7 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
         # ------------------------------------------------------------------------
         # 이제, 현재 stdZoid의 특성(sfcHLst, scoreMtx)을 얻자.
         stdZoid <- gEnv$zhF[curHIdx,]
-        stdIdx <- k.getIdx_AllZoidMtx( gEnv, stdZoid )
+        stdIdx <- testData.grp$stdIdx[[as.character(curHIdx)]]
         curStdFilted <- fRstLst[[as.character(curHIdx)]]    #   평가가 아닌 실제에선, remLst 으로부터 가져올 것.
         fHName <- bUtil.getSfcLstName( fRstLst.w[[length(fRstLst.w)]] ,curStdFilted ,cut.grp )
 
@@ -76,6 +82,7 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
         # ------------------------------------------------------------------------
         cutRstLst[[1+length(cutRstLst)]] <- cutRst
 
+        cat(sprintf("  - %d test done. \n",curHIdx))
     } # curHIdx
     names(cutRstLst) <- paste("H",testSpan,sep="")
     names(cutRstLst) <- paste( names(cutRstLst) ,allIdxLst$stdFiltedCnt[as.character(testSpan)] ,sep="_" )
@@ -85,7 +92,40 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
 
     B.rptCutRstLst( cutRstLst )
 
+    get_testData.grp <- function( testSpan ,gEnv ,allIdxLst ,fRstLst ){
+
+        curHMtxLst.grp <- list( )
+        stdIdx.grp <- list()
+
+        for( curHIdx in testSpan ){    # curHIdx <- testSpan[1] # 842
+
+            wLastH <-curHIdx-1
+            wLastSpan <- 1:which(names(fRstLst)==wLastH)
+
+            # ------------------------------------------------------------------------
+            # curHMtxLst.grp
+            gEnv.w <- gEnv              ;gEnv.w$zhF <- gEnv$zhF[1:wLastH,]
+            allIdxLst.w <- allIdxLst    ;allIdxLst.w$stdFiltedCnt <- allIdxLst$stdFiltedCnt[wLastSpan]
+                                        allIdxLst.w$infoMtx <- allIdxLst$infoMtx[wLastSpan,]
+            fRstLst.w <- fRstLst[wLastSpan]
+
+            curHMtxLst <- B.makeHMtxLst( gEnv.w, allIdxLst.w, fRstLst.w )   
+
+            curHMtxLst.grp[[as.character(curHIdx)]] <- curHMtxLst
+
+            # ------------------------------------------------------------------------
+            # stdIdx.grp
+            stdZoid <- gEnv$zhF[curHIdx,]
+            stdIdx <- k.getIdx_AllZoidMtx( gEnv, stdZoid )
+            stdIdx.grp[[as.character(curHIdx)]] <- stdIdx
+        }
+
+        return( list(curHMtxLst.grp=curHMtxLst.grp ,stdIdx.grp=stdIdx.grp) )
+    }
+
 }
+
+
 
 
 
