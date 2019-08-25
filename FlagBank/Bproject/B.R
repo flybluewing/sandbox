@@ -126,8 +126,6 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
 
 
 
-
-
 if( FALSE ){    # 실전 추출 예제 코드
 
     # remLst
@@ -155,12 +153,12 @@ if( FALSE ){    # 실전 추출 예제 코드
     #   - 그룹 특성에 따라 stdFilted.NG 에서
     #       하나 소속되지 않은 aZoid, 혹은 다수가 소속된 aZoid도 있을 수 있다.
     # --------------------------------------------------------------------
+    curStdFiltedCnt <- 2
     allIdx <- allIdxLst[["allZoid.idx2"]]
 
-    allIdxF <- allIdx[1:10]
-    curStdFiltedCnt <- 2
+    allIdxF <- allIdx[1:10000]
+    fHName <- bUtil.getSfcLstName( fRstLst[[length(fRstLst)]] ,curStdFiltedCnt=curStdFiltedCnt ,cut.grp )
 
-    fHName <- bUtil.getSfcLstName( fRstLst[[length(fRstLst)]] ,curStdFiltedCnt=0 ,cut.grp )
     scoreMtx.grp <- getScoreMtx.grp( gEnv$allZoidMtx[allIdxF,,drop=F] ,filter.grp )
     cutRst <- bUtil.cut( scoreMtx.grp ,cut.grp ,fHName )
     allIdxF <- allIdxF[cutRst$surFlag]
