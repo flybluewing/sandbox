@@ -282,14 +282,13 @@ bUtil.getStdMILst <- function( gEnv ,fRstLst ){
 
 }	# bUtil.getStdMILst()
 
-bUtil.getSfcLstName <- function( lastStdFilted ,curStdFilted ,cut.grp ){
+bUtil.getSfcLstName <- function( lastStdFilted ,curStdFiltedCnt ,cut.grp ){
 	#	lastStdFilted <- fRstLst.w[[length(fRstLst.w)]]
 	#	cut.grp <- bFCust.getFCustGrp( stdCtrlCfgGrp ,curHMtxLst ) 
 
 	#	B.makeHMtxLst() 의 sfcHLst 생성 코드 참고할 것.
 	fHName <- c( "sfcLate" )
-
-	if( 0 < length(curStdFilted) ) fHName <- c( fHName  ,sprintf("sfc%d",length(curStdFilted)) )
+	fHName <- c( fHName  ,sprintf("sfc%d",curStdFiltedCnt) )
 
 	if( 0 < length(lastStdFilted) ) fHName <- c( fHName  ,paste("NG",lastStdFilted,sep="") )
 

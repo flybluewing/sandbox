@@ -26,72 +26,6 @@ if( FALSE ){ # report sample
 if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
 
     names(fRstLst) <- names(allIdxLst$stdFiltedCnt)
-
-    configH <- lastH-20    # configH는 기본 cutting값을 얻기 위하는 시점에 따라 조절.
-    hMtxLst <- B.makeHMtxLst( gEnv, allIdxLst, fRstLst, lastH=configH )
-    stdCtrlCfgGrp <- bUtil.makeStdCtrlCfgGrp(hMtxLst)
-    save( stdCtrlCfgGrp ,file=sprintf("./save/HMtxLst/Obj_stdCtrlCfgGrp_%d.save",configH) )
-    #   load(sprintf("./save/HMtxLst/Obj_stdCtrlCfgGrp_%d.save",configH))
-
-    # 반복 테스트를 위한 속도향상을 위해..
-    testData.grp <- get_testData.grp( testSpan ,gEnv ,allIdxLst ,fRstLst )
-    #   save( testData.grp ,file="Obj_testData.grp.save" )
-    #   load( "Obj_testData.grp.save" )
-
-    testSpan <- (lastH - 18:0)   # configH 보다는 큰 시점에서 시작해야 함을 유의.
-    cutRstLst <- list()
-    for( curHIdx in testSpan ){    # curHIdx <- testSpan[1] # 842
-
-        wLastH <-curHIdx-1
-        wLastSpan <- 1:which(names(fRstLst)==wLastH)
-
-        # ------------------------------------------------------------------------
-        # cut.grp : cutter grp 을 얻어내자.
-        gEnv.w <- gEnv              ;gEnv.w$zhF <- gEnv$zhF[1:wLastH,]
-        allIdxLst.w <- allIdxLst    ;allIdxLst.w$stdFiltedCnt <- allIdxLst$stdFiltedCnt[wLastSpan]
-                                    allIdxLst.w$infoMtx <- allIdxLst$infoMtx[wLastSpan,]
-        fRstLst.w <- fRstLst[wLastSpan]
-
-        curHMtxLst <- testData.grp$curHMtxLst.grp[[as.character(curHIdx)]]
-            # B.makeHMtxLst() 의 lastH는 allIdxLst.w$stdFiltedCnt에 의존한다.
-
-        cut.grp <- bFCust.getFCustGrp( stdCtrlCfgGrp ,curHMtxLst )  # curHMtxLst 적용 추가 필요.
-            #   B.rptCut.grp( cut.grp )
-
-        # ------------------------------------------------------------------------
-        # 이제, 현재 stdZoid의 특성(sfcHLst, scoreMtx)을 얻자.
-        stdZoid <- gEnv$zhF[curHIdx,]
-        stdIdx <- testData.grp$stdIdx[[as.character(curHIdx)]]
-        curStdFilted <- fRstLst[[as.character(curHIdx)]]    #   평가가 아닌 실제에선, remLst 으로부터 가져올 것.
-        fHName <- bUtil.getSfcLstName( fRstLst.w[[length(fRstLst.w)]] ,curStdFilted ,cut.grp )
-
-        stdMI.grp <- bUtil.getStdMILst( gEnv.w ,fRstLst.w )
-        filter.grp <- getFilter.grp( stdMI.grp )
-        scoreMtx.grp <- getScoreMtx.grp.4H( stdZoid ,filter.grp )
-            #   평가용이므로 getScoreMtx.grp.4H() 가 사용됨.   .4H !
-
-        cutRst <- bUtil.cut( scoreMtx.grp ,cut.grp ,fHName ,anaOnly=T ) 
-            #   anaOnly=TRUE 에서, cutRst$surFlag는 항상 TRUE임을 유의.
-            # report example =================================================
-                # B.rptStdMI.grp( stdMI.grp )
-                # B.rptScoreMtx.grp( scoreMtx.grp )
-                # B.rptCut.grp( cut.grp )
-                # B.rptCutRst( cutRst )
-
-
-        # ------------------------------------------------------------------------
-        cutRstLst[[1+length(cutRstLst)]] <- cutRst
-
-        cat(sprintf("  - %d test done. \n",curHIdx))
-    } # curHIdx
-    names(cutRstLst) <- paste("H",testSpan,sep="")
-    names(cutRstLst) <- paste( names(cutRstLst) ,allIdxLst$stdFiltedCnt[as.character(testSpan)] ,sep="_" )
-
-    save( cutRstLst ,file=sprintf("./save/HMtxLst/Obj_cutRstLst%d.save",configH) )
-        # load("./save/HMtxLst/Obj_cutRstLst840.save")
-
-    B.rptCutRstLst( cutRstLst )
-
     get_testData.grp <- function( testSpan ,gEnv ,allIdxLst ,fRstLst ){
 
         curHMtxLst.grp <- list( )
@@ -123,6 +57,71 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
         return( list(curHMtxLst.grp=curHMtxLst.grp ,stdIdx.grp=stdIdx.grp) )
     }
 
+
+
+    configH <- lastH-20    # configH는 기본 cutting값을 얻기 위하는 시점에 따라 조절.
+    hMtxLst <- B.makeHMtxLst( gEnv, allIdxLst, fRstLst, lastH=configH )
+    stdCtrlCfgGrp <- bUtil.makeStdCtrlCfgGrp(hMtxLst)
+    save( stdCtrlCfgGrp ,file=sprintf("./save/HMtxLst/Obj_stdCtrlCfgGrp_%d.save",configH) )
+    #   load(sprintf("./save/HMtxLst/Obj_stdCtrlCfgGrp_%d.save",configH))
+
+    testSpan <- (lastH - 18:0)   # configH 보다는 큰 시점에서 시작해야 함을 유의.
+    testData.grp <- get_testData.grp( testSpan ,gEnv ,allIdxLst ,fRstLst )  # 반복 테스트를 위한 속도향상
+    #   save( testData.grp ,file="Obj_testData.grp.save" )
+    #   load( "Obj_testData.grp.save" )
+
+    cutRstLst <- list()
+    for( curHIdx in testSpan ){    # curHIdx <- testSpan[1] # 842
+
+        wLastH <-curHIdx-1
+        wLastSpan <- 1:which(names(fRstLst)==wLastH)
+
+        # ------------------------------------------------------------------------
+        # cut.grp : cutter grp 을 얻어내자.
+        gEnv.w <- gEnv              ;gEnv.w$zhF <- gEnv$zhF[1:wLastH,]
+        allIdxLst.w <- allIdxLst    ;allIdxLst.w$stdFiltedCnt <- allIdxLst$stdFiltedCnt[wLastSpan]
+                                    allIdxLst.w$infoMtx <- allIdxLst$infoMtx[wLastSpan,]
+        fRstLst.w <- fRstLst[wLastSpan]
+
+        curHMtxLst <- testData.grp$curHMtxLst.grp[[as.character(curHIdx)]]
+            # B.makeHMtxLst() 의 lastH는 allIdxLst.w$stdFiltedCnt에 의존한다.
+
+        cut.grp <- bFCust.getFCustGrp( stdCtrlCfgGrp ,curHMtxLst )  # curHMtxLst 적용 추가 필요.
+            #   B.rptCut.grp( cut.grp )
+
+        # ------------------------------------------------------------------------
+        # 이제, 현재 stdZoid의 특성(sfcHLst, scoreMtx)을 얻자.
+        stdZoid <- gEnv$zhF[curHIdx,]
+        stdIdx <- testData.grp$stdIdx[[as.character(curHIdx)]]
+        curStdFilted <- fRstLst[[as.character(curHIdx)]]    #   평가가 아닌 실제에선, remLst 으로부터 가져올 것.
+        fHName <- bUtil.getSfcLstName( fRstLst.w[[length(fRstLst.w)]] ,curStdFiltedCnt=length(curStdFilted) ,cut.grp )
+
+        stdMI.grp <- bUtil.getStdMILst( gEnv.w ,fRstLst.w )
+        filter.grp <- getFilter.grp( stdMI.grp )
+        scoreMtx.grp <- getScoreMtx.grp.4H( stdZoid ,filter.grp )
+            #   평가용이므로 getScoreMtx.grp.4H() 가 사용됨.   .4H !
+
+        cutRst <- bUtil.cut( scoreMtx.grp ,cut.grp ,fHName ,anaOnly=T ) 
+            #   anaOnly=TRUE 에서, cutRst$surFlag는 항상 TRUE임을 유의.
+            # report example =================================================
+                # B.rptStdMI.grp( stdMI.grp )
+                # B.rptScoreMtx.grp( scoreMtx.grp )
+                # B.rptCut.grp( cut.grp )
+                # B.rptCutRst( cutRst )
+
+
+        # ------------------------------------------------------------------------
+        cutRstLst[[1+length(cutRstLst)]] <- cutRst
+
+        cat(sprintf("  - %d test done. \n",curHIdx))
+    } # curHIdx
+    names(cutRstLst) <- paste("H",testSpan,sep="")
+    names(cutRstLst) <- paste( names(cutRstLst) ,allIdxLst$stdFiltedCnt[as.character(testSpan)] ,sep="_" )
+
+    save( cutRstLst ,file=sprintf("./save/HMtxLst/Obj_cutRstLst%d.save",configH) )
+        # load("./save/HMtxLst/Obj_cutRstLst840.save")
+
+    B.rptCutRstLst( cutRstLst )
 }
 
 
@@ -158,10 +157,10 @@ if( FALSE ){    # 실전 추출 예제 코드
     # --------------------------------------------------------------------
     allIdx <- allIdxLst[["allZoid.idx2"]]
 
-    allIdxF <- allIdx
-    # --------------------------------------------------------------------
-    # * 처음엔 curStdFilted 가 없는 것으로 속여서 cutting
-    fHName <- bUtil.getSfcLstName( fRstLst[[length(fRstLst)]] ,curStdFilted=character(0) ,cut.grp )
+    allIdxF <- allIdx[1:10]
+    curStdFiltedCnt <- 2
+
+    fHName <- bUtil.getSfcLstName( fRstLst[[length(fRstLst)]] ,curStdFiltedCnt=0 ,cut.grp )
     scoreMtx.grp <- getScoreMtx.grp( gEnv$allZoidMtx[allIdxF,,drop=F] ,filter.grp )
     cutRst <- bUtil.cut( scoreMtx.grp ,cut.grp ,fHName )
     allIdxF <- allIdxF[cutRst$surFlag]
