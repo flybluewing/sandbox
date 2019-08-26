@@ -67,14 +67,11 @@ B.makeHMtxLst <- function( gEnv, allIdxLst, fRstLst, lastH=NULL ){
     # ----------------------------------------------------
     sfcHLst <- list(    sfcLate= baseSpan[length(baseSpan)] - 20:0
                         ,sfc0=as.integer(names(stdFiltedCnt)[stdFiltedCnt==0])
-                        #   Q_RBF
-                        # ,sfc1=as.integer(names(stdFiltedCnt)[stdFiltedCnt==1])
-                        # ,sfc2=as.integer(names(stdFiltedCnt)[stdFiltedCnt==2])
+                        ,sfc1=as.integer(names(stdFiltedCnt)[stdFiltedCnt==1])
+                        ,sfc2=as.integer(names(stdFiltedCnt)[stdFiltedCnt==2])
                     )
 
-    #   Q_RBF
-    #       stdFilter <- c("D0000.A","A0100.A","AP000.E")
-    stdFilter <- c("D0000.A")
+    stdFilter <- c("D0000.A","A0100.A","AP000.E")   # "AR000.B","AL000A","C1000.A"
     for( sfnIdx in stdFilter ){
         #   sfnIdx <- "D0000.A"
         hSpan <- baseSpan[sapply( fRstLst[as.character(baseSpan)] ,function(p){ sfnIdx %in% p } )]
@@ -153,7 +150,6 @@ B.makeHMtxLst <- function( gEnv, allIdxLst, fRstLst, lastH=NULL ){
     }
 
     return( rObj )
-
 } # B.makeHMtxLst()
 
 B.getHMtxLst_byFCol <- function( hMtxLst ){ # scoreMtxLst <- hMtxLst$scoreMtxLst
