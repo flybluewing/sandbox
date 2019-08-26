@@ -329,7 +329,7 @@ bFCust.A_score2_A_Row01 <- function(  ){
 			for( idx in seq_len(val.len) ){
 				if( alreadyDead[idx] ){
 					surDf[idx,"surv"] <- F
-					surDf[idx,"info"] <- sprintf("%d, already dead",val[idx])
+					surDf[idx,"info"] <- sprintf("%d, already dead",idx)
 					next
 				}
 
@@ -473,7 +473,7 @@ bFCust.A_score2_A_rReb01 <- function(  ){
 			for( idx in seq_len(val.len) ){
 				if( alreadyDead[idx] ){
 					surDf[idx,"surv"] <- F
-					surDf[idx,"info"] <- sprintf("%d, already dead",val[idx])
+					surDf[idx,"info"] <- sprintf("%d, already dead",idx)
 					next
 				}
 
@@ -545,7 +545,7 @@ bFCust.A_score2_A_rRebAA <- function(  ){
 			for( idx in seq_len(val.len) ){
 				if( alreadyDead[idx] ){
 					surDf[idx,"surv"] <- F
-					surDf[idx,"info"] <- sprintf("%d, already dead",val[idx])
+					surDf[idx,"info"] <- sprintf("%d, already dead",idx)
 					next
 				}
 
@@ -623,7 +623,7 @@ bFCust.byFCol_A_score2_rebVR <- function( ){
 			for( idx in seq_len(val.len) ){
 				if( alreadyDead[idx] ){
 					surDf[idx,"surv"] <- F
-					surDf[idx,"info"] <- sprintf("%d, already dead",val[idx])
+					surDf[idx,"info"] <- sprintf("%d, already dead",idx)
 					next
 				}
 
@@ -694,7 +694,7 @@ bFCust.byFCol_A_score2_A_rReb01 <- function( ){
 			for( idx in seq_len(val.len) ){
 				if( alreadyDead[idx] ){
 					surDf[idx,"surv"] <- F
-					surDf[idx,"info"] <- sprintf("%d, already dead",val[idx])
+					surDf[idx,"info"] <- sprintf("%d, already dead",idx)
 					next
 				}
 
@@ -788,7 +788,7 @@ bFCust.byFCol_A_score2_A_rRebAA <- function( ){
 			for( idx in seq_len(val.len) ){
 				if( alreadyDead[idx] ){
 					surDf[idx,"surv"] <- F
-					surDf[idx,"info"] <- sprintf("%d, already dead",val[idx])
+					surDf[idx,"info"] <- sprintf("%d, already dead",idx)
 					next
 				}
 

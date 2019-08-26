@@ -130,6 +130,7 @@ if( FALSE ){    # 실전 추출 예제 코드
 
     # remLst
     load(sprintf("./save/Obj_remLstZ%d.save",lastH) )
+    logger <- k.getFlogObj( "./log/cutLog.txt" )
 
     configH <- 839  # 지정된 지점을 반복사용하므로..
     
@@ -154,13 +155,22 @@ if( FALSE ){    # 실전 추출 예제 코드
     #       하나 소속되지 않은 aZoid, 혹은 다수가 소속된 aZoid도 있을 수 있다.
     # --------------------------------------------------------------------
     curStdFiltedCnt <- 2
-    allIdx <- allIdxLst[["allZoid.idx2"]]
+    allIdx <- allIdxLst[[sprintf("allZoid.idx%d",curStdFiltedCnt)]]
 
-    allIdxF <- allIdx[1:10000]
+    allIdxF <- allIdx[1:1000]
     fHName <- bUtil.getSfcLstName( fRstLst[[length(fRstLst)]] ,curStdFiltedCnt=curStdFiltedCnt ,cut.grp )
 
+    Rprof(filename="Work_Rprof.scoreMtx.out", append=FALSE,  interval=0.02 )
     scoreMtx.grp <- getScoreMtx.grp( gEnv$allZoidMtx[allIdxF,,drop=F] ,filter.grp )
-    cutRst <- bUtil.cut( scoreMtx.grp ,cut.grp ,fHName )
+    Rprof( NULL )
+
+    Rprof(filename="Work_Rprof.out", append=FALSE,  interval=0.02 )
+    cutRst <- bUtil.cut( scoreMtx.grp ,cut.grp ,fHName ,logger=logger )
+    Rprof( NULL )
+
+    # logger$fLogStr("\n\n= Performance Prof======================================")
+    # logger$fLog( summaryRprof("Work_Rprof.out") )
+
     allIdxF <- allIdxF[cutRst$surFlag]
     rptStr <- sprintf( "Initial cut : %d -> %d \n" ,length(allIdx) ,length(allIdxF) )
     cat( rptStr )
