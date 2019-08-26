@@ -30,39 +30,19 @@ bFCust.A_score3_A_A <- function(  ){
 
 			val <- scoreMtx[,cutterObj$idObj["fcName"]]
 			val.len <- length( val )
-			if( is.null(alreadyDead) ){
-				alreadyDead <- rep( F, val.len )
-			}
+			if( is.null(alreadyDead) )	alreadyDead <- rep( F, val.len )
 
-			extMaxMin <- range( c(cutterObj$maxMin,cutterObj$extVal) )[2:1]
-
-			surDf <- data.frame( surv=rep(F,val.len) ,evt=rep(NA,val.len) ,info=rep(NA,val.len) )
-			cutLst <- vector("list",val.len)
+			cutLst <- list()
 			for( idx in seq_len(val.len) ){
-				if( alreadyDead[idx] ){
-					surDf[idx,"surv"] <- F
-					surDf[idx,"info"] <- sprintf("%d, already dead",val[idx])
-					next
+				if( alreadyDead[idx] ) next
+
+				if( !bUtil.in(val[idx],cutterObj$maxMin) ){
+					infoStr <- c(info=sprintf("val:%d",val[idx]))
+					cutLst[[1+length(cutLst)]] <- list( idx=idx ,idObjDesc=cutterObj$idObjDesc ,info=infoStr )
 				}
-
-				if( val[idx] %in% cutterObj$evtVal )	surDf[idx,"evt"] <- val[idx]
-
-				surDf[idx,"info"] <- sprintf("%d",val[idx])
-
-				if( (cutterObj$maxMin[1]>=val[idx]) && (val[idx]>=cutterObj$maxMin[2]) ){ 
-					surDf[idx,"surv"] <- T
-				} else {
-					if( (extMaxMin[1]>=val[idx]) && (val[idx]>=extMaxMin[2]) ){ 
-						surDf[idx,"info"] <- sprintf("%d in ext(%d~%d)",val[idx],extMaxMin[1],extMaxMin[2]) 
-					}
-					cutLst[[idx]] <- cutterObj$idObjDesc
-				}
-
 			}
 
-			rstObj <- list( surDf=surDf ,cutLst=cutLst )
-			return( rstObj )
-
+			return( cutLst )
 		} # cutterObj$cut()
 
 		return(cutterObj)
@@ -100,39 +80,19 @@ bFCust.A_score3_A_rebPtnN <- function(  ){
 
 			val <- scoreMtx[,cutterObj$idObj["fcName"]]
 			val.len <- length( val )
-			if( is.null(alreadyDead) ){
-				alreadyDead <- rep( F, val.len )
-			}
+			if( is.null(alreadyDead) )	alreadyDead <- rep( F, val.len )
 
-			extMaxMin <- range( c(cutterObj$maxMin,cutterObj$extVal) )[2:1]
-
-			surDf <- data.frame( surv=rep(F,val.len) ,evt=rep(NA,val.len) ,info=rep(NA,val.len) )
-			cutLst <- vector("list",val.len)
+			cutLst <- list()
 			for( idx in seq_len(val.len) ){
-				if( alreadyDead[idx] ){
-					surDf[idx,"surv"] <- F
-					surDf[idx,"info"] <- sprintf("%d, already dead",val[idx])
-					next
+				if( alreadyDead[idx] ) next
+
+				if( !bUtil.in(val[idx],cutterObj$maxMin) ){
+					infoStr <- c(info=sprintf("val:%d",val[idx]))
+					cutLst[[1+length(cutLst)]] <- list( idx=idx ,idObjDesc=cutterObj$idObjDesc ,info=infoStr )
 				}
-
-				if( val[idx] %in% cutterObj$evtVal )	surDf[idx,"evt"] <- val[idx]
-
-				surDf[idx,"info"] <- sprintf("%d",val[idx])
-
-				if( (cutterObj$maxMin[1]>=val[idx]) && (val[idx]>=cutterObj$maxMin[2]) ){ 
-					surDf[idx,"surv"] <- T
-				} else {
-					if( (extMaxMin[1]>=val[idx]) && (val[idx]>=extMaxMin[2]) ){ 
-						surDf[idx,"info"] <- sprintf("%d in ext(%d~%d)",val[idx],extMaxMin[1],extMaxMin[2]) 
-					}
-					cutLst[[idx]] <- cutterObj$idObjDesc
-				}
-
 			}
 
-			rstObj <- list( surDf=surDf ,cutLst=cutLst )
-			return( rstObj )
-
+			return( cutLst )
 		} # cutterObj$cut()
 
 		return(cutterObj)
@@ -170,39 +130,20 @@ bFCust.A_score3_A_snFCntR <- function(  ){
 
 			val <- scoreMtx[,cutterObj$idObj["fcName"]]
 			val.len <- length( val )
-			if( is.null(alreadyDead) ){
-				alreadyDead <- rep( F, val.len )
-			}
+			if( is.null(alreadyDead) )	alreadyDead <- rep( F, val.len )
 
-			extMaxMin <- range( c(cutterObj$maxMin,cutterObj$extVal) )[2:1]
-
-			surDf <- data.frame( surv=rep(F,val.len) ,evt=rep(NA,val.len) ,info=rep(NA,val.len) )
-			cutLst <- vector("list",val.len)
+			cutLst <- list()
 			for( idx in seq_len(val.len) ){
-				if( alreadyDead[idx] ){
-					surDf[idx,"surv"] <- F
-					surDf[idx,"info"] <- sprintf("%d, already dead",val[idx])
-					next
-				}
+				if( alreadyDead[idx] ) next
 
-				if( val[idx] %in% cutterObj$evtVal )	surDf[idx,"evt"] <- val[idx]
-
-				surDf[idx,"info"] <- sprintf("%d",val[idx])
-
-				if( (cutterObj$maxMin[1]>=val[idx]) && (val[idx]>=cutterObj$maxMin[2]) ){ 
-					surDf[idx,"surv"] <- T
-				} else {
-					if( (extMaxMin[1]>=val[idx]) && (val[idx]>=extMaxMin[2]) ){ 
-						surDf[idx,"info"] <- sprintf("%d in ext(%d~%d)",val[idx],extMaxMin[1],extMaxMin[2]) 
-					}
-					cutLst[[idx]] <- cutterObj$idObjDesc
+				if( !bUtil.in(val[idx],cutterObj$maxMin) ){
+					infoStr <- c(info=sprintf("val:%d",val[idx]))
+					cutLst[[1+length(cutLst)]] <- list( idx=idx ,idObjDesc=cutterObj$idObjDesc ,info=infoStr )
 				}
 
 			}
 
-			rstObj <- list( surDf=surDf ,cutLst=cutLst )
-			return( rstObj )
-
+			return( cutLst )
 		} # cutterObj$cut()
 
 		return(cutterObj)

@@ -31,6 +31,7 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
         curHMtxLst.grp <- list( )
         stdIdx.grp <- list()
 
+        tStmp <- Sys.time()
         for( curHIdx in testSpan ){    # curHIdx <- testSpan[1] # 842
 
             wLastH <-curHIdx-1
@@ -53,6 +54,8 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
             stdIdx <- k.getIdx_AllZoidMtx( gEnv, stdZoid )
             stdIdx.grp[[as.character(curHIdx)]] <- stdIdx
         }
+        tDiff <- Sys.time() - tStmp
+        cat(sprintf("time : %.1f,%s   \n",tDiff,units(tDiff)))
 
         return( list(curHMtxLst.grp=curHMtxLst.grp ,stdIdx.grp=stdIdx.grp) )
     }
@@ -104,6 +107,7 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
         cutRst <- bUtil.cut( scoreMtx.grp ,cut.grp ,fHName ,anaOnly=T ) 
             #   anaOnly=TRUE 에서, cutRst$surFlag는 항상 TRUE임을 유의.
             # report example =================================================
+                # B.rptHMtxLst( curHMtxLst )
                 # B.rptStdMI.grp( stdMI.grp )
                 # B.rptScoreMtx.grp( scoreMtx.grp )
                 # B.rptCut.grp( cut.grp )
@@ -132,16 +136,20 @@ if( FALSE ){    # 실전 추출 예제 코드
     load(sprintf("./save/Obj_remLstZ%d.save",lastH) )
     logger <- k.getFlogObj( "./log/cutLog.txt" )
 
-    configH <- 839  # 지정된 지점을 반복사용하므로..
-    
+    configH <- 851  # 지정된 지점을 반복사용하므로..
+    stdZoid <- gEnv$zhF[configH,]
+    stdIdx <- k.getIdx_AllZoidMtx( gEnv, stdZoid )
+
+
     # stdCtrlCfgGrp
-    load(sprintf("./save/HMtxLst/Obj_stdCtrlCfgGrp_%d.save",configH))
+    load("./save/HMtxLst/Obj_stdCtrlCfgGrp_840.save")
 
     hMtxLst <- B.makeHMtxLst( gEnv, allIdxLst, fRstLst )
     cut.grp <- bFCust.getFCustGrp( stdCtrlCfgGrp ,hMtxLst )
 
+    tgt.scMtx <- c("score3")       # default : NULL
     stdMI.grp <- bUtil.getStdMILst( gEnv ,fRstLst )
-    filter.grp <- getFilter.grp( stdMI.grp )
+    filter.grp <- getFilter.grp( stdMI.grp ,tgt.scMtx )
 
     # ====================================================================
     #   Cutting
@@ -157,7 +165,7 @@ if( FALSE ){    # 실전 추출 예제 코드
     curStdFiltedCnt <- 2
     allIdx <- allIdxLst[[sprintf("allZoid.idx%d",curStdFiltedCnt)]]
 
-    allIdxF <- allIdx[1:1000]
+    allIdxF <- c( stdIdx ,allIdx[1:100] )
     fHName <- bUtil.getSfcLstName( fRstLst[[length(fRstLst)]] ,curStdFiltedCnt=curStdFiltedCnt ,cut.grp )
 
     Rprof(filename="Work_Rprof.scoreMtx.out", append=FALSE,  interval=0.02 )
@@ -165,7 +173,7 @@ if( FALSE ){    # 실전 추출 예제 코드
     Rprof( NULL )
 
     Rprof(filename="Work_Rprof.out", append=FALSE,  interval=0.02 )
-    cutRst <- bUtil.cut( scoreMtx.grp ,cut.grp ,fHName ,logger=logger )
+    cutRst <- bUtil.cut( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx ,logger=logger )
     Rprof( NULL )
 
     # logger$fLogStr("\n\n= Performance Prof======================================")

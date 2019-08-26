@@ -1,6 +1,6 @@
 
 
-bUtil.cut <- function( scoreMtx.grp ,cut.grp ,fHName ,anaOnly=F ,logger=NULL ){
+bUtil.cut <- function( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=NULL ,anaOnly=F ,logger=NULL ){
     #   anaOnly=T : scoreMtx[1,] 만 분석하며, 그 대신 cutting 정보를 추가한다.
 	#	logger <- k.getFlogObj( "./log/cutLog.txt" )
 
@@ -14,15 +14,15 @@ bUtil.cut <- function( scoreMtx.grp ,cut.grp ,fHName ,anaOnly=F ,logger=NULL ){
 
     # scoreMtx.grp <- wScoreMtx.grp ;anaOnly=T
     scMtxName <- names(cut.grp$mtxInfoLst)
+	if( !is.null(tgt.scMtx) )	scMtxName <- intersect( scMtxName ,tgt.scMtx )
     datLen <- nrow(scoreMtx.grp$basic[[1]][[1]]$scoreMtx)
     cutInfoLst <- NULL
     if( anaOnly ){
-        datLen <- 1
-        cutInfoLst <- list()
+        datLen <- 1	;cutInfoLst <- list()
     }
 
 	tStmp <- Sys.time()
-	logger$fLogStr("Start", pTime=T ,pAppend=F )
+	if( !is.null(logger) ) logger$fLogStr("Start", pTime=T ,pAppend=F )
 
     surFlag <- rep( T ,datLen )
     for( hName in fHName ){ # hName <- fHName[1]
@@ -32,13 +32,14 @@ bUtil.cut <- function( scoreMtx.grp ,cut.grp ,fHName ,anaOnly=F ,logger=NULL ){
                 cutLst <- cut.grp$cutterLst[[hName]][[mName]]$stdLst[[pName]]
                 scoreMtx <- scoreMtx.grp$basic[[pName]][[mName]]$scoreMtx
                 for( cnIdx in names(cutLst) ){  # cnIdx <- names(cutLst)[1]
-                    cutRstObj <- cutLst[[cnIdx]]$cut( scoreMtx ,!surFlag )
-                    if( anaOnly && !cutRstObj$surDf[1,"surv"] ){
-                        cutInfoLst[[1+length(cutInfoLst)]] <- cutRstObj$cutLst[[1]]
-                    }
-                    if( !anaOnly ){
-                        surFlag <- surFlag & cutRstObj$surDf[,"surv"]
-                    }
+                    cuttedLst <- cutLst[[cnIdx]]$cut( scoreMtx ,!surFlag )
+					if( 0<length(cuttedLst) ){
+						if( anaOnly ){	cutInfoLst[[1+length(cutInfoLst)]] <- c( cuttedLst[[1]]$idObjDesc ,cuttedLst[[1]]$info )
+						} else {
+							cut_aIdx <- sapply( cuttedLst ,function(p){p$idx} )
+	                        surFlag[cut_aIdx] <- FALSE
+						}
+					}
                 }
 				reportStatus( tStmp ,sprintf("     %s",pName) ,surFlag ,logger )
             }
@@ -50,13 +51,14 @@ bUtil.cut <- function( scoreMtx.grp ,cut.grp ,fHName ,anaOnly=F ,logger=NULL ){
 				cutLst <- cut.grp$cutterLst[[hName]][[mName]]$fColLst[[fcName]]
 				scoreMtx <- mtxGrp[[mName]][[fcName]]
                 for( cnIdx in names(cutLst) ){  # cnIdx <- names(cutLst)[1]
-                    cutRstObj <- cutLst[[cnIdx]]$cut( scoreMtx ,!surFlag )
-                    if( anaOnly && !cutRstObj$surDf[1,"surv"] ){
-                        cutInfoLst[[1+length(cutInfoLst)]] <- cutRstObj$cutLst[[1]]
-                    }
-                    if( !anaOnly ){
-                        surFlag <- surFlag & cutRstObj$surDf[,"surv"]
-                    }
+                    cuttedLst <- cutLst[[cnIdx]]$cut( scoreMtx ,!surFlag )
+					if( 0<length(cuttedLst) ){
+						if( anaOnly ){	cutInfoLst[[1+length(cutInfoLst)]] <- c( cuttedLst[[1]]$idObjDesc ,cuttedLst[[1]]$info )
+						} else {
+							cut_aIdx <- sapply( cuttedLst ,function(p){p$idx} )
+	                        surFlag[cut_aIdx] <- FALSE
+						}
+					}
                 }
 			}
 			reportStatus( tStmp ,sprintf("[%s,%s] fColLst",hName,mName) ,surFlag ,logger )
@@ -70,13 +72,13 @@ bUtil.cut <- function( scoreMtx.grp ,cut.grp ,fHName ,anaOnly=F ,logger=NULL ){
 				cutLst <- cut.grp$cutterLst[[hName]][[mName]]$hIdxLst
 				scoreMtx <- mtxGrp[[mName]][[aIdx]]
                 for( cnIdx in names(cutLst) ){  # cnIdx <- names(cutLst)[1]
-                    cutRstObj <- cutLst[[cnIdx]]$cut( scoreMtx )
-                    if( anaOnly && !cutRstObj$surDf[1,"surv"] ){
-                        cutInfoLst[[1+length(cutInfoLst)]] <- cutRstObj$cutLst[[1]]
-                    }
-                    if( !anaOnly ){
-                        surFlag[aIdx] <- surFlag[aIdx] & cutRstObj$surDf[1,"surv"]
-                    }
+                    cuttedLst <- cutLst[[cnIdx]]$cut( scoreMtx ,aIdx )
+					if( 0<length(cuttedLst) ){
+						if( anaOnly ){	cutInfoLst[[1+length(cutInfoLst)]] <- c( cuttedLst[[1]]$idObjDesc ,cuttedLst[[1]]$info )
+						} else {
+	                        surFlag[aIdx] <- FALSE
+						}
+					}
                 }
 			}
 			reportStatus( tStmp ,sprintf("[%s,%s] hIdxLst",hName,mName) ,surFlag ,logger )

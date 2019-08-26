@@ -8,7 +8,7 @@ getScoreMtx.grp.4H <- function( aZoid ,filter.grp ){
 
 } # getScoreMtx.grp.4H()
 
-getScoreMtx.grp <- function( aZoidMtx ,filter.grp ,makeInfoStr=F ,cutter.grp=NULL ){
+getScoreMtx.grp <- function( aZoidMtx ,filter.grp ,makeInfoStr=F ,cutter.grp=NULL ,tgt.scMtx=NULL ){
 
 	rObj <- list( basic=list() ,bDup=list() ,mf=list() )
 
@@ -105,12 +105,16 @@ getScoreMtx.grp_byHIdx <- function( scoreMtx.grp ){
 
 
 
-getFilter.grp <- function( stdMI.grp ){
+getFilter.grp <- function( stdMI.grp ,tgt.scMtx=NULL ){
 
 	getMtxObjLst <- function( stdMIObj ){
 		mtxObjLst <- list()
-		mtxObjLst[[1+length(mtxObjLst)]] <- bFMtx.score2( stdMIObj )
-		mtxObjLst[[1+length(mtxObjLst)]] <- bFMtx.score3( stdMIObj )
+		if( is.null(tgt.scMtx) || ("score2" %in%tgt.scMtx ) ){
+			mtxObjLst[[1+length(mtxObjLst)]] <- bFMtx.score2( stdMIObj )
+		}
+		if( is.null(tgt.scMtx) || ("score3" %in%tgt.scMtx ) ){
+			mtxObjLst[[1+length(mtxObjLst)]] <- bFMtx.score3( stdMIObj )
+		}
 		names(mtxObjLst) <- sapply(mtxObjLst,function(p){p$idStr})
 		return( mtxObjLst )
 	}
