@@ -315,14 +315,17 @@ B.rptStdMI.grp <- function( stdMI.grp ,file="stdMI.grp" ){
     log.meta$fLogStr("<Basic phase> ---------------------------------------------------")
     for( pName in names(stdMI.grp$basic) ){ # pName <- names(stdMI.grp$basic)[1]
         stdMI <- stdMI.grp$basic[[pName]]$stdMI
-        log.meta$fLogStr( sprintf("  phase:%s",pName) )
-        log.meta$fLogStr( sprintf("    rem : %s",paste(stdMI$rem,collapse=",") ) )
-        log.meta$fLogStr( sprintf("    rawTail") )
-        log.meta$fLogMtx( stdMI$rawTail ,pIndent="        " )
-        log.meta$fLogStr( sprintf("    cStepTail") )
-        log.meta$fLogMtx( stdMI$cStepTail ,pIndent="        " )
-        log.meta$fLogStr( sprintf("    fStepTail") )
-        log.meta$fLogMtx( stdMI$fStepTail ,pIndent="        " )
+        log.meta$fLogStr( sprintf("*** %s ***",pName) )
+        # log.meta$fLogStr( sprintf("    rem : %s",paste(stdMI$rem,collapse=",") ) )
+        # log.meta$fLogStr( sprintf("    rawTail") )
+        # log.meta$fLogMtx( stdMI$rawTail ,pIndent="        " )
+        # log.meta$fLogStr( sprintf("    cStepTail") )
+        # log.meta$fLogMtx( stdMI$cStepTail ,pIndent="        " )
+        # log.meta$fLogStr( sprintf("    fStepTail") )
+        # log.meta$fLogMtx( stdMI$fStepTail ,pIndent="        " )
+        dfStr <- capture.output( anaMtx(stdMI$rawTail,NULL) )
+        dfStr <- paste( dfStr ,collapse="\n" )
+        log.meta$fLogStr( sprintf("%s \n",dfStr) )
     }
 
     # bDup

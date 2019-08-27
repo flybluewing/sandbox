@@ -107,7 +107,7 @@ anaMtx <- function( zMtx ,stdZoid=NULL ){
     cat(sprintf("  zoid width  ... %s and ?\n",paste(zw,collapse="   ") ))
 
     rObj <- list( quoTbl=anaQuoTbl(zMtx) )
-    return(NULL)
+    return( "" )
 } # anaMtx()
 
 anaMtx.freqVal <- function( rawTail ){
