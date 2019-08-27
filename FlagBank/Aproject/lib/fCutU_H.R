@@ -1872,7 +1872,7 @@ fCutU.getFiltObjPair <- function( pMtx ,debug=F ){
 			}
 		}
 		pairPtnLst[["(*,pFV)"]] <- fCnt2
-		rstObj$iBanLst <- pairPtnLst
+		rstObj$pairPtnLst <- pairPtnLst
 
 		ptn4Str <- character(0)
 		for( lIdx in seq_len(length(rObj$ptn4Lst)) ){

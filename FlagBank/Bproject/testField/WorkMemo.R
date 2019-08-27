@@ -53,3 +53,60 @@ idx <- 1
 
 
 
+if( FALSE ){	# test fCutU.getFiltObjPair( )
+
+	temp.getCaptureRpt <- function( captureStr ,indent="    " ){
+		captureStr <- paste( indent ,captureStr )
+		captureStr <- paste( captureStr ,collapse="\n" )
+		return( captureStr )
+	}
+
+    logger <- k.getFlogObj( "./log/Test_fCutU.getFiltObjPair.txt" )
+	logger$fLogStr( "Test fCutU.getFiltObjPair( )", pAppend=F ,pTime=T )
+
+	stdZoid <- c( 14,18,22,26,31,44 )
+    stdMI.grp <- bUtil.getStdMILst( gEnv ,fRstLst ) # B.rptStdMI.grp( stdMI.grp )   ;stdMI.grp$anyWarn()
+	for( pName in names(stdMI.grp$basic) ){	# pName <- names(stdMI.grp$basic)[1]
+		logger$fLogStr( sprintf("< %s > =====================================================",pName) )
+		stdMI <- stdMI.grp$basic[[pName]]$stdMI
+        dfStr <- capture.output( anaMtx(stdMI$rawTail,NULL) )
+        logger$fLogStr( sprintf("%s \n",temp.getCaptureRpt( dfStr )) )
+
+		stdCStep <- stdZoid[2:6] - stdZoid[1:5]
+		stdFStep <- stdZoid - stdMI$lastZoid
+		stdRem <- stdZoid %% 10
+
+		logger$fLogStr( "[RawTail]" )
+		obj <- fCutU.getFiltObjPair( stdMI$rawTail )
+		dfStr <- capture.output( obj$explain() )
+        logger$fLogStr( sprintf("%s \n",temp.getCaptureRpt( dfStr )) )
+		logger$fLogStr( sprintf("         obj$filt( stdZoid )  # %s",paste(stdZoid,collapse=",")) )
+		dfStr <- capture.output( obj$filt(stdZoid) )
+		logger$fLogStr( sprintf("%s \n",temp.getCaptureRpt( dfStr,indent="             " )) )
+
+		logger$fLogStr( "[CStepTail]" )
+		obj <- fCutU.getFiltObjPair( stdMI$cStepTail )
+		dfStr <- capture.output( obj$explain() )
+        logger$fLogStr( sprintf("%s \n",temp.getCaptureRpt( dfStr )) )
+		logger$fLogStr( sprintf("         obj$filt( stdCStep )  # %s",paste(stdCStep,collapse=",")) )
+		dfStr <- capture.output( obj$filt(stdCStep) )
+		logger$fLogStr( sprintf("%s \n",temp.getCaptureRpt( dfStr,indent="             " )) )
+
+		# logger$fLogStr( "[FStepTail]" )
+		# obj <- fCutU.getFiltObjPair( stdMI$fStepTail )
+		# dfStr <- capture.output( obj$explain() )
+        # logger$fLogStr( sprintf("%s \n",temp.getCaptureRpt( dfStr )) )
+		# logger$fLogStr( sprintf("         obj$filt( stdFStep )  # %s",paste(stdFStep,collapse=",")) )
+		# dfStr <- capture.output( obj$filt(stdFStep) )
+		# logger$fLogStr( sprintf("%s \n",temp.getCaptureRpt( dfStr,indent="             " )) )
+
+		# logger$fLogStr( "[rem]" )
+		# obj <- fCutU.getFiltObjPair( stdMI$rawTail %% 10 )
+		# dfStr <- capture.output( obj$explain() )
+        # logger$fLogStr( sprintf("%s \n",temp.getCaptureRpt( dfStr )) )
+		# logger$fLogStr( sprintf("         obj$filt( stdRem )  # %s",paste(stdRem,collapse=",")) )
+		# dfStr <- capture.output( obj$filt(stdRem) )
+		# logger$fLogStr( sprintf("%s \n",temp.getCaptureRpt( dfStr,indent="             " )) )
+	}
+
+}	# test fCutU.getFiltObjPair( )
