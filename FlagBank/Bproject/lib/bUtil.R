@@ -295,6 +295,42 @@ bUtil.getStdMILst <- function( gEnv ,fRstLst ){
     stdMI.mf <- list()        # lastZoid가 해당되던 main filter(D0000.A, A0100.A 등)
 
 	rObj <- list( basic=stdMILst.basic ,bDup=stdMI.bDup ,mf=stdMI.mf )
+	rObj$anyWarn <- function(){
+		rptStr <- character(0)
+
+		chkStr <- character(0)
+		for( nIdx in names(rObj$basic) ){
+			rCnt <- nrow(rObj$basic[[nIdx]]$stdMI$rawTail)
+			if( rCnt<6 ) chkStr <- c( chkStr ,sprintf("%s:%d",nIdx,) )
+		}
+		if( 0<length(chkStr) ){
+			rptStr <- c( rptStr ,"stdMI.basic")
+			rptStr <- c( rptStr ,sprintf("    warn!! %s",paste(chkStr,collapse=" ")) )
+		}
+
+		chkStr <- character(0)
+		for( nIdx in names(rObj$bDup) ){
+			rCnt <- nrow(rObj$bDup[[nIdx]]$stdMI$rawTail)
+			if( rCnt<6 ) chkStr <- c( chkStr ,sprintf("%s:%d",nIdx,) )
+		}
+		if( 0<length(chkStr) ){
+			rptStr <- c( rptStr ,"stdMI.bDup")
+			rptStr <- c( rptStr ,sprintf("    warn!! %s",paste(chkStr,collapse=" ")) )
+		}
+
+		chkStr <- character(0)
+		for( nIdx in names(rObj$mf) ){
+			rCnt <- nrow(rObj$mf[[nIdx]]$stdMI$rawTail)
+			if( rCnt<6 ) chkStr <- c( chkStr ,sprintf("%s:%d",nIdx,) )
+		}
+		if( 0<length(chkStr) ){
+			rptStr <- c( rptStr ,"stdMI.mf")
+			rptStr <- c( rptStr ,sprintf("    warn!! %s",paste(chkStr,collapse=" ")) )
+		}
+
+		rptStr <- paste( rptStr ,collapse="\n" )
+		return( sprintf("%s\n",rptStr) )
+	} # rObj$rpt( )
 
     return( rObj )
 

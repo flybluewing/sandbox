@@ -1,3 +1,10 @@
+fCutU.getFiltObjPair( )
+fCutU.rptGrpSum( )
+
+fCutU.fStepBanVal( )
+fCutU.cStepBanVal( )
+fCutU.rempBanVal( )
+fCutU.rawBanVal( )
 
 
 

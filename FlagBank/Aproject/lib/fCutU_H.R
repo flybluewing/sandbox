@@ -1789,7 +1789,9 @@ fCutU.getFiltObjPair <- function( pMtx ,debug=F ){
 				if( 0<nrow(foundIdxMtx) ){
 					rebLastCol <- apply( foundIdxMtx ,1 ,function(fIdx){all(fIdx==pI[c("cf1","cf2")])} )
 					df <- data.frame( typ="rebPair" ,id=lIdx 
-									,info=sprintf("val:%s(%d/%s)",paste(pI[c("v1","v2")],collapse=","),pI["rf"],paste(pI[c("cf1","cf2")],collapse=",")) 
+									,info=sprintf("val:%s(%d/%s)",paste(pI[c("v1","v2")],collapse=",")
+													,pI["rf"],paste(pI[c("cf1","cf2")],collapse=",")
+									) 
 					)
 					cut.incPtn3<-F	;cut.incPtn4<-F		# thld 크기 차이
 					if( 2<length(pBI$incPtn.banVal) ){
@@ -1806,7 +1808,9 @@ fCutU.getFiltObjPair <- function( pMtx ,debug=F ){
 				# typ="pairNextPtn"
 				if( all(pBI$rebPtn.banVal[pBI$rebPtn.fixIdx]==aCode[pBI$rebPtn.fixIdx]) ){
 					df <- data.frame( typ="pairNextPtn" ,id=lIdx 
-									,info=sprintf("from pair %s(%d/%s)",paste(pI[c("v1","v2")],collapse=","),pI["rf"],paste(pI[c("cf1","cf2")],collapse=",")) 
+									,info=sprintf("from pair %s(%d/%s)",paste(pI[c("v1","v2")],collapse=",")
+											,pI["rf"],paste(pI[c("cf1","cf2")],collapse=",")
+									) 
 					)
 					cut.extMatNum <- 0
 					if( 2<length(pBI$rebPtn.banCol) ){
@@ -1966,8 +1970,10 @@ fCutU.getFiltObjPair <- function( pMtx ,debug=F ){
 } # fCutU.getFiltObjPair()
 
 fCutU.getFallower <- function( pMtx ){
+	#	List Obj : "tLst"    "(pFV,*)" 	"(*,pFV)"
 
 	getTree <- function( truncLst ,cIdxs ,rIdx ){
+		#	truncLst : FreqVal에 대한 발생 좌표 추적 경로정보 Table
 		if( 0==length(cIdxs) ) return( truncLst )
 
 		rLst <- list()
