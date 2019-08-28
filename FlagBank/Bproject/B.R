@@ -73,6 +73,7 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
     #   save( testData.grp ,file="Obj_testData.grp.save" )
     #   load( "Obj_testData.grp.save" )
 
+    tgt.scMtx <- NULL       # default : NULL
     cutRstLst <- list()
     for( curHIdx in testSpan ){    # curHIdx <- testSpan[1] # 842
 
@@ -100,11 +101,11 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
         fHName <- bUtil.getSfcLstName( fRstLst.w[[length(fRstLst.w)]] ,curStdFiltedCnt=length(curStdFilted) ,cut.grp )
 
         stdMI.grp <- bUtil.getStdMILst( gEnv.w ,fRstLst.w )
-        filter.grp <- getFilter.grp( stdMI.grp )
+        filter.grp <- getFilter.grp( stdMI.grp ,tgt.scMtx=tgt.scMtx )
         scoreMtx.grp <- getScoreMtx.grp.4H( stdZoid ,filter.grp )
             #   평가용이므로 getScoreMtx.grp.4H() 가 사용됨.   .4H !
 
-        cutRst <- bUtil.cut( scoreMtx.grp ,cut.grp ,fHName ,anaOnly=T ) 
+        cutRst <- bUtil.cut( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx ,anaOnly=T ) 
             #   anaOnly=TRUE 에서, cutRst$surFlag는 항상 TRUE임을 유의.
             # report example =================================================
                 # B.rptHMtxLst( curHMtxLst )
@@ -147,7 +148,7 @@ if( FALSE ){    # 실전 추출 예제 코드
     hMtxLst <- B.makeHMtxLst( gEnv, allIdxLst, fRstLst )
     cut.grp <- bFCust.getFCustGrp( stdCtrlCfgGrp ,hMtxLst )
 
-    tgt.scMtx <- c("score3")       # default : NULL
+    tgt.scMtx <- NULL       # default : NULL        ; c("score2","score3")
     stdMI.grp <- bUtil.getStdMILst( gEnv ,fRstLst ) # B.rptStdMI.grp( stdMI.grp )   ;stdMI.grp$anyWarn()
     filter.grp <- getFilter.grp( stdMI.grp ,tgt.scMtx )
 
@@ -162,10 +163,10 @@ if( FALSE ){    # 실전 추출 예제 코드
     #   - 그룹 특성에 따라 stdFilted.NG 에서
     #       하나 소속되지 않은 aZoid, 혹은 다수가 소속된 aZoid도 있을 수 있다.
     # --------------------------------------------------------------------
-    curStdFiltedCnt <- 2
+    curStdFiltedCnt <- 1
     allIdx <- allIdxLst[[sprintf("allZoid.idx%d",curStdFiltedCnt)]]
 
-    allIdxF <- c( stdIdx ,allIdx[1:100] )
+    allIdxF <- c( stdIdx ,allIdx[1:10000] )
     fHName <- bUtil.getSfcLstName( fRstLst[[length(fRstLst)]] ,curStdFiltedCnt=curStdFiltedCnt ,cut.grp )
 
     Rprof(filename="Work_Rprof.scoreMtx.out", append=FALSE,  interval=0.02 )
