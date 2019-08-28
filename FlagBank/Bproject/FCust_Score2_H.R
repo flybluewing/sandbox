@@ -216,18 +216,19 @@ bFCust.A_score2_A_Row01 <- function(  ){
 	rObj$defId <- c( typ="cust_NCol"	,hName="*"	,mName="score2"	,pName="*"	,rFId="Row01" )	# row filt ID
 	rObj$description <- sprintf("(cust)  ")
 
+	rObj$evtLst <- FCust_score2EvtLst
+
 	rObj$cutFLst <- list()
 	# Sample code ================================================================
-	# rObj$cutFLst[[1+length(rObj$cutFLst)]] <- function( smRow ){	# for testing
+	rObj$cutFLst[[1+length(rObj$cutFLst)]] <- function( smRow ,evt ){	# for testing
 
-	# 	crObj <- list( cutFlag=F ,cId="Test.rebC" ) # cut result object, cut Id
-	# 	evtThld <- c("rebC.r"=0,"rebC.c"=1)
-
-	# 	evtFlag <- smRow[names(evtThld)] == evtThld
-	# 	if( all(evtFlag) ) crObj$cutFlag <- TRUE
-
-	# 	return( crObj )
-	# } # rObj$cutFLst[1]( )
+		crObj <- list( cutFlag=F ,cId="evtNum" ) # cut result object, cut Id
+		if( 4<=sum(!is.na(evt)) ){
+			crObj$cutFlag <- TRUE
+			crObj$cId <- sprintf( "%s  %d" ,crObj$cId ,sum(!is.na(evt)) )
+		}
+		return( crObj )
+	} # rObj$cutFLst[1]( )
 
 	rObj$createCutter <- function( tgtId=c(hName="", mName="", pName="") ,auxInfo=c(auxInfo="") ){
 
@@ -245,6 +246,15 @@ bFCust.A_score2_A_Row01 <- function(  ){
 		cutterObj$idObj <- rObj$defId
 		cutterObj$idObj[names(tgtId)] <- tgtId
 
+		cutterObj$getEvtVal <- function( src ,evtLst ){
+			evtVal <- src[names(evtLst)]
+			for( nIdx in names(evtLst) ){
+				if( !(evtVal[nIdx] %in% evtLst[[nIdx]]) ) evtVal[nIdx] <- NA
+			}
+			return( evtVal )
+		} # cutterObj$getLastVal()
+
+
 		cutterObj$cut <- function( scoreMtx ,alreadyDead=NULL ){
 			val.len <- nrow( scoreMtx )
 			if( is.null(alreadyDead) )	alreadyDead <- rep( F, val.len )
@@ -253,7 +263,10 @@ bFCust.A_score2_A_Row01 <- function(  ){
 			for( idx in seq_len(val.len) ){
 				if( alreadyDead[idx] ) next
 
-				lst <- lapply( rObj$cutFLst ,function( pFunc ){ pFunc( scoreMtx[idx,] ) } )
+				smRow <- scoreMtx[idx,]
+				evt <- cutterObj$getEvtVal( smRow ,rObj$evtLst )
+
+				lst <- lapply( rObj$cutFLst ,function( pFunc ){ pFunc( smRow, evt ) } )
 				cutFlag <- sapply( lst ,function(p){ p$cutFlag })
 				if( any(cutFlag) ){
 					firedCId <- sapply( lst[cutFlag] ,function(p){p$cId})
