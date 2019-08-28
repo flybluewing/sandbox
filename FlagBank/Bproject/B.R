@@ -149,7 +149,9 @@ if( FALSE ){    # 실전 추출 예제 코드
     cut.grp <- bFCust.getFCustGrp( stdCtrlCfgGrp ,hMtxLst )
 
     tgt.scMtx <- NULL       # default : NULL        ; c("score2","score3")
-    stdMI.grp <- bUtil.getStdMILst( gEnv ,fRstLst ) # B.rptStdMI.grp( stdMI.grp )   ;stdMI.grp$anyWarn()
+    stdMI.grp <- bUtil.getStdMILst( gEnv ,fRstLst ) # B.rptStdMI.grp( stdMI.grp )
+    stdMI.grp$anyWarn( )
+
     filter.grp <- getFilter.grp( stdMI.grp ,tgt.scMtx )
 
     # ====================================================================

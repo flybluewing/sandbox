@@ -571,22 +571,25 @@ bFMtx.score3 <- function( stdMIObj ){
 
 #	fCutU.getFiltObjPair( stdMI$rawTail )
 bFMtx.score4 <- function( stdMIObj ){
-
+	#	stdMIObj <- stdMI.grp$basic$basic
 	stdMI <- stdMIObj$stdMI
 	zMtx <- stdMIObj$zMtx
 	rObj <- list( 	idStr="score4"	,zMtx.size=nrow(zMtx)
 					,lastZoid=stdMI$lastZoid
 				)
+	rObj$fInfo <- fCutU.getFiltObjPair( stdMI$rawTail )
 
-	#	cName <- c("rebPtn.1","rebPtn.n","snMax.r" ,"snFCnt.r" ,"snMax.c" ,"snFCnt.c")
+	#	cName <- c("rebPtn.1")
 	rObj$fMtxObj <- function( aZoidMtx ,makeInfoStr=F ){
+		#	aZoidMtx <- gEnv$allZoidMtx[c(stdIdx,sample(10:nrow(gEnv$allZoidMtx),19)) ,] ;makeInfoStr=T
+
 		aLen <- nrow(aZoidMtx)
-		cName <- c("rebPtn.1","rebPtn.n","snMax.r" ,"snFCnt.r" ,"snMax.c" ,"snFCnt.c")
+		cName <- c("rebPtn.1")
 		scoreMtx <- matrix( 0, nrow=aLen, ncol=length(cName) )	;colnames(scoreMtx) <- cName
 
 		infoMtx <- NULL
 		if( makeInfoStr ){
-			cName <- c("rebPtn.1","rebPtn.n","snXXX.r","snXXX.c","zMtx.size")
+			cName <- c("rebPtn.1","zMtx.size")
 			infoMtx <- matrix( "" ,nrow=aLen ,ncol=length(cName) )	;colnames(infoMtx) <- cName
 			infoMtx[,"zMtx.size"] <- rObj$zMtx.size
 		}
@@ -596,12 +599,98 @@ bFMtx.score4 <- function( stdMIObj ){
 
 		for( aIdx in 1:aLen ){
 			aZoid <- aZoidMtx[aIdx,]
-			aCStep <- aZoid[2:6] - aZoid[1:5]
-			aFStep <- aZoid - rObj$lastZoid
-			# working
+			# aCStep <- aZoid[2:6] - aZoid[1:5]
+			# aFStep <- aZoid - rObj$lastZoid
+			# aRem <- aZoid %% 10
+
+
 		}
 	}
 
 	return( rObj )
 
 } # bFMtx.score4( )
+
+#	score4,score5,score6,score7 ÀÇ °øÅë fMtxObj( )
+bFMtx.util.fMtxObj.score4567 <- function( aCode ,fInfo ,makeInfoStr=F ){
+	#	fInfo <- rObj$fInfo ;makeInfoStr<-T	;aCode <- aZoid
+	rstObj <- list()
+
+	# rstObj$pairBanLst ==========================================
+	pairBanLst <- list()
+	if( 0<length(rObj$pBanInfoLst) ){
+		for( lIdx in 1:length(rObj$pBanInfoLst) ){
+			pBI <- fInfo$pBanInfoLst[[lIdx]]	# banInfo
+			pI	<- pBI$pairInfo
+
+			# typ="rebPair" --------------------------------------
+			rebPair <- NULL
+			foundIdxMtx <- fInfo$findPtn( aCode ,pI[c("v1","v2")] )
+			if( 0<nrow(foundIdxMtx) ){
+				foundInfo <- c( rebLastCol=0 ,incPtn3.TF=0	,incPtn4.TF=0
+								,hpnCnt=pI["hpn"] ,foundNum=nrow(foundIdxMtx) 
+				)
+				rebLastCol.F <- apply( foundIdxMtx ,1 ,function(fIdx){all(fIdx==pI[c("cf1","cf2")])} )
+				foundInfo["rebLastCol"] <- sum( rebLastCol.F )
+				foundInfo["incPtn3.TF"] <- fCutU.hasPtn(pBI$incPtn.banVal,aCode,thld=3,fixIdx=pBI$incPtn.fixIdx)
+				foundInfo["incPtn4.TF"] <- fCutU.hasPtn(pBI$incPtn.banVal,aCode,thld=4,fixIdx=pBI$incPtn.fixIdx)
+
+				rebPair <- list( foundInfo=foundInfo )
+				if( makeInfoStr ){
+					infoStr <- character(0)
+					if( any(rebLastCol.F) ){
+						str <- apply( foundIdxMtx[rebLastCol.F,,drop=F] ,1 ,function(cord){sprintf("(%d,%d)",cord[1],cord[2])} )
+						infoStr <- c(infoStr ,rebLastCol=paste(str,collapse="") )
+					}
+
+					if( 0<length(infoStr) ) infoStr <- c( pairVal=sprintf("%d,%d",pI["v1"],pI["v2"]) ,infoStr )
+
+					rebPair$infoStr <- paste( paste(names(infoStr),infoStr,sep=":") ,collapse="  " )
+				}
+			}
+
+			# typ="pairNextPtn" ----------------------------------
+			pairNextPtn <- NULL
+			if( all(pBI$rebPtn.banVal[pBI$rebPtn.fixIdx]==aCode[pBI$rebPtn.fixIdx]) ){
+				foundInfo <- c( 
+					,nextPtn=
+				)
+				rebPair <- list( foundInfo=foundInfo )
+				if( makeInfoStr ){
+					infoStr <- character(0)
+
+					if( 0<length(infoStr) ){
+						# working : pBI$rebPtn.banVal[pBI$rebPtn.fixIdx]
+						infoStr <- c( nextVal=sprintf("%d,%d (from %d,%d)",pI["v1"],pI["v2"]) 
+									,infoStr )
+					}
+
+					rebPair$infoStr <- paste( paste(names(infoStr),infoStr,sep=":") ,collapse="  " )
+				}
+			}
+
+			if( !is.null(rebPairLst) || !is.null(pairNextPtnLst) ){
+				lId <- sprintf("pBan%d",lIdx)
+				pairBanLst[[lId]] <- list( rebPairLst=rebPairLst ,pairNextPtnLst=pairNextPtnLst )
+			}
+		}
+	}
+	rstObj$pairBanLst <- pairBanLst
+
+	# rstObj$iBanLst =============================================
+	iBanLst <- list()
+	rstObj$iBanLst <- iBanLst
+
+	# rstObj$pairPtnLst ==========================================
+	pairPtnLst <- list()
+	rstObj$pairPtnLst <- pairPtnLst
+
+	# rstObj$ptn4Str =============================================
+	ptn4Str <- character(0)
+	rstObj$ptn4Str <- ptn4Str
+
+
+	return( rstObj )
+} # bFMtx.util.fMtxObj.score4567( )
+
+
