@@ -569,3 +569,39 @@ bFMtx.score3 <- function( stdMIObj ){
 
 } # bFMtx.score3( )
 
+#	fCutU.getFiltObjPair( stdMI$rawTail )
+bFMtx.score4 <- function( stdMIObj ){
+
+	stdMI <- stdMIObj$stdMI
+	zMtx <- stdMIObj$zMtx
+	rObj <- list( 	idStr="score4"	,zMtx.size=nrow(zMtx)
+					,lastZoid=stdMI$lastZoid
+				)
+
+	#	cName <- c("rebPtn.1","rebPtn.n","snMax.r" ,"snFCnt.r" ,"snMax.c" ,"snFCnt.c")
+	rObj$fMtxObj <- function( aZoidMtx ,makeInfoStr=F ){
+		aLen <- nrow(aZoidMtx)
+		cName <- c("rebPtn.1","rebPtn.n","snMax.r" ,"snFCnt.r" ,"snMax.c" ,"snFCnt.c")
+		scoreMtx <- matrix( 0, nrow=aLen, ncol=length(cName) )	;colnames(scoreMtx) <- cName
+
+		infoMtx <- NULL
+		if( makeInfoStr ){
+			cName <- c("rebPtn.1","rebPtn.n","snXXX.r","snXXX.c","zMtx.size")
+			infoMtx <- matrix( "" ,nrow=aLen ,ncol=length(cName) )	;colnames(infoMtx) <- cName
+			infoMtx[,"zMtx.size"] <- rObj$zMtx.size
+		}
+		if( 0==rObj$zMtx.size ){
+			return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
+		}
+
+		for( aIdx in 1:aLen ){
+			aZoid <- aZoidMtx[aIdx,]
+			aCStep <- aZoid[2:6] - aZoid[1:5]
+			aFStep <- aZoid - rObj$lastZoid
+			# working
+		}
+	}
+
+	return( rObj )
+
+} # bFMtx.score4( )
