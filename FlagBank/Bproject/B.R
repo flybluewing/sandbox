@@ -163,19 +163,23 @@ if( FALSE ){    # 실전 추출 예제 코드
     #   - 그룹 특성에 따라 stdFilted.NG 에서
     #       하나 소속되지 않은 aZoid, 혹은 다수가 소속된 aZoid도 있을 수 있다.
     # --------------------------------------------------------------------
+    #   시간 소요 8.8min/20k, 39min/20k
     curStdFiltedCnt <- 1
-      <- allIdxLst[[sprintf("allZoid.idx%d",curStdFiltedCnt)]]
+    allIdx  <- allIdxLst[[sprintf("allZoid.idx%d",curStdFiltedCnt)]]
 
-    allIdxF <- c( stdIdx ,allIdx[sample(1:length(allIdx),20000)] ) 
+    allIdxF <- c( stdIdx ,allIdx[sample(1:length(allIdx),200000)] ) 
     fHName <- bUtil.getSfcLstName( fRstLst[[length(fRstLst)]] ,curStdFiltedCnt=curStdFiltedCnt ,cut.grp )
 
+    tStmp <- Sys.time()
     Rprof(filename="Work_Rprof.scoreMtx.out", append=FALSE,  interval=0.02 )
     scoreMtx.grp <- getScoreMtx.grp( gEnv$allZoidMtx[allIdxF,,drop=F] ,filter.grp )
     Rprof( NULL )
+    tDiff <- Sys.time() - tStmp     ;cat( sprintf("cost : %.1f%s \n",tDiff,units(tDiff)) )
 
     Rprof(filename="Work_Rprof.out", append=FALSE,  interval=0.02 )
     cutRst <- bUtil.cut( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx ,logger=logger )
     Rprof( NULL )
+    tDiff <- Sys.time() - tStmp     ;cat( sprintf("cost : %.1f%s \n",tDiff,units(tDiff)) )
 
     # logger$fLogStr("\n\n= Performance Prof======================================")
     # logger$fLog( summaryRprof("Work_Rprof.out") )
