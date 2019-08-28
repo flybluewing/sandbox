@@ -137,7 +137,7 @@ if( FALSE ){    # 실전 추출 예제 코드
     load(sprintf("./save/Obj_remLstZ%d.save",lastH) )
     logger <- k.getFlogObj( "./log/cutLog.txt" )
 
-    configH <- 851  # 지정된 지점을 반복사용하므로..
+    configH <- 854  # 지정된 지점을 반복사용하므로..
     stdZoid <- gEnv$zhF[configH,]
     stdIdx <- k.getIdx_AllZoidMtx( gEnv, stdZoid )
 
@@ -164,9 +164,9 @@ if( FALSE ){    # 실전 추출 예제 코드
     #       하나 소속되지 않은 aZoid, 혹은 다수가 소속된 aZoid도 있을 수 있다.
     # --------------------------------------------------------------------
     curStdFiltedCnt <- 1
-    allIdx <- allIdxLst[[sprintf("allZoid.idx%d",curStdFiltedCnt)]]
+      <- allIdxLst[[sprintf("allZoid.idx%d",curStdFiltedCnt)]]
 
-    allIdxF <- c( stdIdx ,allIdx[1:10000] )
+    allIdxF <- c( stdIdx ,allIdx[sample(1:length(allIdx),20000)] ) 
     fHName <- bUtil.getSfcLstName( fRstLst[[length(fRstLst)]] ,curStdFiltedCnt=curStdFiltedCnt ,cut.grp )
 
     Rprof(filename="Work_Rprof.scoreMtx.out", append=FALSE,  interval=0.02 )
