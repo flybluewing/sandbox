@@ -1405,10 +1405,86 @@ fCutU.getFiltObjPair <- function( pMtx ,debug=F ){
 		}
 		return( fndMtx )
 	}
+	rObj$explain <- function( part=NULL ){
+		rptStr <- NULL
+		if( is.null(part) || part=="pBanInfoLst" ){
+			rptStr <- c( rptStr ,"pBanInfoLst")
+			infoStr <- sapply( rObj$pBanInfoLst ,function( banInfo ){
+				pairInfo <- banInfo$pairInfo
+				sprintf("val:%s   cord:(%d/%s),(%d/%s) happen:%d   incPtn:%s(fix:%s)  rebPtn:%s(fix:%s)" 
+					,paste(pairInfo[c("v1","v2")],collapse=",")
+					,pairInfo["rf"],paste(pairInfo[c("cf1","cf2")],collapse=",")
+					,pairInfo["rs"],paste(pairInfo[c("cs1","cs2")],collapse=",")
+					,pairInfo["hpn"]
+					,paste(banInfo$incPtn.banVal,collapse=",")	,paste(banInfo$incPtn.fixIdx,collapse=",")
+					,paste(banInfo$rebPtn.banVal,collapse=",")	,paste(banInfo$rebPtn.fixIdx,collapse=",")
+				)
+			})
+			if( 0<length(infoStr) ){
+				infoStr <- paste( sprintf("  %dth %s",1:length(infoStr),infoStr) ,collapse="\n")
+				rptStr <- c( rptStr ,infoStr )
+			}
+		}
+		if( is.null(part) || part=="iBanInfoLst" ){
+			rptStr <- c( rptStr ,"iBanInfoLst")
+			infoStr <- sapply( rObj$iBanInfoLst ,function( banInfo ){
+				incInfoDf <- banInfo$incInfoDf
+				sprintf("<%s> banVal:%s(fix:%s) multiHpn:%s cord:%s val:%s" 
+					,banInfo$typ
+					,paste(banInfo$incPtn.banVal,collapse=",")
+					,paste(banInfo$incPtn.fixIdx,collapse=",")
+					,banInfo$multiHpn
+					,incInfoDf[1,"cordStr"]	,incInfoDf[1,"valStr"]
+				)
+			})
+			if( 0<length(infoStr) ){
+				infoStr <- paste( sprintf("  %dth %s",1:length(infoStr),infoStr) ,collapse="\n")
+				rptStr <- c( rptStr ,infoStr )
+			}
+		}
+		if( is.null(part) || part=="pairPtnLst" ){
+			rptStr <- c( rptStr ,"pairPtnLst")
+			infoStr <- sapply(	rObj$pairPtnLst[["(pFV,*)"]] ,function( mtx ){
+				str <- NULL
+				for( rIdx in seq_len(nrow(mtx)) ){
+					str <- c( str ,sprintf("(%s)",paste(mtx[rIdx,],collapse=",")) )
+				}
+				return( ifelse(is.null(str),"",paste(str,collapse="") ) )
+			})
+			if( 0<length(infoStr) ){
+				infoStr <- paste( sprintf("  (pFV,*) %dth gen %s",1:length(infoStr),infoStr) ,collapse="\n")
+				rptStr <- c( rptStr ,infoStr )
+			}
+
+			infoStr <- sapply(	rObj$pairPtnLst[["(*,pFV)"]] ,function( mtx ){
+				str <- NULL
+				for( rIdx in seq_len(nrow(mtx)) ){
+					str <- c( str ,sprintf("(%s)",paste(mtx[rIdx,],collapse=",")) )
+				}
+				return( ifelse(is.null(str),"",paste(str,collapse="") ) )
+			})
+			if( 0<length(infoStr) ){
+				infoStr <- paste( sprintf("  (*,pFV) %dth gen %s",1:length(infoStr),infoStr) ,collapse="\n")
+				rptStr <- c( rptStr ,infoStr )
+			}
+		}
+		if( is.null(part) || part=="ptn4Lst" ){
+			rptStr <- c( rptStr ,"ptn4Lst")
+			infoStr <- sapply( rObj$ptn4Lst ,function( ptn4 ){ ptn4$infoStr })
+			if( 0<length(infoStr) ){
+				infoStr <- paste( sprintf("  %dth %s",1:length(infoStr),infoStr) ,collapse="\n")
+				rptStr <- c( rptStr ,infoStr )
+			}
+		}
+
+		rptStr <- paste( rptStr ,collapse="\n" )
+		cat( sprintf("%s\n",rptStr) )
+	}
 
 	if( 2>nrow(pMtx) ){
 		# QQE:todo pMtx 데이터가 없는 경우를 위해 처리 필요.
 		rObj$filt <- function(aCode){ return(NULL) }
+		rObj$explain <- function( part=NULL ){	cat( sprintf("not enough data(row num:%d)\n",nrow(pMtx)) )	}
 		return( rObj )
 	}
 
@@ -1828,7 +1904,7 @@ fCutU.getFiltObjPair <- function( pMtx ,debug=F ){
 
 		# iBanInfoLst
 		iBanLst <- list()
-		if( 1<length(rObj$iBanInfoLst) ){
+		if( 0<length(rObj$iBanInfoLst) ){
 			for( lIdx in 1:length(rObj$iBanInfoLst) ){
 				iBanInfo <- rObj$iBanInfoLst[[lIdx]]
 				infoDf <- iBanInfo$incInfoDf
@@ -1888,82 +1964,6 @@ fCutU.getFiltObjPair <- function( pMtx ,debug=F ){
 		return( rstObj )
 
 	} # rObj$filt()
-
-	rObj$explain <- function( part=NULL ){
-		rptStr <- NULL
-		if( is.null(part) || part=="pBanInfoLst" ){
-			rptStr <- c( rptStr ,"pBanInfoLst")
-			infoStr <- sapply( rObj$pBanInfoLst ,function( banInfo ){
-				pairInfo <- banInfo$pairInfo
-				sprintf("val:%s   cord:(%d/%s),(%d/%s) happen:%d   incPtn:%s(fix:%s)  rebPtn:%s(fix:%s)" 
-					,paste(pairInfo[c("v1","v2")],collapse=",")
-					,pairInfo["rf"],paste(pairInfo[c("cf1","cf2")],collapse=",")
-					,pairInfo["rs"],paste(pairInfo[c("cs1","cs2")],collapse=",")
-					,pairInfo["hpn"]
-					,paste(banInfo$incPtn.banVal,collapse=",")	,paste(banInfo$incPtn.fixIdx,collapse=",")
-					,paste(banInfo$rebPtn.banVal,collapse=",")	,paste(banInfo$rebPtn.fixIdx,collapse=",")
-				)
-			})
-			if( 0<length(infoStr) ){
-				infoStr <- paste( sprintf("  %dth %s",1:length(infoStr),infoStr) ,collapse="\n")
-				rptStr <- c( rptStr ,infoStr )
-			}
-		}
-		if( is.null(part) || part=="iBanInfoLst" ){
-			rptStr <- c( rptStr ,"iBanInfoLst")
-			infoStr <- sapply( rObj$iBanInfoLst ,function( banInfo ){
-				incInfoDf <- banInfo$incInfoDf
-				sprintf("<%s> banVal:%s(fix:%s) multiHpn:%s cord:%s val:%s" 
-					,banInfo$typ
-					,paste(banInfo$incPtn.banVal,collapse=",")
-					,paste(banInfo$incPtn.fixIdx,collapse=",")
-					,banInfo$multiHpn
-					,incInfoDf[1,"cordStr"]	,incInfoDf[1,"valStr"]
-				)
-			})
-			if( 0<length(infoStr) ){
-				infoStr <- paste( sprintf("  %dth %s",1:length(infoStr),infoStr) ,collapse="\n")
-				rptStr <- c( rptStr ,infoStr )
-			}
-		}
-		if( is.null(part) || part=="pairPtnLst" ){
-			rptStr <- c( rptStr ,"pairPtnLst")
-			infoStr <- sapply(	rObj$pairPtnLst[["(pFV,*)"]] ,function( mtx ){
-				str <- NULL
-				for( rIdx in seq_len(nrow(mtx)) ){
-					str <- c( str ,sprintf("(%s)",paste(mtx[rIdx,],collapse=",")) )
-				}
-				return( ifelse(is.null(str),"",paste(str,collapse="") ) )
-			})
-			if( 0<length(infoStr) ){
-				infoStr <- paste( sprintf("  (pFV,*) %dth gen %s",1:length(infoStr),infoStr) ,collapse="\n")
-				rptStr <- c( rptStr ,infoStr )
-			}
-
-			infoStr <- sapply(	rObj$pairPtnLst[["(*,pFV)"]] ,function( mtx ){
-				str <- NULL
-				for( rIdx in seq_len(nrow(mtx)) ){
-					str <- c( str ,sprintf("(%s)",paste(mtx[rIdx,],collapse=",")) )
-				}
-				return( ifelse(is.null(str),"",paste(str,collapse="") ) )
-			})
-			if( 0<length(infoStr) ){
-				infoStr <- paste( sprintf("  (*,pFV) %dth gen %s",1:length(infoStr),infoStr) ,collapse="\n")
-				rptStr <- c( rptStr ,infoStr )
-			}
-		}
-		if( is.null(part) || part=="ptn4Lst" ){
-			rptStr <- c( rptStr ,"ptn4Lst")
-			infoStr <- sapply( rObj$ptn4Lst ,function( ptn4 ){ ptn4$infoStr })
-			if( 0<length(infoStr) ){
-				infoStr <- paste( sprintf("  %dth %s",1:length(infoStr),infoStr) ,collapse="\n")
-				rptStr <- c( rptStr ,infoStr )
-			}
-		}
-
-		rptStr <- paste( rptStr ,collapse="\n" )
-		cat( sprintf("%s\n",rptStr) )
-	}
 
 	return( rObj )
 
