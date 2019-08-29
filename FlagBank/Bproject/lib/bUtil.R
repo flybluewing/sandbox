@@ -301,7 +301,7 @@ bUtil.getStdMILst <- function( gEnv ,fRstLst ){
 		chkStr <- character(0)
 		for( nIdx in names(rObj$basic) ){
 			rCnt <- nrow(rObj$basic[[nIdx]]$stdMI$rawTail)
-			if( rCnt<6 ) chkStr <- c( chkStr ,sprintf("%s:%d",nIdx,) )
+			if( rCnt<6 ) chkStr <- c( chkStr ,sprintf("%s:%d",nIdx,rCnt) )
 		}
 		if( 0<length(chkStr) ){
 			rptStr <- c( rptStr ,"stdMI.basic")
@@ -311,7 +311,7 @@ bUtil.getStdMILst <- function( gEnv ,fRstLst ){
 		chkStr <- character(0)
 		for( nIdx in names(rObj$bDup) ){
 			rCnt <- nrow(rObj$bDup[[nIdx]]$stdMI$rawTail)
-			if( rCnt<6 ) chkStr <- c( chkStr ,sprintf("%s:%d",nIdx,) )
+			if( rCnt<6 ) chkStr <- c( chkStr ,sprintf("%s:%d",nIdx,rCnt) )
 		}
 		if( 0<length(chkStr) ){
 			rptStr <- c( rptStr ,"stdMI.bDup")
@@ -321,7 +321,7 @@ bUtil.getStdMILst <- function( gEnv ,fRstLst ){
 		chkStr <- character(0)
 		for( nIdx in names(rObj$mf) ){
 			rCnt <- nrow(rObj$mf[[nIdx]]$stdMI$rawTail)
-			if( rCnt<6 ) chkStr <- c( chkStr ,sprintf("%s:%d",nIdx,) )
+			if( rCnt<6 ) chkStr <- c( chkStr ,sprintf("%s:%d",nIdx,rCnt) )
 		}
 		if( 0<length(chkStr) ){
 			rptStr <- c( rptStr ,"stdMI.mf")
