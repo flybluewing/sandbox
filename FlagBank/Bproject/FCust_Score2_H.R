@@ -423,6 +423,7 @@ bFCust.A_score2_A_rReb01 <- function(  ){
 } # bFCust.A_score2_A_rReb01()
 
 bFCust.A_score2_A_rRebAA <- function(  ){
+	#	이전 마지막 score(cutterObj$lastRow) 값과의 일치여부(raw Value) 
 	rObj <- list( )
 	rObj$defId <- c( typ="cust_RReb"	,hName="*"	,mName="score2"	,pName="*"	,rFId="rRebAA" )	# row filt ID
 	rObj$description <- sprintf("(cust)  ")

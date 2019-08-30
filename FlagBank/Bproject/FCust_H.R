@@ -10,9 +10,9 @@ source("FCust_Score7_H.R")
 #   stdCtrlCfgGrp <- bUtil.makeStdCtrlCfgGrp(hMtxLst)
 bFCust.getFCustGrp <- function( stdCtrlCfgGrp ,hMtxLst ){
 
-    rObj <- list(   sfcHLst = stdCtrlCfgGrp$sfcHLst
-                    ,mtxInfoLst = stdCtrlCfgGrp$mtxInfoLst
-                    ,phaseName = stdCtrlCfgGrp$phaseName        
+    rObj <- list(   sfcHLst = hMtxLst$sfcHLst
+                    ,mtxInfoLst = hMtxLst$mtxInfoLst
+                    ,phaseName = hMtxLst$phaseName
     )
 
     ctrlCfgLst <- stdCtrlCfgGrp$ctrlCfgLst
