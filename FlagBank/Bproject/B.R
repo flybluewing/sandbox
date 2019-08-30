@@ -26,7 +26,7 @@ if( FALSE ){ # report sample
 if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
 
     names(fRstLst) <- names(allIdxLst$stdFiltedCnt)
-    get_testData.grp <- function( testSpan ,gEnv ,allIdxLst ,fRstLst ){
+    get_testData.grp <- function( testSpan ,gEnv ,allIdxLst ,fRstLst ,tgt.scMtx=tgt.scMtx ){
 
         curHMtxLst.grp <- list( )
         stdIdx.grp <- list()
@@ -44,7 +44,7 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
                                         allIdxLst.w$infoMtx <- allIdxLst$infoMtx[wLastSpan,]
             fRstLst.w <- fRstLst[wLastSpan]
 
-            curHMtxLst <- B.makeHMtxLst( gEnv.w, allIdxLst.w, fRstLst.w )   
+            curHMtxLst <- B.makeHMtxLst( gEnv.w, allIdxLst.w, fRstLst.w, tgt.scMtx )   
 
             curHMtxLst.grp[[as.character(curHIdx)]] <- curHMtxLst
 
@@ -61,19 +61,20 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
     }
 
 
+    tgt.scMtx <- NULL       # default : NULL
 
     configH <- lastH-20    # configH는 기본 cutting값을 얻기 위하는 시점에 따라 조절.
-    hMtxLst <- B.makeHMtxLst( gEnv, allIdxLst, fRstLst, lastH=configH )
+    hMtxLst <- B.makeHMtxLst( gEnv, allIdxLst, fRstLst, lastH=configH, tgt.scMtx )
     stdCtrlCfgGrp <- bUtil.makeStdCtrlCfgGrp(hMtxLst)
     save( stdCtrlCfgGrp ,file=sprintf("./save/HMtxLst/Obj_stdCtrlCfgGrp_%d.save",configH) )
     #   load(sprintf("./save/HMtxLst/Obj_stdCtrlCfgGrp_%d.save",configH))
 
+
     testSpan <- (lastH - 18:0)   # configH 보다는 큰 시점에서 시작해야 함을 유의.
-    testData.grp <- get_testData.grp( testSpan ,gEnv ,allIdxLst ,fRstLst )  # 반복 테스트를 위한 속도향상
+    testData.grp <- get_testData.grp( testSpan ,gEnv ,allIdxLst ,fRstLst ,tgt.scMtx=tgt.scMtx)  # 반복 테스트를 위한 속도향상
     #   save( testData.grp ,file="Obj_testData.grp.save" )
     #   load( "Obj_testData.grp.save" )
 
-    tgt.scMtx <- NULL       # default : NULL
     cutRstLst <- list()
     for( curHIdx in testSpan ){    # curHIdx <- testSpan[1] # 842
 

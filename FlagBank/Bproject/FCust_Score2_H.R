@@ -704,6 +704,7 @@ bFCust.byFCol_A_score2_A_rRebAA <- function( ){
 #		  따라서 col 방향, row 방향, mtx전체에 대한 rebPtn 체크.
 #			(fCol 별 evt 기준 때문에 scoreMtx 개개별로 작성 필요.)
 
+#		c( typ="cust_byHIdx"	,hName="*"	,mName="score2" )
 bFCust.byHIdx_A_score2 <- function( ){
 
 	rObj <- list( )
@@ -846,6 +847,162 @@ bFCust.byHIdx_A_score2 <- function( ){
 					rCutId <- c( rCutId, sprintf("colRawDiff.%d(%d~%d)",matCnt,surWindow["min"],surWindow["max"]) )
 					break
 				}
+			}
+
+			return( rCutId )
+		}
+		# - custom --------------------------------------------------
+		cutterObj$cutLst[["F_colPairMat"]] <- function( scoreMtx ){
+			rCutId <- character(0)
+
+			# rebC r/c/f -------------------------------------------
+			matCnt <- apply( scoreMtx ,2 ,function(cVal){
+				pair1 <- cVal[c("rebC.r","rebC.c","rebC.f")]
+				pair2 <- cVal[c("rebC2.r","rebC2.c","rebC2.f")]
+
+				if( 0==(sum(pair1)+sum(pair2)) )	return( 0 )
+
+				return( sum(pair1==pair2) )
+			})
+			if(TRUE){	# check
+				matCntSum <- sum(matCnt==3)
+				if( 0<matCntSum )	rCutId <- c( rCutId, sprintf("rebC.m3 %d",matCntSum) )
+
+				matCntSum <- sum(matCnt==2)
+				if( !bUtil.in(matCntSum,eadge=c(min=1,max=1)) ){
+					rCutId <- c( rCutId, sprintf("rebC.m2 %d",sum(matCnt==2)) )
+				}
+			}
+
+			# inc r/c/f -------------------------------------------
+			matCnt <- apply( scoreMtx ,2 ,function(cVal){
+				pair1 <- cVal[c("inc.r","inc.c","inc.f")]
+				pair2 <- cVal[c("inc.r2","inc.c2","inc.f2")]
+
+				if( 0==(sum(pair1)+sum(pair2)) )	return( 0 )
+
+				return( sum(pair1==pair2) )
+			})
+			if(TRUE){	# check
+				matCntSum <- sum(matCnt==3)
+				if( 0<matCntSum )	rCutId <- c( rCutId, sprintf("inc.m3 %d",matCntSum) )
+
+				matCntSum <- sum(matCnt==2)
+				if( !bUtil.in(matCntSum,eadge=c(min=1,max=1)) ){
+					rCutId <- c( rCutId, sprintf("inc.m2 %d",sum(matCnt==2)) )
+				}
+			}
+
+			# inc r/c (1,2,3) -------------------------------------------
+			matFlag <- apply( scoreMtx ,2 ,function(cVal){
+				pair1 <- cVal[c("inc.r","inc.c")]
+				pair2 <- cVal[c("inc.r2","inc.c2")]
+				pair3 <- cVal[c("inc.r3","inc.c3")]
+
+				if( 0==sum(pair1) )	return( FALSE )
+
+				return( (pair1==pair2)&&(pair1==pair3) )
+			})
+			if(TRUE){	# check
+				matCntSum <- sum(matFlag)
+				if( 0<matCntSum )	rCutId <- c( rCutId, sprintf("inc.rc %d",matCntSum) )
+			}
+
+			return( rCutId )
+		}
+		cutterObj$cutLst[["F_rebLR"]] <- function( scoreMtx ){
+			rCutId <- character(0)
+
+			sum.rebLR <- scoreMtx["rebL",]+scoreMtx["rebR",]
+
+			chkCol <- setdiff( colnames(scoreMtx),"basic" )
+			if( any(sum.rebLR[chkCol]>1) ){
+				rCutId <- c( rCutId, sprintf("rebLR %d",sum(chkCol[chkCol])) )
+			}
+
+			return( rCutId )
+		}
+		cutterObj$cutLst[["F_rowPairMat"]] <- function( scoreMtx ){
+			rCutId <- character(0)
+
+			rowPair <- c("rebC.r","rebC2.r")	# scoreMtx[rowPair,]
+			matFlag <- scoreMtx[rowPair[1],]==scoreMtx[rowPair[2],]
+			validFlag <- 0<(scoreMtx[rowPair[1],]+scoreMtx[rowPair[2],])
+			matCnt <- sum( matFlag[validFlag] )
+			if( !bUtil.in(matCnt,eadge=c(min=1,max=1)) ){
+				rCutId <- c( rCutId, sprintf("rr %d",matCnt) )
+			}
+
+			rowPair <- c("rebC.c","rebC2.c")	# scoreMtx[rowPair,]
+			matFlag <- scoreMtx[rowPair[1],]==scoreMtx[rowPair[2],]
+			validFlag <- 0<(scoreMtx[rowPair[1],]+scoreMtx[rowPair[2],])
+			matCnt <- sum( matFlag[validFlag] )
+			if( !bUtil.in(matCnt,eadge=c(min=1,max=1)) ){
+				rCutId <- c( rCutId, sprintf("rc %d",matCnt) )
+			}
+
+			rowPair <- c("rebC.f","rebC2.f")	# scoreMtx[rowPair,]
+			matFlag <- scoreMtx[rowPair[1],]==scoreMtx[rowPair[2],]
+			validFlag <- 0<(scoreMtx[rowPair[1],]+scoreMtx[rowPair[2],])
+			matCnt <- sum( matFlag[validFlag] )
+			if( !bUtil.in(matCnt,eadge=c(min=1,max=1)) ){
+				rCutId <- c( rCutId, sprintf("rf %d",matCnt) )
+			}
+
+			rowPair <- c("inc.r","inc.r2")	# scoreMtx[rowPair,]
+			matFlag <- scoreMtx[rowPair[1],]==scoreMtx[rowPair[2],]
+			validFlag <- 0<(scoreMtx[rowPair[1],]+scoreMtx[rowPair[2],])
+			matCnt <- sum( matFlag[validFlag] )
+			if( !bUtil.in(matCnt,eadge=c(min=1,max=1)) ){
+				rCutId <- c( rCutId, sprintf("ir12 %d",matCnt) )
+			}
+
+			rowPair <- c("inc.r","inc.r3")	# scoreMtx[rowPair,]
+			matFlag <- scoreMtx[rowPair[1],]==scoreMtx[rowPair[2],]
+			validFlag <- 0<(scoreMtx[rowPair[1],]+scoreMtx[rowPair[2],])
+			matCnt <- sum( matFlag[validFlag] )
+			if( !bUtil.in(matCnt,eadge=c(min=1,max=1)) ){
+				rCutId <- c( rCutId, sprintf("ir13 %d",matCnt) )
+			}
+
+			rowPair <- c("inc.r2","inc.r3")	# scoreMtx[rowPair,]
+			matFlag <- scoreMtx[rowPair[1],]==scoreMtx[rowPair[2],]
+			validFlag <- 0<(scoreMtx[rowPair[1],]+scoreMtx[rowPair[2],])
+			matCnt <- sum( matFlag[validFlag] )
+			if( !bUtil.in(matCnt,eadge=c(min=1,max=1)) ){
+				rCutId <- c( rCutId, sprintf("ir23 %d",matCnt) )
+			}
+
+			rowPair <- c("inc.c","inc.c2")	# scoreMtx[rowPair,]
+			matFlag <- scoreMtx[rowPair[1],]==scoreMtx[rowPair[2],]
+			validFlag <- 0<(scoreMtx[rowPair[1],]+scoreMtx[rowPair[2],])
+			matCnt <- sum( matFlag[validFlag] )
+			if( !bUtil.in(matCnt,eadge=c(min=1,max=1)) ){
+				rCutId <- c( rCutId, sprintf("ic12 %d",matCnt) )
+			}
+
+			rowPair <- c("inc.c","inc.c3")	# scoreMtx[rowPair,]
+			matFlag <- scoreMtx[rowPair[1],]==scoreMtx[rowPair[2],]
+			validFlag <- 0<(scoreMtx[rowPair[1],]+scoreMtx[rowPair[2],])
+			matCnt <- sum( matFlag[validFlag] )
+			if( !bUtil.in(matCnt,eadge=c(min=1,max=1)) ){
+				rCutId <- c( rCutId, sprintf("ic13 %d",matCnt) )
+			}
+
+			rowPair <- c("inc.c2","inc.c3")	# scoreMtx[rowPair,]
+			matFlag <- scoreMtx[rowPair[1],]==scoreMtx[rowPair[2],]
+			validFlag <- 0<(scoreMtx[rowPair[1],]+scoreMtx[rowPair[2],])
+			matCnt <- sum( matFlag[validFlag] )
+			if( !bUtil.in(matCnt,eadge=c(min=1,max=1)) ){
+				rCutId <- c( rCutId, sprintf("ic23 %d",matCnt) )
+			}
+
+			rowPair <- c("inc.f","inc.f2")	# scoreMtx[rowPair,]
+			matFlag <- scoreMtx[rowPair[1],]==scoreMtx[rowPair[2],]
+			validFlag <- 0<(scoreMtx[rowPair[1],]+scoreMtx[rowPair[2],])
+			matCnt <- sum( matFlag[validFlag] )
+			if( !bUtil.in(matCnt,eadge=c(min=1,max=1)) ){
+				rCutId <- c( rCutId, sprintf("if12 %d",matCnt) )
 			}
 
 			return( rCutId )
