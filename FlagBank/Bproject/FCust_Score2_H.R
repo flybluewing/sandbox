@@ -220,12 +220,19 @@ bFCust.A_score2_A_Row01 <- function(  ){
 
 	rObj$cutFLst <- list()
 	# Sample code ================================================================
-	rObj$cutFLst[[1+length(rObj$cutFLst)]] <- function( smRow ,evt ){	# for testing
-
+	rObj$cutFLst[[1+length(rObj$cutFLst)]] <- function( smRow ,evt ){
 		crObj <- list( cutFlag=F ,cId="evtNum" ) # cut result object, cut Id
 		if( 4<=sum(!is.na(evt)) ){
 			crObj$cutFlag <- TRUE
 			crObj$cId <- sprintf( "%s  %d" ,crObj$cId ,sum(!is.na(evt)) )
+		}
+		return( crObj )
+	} # rObj$cutFLst[1]( )
+	rObj$cutFLst[[1+length(rObj$cutFLst)]] <- function( smRow ,evt ){
+		crObj <- list( cutFlag=F ,cId="hpnOne" ) # cut result object, cut Id
+		if( 0<sum(smRow==1) ){
+			crObj$cutFlag <- TRUE
+			crObj$cId <- sprintf( "%s  %d" ,crObj$cId ,sum(smRow==1) )
 		}
 		return( crObj )
 	} # rObj$cutFLst[1]( )
