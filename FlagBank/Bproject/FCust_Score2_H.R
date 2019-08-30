@@ -484,6 +484,7 @@ bFCust.A_score2_A_rRebAA <- function(  ){
 } # bFCust.A_score2_A_rRebAA()
 
 #	[score2:byFCol(Rebound/Sequencial)] ---------------------------------------------------------
+#		- mtxGrp <- getScoreMtx.grp_byFCol( scoreMtx.grp )
 #		- nRow 대상이긴 하지만, mtx는 각 scoreMtx 의 fCol 별로 생성된다는 점을 주의
 #		- column이 phase이므로 pName 구분이 없고, tgtId에서도 pName이 빠진다. 대신 fcName 필요.
 bFCust.byFCol_A_score2_rebVR <- function( ){
@@ -700,6 +701,7 @@ bFCust.byFCol_A_score2_A_rRebAA <- function( ){
 
 #	[score2:byHIdx(...)] ---------------------------------------------------------
 #		- [fCol,phName] 
+#		- mtxGrp <- getScoreMtx.grp_byHIdx( scoreMtx.grp )
 #       - 개개 score의 최대 최소값이나, evt 발생등은 이미 앞에서 모두 확인되었다.)
 #		  따라서 col 방향, row 방향, mtx전체에 대한 rebPtn 체크.
 #			(fCol 별 evt 기준 때문에 scoreMtx 개개별로 작성 필요.)
