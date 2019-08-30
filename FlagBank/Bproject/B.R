@@ -1,6 +1,6 @@
 source("header.r")
 source("B_H.R")
-lastH <- 860    # 최종 데이터의 로딩기준이지, 작업시점(workH)은 다를 수 있다.
+lastH <- 860    # 최종 데이터의 로딩 기준일 뿐, 작업시점(workH)은 다를 수 있다.
 #source(sprintf("./toFinal/toZ%d_H.R",workH))	# working
 
 load(sprintf("../Aproject/Obj_allIdxLstZ%d.save",lastH) )
@@ -145,10 +145,10 @@ if( FALSE ){    # 실전 추출 예제 코드
     # stdCtrlCfgGrp
     load("./save/HMtxLst/Obj_stdCtrlCfgGrp_840.save")
 
-    hMtxLst <- B.makeHMtxLst( gEnv, allIdxLst, fRstLst )
+    tgt.scMtx <- NULL       # default : NULL        ; c("score2","score3")
+    hMtxLst <- B.makeHMtxLst( gEnv, allIdxLst, fRstLst, tgt.scMtx=tgt.scMtx )
     cut.grp <- bFCust.getFCustGrp( stdCtrlCfgGrp ,hMtxLst )
 
-    tgt.scMtx <- NULL       # default : NULL        ; c("score2","score3")
     stdMI.grp <- bUtil.getStdMILst( gEnv ,fRstLst ) # B.rptStdMI.grp( stdMI.grp )
     stdMI.grp$anyWarn( )
 

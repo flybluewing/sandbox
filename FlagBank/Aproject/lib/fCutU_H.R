@@ -1782,10 +1782,17 @@ fCutU.getFiltObjPair <- function( pMtx ,debug=F ){
 			}
 		}
 	}
+	lstLen <- sapply(pairPtnLst,length)
 	pairPtnLst[["(pFV,*)"]] <- lapply( pairPtnLst[["(pFV,*)"]] ,removeDup )
-	names(pairPtnLst[["(pFV,*)"]]) <- sprintf("%dth Gen",1:length(pairPtnLst[["(pFV,*)"]]))
 	pairPtnLst[["(*,pFV)"]] <- lapply( pairPtnLst[["(*,pFV)"]] ,removeDup )
-	names(pairPtnLst[["(*,pFV)"]]) <- sprintf("%dth Gen",1:length(pairPtnLst[["(*,pFV)"]]))
+	if( 0<lstLen["(pFV,*)"] ){
+		names(pairPtnLst[["(pFV,*)"]]) <- sprintf("%dth Gen",1:length(pairPtnLst[["(pFV,*)"]]))
+	}
+	if( 0<lstLen["(*,pFV)"] ){
+		names(pairPtnLst[["(*,pFV)"]]) <- sprintf("%dth Gen",1:length(pairPtnLst[["(*,pFV)"]]))
+	}
+
+
 	rObj$pairPtnLst <- pairPtnLst
 
 	#	<ptn4Lst> pair 주변 4개 길이의 재현 배제

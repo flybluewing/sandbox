@@ -47,11 +47,12 @@ bUtil.makeStdCtrlCfgGrp <- function( hMtxLst ){
 }
 
 
-B.makeHMtxLst <- function( gEnv, allIdxLst, fRstLst, lastH=NULL ){
+B.makeHMtxLst <- function( gEnv, allIdxLst, fRstLst ,tgt.scMtx=NULL ,lastH=NULL ){
 
     hStr <- names(allIdxLst$stdFiltedCnt)
     names(fRstLst) <- hStr
 
+    tStmp <- Sys.time()
     # ----------------------------------------------------
     firstH <- as.integer(hStr[1])
     if( is.null(lastH) ){
@@ -80,14 +81,11 @@ B.makeHMtxLst <- function( gEnv, allIdxLst, fRstLst, lastH=NULL ){
         sfcHLst[[sprintf("NG%s",sfnIdx)]] <- hSpan.NG
     }
 
-    cnt <- sapply(sfcHLst,length)
-    cat(sprintf("   %s\n",paste(paste(names(cnt),cnt,sep=":") ,collapse="   " ) ))
-
     scoreMtxLst <- list()
     for( sfcIdx in names(sfcHLst) ){    # sfcIdx <- names(sfcHLst)[2]
 
         scoreMtx.grp.lst <- list()
-        for( hIdx in sfcHLst[[sfcIdx]] ){   # hIdx <- hSpan[1]
+        for( hIdx in sfcHLst[[sfcIdx]] ){   # hIdx <- sfcHLst[[sfcIdx]][1]
             stdZoid <- gEnv$zhF[hIdx ,]
             wEnv <- gEnv
             wEnv$zhF <- gEnv$zhF[1:(hIdx-1),]
@@ -95,7 +93,7 @@ B.makeHMtxLst <- function( gEnv, allIdxLst, fRstLst, lastH=NULL ){
             fRstLst.w <- fRstLst[as.character(fRstLst.hSpan[fRstLst.hSpan<hIdx])]
 
             stdMI.grp <- bUtil.getStdMILst( wEnv ,fRstLst.w )
-            filter.grp <- getFilter.grp( stdMI.grp )
+            filter.grp <- getFilter.grp( stdMI.grp ,tgt.scMtx )
 
             scoreMtx.grp <- getScoreMtx.grp.4H( stdZoid ,filter.grp )
             scoreMtx.grp.lst[[sprintf("hIdx:%d",hIdx)]] <- scoreMtx.grp
@@ -148,6 +146,13 @@ B.makeHMtxLst <- function( gEnv, allIdxLst, fRstLst, lastH=NULL ){
     rObj$getScoreMtxObj <- function( hName, mName, pName ){
         return( rObj$scoreMtxLst[[hName]][[pName]][[mName]] )
     }
+
+    cnt <- sapply(sfcHLst,length)
+    tDiff <- Sys.time() - tStmp
+    cat(sprintf("       time %.1f%s   %s\n"
+            ,tDiff  ,units(tDiff)
+            ,paste(paste(names(cnt),cnt,sep=":") ,collapse="   " ) 
+    ))
 
     return( rObj )
 } # B.makeHMtxLst()
