@@ -230,9 +230,10 @@ bFCust.A_score2_A_Row01 <- function(  ){
 	} # rObj$cutFLst[1]( )
 	rObj$cutFLst[[1+length(rObj$cutFLst)]] <- function( smRow ,evt ){
 		crObj <- list( cutFlag=F ,cId="hpnOne" ) # cut result object, cut Id
-		if( 0<sum(smRow==1) ){
+		cnt <- sum(smRow==1)
+		if( !bUtil.in(cnt,c(min=0,max=8)) ){
 			crObj$cutFlag <- TRUE
-			crObj$cId <- sprintf( "%s  %d" ,crObj$cId ,sum(smRow==1) )
+			crObj$cId <- sprintf( "%s  %d" ,crObj$cId ,cnt )
 		}
 		return( crObj )
 	} # rObj$cutFLst[1]( )
@@ -768,7 +769,8 @@ bFCust.byHIdx_A_score2 <- function( ){
 		cutterObj$idObj <- rObj$defId
 		cutterObj$idObj[names(tgtId)] <- tgtId
 
-		cutterObj$evt <- rObj$getMtxEvt_byRow( mtxLst ) 
+		cutterObj$evt <- rObj$getMtxEvt_byRow( mtxLst )
+		cutterObj$chkEvt.last <- bFCust.get_byHIdx_score2ChkEvt( mtxLst[[length(mtxLst)]] )
 
 		cutterObj$cut <- function( scoreMtx ,aIdx ){
 			# scoreMtx 는 1개 aZoid에 관한 [fCol,phase] mtx임을 유의.
@@ -776,8 +778,9 @@ bFCust.byHIdx_A_score2 <- function( ){
 			#	단 surDf와 cutLst는 다른 cut함수들 결과와의 호환성 유지를 위해 구조유지.
 			cutId <- character(0)
 
+			chkEvt <- bFCust.get_byHIdx_score2ChkEvt( scoreMtx )
 			for( cutIdx in names(cutterObj$cutLst) ){ # cutIdx <- names(cutterObj$cutLst)[1]
-				cutId <- c( cutId ,cutterObj$cutLst[[cutIdx]]( scoreMtx ) )
+				cutId <- c( cutId ,cutterObj$cutLst[[cutIdx]]( scoreMtx ,chkEvt ) )
 			}
 
 			cutLst <- list()
@@ -790,7 +793,7 @@ bFCust.byHIdx_A_score2 <- function( ){
 		} # cutterObj$cut()
 
 		cutterObj$cutLst <- list()
-		cutterObj$cutLst[["F_matEvt"]] <- function( scoreMtx ){
+		cutterObj$cutLst[["F_matEvt"]] <- function( scoreMtx ,chkEvt=NULL ){
 			rCutId <- character(0)
 
 			srcEvt <- scoreMtx
@@ -820,7 +823,7 @@ bFCust.byHIdx_A_score2 <- function( ){
 
 			return( rCutId )
 		}
-		cutterObj$cutLst[["F_colMat"]] <- function( scoreMtx ){
+		cutterObj$cutLst[["F_colMat"]] <- function( scoreMtx ,chkEvt=NULL ){
 			rCutId <- character(0)
 
 			# match happen count ----------------------------------
@@ -854,77 +857,58 @@ bFCust.byHIdx_A_score2 <- function( ){
 			return( rCutId )
 		}
 		# - custom --------------------------------------------------
-		cutterObj$cutLst[["F_colPairMat"]] <- function( scoreMtx ){
+		cutterObj$cutLst[["F_colPairMat"]] <- function( scoreMtx ,chkEvt ){
+
 			rCutId <- character(0)
 
 			# rebC r/c/f -------------------------------------------
-			matCnt <- apply( scoreMtx ,2 ,function(cVal){
-				pair1 <- cVal[c("rebC.r","rebC.c","rebC.f")]
-				pair2 <- cVal[c("rebC2.r","rebC2.c","rebC2.f")]
+			matCnt <- chkEvt$colPairMat[["rebC.m"]]
+			matCntSum <- sum(matCnt==3)
+			if( !bUtil.in(matCntSum,eadge=c(min=0,max=2)) ){
+				rCutId <- c( rCutId, sprintf("rebC.m3 %d",matCntSum) )
+			}
 
-				if( 0==(sum(pair1)+sum(pair2)) )	return( 0 )
-
-				return( sum(pair1==pair2) )
-			})
-			if(TRUE){	# check
-				matCntSum <- sum(matCnt==3)
-				if( 0<matCntSum )	rCutId <- c( rCutId, sprintf("rebC.m3 %d",matCntSum) )
-
-				matCntSum <- sum(matCnt==2)
-				if( !bUtil.in(matCntSum,eadge=c(min=1,max=1)) ){
-					rCutId <- c( rCutId, sprintf("rebC.m2 %d",sum(matCnt==2)) )
-				}
+			matCntSum <- sum(matCnt==2)
+			if( !bUtil.in(matCntSum,eadge=c(min=2,max=10)) ){
+				rCutId <- c( rCutId, sprintf("rebC.m2 %d",matCntSum) )
 			}
 
 			# inc r/c/f -------------------------------------------
-			matCnt <- apply( scoreMtx ,2 ,function(cVal){
-				pair1 <- cVal[c("inc.r","inc.c","inc.f")]
-				pair2 <- cVal[c("inc.r2","inc.c2","inc.f2")]
+			matCnt <- chkEvt$colPairMat[["inc.m"]]
+			matCntSum <- sum(matCnt==3)
+			if( !bUtil.in(matCntSum,eadge=c(min=0,max=1)) ){
+				rCutId <- c( rCutId, sprintf("inc.m3 %d",matCntSum) )
+			}
 
-				if( 0==(sum(pair1)+sum(pair2)) )	return( 0 )
-
-				return( sum(pair1==pair2) )
-			})
-			if(TRUE){	# check
-				matCntSum <- sum(matCnt==3)
-				if( 0<matCntSum )	rCutId <- c( rCutId, sprintf("inc.m3 %d",matCntSum) )
-
-				matCntSum <- sum(matCnt==2)
-				if( !bUtil.in(matCntSum,eadge=c(min=1,max=1)) ){
-					rCutId <- c( rCutId, sprintf("inc.m2 %d",sum(matCnt==2)) )
-				}
+			matCntSum <- sum(matCnt==2)
+			if( !bUtil.in(matCntSum,eadge=c(min=1,max=8)) ){
+				rCutId <- c( rCutId, sprintf("inc.m2 %d",matCntSum) )
 			}
 
 			# inc r/c (1,2,3) -------------------------------------------
-			matFlag <- apply( scoreMtx ,2 ,function(cVal){
-				pair1 <- cVal[c("inc.r","inc.c")]
-				pair2 <- cVal[c("inc.r2","inc.c2")]
-				pair3 <- cVal[c("inc.r3","inc.c3")]
-
-				if( 0==sum(pair1) )	return( FALSE )
-
-				return( (pair1==pair2)&&(pair1==pair3) )
-			})
-			if(TRUE){	# check
-				matCntSum <- sum(matFlag)
-				if( 0<matCntSum )	rCutId <- c( rCutId, sprintf("inc.rc %d",matCntSum) )
+			matFlag <- chkEvt$colPairMat[["incRC123.m"]]
+			if( !bUtil.in(matCntSum,eadge=c(min=3,max=8)) ){
+				rCutId <- c( rCutId, sprintf("inc.rc %d",matCntSum) )
 			}
 
 			return( rCutId )
 		}
-		cutterObj$cutLst[["F_rebLR"]] <- function( scoreMtx ){
+		cutterObj$cutLst[["F_rebLR"]] <- function( scoreMtx ,chkEvt=NULL ){
 			rCutId <- character(0)
 
 			sum.rebLR <- scoreMtx["rebL",]+scoreMtx["rebR",]
 
 			chkCol <- setdiff( colnames(scoreMtx),"basic" )
 			if( any(sum.rebLR[chkCol]>1) ){
-				rCutId <- c( rCutId, sprintf("rebLR %d",sum(chkCol[chkCol])) )
+				hpnPh <- names(sum.rebLR)[ sum.rebLR[chkCol]>1 ]
+				rCutId <- c( rCutId, sprintf("rebLR %s",paste(hpnPh,collapse="/") ) )
 			}
 
 			return( rCutId )
 		}
-		cutterObj$cutLst[["F_rowPairMat"]] <- function( scoreMtx ){
+		# cutterObj$cutLst[["F_rowPairMat"]] <- function( scoreMtx ,chkEvt ){
+		F_rowPairMat <- function( scoreMtx ,chkEvt ){
+
 			rCutId <- character(0)
 
 			rowPair <- c("rebC.r","rebC2.r")	# scoreMtx[rowPair,]
@@ -1017,6 +1001,75 @@ bFCust.byHIdx_A_score2 <- function( ){
 } # bFCust.byHIdx_A_score2
 
 
+bFCust.get_byHIdx_score2ChkEvt <- function( scoreMtx ){
+
+	# colPairMat --------------------------------------------------
+	colPairMat <- list()
+	if( TRUE ){
+		# rebC r/c/f -------------------------------------------
+		matCnt <- apply( scoreMtx ,2 ,function(cVal){
+			pair1 <- cVal[c("rebC.r","rebC.c","rebC.f")]
+			pair2 <- cVal[c("rebC2.r","rebC2.c","rebC2.f")]
+
+			if( 0==(sum(pair1)+sum(pair2)) )	return( 0 )
+
+			return( sum(pair1==pair2) )
+		})
+		colPairMat[["rebC.m"]] <- matCnt
+
+		# inc r/c/f -------------------------------------------
+		matCnt <- apply( scoreMtx ,2 ,function(cVal){
+			pair1 <- cVal[c("inc.r","inc.c","inc.f")]
+			pair2 <- cVal[c("inc.r2","inc.c2","inc.f2")]
+
+			if( 0==(sum(pair1)+sum(pair2)) )	return( 0 )
+
+			return( sum(pair1==pair2) )
+		})
+		colPairMat[["inc.m"]] <- matCnt
+
+		# inc r/c (1,2,3) -------------------------------------------
+		matFlag <- apply( scoreMtx ,2 ,function(cVal){
+			pair1 <- cVal[c("inc.r","inc.c")]
+			pair2 <- cVal[c("inc.r2","inc.c2")]
+			pair3 <- cVal[c("inc.r3","inc.c3")]
+
+			if( 0==sum(pair1) )	return( FALSE )
+
+			return( (pair1==pair2)&&(pair1==pair3) )
+		})
+		colPairMat[["incRC123.m"]] <- matFlag
+
+	}
+
+	# rowPairMat
+	rowPairMat <- list()
+	if( TRUE ){
+
+		F_rowPairMat <- function( rowPair ){
+			matFlag <- scoreMtx[rowPair[1],]==scoreMtx[rowPair[2],]
+			validFlag <- 0<(scoreMtx[rowPair[1],]+scoreMtx[rowPair[2],])
+			matFlag[!validFlag]	<- FALSE
+			return( matFlag )
+		} # F_rowPairMat( )
+
+		rowPairMat[["rr"]] <- F_rowPairMat( c("rebC.r","rebC2.r") )
+		rowPairMat[["rc"]] <- F_rowPairMat( c("rebC.c","rebC2.c") )
+		rowPairMat[["rf"]] <- F_rowPairMat( c("rebC.f","rebC2.f") )
+		rowPairMat[["ir12"]] <- F_rowPairMat( c("inc.r","inc.r2") )
+		rowPairMat[["ir13"]] <- F_rowPairMat( c("inc.r","inc.r3") )
+		rowPairMat[["ir23"]] <- F_rowPairMat( c("inc.r2","inc.r3") )
+		rowPairMat[["ic12"]] <- F_rowPairMat( c("inc.c","inc.c2") )
+		rowPairMat[["ic13"]] <- F_rowPairMat( c("inc.c","inc.c3") )
+		rowPairMat[["ic23"]] <- F_rowPairMat( c("inc.c2","inc.c3") )
+		rowPairMat[["if12"]] <- F_rowPairMat( c("inc.f","inc.f2") )
+	}
+
+	rObj <- list( colPairMat=colPairMat ,rowPairMat=rowPairMat )
+
+	return( rObj )
+} # bFCust.get_byHIdx_score2ChkEvt( )
+
 
 getEvtMtx_byRow <- function( evtLst ,srcMtx ){
 	# evtLst <- FCust_score2EvtLst	;srcMtx <- scoreMtx
@@ -1030,6 +1083,5 @@ getEvtMtx_byRow <- function( evtLst ,srcMtx ){
 	}
 	return( rMtx )
 } # getEvtMtx
-
 
 

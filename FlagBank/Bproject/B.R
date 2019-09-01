@@ -128,6 +128,7 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
         # load("./save/HMtxLst/Obj_cutRstLst840.save")
 
     B.rptCutRstLst( cutRstLst )
+
 }
 
 

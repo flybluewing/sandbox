@@ -345,6 +345,13 @@ B.rptStdMI.grp <- function( stdMI.grp ,file="stdMI.grp" ){
 
 B.rptScoreMtx.grp <- function( scoreMtx.grp ,rIdx=1 ,file="scoreMtx.grp" ){
 
+    getShortPhaseName <- function( phaseName ){
+        phaseName <- gsub("^next","",phaseName)
+        phaseName <- gsub("^ColVal_","cv",phaseName)
+        phaseName <- gsub("StepBin","Bin",phaseName)
+        return( phaseName )
+    }
+
     log.meta <- k.getFlogObj( sprintf("./report/workRpt/%s.txt",file) )
     log.meta$fLogStr("start", pTime=T ,pAppend=F )
 
@@ -354,9 +361,29 @@ B.rptScoreMtx.grp <- function( scoreMtx.grp ,rIdx=1 ,file="scoreMtx.grp" ){
         for( mName in names(scoreMtx.grp$basic[[pName]]) ){ # mName <- names(scoreMtx.grp$basic[[pName]])[1]
             scoreMtx <- scoreMtx.grp$basic[[pName]][[mName]]$scoreMtx[rIdx,,drop=F]
             rownames(scoreMtx) <- paste(rIdx,"st",sep="")
-            
+
             log.meta$fLogStr( sprintf("  %s / %s",pName,mName) )
             log.meta$fLogMtx( scoreMtx ,pIndent="    " )
+        }
+    }
+    log.meta$fLogStr("<Basic phase> FCol------------------------------------------------")
+    mtxGrp <- getScoreMtx.grp_byFCol( scoreMtx.grp )
+    for( mName in names(mtxGrp) ){  # mName <- names(mtxGrp)[1]
+        for( fColName in names(mtxGrp[[mName]]) ){  # fColName <- names(mtxGrp[[mName]])[1]
+            mtx <- mtxGrp[[mName]][[fColName]][rIdx,,drop=F]
+            colnames( mtx ) <- getShortPhaseName( colnames( mtx ) )
+            log.meta$fLogStr( sprintf("  %s[,\"%s\"]",mName,fColName) )
+            log.meta$fLogMtx( mtx ,pIndent="    " )
+        }
+    }
+    log.meta$fLogStr("<Basic phase> hIdx------------------------------------------------")
+    mtxGrp <- getScoreMtx.grp_byHIdx( scoreMtx.grp )
+    for( mName in names(mtxGrp) ){  # mName <- names(mtxGrp)[1]
+        for( aIdx in rIdx ){    # aIdx <- rIdx[1]
+            mtx <- mtxGrp[[mName]][[rIdx]]
+            colnames( mtx ) <- getShortPhaseName( colnames( mtx ) )
+            log.meta$fLogStr( sprintf("  %s for %dth aZoid ",mName,aIdx) )
+            log.meta$fLogMtx( mtx ,pIndent="    " )
         }
     }
 
