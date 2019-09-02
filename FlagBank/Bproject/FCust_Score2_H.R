@@ -860,6 +860,7 @@ bFCust.byHIdx_A_score2 <- function( ){
 		cutterObj$cutLst[["F_colPairMat"]] <- function( scoreMtx ,chkEvt ){
 
 			rCutId <- character(0)
+			hpnSum <- 0
 
 			# rebC r/c/f -------------------------------------------
 			matCnt <- chkEvt$colPairMat[["rebC.m"]]
@@ -869,7 +870,7 @@ bFCust.byHIdx_A_score2 <- function( ){
 			}
 
 			matCntSum <- sum(matCnt==2)
-			if( !bUtil.in(matCntSum,eadge=c(min=2,max=10)) ){
+			if( !bUtil.in(matCntSum,eadge=c(min=0,max=4)) ){
 				rCutId <- c( rCutId, sprintf("rebC.m2 %d",matCntSum) )
 			}
 
@@ -879,16 +880,75 @@ bFCust.byHIdx_A_score2 <- function( ){
 			if( !bUtil.in(matCntSum,eadge=c(min=0,max=1)) ){
 				rCutId <- c( rCutId, sprintf("inc.m3 %d",matCntSum) )
 			}
+			hpnSum <- hpnSum + matCntSum
 
 			matCntSum <- sum(matCnt==2)
-			if( !bUtil.in(matCntSum,eadge=c(min=1,max=8)) ){
+			if( !bUtil.in(matCntSum,eadge=c(min=0,max=1)) ){
 				rCutId <- c( rCutId, sprintf("inc.m2 %d",matCntSum) )
 			}
+			hpnSum <- hpnSum + matCntSum
 
 			# inc r/c (1,2,3) -------------------------------------------
 			matFlag <- chkEvt$colPairMat[["incRC123.m"]]
-			if( !bUtil.in(matCntSum,eadge=c(min=3,max=8)) ){
+			if( !bUtil.in(matCntSum,eadge=c(min=0,max=1)) ){
 				rCutId <- c( rCutId, sprintf("inc.rc %d",matCntSum) )
+			}
+			hpnSum <- hpnSum + matCntSum
+
+			if( !bUtil.in(hpnSum,eadge=c(min=0,max=2)) ){
+				rCutId <- c( rCutId, sprintf("hpnSum.cpm %d",hpnSum) )
+			}
+
+			return( rCutId )
+		}
+		cutterObj$cutLst[["F_colPairMat.L"]] <- function( scoreMtx ,chkEvt ){	# last happen
+
+			rCutId <- character(0)
+			hpnSum <- 0
+
+			chkEvt.last <- cutterObj$chkEvt.last
+			# rebC r/c/f -------------------------------------------
+			matCnt <- chkEvt$colPairMat[["rebC.m"]]
+			flag <- chkEvt$colPairMat[["rebC.m"]] == chkEvt.last$colPairMat[["rebC.m"]]
+			flag[ chkEvt$colPairMat[["rebC.m"]]==0 ] <- FALSE
+
+			matCntSum <- sum(flag)
+			if( !bUtil.in(matCntSum,eadge=c(min=0,max=1)) ){
+				rCutId <- c( rCutId, sprintf("LrebC.m %d",matCntSum) )
+			}
+			hpnSum <- hpnSum + matCntSum
+			matCntSum <- sum(matCnt[flag]==3)
+			if( !bUtil.in(matCntSum,eadge=c(min=0,max=1)) ){
+				rCutId <- c( rCutId, sprintf("LrebC.m3 %d",matCntSum) )
+			}
+
+			# matCnt <- chkEvt$colPairMat[["inc.m"]]	# inc.m
+			matCnt <- chkEvt$colPairMat[["inc.m"]]
+			flag <- chkEvt$colPairMat[["inc.m"]] == chkEvt.last$colPairMat[["inc.m"]]
+			flag[ chkEvt$colPairMat[["inc.m"]]==0 ] <- FALSE
+
+			matCntSum <- sum(flag)
+			if( !bUtil.in(matCntSum,eadge=c(min=0,max=1)) ){
+				rCutId <- c( rCutId, sprintf("Linc.m %d",matCntSum) )
+			}
+			hpnSum <- hpnSum + matCntSum
+			matCntSum <- sum(matCnt[flag]==3)
+			if( !bUtil.in(matCntSum,eadge=c(min=0,max=1)) ){
+				rCutId <- c( rCutId, sprintf("Linc.m3 %d",matCntSum) )
+			}
+
+			# inc r/c (1,2,3) -------------------------------------------
+			matCnt <- chkEvt$colPairMat[["incRC123.m"]]
+			flag <- chkEvt$colPairMat[["incRC123.m"]] & chkEvt.last$colPairMat[["incRC123.m"]]
+
+			matCntSum <- sum(flag)
+			if( !bUtil.in(matCntSum,eadge=c(min=0,max=2)) ){
+				rCutId <- c( rCutId, sprintf("Linc123.m %d",matCntSum) )
+			}
+			hpnSum <- hpnSum + matCntSum
+
+			if( !bUtil.in(hpnSum,eadge=c(min=0,max=2)) ){
+				rCutId <- c( rCutId, sprintf("L.hpnSum.cpm %d",hpnSum) )
 			}
 
 			return( rCutId )
@@ -906,96 +966,165 @@ bFCust.byHIdx_A_score2 <- function( ){
 
 			return( rCutId )
 		}
-		# cutterObj$cutLst[["F_rowPairMat"]] <- function( scoreMtx ,chkEvt ){
-		F_rowPairMat <- function( scoreMtx ,chkEvt ){
+		cutterObj$cutLst[["F_rowPairMat"]] <- function( scoreMtx ,chkEvt ){
 
 			rCutId <- character(0)
+			hpnSum <- 0
 
-			rowPair <- c("rebC.r","rebC2.r")	# scoreMtx[rowPair,]
-			matFlag <- scoreMtx[rowPair[1],]==scoreMtx[rowPair[2],]
-			validFlag <- 0<(scoreMtx[rowPair[1],]+scoreMtx[rowPair[2],])
-			matCnt <- sum( matFlag[validFlag] )
-			if( !bUtil.in(matCnt,eadge=c(min=1,max=1)) ){
-				rCutId <- c( rCutId, sprintf("rr %d",matCnt) )
+			idStr <- "rr"
+			matCnt <- sum( chkEvt$rowPairMat[[idStr]] )
+			if( !bUtil.in(matCnt,eadge=c(min=0,max=6)) ){
+				rCutId <- c( rCutId, sprintf("%s %d",idStr,matCnt) )
+			}
+			idStr <- "rc"
+			matCnt <- sum( chkEvt$rowPairMat[[idStr]] )
+			if( !bUtil.in(matCnt,eadge=c(min=0,max=4)) ){
+				rCutId <- c( rCutId, sprintf("%s %d",idStr,matCnt) )
+			}
+			idStr <- "rf"
+			matCnt <- sum( chkEvt$rowPairMat[[idStr]] )
+			if( !bUtil.in(matCnt,eadge=c(min=0,max=1)) ){
+				rCutId <- c( rCutId, sprintf("%s %d",idStr,matCnt) )
+			}
+            hpnSum <- hpnSum + matCnt
+
+
+			idStr <- "ir12"
+			matCnt <- sum( chkEvt$rowPairMat[[idStr]] )
+			if( !bUtil.in(matCnt,eadge=c(min=0,max=1)) ){
+				rCutId <- c( rCutId, sprintf("%s %d",idStr,matCnt) )
+			}
+            hpnSum <- hpnSum + matCnt
+			idStr <- "ir13"
+			matCnt <- sum( chkEvt$rowPairMat[[idStr]] )
+			if( !bUtil.in(matCnt,eadge=c(min=0,max=1)) ){
+				rCutId <- c( rCutId, sprintf("%s %d",idStr,matCnt) )
+			}
+            hpnSum <- hpnSum + matCnt			
+			idStr <- "ir23"
+			matCnt <- sum( chkEvt$rowPairMat[[idStr]] )
+			if( !bUtil.in(matCnt,eadge=c(min=0,max=1)) ){
+				rCutId <- c( rCutId, sprintf("%s %d",idStr,matCnt) )
+			}
+            hpnSum <- hpnSum + matCnt
+
+
+			idStr <- "ic12"
+			matCnt <- sum( chkEvt$rowPairMat[[idStr]] )
+			if( !bUtil.in(matCnt,eadge=c(min=0,max=1)) ){
+				rCutId <- c( rCutId, sprintf("%s %d",idStr,matCnt) )
+			}
+            hpnSum <- hpnSum + matCnt
+			idStr <- "ic12"
+			matCnt <- sum( chkEvt$rowPairMat[[idStr]] )
+			if( !bUtil.in(matCnt,eadge=c(min=0,max=1)) ){
+				rCutId <- c( rCutId, sprintf("%s %d",idStr,matCnt) )
+			}
+            hpnSum <- hpnSum + matCnt
+			idStr <- "ic23"
+			matCnt <- sum( chkEvt$rowPairMat[[idStr]] )
+			if( !bUtil.in(matCnt,eadge=c(min=0,max=1)) ){
+				rCutId <- c( rCutId, sprintf("%s %d",idStr,matCnt) )
+			}
+            hpnSum <- hpnSum + matCnt
+
+
+			idStr <- "if12"
+			matCnt <- sum( chkEvt$rowPairMat[[idStr]] )
+			if( !bUtil.in(matCnt,eadge=c(min=0,max=1)) ){
+				rCutId <- c( rCutId, sprintf("%s %d",idStr,matCnt) )
+			}
+            hpnSum <- hpnSum + matCnt
+
+			if( !bUtil.in(hpnSum,eadge=c(min=0,max=4)) ){
+				rCutId <- c( rCutId, sprintf("hpnSum.rpm %d",hpnSum) )
 			}
 
-			rowPair <- c("rebC.c","rebC2.c")	# scoreMtx[rowPair,]
-			matFlag <- scoreMtx[rowPair[1],]==scoreMtx[rowPair[2],]
-			validFlag <- 0<(scoreMtx[rowPair[1],]+scoreMtx[rowPair[2],])
-			matCnt <- sum( matFlag[validFlag] )
-			if( !bUtil.in(matCnt,eadge=c(min=1,max=1)) ){
-				rCutId <- c( rCutId, sprintf("rc %d",matCnt) )
-			}
+			return( rCutId )
+		}
+		cutterObj$cutLst[["F_rowPairMat.L"]] <- function( scoreMtx ,chkEvt ){
 
-			rowPair <- c("rebC.f","rebC2.f")	# scoreMtx[rowPair,]
-			matFlag <- scoreMtx[rowPair[1],]==scoreMtx[rowPair[2],]
-			validFlag <- 0<(scoreMtx[rowPair[1],]+scoreMtx[rowPair[2],])
-			matCnt <- sum( matFlag[validFlag] )
-			if( !bUtil.in(matCnt,eadge=c(min=1,max=1)) ){
-				rCutId <- c( rCutId, sprintf("rf %d",matCnt) )
-			}
+			rCutId <- character(0)
+			chkEvt.last <- cutterObj$chkEvt.last
+            hpnSum <- 0
 
-			rowPair <- c("inc.r","inc.r2")	# scoreMtx[rowPair,]
-			matFlag <- scoreMtx[rowPair[1],]==scoreMtx[rowPair[2],]
-			validFlag <- 0<(scoreMtx[rowPair[1],]+scoreMtx[rowPair[2],])
-			matCnt <- sum( matFlag[validFlag] )
-			if( !bUtil.in(matCnt,eadge=c(min=1,max=1)) ){
-				rCutId <- c( rCutId, sprintf("ir12 %d",matCnt) )
+			idStr <- "rr"
+			matCnt <- sum( chkEvt$rowPairMat[[idStr]] & chkEvt.last$rowPairMat[[idStr]] )
+			if( !bUtil.in(matCnt,eadge=c(min=0,max=1)) ){
+				rCutId <- c( rCutId, sprintf("L%s %d",idStr,matCnt) )
 			}
-
-			rowPair <- c("inc.r","inc.r3")	# scoreMtx[rowPair,]
-			matFlag <- scoreMtx[rowPair[1],]==scoreMtx[rowPair[2],]
-			validFlag <- 0<(scoreMtx[rowPair[1],]+scoreMtx[rowPair[2],])
-			matCnt <- sum( matFlag[validFlag] )
-			if( !bUtil.in(matCnt,eadge=c(min=1,max=1)) ){
-				rCutId <- c( rCutId, sprintf("ir13 %d",matCnt) )
+            hpnSum <- hpnSum + matCnt
+			idStr <- "rc"
+			matCnt <- sum( chkEvt$rowPairMat[[idStr]] & chkEvt.last$rowPairMat[[idStr]] )
+			if( !bUtil.in(matCnt,eadge=c(min=0,max=1)) ){
+				rCutId <- c( rCutId, sprintf("L%s %d",idStr,matCnt) )
 			}
-
-			rowPair <- c("inc.r2","inc.r3")	# scoreMtx[rowPair,]
-			matFlag <- scoreMtx[rowPair[1],]==scoreMtx[rowPair[2],]
-			validFlag <- 0<(scoreMtx[rowPair[1],]+scoreMtx[rowPair[2],])
-			matCnt <- sum( matFlag[validFlag] )
-			if( !bUtil.in(matCnt,eadge=c(min=1,max=1)) ){
-				rCutId <- c( rCutId, sprintf("ir23 %d",matCnt) )
+            hpnSum <- hpnSum + matCnt
+			idStr <- "rf"
+			matCnt <- sum( chkEvt$rowPairMat[[idStr]] & chkEvt.last$rowPairMat[[idStr]] )
+			if( !bUtil.in(matCnt,eadge=c(min=0,max=0)) ){
+				rCutId <- c( rCutId, sprintf("L%s %d",idStr,matCnt) )
 			}
+            hpnSum <- hpnSum + matCnt
 
-			rowPair <- c("inc.c","inc.c2")	# scoreMtx[rowPair,]
-			matFlag <- scoreMtx[rowPair[1],]==scoreMtx[rowPair[2],]
-			validFlag <- 0<(scoreMtx[rowPair[1],]+scoreMtx[rowPair[2],])
-			matCnt <- sum( matFlag[validFlag] )
-			if( !bUtil.in(matCnt,eadge=c(min=1,max=1)) ){
-				rCutId <- c( rCutId, sprintf("ic12 %d",matCnt) )
+
+			idStr <- "ir12"
+			matCnt <- sum( chkEvt$rowPairMat[[idStr]] & chkEvt.last$rowPairMat[[idStr]] )
+			if( !bUtil.in(matCnt,eadge=c(min=0,max=0)) ){
+				rCutId <- c( rCutId, sprintf("L%s %d",idStr,matCnt) )
 			}
-
-			rowPair <- c("inc.c","inc.c3")	# scoreMtx[rowPair,]
-			matFlag <- scoreMtx[rowPair[1],]==scoreMtx[rowPair[2],]
-			validFlag <- 0<(scoreMtx[rowPair[1],]+scoreMtx[rowPair[2],])
-			matCnt <- sum( matFlag[validFlag] )
-			if( !bUtil.in(matCnt,eadge=c(min=1,max=1)) ){
-				rCutId <- c( rCutId, sprintf("ic13 %d",matCnt) )
+            hpnSum <- hpnSum + matCnt
+			idStr <- "ir13"
+			matCnt <- sum( chkEvt$rowPairMat[[idStr]] & chkEvt.last$rowPairMat[[idStr]] )
+			if( !bUtil.in(matCnt,eadge=c(min=0,max=0)) ){
+				rCutId <- c( rCutId, sprintf("L%s %d",idStr,matCnt) )
 			}
-
-			rowPair <- c("inc.c2","inc.c3")	# scoreMtx[rowPair,]
-			matFlag <- scoreMtx[rowPair[1],]==scoreMtx[rowPair[2],]
-			validFlag <- 0<(scoreMtx[rowPair[1],]+scoreMtx[rowPair[2],])
-			matCnt <- sum( matFlag[validFlag] )
-			if( !bUtil.in(matCnt,eadge=c(min=1,max=1)) ){
-				rCutId <- c( rCutId, sprintf("ic23 %d",matCnt) )
+            hpnSum <- hpnSum + matCnt
+			idStr <- "ir23"
+			matCnt <- sum( chkEvt$rowPairMat[[idStr]] & chkEvt.last$rowPairMat[[idStr]] )
+			if( !bUtil.in(matCnt,eadge=c(min=0,max=0)) ){
+				rCutId <- c( rCutId, sprintf("L%s %d",idStr,matCnt) )
 			}
+            hpnSum <- hpnSum + matCnt
 
-			rowPair <- c("inc.f","inc.f2")	# scoreMtx[rowPair,]
-			matFlag <- scoreMtx[rowPair[1],]==scoreMtx[rowPair[2],]
-			validFlag <- 0<(scoreMtx[rowPair[1],]+scoreMtx[rowPair[2],])
-			matCnt <- sum( matFlag[validFlag] )
-			if( !bUtil.in(matCnt,eadge=c(min=1,max=1)) ){
-				rCutId <- c( rCutId, sprintf("if12 %d",matCnt) )
+
+			idStr <- "ic12"
+			matCnt <- sum( chkEvt$rowPairMat[[idStr]] & chkEvt.last$rowPairMat[[idStr]] )
+			if( !bUtil.in(matCnt,eadge=c(min=0,max=0)) ){
+				rCutId <- c( rCutId, sprintf("L%s %d",idStr,matCnt) )
+			}
+            hpnSum <- hpnSum + matCnt
+			idStr <- "ic12"
+			matCnt <- sum( chkEvt$rowPairMat[[idStr]] & chkEvt.last$rowPairMat[[idStr]] )
+			if( !bUtil.in(matCnt,eadge=c(min=0,max=0)) ){
+				rCutId <- c( rCutId, sprintf("L%s %d",idStr,matCnt) )
+			}
+            hpnSum <- hpnSum + matCnt
+			idStr <- "ic23"
+			matCnt <- sum( chkEvt$rowPairMat[[idStr]] & chkEvt.last$rowPairMat[[idStr]] )
+			if( !bUtil.in(matCnt,eadge=c(min=0,max=0)) ){
+				rCutId <- c( rCutId, sprintf("L%s %d",idStr,matCnt) )
+			}
+            hpnSum <- hpnSum + matCnt
+
+
+			idStr <- "if12"
+			matCnt <- sum( chkEvt$rowPairMat[[idStr]] & chkEvt.last$rowPairMat[[idStr]] )
+			if( !bUtil.in(matCnt,eadge=c(min=0,max=1)) ){
+				rCutId <- c( rCutId, sprintf("L%s %d",idStr,matCnt) )
+			}
+            hpnSum <- hpnSum + matCnt
+
+
+			if( !bUtil.in(hpnSum,eadge=c(min=0,max=2)) ){
+				rCutId <- c( rCutId, sprintf("L.hpnSum.rpm %d",hpnSum) )
 			}
 
 			return( rCutId )
 		}
 
 		return(cutterObj)
-	}
+	} # rObj$createCutter( )
 
 	return( rObj )
 } # bFCust.byHIdx_A_score2
@@ -1011,7 +1140,8 @@ bFCust.get_byHIdx_score2ChkEvt <- function( scoreMtx ){
 			pair1 <- cVal[c("rebC.r","rebC.c","rebC.f")]
 			pair2 <- cVal[c("rebC2.r","rebC2.c","rebC2.f")]
 
-			if( 0==(sum(pair1)+sum(pair2)) )	return( 0 )
+			flag <- pair1==pair2
+			if( 0==sum(pair1[flag]) )	return( 0 )
 
 			return( sum(pair1==pair2) )
 		})
@@ -1022,7 +1152,8 @@ bFCust.get_byHIdx_score2ChkEvt <- function( scoreMtx ){
 			pair1 <- cVal[c("inc.r","inc.c","inc.f")]
 			pair2 <- cVal[c("inc.r2","inc.c2","inc.f2")]
 
-			if( 0==(sum(pair1)+sum(pair2)) )	return( 0 )
+			flag <- pair1==pair2
+			if( 0==sum(pair1[flag]) )	return( 0 )
 
 			return( sum(pair1==pair2) )
 		})
@@ -1049,7 +1180,7 @@ bFCust.get_byHIdx_score2ChkEvt <- function( scoreMtx ){
 		F_rowPairMat <- function( rowPair ){
 			matFlag <- scoreMtx[rowPair[1],]==scoreMtx[rowPair[2],]
 			validFlag <- 0<(scoreMtx[rowPair[1],]+scoreMtx[rowPair[2],])
-			matFlag[!validFlag]	<- FALSE
+			matFlag <- matFlag & validFlag
 			return( matFlag )
 		} # F_rowPairMat( )
 
