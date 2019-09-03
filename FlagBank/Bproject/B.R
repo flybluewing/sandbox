@@ -26,7 +26,7 @@ if( FALSE ){ # report sample
 if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
 
     names(fRstLst) <- names(allIdxLst$stdFiltedCnt)
-    get_testData.grp <- function( testSpan ,gEnv ,allIdxLst ,fRstLst ,tgt.scMtx=tgt.scMtx ){
+    get_testData.grp <- function( testSpan ,gEnv ,allIdxLst ,fRstLst ,tgt.scMtx=NULL ){
 
         curHMtxLst.grp <- list( )
         stdIdx.grp <- list()
@@ -152,8 +152,11 @@ if( FALSE ){    # 실전 추출 예제 코드
     allIdx  <- allIdxLst[[sprintf("allZoid.idx%d",curStdFiltedCnt)]]
     allIdxF <- c( stdIdx ,allIdx[sample(1:length(allIdx),200000)] ) 
     #   200000 기준 
-    #       score2 : 2.6min, 35.2min       --> 48924/200001
-    #       score3 : 5.6min,
+    #       score2 : 2.6min, 35.2min       --> 48233/200001
+    #       score3 : 1.4min,  2.8min       --> 47015/ 48233
+    # ---------------------------------------------------------------------
+    #   save( allIdxF ,file="Obj_allIdxF.save" )
+    #   load( "Obj_allIdxF.save" )
 
 
     hMtxLst <- B.makeHMtxLst( gEnv, allIdxLst, fRstLst, tgt.scMtx=tgt.scMtx )
