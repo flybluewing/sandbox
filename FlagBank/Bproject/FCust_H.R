@@ -94,13 +94,13 @@ bFCust.defaultStdColCutter <- function( ctrlCfg ,tgtId=c(hName="", mName="", pNa
 		for( idx in seq_len(val.len) ){
 			if( alreadyDead[idx] )	next
 
-			if( !bUil.in(val[idx],c(min=rObj$maxMin[2],max=rObj$maxMin[1])) ){
+			if( !bUtil.in(val[idx],c(min=rObj$maxMin[2],max=rObj$maxMin[1])) ){
 				infoStr <- c(info=sprintf("val:%d",val[idx]))
 				cutLst[[1+length(cutLst)]] <- list( idx=idx ,idObjDesc=rObj$idObjDesc ,info=infoStr )
 			}
 		}
 
-		rstObj <- list( surDf=surDf ,cutLst=cutLst )
+		rstObj <- list( cutLst=cutLst )
 		return( rstObj )
 	}
 
