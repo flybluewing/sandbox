@@ -148,6 +148,14 @@ if( FALSE ){    # 실전 추출 예제 코드
     load("./save/HMtxLst/Obj_stdCtrlCfgGrp_840.save")
 
     tgt.scMtx <- NULL       # default : NULL        ; c("score2","score3")
+    curStdFiltedCnt <- 1
+    allIdx  <- allIdxLst[[sprintf("allZoid.idx%d",curStdFiltedCnt)]]
+    allIdxF <- c( stdIdx ,allIdx[sample(1:length(allIdx),200000)] ) 
+    #   200000 기준 
+    #       score2 : 2.6min, 35.2min       --> 48924/200001
+    #       score3 : 5.6min,
+
+
     hMtxLst <- B.makeHMtxLst( gEnv, allIdxLst, fRstLst, tgt.scMtx=tgt.scMtx )
     cut.grp <- bFCust.getFCustGrp( stdCtrlCfgGrp ,hMtxLst )
 
@@ -168,10 +176,6 @@ if( FALSE ){    # 실전 추출 예제 코드
     #       하나 소속되지 않은 aZoid, 혹은 다수가 소속된 aZoid도 있을 수 있다.
     # --------------------------------------------------------------------
     #   시간 소요 8.8min/20k, 39min/20k
-    curStdFiltedCnt <- 1
-    allIdx  <- allIdxLst[[sprintf("allZoid.idx%d",curStdFiltedCnt)]]
-
-    allIdxF <- c( stdIdx ,allIdx[sample(1:length(allIdx),200000)] ) 
     fHName <- bUtil.getSfcLstName( fRstLst[[length(fRstLst)]] ,curStdFiltedCnt=curStdFiltedCnt ,cut.grp )
 
     tStmp <- Sys.time()
@@ -187,11 +191,19 @@ if( FALSE ){    # 실전 추출 예제 코드
 
     # logger$fLogStr("\n\n= Performance Prof======================================")
     # logger$fLog( summaryRprof("Work_Rprof.out") )
-
     allIdxF <- allIdxF[cutRst$surFlag]
     rptStr <- sprintf( "Initial cut : %d -> %d \n" ,length(allIdx) ,length(allIdxF) )
     cat( rptStr )
     allIdx <- allIdxF
+
+
+
+
+
+
+
+
+
 
     # --------------------------------------------------------------------
     # * stdFiled 한가지씩 적용

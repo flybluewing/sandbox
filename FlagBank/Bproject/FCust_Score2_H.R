@@ -770,7 +770,9 @@ bFCust.byHIdx_A_score2 <- function( ){
 		cutterObj$idObj[names(tgtId)] <- tgtId
 
 		cutterObj$evt <- rObj$getMtxEvt_byRow( mtxLst )
-		cutterObj$chkEvt.last <- bFCust.get_byHIdx_score2ChkEvt( mtxLst[[length(mtxLst)]] )
+		if( tgtId["mName"]==cutterObj$defId["mName"] ){
+			cutterObj$chkEvt.last <- bFCust.get_byHIdx_score2ChkEvt( mtxLst[[length(mtxLst)]] )
+		}
 
 		cutterObj$cut <- function( scoreMtx ,aIdx ){
 			# scoreMtx 는 1개 aZoid에 관한 [fCol,phase] mtx임을 유의.
