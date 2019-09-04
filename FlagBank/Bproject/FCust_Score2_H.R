@@ -213,7 +213,7 @@ bFCust.A_score2_A_rebR <- function(  ){
 #	[score2:Col Cutter(N col)] ------------------------------------------------------------------
 bFCust.A_score2_A_Row01 <- function(  ){
 	rObj <- list( )
-	rObj$defId <- c( typ="cust_NCol"	,hName="*"	,mName="score2"	,pName="*"	,rFId="Row01" )	# row filt ID
+	rObj$defId <- c( typ="c_NCol.2"	,hName="*"	,mName="score2"	,pName="*"	,rFId="Row01" )	# row filt ID
 	rObj$description <- sprintf("(cust)  ")
 
 	rObj$evtLst <- FCust_score2EvtLst
