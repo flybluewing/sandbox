@@ -90,7 +90,7 @@ bFCust.defaultStdColCutter <- function( ctrlCfg ,tgtId=c(hName="", mName="", pNa
 			alreadyDead <- rep( F, val.len )
 		}
 
-		cutLst <- vector("list",val.len)
+		cutLst <- list()
 		for( idx in seq_len(val.len) ){
 			if( alreadyDead[idx] )	next
 
@@ -100,8 +100,7 @@ bFCust.defaultStdColCutter <- function( ctrlCfg ,tgtId=c(hName="", mName="", pNa
 			}
 		}
 
-		rstObj <- list( cutLst=cutLst )
-		return( rstObj )
+		return( cutLst )
 	}
 
 	return( rObj )
