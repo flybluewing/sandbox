@@ -488,6 +488,69 @@ bFCust.A_score2_A_rRebAA <- function(  ){
 #		- mtxGrp <- getScoreMtx.grp_byFCol( scoreMtx.grp )
 #		- nRow 대상이긴 하지만, mtx는 각 scoreMtx 의 fCol 별로 생성된다는 점을 주의
 #		- column이 phase이므로 pName 구분이 없고, tgtId에서도 pName이 빠진다. 대신 fcName 필요.
+bFCust.byFCol_A_score2_A <- function( ){
+
+	rObj <- list( )
+	rObj$defId <- c( typ="cust_byFCol"	,hName="*"	,mName="score2"	,fcName="*"  )
+	rObj$description <- sprintf("(cust)  ")
+
+	rObj$cutFLst <- list()
+	# Sample code ================================================================
+	# rObj$cutFLst[[1+length(rObj$cutFLst)]] <- function( smRow ){	# for testing
+
+	# 	crObj <- list( cutFlag=F ,cId="Test.phase" ) # cut result object, cut Id
+	# 	evtThld <- c("basic"=2,"nextZW"=1)
+
+	# 	evtFlag <- smRow[names(evtThld)] == evtThld
+	# 	if( all(evtFlag) ) crObj$cutFlag <- TRUE
+
+	# 	return( crObj )
+	# } # rObj$cutFLst[1]( )
+
+	rObj$createCutter <- function( lastMtx ,tgtId=c(hName="", mName="", fcName="") ,auxInfo=c(auxInfo="") ){
+
+		cutterObj <- rObj
+		cutterObj$createCutter <- NULL
+
+		#	hName="testNA"; mName="testNA"; pName="testNA"; fcName="testNA"; auxInfo=c(auxInfo="")
+		idObjDesc <- rObj$defId
+		if( idObjDesc["hName"]!=tgtId["hName"] ) idObjDesc["hName"] <- sprintf("(%s)%s",idObjDesc["hName"],tgtId["hName"])
+		if( idObjDesc["mName"]!=tgtId["mName"] ) idObjDesc["mName"] <- sprintf("(%s)%s",idObjDesc["mName"],tgtId["mName"])
+		if( idObjDesc["fcName"]!=tgtId["fcName"] ) idObjDesc["fcName"] <- sprintf("(%s)%s",idObjDesc["fcName"],tgtId["fcName"])
+		idObjDesc <- c( idObjDesc ,auxInfo )
+		cutterObj$idObjDesc <- idObjDesc
+
+		cutterObj$idObj <- rObj$defId
+		cutterObj$idObj[names(tgtId)] <- tgtId
+
+		cutterObj$
+
+		cutterObj$cut <- function( scoreMtx ,alreadyDead=NULL ){
+			val.len <- nrow( scoreMtx )
+			if( is.null(alreadyDead) )	alreadyDead <- rep( F, val.len )
+
+			cutLst <- list()
+			for( idx in seq_len(val.len) ){
+				if( alreadyDead[idx] ) next
+
+				lst <- lapply( rObj$cutFLst ,function( pFunc ){ pFunc( scoreMtx[idx,] ) } )
+				cutFlag <- sapply( lst ,function(p){ p$cutFlag })
+				if( any(cutFlag) ){
+					firedCId <- sapply( lst[cutFlag] ,function(p){p$cId})
+					infoStr <- sprintf("cut Id : %s",paste(firedCId,collapse=",") )
+					cutLst[[1+length(cutLst)]] <- list( idx=idx ,idObjDesc=cutterObj$idObjDesc ,info=infoStr )
+				}
+			}
+
+			return( cutLst )
+		} # cutterObj$cut()
+
+		return(cutterObj)
+	}
+
+	return( rObj )
+} # bFCust.byFCol_A_score2_A( )
+
 bFCust.byFCol_A_score2_rebVR <- function( ){
 
 	rObj <- list( )

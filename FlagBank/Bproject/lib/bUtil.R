@@ -360,3 +360,13 @@ bUtil.in <- function( val ,eadge=c(min=0,max=0) ){
 	return( rst )
 } # bUtil.in()
 
+bUtil.getEvtVal <- function( src ,evtLst ){
+	evtVal <- src[names(evtLst)]
+	for( nIdx in names(evtLst) ){
+		if( !(evtVal[nIdx] %in% evtLst[[nIdx]]) ) evtVal[nIdx] <- NA
+	}
+	return( evtVal )
+} # bUtil.getEvtVal( )
+
+
+
