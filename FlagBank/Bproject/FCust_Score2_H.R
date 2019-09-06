@@ -502,14 +502,21 @@ bFCust.byFCol_A_score2_A <- function( ){
 	rObj$cutFLst[["rebV.r"]] <- function( smRow ,fcName ){	# for testing
 
 		crObj <- list( cutFlag=F ,cId="_A rebV.r" ) # cut result object, cut Id
-		# evtThld <- c("basic"=2,"nextZW"=1)
-		# evtFlag <- smRow[names(evtThld)] == evtThld
-		# if( all(evtFlag) ) crObj$cutFlag <- TRUE
 
-		# cnt <- sum(smRow==0)
-		# if( !bUtil.in(cnt,c(min=2,max=2)) ){
-		# 	crObj$cutFlag <- TRUE	;cId <- sprintf("%s 00.%d",crObj$cId,cnt)
-		# }
+		cnt <- sum(smRow==0)
+		if( !bUtil.in(cnt,c(min=0,max=8)) ){
+			crObj$cutFlag <- TRUE	;crObj$cId <- sprintf("%s 00.%d",crObj$cId,cnt)
+		}
+
+		cnt <- sum(smRow==2)
+		if( !bUtil.in(cnt,c(min=0,max=5)) ){
+			crObj$cutFlag <- TRUE	;crObj$cId <- sprintf("%s 02.%d",crObj$cId,cnt)
+		}
+
+		cnt <- sum(smRow==3)
+		if( !bUtil.in(cnt,c(min=0,max=3)) ){
+			crObj$cutFlag <- TRUE	;crObj$cId <- sprintf("%s 03.%d",crObj$cId,cnt)
+		}
 
 		return( crObj )
 	} # rObj$cutFLst[1]( )
@@ -709,7 +716,7 @@ bFCust.byFCol_A_score2_A_rReb01 <- function( ){
 
 				chkRst <- cutterObj$checkRow( scoreMtx[idx,] )
 				if( chkRst$cutFlag ){
-					infoStr <- sprintf("cut Id : rReb01(%s %s)",cutterObj$idObj["fcName"],chkRst$fireCutId )
+					infoStr <- sprintf("cut Id : rReb01(%s)",chkRst$fireCutId )
 					cutLst[[1+length(cutLst)]] <- list( idx=idx ,idObjDesc=cutterObj$idObjDesc ,info=infoStr )
 				}
 			}
@@ -799,7 +806,7 @@ bFCust.byFCol_A_score2_A_rRebAA <- function( ){
 
 				matFlag <- all( cutterObj$lastRow==scoreMtx[idx,] )
 				if( all(matFlag) ){
-					infoStr <- sprintf("cut Id : rRebAA (%d raw all Mat %d)",cutterObj$idObj["fcName"],length(matFlag) )
+					infoStr <- sprintf("cut Id : rRebAA (raw all Mat %d)",length(matFlag) )
 					cutLst[[1+length(cutLst)]] <- list( idx=idx ,idObjDesc=cutterObj$idObjDesc ,info=infoStr )
 				}
 			}
