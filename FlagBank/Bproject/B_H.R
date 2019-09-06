@@ -149,8 +149,8 @@ B.makeHMtxLst <- function( gEnv, allIdxLst, fRstLst ,tgt.scMtx=NULL ,lastH=NULL 
 
     cnt <- sapply(sfcHLst,length)
     tDiff <- Sys.time() - tStmp
-    cat(sprintf("       time %.1f%s   %s\n"
-            ,tDiff  ,units(tDiff)
+    cat(sprintf("       time %.1f%s(tgt.scMtx:%s)   %s\n"
+            ,tDiff  ,units(tDiff)   ,ifelse( is.null(tgt.scMtx),"*",paste(tgt.scMtx,collapse=",") )
             ,paste(paste(names(cnt),cnt,sep=":") ,collapse="   " ) 
     ))
 

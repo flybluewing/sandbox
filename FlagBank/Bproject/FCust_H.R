@@ -54,7 +54,7 @@ bFCust.getFCustGrp <- function( stdCtrlCfgGrp ,hMtxLst ){
 				lastMtx <- fColObj[[hName]][[mName]][[fcName]]	# h * phase
 				tgtId <- c(hName=hName, mName=mName, fcName=fcName)
 				fcLst <- list()
-				fcLst <- append(fcLst ,custObj$getCustF_byFCol( lastMtx, tgtId) ) 
+				fcLst <- append(fcLst ,custObj$getCustF_byFCol(lastMtx,tgtId) ) 
 				fColLst[[fcName]] <- fcLst
 			}
 

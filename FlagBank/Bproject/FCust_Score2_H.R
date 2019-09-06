@@ -490,6 +490,8 @@ bFCust.A_score2_A_rRebAA <- function(  ){
 #		- mtxGrp <- getScoreMtx.grp_byFCol( scoreMtx.grp )
 #		- nRow 대상이긴 하지만, mtx는 각 scoreMtx 의 fCol 별로 생성된다는 점을 주의
 #		- column이 phase이므로 pName 구분이 없고, tgtId에서도 pName이 빠진다. 대신 fcName 필요.
+
+#	c( typ="c_byFCol"	,hName="*"	,mName="score2"	,fcName="*"  )
 bFCust.byFCol_A_score2_A <- function( ){
 
 	rObj <- list( )
@@ -504,12 +506,11 @@ bFCust.byFCol_A_score2_A <- function( ){
 		# evtFlag <- smRow[names(evtThld)] == evtThld
 		# if( all(evtFlag) ) crObj$cutFlag <- TRUE
 
-		cnt <- sum(smRow==0)
-		if( !bUtil.in(cnt,c(min=2,max=2)) ){
-			crObj$cutFlag <- TRUE	;cId <- sprintf("%s 00.%d",crObj$cId,cnt)
-		}
+		# cnt <- sum(smRow==0)
+		# if( !bUtil.in(cnt,c(min=2,max=2)) ){
+		# 	crObj$cutFlag <- TRUE	;cId <- sprintf("%s 00.%d",crObj$cId,cnt)
+		# }
 
-		crObj$cutFlag <- TRUE	;cId <- sprintf("%s 00.%d",crObj$cId,cnt)
 		return( crObj )
 	} # rObj$cutFLst[1]( )
 	rObj$cutFLst[["rebLR"]] <- function( smRow ,fcName ){	# for testing
@@ -659,11 +660,13 @@ bFCust.byFCol_A_score2_rebVR <- function( ){
 	return( rObj )
 } # bFCust.byFCol_A_score2_rebVR( )
 
+#	typ="c_byFCol"	,hName="*"	,mName="score2"	,pName="*"	,fcName="rebV.r" )
+#	전체 컬럼으로 개조 후 적용.
 bFCust.byFCol_A_score2_A_rReb01 <- function( ){
 	#	row rebind라고는 했지만 사실 seq 이다. 
 	#	즉 이전 evt 발생 phase에서 다음에도 동일 evt가 일어나는지 체크(다음에서 추가적으로 발생하는 evt는 상관없음.)
 	rObj <- list( )
-	rObj$defId <- c( typ="cust_byFCol"	,hName="*"	,mName="score2"	,pName="*"	,fcName="rebV.r" )	# row filt ID
+	rObj$defId <- c( typ="c_byFCol"	,hName="*"	,mName="score2"	,pName="*"	,fcName="*" )	# row filt ID
 	rObj$description <- sprintf("(cust)  ")
 
 	rObj$evtLst <- FCust_score2EvtLst
@@ -706,7 +709,7 @@ bFCust.byFCol_A_score2_A_rReb01 <- function( ){
 
 				chkRst <- cutterObj$checkRow( scoreMtx[idx,] )
 				if( chkRst$cutFlag ){
-					infoStr <- sprintf("cut Id : rReb01(thld min:%d)",cutterObj$fireThld.min )
+					infoStr <- sprintf("cut Id : rReb01(%s %s)",cutterObj$idObj["fcName"],chkRst$fireCutId )
 					cutLst[[1+length(cutLst)]] <- list( idx=idx ,idObjDesc=cutterObj$idObjDesc ,info=infoStr )
 				}
 			}
@@ -726,7 +729,8 @@ bFCust.byFCol_A_score2_A_rReb01 <- function( ){
 				matFlag <- (smRow==cutterObj$lastEvt)[cutterObj$evtNaMask]
 				if( fireThld.min <= sum(matFlag) ){
 					chkRstObj$cutFlag = TRUE
-					chkRstObj$fireCutId = c( chkRstObj$fireCutId ,"evtReb" )
+					chkRstObj$fireCutId = c( chkRstObj$fireCutId ,sprintf("evtReb %d/%d",sum(matFlag),fireThld.min ) 
+					)
 				}
 			}
 
@@ -741,9 +745,10 @@ bFCust.byFCol_A_score2_A_rReb01 <- function( ){
 	return( rObj )
 } # bFCust.byFCol_A_score2_A_rReb01( )
 
+#	c( typ="c_byFCol"	,hName="*"	,mName="score2"	,fcName="*"  )
 bFCust.byFCol_A_score2_A_rRebAA <- function( ){
 	rObj <- list( )
-	rObj$defId <- c( typ="cust_byFCol"	,hName="*"	,mName="score2"	,fcName="*"  )
+	rObj$defId <- c( typ="c_byFCol"	,hName="*"	,mName="score2"	,fcName="*"  )
 	rObj$description <- sprintf("(cust)  ")
 
 	# last score에서, happen 수가 fireThld.min이상 존재할 때에만 완전 매치여부 확인.
@@ -769,10 +774,11 @@ bFCust.byFCol_A_score2_A_rRebAA <- function( ){
 		cutterObj$idObj <- rObj$defId
 		cutterObj$idObj[names(tgtId)] <- tgtId
 
-		cutterObj$defId["fcName"] <- tgtId["fcName"]
-			# 주의 : defId에서의 "*" 값은 타 정의된 cutter 함수가 있으면 제거된다.
-			#		때문에 무조건 살리기 위해서는 fcName값을 강제 설정해야만 한다.
-			#		이런 경우, fcName 별 별도 로직을 추가하려면 createCutter() 함수 내에서 구현해야 한다.
+		# cutterObj$defId["fcName"] <- tgtId["fcName"]
+		# 	# 주의 : defId에서의 "*" 값은 타 정의된 cutter 함수가 있으면 제거된다.
+		# 	#		때문에 무조건 살리기 위해서는 fcName값을 강제 설정해야만 한다.
+		# 	#		이런 경우, fcName 별 별도 로직을 추가하려면 createCutter() 함수 내에서 구현해야 한다.
+		#	bFCust.byFCol_A_score2_rebVR() 이 폐지됨에 따라 필요 없어졌다.
 
 		cutterObj$lastRow <- lastMtx[nrow(lastMtx),]
 		cutterObj$fireThld.min <- rObj$fireThld.min[tgtId["fcName"]]
@@ -793,7 +799,7 @@ bFCust.byFCol_A_score2_A_rRebAA <- function( ){
 
 				matFlag <- all( cutterObj$lastRow==scoreMtx[idx,] )
 				if( all(matFlag) ){
-					infoStr <- sprintf("cut Id : rRebAA" )
+					infoStr <- sprintf("cut Id : rRebAA (%d raw all Mat %d)",cutterObj$idObj["fcName"],length(matFlag) )
 					cutLst[[1+length(cutLst)]] <- list( idx=idx ,idObjDesc=cutterObj$idObjDesc ,info=infoStr )
 				}
 			}

@@ -191,6 +191,8 @@ if( FALSE ){    # 실전 추출 예제 코드
     cutRst <- bUtil.cut( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx ,logger=logger )
     Rprof( NULL )
     tDiff <- Sys.time() - tStmp     ;cat( sprintf("cost : %.1f%s \n",tDiff,units(tDiff)) )
+    #   B.rptCutRstLst( list(cutRst) )
+
 
     # logger$fLogStr("\n\n= Performance Prof======================================")
     # logger$fLog( summaryRprof("Work_Rprof.out") )
