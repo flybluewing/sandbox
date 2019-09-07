@@ -147,13 +147,13 @@ if( FALSE ){    # 실전 추출 예제 코드
     # stdCtrlCfgGrp
     load("./save/HMtxLst/Obj_stdCtrlCfgGrp_840.save")
 
-    tgt.scMtx <- NULL       # default : NULL        ; c("score2","score3")
+    tgt.scMtx <-        # default : NULL        ; c("score2","score3")
     curStdFiltedCnt <- 1
     allIdx  <- allIdxLst[[sprintf("allZoid.idx%d",curStdFiltedCnt)]]
     allIdxF <- c( stdIdx ,allIdx[sample(1:length(allIdx),200000)] ) 
     #   200000 기준 
-    #       score2 : 2.6min, 35.2min       --> 48233/200001
-    #       score3 : 1.4min,  2.8min       --> 47015/ 48233
+    #       score2 : 2.7min, 40.0min       --> 44450/200001
+    #       score3 : 1.5min,  3.1min       --> 43272/ 44450
     # ---------------------------------------------------------------------
     #   save( allIdxF ,file="Obj_allIdxF.save" )
     #   load( "Obj_allIdxF.save" )

@@ -605,7 +605,8 @@ bFCust.byFCol_A_score2_A <- function( ){
 	return( rObj )
 } # bFCust.byFCol_A_score2_A( )
 
-bFCust.byFCol_A_score2_rebVR <- function( ){
+
+bFCust.byFCol_A_score2_rebVR <- function( ){	# 폐지 예정.
 
 	rObj <- list( )
 	rObj$defId <- c( typ="cust_byFCol"	,hName="*"	,mName="score2"	,fcName="rebV.r"  )
@@ -667,8 +668,7 @@ bFCust.byFCol_A_score2_rebVR <- function( ){
 	return( rObj )
 } # bFCust.byFCol_A_score2_rebVR( )
 
-#	typ="c_byFCol"	,hName="*"	,mName="score2"	,pName="*"	,fcName="rebV.r" )
-#	전체 컬럼으로 개조 후 적용.
+#	typ="c_byFCol"	,hName="*"	,mName="score2"	,pName="*"	,fcName="*" )
 bFCust.byFCol_A_score2_A_rReb01 <- function( ){
 	#	row rebind라고는 했지만 사실 seq 이다. 
 	#	즉 이전 evt 발생 phase에서 다음에도 동일 evt가 일어나는지 체크(다음에서 추가적으로 발생하는 evt는 상관없음.)
