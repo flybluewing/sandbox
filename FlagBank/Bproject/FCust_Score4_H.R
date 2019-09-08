@@ -151,7 +151,10 @@ bFCust.A_score4_A_Row01 <- function(  ){
 } # bFCust.A_score4_A_Row01( )
 
 
-#	[score4:Col Cutter] ------------------------------------------------------------------
+#	[score4:byFCol(Rebound/Sequencial)] ---------------------------------------------------------
+#		- mtxGrp <- getScoreMtx.grp_byFCol( scoreMtx.grp )
+#		- nRow 대상이긴 하지만, mtx는 각 scoreMtx 의 fCol 별로 생성된다는 점을 주의
+#		- column이 phase이므로 pName 구분이 없고, tgtId에서도 pName이 빠진다. 대신 fcName 필요.
 #	c( typ="c_byFCol"	,hName="*"	,mName="score4"	,fcName="*"  )
 bFCust.byFCol_A_score4_A <- function( ){
 
@@ -497,7 +500,177 @@ bFCust.byFCol_A_score4_A_rRebAA <- function( ){
 
 
 
-#	[score4:Row Cutter] ------------------------------------------------------------------
+#	[score4:byHIdx(...)] ---------------------------------------------------------
+#		- [fCol,phName] 
+#		- mtxGrp <- getScoreMtx.grp_byHIdx( scoreMtx.grp )
+#		- hIdxObj <- B.getHMtxLst_byHIdx( hMtxLst )
+#       - 개개 score의 최대 최소값이나, evt 발생등은 이미 앞에서 모두 확인되었다.)
+#		  따라서 col 방향, row 방향, mtx전체에 대한 rebPtn 체크.
+#			(fCol 별 evt 기준 때문에 scoreMtx 개개별로 작성 필요.)
+
+#		c( typ="cust_byHIdx"	,hName="*"	,mName="score4" )
+bFCust.byHIdx_A_score4 <- function( ){
+
+	rObj <- list( )
+	rObj$defId <- c( typ="cust_byHIdx"	,hName="*"	,mName="score4" )
+	rObj$description <- sprintf("(cust)  ")
+
+	rObj$evtLst <- FCust_score2EvtLst
+
+	rObj$createCutter <- function( mtxLst=NULL ,tgtId=c(hName="", mName="") ,auxInfo=c(auxInfo="") ){
+		#	mtxLst : 사실상 맨 마지막 mtx만 필요하긴 한데, 차후 h간 연속발생 갯수도 체크할 기능을 만들 수 있게 하기 위해 전체 list를 받음.
+
+		cutterObj <- rObj
+		cutterObj$createCutter <- NULL	;cutterObj$evtLst <- NULL	;cutterObj$getMtxEvt_byRow <- NULL
+
+		#	hName="testNA"; mName="testNA"; pName="testNA"; fcName="testNA"; auxInfo=c(auxInfo="")
+		idObjDesc <- rObj$defId
+		if( idObjDesc["hName"]!=tgtId["hName"] ) idObjDesc["hName"] <- sprintf("(%s)%s",idObjDesc["hName"],tgtId["hName"])
+		if( idObjDesc["mName"]!=tgtId["mName"] ) idObjDesc["mName"] <- sprintf("(%s)%s",idObjDesc["mName"],tgtId["mName"])
+		idObjDesc <- c( idObjDesc ,auxInfo )
+		cutterObj$idObjDesc <- idObjDesc
+
+		cutterObj$idObj <- rObj$defId
+		cutterObj$idObj[names(tgtId)] <- tgtId
+
+		cutterObj$evt <- bUtil.getMtxEvt_byRow( mtxLst ,rObj$evtLst )
+		if( tgtId["mName"]==cutterObj$defId["mName"] ){
+			cutterObj$chkEvt.last <- bFCust.get_byHIdx_score4ChkEvt( mtxLst[[length(mtxLst)]] )
+		}
+
+		cutterObj$cut <- function( scoreMtx ,aIdx ){
+			# scoreMtx 는 1개 aZoid에 관한 [fCol,phase] mtx임을 유의.
+			# 	(즉, 이 함수는 한 개 aZoid에 대한 처리로직이다.)
+			#	단 surDf와 cutLst는 다른 cut함수들 결과와의 호환성 유지를 위해 구조유지.
+			cutId <- character(0)
+
+			chkEvt <- bFCust.get_byHIdx_score2ChkEvt( scoreMtx )
+			for( cutIdx in names(cutterObj$cutLst) ){ # cutIdx <- names(cutterObj$cutLst)[1]
+				cutId <- c( cutId ,cutterObj$cutLst[[cutIdx]]( scoreMtx ,chkEvt ) )
+			}
+
+			cutLst <- list()
+			if( 0<length(cutId) ){
+				infoStr <- sprintf("cut Id : %s",paste(cutId,collapse=",") )
+				cutLst[[1+length(cutLst)]] <- list( idx=aIdx ,idObjDesc=cutterObj$idObjDesc ,info=infoStr )
+			}
+
+			return( cutLst )
+		} # cutterObj$cut()
+
+		cutterObj$cutLst <- list()
+		cutterObj$cutLst[["F_matEvt"]] <- function( scoreMtx ,chkEvt=NULL ){
+			rCutId <- character(0)
+
+			srcEvt <- scoreMtx
+			for( rnIdx in rownames(scoreMtx) ){ # rnIdx <- rownames(scoreMtx)[1]
+				for( cIdx in 1:ncol(scoreMtx) ){
+					if( !(srcEvt[rnIdx,cIdx] %in% rObj$evtLst[[rnIdx]]) ){
+						srcEvt[rnIdx,cIdx] <- NA
+					}
+				}
+			}
+
+			matMtx <- srcEvt == cutterObj$evt$lastMtx
+			matMtx[is.na(matMtx)] <- FALSE
+
+			# match happen count ----------------------------------
+			if( 0<=sum( matMtx ) ) rCutId <- c( rCutId, sprintf("matHpnCnt.%d",sum( matMtx )) )
+
+			# match happen count(sequencial rebind) ----------------------------------
+			rebCnt <- cutterObj$evt$rebCntMtx[matMtx]
+			if( any(rebCnt>2) ) rCutId <- c( rCutId, sprintf("matRebCnt.%d/%d",sum(rebCnt>1),max(rebCnt)) )
+
+			# raw idff -------------------------------------------
+			nMatchCnt <- sum(scoreMtx!=cutterObj$evt$lastMtxRaw)
+			surWindow <- c(min=0,max=0)
+			if( !bUtil.in(nMatchCnt,surWindow) ) rCutId <- c( rCutId, sprintf("rawDiffCnt.%d(%d~%d)",nMatchCnt,surWindow["min"],surWindow["max"]) )
+
+
+			return( rCutId )
+		}
+		cutterObj$cutLst[["F_colMat"]] <- function( scoreMtx ,chkEvt=NULL ){
+			rCutId <- character(0)
+
+			# match happen count ----------------------------------
+			surWindow <- c(min=0,max=0)	# survive window
+			srcEvt <- scoreMtx
+			for( rnIdx in rownames(scoreMtx) ){ # rnIdx <- rownames(scoreMtx)[1]
+				for( cIdx in 1:ncol(scoreMtx) ){
+					if( !(srcEvt[rnIdx,cIdx] %in% rObj$evtLst[[rnIdx]]) ){
+						srcEvt[rnIdx,cIdx] <- NA
+					}
+				}
+			}
+			for( cIdx in 2:ncol(scoreMtx) ){
+				matCnt <- sum( srcEvt[,cIdx-1]==srcEvt[,cIdx] ,na.rm=T )
+				if( !bUtil.in(matCnt,surWindow) ){
+					rCutId <- c( rCutId, sprintf("colEvtMat.%d(%d~%d)",matCnt,surWindow["min"],surWindow["max"]) )
+					break
+				}
+			}
+
+			# raw match -------------------------------------------
+			surWindow <- c(min=0,max=0)	# survive window
+			for( cIdx in 2:ncol(scoreMtx) ){
+				matCnt <- sum( scoreMtx[,cIdx-1]!=scoreMtx[,cIdx] )
+				if( !bUtil.in(matCnt,surWindow) ){
+					rCutId <- c( rCutId, sprintf("colRawDiff.%d(%d~%d)",matCnt,surWindow["min"],surWindow["max"]) )
+					break
+				}
+			}
+
+			return( rCutId )
+		}
+		# - custom --------------------------------------------------
+		cutterObj$cutLst[["F_kkk"]] <- function( scoreMtx ,chkEvt ){
+
+			rCutId <- character(0)
+			hpnSum <- 0
+
+			# matCnt <- chkEvt$colPairMat[["rebC.m"]]
+			# matCntSum <- sum(matCnt==3)
+			# if( !bUtil.in(matCntSum,eadge=c(min=0,max=2)) ){
+			# 	rCutId <- c( rCutId, sprintf("rebC.m3 %d",matCntSum) )
+			# }
+
+			# matCntSum <- sum(matCnt==2)
+			# if( !bUtil.in(matCntSum,eadge=c(min=0,max=4)) ){
+			# 	rCutId <- c( rCutId, sprintf("rebC.m2 %d",matCntSum) )
+			# }
+
+			return( rCutId )
+		}
+		cutterObj$cutLst[["F_kkk.L"]] <- function( scoreMtx ,chkEvt ){	# last happen
+
+			rCutId <- character(0)
+			hpnSum <- 0
+
+			chkEvt.last <- cutterObj$chkEvt.last
+
+			# matCnt <- chkEvt$colPairMat[["rebC.m"]]
+			# flag <- chkEvt$colPairMat[["rebC.m"]] == chkEvt.last$colPairMat[["rebC.m"]]
+			# flag[ chkEvt$colPairMat[["rebC.m"]]==0 ] <- FALSE
+
+			# matCntSum <- sum(flag)
+			# if( !bUtil.in(matCntSum,eadge=c(min=0,max=1)) ){
+			# 	rCutId <- c( rCutId, sprintf("LrebC.m %d",matCntSum) )
+			# }
+			# hpnSum <- hpnSum + matCntSum
+			# matCntSum <- sum(matCnt[flag]==3)
+			# if( !bUtil.in(matCntSum,eadge=c(min=0,max=1)) ){
+			# 	rCutId <- c( rCutId, sprintf("LrebC.m3 %d",matCntSum) )
+			# }
+
+			return( rCutId )
+		}
+
+
+		return(cutterObj)
+	} # rObj$createCutter( )
+
+	return( rObj )
+} # bFCust.byHIdx_A_score2
 
 
 

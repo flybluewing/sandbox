@@ -368,5 +368,45 @@ bUtil.getEvtVal <- function( src ,evtLst ){
 	return( evtVal )
 } # bUtil.getEvtVal( )
 
+bUtil.getMtxEvt_byRow <- function( srcMtxLst ,evtLst ){
+	# [fCol,phase]
+	#	hIdxObj <- B.getHMtxLst_byHIdx( hMtxLst )
+	#	srcMtxLst <- hIdxObj[[hName]][[mName]]
 
+	mtxLen <- length(srcMtxLst)
+
+	eMtxLst <- lapply( srcMtxLst ,function( srcMtx ){
+						rMtx <- srcMtx
+						for( rnIdx in rownames(srcMtx) ){ # rnIdx <- rownames(srcMtx)[1]
+							for( cIdx in 1:ncol(srcMtx) ){
+								if( !(rMtx[rnIdx,cIdx] %in% evtLst[[rnIdx]]) ){
+									rMtx[rnIdx,cIdx] <- NA
+								}
+							}
+						}
+						return( rMtx )
+	})
+	eMtxLst <- eMtxLst[mtxLen:1]	# 작업 편의를 위해 순서를 바꾸자.
+
+	lastMtx <- eMtxLst[[1]]
+	rebCntMtx <- lastMtx
+	rebCntMtx[!is.na(rebCntMtx)] <- 0
+	if( 1<mtxLen ){
+		maskMtx <- !is.na(rebCntMtx)
+		for( idx in 2:mtxLen){
+			matMtx <- lastMtx==eMtxLst[[idx]]
+			incFlag <- matMtx
+			incFlag [is.na(incFlag)] <- F
+			incFlag[ !maskMtx ] <- FALSE
+			if( all(!incFlag) ) break
+
+			rebCntMtx[ incFlag ] <- 1 + rebCntMtx[ incFlag ]
+
+			maskMtx <- incFlag
+		}
+	}
+
+	return( list(lastMtx=lastMtx ,rebCntMtx=rebCntMtx ,maskMtx=!is.na(lastMtx) ,lastMtxRaw=srcMtxLst[[mtxLen]]) )
+
+} # bUtil.getEvtMtx()
 
