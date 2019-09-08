@@ -152,8 +152,8 @@ if( FALSE ){    # 실전 추출 예제 코드
     allIdx  <- allIdxLst[[sprintf("allZoid.idx%d",curStdFiltedCnt)]]
     allIdxF <- c( stdIdx ,allIdx[sample(1:length(allIdx),200000)] ) 
     #   200000 기준 
-    #       score2 : 2.7min, 40.0min       --> 44450/200001
-    #       score3 : 1.5min,  3.1min       --> 43272/ 44450
+    #       score2 : 2.7min, 40.0min       --> 31837/200001
+    #       score3 : 1.5min,  3.1min       -->      / 31837
     # ---------------------------------------------------------------------
     #   save( allIdxF ,file="Obj_allIdxF.save" )
     #   load( "Obj_allIdxF.save" )
