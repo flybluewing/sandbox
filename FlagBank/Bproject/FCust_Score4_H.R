@@ -534,6 +534,9 @@ bFCust.byHIdx_A_score4 <- function( ){
 		cutterObj$idObj[names(tgtId)] <- tgtId
 
 		cutterObj$evt <- bUtil.getMtxEvt_byRow( mtxLst ,rObj$evtLst )
+		if( tgtId["mName"]==cutterObj$defId["mName"] ){
+			cutterObj$chkEvt.last <- bFCust.get_byHIdx_score4ChkEvt( mtxLst[[length(mtxLst)]] )
+		}
 
 		cutterObj$cut <- function( scoreMtx ,aIdx ){
 			# scoreMtx 는 1개 aZoid에 관한 [fCol,phase] mtx임을 유의.
@@ -541,7 +544,7 @@ bFCust.byHIdx_A_score4 <- function( ){
 			#	단 surDf와 cutLst는 다른 cut함수들 결과와의 호환성 유지를 위해 구조유지.
 			cutId <- character(0)
 
-			chkEvt <- NULL	# bFCust.get_byHIdx_score2ChkEvt( scoreMtx )
+			chkEvt <- bFCust.get_byHIdx_score4ChkEvt( scoreMtx )
 			for( cutIdx in names(cutterObj$cutLst) ){ # cutIdx <- names(cutterObj$cutLst)[1]
 				cutId <- c( cutId ,cutterObj$cutLst[[cutIdx]]( scoreMtx ,chkEvt ) )
 			}
@@ -619,6 +622,44 @@ bFCust.byHIdx_A_score4 <- function( ){
 
 			return( rCutId )
 		}
+		# - custom --------------------------------------------------
+		cutterObj$cutLst[["F_hpnInfo"]] <- function( scoreMtx ,chkEvt ){
+			rCutId <- character(0)
+
+			# Hpn(18*13) -------------------------------------------
+			#	tot 에서의 0 발생가능성 인정. 이에 따라 HpnFCol, HpnPh 확인은 의미 없어진다.
+			#		그런데 tot 0은 1 건 밖에 없었다. 적용 가능성도 있을 듯.
+			# tot <- chkEvt$hpnInfo$tot
+			# surWindow <- c(min=0,max=16)
+			# if( !bUtil.in(tot,surWindow) ) rCutId <- c( rCutId, sprintf("HpnTot.%d(%d~%d)",tot,surWindow["min"],surWindow["max"]) )
+
+			# tot <- sum(chkEvt$hpnInfo$fCol==0)
+			# surWindow <- c(min=1,max=16)
+			# if( !bUtil.in(tot,surWindow) ) rCutId <- c( rCutId, sprintf("HpnFCol.%d(%d~%d)",tot,surWindow["min"],surWindow["max"]) )
+
+			# tot <- sum(chkEvt$hpnInfo$phase==0)
+			# surWindow <- c(min=1,max=12)
+			# if( !bUtil.in(tot,surWindow) ) rCutId <- c( rCutId, sprintf("HpnPh.%d(%d~%d)",tot,surWindow["min"],surWindow["max"]) )
+
+			# Hpn Last-----------------------------------------
+			hpnInfo.c <- chkEvt$hpnInfo
+			hpnInfo.l <- cutterObj$chkEvt.last$hpnInfo
+			fireThld.min <- 0	# chkEvt$hpnInfo$tot 최소값 참조.
+			if( hpnInfo.c$tot<=fireThld.min && hpnInfo.l$tot<=fireThld.min ){
+				rCutId <- c( rCutId, sprintf("Hpn zero seq(%d->%d)",hpnInfo.l$tot,hpnInfo.c$tot) )	
+			}
+
+			cnt.fCol <- sum(hpnInfo.c$fCol!=hpnInfo.l$fCol)
+			cnt.phase <- sum(hpnInfo.c$phase!=hpnInfo.l$phase)
+			firThld <- 2
+			if( firThld >= (cnt.fCol+cnt.phase) ){
+				rCutId <- c( rCutId, sprintf("HpnXY.(thld:%d) fCol:%d phase:%d",firThld,cnt.fCol,cnt.phase) 
+				)
+			}
+
+			return( rCutId )
+		}
+
 
 		return(cutterObj)
 	} # rObj$createCutter( )
@@ -627,7 +668,16 @@ bFCust.byHIdx_A_score4 <- function( ){
 } # bFCust.byHIdx_A_score2
 
 
+bFCust.get_byHIdx_score4ChkEvt <- function( scoreMtx ){
 
+	hpnInfo <- list( tot=	sum(scoreMtx>0)
+					,fCol=	apply( scoreMtx ,1 ,function(byRV){ length(byRV) - sum(byRV==0) })
+					,phase= apply( scoreMtx ,2 ,function(byCV){ length(byCV) - sum(byCV==0)})
+	)
+
+	return( list(hpnInfo=hpnInfo) )
+
+} # bFCust.get_byHIdx_score4ChkEvt( )
 
 
 

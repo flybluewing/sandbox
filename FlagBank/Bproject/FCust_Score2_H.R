@@ -1050,6 +1050,41 @@ bFCust.byHIdx_A_score2 <- function( ){
 			return( rCutId )
 		}
 		# - custom --------------------------------------------------
+		cutterObj$cutLst[["F_hpnInfo"]] <- function( scoreMtx ,chkEvt ){
+			rCutId <- character(0)
+
+			# Hpn(17*13) -------------------------------------------
+			tot <- chkEvt$hpnInfo$tot
+			surWindow <- c(min=35,max=56)
+			if( !bUtil.in(tot,surWindow) ) rCutId <- c( rCutId, sprintf("HpnTot.%d(%d~%d)",tot,surWindow["min"],surWindow["max"]) )
+
+			tot <- sum(chkEvt$hpnInfo$fCol==0)
+			surWindow <- c(min=1,max=6)
+			if( !bUtil.in(tot,surWindow) ) rCutId <- c( rCutId, sprintf("HpnFCol.%d(%d~%d)",tot,surWindow["min"],surWindow["max"]) )
+
+			tot <- sum(chkEvt$hpnInfo$phase==0)
+			surWindow <- c(min=0,max=1)
+			if( !bUtil.in(tot,surWindow) ) rCutId <- c( rCutId, sprintf("HpnPh.%d(%d~%d)",tot,surWindow["min"],surWindow["max"]) )
+
+			# Hpn Last-----------------------------------------
+			hpnInfo.c <- chkEvt$hpnInfo
+			hpnInfo.l <- cutterObj$chkEvt.last$hpnInfo
+			surWindow <- c(min=34,max=55)	# chkEvt$hpnInfo$tot 범위 참조
+			surLC <- c( lEvt=bUtil.in(hpnInfo.l$tot,surWindow) ,cEvt=bUtil.in(hpnInfo.c$tot,surWindow) )
+			if( all(!surLC) ){
+				rCutId <- c( rCutId, sprintf("Hpn Evt dup(%d~%d) %d->%d",surWindow["min"],surWindow["max"],hpnInfo.l$tot,hpnInfo.c$tot) )	
+			}
+
+			cnt.fCol <- sum(hpnInfo.c$fCol!=hpnInfo.l$fCol)
+			cnt.phase <- sum(hpnInfo.c$phase!=hpnInfo.l$phase)
+			firThld <- 17
+			if( firThld >= (cnt.fCol+cnt.phase) ){
+				rCutId <- c( rCutId, sprintf("HpnXY.(thld:%d) fCol:%d phase:%d",firThld,cnt.fCol,cnt.phase) 
+				)
+			}
+
+			return( rCutId )
+		}
 		cutterObj$cutLst[["F_colPairMat"]] <- function( scoreMtx ,chkEvt ){
 
 			rCutId <- character(0)
@@ -1389,7 +1424,13 @@ bFCust.get_byHIdx_score2ChkEvt <- function( scoreMtx ){
 		rowPairMat[["if12"]] <- F_rowPairMat( c("inc.f","inc.f2") )
 	}
 
-	rObj <- list( colPairMat=colPairMat ,rowPairMat=rowPairMat )
+	# hpnInfo
+	hpnInfo <- list( tot=	sum(scoreMtx>0)
+					,fCol=	apply( scoreMtx ,1 ,function(byRV){ length(byRV) - sum(byRV==0) })
+					,phase= apply( scoreMtx ,2 ,function(byCV){ length(byCV) - sum(byCV==0)})
+	)
+
+	rObj <- list( colPairMat=colPairMat ,rowPairMat=rowPairMat ,hpnInfo=hpnInfo )
 
 	return( rObj )
 } # bFCust.get_byHIdx_score2ChkEvt( )
