@@ -627,27 +627,49 @@ bFCust.byHIdx_A_score4 <- function( ){
 			rCutId <- character(0)
 
 			# Hpn(18*13) -------------------------------------------
-			#	tot 에서의 0 발생가능성 인정. 이에 따라 HpnFCol, HpnPh 확인은 의미 없어진다.
+			#	tot 에서의 0 발생가능성 인정. 이에 따라 HpnFCol, HpnPh 최대값 확인은 의미 없어진다.
 			#		그런데 tot 0은 1 건 밖에 없었다. 적용 가능성도 있을 듯.
 			# tot <- chkEvt$hpnInfo$tot
 			# surWindow <- c(min=0,max=16)
 			# if( !bUtil.in(tot,surWindow) ) rCutId <- c( rCutId, sprintf("HpnTot.%d(%d~%d)",tot,surWindow["min"],surWindow["max"]) )
-
+			#
 			# tot <- sum(chkEvt$hpnInfo$fCol==0)
-			# surWindow <- c(min=1,max=16)
+			# surWindow <- c(min=12,max=16)
 			# if( !bUtil.in(tot,surWindow) ) rCutId <- c( rCutId, sprintf("HpnFCol.%d(%d~%d)",tot,surWindow["min"],surWindow["max"]) )
-
+			#
 			# tot <- sum(chkEvt$hpnInfo$phase==0)
-			# surWindow <- c(min=1,max=12)
+			# surWindow <- c(min=7,max=12)
 			# if( !bUtil.in(tot,surWindow) ) rCutId <- c( rCutId, sprintf("HpnPh.%d(%d~%d)",tot,surWindow["min"],surWindow["max"]) )
 
 			# Hpn Last-----------------------------------------
 			hpnInfo.c <- chkEvt$hpnInfo
 			hpnInfo.l <- cutterObj$chkEvt.last$hpnInfo
-			fireThld.min <- 0	# chkEvt$hpnInfo$tot 최소값 참조.
-			if( hpnInfo.c$tot<=fireThld.min && hpnInfo.l$tot<=fireThld.min ){
-				rCutId <- c( rCutId, sprintf("Hpn zero seq(%d->%d)",hpnInfo.l$tot,hpnInfo.c$tot) )	
+
+			surWindow <- c(min=1,max=16)	# chkEvt$hpnInfo$tot 범위 참조
+			tot.surLC <- c( lEvt=bUtil.in(hpnInfo.l$tot,surWindow) ,cEvt=bUtil.in(hpnInfo.c$tot,surWindow) )
+			if( all(!tot.surLC) ){
+				rCutId <- c( rCutId, sprintf("Hpn.tot Evt dup(%d~%d) %d->%d"
+							,surWindow["min"],surWindow["max"],hpnInfo.l$tot,hpnInfo.c$tot) )	
 			}
+
+			surWindow <- c(min=12,max=16)	# chkEvt$hpnInfo$fCol 범위 참조
+			tot.l <- sum(hpnInfo.l$fCol==0)
+			tot.c <- sum(hpnInfo.c$fCol==0)
+			fCol.surLC <- c( lEvt=bUtil.in(tot.l,surWindow) ,cEvt=bUtil.in(tot.c,surWindow) )
+			if( all(!fCol.surLC) ){
+				rCutId <- c( rCutId, sprintf("Hpn.fCol Evt dup(%d~%d) %d->%d"
+							,surWindow["min"],surWindow["max"],tot.l,tot.c) )	
+			}
+
+			surWindow <- c(min=7,max=12)	# chkEvt$hpnInfo$phase 범위 참조
+			tot.l <- sum(hpnInfo.l$phase==0)
+			tot.c <- sum(hpnInfo.c$phase==0)
+			phase.surLC <- c( lEvt=bUtil.in(tot.l,surWindow) ,cEvt=bUtil.in(tot.c,surWindow) )
+			if( all(!phase.surLC) ){
+				rCutId <- c( rCutId, sprintf("Hpn.phase Evt dup(%d~%d) %d->%d"
+							,surWindow["min"],surWindow["max"],tot.l,tot.c) )	
+			}
+
 
 			cnt.fCol <- sum(hpnInfo.c$fCol!=hpnInfo.l$fCol)
 			cnt.phase <- sum(hpnInfo.c$phase!=hpnInfo.l$phase)
