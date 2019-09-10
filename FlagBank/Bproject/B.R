@@ -150,10 +150,11 @@ if( FALSE ){    # 실전 추출 예제 코드
     tgt.scMtx <-        # default : NULL        ; c("score2","score3")
     curStdFiltedCnt <- 1
     allIdx  <- allIdxLst[[sprintf("allZoid.idx%d",curStdFiltedCnt)]]
-    allIdxF <- c( stdIdx ,allIdx[sample(1:length(allIdx),200000)] ) 
+    # allIdx  <- allIdx[sample(1:length(allIdx),200000)]
+    allIdxF <- c( stdIdx ,allIdx ) 
     #   200000 기준 
-    #       score2 : 2.7min, 40.0min       --> 31837/200001
-    #       score3 : 1.5min,  3.1min       -->      / 31837
+    #       score2 : 2.7min, 33.8min       --> 25363/200001
+    #       score3 : 1.5min,  3.1min       -->      / 25363
     # ---------------------------------------------------------------------
     #   save( allIdxF ,file="Obj_allIdxF.save" )
     #   load( "Obj_allIdxF.save" )
@@ -201,6 +202,7 @@ if( FALSE ){    # 실전 추출 예제 코드
     cat( rptStr )
     allIdx <- allIdxF
 
+    save( allIdxF ,file="Obj_allIdxF.save" )
 
 
 
