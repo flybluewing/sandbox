@@ -124,6 +124,7 @@ bFCust.getCust <- function(){
 		rObj$fLst_1Col[[1+length(rObj$fLst_1Col)]] <- bFCust.A_score3_A_snFCntR( )
 
 		rObj$fLst_1Col[[1+length(rObj$fLst_1Col)]] <- bFCust.A_score4_A_A( )
+		rObj$fLst_1Col[[1+length(rObj$fLst_1Col)]] <- bFCust.A_score5_A_A( )
 	}
 	rObj$getCustF_1Col <- function( ctrlCfg ,tgtId=c(hName="", mName="", pName="", fcName="") ,auxInfo=c(auxInfo="") ){
 		# tgtId=c(hName="sfcHLst", mName="score2", pName="basic", fcName="inc.f")
