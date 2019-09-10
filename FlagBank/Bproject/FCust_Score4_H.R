@@ -165,9 +165,7 @@ bFCust.byFCol_A_score4_A <- function( ){
 	rObj$cutFLst <- list()
 	if( TRUE ){	# build cutFLst
 		rObj$cutFLst[["pBanN.r"]] <- function( smRow ,fcName ){
-
 			crObj <- list( cutFlag=F ,cId="_A pBanN.r" ) # cut result object, cut Id
-
 			cnt <- sum(smRow==1)
 			if( !bUtil.in(cnt,c(min=0,max=1)) ){
 				crObj$cutFlag <- TRUE	;crObj$cId <- sprintf("%s 01.%d",crObj$cId,cnt)
@@ -176,55 +174,58 @@ bFCust.byFCol_A_score4_A <- function( ){
 			if( !bUtil.in(cnt,c(min=0,max=0)) ){
 				crObj$cutFlag <- TRUE	;crObj$cId <- sprintf("%s 0n.%d",crObj$cId,cnt)
 			}
-
 			return( crObj )
 		} # rObj$cutFLst[1]( )
 		rObj$cutFLst[["pBanN.n"]] <- function( smRow ,fcName ){	# for testing
 			crObj <- list( cutFlag=F ,cId="_A pBanN.n" ) # cut result object, cut Id
-			# cnt <- sum(smRow==0)
-			# if( !bUtil.in(cnt,c(min=0,max=0)) ){
-			# 	crObj$cutFlag <- TRUE	;crObj$cId <- sprintf("%s 00.%d",crObj$cId,cnt)
-			# }
+			cnt <- sum(smRow==1)
+			if( !bUtil.in(cnt,c(min=0,max=1)) ){
+				crObj$cutFlag <- TRUE	;crObj$cId <- sprintf("%s 01.%d",crObj$cId,cnt)
+			}
+			cnt <- sum(smRow==2)
+			if( !bUtil.in(cnt,c(min=0,max=0)) ){
+				crObj$cutFlag <- TRUE	;crObj$cId <- sprintf("%s 0n.%d",crObj$cId,cnt)
+			}
 			return( crObj )
 		} # rObj$cutFLst[1]( )
 		rObj$cutFLst[["pLCol"]] <- function( smRow ,fcName ){	# for testing
 			crObj <- list( cutFlag=F ,cId="_A pLCol" ) # cut result object, cut Id
-			# cnt <- sum(smRow==0)
-			# if( !bUtil.in(cnt,c(min=0,max=0)) ){
-			# 	crObj$cutFlag <- TRUE	;crObj$cId <- sprintf("%s 00.%d",crObj$cId,cnt)
-			# }
+			cnt <- sum(smRow==1)
+			if( !bUtil.in(cnt,c(min=0,max=1)) ){
+				crObj$cutFlag <- TRUE	;crObj$cId <- sprintf("%s 01.%d",crObj$cId,cnt)
+			}
 			return( crObj )
 		} # rObj$cutFLst[1]( )
 		rObj$cutFLst[["pE3"]] <- function( smRow ,fcName ){	# for testing
 			crObj <- list( cutFlag=F ,cId="_A pE3" ) # cut result object, cut Id
-			# cnt <- sum(smRow==0)
-			# if( !bUtil.in(cnt,c(min=0,max=0)) ){
-			# 	crObj$cutFlag <- TRUE	;crObj$cId <- sprintf("%s 00.%d",crObj$cId,cnt)
-			# }
+			cnt <- sum(smRow==1)
+			if( !bUtil.in(cnt,c(min=0,max=1)) ){
+				crObj$cutFlag <- TRUE	;crObj$cId <- sprintf("%s 01.%d",crObj$cId,cnt)
+			}
 			return( crObj )
 		} # rObj$cutFLst[1]( )
 		rObj$cutFLst[["pE4"]] <- function( smRow ,fcName ){	# for testing
 			crObj <- list( cutFlag=F ,cId="_A pE4" ) # cut result object, cut Id
-			# cnt <- sum(smRow==0)
-			# if( !bUtil.in(cnt,c(min=0,max=0)) ){
-			# 	crObj$cutFlag <- TRUE	;crObj$cId <- sprintf("%s 00.%d",crObj$cId,cnt)
-			# }
+			cnt <- sum(smRow==1)
+			if( !bUtil.in(cnt,c(min=0,max=1)) ){
+				crObj$cutFlag <- TRUE	;crObj$cId <- sprintf("%s 01.%d",crObj$cId,cnt)
+			}
 			return( crObj )
 		} # rObj$cutFLst[1]( )
 		rObj$cutFLst[["pMH"]] <- function( smRow ,fcName ){	# for testing
 			crObj <- list( cutFlag=F ,cId="_A pMH" ) # cut result object, cut Id
-			# cnt <- sum(smRow==0)
-			# if( !bUtil.in(cnt,c(min=0,max=0)) ){
-			# 	crObj$cutFlag <- TRUE	;crObj$cId <- sprintf("%s 00.%d",crObj$cId,cnt)
-			# }
+			cnt <- sum(smRow==1)
+			if( !bUtil.in(cnt,c(min=0,max=1)) ){
+				crObj$cutFlag <- TRUE	;crObj$cId <- sprintf("%s 01.%d",crObj$cId,cnt)
+			}
 			return( crObj )
 		} # rObj$cutFLst[1]( )
 		rObj$cutFLst[["pfNum"]] <- function( smRow ,fcName ){	# for testing
 			crObj <- list( cutFlag=F ,cId="_A pfNum" ) # cut result object, cut Id
-			# cnt <- sum(smRow==0)
-			# if( !bUtil.in(cnt,c(min=0,max=0)) ){
-			# 	crObj$cutFlag <- TRUE	;crObj$cId <- sprintf("%s 00.%d",crObj$cId,cnt)
-			# }
+			cnt <- sum(smRow==1)
+			if( !bUtil.in(cnt,c(min=0,max=1)) ){
+				crObj$cutFlag <- TRUE	;crObj$cId <- sprintf("%s 01.%d",crObj$cId,cnt)
+			}
 			return( crObj )
 		} # rObj$cutFLst[1]( )
 		rObj$cutFLst[["iBanN"]] <- function( smRow ,fcName ){	# for testing
