@@ -67,6 +67,74 @@ bFCust.A_score5_A_A <- function(  ){
 } # bFCust.A_score5_A_A( )
 
 
+#	[score5:Col Cutter(N col)] ------------------------------------------------------------------
+bFCust.A_score5_A_Row01 <- function(  ){
+	rObj <- list( )
+	rObj$defId <- c( typ="c_NCol.5"	,hName="*"	,mName="score5"	,pName="*"	,rFId="Row01" )	# row filt ID
+	rObj$description <- sprintf("(cust)  ")
+
+	rObj$evtLst <- FCust_score5EvtLst
+
+	rObj$cutFLst <- list()
+	rObj$cutFLst[[1+length(rObj$cutFLst)]] <- function( smRow ,evt ){
+		crObj <- list( cutFlag=F ,cId="hpnOne" ) # cut result object, cut Id
+        
+        cId <- ""
+
+		cnt <- sum(smRow[c("pBanN.r","pBanN.n","iBanN")])
+		if( !bUtil.in(cnt,c(min=0,max=2)) ){
+			crObj$cutFlag <- TRUE
+			cId <- c( cId ,sprintf( "<BanCnt %d>",cnt) )
+		}
+
+        crObj$cId <- sprintf( "%s %s" ,crObj$cId ,cId )
+		return( crObj )
+	} # rObj$cutFLst[1]( )
+
+	rObj$createCutter <- function( tgtId=c(hName="", mName="", pName="") ,auxInfo=c(auxInfo="") ){
+
+		cutterObj <- rObj
+		cutterObj$createCutter <- NULL
+
+		#	hName="testNA"; mName="testNA"; pName="testNA"; fcName="testNA"; auxInfo=c(auxInfo="")
+		idObjDesc <- rObj$defId
+		if( idObjDesc["hName"]!=tgtId["hName"] ) idObjDesc["hName"] <- sprintf("(%s)%s",idObjDesc["hName"],tgtId["hName"])
+		if( idObjDesc["mName"]!=tgtId["mName"] ) idObjDesc["mName"] <- sprintf("(%s)%s",idObjDesc["mName"],tgtId["mName"])
+		if( idObjDesc["pName"]!=tgtId["pName"] ) idObjDesc["pName"] <- sprintf("(%s)%s",idObjDesc["pName"],tgtId["pName"])
+		idObjDesc <- c( idObjDesc ,auxInfo )
+		cutterObj$idObjDesc <- idObjDesc
+
+		cutterObj$idObj <- rObj$defId
+		cutterObj$idObj[names(tgtId)] <- tgtId
+
+		cutterObj$cut <- function( scoreMtx ,alreadyDead=NULL ){
+			val.len <- nrow( scoreMtx )
+			if( is.null(alreadyDead) )	alreadyDead <- rep( F, val.len )
+
+			cutLst <- list()
+			for( idx in seq_len(val.len) ){
+				if( alreadyDead[idx] ) next
+
+				lst <- lapply( rObj$cutFLst ,function( pFunc ){ pFunc( scoreMtx[idx,] ) } )
+				cutFlag <- sapply( lst ,function(p){ p$cutFlag })
+				if( any(cutFlag) ){
+					firedCId <- sapply( lst[cutFlag] ,function(p){p$cId})
+					infoStr <- sprintf("cut Id : %s",paste(firedCId,collapse=",") )
+					cutLst[[1+length(cutLst)]] <- list( idx=idx ,idObjDesc=cutterObj$idObjDesc ,info=infoStr )
+				}
+			}
+
+			return( cutLst )
+		} # cutterObj$cut()
+
+		return(cutterObj)
+    }
+
+	return( rObj )
+} # bFCust.A_score5_A_Row01( )
+
+
+
 #	[score5:Row Cutter] ------------------------------------------------------------------
 
 
