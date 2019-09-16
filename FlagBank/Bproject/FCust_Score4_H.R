@@ -744,7 +744,7 @@ bFCust.byHIdx_A_score4 <- function( ){
 	} # rObj$createCutter( )
 
 	return( rObj )
-} # bFCust.byHIdx_A_score2
+} # bFCust.byHIdx_A_score4
 
 
 bFCust.get_byHIdx_score4ChkEvt <- function( scoreMtx ){

@@ -162,6 +162,7 @@ bFCust.getCust <- function(){
 	if( TRUE ){
 		rObj$fLst_NCol[[1+length(rObj$fLst_NCol)]] <- bFCust.A_score2_A_Row01()
 		rObj$fLst_NCol[[1+length(rObj$fLst_NCol)]] <- bFCust.A_score4_A_Row01()
+		rObj$fLst_NCol[[1+length(rObj$fLst_NCol)]] <- bFCust.A_score5_A_Row01()
 	}
 	rObj$getCustF_NCol <- function( tgtId=c(hName="", mName="", pName="") ,auxInfo=c(auxInfo="") ){
 		# tgtId=c(hName="sfcHLst", mName="score2", pName="basic")
@@ -262,6 +263,7 @@ bFCust.getCust <- function(){
 	if( TRUE ){
 		rObj$fLst_byHIdx[[1+length(rObj$fLst_byHIdx)]] <- bFCust.byHIdx_A_score2()
 		rObj$fLst_byHIdx[[1+length(rObj$fLst_byHIdx)]] <- bFCust.byHIdx_A_score4()
+		rObj$fLst_byHIdx[[1+length(rObj$fLst_byHIdx)]] <- bFCust.byHIdx_A_score5()
 	}
 	rObj$getCustF_byHIdx <- function( mtxLst ,tgtId=c(hName="", mName="") ,auxInfo=c(auxInfo="") ){
 		fFLst <- list()	# found fLst
