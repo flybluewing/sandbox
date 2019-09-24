@@ -416,7 +416,7 @@ bFCust.byFCol_A_score4_A <- function( ){
 	}
 
 	return( rObj )
-} # bFCust.byFCol_A_score2_A( )
+} # bFCust.byFCol_A_score4_A( )
 
 #	typ="c_byFCol"	,hName="*"	,mName="score4"	,pName="*"	,fcName="*" )
 bFCust.byFCol_A_score4_A_rReb01 <- function( ){

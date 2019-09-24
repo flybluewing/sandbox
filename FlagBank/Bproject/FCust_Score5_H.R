@@ -118,6 +118,12 @@ bFCust.A_score5_A_Row01 <- function(  ){
 		}
 
 
+		cnt <- sum( smRow==0 )
+		if( !bUtil.in(cnt,c(min=10,max=18)) ){
+			crObj$cutFlag <- TRUE
+			crObj$cId <- c( crObj$cId ,sprintf( "<ZeroCnt %d>",cnt) )
+		}
+
 		return( crObj )
 	} # rObj$cutFLst[1]( )
 
