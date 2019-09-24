@@ -156,8 +156,8 @@ if( FALSE ){    # 실전 추출 예제 코드
     }
     allIdxF <- c( stdIdx ,allIdx ) 
     #   50*10000 기준 
-    #       score2 :  7min, 1.2hour       --> 63410/500000
-    #       score3 : 57min, 1.2min       -->  47571/ 63410
+    #       score2 :  7min, 1.2hour       --> 63,410/500,000
+    #       score3 : 57min, 1.2min       -->  47,571/ 63,410
     # ---------------------------------------------------------------------
     #   save( allIdxF ,file="Obj_allIdxF.save" )
     #   load( "Obj_allIdxF.save" )
