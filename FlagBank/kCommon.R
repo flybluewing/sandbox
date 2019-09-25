@@ -645,3 +645,19 @@ k.getIdx_AllZoidMtx <- function( gEnv ,aZoid ){
 	return( aIdx )
 } # k.getIdx_AllZoidMtx
 
+k.blockLst <- function( totLen ,blockSize ){
+
+	rLst <- list()
+
+	blockNum <- totLen %/% blockSize
+	for( idx in seq_len(blockNum) ){
+		rLst[[1+length(rLst)]] <- c( start=(idx-1)*blockSize+1 ,end=(idx*blockSize) )
+	}
+	if( totLen > (blockNum*blockSize) ){
+		rLst[[1+length(rLst)]] <- c( start=blockNum*blockSize+1 ,end=totLen )
+	}
+	names(rLst) <- sprintf("%2d/%d",seq_len(length(rLst)),length(rLst))
+
+	return( rLst )
+} # k.blockLst()
+
