@@ -151,6 +151,8 @@ bFCust.A_score4_A_Row01 <- function(  ){
 } # bFCust.A_score4_A_Row01( )
 
 
+
+
 #	[score4:byFCol(Rebound/Sequencial)] ---------------------------------------------------------
 #		- mtxGrp <- getScoreMtx.grp_byFCol( scoreMtx.grp )
 #		- nRow 대상이긴 하지만, mtx는 각 scoreMtx 의 fCol 별로 생성된다는 점을 주의

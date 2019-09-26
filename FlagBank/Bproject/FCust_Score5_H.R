@@ -169,6 +169,191 @@ bFCust.A_score5_A_Row01 <- function(  ){
 	return( rObj )
 } # bFCust.A_score5_A_Row01( )
 
+#	[score5:Col Cutter(Rebound/Sequencial)] -----------------------------------------------------
+bFCust.A_score5_A_rReb01 <- function(  ){	# evt rebind
+	#	row rebind라고는 했지만 사실 seq 이다. 
+	#	즉 이전 evt 컬럼이 다음에도 동일 evt가 일어나는지 체크 (다음에서 추가적으로 발생하는 evt는 상관없음)
+	rObj <- list( )
+	rObj$defId <- c( typ="cust_RReb"	,hName="*"	,mName="score5"	,pName="*"	,rFId="rReb01" )	# row filt ID
+	rObj$description <- sprintf("(cust)  ")
+
+	rObj$evtLst <- FCust_score5EvtLst
+
+	rObj$createCutter <- function( hMtxLst ,tgtId=c(hName="", mName="", pName="") ,auxInfo=c(auxInfo="") ){
+
+		cutterObj <- rObj
+		cutterObj$createCutter <- NULL
+
+		#	hName="testNA"; mName="testNA"; pName="testNA"; fcName="testNA"; auxInfo=c(auxInfo="")
+		idObjDesc <- rObj$defId
+		if( idObjDesc["hName"]!=tgtId["hName"] ) idObjDesc["hName"] <- sprintf("(%s)%s",idObjDesc["hName"],tgtId["hName"])
+		if( idObjDesc["mName"]!=tgtId["mName"] ) idObjDesc["mName"] <- sprintf("(%s)%s",idObjDesc["mName"],tgtId["mName"])
+		if( idObjDesc["pName"]!=tgtId["pName"] ) idObjDesc["pName"] <- sprintf("(%s)%s",idObjDesc["pName"],tgtId["pName"])
+		idObjDesc <- c( idObjDesc ,auxInfo )
+		cutterObj$idObjDesc <- idObjDesc
+
+		cutterObj$idObj <- rObj$defId
+		cutterObj$idObj[names(tgtId)] <- tgtId
+
+		scoreMtxObj <- hMtxLst$getScoreMtxObj( tgtId["hName"] ,tgtId["mName"] ,tgtId["pName"] )
+		scoreMtx <- if( is.null(scoreMtxObj) ) NULL else scoreMtxObj$scoreMtx
+		cutterObj$scoreMtx <- scoreMtx	# just for debug later..
+
+		cutterObj$evtChkLst <- list()
+		if( !is.null(scoreMtx) ){	# build checkLst
+			#	fireThld 는 fire가 일어날 동일 패턴 수. NA이면 전부 매치.
+			scoreMtx.last <- scoreMtx[nrow(scoreMtx),]
+
+			cName <- c("pBanN.r","pBanN.n","pLCol","pE3","pE4","pMH","pfNum")
+			evtChkInfo <- list( cutId="grp.p" ,fireThld=2 ,evtLst=rObj$evtLst[cName] )
+			evtChkInfo$evtLast <- bUtil.getEvtVal( scoreMtx.last ,evtChkInfo$evtLst )
+			cutterObj$evtChkLst[[1+length(cutterObj$evtChkLst)]] <- evtChkInfo
+
+			cName <- c("iBanN","iLCol","iE3","iE4","iMH","ifNum")
+			evtChkInfo <- list( cutId="grp.i" ,fireThld=2 ,evtLst=rObj$evtLst[cName] )
+			evtChkInfo$evtLast <- bUtil.getEvtVal( scoreMtx.last ,evtChkInfo$evtLst )
+			cutterObj$evtChkLst[[1+length(cutterObj$evtChkLst)]] <- evtChkInfo
+
+			#	byHIdx에서 다수 발생 체크
+			# cName <- c("FVa.m","FVa.c","aFV.m","aFV.c")
+			# evtChkInfo <- list( cutId="grp.fv" ,fireThld=2 ,evtLst=rObj$evtLst[cName] )
+			# evtChkInfo$evtLast <- bUtil.getEvtVal( scoreMtx.last ,evtChkInfo$evtLst )
+			# cutterObj$evtChkLst[[1+length(cutterObj$evtChkLst)]] <- evtChkInfo
+
+			#	byHIdx에서 다수 발생 체크
+			# evtChkInfo <- list( cutId="evtAll" ,fireThld=2 ,evtLst=rObj$evtLst )
+			# evtChkInfo$evtLast <- bUtil.getEvtVal( scoreMtx.last ,evtChkInfo$evtLst )
+			# cutterObj$evtChkLst[[1+length(cutterObj$evtChkLst)]] <- evtChkInfo
+
+			# 기타등등..
+
+			names(cutterObj$evtChkLst) <- sapply( cutterObj$evtChkLst ,function(p){p$cutId})
+			for( nIdx in names(cutterObj$evtChkLst) ){
+				cutterObj$evtChkLst[[nIdx]]$evtNaMask <- !is.na(cutterObj$evtChkLst[[nIdx]]$evtLast)
+			}
+		}
+
+		cutterObj$checkRow <- function( smRow ){	# scoreMtx row
+			# 속도 최적화 면에서는 아주 안 좋지만, 일단 기능의 유효성 확인이 급하니..
+			# cutterObj$checkLst 설정내역을 흝어가며 체크.
+
+			firedCutId <- character(0)
+			for( idx in seq_len(length(cutterObj$evtChkLst)) ){
+				evtChkInfo <- cutterObj$evtChkLst[[idx]]
+				if( 0==sum(evtChkInfo$evtNaMask) ) next
+
+				fireThld <- evtChkInfo$fireThld
+				if( is.na(fireThld) ) fireThld <- sum(evtChkInfo$evtNaMask)
+
+				src <- bUtil.getEvtVal( smRow ,evtChkInfo$evtLst )
+				chk <- (src==evtChkInfo$evtLast)[evtChkInfo$evtNaMask]
+
+				if( fireThld <= sum(chk,na.rm=T) ){
+					firedCutId <- c( firedCutId ,evtChkInfo$cutId )
+				}
+
+			}
+
+			chkRstObj <- list( firedCutId=firedCutId ,cutFlag=(length(firedCutId)>0) )
+
+			return( chkRstObj )
+		}
+
+		cutterObj$cut <- function( scoreMtx ,alreadyDead=NULL ){
+			val.len <- nrow( scoreMtx )
+			if( is.null(alreadyDead) )	alreadyDead <- rep( F, val.len )
+
+			cutLst <- list()
+			for( idx in seq_len(val.len) ){
+				if( alreadyDead[idx] ) next
+
+				chkRst <- cutterObj$checkRow( scoreMtx[idx,] )
+				if( chkRst$cutFlag ){
+					infoStr <- sprintf("cut Id : %s",paste(chkRst$firedCutId,collapse=",") )
+					cutLst[[1+length(cutLst)]] <- list( idx=idx ,idObjDesc=cutterObj$idObjDesc ,info=infoStr )
+				}
+			}
+
+			return( cutLst )
+		} # cutterObj$cut()
+
+		return(cutterObj)
+
+	}
+
+	return( rObj )
+} # bFCust.A_score5_A_rReb01()
+
+bFCust.A_score5_A_rRebAA <- function(  ){	#	이전 마지막 score(cutterObj$lastRow) 값과의 일치여부(raw Value) 
+
+	rObj <- list( )
+	rObj$defId <- c( typ="cust_RReb"	,hName="*"	,mName="score5"	,pName="*"	,rFId="rRebAA" )	# row filt ID
+	rObj$description <- sprintf("(cust)  ")
+
+	rObj$createCutter <- function( hMtxLst ,tgtId=c(hName="", mName="", pName="") ,auxInfo=c(auxInfo="") ){
+
+		cutterObj <- rObj
+		cutterObj$createCutter <- NULL
+		cutterObj$getEvtVal <- function( src ,evtLst ){
+			evtVal <- src[names(evtLst)]
+			for( nIdx in names(evtLst) ){
+				if( !(evtVal[nIdx] %in% evtLst[[nIdx]]) ) evtVal[nIdx] <- NA
+			}
+			return( evtVal )
+		} # cutterObj$getLastVal()
+
+		#	hName="testNA"; mName="testNA"; pName="testNA"; fcName="testNA"; auxInfo=c(auxInfo="")
+		idObjDesc <- rObj$defId
+		if( idObjDesc["hName"]!=tgtId["hName"] ) idObjDesc["hName"] <- sprintf("(%s)%s",idObjDesc["hName"],tgtId["hName"])
+		if( idObjDesc["mName"]!=tgtId["mName"] ) idObjDesc["mName"] <- sprintf("(%s)%s",idObjDesc["mName"],tgtId["mName"])
+		if( idObjDesc["pName"]!=tgtId["pName"] ) idObjDesc["pName"] <- sprintf("(%s)%s",idObjDesc["pName"],tgtId["pName"])
+		idObjDesc <- c( idObjDesc ,auxInfo )
+		cutterObj$idObjDesc <- idObjDesc
+
+		cutterObj$idObj <- rObj$defId
+		cutterObj$idObj[names(tgtId)] <- tgtId
+
+		scoreMtxObj <- hMtxLst$getScoreMtxObj( tgtId["hName"] ,tgtId["mName"] ,tgtId["pName"] )
+		if( is.null(scoreMtxObj) ){	cutterObj$lastRow <- NULL
+		} else {
+			cutterObj$lastRow <- scoreMtxObj$scoreMtx[nrow(scoreMtxObj$scoreMtx),]
+
+			#	허나, FV 그룹은 유사한 경우가 자주 있어서..
+			cName <- setdiff( names(cutterObj$lastRow) ,c("FVa.m","FVa.c","aFV.m","aFV.c") )
+			if( all(cutterObj$lastRow[cName]==0) ){
+				cutterObj$lastRow <- NULL
+			}
+		}
+
+		cutterObj$cut <- function( scoreMtx ,alreadyDead=NULL ){
+			val.len <- nrow( scoreMtx )
+			if( is.null(alreadyDead) )	alreadyDead <- rep( F, val.len )
+
+			cutLst <- list()
+			for( idx in seq_len(val.len) ){
+				if( alreadyDead[idx] ) next
+
+				if( is.null(cutterObj$lastRow) )	next
+
+				matFlag <- all( cutterObj$lastRow==scoreMtx[idx,] )
+				if( all(matFlag) ){
+					infoStr <- sprintf("cut Id : %s",cutterObj$idObjDesc["rFId"] )
+					cutLst[[1+length(cutLst)]] <- list( idx=idx ,idObjDesc=cutterObj$idObjDesc ,info=infoStr )
+				}
+			}
+
+			return( cutLst )
+		} # cutterObj$cut()
+
+		return(cutterObj)
+	}
+
+	return( rObj )
+} # bFCust.A_score5_A_rRebAA()
+
+
+
+
 
 
 #	[score5:Row Cutter] ------------------------------------------------------------------

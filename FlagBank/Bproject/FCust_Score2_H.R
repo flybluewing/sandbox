@@ -294,7 +294,7 @@ bFCust.A_score2_A_Row01 <- function(  ){
 } # bFCust.A_score2_A_Row01()
 
 #	[score2:Col Cutter(Rebound/Sequencial)] -----------------------------------------------------
-bFCust.A_score2_A_rReb01 <- function(  ){
+bFCust.A_score2_A_rReb01 <- function(  ){	# evt rebind
 	#	row rebind라고는 했지만 사실 seq 이다. 
 	#	즉 이전 evt 컬럼이 다음에도 동일 evt가 일어나는지 체크(다음에서 추가적으로 발생하는 evt는 상관없음.)
 	rObj <- list( )
@@ -372,7 +372,7 @@ bFCust.A_score2_A_rReb01 <- function(  ){
 		}
 
 		cutterObj$checkRow <- function( smRow ){	# scoreMtx row
-			# 속도 최적화 면에서는 아주 안 좋지만, 일단 기능과 성능 확인이 급하니..
+			# 속도 최적화 면에서는 아주 안 좋지만, 일단 기능의 유효성 확인이 급하니..
 			# cutterObj$checkLst 설정내역을 흝어가며 체크.
 
 			firedCutId <- character(0)
@@ -422,8 +422,8 @@ bFCust.A_score2_A_rReb01 <- function(  ){
 	return( rObj )
 } # bFCust.A_score2_A_rReb01()
 
-bFCust.A_score2_A_rRebAA <- function(  ){
-	#	이전 마지막 score(cutterObj$lastRow) 값과의 일치여부(raw Value) 
+bFCust.A_score2_A_rRebAA <- function(  ){	#	이전 마지막 score(cutterObj$lastRow) 값과의 일치여부(raw Value) 
+
 	rObj <- list( )
 	rObj$defId <- c( typ="cust_RReb"	,hName="*"	,mName="score2"	,pName="*"	,rFId="rRebAA" )	# row filt ID
 	rObj$description <- sprintf("(cust)  ")

@@ -194,6 +194,12 @@ bFCust.getCust <- function(){
 	if( TRUE ){
 		rObj$fLst_rReb[[1+length(rObj$fLst_rReb)]] <- bFCust.A_score2_A_rReb01()
 		rObj$fLst_rReb[[1+length(rObj$fLst_rReb)]] <- bFCust.A_score2_A_rRebAA()
+
+		# rObj$fLst_rReb[[1+length(rObj$fLst_rReb)]] <- bFCust.A_score4_A_rReb01()
+		# rObj$fLst_rReb[[1+length(rObj$fLst_rReb)]] <- bFCust.A_score4_A_rRebAA()
+		rObj$fLst_rReb[[1+length(rObj$fLst_rReb)]] <- bFCust.A_score5_A_rReb01()
+		rObj$fLst_rReb[[1+length(rObj$fLst_rReb)]] <- bFCust.A_score5_A_rRebAA()
+
 	}
 	rObj$getCustF_RReb <- function( lastMtx ,tgtId=c(hName="", mName="", pName="") ,auxInfo=c(auxInfo="") ){
 		# tgtId=c(hName="sfcHLst", mName="score2", pName="basic")

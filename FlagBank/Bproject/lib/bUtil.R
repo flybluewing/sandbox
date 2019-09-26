@@ -165,18 +165,6 @@ bUtil.stdCtrlCfg.scoreMtx <- function( scoreMtx ){
 
 } # bUtil.stdCtrlCfg.scoreMtx()
 
-bUtil.stdCtrlCfg.h_ph4FCol <- function( scoreMtx ){	
-	# qqe work
-	rObj <- list()
-	return( rObj )
-} # bUtil.stdCtrlCfg.h_ph4FCol()
-
-bUtil.stdCtrlCfg.h_ph4FCol <- function( scoreMtx ){
-	# qqe work
-	rObj <- list()
-	return( rObj )
-} # bUtil.stdCtrlCfg.h_ph4FCol()
-
 bUtil.getCtrlCfg <- function( hVal ){
 
     toString <- function(){
@@ -360,6 +348,7 @@ bUtil.in <- function( val ,eadge=c(min=0,max=0) ){
 	return( rst )
 } # bUtil.in()
 
+#	src컬럼을 지정할 필요 없음. evtLst 의 이름을 이용함.
 bUtil.getEvtVal <- function( src ,evtLst ){
 	evtVal <- src[names(evtLst)]
 	for( nIdx in names(evtLst) ){
