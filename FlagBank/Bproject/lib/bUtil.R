@@ -120,17 +120,19 @@ bUtil.makeStdCtrlCfgGrp <- function( hMtxLst ){
 			ctrlCfg$std <- pLst
 
 			fColLst <- list()
-			for( fcName in hMtxLst$mtxInfoLst[[mName]] ){	# fcName <- hMtxLst$mtxInfoLst[[mName]][1]
-				mtx <- byFCol[[hName]][[mName]][[fcName]]	# h * phase
-				fColLst[[fcName]] <- bUtil.stdCtrlCfg.h_ph4FCol( mtx )
-			}
+			#	생각보다 실효성이 없다...
+			# for( fcName in hMtxLst$mtxInfoLst[[mName]] ){	# fcName <- hMtxLst$mtxInfoLst[[mName]][1]
+			# 	mtx <- byFCol[[hName]][[mName]][[fcName]]	# h * phase
+			# 	fColLst[[fcName]] <- bUtil.stdCtrlCfg.h_ph4FCol( mtx )
+			# }
 			ctrlCfg$byFCol <- fColLst
 
 			hIdxLst <- list()
-			for( hIdxName in as.character(hMtxLst$sfcHLst[[hName]]) ){	# hIdxName <- as.character(hMtxLst$sfcHLst[[hName]])[1]
-				mtx <- byHIdx[[hName]][[mName]][[hIdxName]]	# fCol * phase
-				hIdxLst[[hIdxName]] <- bUtil.stdCtrlCfg.h_ph4FCol( mtx )
-			}
+			#	생각보다 실효성이 없다...			
+			# for( hIdxName in as.character(hMtxLst$sfcHLst[[hName]]) ){	# hIdxName <- as.character(hMtxLst$sfcHLst[[hName]])[1]
+			# 	mtx <- byHIdx[[hName]][[mName]][[hIdxName]]	# fCol * phase
+			# 	hIdxLst[[hIdxName]] <- bUtil.stdCtrlCfg.h_ph4FCol( mtx )
+			# }
 
 		} # for(mName)
 
