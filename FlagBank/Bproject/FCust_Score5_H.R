@@ -382,7 +382,6 @@ bFCust.byHIdx_A_score5 <- function( ){
 	rObj$evtLst <- FCust_score2EvtLst
 
 	rObj$createCutter <- function( mtxLst=NULL ,tgtId=c(hName="", mName="") ,auxInfo=c(auxInfo="") ){
-		#	mtxLst : 사실상 맨 마지막 mtx만 필요하긴 한데, 차후 h간 연속발생 갯수도 체크할 기능을 만들 수 있게 하기 위해 전체 list를 받음.
 
 		cutterObj <- rObj
 		cutterObj$createCutter <- NULL	;cutterObj$evtLst <- NULL	;cutterObj$getMtxEvt_byRow <- NULL
@@ -401,6 +400,10 @@ bFCust.byHIdx_A_score5 <- function( ){
 		if( tgtId["mName"]==cutterObj$defId["mName"] ){
 			cutterObj$chkEvt.last <- bFCust.get_byHIdx_score5ChkEvt( mtxLst[[length(mtxLst)]] )
 		}
+
+		# add start --------------------------------------------------------------
+		cutterObj$mtxLst <- mtxLst
+		# add end   --------------------------------------------------------------
 
 		cutterObj$cut <- function( scoreMtx ,aIdx ){
 			# scoreMtx 는 1개 aZoid에 관한 [fCol,phase] mtx임을 유의.
@@ -450,6 +453,51 @@ bFCust.byHIdx_A_score5 <- function( ){
 			surWindow <- c(min=28,max=64)
 			if( !bUtil.in(nMatchCnt,surWindow) ) rCutId <- c( rCutId, sprintf("rawDiffCnt.%d(%d~%d)",nMatchCnt,surWindow["min"],surWindow["max"]) )
 
+			# add start --------------------------------------------------------------
+
+			
+			# phRawMat -------------------------------------------
+			fireThld <- 3
+			cnt.allMat <- 0
+			for( pName in colnames(scoreMtx) ){
+				# 0 이 많으면 적용.
+				if( 0==sum(scoreMtx[,pName]) )	next
+
+				if( any(scoreMtx[,pName]!=cutterObj$evt$lastMtxRaw[,pName]) ) next
+
+				cnt.allMat <- cnt.allMat + 1
+			}
+			if( fireThld<=cnt.allMat )	rCutId <- c( rCutId, sprintf("phRawMatCnt.%d",cnt.allMat) )
+
+			# fColRawMat -------------------------------------------
+			fireThld <- 2
+			cnt.allMat <- 0
+			for( fColName in rownames(scoreMtx) ){
+				# 0 이 많으면 적용.
+				if( 0==sum(scoreMtx[fColName,]) )	next
+
+				if( any(scoreMtx[fColName,]!=cutterObj$evt$lastMtxRaw[fColName,]) ) next
+
+				cnt.allMat <- cnt.allMat + 1
+			}
+			if( fireThld<=cnt.allMat )	rCutId <- c( rCutId, sprintf("fColRawMatCnt.%d",cnt.allMat) )
+
+			# banPastH -------------------------------------------
+			banPastH <- 40	# 바로 이전 H를 제외한 크기(rawDiffCnt에서 체크되므로)
+			surWindow <- c(min=27,max=67)
+			mtxLst.len <- length(cutterObj$mtxLst)
+			endPoint <- mtxLst.len - banPastH -1
+			checkSpan <- (mtxLst.len-1):ifelse(1>endPoint,1,endPoint)
+			if( length(mtxLst) < banPastH )	banPastH <- length(mtxLst)
+			for( idx in seq_len(length(checkSpan)) ){
+				chkIdx <- checkSpan[idx]
+				nMatchCnt <- sum(scoreMtx!=cutterObj$mtxLst[[chkIdx]])
+				if( !bUtil.in(nMatchCnt,surWindow) ){
+					rCutId <- c( rCutId, sprintf("banPastH.%d in past %d(%d~%d)",nMatchCnt,idx,surWindow["min"],surWindow["max"]) )
+					break
+				}
+			}
+			# add end   --------------------------------------------------------------
 
 			return( rCutId )
 		}
@@ -485,7 +533,7 @@ bFCust.byHIdx_A_score5 <- function( ){
 			}
 
 			return( rCutId )
-		}
+		}		
 		# - custom --------------------------------------------------
 		cutterObj$cutLst[["F_hpnInfo"]] <- function( scoreMtx ,chkEvt ){	# working
 			rCutId <- character(0)

@@ -3,7 +3,7 @@ source("header.r")
 source("B_H.R")
 source("C_H.R")
 
-hSpan <- as.integer(allIdxLst$stdFiltedCnt)
+hSpan <- as.integer(names(allIdxLst$stdFiltedCnt))
 
 stdIdxLst <- list()
 for( hIdx in hSpan ){

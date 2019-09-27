@@ -127,7 +127,8 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
     save( cutRstLst ,file=sprintf("./save/HMtxLst/Obj_cutRstLst%d.save",configH) )
         # load("./save/HMtxLst/Obj_cutRstLst840.save")
 
-    B.rptCutRstLst( cutRstLst )
+    rptFile <- ifelse(1==length(tgt.scMtx),sprintf("cutRstLst_%s",tgt.scMtx),"cutRstLst")
+    B.rptCutRstLst( cutRstLst ,file=rptFile )
 
 }
 
