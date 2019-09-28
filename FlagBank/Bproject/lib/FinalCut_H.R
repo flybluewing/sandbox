@@ -1,9 +1,15 @@
 
 FC.primaryCut.static <- function( allIdxF ,gEnv ,filtTest=F ){
 
+    checkExit <- function( allIdxF ){
+
+        if( 1>=length(allIdxF) )    return( TRUE )
+        return( FALSE )
+    }
+
     filtedId <- integer(0)
-    zhF <- gEnv$zhF                 #   zhF <- gEnv.w$zhF
-    allZoidMtx <- gEnv$allZoidMtx   #   allZoidMtx <- gEnv.w$allZoidMtx 
+    zhF <- gEnv$zhF                 #   zhF <- gEnv.w$zhF   ;allZoidMtx <- gEnv.w$allZoidMtx
+    allZoidMtx <- gEnv$allZoidMtx
 
     # mtx <- apply( gEnv$zhF ,1 ,function(zoid){ c(zoid[1],zoid[6]-zoid[1],zoid[6]) })
     # mtx <- t(mtx)   ;colnames(mtx) <- c("c1","zw","c6")
@@ -16,14 +22,14 @@ FC.primaryCut.static <- function( allIdxF ,gEnv ,filtTest=F ){
     if( filtTest ){
         if( flag[1] ) filtedId <- c(filtedId,"01.0")
     } else {    allIdxF <- allIdxF[ !flag ]   }
-    if( 1>=length(allIdxF) ) return( allIdxF )
+    if( checkExit(allIdxF) ) return( NA )
 
     aZoidMtx <- allZoidMtx[allIdxF,]
     flag <- apply( aZoidMtx ,1 ,function(aZoid){4<=sum(aZoid%in%lastZoid)})
     if( filtTest ){
         if( flag[1] ) filtedId <- c(filtedId,"01.1")
     } else {    allIdxF <- allIdxF[ !flag ]   }
-    if( 1>=length(allIdxF) ) return( allIdxF )
+    if( checkExit(allIdxF) ) return( NA )
 
     # ==============================================================
         # table( mtx[,"c1"]>15 )  #   66/860
@@ -35,7 +41,7 @@ FC.primaryCut.static <- function( allIdxF ,gEnv ,filtTest=F ){
     if( filtTest ){
         if( aZoidMtx[1,1]>=thld ) filtedId <- c(filtedId,"02.0")
     } else {    allIdxF <- allIdxF[aZoidMtx[1,1]<thld]   }
-    if( 1>=length(allIdxF) ) return( allIdxF )
+    if( checkExit(allIdxF) ) return( NA )
 
     if( lastZoid[1]>=10 ){
         aZoidMtx <- allZoidMtx[allIdxF,]
@@ -43,7 +49,7 @@ FC.primaryCut.static <- function( allIdxF ,gEnv ,filtTest=F ){
             if( aZoidMtx[1,1]==lastZoid[1] ) filtedId <- c(filtedId,"02.1")
         } else {    allIdxF <- allIdxF[ aZoidMtx[,1]!=lastZoid[1] ]   }
     }
-    if( 1>=length(allIdxF) ) return( allIdxF )
+    if( checkExit(allIdxF) ) return( NA )
 
     if( lastZoid[6] <30 ){
         aZoidMtx <- allZoidMtx[allIdxF,]
@@ -51,7 +57,7 @@ FC.primaryCut.static <- function( allIdxF ,gEnv ,filtTest=F ){
             if( aZoidMtx[1,6]==lastZoid[6] ) filtedId <- c(filtedId,"02.2")
         } else {    allIdxF <- allIdxF[ aZoidMtx[,6]!=lastZoid[6] ]   }
     }
-    if( 1>=length(allIdxF) ) return( allIdxF )
+    if( checkExit(allIdxF) ) return( NA )
 
     l.zw <- lastZoid[6]-lastZoid[1]
     if( l.zw<20 || 42<l.zw ){
@@ -60,7 +66,7 @@ FC.primaryCut.static <- function( allIdxF ,gEnv ,filtTest=F ){
             if( l.zw == (aZoidMtx[1,6]-aZoidMtx[1,1]) ) filtedId <- c(filtedId,"02.3")
         } else {    allIdxF <- allIdxF[ l.zw != (aZoidMtx[,6]-aZoidMtx[,1]) ]   }
     }
-    if( 1>=length(allIdxF) ) return( allIdxF )
+    if( checkExit(allIdxF) ) return( NA )
 
     # ==============================================================
 
@@ -71,7 +77,7 @@ FC.primaryCut.static <- function( allIdxF ,gEnv ,filtTest=F ){
     if( filtTest ){
         if( a.rebCnt[1]>=4 ) filtedId <- c(filtedId,"03.1")
     } else {    allIdxF <- allIdxF[ a.rebCnt<4 ]   }
-    if( 1>=length(allIdxF) ) return( allIdxF )
+    if( checkExit(allIdxF) ) return( NA )
 
 
     if( l.rebCnt==3 ){
@@ -80,7 +86,7 @@ FC.primaryCut.static <- function( allIdxF ,gEnv ,filtTest=F ){
             if( a.rebCnt[1]>=3 ) filtedId <- c(filtedId,"03.2")
         } else {    allIdxF <- allIdxF[ a.rebCnt<3 ]   }
     }
-    if( 1>=length(allIdxF) ) return( allIdxF )
+    if( checkExit(allIdxF) ) return( NA )
 
     #   rem
     l.rem <- lastZoid %% 10 ;l2.rem <- lastZoid2 %% 10
@@ -91,7 +97,7 @@ FC.primaryCut.static <- function( allIdxF ,gEnv ,filtTest=F ){
     if( filtTest ){
         if( flag[1] ) filtedId <- c(filtedId,"03.3")
     } else {    allIdxF <- allIdxF[ !flag ]   }
-    if( 1>=length(allIdxF) ) return( allIdxF )
+    if( checkExit(allIdxF) ) return( NA )
 
     if( 2<= sum(l.rem==l2.rem) ){
         flag <- apply( allZoidMtx[allIdxF,]%%10 ,1 ,function(a.rem){  
@@ -101,7 +107,7 @@ FC.primaryCut.static <- function( allIdxF ,gEnv ,filtTest=F ){
             if( flag[1] ) filtedId <- c(filtedId,"03.3.a")
         } else {    allIdxF <- allIdxF[ !flag ]   }
     }
-    if( 1>=length(allIdxF) ) return( allIdxF )
+    if( checkExit(allIdxF) ) return( NA )
 
     if( any(l.rem[1:5]==l.rem[2:6]) ){
         fIdx <- which( l.rem[1:5]==l.rem[2:6] )
@@ -111,7 +117,7 @@ FC.primaryCut.static <- function( allIdxF ,gEnv ,filtTest=F ){
         if( filtTest ){
             if( flag[1] ) filtedId <- c(filtedId,"03.4")
         } else {    allIdxF <- allIdxF[ !flag ]   }
-        if( 1>=length(allIdxF) ) return( allIdxF )
+        if( checkExit(allIdxF) ) return( NA )
     }
     if( 3<=max(table(l.rem)) ){
         flag <- apply( allZoidMtx[allIdxF,]%%10 ,1 ,function(a.rem){  
@@ -120,7 +126,7 @@ FC.primaryCut.static <- function( allIdxF ,gEnv ,filtTest=F ){
         if( filtTest ){
             if( flag[1] ) filtedId <- c(filtedId,"03.5")
         } else {    allIdxF <- allIdxF[ !flag ]   }
-        if( 1>=length(allIdxF) ) return( allIdxF )
+        if( checkExit(allIdxF) ) return( NA )
     }
     if( 2<=max(table(l.rem)) ){
         tbl <- table(l.rem)
@@ -136,7 +142,7 @@ FC.primaryCut.static <- function( allIdxF ,gEnv ,filtTest=F ){
                 if( cFlag[1] ) filtedId <- c(filtedId,"03.6.n")
             } else {    allIdxF <- allIdxF[ !cFlag ]   }
         }
-        if( 1>=length(allIdxF) ) return( allIdxF )
+        if( checkExit(allIdxF) ) return( NA )
     }
 
 
@@ -150,7 +156,7 @@ FC.primaryCut.static <- function( allIdxF ,gEnv ,filtTest=F ){
     if( filtTest ){
         if( flag[1] ) filtedId <- c(filtedId,"04.1")
     } else {    allIdxF <- allIdxF[ !flag ]   }
-    if( 1>=length(allIdxF) ) return( allIdxF )
+    if( checkExit(allIdxF) ) return( NA )
 
     if( 3<=max(table(lCStep)) ){
         cFlag <- apply( allZoidMtx[allIdxF,] ,1 ,function(aZoid){
@@ -160,7 +166,7 @@ FC.primaryCut.static <- function( allIdxF ,gEnv ,filtTest=F ){
         if( filtTest ){
             if( cFlag[1] ) filtedId <- c(filtedId,"04.2")
         } else {    allIdxF <- allIdxF[ !cFlag ]   }
-        if( 1>=length(allIdxF) ) return( allIdxF )
+        if( checkExit(allIdxF) ) return( NA )
     }
 
     if( 2<=max(table(lCStep)) ){    # 동일 cStep 값이 동일위치 재현
@@ -177,7 +183,7 @@ FC.primaryCut.static <- function( allIdxF ,gEnv ,filtTest=F ){
             if( filtTest ){
                 if( cFlag[1] ) filtedId <- c(filtedId,"04.3.n")
             } else {    allIdxF <- allIdxF[ !cFlag ]   }
-            if( 1>=length(allIdxF) ) return( allIdxF )
+            if( checkExit(allIdxF) ) return( NA )
         }
     }
 
@@ -191,7 +197,7 @@ FC.primaryCut.static <- function( allIdxF ,gEnv ,filtTest=F ){
     if( filtTest ){
         if( cFlag[1] ) filtedId <- c(filtedId,"05.0")
     } else {    allIdxF <- allIdxF[ !cFlag ]   }
-    if( 1>=length(allIdxF) ) return( allIdxF )
+    if( checkExit(allIdxF) ) return( NA )
 
     if( 3<=max(table(lFStep)) ){
         cFlag <- apply( allZoidMtx[allIdxF,] ,1 ,function(aZoid){
@@ -201,7 +207,7 @@ FC.primaryCut.static <- function( allIdxF ,gEnv ,filtTest=F ){
         if( filtTest ){
             if( cFlag[1] ) filtedId <- c(filtedId,"05.1")
         } else {    allIdxF <- allIdxF[ !cFlag ]   }
-        if( 1>=length(allIdxF) ) return( allIdxF )
+        if( checkExit(allIdxF) ) return( NA )
     }
 
     if( 2<=max(table(lFStep)) ){
@@ -217,7 +223,7 @@ FC.primaryCut.static <- function( allIdxF ,gEnv ,filtTest=F ){
             if( filtTest ){
                 if( cFlag[1] ) filtedId <- c(filtedId,"05.2.n")
             } else {    allIdxF <- allIdxF[ !cFlag ]   }
-            if( 1>=length(allIdxF) ) return( allIdxF )
+            if( checkExit(allIdxF) ) return( NA )
         }
     }
 
