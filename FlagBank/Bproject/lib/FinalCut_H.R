@@ -2,99 +2,125 @@
 FC.primaryCut.static <- function( allIdxF ,gEnv ,filtTest=F ){
 
     filtedId <- integer(0)
+    zhF <- gEnv$zhF                 #   zhF <- gEnv.w$zhF
+    allZoidMtx <- gEnv$allZoidMtx   #   allZoidMtx <- gEnv.w$allZoidMtx 
 
     # mtx <- apply( gEnv$zhF ,1 ,function(zoid){ c(zoid[1],zoid[6]-zoid[1],zoid[6]) })
     # mtx <- t(mtx)   ;colnames(mtx) <- c("c1","zw","c6")
-    lastZoid <- gEnv$zhF[nrow(gEnv$zhF),]
+    lastZoid  <- zhF[nrow(zhF)  ,]
+    lastZoid2 <- zhF[nrow(zhF)-1,]
 
-    aZoidMtx <- gEnv$allZoidMtx[allIdxF,]
+
+    aZoidMtx <- allZoidMtx[allIdxF,]
     flag <- apply( aZoidMtx ,1 ,function(aZoid){3<=sum(aZoid==lastZoid)})
     if( filtTest ){
         if( flag[1] ) filtedId <- c(filtedId,"01.0")
     } else {    allIdxF <- allIdxF[ !flag ]   }
+    if( 1>=length(allIdxF) ) return( allIdxF )
 
-    aZoidMtx <- gEnv$allZoidMtx[allIdxF,]
+    aZoidMtx <- allZoidMtx[allIdxF,]
     flag <- apply( aZoidMtx ,1 ,function(aZoid){4<=sum(aZoid%in%lastZoid)})
     if( filtTest ){
         if( flag[1] ) filtedId <- c(filtedId,"01.1")
     } else {    allIdxF <- allIdxF[ !flag ]   }
+    if( 1>=length(allIdxF) ) return( allIdxF )
 
     # ==============================================================
         # table( mtx[,"c1"]>15 )  #   66/860
         # table( mtx[,"c6"]<30 )  #   51/860
         # table( mtx[,"zw"]<20 )  #   37/860
         # table( mtx[,"zw"]>42 )  #   38/860
-    aZoidMtx <- gEnv$allZoidMtx[allIdxF,]
+    aZoidMtx <- allZoidMtx[allIdxF,]
+    thld <- 20
     if( filtTest ){
-        if( aZoidMtx[1,1]>=15 ) filtedId <- c(filtedId,"02.0")
-    } else {    allIdxF <- allIdxF[aZoidMtx[1,1]<15]   }
-   
+        if( aZoidMtx[1,1]>=thld ) filtedId <- c(filtedId,"02.0")
+    } else {    allIdxF <- allIdxF[aZoidMtx[1,1]<thld]   }
+    if( 1>=length(allIdxF) ) return( allIdxF )
 
     if( lastZoid[1]>=10 ){
-        aZoidMtx <- gEnv$allZoidMtx[allIdxF,]
+        aZoidMtx <- allZoidMtx[allIdxF,]
         if( filtTest ){
             if( aZoidMtx[1,1]==lastZoid[1] ) filtedId <- c(filtedId,"02.1")
         } else {    allIdxF <- allIdxF[ aZoidMtx[,1]!=lastZoid[1] ]   }
     }
+    if( 1>=length(allIdxF) ) return( allIdxF )
 
     if( lastZoid[6] <30 ){
-        aZoidMtx <- gEnv$allZoidMtx[allIdxF,]
+        aZoidMtx <- allZoidMtx[allIdxF,]
         if( filtTest ){
             if( aZoidMtx[1,6]==lastZoid[6] ) filtedId <- c(filtedId,"02.2")
         } else {    allIdxF <- allIdxF[ aZoidMtx[,6]!=lastZoid[6] ]   }
     }
+    if( 1>=length(allIdxF) ) return( allIdxF )
 
     l.zw <- lastZoid[6]-lastZoid[1]
     if( l.zw<20 || 42<l.zw ){
-        aZoidMtx <- gEnv$allZoidMtx[allIdxF,]
+        aZoidMtx <- allZoidMtx[allIdxF,]
         if( filtTest ){
             if( l.zw == (aZoidMtx[1,6]-aZoidMtx[1,1]) ) filtedId <- c(filtedId,"02.3")
         } else {    allIdxF <- allIdxF[ l.zw != (aZoidMtx[,6]-aZoidMtx[,1]) ]   }
     }
+    if( 1>=length(allIdxF) ) return( allIdxF )
 
     # ==============================================================
 
     #   rebCnt
-    l.rebCnt <- sum(lastZoid %in% gEnv$zhF[nrow(gEnv$zhF)-1,])
+    l.rebCnt <- sum(lastZoid %in% lastZoid2)
 
-    a.rebCnt <- apply( gEnv$allZoidMtx[allIdxF,] ,1 ,function(aZoid){ sum(aZoid %in% lastZoid) })
+    a.rebCnt <- apply( allZoidMtx[allIdxF,] ,1 ,function(aZoid){ sum(aZoid %in% lastZoid) })
     if( filtTest ){
         if( a.rebCnt[1]>=4 ) filtedId <- c(filtedId,"03.1")
     } else {    allIdxF <- allIdxF[ a.rebCnt<4 ]   }
+    if( 1>=length(allIdxF) ) return( allIdxF )
 
 
     if( l.rebCnt==3 ){
-        a.rebCnt <- apply( gEnv$allZoidMtx[allIdxF,] ,1 ,function(aZoid){ sum(aZoid %in% lastZoid) })
+        a.rebCnt <- apply( allZoidMtx[allIdxF,] ,1 ,function(aZoid){ sum(aZoid %in% lastZoid) })
         if( filtTest ){
             if( a.rebCnt[1]>=3 ) filtedId <- c(filtedId,"03.2")
         } else {    allIdxF <- allIdxF[ a.rebCnt<3 ]   }
     }
+    if( 1>=length(allIdxF) ) return( allIdxF )
 
     #   rem
-    l.rem <- lastZoid %% 10
-    flag <- apply( gEnv$allZoidMtx[allIdxF,]%%10 ,1 ,function(a.rem){  
-                3 <= sum(l.rem==a.rem)
+    l.rem <- lastZoid %% 10 ;l2.rem <- lastZoid2 %% 10
+
+    flag <- apply( allZoidMtx[allIdxF,]%%10 ,1 ,function(a.rem){  
+                4 <= sum(l.rem==a.rem)
     })
     if( filtTest ){
         if( flag[1] ) filtedId <- c(filtedId,"03.3")
     } else {    allIdxF <- allIdxF[ !flag ]   }
+    if( 1>=length(allIdxF) ) return( allIdxF )
 
+    if( 2<= sum(l.rem==l2.rem) ){
+        flag <- apply( allZoidMtx[allIdxF,]%%10 ,1 ,function(a.rem){  
+                    3 <= sum(l.rem==a.rem)
+        })
+        if( filtTest ){
+            if( flag[1] ) filtedId <- c(filtedId,"03.3.a")
+        } else {    allIdxF <- allIdxF[ !flag ]   }
+    }
+    if( 1>=length(allIdxF) ) return( allIdxF )
 
     if( any(l.rem[1:5]==l.rem[2:6]) ){
-        flag <- apply( gEnv$allZoidMtx[allIdxF,]%%10 ,1 ,function(a.rem){  
-                    any( a.rem[1:5]==a.rem[2:6] )
+        fIdx <- which( l.rem[1:5]==l.rem[2:6] )
+        flag <- apply( allZoidMtx[allIdxF,]%%10 ,1 ,function(a.rem){
+                    any(a.rem[fIdx]==a.rem[fIdx+1])
         })
         if( filtTest ){
             if( flag[1] ) filtedId <- c(filtedId,"03.4")
         } else {    allIdxF <- allIdxF[ !flag ]   }
+        if( 1>=length(allIdxF) ) return( allIdxF )
     }
     if( 3<=max(table(l.rem)) ){
-        flag <- apply( gEnv$allZoidMtx[allIdxF,]%%10 ,1 ,function(a.rem){  
+        flag <- apply( allZoidMtx[allIdxF,]%%10 ,1 ,function(a.rem){  
                     3<=max(table(a.rem))
         })
         if( filtTest ){
             if( flag[1] ) filtedId <- c(filtedId,"03.5")
         } else {    allIdxF <- allIdxF[ !flag ]   }
+        if( 1>=length(allIdxF) ) return( allIdxF )
     }
     if( 2<=max(table(l.rem)) ){
         tbl <- table(l.rem)
@@ -102,35 +128,39 @@ FC.primaryCut.static <- function( allIdxF ,gEnv ,filtTest=F ){
         for( val in as.integer(names(tbl)) ){
             vGrpIdx <- which(l.rem==val)
 
-            cFlag <- apply( gEnv$allZoidMtx[allIdxF,]%%10 ,1 ,function(a.rem){
-                1 < max(table(a.rem[vGrpIdx]))
+            cFlag <- apply( allZoidMtx[allIdxF,]%%10 ,1 ,function(a.rem){
+                # 1 < max(table(a.rem[vGrpIdx]))
+                all( l.rem[vGrpIdx]==a.rem[vGrpIdx] )
             })
             if( filtTest ){
                 if( cFlag[1] ) filtedId <- c(filtedId,"03.6.n")
             } else {    allIdxF <- allIdxF[ !cFlag ]   }
         }
+        if( 1>=length(allIdxF) ) return( allIdxF )
     }
 
 
     #   cStep
     lCStep <- lastZoid[2:6]-lastZoid[1:5]
-    cnt <- apply( gEnv$allZoidMtx[allIdxF,] ,1 ,function(aZoid){
+    cnt <- apply( allZoidMtx[allIdxF,] ,1 ,function(aZoid){
         aCStep <- aZoid[2:6]-aZoid[1:5]
         sum(lCStep==aCStep)
     })
     flag <- 3<=cnt
     if( filtTest ){
-        if( flag[1] ) filtedId <- c(filtedId,"03.6")
+        if( flag[1] ) filtedId <- c(filtedId,"04.1")
     } else {    allIdxF <- allIdxF[ !flag ]   }
+    if( 1>=length(allIdxF) ) return( allIdxF )
 
     if( 3<=max(table(lCStep)) ){
-        cFlag <- apply( gEnv$allZoidMtx[allIdxF,] ,1 ,function(aZoid){
+        cFlag <- apply( allZoidMtx[allIdxF,] ,1 ,function(aZoid){
             aCStep <- aZoid[2:6]-aZoid[1:5]
             3 <= max(table(aCStep))
         })
         if( filtTest ){
-            if( cFlag[1] ) filtedId <- c(filtedId,"03.7")
+            if( cFlag[1] ) filtedId <- c(filtedId,"04.2")
         } else {    allIdxF <- allIdxF[ !cFlag ]   }
+        if( 1>=length(allIdxF) ) return( allIdxF )
     }
 
     if( 2<=max(table(lCStep)) ){    # 동일 cStep 값이 동일위치 재현
@@ -140,35 +170,38 @@ FC.primaryCut.static <- function( allIdxF ,gEnv ,filtTest=F ){
         for( val in as.integer(names(tbl)) ){
             vGrpIdx <- which(lCStep==val)
 
-            cFlag <- apply( gEnv$allZoidMtx[allIdxF,] ,1 ,function(aZoid){
+            cFlag <- apply( allZoidMtx[allIdxF,] ,1 ,function(aZoid){
                 aCode <- aZoid[2:6]-aZoid[1:5]
-                1 < max(table(aCode[vGrpIdx]))
+                all(aCode[vGrpIdx]==lCStep[vGrpIdx])
             })
             if( filtTest ){
-                if( cFlag[1] ) filtedId <- c(filtedId,"03.8.n")
+                if( cFlag[1] ) filtedId <- c(filtedId,"04.3.n")
             } else {    allIdxF <- allIdxF[ !cFlag ]   }
+            if( 1>=length(allIdxF) ) return( allIdxF )
         }
     }
 
     #   fStep
-    lFStep <- lastZoid - gEnv$zhF[nrow(gEnv$zhF)-1,]
-    cnt <- apply( gEnv$allZoidMtx[allIdxF,] ,1 ,function(aZoid){
+    lFStep <- lastZoid - lastZoid2
+    cnt <- apply( allZoidMtx[allIdxF,] ,1 ,function(aZoid){
         aFStep <- aZoid - lastZoid
         sum(lFStep==aFStep)
     })
     cFlag <- 3<=cnt
     if( filtTest ){
-        if( cFlag[1] ) filtedId <- c(filtedId,"04.0")
+        if( cFlag[1] ) filtedId <- c(filtedId,"05.0")
     } else {    allIdxF <- allIdxF[ !cFlag ]   }
+    if( 1>=length(allIdxF) ) return( allIdxF )
 
     if( 3<=max(table(lFStep)) ){
-        cFlag <- apply( gEnv$allZoidMtx[allIdxF,] ,1 ,function(aZoid){
+        cFlag <- apply( allZoidMtx[allIdxF,] ,1 ,function(aZoid){
             aFStep <- aZoid-lastZoid
             3 <= max(table(aFStep))
         })
         if( filtTest ){
-            if( cFlag[1] ) filtedId <- c(filtedId,"04.1")
+            if( cFlag[1] ) filtedId <- c(filtedId,"05.1")
         } else {    allIdxF <- allIdxF[ !cFlag ]   }
+        if( 1>=length(allIdxF) ) return( allIdxF )
     }
 
     if( 2<=max(table(lFStep)) ){
@@ -177,13 +210,14 @@ FC.primaryCut.static <- function( allIdxF ,gEnv ,filtTest=F ){
         for( val in as.integer(names(tbl)) ){
             vGrpIdx <- which(lFStep==val)
 
-            cFlag <- apply( gEnv$allZoidMtx[allIdxF,] ,1 ,function(aZoid){
+            cFlag <- apply( allZoidMtx[allIdxF,] ,1 ,function(aZoid){
                 aFStep <- aZoid - lastZoid
-                1 < max(table(aFStep[vGrpIdx]))
+                all( aFStep[vGrpIdx]==lFStep[vGrpIdx] )
             })
             if( filtTest ){
-                if( cFlag[1] ) filtedId <- c(filtedId,"04.2.n")
+                if( cFlag[1] ) filtedId <- c(filtedId,"05.2.n")
             } else {    allIdxF <- allIdxF[ !cFlag ]   }
+            if( 1>=length(allIdxF) ) return( allIdxF )
         }
     }
 

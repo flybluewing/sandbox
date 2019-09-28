@@ -3,8 +3,18 @@ source("header.r")
 source("B_H.R")
 source("C_H.R")
 
-hSpan <- as.integer(names(allIdxLst$stdFiltedCnt))
+lastH <- 860    # 최종 데이터의 로딩 기준일 뿐, 작업시점(workH)은 다를 수 있다.
+#source(sprintf("./toFinal/toZ%d_H.R",workH))	# working
 
+load(sprintf("../Aproject/Obj_allIdxLstZ%d.save",lastH) )
+load(sprintf("../Aproject/save/Obj_fRstLstZ%d.save",lastH) )
+names(fRstLst) <- names(allIdxLst$stdFiltedCnt)
+load(sprintf("../Aproject/save/Obj_gEnvZ%d.save",lastH))
+
+
+
+
+hSpan <- as.integer(names(allIdxLst$stdFiltedCnt))
 if( FALSE ){
     stdIdxLst <- list()
     for( hIdx in hSpan ){
@@ -28,6 +38,18 @@ if( TRUE ){
     }
     names(filtedLst) <- sprintf("%d_%d",hSpan,allIdxLst$stdFiltedCnt)
 
+    #   filtedLst[0<sapply(filtedLst,length)]
+    surMtx <- cbind( allIdxLst$stdFiltedCnt , 0<sapply(filtedLst,length) )
+    colnames(surMtx) <- c("sfc","filted")
+    tapply( surMtx[,"filted"] ,surMtx[,"sfc"] ,function(val){ 
+            sprintf("%d/%d(%3.1f%%)",sum(val),length(val),100*sum(val)/length(val) ) 
+    })
+
+    allFF <- do.call( c ,filtedLst )
+    table( allFF )
+
+    fIdx <- which( sapply(filtedLst,function(cutId){ any(cutId %in% c("04.3.n")) }) )
+    hSpan[fIdx]
 }
 
 
