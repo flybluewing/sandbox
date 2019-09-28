@@ -5,12 +5,16 @@ source("C_H.R")
 
 hSpan <- as.integer(names(allIdxLst$stdFiltedCnt))
 
-stdIdxLst <- list()
-for( hIdx in hSpan ){
-    idStr <- sprintf("H%d",hIdx)
-    stdIdxLst[[idStr]] <- k.getIdx_AllZoidMtx( gEnv, gEnv$zhF[hIdx,] )
+if( FALSE ){
+    stdIdxLst <- list()
+    for( hIdx in hSpan ){
+        idStr <- sprintf("H%d",hIdx)
+        stdIdxLst[[idStr]] <- k.getIdx_AllZoidMtx( gEnv, gEnv$zhF[hIdx,] )
+    }
+    save( stdIdxLst ,file="Obj_stdIdxLst.save" )
+} else {
+    load( "Obj_stdIdxLst.save" )
 }
-save( stdIdxLst ,file="Obj_stdIdxLst.save" )
 
 if( TRUE ){
 
@@ -22,7 +26,7 @@ if( TRUE ){
         allIdxF <- c( stdIdxLst[[idStr]] ,1 )
         filtedLst[[idStr]] <- FC.primaryCut.static( allIdxF, gEnv.w, filtTest=T )
     }
-    names(filtedLst) <- paste(hSpan,names(allIdxLst$stdFiltedCnt),collapse="_")
+    names(filtedLst) <- sprintf("%d_%d",hSpan,allIdxLst$stdFiltedCnt)
 
 }
 

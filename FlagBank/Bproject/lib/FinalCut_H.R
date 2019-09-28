@@ -26,8 +26,8 @@ FC.primaryCut.static <- function( allIdxF ,gEnv ,filtTest=F ){
         # table( mtx[,"zw"]>42 )  #   38/860
     aZoidMtx <- gEnv$allZoidMtx[allIdxF,]
     if( filtTest ){
-        if( allIdxF[aZoidMtx[1,1]<15] ) filtedId <- c(filtedId,"02.0")
-    } else {    allIdxF <- allIdxF[aZoidMtx[,1]<15]   }
+        if( aZoidMtx[1,1]>=15 ) filtedId <- c(filtedId,"02.0")
+    } else {    allIdxF <- allIdxF[aZoidMtx[1,1]<15]   }
    
 
     if( lastZoid[1]>=10 ){
@@ -48,7 +48,7 @@ FC.primaryCut.static <- function( allIdxF ,gEnv ,filtTest=F ){
     if( l.zw<20 || 42<l.zw ){
         aZoidMtx <- gEnv$allZoidMtx[allIdxF,]
         if( filtTest ){
-            if( l.zw != (aZoidMtx[1,6]-aZoidMtx[1,1]) ) filtedId <- c(filtedId,"02.3")
+            if( l.zw == (aZoidMtx[1,6]-aZoidMtx[1,1]) ) filtedId <- c(filtedId,"02.3")
         } else {    allIdxF <- allIdxF[ l.zw != (aZoidMtx[,6]-aZoidMtx[,1]) ]   }
     }
 
@@ -59,14 +59,14 @@ FC.primaryCut.static <- function( allIdxF ,gEnv ,filtTest=F ){
 
     a.rebCnt <- apply( gEnv$allZoidMtx[allIdxF,] ,1 ,function(aZoid){ sum(aZoid %in% lastZoid) })
     if( filtTest ){
-        if( a.rebCnt[1]<4 ) filtedId <- c(filtedId,"03.1")
+        if( a.rebCnt[1]>=4 ) filtedId <- c(filtedId,"03.1")
     } else {    allIdxF <- allIdxF[ a.rebCnt<4 ]   }
 
 
     if( l.rebCnt==3 ){
         a.rebCnt <- apply( gEnv$allZoidMtx[allIdxF,] ,1 ,function(aZoid){ sum(aZoid %in% lastZoid) })
         if( filtTest ){
-            if( a.rebCnt[1]<3 ) filtedId <- c(filtedId,"03.2")
+            if( a.rebCnt[1]>=3 ) filtedId <- c(filtedId,"03.2")
         } else {    allIdxF <- allIdxF[ a.rebCnt<3 ]   }
     }
 
