@@ -7,7 +7,7 @@ lastH <- 860
 testMode <- TRUE
 
 stdFiltedCnt <- 0:2
-scoreMtx.name <- c("score2","score4")
+scoreMtx.name <- c("score2","score3","score4","score5")
 stdFilted.NG <- c("D0000.A","A0100.A","AP000.E")
 
 load(sprintf("../Aproject/Obj_allIdxLstZ%d.save",lastH) )
