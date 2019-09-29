@@ -39,7 +39,7 @@ for( curStdFiltedCnt in stdFiltedCnt ){   # curStdFiltedCnt <- stdFiltedCnt[1]
 
     allIdxF <- allIdxLst[[aZoidGrp]]
     if( testMode ){
-        allIdxF <- allIdxF[sample(1:length(allIdxF),20000)]
+        allIdxF <- allIdxF[sample(1:length(allIdxF),5000)]
     }
     logger$fLogStr(sprintf("Initial size :%7d",length(allIdxF)),pTime=T)
 
@@ -60,36 +60,46 @@ for( curStdFiltedCnt in stdFiltedCnt ){   # curStdFiltedCnt <- stdFiltedCnt[1]
 
         logger$fLogStr(sprintf("FC.primaryCut.bySC - size :%7d  tgt.scMtx:%s",length(allIdxF),tgt.scMtx),pTime=T)
     }
+    gc()
 
     #   bUtil.cut( ) --------------------------------------------------------------------
     for( tgt.scMtx in scoreMtx.name ){   # tgt.scMtx <- scoreMtx.name[1]
 
-        logger$fLogStr(sprintf("FC.primaryCut.bySC - tgt.scMtx:%s",tgt.scMtx),pTime=T)
+        logger$fLogStr(sprintf("bUtil.cut( ) - tgt.scMtx:%s",tgt.scMtx),pTime=T)
+
+        filter.grp <- getFilter.grp( stdMI.grp ,tgt.scMtx=tgt.scMtx )
 
         surFlag <- rep( T ,length(allIdxF) )
-        tStmp <- Sys.time()
-        bLst <- k.blockLst( length(allIdxF) ,10000*ifelse(testMode,1,20) )
+        bLst <- k.blockLst( length(allIdxF) ,1000*ifelse(testMode,1,200) )
         for( bName in names(bLst) ){    # bName <- names(bLst)[1]
+            tStmp <- Sys.time()
             span <- bLst[[bName]]["start"]:bLst[[bName]]["end"] 
 
+            logger.cut <- k.getFlogObj( sprintf("./log/FinalCut_%d_%s_bUtil.cut.txt",lastH,aZoidGrp) )
+
             scoreMtx.grp <- getScoreMtx.grp( gEnv$allZoidMtx[allIdxF[span],,drop=F] ,filter.grp )
-            cutRst <- bUtil.cut( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx ,logger=logger )
+            cutRst <- bUtil.cut( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx ,logger=logger.cut )
             surFlag[span] <- cutRst$surFlag
 
             tDiff <- Sys.time() - tStmp
             logStr <- sprintf("  %s block finished.(remove:%d/%d) %5.1f%s"
-                                ,bName,sum(!surFlag.blk),length(surFlag.blk)
+                                ,bName,sum(!cutRst$surFlag),length(cutRst$surFlag)
                                 ,tDiff  ,units(tDiff)
                         )
         }
         allIdxF <- allIdxF[surFlag]
         logger$fLogStr(sprintf("   - final size :%7d",length(allIdxF)),pTime=T)
-
-        # filter.grp <- getFilter.grp( stdMI.grp ,tgt.scMtx=tgt.scMtx )
-        # scoreMtx.grp <- getScoreMtx.grp( gEnv$allZoidMtx[allIdxF,,drop=F] ,filter.grp )
-
-        # logger$fLogStr(sprintf("FC.primaryCut.bySC - size :%7d  tgt.scMtx:%s",length(allIdxF),tgt.scMtx),pTime=T)
     }
+
+
+    #   QQE 다중 scoreMtx 필터링 추가.
+
+    rptFile <- sprintf("./report/FinalCut_H%d%s_%d.txt",lastH,aZoidGrp,length(allIdxF) )
+    zoidMtx <- gEnv$allZoidMtx[allIdxF,,drop=F]     ;rownames(zoidMtx) <- sprintf("%3d:",1:nrow(zoidMtx))
+    finalRpt <- k.getFlogObj( rptFile )
+    finalRpt$fLogMtx( zoidMtx ,pIndent=" " )
+    logger$fLogStr( sprintf("      reported in %s",rptFile) ,pConsole=T )
+    logger$fLogStr( "Mission complete." ,pConsole=T ,pTime=T )
 
 
 }   # for( stdFiltedCnt )
