@@ -17,7 +17,7 @@ if( FALSE ){ # report sample
 
     save( hMtxLst ,file=sprintf("./save/HMtxLst/Obj_hMtxLst_%d.save",hMtxLst$lastH) )
     #   load(sprintf("./save/HMtxLst/Obj_hMtxLst_%d.save",lastH))
-    
+
     B.rptHMtxLst( hMtxLst )
     #   B.getHMtxLst_byFCol( ), B.getHMtxLst_byHIdx( ) 사용은
     #   report 함수 내 코드 참조.

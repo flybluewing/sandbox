@@ -247,7 +247,7 @@ FC.primaryCut.bySC <- function( allIdxF ,gEnv ,filter.grp ,fHName ,cut.grp ,logF
         for( hName in fHName ){
             stdLst <- cut.grp$cutterLst[[hName]][[mName]]$stdLst[[pName]]
             for( cnIdx in names(stdLst) ){    # cnIdx <- names(stdLst)[1]
-                cuttedLst <- cutLst[[cnIdx]]$cut( scoreMtx ,!surFlag )
+                cuttedLst <- stdLst[[cnIdx]]$cut( scoreMtx ,!surFlag )
                 if( 0==length(cuttedLst) ) next
 
                 cut_aIdx <- sapply( cuttedLst ,function(p){p$idx} )
@@ -277,11 +277,6 @@ FC.primaryCut.bySC <- function( allIdxF ,gEnv ,filter.grp ,fHName ,cut.grp ,logF
 
             surFlag <- rep( T ,length(allIdxF) )
             bLst <- k.blockLst( length(allIdxF) ,10*10000 )
-            # if( TRUE ){ ;qqe:rbf
-            #     allIdxF <- allIdxF[sample(1:length(allIdxF),3500)]
-            #     surFlag <- rep( T ,length(allIdxF) )
-            #     bLst <- k.blockLst( length(allIdxF) ,3000 )
-            # }
 
             tStmp <- Sys.time()
             for( bName in names(bLst) ){    # bName <- names(bLst)[1]

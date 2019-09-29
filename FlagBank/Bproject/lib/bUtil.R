@@ -99,7 +99,11 @@ bUtil.cutAZoidMtx <- function( gEnv ,allIdxF ,cutGrp ){
 
 bUtil.makeStdCtrlCfgGrp <- function( hMtxLst ){
 
-	rObj <- list( createInfo=sprintf("lastH:%d when %s",hMtxLst$lastH,Sys.time()) )
+	rObj <- list( createInfo=sprintf("lastH:%d when %s",hMtxLst$lastH,Sys.time()) 
+                    ,sfcHLst = hMtxLst$sfcHLst
+                    ,mtxInfoLst = hMtxLst$mtxInfoLst
+                    ,phaseName = hMtxLst$phaseName
+                )
 
 	byFCol <- B.getHMtxLst_byFCol( hMtxLst )
     byHIdx <- B.getHMtxLst_byHIdx( hMtxLst )
@@ -110,30 +114,26 @@ bUtil.makeStdCtrlCfgGrp <- function( hMtxLst ){
 
 		mLst <- list()
 		for( mName in names(hMtxLst$mtxInfoLst) ){	# mName <- names(hMtxLst$mtxInfoLst)[1]
-			ctrlCfg <- list()
 
-			pLst <- list()
+			stdLst <- list()
 			for( pName in hMtxLst$phaseName ){	# pName <- hMtxLst$phaseName[1]
 				scoreMtx <- hMtxLst$scoreMtxLst[[hName]][[pName]][[mName]]$scoreMtx
-				pLst[[pName]] <- bUtil.stdCtrlCfg.scoreMtx( scoreMtx )
+				stdLst[[pName]] <- bUtil.stdCtrlCfg.scoreMtx( scoreMtx )
 			}
-			ctrlCfg$std <- pLst
 
 			fColLst <- list()
-			#	생각보다 실효성이 없다...
 			# for( fcName in hMtxLst$mtxInfoLst[[mName]] ){	# fcName <- hMtxLst$mtxInfoLst[[mName]][1]
 			# 	mtx <- byFCol[[hName]][[mName]][[fcName]]	# h * phase
 			# 	fColLst[[fcName]] <- bUtil.stdCtrlCfg.h_ph4FCol( mtx )
 			# }
-			ctrlCfg$byFCol <- fColLst
 
 			hIdxLst <- list()
-			#	생각보다 실효성이 없다...			
 			# for( hIdxName in as.character(hMtxLst$sfcHLst[[hName]]) ){	# hIdxName <- as.character(hMtxLst$sfcHLst[[hName]])[1]
 			# 	mtx <- byHIdx[[hName]][[mName]][[hIdxName]]	# fCol * phase
 			# 	hIdxLst[[hIdxName]] <- bUtil.stdCtrlCfg.h_ph4FCol( mtx )
 			# }
 
+            mLst[[mName]] <- list( stdLst=stdLst ,fColLst=fColLst ,hIdxLst=hIdxLst )
 		} # for(mName)
 
 		ctrlCfgLst[[hName]] <- mLst

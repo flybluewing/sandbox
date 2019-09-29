@@ -965,6 +965,8 @@ bFCust.byHIdx_A_score2 <- function( ){
 			cutterObj$chkEvt.last <- bFCust.get_byHIdx_score2ChkEvt( mtxLst[[length(mtxLst)]] )
 		}
 
+		cutterObj$mtxLst <- mtxLst
+
 		cutterObj$cut <- function( scoreMtx ,aIdx ){
 			# scoreMtx 는 1개 aZoid에 관한 [fCol,phase] mtx임을 유의.
 			# 	(즉, 이 함수는 한 개 aZoid에 대한 처리로직이다.)
@@ -1013,6 +1015,47 @@ bFCust.byHIdx_A_score2 <- function( ){
 			surWindow <- c(min=50,max=70)
 			if( !bUtil.in(nMatchCnt,surWindow) ) rCutId <- c( rCutId, sprintf("rawDiffCnt.%d(%d~%d)",nMatchCnt,surWindow["min"],surWindow["max"]) )
 
+			# phRawMat -------------------------------------------
+			fireThld <- 1
+			cnt.allMat <- 0
+			for( pName in colnames(scoreMtx) ){
+				# 0 이 많으면 적용.
+				# if( 0==sum(scoreMtx[,pName]) )	next
+
+				if( any(scoreMtx[,pName]!=cutterObj$evt$lastMtxRaw[,pName]) ) next
+
+				cnt.allMat <- cnt.allMat + 1
+			}
+			if( fireThld<=cnt.allMat )	rCutId <- c( rCutId, sprintf("phRawMatCnt.%d",cnt.allMat) )
+
+			# fColRawMat -------------------------------------------
+			fireThld <- 4
+			cnt.allMat <- 0
+			for( fColName in rownames(scoreMtx) ){
+				# 0 이 많으면 적용.
+				if( 0==sum(scoreMtx[fColName,]) )	next
+
+				if( any(scoreMtx[fColName,]!=cutterObj$evt$lastMtxRaw[fColName,]) ) next
+
+				cnt.allMat <- cnt.allMat + 1
+			}
+			if( fireThld<=cnt.allMat )	rCutId <- c( rCutId, sprintf("fColRawMatCnt.%d",cnt.allMat) )
+
+			# banPastH -------------------------------------------
+			banPastH <- 40	# 바로 이전 H를 제외한 크기(rawDiffCnt에서 체크되므로)
+			surWindow <- c(min=48,max=89)
+			mtxLst.len <- length(cutterObj$mtxLst)
+			endPoint <- mtxLst.len - banPastH -1
+			checkSpan <- (mtxLst.len-1):ifelse(1>endPoint,1,endPoint)
+			if( length(mtxLst) < banPastH )	banPastH <- length(mtxLst)
+			for( idx in seq_len(length(checkSpan)) ){
+				chkIdx <- checkSpan[idx]
+				nMatchCnt <- sum(scoreMtx!=cutterObj$mtxLst[[chkIdx]])
+				if( !bUtil.in(nMatchCnt,surWindow) ){
+					rCutId <- c( rCutId, sprintf("banPastH.%d in past %d(%d~%d)",nMatchCnt,idx,surWindow["min"],surWindow["max"]) )
+					break
+				}
+			}
 
 			return( rCutId )
 		}
