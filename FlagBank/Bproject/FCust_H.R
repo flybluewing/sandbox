@@ -125,6 +125,7 @@ bFCust.getCust <- function(){
 
 		rObj$fLst_1Col[[1+length(rObj$fLst_1Col)]] <- bFCust.A_score4_A_A( )
 		rObj$fLst_1Col[[1+length(rObj$fLst_1Col)]] <- bFCust.A_score5_A_A( )
+		rObj$fLst_1Col[[1+length(rObj$fLst_1Col)]] <- bFCust.A_score6_A_A( )
 	}
 	rObj$getCustF_1Col <- function( ctrlCfg ,tgtId=c(hName="", mName="", pName="", fcName="") ,auxInfo=c(auxInfo="") ){
 		# tgtId=c(hName="sfcHLst", mName="score2", pName="basic", fcName="inc.f")
@@ -163,6 +164,7 @@ bFCust.getCust <- function(){
 		rObj$fLst_NCol[[1+length(rObj$fLst_NCol)]] <- bFCust.A_score2_A_Row01()
 		rObj$fLst_NCol[[1+length(rObj$fLst_NCol)]] <- bFCust.A_score4_A_Row01()
 		rObj$fLst_NCol[[1+length(rObj$fLst_NCol)]] <- bFCust.A_score5_A_Row01()
+		rObj$fLst_NCol[[1+length(rObj$fLst_NCol)]] <- bFCust.A_score6_A_Row01()
 	}
 	rObj$getCustF_NCol <- function( tgtId=c(hName="", mName="", pName="") ,auxInfo=c(auxInfo="") ){
 		# tgtId=c(hName="sfcHLst", mName="score2", pName="basic")
