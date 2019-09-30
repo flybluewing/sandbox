@@ -7,7 +7,7 @@ lastH <- 860
 testMode <- TRUE
 
 stdFiltedCnt <- 0:2
-scoreMtx.name <- c("score2","score3","score4","score5")
+scoreMtx.name <- c("score2","score3","score4","score5","score6","score6")
 stdFilted.NG <- c("D0000.A","A0100.A","AP000.E")
 
 load(sprintf("../Aproject/Obj_allIdxLstZ%d.save",lastH) )
@@ -70,7 +70,7 @@ for( curStdFiltedCnt in stdFiltedCnt ){   # curStdFiltedCnt <- stdFiltedCnt[1]
         filter.grp <- getFilter.grp( stdMI.grp ,tgt.scMtx=tgt.scMtx )
 
         surFlag <- rep( T ,length(allIdxF) )
-        bLst <- k.blockLst( length(allIdxF) ,1000*ifelse(testMode,1,200) )
+        bLst <- k.blockLst( length(allIdxF) ,1000*ifelse(testMode,1,100) )
         for( bName in names(bLst) ){    # bName <- names(bLst)[1]
             tStmp <- Sys.time()
             span <- bLst[[bName]]["start"]:bLst[[bName]]["end"] 
