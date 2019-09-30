@@ -201,6 +201,8 @@ bFCust.getCust <- function(){
 		rObj$fLst_rReb[[1+length(rObj$fLst_rReb)]] <- bFCust.A_score4_A_rRebAA()
 		rObj$fLst_rReb[[1+length(rObj$fLst_rReb)]] <- bFCust.A_score5_A_rReb01()
 		rObj$fLst_rReb[[1+length(rObj$fLst_rReb)]] <- bFCust.A_score5_A_rRebAA()
+		rObj$fLst_rReb[[1+length(rObj$fLst_rReb)]] <- bFCust.A_score6_A_rReb01()
+		rObj$fLst_rReb[[1+length(rObj$fLst_rReb)]] <- bFCust.A_score6_A_rRebAA()
 
 	}
 	rObj$getCustF_RReb <- function( lastMtx ,tgtId=c(hName="", mName="", pName="") ,auxInfo=c(auxInfo="") ){
@@ -244,6 +246,10 @@ bFCust.getCust <- function(){
 		rObj$fLst_byFCol[[1+length(rObj$fLst_byFCol)]] <- bFCust.byFCol_A_score5_A_rReb01()
 		rObj$fLst_byFCol[[1+length(rObj$fLst_byFCol)]] <- bFCust.byFCol_A_score5_A_rRebAA()
 
+		rObj$fLst_byFCol[[1+length(rObj$fLst_byFCol)]] <- bFCust.byFCol_A_score6_A()
+		rObj$fLst_byFCol[[1+length(rObj$fLst_byFCol)]] <- bFCust.byFCol_A_score6_A_rReb01()
+		rObj$fLst_byFCol[[1+length(rObj$fLst_byFCol)]] <- bFCust.byFCol_A_score6_A_rRebAA()
+
 	}
 	rObj$getCustF_byFCol <- function( lastMtx ,tgtId=c(hName="", mName="", fcName="") ,auxInfo=c(auxInfo="") ){
 		# tgtId=c(hName="sfcHLst", mName="score2", fcName="rebV.r")
@@ -276,6 +282,7 @@ bFCust.getCust <- function(){
 		rObj$fLst_byHIdx[[1+length(rObj$fLst_byHIdx)]] <- bFCust.byHIdx_A_score2()
 		rObj$fLst_byHIdx[[1+length(rObj$fLst_byHIdx)]] <- bFCust.byHIdx_A_score4()
 		rObj$fLst_byHIdx[[1+length(rObj$fLst_byHIdx)]] <- bFCust.byHIdx_A_score5()
+		rObj$fLst_byHIdx[[1+length(rObj$fLst_byHIdx)]] <- bFCust.byHIdx_A_score6()
 	}
 	rObj$getCustF_byHIdx <- function( mtxLst ,tgtId=c(hName="", mName="") ,auxInfo=c(auxInfo="") ){
 		fFLst <- list()	# found fLst
