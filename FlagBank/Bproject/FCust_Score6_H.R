@@ -353,7 +353,7 @@ bFCust.A_score6_A_rRebAA <- function(  ){	#	이전 마지막 score(cutterObj$lastRow)
 
 
 
-#	[score4:byFCol(Rebound/Sequencial)] ---------------------------------------------------------
+#	[score6:byFCol(Rebound/Sequencial)] ---------------------------------------------------------
 #		- mtxGrp <- getScoreMtx.grp_byFCol( scoreMtx.grp )
 #		- nRow 대상이긴 하지만, mtx는 각 scoreMtx 의 fCol 별로 생성된다는 점을 주의
 #		- column이 phase이므로 pName 구분이 없고, tgtId에서도 pName이 빠진다. 대신 fcName 필요.
