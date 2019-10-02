@@ -828,13 +828,13 @@ bFCust.byHIdx_A_score6 <- function( ){
 				rCutId <- c( rCutId, sprintf("skipZero.fCol.%d (%d~%d)",cnt.fCol,surWin["min"],surWin["max"]) )
 			}
 
-			surWin <- c(min=0,max=1)
+			surWin <- c(min=0,max=2)
 			cnt.ph <- sum( 0==cutterObj$rebPtn.skipZero$diffCnt.ph(scoreMtx) )
 			if( !bUtil.in(cnt.ph,surWin) ){
 				rCutId <- c( rCutId, sprintf("skipZero.ph.%d (%d~%d)",cnt.ph,surWin["min"],surWin["max"]) )
 			}
 
-			surWin <- c(min=0,max=2)
+			surWin <- c(min=0,max=3)
 			cntTot <- cnt.fCol + cnt.ph
 			if( !bUtil.in(cntTot,surWin) ){
 				rCutId <- c( rCutId, sprintf("skipZero.sum.%d (%d~%d)",cntTot,surWin["min"],surWin["max"]) )
