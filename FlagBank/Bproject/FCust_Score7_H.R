@@ -914,6 +914,7 @@ bFCust.byHIdx_A_score7 <- function( ){
 			# raw match -------------------------------------------
 			surWindow <- c(min=0,max=5)	# survive window
 			for( cIdx in 2:ncol(scoreMtx) ){
+
 				matCnt <- sum( scoreMtx[,cIdx-1]!=scoreMtx[,cIdx] )
 				if( !bUtil.in(matCnt,surWindow) ){
 					rCutId <- c( rCutId, sprintf("colRawDiff.%d(%d~%d)",matCnt,surWindow["min"],surWindow["max"]) )
