@@ -401,3 +401,103 @@ bUtil.getMtxEvt_byRow <- function( srcMtxLst ,evtLst ){
 
 } # bUtil.getEvtMtx()
 
+
+bUtil.getMtxRebPtn.skipZero <- function( mtxLst.h ,hpnThld.fCol=NA ,hpnThld.ph=NA ){
+	# - 패턴을 찾지 못한 경우, rep( NA ,n ) 데이터가 주어진다.
+
+	# * mtxLst.h : fCol*phase 형태의 scoreMtx가 history 별로 저장된 상태.
+	#	hIdxObj <- B.getHMtxLst_byHIdx(hMtxLst)
+	#	mtxLst.h <- hIdxObj[["sfcLate"]][["score3"]]
+	# * hpnThld.fCol / hpnThld.ph : 0 이 많지않은 scoreMtx의 경우, 일정 hpn수 이상만 찾도록 제약
+	#		(NA 이면 무시.)
+
+	#	Debugging Code -------------------------------------------------------------------
+	# 	mtxLst.h=hIdxObj[["sfcLate"]][["score3"]]
+	# 	rObj <- bUtil.getMtxRebPtn.skipZero( mtxLst.h ,hpnThld.fCol=2 ,hpnThld.ph=3 )
+	# 		# sapply( rObj$fColLst ,function(obj){ ifelse(is.null(obj$fndInfo),"",obj$fndInfo) })
+	# 		# sapply( rObj$phLst ,function(obj){ ifelse(is.null(obj$fndInfo),"",obj$fndInfo) })
+	#
+	# 	scoreMtx <- mtxLst[["839"]]
+	# 	rObj$diffCnt.fCol( scoreMtx )
+	# 	rObj$diffCnt.ph( scoreMtx )
+
+	mtxLst.len <- length(mtxLst.h)
+	mtxLst <- mtxLst.h[mtxLst.len:1]	# 처리 편하게..
+	mtxNames <- names(mtxLst)
+
+	fColLst <- list()
+	for( rIdx in 1:nrow(mtxLst[[1]]) ){
+		hpnVal <- NULL
+		fndInfo <- NULL
+		for( bHIdx in 1:mtxLst.len ){
+			cnt <- sum( mtxLst[[bHIdx]][rIdx,]>0 ,na.rm=T )
+			
+			if( 0==cnt ) next
+
+			if( !is.na(hpnThld.fCol) && cnt<=hpnThld.fCol ) next
+
+			hpnVal <- mtxLst[[bHIdx]][rIdx,]
+			fndInfo <- mtxNames[bHIdx]
+			break
+		}
+
+		fColLst[[sprintf("R%d",rIdx)]] <- list(hpnVal=hpnVal ,fndInfo=fndInfo)
+	}
+	names(fColLst) <- rownames(mtxLst[[1]])
+
+	phLst <- list()
+	for( cIdx in 1:ncol(mtxLst[[1]]) ){
+		hpnVal <- NULL
+		fndInfo <- NULL
+		for( bHIdx in 1:mtxLst.len ){
+			cnt <- sum( mtxLst[[bHIdx]][,cIdx]>0 ,na.rm=T )
+			
+			if( 0==cnt ) next
+
+			if( !is.na(hpnThld.ph) && cnt<=hpnThld.ph ) next
+
+			hpnVal <- mtxLst[[bHIdx]][,cIdx]
+			fndInfo <- mtxNames[bHIdx]
+			break
+		}
+
+		hpnVal <- mtxLst[[bHIdx]][,cIdx]
+		fndInfo <- mtxNames[bHIdx]
+
+		phLst[[sprintf("C%d",cIdx)]] <- list(hpnVal=hpnVal ,fndInfo=fndInfo)
+	}
+	names(phLst) <- colnames(mtxLst[[1]])
+
+	rObj <- list(fColLst=fColLst ,phLst=phLst)
+
+	rObj$diffCnt.fCol <- function( scoreMtx ){
+		cnt <- rep( ncol(scoreMtx) ,nrow(scoreMtx) )
+		names(cnt) <- rownames(scoreMtx)
+		for( rIdx in 1:nrow(scoreMtx) ){
+			hpnVal <-rObj$fColLst[[rIdx]]$hpnVal
+			if( is.null(hpnVal) ) next
+
+			cnt[rIdx] <- sum( scoreMtx[rIdx,]!=hpnVal ,na.rm=T )
+		}
+
+		return( cnt )
+	}
+
+	rObj$diffCnt.ph <- function( scoreMtx ){
+		cnt <- rep( nrow(scoreMtx) ,ncol(scoreMtx) )
+		names(cnt) <- colnames(scoreMtx)
+		for( cIdx in 1:ncol(scoreMtx) ){
+			hpnVal <-rObj$phLst[[cIdx]]$hpnVal
+			if( is.null(hpnVal) ) next
+
+			cnt[cIdx] <- sum( scoreMtx[,cIdx]!=hpnVal ,na.rm=T )
+		}
+
+		return( cnt )
+	}
+
+	return( rObj )
+
+} # bUtil.getMtxRebPtn.skipZero( )
+
+

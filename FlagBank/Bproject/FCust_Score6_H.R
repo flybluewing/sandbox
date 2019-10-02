@@ -796,6 +796,7 @@ bFCust.byHIdx_A_score6 <- function( ){
 		}
 
 		cutterObj$mtxLst <- mtxLst
+		cutterObj$rebPtn.skipZero <- bUtil.getMtxRebPtn.skipZero( mtxLst ,hpnThld.fCol=NA ,hpnThld.ph=NA )
 
 		cutterObj$cut <- function( scoreMtx ,aIdx ){
 			# scoreMtx 는 1개 aZoid에 관한 [fCol,phase] mtx임을 유의.
@@ -818,6 +819,29 @@ bFCust.byHIdx_A_score6 <- function( ){
 		} # cutterObj$cut()
 
 		cutterObj$cutLst <- list()
+		cutterObj$cutLst[["F_rebPtn.skipZero"]] <- function( scoreMtx ,chkEvt=NULL ){
+			rCutId <- character(0)
+
+			surWin <- c(min=0,max=1)
+			cnt.fCol <- sum( 0==cutterObj$rebPtn.skipZero$diffCnt.fCol(scoreMtx) )
+			if( !bUtil.in(cnt.fCol,surWin) ){
+				rCutId <- c( rCutId, sprintf("skipZero.fCol.%d (%d~%d)",cnt.fCol,surWin["min"],surWin["max"]) )
+			}
+
+			surWin <- c(min=0,max=1)
+			cnt.ph <- sum( 0==cutterObj$rebPtn.skipZero$diffCnt.ph(scoreMtx) )
+			if( !bUtil.in(cnt.ph,surWin) ){
+				rCutId <- c( rCutId, sprintf("skipZero.ph.%d (%d~%d)",cnt.ph,surWin["min"],surWin["max"]) )
+			}
+
+			surWin <- c(min=0,max=2)
+			cntTot <- cnt.fCol + cnt.ph
+			if( !bUtil.in(cntTot,surWin) ){
+				rCutId <- c( rCutId, sprintf("skipZero.sum.%d (%d~%d)",cntTot,surWin["min"],surWin["max"]) )
+			}
+
+			return( rCutId )
+		}
 		cutterObj$cutLst[["F_matEvt"]] <- function( scoreMtx ,chkEvt=NULL ){
 			rCutId <- character(0)
 
