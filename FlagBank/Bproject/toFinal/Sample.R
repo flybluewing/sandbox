@@ -4,10 +4,11 @@ source("B_H.R")
 
 
 lastH <- 860
-testMode <- TRUE
+testMode <- # 실수 방지를 위해 일부러 오류 코드로 남김.
 
 stdFiltedCnt <- 0:2
-scoreMtx.name <- c("score2","score3","score4","score5","score6","score6")
+scoreMtx.name <- c("score2","score3","score4","score5","score6","score7")
+scoreMtx.name.hard <- c( "score8" ) # 실행 시간이 너무 오래 걸리는 것은 별도 그룹으로..
 stdFilted.NG <- c("D0000.A","A0100.A","AP000.E")
 
 load(sprintf("../Aproject/Obj_allIdxLstZ%d.save",lastH) )
@@ -20,7 +21,7 @@ load(sprintf("./save/Obj_remLstZ%d.save",lastH) )
 tStmp <- Sys.time()
 stdMI.grp <- bUtil.getStdMILst( gEnv ,fRstLst )     ;stdMI.grp$anyWarn( )
 
-hMtxLst <- B.makeHMtxLst( gEnv, allIdxLst, fRstLst, lastH=lastH, scoreMtx.name )
+hMtxLst <- B.makeHMtxLst( gEnv, allIdxLst, fRstLst, lastH=lastH, scoreMtx.name )    # 12 min.
 stdCtrlCfgGrp <- bUtil.makeStdCtrlCfgGrp(hMtxLst)
 cut.grp <- bFCust.getFCustGrp( stdCtrlCfgGrp ,hMtxLst )
 
@@ -66,6 +67,36 @@ for( curStdFiltedCnt in stdFiltedCnt ){   # curStdFiltedCnt <- stdFiltedCnt[1]
     for( tgt.scMtx in scoreMtx.name ){   # tgt.scMtx <- scoreMtx.name[1]
 
         logger$fLogStr(sprintf("bUtil.cut( ) - tgt.scMtx:%s",tgt.scMtx),pTime=T)
+
+        filter.grp <- getFilter.grp( stdMI.grp ,tgt.scMtx=tgt.scMtx )
+
+        surFlag <- rep( T ,length(allIdxF) )
+        bLst <- k.blockLst( length(allIdxF) ,1000*ifelse(testMode,1,100) )
+        for( bName in names(bLst) ){    # bName <- names(bLst)[1]
+            tStmp <- Sys.time()
+            span <- bLst[[bName]]["start"]:bLst[[bName]]["end"] 
+
+            logger.cut <- k.getFlogObj( sprintf("./log/FinalCut_%d_%s_bUtil.cut.txt",lastH,aZoidGrp) )
+
+            scoreMtx.grp <- getScoreMtx.grp( gEnv$allZoidMtx[allIdxF[span],,drop=F] ,filter.grp )
+            cutRst <- bUtil.cut( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx ,logger=logger.cut )
+            surFlag[span] <- cutRst$surFlag
+
+            tDiff <- Sys.time() - tStmp
+            logStr <- sprintf("  %s block finished.(remove:%d/%d) %5.1f%s"
+                                ,bName,sum(!cutRst$surFlag),length(cutRst$surFlag)
+                                ,tDiff  ,units(tDiff)
+                        )
+        }
+        allIdxF <- allIdxF[surFlag]
+        logger$fLogStr(sprintf("   - final size :%7d",length(allIdxF)),pTime=T)
+    }
+
+
+    #   bUtil.cut( ) : 초 장시간 시간 소요가 되는 scoreMtx 들.. --------------------------------------------
+    for( tgt.scMtx in scoreMtx.name.hard ){   # tgt.scMtx <- scoreMtx.name[1]
+
+        logger$fLogStr(sprintf("bUtil.cut( hard ) - tgt.scMtx:%s",tgt.scMtx),pTime=T)
 
         filter.grp <- getFilter.grp( stdMI.grp ,tgt.scMtx=tgt.scMtx )
 

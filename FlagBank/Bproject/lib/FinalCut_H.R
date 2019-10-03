@@ -280,8 +280,8 @@ FC.primaryCut.bySC <- function( allIdxF ,gEnv ,filter.grp ,fHName ,cut.grp ,logF
 
             tStmp <- Sys.time()
             for( bName in names(bLst) ){    # bName <- names(bLst)[1]
-                span <- bLst[[bName]]["start"]:bLst[[bName]]["end"] 
-                scoreMtxObj <- filterObj$fMtxObj( gEnv$allZoidMtx[span,,drop=F] ,makeInfoStr=F )
+                span <- bLst[[bName]]["start"]:bLst[[bName]]["end"]
+                scoreMtxObj <- filterObj$fMtxObj( gEnv$allZoidMtx[allIdxF[span],,drop=F] ,makeInfoStr=F )
                 surFlag.blk <- cutting( scoreMtxObj$scoreMtx ,cut.grp ,mName ,pName ,fHName )
                 surFlag[span] <- surFlag.blk
 
