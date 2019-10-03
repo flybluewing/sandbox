@@ -302,6 +302,7 @@ lab.getMtxLst <- function( pHSpan ,pIdStr ){
 
 idStr <- "goldRstSpan"
 rstObj <- lab.getMtxLst( goldRstSpan ,pIdStr=idStr )
+    #   build.u0.saveStdZoidFltRst( goldRstSpan )
 save( rstObj ,file=sprintf("./save/stdZoidFltRst/Obj_rstObj.%s.save",idStr) )
 #   rstObj <- lab.getMtxLst( grp2RstSpan ,pIdStr="grp2RstSpan" )
 #   rstObj <- lab.getMtxLst( fullRstSpan ,pIdStr="fullRstSpan" )

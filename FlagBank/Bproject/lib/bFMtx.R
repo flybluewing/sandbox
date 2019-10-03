@@ -1189,3 +1189,93 @@ bFMtx.util.fMtxObj.score4567 <- function( aCode ,fInfo ,makeInfoStr=F ){
 } # bFMtx.util.fMtxObj.score4567( )
 
 
+
+#	fCutU.getFiltObjPair( stdMI$fStepTail )
+bFMtx.score8 <- function( stdMIObj ){
+	#	stdMIObj <- stdMI.grp$basic$basic
+	stdMI <- stdMIObj$stdMI
+	zMtx <- stdMIObj$zMtx
+	rObj <- list( 	idStr="score8"	,zMtx.size=nrow(zMtx)
+					,lastZoid=stdMI$lastZoid
+				)
+
+	rObj$fInfo <- NULL
+	if( 2<nrow(stdMI$rawTail) ){
+		rObj$fInfo <- fCutU.getFiltObjPair( stdMI$cStepTail )	# rObj$fInfo$explain( )
+	}
+
+	#	cName <- c("rebPtn.1")
+	rObj$fMtxObj <- function( aZoidMtx ,makeInfoStr=F ){
+		#	aZoidMtx <- gEnv$allZoidMtx[c(stdIdx,sample(10:nrow(gEnv$allZoidMtx),19)) ,] ;makeInfoStr=T
+
+		aLen <- nrow(aZoidMtx)
+		cName <- c(	"pBanN.r","pBanN.n"				# found num of rebound ptn ( ptn itself, next ptn in right column )
+					,"pLCol" ,"pE3" ,"pE4"	,"pMH" ,"pfNum"
+				)
+		scoreMtx <- matrix( 0, nrow=aLen, ncol=length(cName) )	;colnames(scoreMtx) <- cName
+
+		infoMtx <- NULL
+		if( makeInfoStr ){
+			cName <- c( "pBanLst","iBanLst", "pairHpn", "match4" ,"zMtx.size" )
+			infoMtx <- matrix( "" ,nrow=aLen ,ncol=length(cName) )	;colnames(infoMtx) <- cName
+			infoMtx[,"zMtx.size"] <- rObj$zMtx.size
+		}
+		if( 0==rObj$zMtx.size ){
+			return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
+		}
+
+		if( is.null(rObj$fInfo) ){ # stdMIObj$zMtx 데이터가 부족한 상태
+			return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
+		}
+
+		for( aIdx in 1:aLen ){
+			aZoid <- aZoidMtx[aIdx,]
+			# aCStep <- aZoid[2:6] - aZoid[1:5]	;aFStep <- aZoid - rObj$lastZoid	;aRem <- aZoid %% 10
+
+			rstObj <- bFMtx.util.fMtxObj.score4567( aZoid - rObj$lastZoid ,rObj$fInfo ,makeInfoStr )
+
+			# pairBanLst
+			pBan.cutInfo <- rstObj$F_pBanLst( makeInfoStr )
+			scoreMtx[aIdx ,"pBanN.r"] <- pBan.cutInfo$cutHpn["rebPtn"]
+			scoreMtx[aIdx ,"pBanN.n"] <- pBan.cutInfo$cutHpn["nextPtn"]
+			workCol <- c("pLCol" ,"pE3" ,"pE4"	,"pMH" ,"pfNum")
+			scoreMtx[aIdx ,workCol] <- pBan.cutInfo$cutHpn[c("rebLastCol","extMat3","extMat4","multiHpn","foundNum")]
+
+			# iBanLst
+			iBan.cutInfo <- rstObj$F_iBanLst( makeInfoStr )
+			scoreMtx[aIdx ,"iBanN"] <- length(rstObj$iBanLst)
+			workCol <- c("iLCol" ,"iE3" ,"iE4"	,"iMH" ,"ifNum")
+			scoreMtx[aIdx ,workCol] <- iBan.cutInfo$cutHpn[c("rebLastCol","extMat3","extMat4","multiHpn","foundNum")]
+
+			# pairHpn
+			if( 0<length(rstObj$pairHpn) ){
+				workCol <- c("FVa.m","FVa.c","aFV.m","aFV.c")
+				scoreMtx[aIdx ,workCol ] <- rstObj$pairHpn$foundInfo[c("FVa.max","FVa.hpnCnt","aFV.max","aFV.hpnCnt")]
+			}
+
+			# match4
+			if( 0<length(rstObj$match4) ){
+				scoreMtx[aIdx, "m4"] <- rstObj$match4$foundInfo["matCnt"]
+			}
+
+			if( makeInfoStr ){
+
+				infoMtx[aIdx,"pBanLst"] <- pBan.cutInfo$infoStr
+				infoMtx[aIdx,"iBanLst"] <- iBan.cutInfo$infoStr
+				
+				if( 0<length(rstObj$pairHpn) )	infoMtx[aIdx,"pairHpn"] <- rstObj$pairHpn$infoStr
+
+				if( 0<scoreMtx[aIdx, "m4"] )	infoMtx[aIdx,"match4"] <- rstObj$match4$infoStr
+
+			}
+
+		}
+
+		return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
+	}
+
+	return( rObj )
+
+} # bFMtx.score8( )
+
+
