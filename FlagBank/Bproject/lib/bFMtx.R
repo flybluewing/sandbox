@@ -1215,8 +1215,8 @@ bFMtx.score8 <- function( stdMIObj ){
 			cInfo$max2 <- cStep.srt[cLen-0:1]	;cInfo$min2 <- cStep.srt[1:2]
 		}
 
-		cInfo$mat5Lst <- list()
 		#	c5.x ,c4.x 폐지. 시간이 너무 오래걸리는 듯.
+		# cInfo$mat5Lst <- list()
 		# for( idx in 1:2 ){	# c5.x
 		# 	logId <- sprintf("c5%d",idx)
 		# 	cInfo$mat5Lst[[logId]] <- fCutU.getChkCStepValReb( zMtx[,0:4+idx,drop=F] )
@@ -1293,14 +1293,14 @@ bFMtx.score8 <- function( stdMIObj ){
 		}
 
 		#	matNLst --------------------------------------------------------
-		for( idx in 1:2 ){	# c5.x
-			logId <- sprintf("c5%d",idx)
-			scoreMtx[,logId] <- rObj$cInfo$mat5Lst[[logId]]$match( aZoidMtx[,0:4+idx,drop=F] )
-		}
-		for( idx in 1:3 ){	# c4.x
-			logId <- sprintf("c4%d",idx)
-			scoreMtx[,logId] <- rObj$cInfo$mat4Lst[[logId]]$match( aZoidMtx[,0:3+idx,drop=F] )
-		}
+		# for( idx in 1:2 ){	# c5.x
+		# 	logId <- sprintf("c5%d",idx)
+		# 	scoreMtx[,logId] <- rObj$cInfo$mat5Lst[[logId]]$match( aZoidMtx[,0:4+idx,drop=F] )
+		# }
+		# for( idx in 1:3 ){	# c4.x
+		# 	logId <- sprintf("c4%d",idx)
+		# 	scoreMtx[,logId] <- rObj$cInfo$mat4Lst[[logId]]$match( aZoidMtx[,0:3+idx,drop=F] )
+		# }
 		for( idx in 1:4 ){	# c3.x
 			logId <- sprintf("c3%d",idx)
 			scoreMtx[,logId] <- rObj$cInfo$mat3Lst[[logId]]$match( aZoidMtx[,0:2+idx,drop=F] )
