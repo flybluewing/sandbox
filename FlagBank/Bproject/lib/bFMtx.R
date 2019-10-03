@@ -1216,15 +1216,16 @@ bFMtx.score8 <- function( stdMIObj ){
 		}
 
 		cInfo$mat5Lst <- list()
-		for( idx in 1:2 ){	# c5.x
-			logId <- sprintf("c5%d",idx)
-			cInfo$mat5Lst[[logId]] <- fCutU.getChkCStepValReb( zMtx[,0:4+idx,drop=F] )
-		}
-		cInfo$mat4Lst <- list()
-		for( idx in 1:3 ){	# c4.x
-			logId <- sprintf("c4%d",idx)
-			cInfo$mat4Lst[[logId]] <- fCutU.getChkCStepValReb( zMtx[,0:3+idx,drop=F] )
-		}
+		#	c5.x ,c4.x 폐지. 시간이 너무 오래걸리는 듯.
+		# for( idx in 1:2 ){	# c5.x
+		# 	logId <- sprintf("c5%d",idx)
+		# 	cInfo$mat5Lst[[logId]] <- fCutU.getChkCStepValReb( zMtx[,0:4+idx,drop=F] )
+		# }
+		# cInfo$mat4Lst <- list()
+		# for( idx in 1:3 ){	# c4.x
+		# 	logId <- sprintf("c4%d",idx)
+		# 	cInfo$mat4Lst[[logId]] <- fCutU.getChkCStepValReb( zMtx[,0:3+idx,drop=F] )
+		# }
 		cInfo$mat3Lst <- list()
 		for( idx in 1:4 ){	# c3.x
 			logId <- sprintf("c3%d",idx)
@@ -1245,8 +1246,8 @@ bFMtx.score8 <- function( stdMIObj ){
 		#	aZoidMtx <- gEnv$allZoidMtx[c(stdIdx,sample(10:nrow(gEnv$allZoidMtx),19)) ,] ;makeInfoStr=T
 
 		aLen <- nrow(aZoidMtx)
-		cName <- c(	"c51","c52","c41","c42","c43"
-					,"c31","c32","c33","c34"
+		cName <- c(	# "c51","c52","c41","c42","c43"		# 폐지. 시간이 너무 오래걸리는 듯 하다.
+					"c31","c32","c33","c34"
 					,"c21","c22","c23","c24","c25"
 					,"max3","min3","max2","min2"
 					,"cTbl"

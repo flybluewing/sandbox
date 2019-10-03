@@ -1,14 +1,12 @@
 # ÇÑ±Û
-FCust_score8EvtLst <- list( "c51"=1,"c52"=1
-								,"c41"=1,"c42"=1,"c43"=1
+FCust_score8EvtLst <- list( 	"c41"=1,"c42"=1,"c43"=1
 								,"c31"=1,"c32"=1,"c33"=1,"c34"=1
 								,"c21"=1,"c22"=1,"c23"=1,"c24"=1,"c25"=1
 								,"max3"=1,"min3"=1,"max2"=1,"min2"=1
 								,"cTbl"=1
 							)
 
-FCust_score8minMaxLst <- list( "c51"=c(min=0,max=0),"c52"=c(min=0,max=0)
-								,"c41"=c(min=0,max=0),"c42"=c(min=0,max=0),"c43"=c(min=0,max=0)
+FCust_score8minMaxLst <- list( "c41"=c(min=0,max=0),"c42"=c(min=0,max=0),"c43"=c(min=0,max=0)
 								,"c31"=c(min=0,max=0),"c32"=c(min=0,max=0),"c33"=c(min=0,max=0),"c34"=c(min=0,max=0)
 								,"c21"=c(min=0,max=0),"c22"=c(min=0,max=0),"c23"=c(min=0,max=0),"c24"=c(min=0,max=0),"c25"=c(min=0,max=0)
 								,"max3"=c(min=0,max=0),"min3"=c(min=0,max=0),"max2"=c(min=0,max=0),"min2"=c(min=0,max=0)
