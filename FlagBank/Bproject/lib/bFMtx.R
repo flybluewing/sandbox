@@ -128,6 +128,9 @@ getFilter.grp <- function( stdMI.grp ,tgt.scMtx=NULL ){
 		if( is.null(tgt.scMtx) || ("score7" %in%tgt.scMtx ) ){
 			mtxObjLst[[1+length(mtxObjLst)]] <- bFMtx.score7( stdMIObj )
 		}
+		if( is.null(tgt.scMtx) || ("score8" %in%tgt.scMtx ) ){
+			mtxObjLst[[1+length(mtxObjLst)]] <- bFMtx.score8( stdMIObj )
+		}
 		names(mtxObjLst) <- sapply(mtxObjLst,function(p){p$idStr})
 		return( mtxObjLst )
 	}
@@ -1199,24 +1202,60 @@ bFMtx.score8 <- function( stdMIObj ){
 					,lastZoid=stdMI$lastZoid
 				)
 
-	rObj$fInfo <- NULL
-	if( 2<nrow(stdMI$rawTail) ){
-		rObj$fInfo <- fCutU.getFiltObjPair( stdMI$cStepTail )	# rObj$fInfo$explain( )
+	rObj$cInfo <- NULL	# cStep Info
+	if( 0<nrow(stdMI$rawTail) ){
+		cInfo <- list()
+
+		cStep.srt <- sort(unique(stdMI$cStep))
+		cLen <- length(cStep.srt)
+		if( 3<=cLen ){
+			cInfo$max3 <- cStep.srt[cLen-0:2]	;cInfo$min3 <- cStep.srt[1:3]
+		}
+		if( 2<=cLen ){
+			cInfo$max2 <- cStep.srt[cLen-0:1]	;cInfo$min2 <- cStep.srt[1:2]
+		}
+
+		cInfo$mat5Lst <- list()
+		for( idx in 1:2 ){	# c5.x
+			logId <- sprintf("c5%d",idx)
+			cInfo$mat5Lst[[logId]] <- fCutU.getChkCStepValReb( zMtx[,0:4+idx,drop=F] )
+		}
+		cInfo$mat4Lst <- list()
+		for( idx in 1:3 ){	# c4.x
+			logId <- sprintf("c4%d",idx)
+			cInfo$mat4Lst[[logId]] <- fCutU.getChkCStepValReb( zMtx[,0:3+idx,drop=F] )
+		}
+		cInfo$mat3Lst <- list()
+		for( idx in 1:4 ){	# c3.x
+			logId <- sprintf("c3%d",idx)
+			cInfo$mat3Lst[[logId]] <- fCutU.getChkCStepValReb( zMtx[,0:2+idx,drop=F] )
+		}
+		cInfo$mat2Lst <- list()
+		for( idx in 1:5 ){	# c2.x
+			logId <- sprintf("c2%d",idx)
+			cInfo$mat2Lst[[logId]] <- fCutU.getChkCStepValReb( zMtx[,0:1+idx,drop=F] )
+		}
+
+		cInfo$cTbl <- table(stdMI$cStep)
+
+		rObj$cInfo <- cInfo
 	}
 
-	#	cName <- c("rebPtn.1")
 	rObj$fMtxObj <- function( aZoidMtx ,makeInfoStr=F ){
 		#	aZoidMtx <- gEnv$allZoidMtx[c(stdIdx,sample(10:nrow(gEnv$allZoidMtx),19)) ,] ;makeInfoStr=T
 
 		aLen <- nrow(aZoidMtx)
-		cName <- c(	"pBanN.r","pBanN.n"				# found num of rebound ptn ( ptn itself, next ptn in right column )
-					,"pLCol" ,"pE3" ,"pE4"	,"pMH" ,"pfNum"
+		cName <- c(	"c51","c52","c41","c42","c43"
+					,"c31","c32","c33","c34"
+					,"c21","c22","c23","c24","c25"
+					,"max3","min3","max2","min2"
+					,"cTbl"
 				)
 		scoreMtx <- matrix( 0, nrow=aLen, ncol=length(cName) )	;colnames(scoreMtx) <- cName
 
 		infoMtx <- NULL
 		if( makeInfoStr ){
-			cName <- c( "pBanLst","iBanLst", "pairHpn", "match4" ,"zMtx.size" )
+			cName <- c( "zMtx.size" )
 			infoMtx <- matrix( "" ,nrow=aLen ,ncol=length(cName) )	;colnames(infoMtx) <- cName
 			infoMtx[,"zMtx.size"] <- rObj$zMtx.size
 		}
@@ -1224,52 +1263,52 @@ bFMtx.score8 <- function( stdMIObj ){
 			return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
 		}
 
-		if( is.null(rObj$fInfo) ){ # stdMIObj$zMtx 데이터가 부족한 상태
+		if( is.null(rObj$cInfo) ){ # stdMIObj$zMtx 데이터가 부족한 상태
 			return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
 		}
 
 		for( aIdx in 1:aLen ){
 			aZoid <- aZoidMtx[aIdx,]
-			# aCStep <- aZoid[2:6] - aZoid[1:5]	;aFStep <- aZoid - rObj$lastZoid	;aRem <- aZoid %% 10
+			aCStep <- aZoid[2:6] - aZoid[1:5]	# ;aFStep <- aZoid - rObj$lastZoid	;aRem <- aZoid %% 10
 
-			rstObj <- bFMtx.util.fMtxObj.score4567( aZoid - rObj$lastZoid ,rObj$fInfo ,makeInfoStr )
-
-			# pairBanLst
-			pBan.cutInfo <- rstObj$F_pBanLst( makeInfoStr )
-			scoreMtx[aIdx ,"pBanN.r"] <- pBan.cutInfo$cutHpn["rebPtn"]
-			scoreMtx[aIdx ,"pBanN.n"] <- pBan.cutInfo$cutHpn["nextPtn"]
-			workCol <- c("pLCol" ,"pE3" ,"pE4"	,"pMH" ,"pfNum")
-			scoreMtx[aIdx ,workCol] <- pBan.cutInfo$cutHpn[c("rebLastCol","extMat3","extMat4","multiHpn","foundNum")]
-
-			# iBanLst
-			iBan.cutInfo <- rstObj$F_iBanLst( makeInfoStr )
-			scoreMtx[aIdx ,"iBanN"] <- length(rstObj$iBanLst)
-			workCol <- c("iLCol" ,"iE3" ,"iE4"	,"iMH" ,"ifNum")
-			scoreMtx[aIdx ,workCol] <- iBan.cutInfo$cutHpn[c("rebLastCol","extMat3","extMat4","multiHpn","foundNum")]
-
-			# pairHpn
-			if( 0<length(rstObj$pairHpn) ){
-				workCol <- c("FVa.m","FVa.c","aFV.m","aFV.c")
-				scoreMtx[aIdx ,workCol ] <- rstObj$pairHpn$foundInfo[c("FVa.max","FVa.hpnCnt","aFV.max","aFV.hpnCnt")]
+			# minN, maxN
+			aCStep.srt <- sort(unique(aCStep))
+			cLen <- length(aCStep.srt)
+			if( 3<=cLen ){
+				scoreMtx[aIdx ,"max3"] <- all( aCStep.srt[cLen-0:2]==rObj$cInfo$max3 )
+				scoreMtx[aIdx ,"min3"] <- all( aCStep.srt[1:3]==rObj$cInfo$min3 )
+			}
+			if( 2<=cLen ){
+				scoreMtx[aIdx ,"max2"] <- all( aCStep.srt[cLen-0:1]==rObj$cInfo$max2 )
+				scoreMtx[aIdx ,"min2"] <- all( aCStep.srt[1:2]==rObj$cInfo$min2 )
 			}
 
-			# match4
-			if( 0<length(rstObj$match4) ){
-				scoreMtx[aIdx, "m4"] <- rstObj$match4$foundInfo["matCnt"]
+			cTbl <- table(aCStep)
+			if( length(rObj$cInfo$cTbl)==length(cTbl) ){
+				scoreMtx[aIdx ,"cTbl"] <- all(names(cTbl)==names(rObj$cInfo$cTbl)) && all(cTbl==rObj$cInfo$cTbl)
 			}
 
-			if( makeInfoStr ){
-
-				infoMtx[aIdx,"pBanLst"] <- pBan.cutInfo$infoStr
-				infoMtx[aIdx,"iBanLst"] <- iBan.cutInfo$infoStr
-				
-				if( 0<length(rstObj$pairHpn) )	infoMtx[aIdx,"pairHpn"] <- rstObj$pairHpn$infoStr
-
-				if( 0<scoreMtx[aIdx, "m4"] )	infoMtx[aIdx,"match4"] <- rstObj$match4$infoStr
-
-			}
-
+			# if( makeInfoStr ){ }
 		}
+
+		#	matNLst --------------------------------------------------------
+		for( idx in 1:2 ){	# c5.x
+			logId <- sprintf("c5%d",idx)
+			scoreMtx[,logId] <- rObj$cInfo$mat5Lst[[logId]]$match( aZoidMtx[,0:4+idx,drop=F] )
+		}
+		for( idx in 1:3 ){	# c4.x
+			logId <- sprintf("c4%d",idx)
+			scoreMtx[,logId] <- rObj$cInfo$mat4Lst[[logId]]$match( aZoidMtx[,0:3+idx,drop=F] )
+		}
+		for( idx in 1:4 ){	# c3.x
+			logId <- sprintf("c3%d",idx)
+			scoreMtx[,logId] <- rObj$cInfo$mat3Lst[[logId]]$match( aZoidMtx[,0:2+idx,drop=F] )
+		}
+		for( idx in 1:5 ){	# c2.x
+			logId <- sprintf("c2%d",idx)
+			scoreMtx[,logId] <- rObj$cInfo$mat2Lst[[logId]]$match( aZoidMtx[,0:1+idx,drop=F] )
+		}
+
 
 		return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
 	}
