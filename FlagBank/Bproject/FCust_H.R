@@ -177,6 +177,9 @@ bFCust.getCust <- function(){
 		rObj$fLst_NCol[[1+length(rObj$fLst_NCol)]] <- bFCust.A_score5_A_Row01()
 		rObj$fLst_NCol[[1+length(rObj$fLst_NCol)]] <- bFCust.A_score6_A_Row01()
 		rObj$fLst_NCol[[1+length(rObj$fLst_NCol)]] <- bFCust.A_score7_A_Row01()
+
+		rObj$fLst_NCol[[1+length(rObj$fLst_NCol)]] <- bFCust.A_score8_A_Row01()
+
 	}
 	rObj$getCustF_NCol <- function( tgtId=c(hName="", mName="", pName="") ,auxInfo=c(auxInfo="") ){
 		# tgtId=c(hName="sfcHLst", mName="score2", pName="basic")
@@ -219,6 +222,9 @@ bFCust.getCust <- function(){
 		rObj$fLst_rReb[[1+length(rObj$fLst_rReb)]] <- bFCust.A_score6_A_rRebAA()
 		rObj$fLst_rReb[[1+length(rObj$fLst_rReb)]] <- bFCust.A_score7_A_rReb01()
 		rObj$fLst_rReb[[1+length(rObj$fLst_rReb)]] <- bFCust.A_score7_A_rRebAA()
+
+		rObj$fLst_rReb[[1+length(rObj$fLst_rReb)]] <- bFCust.A_score8_A_rReb01()
+		rObj$fLst_rReb[[1+length(rObj$fLst_rReb)]] <- bFCust.A_score8_A_rRebAA()
 
 	}
 	rObj$getCustF_RReb <- function( lastMtx ,tgtId=c(hName="", mName="", pName="") ,auxInfo=c(auxInfo="") ){
@@ -273,6 +279,11 @@ bFCust.getCust <- function(){
 		rObj$fLst_byFCol[[1+length(rObj$fLst_byFCol)]] <- bFCust.byFCol_A_score7_A()
 		rObj$fLst_byFCol[[1+length(rObj$fLst_byFCol)]] <- bFCust.byFCol_A_score7_A_rReb01()
 		rObj$fLst_byFCol[[1+length(rObj$fLst_byFCol)]] <- bFCust.byFCol_A_score7_A_rRebAA()
+
+		rObj$fLst_byFCol[[1+length(rObj$fLst_byFCol)]] <- bFCust.byFCol_A_score8_A()
+		rObj$fLst_byFCol[[1+length(rObj$fLst_byFCol)]] <- bFCust.byFCol_A_score8_A_rReb01()
+		# rObj$fLst_byFCol[[1+length(rObj$fLst_byFCol)]] <- bFCust.byFCol_A_score8_A_rRebAA()
+
 	}
 	rObj$getCustF_byFCol <- function( lastMtx ,tgtId=c(hName="", mName="", fcName="") ,auxInfo=c(auxInfo="") ){
 		# tgtId=c(hName="sfcHLst", mName="score2", fcName="rebV.r")
