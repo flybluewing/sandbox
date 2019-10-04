@@ -93,7 +93,7 @@ for( curStdFiltedCnt in stdFiltedCnt ){   # curStdFiltedCnt <- stdFiltedCnt[1]
     }
 
 
-    #   bUtil.cut( ) : 초 장시간 시간 소요가 되는 scoreMtx 들.. --------------------------------------------
+    #   bUtil.cut( hard ) : 초 장시간 시간 소요가 되는 scoreMtx 들.. --------------------------------------------
     for( tgt.scMtx in scoreMtx.name.hard ){   # tgt.scMtx <- scoreMtx.name[1]
 
         logger$fLogStr(sprintf("bUtil.cut( hard ) - tgt.scMtx:%s",tgt.scMtx),pTime=T)
