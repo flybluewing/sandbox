@@ -671,3 +671,320 @@ bFCust.byFCol_A_score8_A_rRebAA <- function( ){
 
 
 
+#	[score8:byHIdx(...)] ---------------------------------------------------------
+#		- [fCol,phName] 
+#		- mtxGrp <- getScoreMtx.grp_byHIdx( scoreMtx.grp )
+#		- hIdxObj <- B.getHMtxLst_byHIdx( hMtxLst )
+#       - 개개 score의 최대 최소값이나, evt 발생등은 이미 앞에서 모두 확인되었다.)
+#		  따라서 col 방향, row 방향, mtx전체에 대한 rebPtn 체크.
+#			(fCol 별 evt 기준 때문에 scoreMtx 개개별로 작성 필요.)
+
+#		c( typ="cust_byHIdx"	,hName="*"	,mName="score8" )
+bFCust.byHIdx_A_score8 <- function( ){
+
+	rObj <- list( )
+	rObj$defId <- c( typ="cust_byHIdx"	,hName="*"	,mName="score8" )
+	rObj$description <- sprintf("(cust)  ")
+
+	rObj$evtLst <- FCust_score2EvtLst
+
+	rObj$createCutter <- function( mtxLst=NULL ,tgtId=c(hName="", mName="") ,auxInfo=c(auxInfo="") ){
+
+		cutterObj <- rObj
+		cutterObj$createCutter <- NULL	;cutterObj$evtLst <- NULL	;cutterObj$getMtxEvt_byRow <- NULL
+
+		#	hName="testNA"; mName="testNA"; pName="testNA"; fcName="testNA"; auxInfo=c(auxInfo="")
+		idObjDesc <- rObj$defId
+		if( idObjDesc["hName"]!=tgtId["hName"] ) idObjDesc["hName"] <- sprintf("(%s)%s",idObjDesc["hName"],tgtId["hName"])
+		if( idObjDesc["mName"]!=tgtId["mName"] ) idObjDesc["mName"] <- sprintf("(%s)%s",idObjDesc["mName"],tgtId["mName"])
+		idObjDesc <- c( idObjDesc ,auxInfo )
+		cutterObj$idObjDesc <- idObjDesc
+
+		cutterObj$idObj <- rObj$defId
+		cutterObj$idObj[names(tgtId)] <- tgtId
+
+		cutterObj$evt <- bUtil.getMtxEvt_byRow( mtxLst ,rObj$evtLst )
+		if( tgtId["mName"]==cutterObj$defId["mName"] ){
+			cutterObj$chkEvt.last <- bFCust.get_byHIdx_score8ChkEvt( mtxLst[[length(mtxLst)]] )
+		}
+
+		cutterObj$mtxLst <- mtxLst
+		cutterObj$rebPtn.skipZero <- bUtil.getMtxRebPtn.skipZero( mtxLst ,hpnThld.fCol=NA ,hpnThld.ph=NA )
+
+		cutterObj$cut <- function( scoreMtx ,aIdx ){
+			# scoreMtx 는 1개 aZoid에 관한 [fCol,phase] mtx임을 유의.
+			# 	(즉, 이 함수는 한 개 aZoid에 대한 처리로직이다.)
+			#	단 surDf와 cutLst는 다른 cut함수들 결과와의 호환성 유지를 위해 구조유지.
+			cutId <- character(0)
+
+			chkEvt <- bFCust.get_byHIdx_score8ChkEvt( scoreMtx )
+			for( cutIdx in names(cutterObj$cutLst) ){ # cutIdx <- names(cutterObj$cutLst)[1]
+				cutId <- c( cutId ,cutterObj$cutLst[[cutIdx]]( scoreMtx ,chkEvt ) )
+			}
+
+			cutLst <- list()
+			if( 0<length(cutId) ){
+				infoStr <- sprintf("cut Id : %s",paste(cutId,collapse=",") )
+				cutLst[[1+length(cutLst)]] <- list( idx=aIdx ,idObjDesc=cutterObj$idObjDesc ,info=infoStr )
+			}
+
+			return( cutLst )
+		} # cutterObj$cut()
+
+		cutterObj$cutLst <- list()
+		cutterObj$cutLst[["F_rebPtn.skipZero"]] <- function( scoreMtx ,chkEvt=NULL ){
+			rCutId <- character(0)
+
+			surWin <- c(min=0,max=1)
+			cnt.fCol <- sum( 0==cutterObj$rebPtn.skipZero$diffCnt.fCol(scoreMtx) )
+			if( !bUtil.in(cnt.fCol,surWin) ){
+				rCutId <- c( rCutId, sprintf("skipZero.fCol.%d (%d~%d)",cnt.fCol,surWin["min"],surWin["max"]) )
+			}
+
+			surWin <- c(min=0,max=2)
+			cnt.ph <- sum( 0==cutterObj$rebPtn.skipZero$diffCnt.ph(scoreMtx) )
+			if( !bUtil.in(cnt.ph,surWin) ){
+				rCutId <- c( rCutId, sprintf("skipZero.ph.%d (%d~%d)",cnt.ph,surWin["min"],surWin["max"]) )
+			}
+
+			surWin <- c(min=0,max=3)
+			cntTot <- cnt.fCol + cnt.ph
+			if( !bUtil.in(cntTot,surWin) ){
+				rCutId <- c( rCutId, sprintf("skipZero.sum.%d (%d~%d)",cntTot,surWin["min"],surWin["max"]) )
+			}
+
+			return( rCutId )
+		}
+		cutterObj$cutLst[["F_matEvt"]] <- function( scoreMtx ,chkEvt=NULL ){
+
+			rCutId <- character(0)
+
+			srcEvt <- scoreMtx
+			for( rnIdx in rownames(scoreMtx) ){ # rnIdx <- rownames(scoreMtx)[1]
+				for( cIdx in 1:ncol(scoreMtx) ){
+					if( !(srcEvt[rnIdx,cIdx] %in% rObj$evtLst[[rnIdx]]) ){
+						srcEvt[rnIdx,cIdx] <- NA
+					}
+				}
+			}
+
+			matMtx <- srcEvt == cutterObj$evt$lastMtx
+			matMtx[is.na(matMtx)] <- FALSE
+
+			# match happen count ----------------------------------
+			if( 1<=sum( matMtx ) ) rCutId <- c( rCutId, sprintf("matHpnCnt.%d",sum( matMtx )) )
+
+			# match happen count(sequencial rebind) ----------------------------------
+			rebCnt <- cutterObj$evt$rebCntMtx[matMtx]
+			if( any(rebCnt>1) ) rCutId <- c( rCutId, sprintf("matRebCnt.%d/%d",sum(rebCnt>1),max(rebCnt)) )
+
+			# raw idff -------------------------------------------
+			nMatchCnt <- sum(scoreMtx!=cutterObj$evt$lastMtxRaw)
+			surWindow <- c(min=3,max=20)
+			if( !bUtil.in(nMatchCnt,surWindow) ) rCutId <- c( rCutId, sprintf("rawDiffCnt.%d(%d~%d)",nMatchCnt,surWindow["min"],surWindow["max"]) )
+
+			
+			# phRawMat -------------------------------------------
+			fireThld <- 2
+			cnt.allMat <- 0
+			for( pName in colnames(scoreMtx) ){
+				# 0 이 많으면 적용.
+				if( 0==sum(scoreMtx[,pName]) )	next
+
+				if( any(scoreMtx[,pName]!=cutterObj$evt$lastMtxRaw[,pName]) ) next
+
+				cnt.allMat <- cnt.allMat + 1
+			}
+			if( fireThld<=cnt.allMat )	rCutId <- c( rCutId, sprintf("phRawMatCnt.%d",cnt.allMat) )
+
+			# fColRawMat -------------------------------------------
+			fireThld <- 2
+			cnt.allMat <- 0
+			for( fColName in rownames(scoreMtx) ){
+				# 0 이 많으면 적용.
+				if( 0==sum(scoreMtx[fColName,]) )	next
+
+				if( any(scoreMtx[fColName,]!=cutterObj$evt$lastMtxRaw[fColName,]) ) next
+
+				cnt.allMat <- cnt.allMat + 1
+			}
+			if( fireThld<=cnt.allMat )	rCutId <- c( rCutId, sprintf("fColRawMatCnt.%d",cnt.allMat) )
+
+			# banPastH -------------------------------------------
+            if( 1 < sum(scoreMtx>0) ){  #  0 이 너무 많다면 적용.
+                banPastH <- 12	# 바로 이전 H를 제외한 크기(rawDiffCnt에서 체크되므로)
+                surWindow <- c(min=3,max=27)
+                mtxLst.len <- length(cutterObj$mtxLst)
+                endPoint <- mtxLst.len - banPastH -1
+                checkSpan <- (mtxLst.len-1):ifelse(1>endPoint,1,endPoint)
+                if( length(mtxLst) < banPastH )	banPastH <- length(mtxLst)
+                for( idx in seq_len(length(checkSpan)) ){
+                    chkIdx <- checkSpan[idx]
+
+                    nMatchCnt <- sum(scoreMtx!=cutterObj$mtxLst[[chkIdx]])
+                    if( !bUtil.in(nMatchCnt,surWindow) ){
+                        rCutId <- c( rCutId, sprintf("banPastH.%d in past %d(%d~%d)",nMatchCnt,idx,surWindow["min"],surWindow["max"]) )
+                        break
+                    }
+                }
+            }
+
+			return( rCutId )
+		}
+		cutterObj$cutLst[["F_colMat"]] <- function( scoreMtx ,chkEvt=NULL ){
+
+			rCutId <- character(0)
+
+			# match happen count ----------------------------------
+			surWindow <- c(min=0,max=1)	# survive window
+			srcEvt <- scoreMtx
+			for( rnIdx in rownames(scoreMtx) ){ # rnIdx <- rownames(scoreMtx)[1]
+				for( cIdx in 1:ncol(scoreMtx) ){
+					if( !(srcEvt[rnIdx,cIdx] %in% rObj$evtLst[[rnIdx]]) ){
+						srcEvt[rnIdx,cIdx] <- NA
+					}
+				}
+			}
+			for( cIdx in 2:ncol(scoreMtx) ){
+				matCnt <- sum( srcEvt[,cIdx-1]==srcEvt[,cIdx] ,na.rm=T )
+				if( !bUtil.in(matCnt,surWindow) ){
+					rCutId <- c( rCutId, sprintf("colEvtMat.%d(%d~%d)",matCnt,surWindow["min"],surWindow["max"]) )
+					break
+				}
+			}
+
+			# raw match -------------------------------------------
+			surWindow <- c(min=0,max=4)	# survive window
+			for( cIdx in 2:ncol(scoreMtx) ){
+
+				matCnt <- sum( scoreMtx[,cIdx-1]!=scoreMtx[,cIdx] )
+				if( !bUtil.in(matCnt,surWindow) ){
+					rCutId <- c( rCutId, sprintf("colRawDiff.%d(%d~%d)",matCnt,surWindow["min"],surWindow["max"]) )
+					break
+				}
+			}
+
+			return( rCutId )
+		}
+		# - custom --------------------------------------------------
+		# cutterObj$cutLst[["F_hpnInfo"]] <- function( scoreMtx ,chkEvt ){	# working
+		F_hpnInfo <- function( scoreMtx ,chkEvt ){	# working
+			rCutId <- character(0)
+
+			# Hpn(18*13) -------------------------------------------
+			tot <- chkEvt$hpnInfo$tot
+			surWindow <- c(min=0,max=11)
+			if( !bUtil.in(tot,surWindow) ) rCutId <- c( rCutId, sprintf("HpnTot.%d(%d~%d)",tot,surWindow["min"],surWindow["max"]) )
+
+			tot <- sum(chkEvt$hpnInfo$fCol==0)
+			surWindow <- c(min=12,max=18)
+			if( !bUtil.in(tot,surWindow) ) rCutId <- c( rCutId, sprintf("HpnFCol.%d(%d~%d)",tot,surWindow["min"],surWindow["max"]) )
+
+			tot <- sum(chkEvt$hpnInfo$phase==0)
+			surWindow <- c(min=8,max=13)
+			if( !bUtil.in(tot,surWindow) ) rCutId <- c( rCutId, sprintf("HpnPh.%d(%d~%d)",tot,surWindow["min"],surWindow["max"]) )
+
+			# Hpn Last-----------------------------------------
+			#	hpn 값이 이전에도 특이했는데 이번에도 특이한 경우를 제거
+			#	즉 위에서의 surWindow에 살짝 걸친 경우가 연속발생하는 것을 부정.
+			hpnInfo.c <- chkEvt$hpnInfo
+			hpnInfo.l <- cutterObj$chkEvt.last$hpnInfo
+
+			surWindow <- c(min=0,max=10)	# chkEvt$hpnInfo$tot 범위 참조
+			tot.surLC <- c( lEvt=bUtil.in(hpnInfo.l$tot,surWindow) ,cEvt=bUtil.in(hpnInfo.c$tot,surWindow) )
+			if( all(!tot.surLC) ){
+				rCutId <- c( rCutId, sprintf("Hpn.tot Evt dup(%d~%d) %d->%d"
+							,surWindow["min"],surWindow["max"],hpnInfo.l$tot,hpnInfo.c$tot) )	
+			}
+
+			surWindow <- c(min=12,max=18)	# chkEvt$hpnInfo$fCol 범위 참조
+			tot.l <- sum(hpnInfo.l$fCol==0)
+			tot.c <- sum(hpnInfo.c$fCol==0)
+			fCol.surLC <- c( lEvt=bUtil.in(tot.l,surWindow) ,cEvt=bUtil.in(tot.c,surWindow) )
+			if( all(!fCol.surLC) ){
+				rCutId <- c( rCutId, sprintf("Hpn.fCol Evt dup(%d~%d) %d->%d"
+							,surWindow["min"],surWindow["max"],tot.l,tot.c) )	
+			}
+
+			surWindow <- c(min=9,max=13)	# chkEvt$hpnInfo$phase 범위 참조
+			tot.l <- sum(hpnInfo.l$phase==0)
+			tot.c <- sum(hpnInfo.c$phase==0)
+			phase.surLC <- c( lEvt=bUtil.in(tot.l,surWindow) ,cEvt=bUtil.in(tot.c,surWindow) )
+			if( all(!phase.surLC) ){
+				rCutId <- c( rCutId, sprintf("Hpn.phase Evt dup(%d~%d) %d->%d"
+							,surWindow["min"],surWindow["max"],tot.l,tot.c) )	
+			}
+
+
+			# # --------------------------------------------------------------------------------------------------------------
+			cnt.fCol <- sum(hpnInfo.c$fCol!=hpnInfo.l$fCol)
+			cnt.phase <- sum(hpnInfo.c$phase!=hpnInfo.l$phase)
+
+			surWindow <- c(min=2,max=6)
+			if( !bUtil.in(cnt.fCol,surWindow) ) rCutId <- c( rCutId, sprintf("cnt.fCol.%d(%d~%d)",cnt.fCol,surWindow["min"],surWindow["max"]) )
+			surWindow <- c(min=1,max=8)
+			if( !bUtil.in(cnt.phase,surWindow) ) rCutId <- c( rCutId, sprintf("cnt.phase.%d(%d~%d)",cnt.phase,surWindow["min"],surWindow["max"]) )
+
+			surWindow <- c(min=3,max=14)
+			tot <- sum(cnt.fCol+cnt.phase)
+			if( !bUtil.in(tot,surWindow) ) rCutId <- c( rCutId, sprintf("HpnXY.%d(%d~%d)",tot,surWindow["min"],surWindow["max"]) )
+
+			return( rCutId )
+		}
+		# cutterObj$cutLst[["F_RareCol"]] <- function( scoreMtx ,chkEvt ){	# working
+		F_RareCol <- function( scoreMtx ,chkEvt ){	# working
+			rCutId <- character(0)
+
+			pRareCol <- c("pLCol","pE3","pE4","pMH","pfNum")
+			iRareCol <- c("iLCol","iE3","iE4","iMH","ifNum")
+
+			pRareHpn <- apply( scoreMtx[pRareCol,] ,2 ,function(cVal){ sum(cVal>0) })
+			iRareHpn <- apply( scoreMtx[iRareCol,] ,2 ,function(cVal){ sum(cVal>0) })
+			matFlag <- pRareHpn == iRareHpn
+			matFlag[pRareHpn==0] <- FALSE
+			tot <- sum(matFlag)
+			surWin <- c(min=0,max=0)
+			if( !bUtil.in(tot,surWin) ) rCutId <- c( rCutId, sprintf("RareHpnCntMat.%d(%d~%d)",tot,surWin["min"],surWin["max"]) )
+
+
+			FVCol <- c("FVa.m","FVa.c","aFV.m","aFV.c")
+			FV0Flg <- apply( scoreMtx[FVCol,] ,2 ,function(cVal){ all(cVal==0) })
+			tot <- sum(FV0Flg)
+			surWin <- c(min=9,max=13)
+			if( !bUtil.in(tot,surWin) ) rCutId <- c( rCutId, sprintf("FV0Hpn.%d(%d~%d)",tot,surWin["min"],surWin["max"]) )
+			FV1Flg <- apply( scoreMtx[FVCol,] ,2 ,function(cVal){ all(cVal==1) })
+			tot <- sum(FV1Flg)
+			surWin <- c(min=0,max=2)
+			if( !bUtil.in(tot,surWin) ) rCutId <- c( rCutId, sprintf("FV1Hpn.%d(%d~%d)",tot,surWin["min"],surWin["max"]) )
+			FV2Cnt <- apply( scoreMtx[FVCol,] ,2 ,function(cVal){ sum(cVal==2) })
+			tot <- sum(FV2Cnt>0)
+			surWin <- c(min=0,max=1)
+			if( !bUtil.in(tot,surWin) ) rCutId <- c( rCutId, sprintf("FV2Hpn.%d(%d~%d)",tot,surWin["min"],surWin["max"]) )
+			FV3Cnt <- apply( scoreMtx[FVCol,] ,2 ,function(cVal){ sum(cVal==3) })
+			tot <- sum(FV3Cnt>0)
+			surWin <- c(min=0,max=0)
+			if( !bUtil.in(tot,surWin) ) rCutId <- c( rCutId, sprintf("FV3Hpn.%d(%d~%d)",tot,surWin["min"],surWin["max"]) )
+
+
+			return( rCutId )
+		}
+
+		return(cutterObj)
+	} # rObj$createCutter( )
+
+	return( rObj )
+} # bFCust.byHIdx_A_score2
+
+
+
+bFCust.get_byHIdx_score8ChkEvt <- function( scoreMtx ){
+
+	hpnInfo <- list( tot=	sum(scoreMtx>0)
+					,fCol=	apply( scoreMtx ,1 ,function(byRV){ length(byRV) - sum(byRV==0) })
+					,phase= apply( scoreMtx ,2 ,function(byCV){ length(byCV) - sum(byCV==0)})
+	)
+
+	return( list(hpnInfo=hpnInfo) )
+
+} # bFCust.get_byHIdx_score8ChkEvt( )
+
