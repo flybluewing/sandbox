@@ -605,6 +605,68 @@ bFCust.byFCol_A_score8_A_rReb01 <- function( ){
 	return( rObj )
 } # bFCust.byFCol_A_score8_A_rReb01( )
 
+#	c( typ="c_byFCol"	,hName="*"	,mName="score8"	,fcName="*"  )
+bFCust.byFCol_A_score8_A_rRebAA <- function( ){
+	rObj <- list( )
+	rObj$defId <- c( typ="c_byFCol"	,hName="*"	,mName="score8"	,fcName="*"  )
+	rObj$description <- sprintf("(cust)  ")
+
+	rObj$createCutter <- function( lastMtx ,tgtId=c(hName="", mName="", pName="") ,auxInfo=c(auxInfo="") ){
+
+		cutterObj <- rObj
+		cutterObj$createCutter <- NULL	;cutterObj$evtLst <- NULL
+
+		#	hName="testNA"; mName="testNA"; pName="testNA"; fcName="testNA"; auxInfo=c(auxInfo="")
+		idObjDesc <- rObj$defId
+		if( idObjDesc["hName"]!=tgtId["hName"] ) idObjDesc["hName"] <- sprintf("(%s)%s",idObjDesc["hName"],tgtId["hName"])
+		if( idObjDesc["mName"]!=tgtId["mName"] ) idObjDesc["mName"] <- sprintf("(%s)%s",idObjDesc["mName"],tgtId["mName"])
+		if( idObjDesc["fcName"]!=tgtId["fcName"] ) idObjDesc["fcName"] <- sprintf("(%s)%s",idObjDesc["fcName"],tgtId["fcName"])
+		idObjDesc <- c( idObjDesc ,auxInfo )
+		cutterObj$idObjDesc <- idObjDesc
+
+		cutterObj$idObj <- rObj$defId
+		cutterObj$idObj[names(tgtId)] <- tgtId
+
+		cutterObj$lastRow <- lastMtx[nrow(lastMtx),]
+		cutterObj$activated <- sum(cutterObj$lastRow>0) > 0
+
+		cutterObj$cut <- function( scoreMtx ,alreadyDead=NULL ){
+
+			val.len <- nrow( scoreMtx )
+			if( is.null(alreadyDead) ){
+				alreadyDead <- rep( F, val.len )
+			}
+
+			cutLst <- list()
+			fqCol <- c( "c21" ,"c22" ,"c23" ,"c24" ,"c25" ,"min2" )	# 발생이 빈번한 컬럼.
+
+			for( idx in seq_len(val.len) ){
+				if( alreadyDead[idx] ) next
+
+				if( !cutterObj$activated || is.null(cutterObj$lastRow) ) next
+
+				matFlag <- cutterObj$lastRow==scoreMtx[idx,]
+				if( all(matFlag) ){
+					if( cutterObj$idObj[["fcName"]] %in% c(fqCol) ){
+						if( 1>=sum(cutterObj$lastRow) )	next
+					}
+
+					infoStr <- sprintf("cut Id : rRebAA (raw all Mat. cnt:%d)",sum(cutterObj$lastRow) )
+					infoStr <- c( infoStr ,sprintf("- %s ",cutterObj$idObj[["fcName"]]) )
+					cutLst[[1+length(cutLst)]] <- list( idx=idx ,idObjDesc=cutterObj$idObjDesc ,info=infoStr )
+
+				}
+			}
+
+			return( cutLst )
+		} # cutterObj$cut()
+
+		return(cutterObj)
+	}
+
+	return( rObj )
+} # bFCust.byFCol_A_score8_A_rRebAA( )
+
 
 
 
