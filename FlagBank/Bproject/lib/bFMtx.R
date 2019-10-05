@@ -1334,11 +1334,13 @@ bFMtx.score9 <- function( stdMIObj ){
 		# rawBan ------------------------------------------
 		df <- u0.zoidMtx_ana(stdMI$rawTail)
 		if( 0<nrow(df) ){
-			df <- df[ 0<=rObj$df[,"banVal"] ,]
+			df <- df[ 0< df[,"banVal"] ,]
 			df <- df[45>=df[,"banVal"] ,]
 		}
 		chkCol <- sort(unique(df[,"tgt.col"]))
-		rObj$rawBan <- list( df=df ,chkCol )
+		dfLst <- vector("list",6)
+		for( cIdx in chkCol ){	dfLst[[cIdx]]<-df[df[,"tgt.col"]==cIdx ,] }
+		rObj$rawBan <- list( chkCol=chkCol, dfLst=dfLst ,df=df )
 
 		# remBan ------------------------------------------
 		df <- u0.zoidMtx_ana(stdMI$rawTail%%10)
@@ -1348,7 +1350,9 @@ bFMtx.score9 <- function( stdMIObj ){
 			df <- df[ 10> df[,"banVal"] ,]
 		}
 		chkCol <- sort(unique(df[,"tgt.col"]))
-		rObj$remBan <- list( df=df ,chkCol )
+		dfLst <- vector("list",6)
+		for( cIdx in chkCol ){	dfLst[[cIdx]]<-df[df[,"tgt.col"]==cIdx ,] }
+		rObj$remBan <- list( chkCol=chkCol, dfLst=dfLst ,df=df )
 
 		# cBan ------------------------------------------
 		df <- u0.zoidCMtx_ana( stdMI$rawTail )
@@ -1356,16 +1360,37 @@ bFMtx.score9 <- function( stdMIObj ){
 			df <- df[ 0< df[,"banVal"] ,]
 		}
 		chkCol <- sort(unique(df[,"tgt.col"]))
-		rObj$cBan <- list( df=df ,chkCol )
+		dfLst <- vector("list",6)
+		for( cIdx in chkCol ){	dfLst[[cIdx]]<-df[df[,"tgt.col"]==cIdx ,] }
+		rObj$cBan <- list( chkCol=chkCol, dfLst=dfLst ,df=df )
 
 		# fBan ------------------------------------------
 		df <- u0.zoidFMtx_ana( stdMI$rawTail )
 		chkCol <- sort(unique(df[,"tgt.col"]))
-		rObj$fBan <- list( df=df ,chkCol )
+		dfLst <- vector("list",6)
+		for( cIdx in chkCol ){	dfLst[[cIdx]]<-df[df[,"tgt.col"]==cIdx ,] }
+		rObj$fBan <- list( chkCol=chkCol, dfLst=dfLst ,df=df )
+
 	}
 
 	rObj$checkBan <- function( srcVal ,banObj ){
-		#	srcVal <- c()
+		#	srcVal <- c( 8,23,32,33,34,40)	;banObj <- rObj$rawBan
+		fLst <- list()
+		for( cIdx in banObj$chkCol ){
+			if( !(srcVal[cIdx] %in% banObj$dfLst[[cIdx]][,"banVal"]) ) next	# 처리 속도를 위해
+
+			flag <- srcVal[cIdx] == banObj$dfLst[[cIdx]][,"banVal"]
+			fObj <- list( fInfo=c(cIdx=cIdx ,val=srcVal[cIdx] ,dupLen=sum(flag))
+						,typ=sort(as.character(banObj$dfLst[[cIdx]][flag,"tgt.dir"]))
+					)
+			fLst[[1+length(fLst)]] <- fObj
+		}
+
+		bDupCnt <- sapply( fLst ,function(obj){obj$fInfo["dupLen"]})
+		typ <- do.call( c ,lapply(fLst,function(obj){obj$typ}))
+		rFObj <- list( cnt=length(fLst) ,bDupCnt=bDupCnt ,typCnt=table(typ) )
+
+		return( rFObj )
 	} # rObj$checkBan( )
 
 
