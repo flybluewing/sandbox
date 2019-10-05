@@ -867,21 +867,20 @@ bFCust.byHIdx_A_score8 <- function( ){
 			return( rCutId )
 		}
 		# - custom --------------------------------------------------
-		# cutterObj$cutLst[["F_hpnInfo"]] <- function( scoreMtx ,chkEvt ){	# working
-		F_hpnInfo <- function( scoreMtx ,chkEvt ){	# working
+		cutterObj$cutLst[["F_hpnInfo"]] <- function( scoreMtx ,chkEvt ){	# working
 			rCutId <- character(0)
 
 			# Hpn(18*13) -------------------------------------------
 			tot <- chkEvt$hpnInfo$tot
-			surWindow <- c(min=0,max=11)
+			surWindow <- c(min=1,max=12)
 			if( !bUtil.in(tot,surWindow) ) rCutId <- c( rCutId, sprintf("HpnTot.%d(%d~%d)",tot,surWindow["min"],surWindow["max"]) )
 
 			tot <- sum(chkEvt$hpnInfo$fCol==0)
-			surWindow <- c(min=12,max=18)
+			surWindow <- c(min=8,max=13)
 			if( !bUtil.in(tot,surWindow) ) rCutId <- c( rCutId, sprintf("HpnFCol.%d(%d~%d)",tot,surWindow["min"],surWindow["max"]) )
 
 			tot <- sum(chkEvt$hpnInfo$phase==0)
-			surWindow <- c(min=8,max=13)
+			surWindow <- c(min=6,max=12)
 			if( !bUtil.in(tot,surWindow) ) rCutId <- c( rCutId, sprintf("HpnPh.%d(%d~%d)",tot,surWindow["min"],surWindow["max"]) )
 
 			# Hpn Last-----------------------------------------
@@ -890,49 +889,49 @@ bFCust.byHIdx_A_score8 <- function( ){
 			hpnInfo.c <- chkEvt$hpnInfo
 			hpnInfo.l <- cutterObj$chkEvt.last$hpnInfo
 
-			surWindow <- c(min=0,max=10)	# chkEvt$hpnInfo$tot 범위 참조
-			tot.surLC <- c( lEvt=bUtil.in(hpnInfo.l$tot,surWindow) ,cEvt=bUtil.in(hpnInfo.c$tot,surWindow) )
-			if( all(!tot.surLC) ){
-				rCutId <- c( rCutId, sprintf("Hpn.tot Evt dup(%d~%d) %d->%d"
-							,surWindow["min"],surWindow["max"],hpnInfo.l$tot,hpnInfo.c$tot) )	
-			}
+			# surWindow <- c(min=0,max=10)	# chkEvt$hpnInfo$tot 범위 참조
+			# tot.surLC <- c( lEvt=bUtil.in(hpnInfo.l$tot,surWindow) ,cEvt=bUtil.in(hpnInfo.c$tot,surWindow) )
+			# if( all(!tot.surLC) ){
+			# 	rCutId <- c( rCutId, sprintf("Hpn.tot Evt dup(%d~%d) %d->%d"
+			# 				,surWindow["min"],surWindow["max"],hpnInfo.l$tot,hpnInfo.c$tot) )	
+			# }
 
-			surWindow <- c(min=12,max=18)	# chkEvt$hpnInfo$fCol 범위 참조
-			tot.l <- sum(hpnInfo.l$fCol==0)
-			tot.c <- sum(hpnInfo.c$fCol==0)
-			fCol.surLC <- c( lEvt=bUtil.in(tot.l,surWindow) ,cEvt=bUtil.in(tot.c,surWindow) )
-			if( all(!fCol.surLC) ){
-				rCutId <- c( rCutId, sprintf("Hpn.fCol Evt dup(%d~%d) %d->%d"
-							,surWindow["min"],surWindow["max"],tot.l,tot.c) )	
-			}
+			# surWindow <- c(min=12,max=18)	# chkEvt$hpnInfo$fCol 범위 참조
+			# tot.l <- sum(hpnInfo.l$fCol==0)
+			# tot.c <- sum(hpnInfo.c$fCol==0)
+			# fCol.surLC <- c( lEvt=bUtil.in(tot.l,surWindow) ,cEvt=bUtil.in(tot.c,surWindow) )
+			# if( all(!fCol.surLC) ){
+			# 	rCutId <- c( rCutId, sprintf("Hpn.fCol Evt dup(%d~%d) %d->%d"
+			# 				,surWindow["min"],surWindow["max"],tot.l,tot.c) )	
+			# }
 
-			surWindow <- c(min=9,max=13)	# chkEvt$hpnInfo$phase 범위 참조
-			tot.l <- sum(hpnInfo.l$phase==0)
-			tot.c <- sum(hpnInfo.c$phase==0)
-			phase.surLC <- c( lEvt=bUtil.in(tot.l,surWindow) ,cEvt=bUtil.in(tot.c,surWindow) )
-			if( all(!phase.surLC) ){
-				rCutId <- c( rCutId, sprintf("Hpn.phase Evt dup(%d~%d) %d->%d"
-							,surWindow["min"],surWindow["max"],tot.l,tot.c) )	
-			}
+			# surWindow <- c(min=9,max=13)	# chkEvt$hpnInfo$phase 범위 참조
+			# tot.l <- sum(hpnInfo.l$phase==0)
+			# tot.c <- sum(hpnInfo.c$phase==0)
+			# phase.surLC <- c( lEvt=bUtil.in(tot.l,surWindow) ,cEvt=bUtil.in(tot.c,surWindow) )
+			# if( all(!phase.surLC) ){
+			# 	rCutId <- c( rCutId, sprintf("Hpn.phase Evt dup(%d~%d) %d->%d"
+			# 				,surWindow["min"],surWindow["max"],tot.l,tot.c) )	
+			# }
 
 
-			# # --------------------------------------------------------------------------------------------------------------
+			# --------------------------------------------------------------------------------------------------------------
 			cnt.fCol <- sum(hpnInfo.c$fCol!=hpnInfo.l$fCol)
 			cnt.phase <- sum(hpnInfo.c$phase!=hpnInfo.l$phase)
 
-			surWindow <- c(min=2,max=6)
+			surWindow <- c(min=1,max=7)
 			if( !bUtil.in(cnt.fCol,surWindow) ) rCutId <- c( rCutId, sprintf("cnt.fCol.%d(%d~%d)",cnt.fCol,surWindow["min"],surWindow["max"]) )
-			surWindow <- c(min=1,max=8)
+			surWindow <- c(min=3,max=10)
 			if( !bUtil.in(cnt.phase,surWindow) ) rCutId <- c( rCutId, sprintf("cnt.phase.%d(%d~%d)",cnt.phase,surWindow["min"],surWindow["max"]) )
 
-			surWindow <- c(min=3,max=14)
+			surWindow <- c(min=6,max=15)
 			tot <- sum(cnt.fCol+cnt.phase)
 			if( !bUtil.in(tot,surWindow) ) rCutId <- c( rCutId, sprintf("HpnXY.%d(%d~%d)",tot,surWindow["min"],surWindow["max"]) )
 
 			return( rCutId )
 		}
 		# cutterObj$cutLst[["F_RareCol"]] <- function( scoreMtx ,chkEvt ){	# working
-		F_RareCol <- function( scoreMtx ,chkEvt ){	# working
+		F_RareCol <- function( scoreMtx ,chkEvt ){
 			rCutId <- character(0)
 
 			pRareCol <- c("pLCol","pE3","pE4","pMH","pfNum")

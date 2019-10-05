@@ -1319,3 +1319,115 @@ bFMtx.score8 <- function( stdMIObj ){
 } # bFMtx.score8( )
 
 
+#	fCutU.getFiltObjPair( stdMI$fStepTail )
+bFMtx.score9 <- function( stdMIObj ){
+	#	stdMIObj <- stdMI.grp$basic$basic
+	stdMI <- stdMIObj$stdMI
+	zMtx <- stdMIObj$zMtx
+	rObj <- list( 	idStr="score9"	,zMtx.size=nrow(zMtx)
+					,lastZoid=stdMI$lastZoid
+				)
+
+	rObj$rawBan <- NULL	;rObj$remBan <- NULL	;rObj$cBan <- NULL	;rObj$fBan <- NULL
+	if( 0<nrow(stdMI$rawTail) ){
+
+		# rawBan ------------------------------------------
+		df <- u0.zoidMtx_ana(stdMI$rawTail)
+		if( 0<nrow(df) ){
+			df <- df[ 0<=rObj$df[,"banVal"] ,]
+			df <- df[45>=df[,"banVal"] ,]
+		}
+		chkCol <- sort(unique(df[,"tgt.col"]))
+		rObj$rawBan <- list( df=df ,chkCol )
+
+		# remBan ------------------------------------------
+		df <- u0.zoidMtx_ana(stdMI$rawTail%%10)
+		if( 0<nrow(df) ){
+			df <- df[ 0<=df[,"banVal"] ,]
+			df[ 10==df[,"banVal"] ,"banVal"] <- 0
+			df <- df[ 10> df[,"banVal"] ,]
+		}
+		chkCol <- sort(unique(df[,"tgt.col"]))
+		rObj$remBan <- list( df=df ,chkCol )
+
+		# cBan ------------------------------------------
+		df <- u0.zoidCMtx_ana( stdMI$rawTail )
+		if( 0<nrow(df) ){
+			df <- df[ 0< df[,"banVal"] ,]
+		}
+		chkCol <- sort(unique(df[,"tgt.col"]))
+		rObj$cBan <- list( df=df ,chkCol )
+
+		# fBan ------------------------------------------
+		df <- u0.zoidFMtx_ana( stdMI$rawTail )
+		chkCol <- sort(unique(df[,"tgt.col"]))
+		rObj$fBan <- list( df=df ,chkCol )
+	}
+
+	rObj$checkBan <- function( srcVal ,banObj ){
+		#	srcVal <- c()
+	} # rObj$checkBan( )
+
+
+	rObj$fMtxObj <- function( aZoidMtx ,makeInfoStr=F ){
+		#	aZoidMtx <- gEnv$allZoidMtx[c(stdIdx,sample(10:nrow(gEnv$allZoidMtx),19)) ,] ;makeInfoStr=T
+
+		aLen <- nrow(aZoidMtx)
+		cName <- c(	# "c51","c52","c41","c42","c43"		# 폐지. 시간이 너무 오래걸리는 듯 하다.
+				)
+		scoreMtx <- matrix( 0, nrow=aLen, ncol=length(cName) )	;colnames(scoreMtx) <- cName
+
+		infoMtx <- NULL
+		if( makeInfoStr ){
+			cName <- c( "zMtx.size" )
+			infoMtx <- matrix( "" ,nrow=aLen ,ncol=length(cName) )	;colnames(infoMtx) <- cName
+			infoMtx[,"zMtx.size"] <- rObj$zMtx.size
+		}
+		if( 0==rObj$zMtx.size ){
+			return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
+		}
+
+		if( is.null(rObj$banDf.r) ){ # stdMIObj$zMtx 데이터가 부족한 상태
+			return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
+		}
+
+		for( aIdx in 1:aLen ){
+			aZoid <- aZoidMtx[aIdx,]
+			aRem <- aZoid %% 10
+			aCStep <- aZoid[2:6] - aZoid[1:5]	
+			aFStep <- aZoid - rObj$lastZoid
+
+			# 		rObj$rawBan[,c("tgt.col","banVal","tgt.dir")]
+			# 							tgt.col banVal tgt.dir
+			# 						824        1      8     col
+			# 						8241       2      0     col
+			# 						843        5     34     col
+			# 						809        5     23     col
+			# 						8242       5     30     col
+			# 						1          2     31  Slide/
+			# 						11         3     32  Slide/
+
+
+			cTbl <- table(aCStep)
+			if( length(rObj$cInfo$cTbl)==length(cTbl) ){
+				scoreMtx[aIdx ,"cTbl"] <- all(names(cTbl)==names(rObj$cInfo$cTbl)) && all(cTbl==rObj$cInfo$cTbl)
+			}
+
+			# if( makeInfoStr ){ }
+		}
+
+		# for( idx in 1:4 ){	# c3.x
+		# 	logId <- sprintf("c3%d",idx)
+		# 	scoreMtx[,logId] <- rObj$cInfo$mat3Lst[[logId]]$match( aZoidMtx[,0:2+idx,drop=F] )
+		# }
+
+		return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
+	}
+
+	return( rObj )
+
+} # bFMtx.score9( )
+
+
+
+
