@@ -1383,10 +1383,12 @@ bFMtx.score9 <- function( stdMIObj ){
 			fObj <- list( fInfo=c(cIdx=cIdx ,val=srcVal[cIdx] ,dupLen=sum(flag))
 						,typ=sort(as.character(banObj$dfLst[[cIdx]][flag,"tgt.dir"]))
 					)
-			fLst[[1+length(fLst)]] <- fObj
+			fLst[[sprintf("C%d",cIdx)]] <- fObj
 		}
 
 		bDupCnt <- sapply( fLst ,function(obj){obj$fInfo["dupLen"]})
+		names(bDupCnt) <- names(fLst)
+
 		typ <- do.call( c ,lapply(fLst,function(obj){obj$typ}))
 		rFObj <- list( cnt=length(fLst) ,bDupCnt=bDupCnt ,typCnt=table(typ) )
 
@@ -1398,7 +1400,7 @@ bFMtx.score9 <- function( stdMIObj ){
 		#	aZoidMtx <- gEnv$allZoidMtx[c(stdIdx,sample(10:nrow(gEnv$allZoidMtx),19)) ,] ;makeInfoStr=T
 
 		aLen <- nrow(aZoidMtx)
-		cName <- c(	# "c51","c52","c41","c42","c43"		# 폐지. 시간이 너무 오래걸리는 듯 하다.
+		cName <- c(	"rCnt","rD2","rDn","rLr","rRl"
 				)
 		scoreMtx <- matrix( 0, nrow=aLen, ncol=length(cName) )	;colnames(scoreMtx) <- cName
 
@@ -1412,7 +1414,7 @@ bFMtx.score9 <- function( stdMIObj ){
 			return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
 		}
 
-		if( is.null(rObj$banDf.r) ){ # stdMIObj$zMtx 데이터가 부족한 상태
+		if( is.null(rObj$rawBan) ){ # stdMIObj$zMtx 데이터가 부족한 상태
 			return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
 		}
 
@@ -1431,12 +1433,21 @@ bFMtx.score9 <- function( stdMIObj ){
 			# 						8242       5     30     col
 			# 						1          2     31  Slide/
 			# 						11         3     32  Slide/
+			# 		rObj$checkBan( aZoid ,rObj$rawBan )
+			# 				$cnt		[1] 4
+			# 				$bDupCnt	dupLen dupLen dupLen dupLen 
+			# 								1      1      1      1 
+			# 				$typCnt		col Slide\\ 
+			# 							3       1 
 
+			banR <- rObj$checkBan( aZoid ,rObj$rawBan )
+			scoreMtx[aIdx,"rCnt"] 	<- banR$cnt
+			scoreMtx[aIdx,"rD2"]	<- sum(banR$bDupCnt==2)
+			scoreMtx[aIdx,"rDn"]	<- sum(banR$bDupCnt >2)
+			scoreMtx[aIdx,"rLr"]	<- ifelse(is.na(banR$typCnt["Slide\\"]),0,banR$typCnt["Slide\\"])
+			scoreMtx[aIdx,"rRl"]	<- ifelse(is.na(banR$typCnt["Slide/"]),0,banR$typCnt["Slide/"])
 
-			cTbl <- table(aCStep)
-			if( length(rObj$cInfo$cTbl)==length(cTbl) ){
-				scoreMtx[aIdx ,"cTbl"] <- all(names(cTbl)==names(rObj$cInfo$cTbl)) && all(cTbl==rObj$cInfo$cTbl)
-			}
+			
 
 			# if( makeInfoStr ){ }
 		}
