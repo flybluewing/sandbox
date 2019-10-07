@@ -131,6 +131,9 @@ getFilter.grp <- function( stdMI.grp ,tgt.scMtx=NULL ){
 		if( is.null(tgt.scMtx) || ("score8" %in%tgt.scMtx ) ){
 			mtxObjLst[[1+length(mtxObjLst)]] <- bFMtx.score8( stdMIObj )
 		}
+		if( is.null(tgt.scMtx) || ("score9" %in%tgt.scMtx ) ){
+			mtxObjLst[[1+length(mtxObjLst)]] <- bFMtx.score9( stdMIObj )
+		}
 		names(mtxObjLst) <- sapply(mtxObjLst,function(p){p$idStr})
 		return( mtxObjLst )
 	}
@@ -1400,6 +1403,143 @@ bFMtx.score9 <- function( stdMIObj ){
 		#	aZoidMtx <- gEnv$allZoidMtx[c(stdIdx,sample(10:nrow(gEnv$allZoidMtx),19)) ,] ;makeInfoStr=T
 
 		aLen <- nrow(aZoidMtx)
+		cName <- c(	"rCnt","rD2","rDn","rLr","rRl"	,"eCnt","eD2","eDn","eLr","eRl"
+					,"cCnt","cD2","cDn","cLr","cRl"	,"fCnt","fD2","fDn","fLr","fRl"
+				)
+		scoreMtx <- matrix( 0, nrow=aLen, ncol=length(cName) )	;colnames(scoreMtx) <- cName
+
+		infoMtx <- NULL
+		if( makeInfoStr ){
+			cName <- c( "zMtx.size" )
+			infoMtx <- matrix( "" ,nrow=aLen ,ncol=length(cName) )	;colnames(infoMtx) <- cName
+			infoMtx[,"zMtx.size"] <- rObj$zMtx.size
+		}
+		if( 0==rObj$zMtx.size ){
+			return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
+		}
+
+		if( is.null(rObj$rawBan) ){ # stdMIObj$zMtx 데이터가 부족한 상태
+			return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
+		}
+
+		for( aIdx in 1:aLen ){
+			aZoid <- aZoidMtx[aIdx,]
+			aRem <- aZoid %% 10
+			aCStep <- aZoid[2:6] - aZoid[1:5]	
+			aFStep <- aZoid - rObj$lastZoid
+
+			# 		rObj$rawBan[,c("tgt.col","banVal","tgt.dir")]	# 		rObj$checkBan( aZoid ,rObj$rawBan )
+			# 							tgt.col banVal tgt.dir		# 				$cnt		[1] 4
+			# 						824        1      8     col		# 				$bDupCnt	dupLen dupLen dupLen dupLen 
+			# 						8241       2      0     col		# 								1      1      1      1 
+			# 						843        5     34     col		# 				$typCnt		col Slide\\ 
+			# 						809        5     23     col		# 							3       1 
+			# 						8242       5     30     col
+			# 						1          2     31  Slide/
+			# 						11         3     32  Slide/
+
+			banR <- rObj$checkBan( aZoid ,rObj$rawBan )
+			scoreMtx[aIdx,"rCnt"] 	<- banR$cnt
+			scoreMtx[aIdx,"rD2"]	<- sum(banR$bDupCnt==2)
+			scoreMtx[aIdx,"rDn"]	<- sum(banR$bDupCnt >2)
+			scoreMtx[aIdx,"rLr"]	<- ifelse(is.na(banR$typCnt["Slide\\"]),0,banR$typCnt["Slide\\"])
+			scoreMtx[aIdx,"rRl"]	<- ifelse(is.na(banR$typCnt["Slide/"]),0,banR$typCnt["Slide/"])
+
+			banE <- rObj$checkBan( aZoid ,rObj$remBan )
+			scoreMtx[aIdx,"eCnt"] 	<- banE$cnt
+			scoreMtx[aIdx,"eD2"]	<- sum(banE$bDupCnt==2)
+			scoreMtx[aIdx,"eDn"]	<- sum(banE$bDupCnt >2)
+			scoreMtx[aIdx,"eLr"]	<- ifelse(is.na(banE$typCnt["Slide\\"]),0,banE$typCnt["Slide\\"])
+			scoreMtx[aIdx,"eRl"]	<- ifelse(is.na(banE$typCnt["Slide/"]),0,banE$typCnt["Slide/"])
+
+			banC <- rObj$checkBan( aZoid ,rObj$cBan )
+			scoreMtx[aIdx,"cCnt"] 	<- banC$cnt
+			scoreMtx[aIdx,"cD2"]	<- sum(banC$bDupCnt==2)
+			scoreMtx[aIdx,"cDn"]	<- sum(banC$bDupCnt >2)
+			scoreMtx[aIdx,"cLr"]	<- ifelse(is.na(banC$typCnt["Slide\\"]),0,banC$typCnt["Slide\\"])
+			scoreMtx[aIdx,"cRl"]	<- ifelse(is.na(banC$typCnt["Slide/"]),0,banC$typCnt["Slide/"])
+
+			banF <- rObj$checkBan( aZoid ,rObj$fBan )
+			scoreMtx[aIdx,"fCnt"] 	<- banF$cnt
+			scoreMtx[aIdx,"fD2"]	<- sum(banF$bDupCnt==2)
+			scoreMtx[aIdx,"fDn"]	<- sum(banF$bDupCnt >2)
+			scoreMtx[aIdx,"fLr"]	<- ifelse(is.na(banF$typCnt["Slide\\"]),0,banF$typCnt["Slide\\"])
+			scoreMtx[aIdx,"fRl"]	<- ifelse(is.na(banF$typCnt["Slide/"]),0,banF$typCnt["Slide/"])
+
+			# if( makeInfoStr ){ }
+		}
+
+		# for( idx in 1:4 ){	# c3.x
+		# 	logId <- sprintf("c3%d",idx)
+		# 	scoreMtx[,logId] <- rObj$cInfo$mat3Lst[[logId]]$match( aZoidMtx[,0:2+idx,drop=F] )
+		# }
+
+		return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
+	}
+
+	return( rObj )
+
+} # bFMtx.score9( )
+
+
+
+#	fCutU.getFiltObjPair( stdMI$fStepTail )
+bFMtx.score1 <- function( stdMIObj ){
+	#	stdMIObj <- stdMI.grp$basic$basic
+	stdMI <- stdMIObj$stdMI
+	zMtx <- stdMIObj$zMtx
+	rObj <- list( 	idStr="score1"	,zMtx.size=nrow(zMtx)
+					,lastZoid=stdMI$lastZoid
+				)
+
+	getRemSeg <- function( aCode ){
+
+		segLst <- list()
+
+		tbl <- table(aCode)
+		if( all(tbl<2) ){
+			return( segLst )
+		} else {
+			tbl <- tbl[tbl>=2]
+		}
+
+		for( remVal in as.integer(names(tbl)) ){
+			segObj <- list( remVal=remVal ,idx=which(aCode==remVal) )
+			segLst[[1+length(segLst)]] <- segObj
+		}
+		names(segLst) <- paste("rem",names(tbl),sep="")
+
+		return( segLst )
+	}
+
+	rObj$lastSeg0 <- NULL	;rObj$lastSeg1 <- NULL
+	if( 0<nrow(stdMI$rawTail) ){
+		segLst <- getRemSeg( stdMI$lastZoid %% 10 )
+		rObj$lastSeg0 <- list( remVal=sapply( segLst ,function(obj){obj$remVal}) 
+								,segCnt=sapply( segLst ,function(obj){length(obj$idx)}) 
+								,segLst=segLst
+							)
+	}
+	if( 1<nrow(stdMI$rawTail) ){
+		segLst <- getRemSeg( stdMI$rawTail[nrow(stdMI$rawTail)-1,] %% 10 )
+		rObj$lastSeg1 <- list( remVal=sapply( segLst ,function(obj){obj$remVal}) 
+								,segCnt=sapply( segLst ,function(obj){length(obj$idx)}) 
+								,segLst=segLst
+							)
+	}
+
+	rObj$zwBan <- NULL
+	
+	# rObj$checkBan <- function( srcVal ,banObj ){
+	# 	#	srcVal <- c( 8,23,32,33,34,40)	;banObj <- rObj$rawBan
+	# 	return( rFObj )
+	# } # rObj$checkBan( )
+
+
+	rObj$fMtxObj <- function( aZoidMtx ,makeInfoStr=F ){
+		#	aZoidMtx <- gEnv$allZoidMtx[c(stdIdx,sample(10:nrow(gEnv$allZoidMtx),19)) ,] ;makeInfoStr=T
+
+		aLen <- nrow(aZoidMtx)
 		cName <- c(	"rCnt","rD2","rDn","rLr","rRl"
 				)
 		scoreMtx <- matrix( 0, nrow=aLen, ncol=length(cName) )	;colnames(scoreMtx) <- cName
@@ -1424,30 +1564,12 @@ bFMtx.score9 <- function( stdMIObj ){
 			aCStep <- aZoid[2:6] - aZoid[1:5]	
 			aFStep <- aZoid - rObj$lastZoid
 
-			# 		rObj$rawBan[,c("tgt.col","banVal","tgt.dir")]
-			# 							tgt.col banVal tgt.dir
-			# 						824        1      8     col
-			# 						8241       2      0     col
-			# 						843        5     34     col
-			# 						809        5     23     col
-			# 						8242       5     30     col
-			# 						1          2     31  Slide/
-			# 						11         3     32  Slide/
-			# 		rObj$checkBan( aZoid ,rObj$rawBan )
-			# 				$cnt		[1] 4
-			# 				$bDupCnt	dupLen dupLen dupLen dupLen 
-			# 								1      1      1      1 
-			# 				$typCnt		col Slide\\ 
-			# 							3       1 
-
 			banR <- rObj$checkBan( aZoid ,rObj$rawBan )
 			scoreMtx[aIdx,"rCnt"] 	<- banR$cnt
 			scoreMtx[aIdx,"rD2"]	<- sum(banR$bDupCnt==2)
 			scoreMtx[aIdx,"rDn"]	<- sum(banR$bDupCnt >2)
 			scoreMtx[aIdx,"rLr"]	<- ifelse(is.na(banR$typCnt["Slide\\"]),0,banR$typCnt["Slide\\"])
 			scoreMtx[aIdx,"rRl"]	<- ifelse(is.na(banR$typCnt["Slide/"]),0,banR$typCnt["Slide/"])
-
-			
 
 			# if( makeInfoStr ){ }
 		}
@@ -1462,8 +1584,7 @@ bFMtx.score9 <- function( stdMIObj ){
 
 	return( rObj )
 
-} # bFMtx.score9( )
-
+} # bFMtx.score1( )
 
 
 

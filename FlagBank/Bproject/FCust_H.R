@@ -16,6 +16,7 @@ scoreEvtLst[["score5"]] <- FCust_score5EvtLst
 scoreEvtLst[["score6"]] <- FCust_score6EvtLst
 scoreEvtLst[["score7"]] <- FCust_score7EvtLst
 scoreEvtLst[["score8"]] <- FCust_score8EvtLst
+scoreEvtLst[["score9"]] <- FCust_score9EvtLst
 
 
 #   stdCtrlCfgGrp <- bUtil.makeStdCtrlCfgGrp(hMtxLst)
@@ -136,6 +137,8 @@ bFCust.getCust <- function(){
 		rObj$fLst_1Col[[1+length(rObj$fLst_1Col)]] <- bFCust.A_score6_A_A( )
 		rObj$fLst_1Col[[1+length(rObj$fLst_1Col)]] <- bFCust.A_score7_A_A( )
 		rObj$fLst_1Col[[1+length(rObj$fLst_1Col)]] <- bFCust.A_score8_A_A( )
+		rObj$fLst_1Col[[1+length(rObj$fLst_1Col)]] <- bFCust.A_score9_A_A( )
+
 	}
 	rObj$getCustF_1Col <- function( ctrlCfg ,tgtId=c(hName="", mName="", pName="", fcName="") ,auxInfo=c(auxInfo="") ){
 		# tgtId=c(hName="sfcHLst", mName="score2", pName="basic", fcName="inc.f")
