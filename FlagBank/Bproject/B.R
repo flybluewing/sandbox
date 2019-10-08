@@ -76,7 +76,7 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
     #   load( "Obj_testData.grp.save" )
 
     cutRstLst <- list()
-    for( curHIdx in testSpan ){    # curHIdx <- testSpan[1] # 842
+    for( curHIdx in testSpan ){    # curHIdx <- testSpan[1] # 860
 
         wLastH <-curHIdx-1
         wLastSpan <- 1:which(names(fRstLst)==wLastH)
@@ -114,7 +114,6 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
                 # B.rptScoreMtx.grp( scoreMtx.grp )
                 # B.rptCut.grp( cut.grp )
                 # B.rptCutRst( cutRst )
-
 
         # ------------------------------------------------------------------------
         cutRstLst[[1+length(cutRstLst)]] <- cutRst
