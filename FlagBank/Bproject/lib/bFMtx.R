@@ -111,6 +111,9 @@ getFilter.grp <- function( stdMI.grp ,tgt.scMtx=NULL ){
 	getMtxObjLst <- function( stdMIObj ){
 		mtxObjLst <- list()
 		if( is.null(tgt.scMtx) || ("score2" %in%tgt.scMtx ) ){
+			mtxObjLst[[1+length(mtxObjLst)]] <- bFMtx.score1( stdMIObj )
+		}
+		if( is.null(tgt.scMtx) || ("score2" %in%tgt.scMtx ) ){
 			mtxObjLst[[1+length(mtxObjLst)]] <- bFMtx.score2( stdMIObj )
 		}
 		if( is.null(tgt.scMtx) || ("score3" %in%tgt.scMtx ) ){
@@ -1528,12 +1531,95 @@ bFMtx.score1 <- function( stdMIObj ){
 							)
 	}
 
-	rObj$zwBan <- NULL
-	
-	# rObj$checkBan <- function( srcVal ,banObj ){
-	# 	#	srcVal <- c( 8,23,32,33,34,40)	;banObj <- rObj$rawBan
-	# 	return( rFObj )
-	# } # rObj$checkBan( )
+	rObj$zwMtx <- NULL
+	if( 1<nrow(stdMI$rawTail) ){
+		banLst <- list()
+		zw <- zMtx[,6]-zMtx[,1]	;names(zw) <- rownames(zMtx)
+		zw.len <- length(zw)
+
+		#	a ... a!
+		banLst[["H0"]] <- c(zw=zw[zw.len] ,c1=zMtx[zw.len,1] )
+
+		if( 2<=zw.len ){	#	a, a ... a!
+			banLst[["H1"]] <- c(zw=zw[zw.len-1] ,c1=zMtx[zw.len-1,1] )
+		}
+
+		if( 3<=zw.len ){	cur <- list( zw=zw[zw.len-2] ,c1=zMtx[zw.len-2,1] )
+
+			#	b, a, a ... b!
+			if( (cur$zw!=zw[zw.len]) && (zw[zw.len]==zw[zw.len-1]) ){
+				banLst[["H2.a"]] <- c(zw=cur$zw ,c1=cur$c1 )
+			}
+			#	b, a, b ... a!
+			if( (cur$zw!=zw[zw.len]) && (zw[zw.len]==zw[zw.len-1]) ){
+				banLst[["H2.b"]] <- banLst[["H0"]]
+			}
+			#	a, a, a ... a!
+			if( (cur$zw==zw[zw.len]) && (cur$zw==zw[zw.len-1]) ){
+				banLst[["H2.c"]] <- banLst[["H0"]]
+			}
+		}
+
+		if( 4<=zw.len ){	cur <- list( zw=zw[zw.len-3] ,c1=zMtx[zw.len-3,1] )
+			#	b, a, *, a ... b!
+			if( (zw[zw.len]==zw[zw.len-2]) ){
+				banLst[["H3.a"]] <- c(zw=cur$zw ,c1=cur$c1 )
+			}
+		}
+
+		if( 5<=zw.len ){	cur <- list( zw=zw[zw.len-4] ,c1=zMtx[zw.len-4,1] )
+			#	b, a, c, c, a ... b!
+			if( (zw[zw.len]==zw[zw.len-3]) && (zw[zw.len-1]==zw[zw.len-2]) ){
+				banLst[["H4.a"]] <- c(zw=cur$zw ,c1=cur$c1 )
+			}
+			#	a, c, b, a, c ... b!
+			if( (zw[zw.len-2]==zw[zw.len-4]) && (zw[zw.len-1]==zw[zw.len-3]) ){
+				banLst[["H4.b"]] <- c(zw=cur$zw ,c1=cur$c1 )
+			}
+		}
+
+		if( 6<=zw.len ){	cur <- list( zw=zw[zw.len-5] ,c1=zMtx[zw.len-5,1] )
+			#	b, a, c, n, c, a ... b!
+			if( all(zw[zw.len-c(0,1)]==zw[zw.len-c(4,3)]) ){
+				banLst[["H5.a"]] <- c(zw=cur$zw ,c1=cur$c1 )
+			}
+		}
+
+		if( 7<=zw.len ){	cur <- list( zw=zw[zw.len-6] ,c1=zMtx[zw.len-6,1] )
+			#	b, a, c, d, d, c, a ... b!
+			if( all(zw[zw.len-0:2]==zw[zw.len-5:3]) ){
+				banLst[["H6.a"]] <- c(zw=cur$zw ,c1=cur$c1 )
+			}
+			#	a, c, b, *, *, a, c ... b!
+			if( all(zw[zw.len-1:0]==zw[zw.len-6:5]) ){
+				banLst[["H6.b"]] <- c(zw=cur$zw ,c1=cur$c1 )
+			}
+		}
+
+		# -------------------------------------------------------------------------
+		zwMtx <- do.call( rbind ,banLst )
+		zwMtx <- cbind( zwMtx ,rep(0,nrow(zwMtx)) ,rep(0,nrow(zwMtx)) )
+		colnames(zwMtx) <- c("zw","c1","seqNum","colMat")
+		fndPtn <- rownames( zwMtx )
+
+		if( "H1" %in% fndPtn ){
+			if( zwMtx["H0","zw"]==zwMtx["H1","zw"] ){
+				zwMtx["H0","seqNum"] <- zwMtx["H0","seqNum"] + 1
+				if( zwMtx["H0","c1"]==zwMtx["H1","c1"] ){
+					zwMtx["H0","colMat"] <- zwMtx["H0","colMat"] + 1
+				}
+			}
+		}
+
+		# if( "H2.a" %in% fndPtn ){
+		# }
+		# if( "H2.b" %in% fndPtn ){
+		# }
+		# if( "H2.c" %in% fndPtn ){
+		# }
+
+
+	}
 
 
 	rObj$fMtxObj <- function( aZoidMtx ,makeInfoStr=F ){

@@ -6,9 +6,11 @@ source("FCust_Score5_H.R")
 source("FCust_Score6_H.R")
 source("FCust_Score7_H.R")
 source("FCust_Score8_H.R")
+source("FCust_Score9_H.R")
 
 
 scoreEvtLst <- list()
+scoreEvtLst[["score1"]] <- FCust_score2EvtLst
 scoreEvtLst[["score2"]] <- FCust_score2EvtLst
 scoreEvtLst[["score3"]] <- FCust_score3EvtLst
 scoreEvtLst[["score4"]] <- FCust_score4EvtLst
