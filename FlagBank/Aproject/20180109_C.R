@@ -16,11 +16,11 @@ source("./lib/refine0_H.R") ;source("./lib/refine1_H.R") ;source("./lib/refine2_
 
 
 tStmp <- Sys.time()
-saveId <- "Z878"
+saveId <- "Z879"
 # myObj <- load( sprintf("Obj_allIdxLst%s.save",saveId) )
 load(sprintf("./save/Obj_gEnv%s.save",saveId))
-
 load(sprintf("./save/Obj_fRstLst%s.save",saveId))
+
 load(sprintf("./save/Obj_remLst%s.save",saveId))
 
 # # A0110.A 의 효율이 안 좋은 듯 해서 테스트.
