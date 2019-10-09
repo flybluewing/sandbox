@@ -350,6 +350,13 @@ bUtil.in <- function( val ,eadge=c(min=0,max=0) ){
 	return( rst )
 } # bUtil.in()
 
+bUtil.allSame <- function( val ){
+	val.len <- length(val)
+	if( 1>=val.len )	return( TRUE )
+
+	return( all(val[1]==val[2:val.len]) )
+} # bUtil.allSame()
+
 #	src컬럼을 지정할 필요 없음. evtLst 의 이름을 이용함.
 bUtil.getEvtVal <- function( src ,evtLst ){
 	evtVal <- src[names(evtLst)]
