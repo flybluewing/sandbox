@@ -159,7 +159,7 @@ bFMtx.score1 <- function( stdMIObj ){
 					,lastZoid=stdMI$lastZoid
 				)
 
-	getRemSeg <- function( aCode ){
+	findSeg <- function( aCode ){
 
 		segLst <- list()
 
@@ -170,29 +170,63 @@ bFMtx.score1 <- function( stdMIObj ){
 			tbl <- tbl[tbl>=2]
 		}
 
-		for( remVal in as.integer(names(tbl)) ){
-			segObj <- list( remVal=remVal ,idx=which(aCode==remVal) )
+		for( val in as.integer(names(tbl)) ){
+			segObj <- list( val=val ,idx=which(aCode==val) )
 			segLst[[1+length(segLst)]] <- segObj
 		}
-		names(segLst) <- paste("rem",names(tbl),sep="")
+		names(segLst) <- paste("val",names(tbl),sep="")
 
 		return( segLst )
 	}
 
-	rObj$lastSeg0 <- NULL	;rObj$lastSeg1 <- NULL
+	rObj$lastSeg0 <- NULL	;rObj$lastSeg1 <- NULL		# rem
+	rObj$lastSeg0.c <- NULL	;rObj$lastSeg1.c <- NULL	# cStep
+	rObj$lastSeg0.f <- NULL	;rObj$lastSeg1.f <- NULL	# fStep
 	if( 0<nrow(stdMI$rawTail) ){
-		segLst <- getRemSeg( stdMI$lastZoid %% 10 )
-		remVal = if( 0==length(segLst) ) integer(0) else sapply( segLst ,function(obj){obj$remVal})
+		#	rObj$lastSeg0 ------------------------------------------
+		segLst <- findSeg( stdMI$lastZoid %% 10 )
+		val = if( 0==length(segLst) ) integer(0) else sapply( segLst ,function(obj){obj$val})
 		segLen = if( 0==length(segLst) ) integer(0) else sapply( segLst ,function(obj){length(obj$idx)})
-		rObj$lastSeg0 <- list( infoMtx=rbind(remVal,segLen)	,segLst=segLst	)
+		rObj$lastSeg0 <- list( infoMtx=rbind(val,segLen)	,segLst=segLst	)
+
+		#	rObj$lastSeg0.c ----------------------------------------
+		segLst <- findSeg( stdMI$lastZoid[2:6] - stdMI$lastZoid[1:5] )
+		val = if( 0==length(segLst) ) integer(0) else sapply( segLst ,function(obj){obj$val})
+		segLen = if( 0==length(segLst) ) integer(0) else sapply( segLst ,function(obj){length(obj$idx)})
+		rObj$lastSeg0.c <- list( infoMtx=rbind(val,segLen)	,segLst=segLst	)
 	}
 	if( 1<nrow(stdMI$rawTail) ){
-		segLst <- getRemSeg( stdMI$rawTail[nrow(stdMI$rawTail)-1,] %% 10 )
-		remVal = if( 0==length(segLst) ) integer(0) else sapply( segLst ,function(obj){obj$remVal})
+		workZoid0 <- stdMI$lastZoid
+		workZoid1 <- stdMI$rawTail[nrow(stdMI$rawTail)-1,]
+		#	rObj$lastSeg1 ------------------------------------------		
+		segLst <- findSeg( workZoid1 %% 10 )
+		val = if( 0==length(segLst) ) integer(0) else sapply( segLst ,function(obj){obj$val})
 		segLen = if( 0==length(segLst) ) integer(0) else sapply( segLst ,function(obj){length(obj$idx)})
-		rObj$lastSeg1 <- list( infoMtx=rbind(remVal,segLen)	,segLst=segLst	)
+		rObj$lastSeg1 <- list( infoMtx=rbind(val,segLen)	,segLst=segLst	)
+
+		#	rObj$lastSeg1.c ----------------------------------------
+		segLst <- findSeg( workZoid1[2:6] - workZoid1[1:5] )
+		val = if( 0==length(segLst) ) integer(0) else sapply( segLst ,function(obj){obj$val})
+		segLen = if( 0==length(segLst) ) integer(0) else sapply( segLst ,function(obj){length(obj$idx)})
+		rObj$lastSeg1.c <- list( infoMtx=rbind(val,segLen)	,segLst=segLst	)
+
+		#	rObj$lastSeg0.f ----------------------------------------
+		segLst <- findSeg( workZoid0 - workZoid1 )
+		val = if( 0==length(segLst) ) integer(0) else sapply( segLst ,function(obj){obj$val})
+		segLen = if( 0==length(segLst) ) integer(0) else sapply( segLst ,function(obj){length(obj$idx)})
+		rObj$lastSeg0.f <- list( infoMtx=rbind(val,segLen)	,segLst=segLst	)
 	}
-	rObj$checkRemMatch <- function( aRem ,segObj ){
+	if( 2<nrow(stdMI$rawTail) ){
+		workZoid1 <- stdMI$rawTail[nrow(stdMI$rawTail)-1,]
+		workZoid2 <- stdMI$rawTail[nrow(stdMI$rawTail)-2,]
+
+		#	rObj$lastSeg1.f ----------------------------------------
+		segLst <- findSeg( workZoid1 - workZoid2 )
+		val = if( 0==length(segLst) ) integer(0) else sapply( segLst ,function(obj){obj$val})
+		segLen = if( 0==length(segLst) ) integer(0) else sapply( segLst ,function(obj){length(obj$idx)})
+		rObj$lastSeg1.f <- list( infoMtx=rbind(val,segLen)	,segLst=segLst	)
+	}
+	rObj$checkSegMatch <- function( aCode ,segObj ){
 
 		rVal <- c( num=0 ,len.tot=0 ,len.val=0 )
 			#	num : 매치가 일어난 세그먼트 수
@@ -203,12 +237,12 @@ bFMtx.score1 <- function( stdMIObj ){
 
 		for( lIdx in 1:length(segObj$segLst) ){
 			seg <- segObj$segLst[[lIdx]]
-			if( !bUtil.allSame(aRem[seg$idx]) )	next
+			if( !bUtil.allSame(aCode[seg$idx]) )	next
 
 			rVal["num"] <- 1 + rVal["num"]
 			rVal["len.tot"] <- length(seg$idx) + rVal["len.tot"]
 
-			if( seg$remVal==aRem[seg$idx[1]] ){
+			if( seg$remVal==aCode[seg$idx[1]] ){
 				rVal["len.val"] <- length(seg$idx) + rVal["len.val"]
 			}
 		}
@@ -328,6 +362,8 @@ bFMtx.score1 <- function( stdMIObj ){
 		aLen <- nrow(aZoidMtx)
 		cName <- c(	"rem0.num" ,"rem0.len.tot" ,"rem0.len.val"
 					,"rem1.num" ,"rem1.len.tot" ,"rem1.len.val"
+					,"c0.num" ,"c0.len.tot" ,"c0.len.val" ,"c1.num" ,"c1.len.tot" ,"c1.len.val"
+					,"f0.num" ,"f0.len.tot" ,"f0.len.val" ,"f1.num" ,"f1.len.tot" ,"f1.len.val"
 					,"zwNum","zwC1Num"
 				)
 		scoreMtx <- matrix( 0, nrow=aLen, ncol=length(cName) )	;colnames(scoreMtx) <- cName
@@ -349,17 +385,46 @@ bFMtx.score1 <- function( stdMIObj ){
 		for( aIdx in 1:aLen ){
 			aZoid <- aZoidMtx[aIdx,]
 			aRem <- aZoid %% 10
-			# aCStep <- aZoid[2:6] - aZoid[1:5]	;aFStep <- aZoid - rObj$lastZoid
+			aCStep <- aZoid[2:6] - aZoid[1:5]	;aFStep <- aZoid - rObj$lastZoid
 
-			rVal <- rObj$checkRemMatch( aRem ,rObj$lastSeg0 )
-			scoreMtx[aIdx,"rem0.num"] 	<- rVal["num"]
-			scoreMtx[aIdx,"rem0.len.tot"] 	<- rVal["len.tot"]
-			scoreMtx[aIdx,"rem0.len.val"] 	<- rVal["len.val"]
+			if( !is.null(rObj$lastSeg0) ){
+				rVal <- rObj$checkSegMatch( aRem ,rObj$lastSeg0 )
+				scoreMtx[aIdx,"rem0.num"] 	<- rVal["num"]
+				scoreMtx[aIdx,"rem0.len.tot"] 	<- rVal["len.tot"]
+				scoreMtx[aIdx,"rem0.len.val"] 	<- rVal["len.val"]
+			}
+			if( !is.null(rObj$lastSeg1) ){
+				rVal <- rObj$checkSegMatch( aRem ,rObj$lastSeg1 )
+				scoreMtx[aIdx,"rem1.num"] 	<- rVal["num"]
+				scoreMtx[aIdx,"rem1.len.tot"] 	<- rVal["len.tot"]
+				scoreMtx[aIdx,"rem1.len.val"] 	<- rVal["len.val"]
+			}
 
-			rVal <- rObj$checkRemMatch( aRem ,rObj$lastSeg1 )
-			scoreMtx[aIdx,"rem1.num"] 	<- rVal["num"]
-			scoreMtx[aIdx,"rem1.len.tot"] 	<- rVal["len.tot"]
-			scoreMtx[aIdx,"rem1.len.val"] 	<- rVal["len.val"]
+			if( !is.null(rObj$lastSeg0.c) ){
+				rVal <- rObj$checkSegMatch( aRem ,rObj$lastSeg0 )
+				scoreMtx[aIdx,"c0.num"] 	<- rVal["num"]
+				scoreMtx[aIdx,"c0.len.tot"] 	<- rVal["len.tot"]
+				scoreMtx[aIdx,"c0.len.val"] 	<- rVal["len.val"]
+			}
+			if( !is.null(rObj$lastSeg1.c) ){
+				rVal <- rObj$checkSegMatch( aRem ,rObj$lastSeg1 )
+				scoreMtx[aIdx,"c1.num"] 	<- rVal["num"]
+				scoreMtx[aIdx,"c1.len.tot"] 	<- rVal["len.tot"]
+				scoreMtx[aIdx,"c1.len.val"] 	<- rVal["len.val"]
+			}
+
+			if( !is.null(rObj$lastSeg0.f) ){
+				rVal <- rObj$checkSegMatch( aRem ,rObj$lastSeg0 )
+				scoreMtx[aIdx,"f0.num"] 	<- rVal["num"]
+				scoreMtx[aIdx,"f0.len.tot"] 	<- rVal["len.tot"]
+				scoreMtx[aIdx,"f0.len.val"] 	<- rVal["len.val"]
+			}
+			if( !is.null(rObj$lastSeg1.f) ){
+				rVal <- rObj$checkSegMatch( aRem ,rObj$lastSeg1 )
+				scoreMtx[aIdx,"f1.num"] 	<- rVal["num"]
+				scoreMtx[aIdx,"f1.len.tot"] 	<- rVal["len.tot"]
+				scoreMtx[aIdx,"f1.len.val"] 	<- rVal["len.val"]
+			}
 
 			zw <- aZoid[6] - aZoid[1]
 			flag <- rObj$zwBanMtx[,"zw"]==zw

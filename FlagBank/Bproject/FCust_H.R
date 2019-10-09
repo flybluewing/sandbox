@@ -21,6 +21,11 @@ scoreEvtLst[["score8"]] <- FCust_score8EvtLst
 scoreEvtLst[["score9"]] <- FCust_score9EvtLst
 
 
+# -----------------------------------------------------
+# 추가 scoreMtx
+#	- Quo 에 따른 판단.
+#	- Binary ( stdZoid %% 2 )
+
 #   stdCtrlCfgGrp <- bUtil.makeStdCtrlCfgGrp(hMtxLst)
 bFCust.getFCustGrp <- function( stdCtrlCfgGrp ,hMtxLst ){
 

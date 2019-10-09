@@ -91,6 +91,23 @@ B.makeHMtxLst <- function( gEnv, allIdxLst, fRstLst ,tgt.scMtx=NULL ,lastH=NULL 
                     })
     phaseName <- names(scoreMtxLst[[1]])
 
+
+    # sfcLate monoSMtx
+    for( hIdx in sfcHLst[["sfcLate"]] ){   # hIdx <- sfcHLst[["sfcLate"]][1]
+        stdZoid <- gEnv$zhF[hIdx ,]
+        wEnv <- gEnv
+        wEnv$zhF <- gEnv$zhF[1:(hIdx-1),]
+
+        # fRstLst.w <- fRstLst[as.character(fRstLst.hSpan[fRstLst.hSpan<hIdx])]
+
+        # stdMI.grp <- bUtil.getStdMILst( wEnv ,fRstLst.w )
+        # filter.grp <- getFilter.grp( stdMI.grp ,tgt.scMtx )
+
+        # scoreMtx.grp <- getScoreMtx.grp.4H( stdZoid ,filter.grp )
+        # scoreMtx.grp.lst[[sprintf("hIdx:%d",hIdx)]] <- scoreMtx.grp
+    }
+
+
     rObj <- list( sfcHLst=sfcHLst ,lastH=lastH
                     ,mtxInfoLst=mtxInfoLst  ,phaseName=phaseName
                     ,scoreMtxLst=scoreMtxLst 
@@ -101,7 +118,7 @@ B.makeHMtxLst <- function( gEnv, allIdxLst, fRstLst ,tgt.scMtx=NULL ,lastH=NULL 
 
     cnt <- sapply(sfcHLst,length)
     tDiff <- Sys.time() - tStmp
-    cat(sprintf("       time %.1f%s(tgt.scMtx:%s)   %s\n"
+    cat(sprintf("       %d time %.1f%s(tgt.scMtx:%s)   %s\n", lastH
             ,tDiff  ,units(tDiff)   ,ifelse( is.null(tgt.scMtx),"*",paste(tgt.scMtx,collapse=",") )
             ,paste(paste(names(cnt),cnt,sep=":") ,collapse="   " ) 
     ))

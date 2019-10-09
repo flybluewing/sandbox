@@ -1,10 +1,18 @@
 FCust_score1EvtLst <- list(	"rem0.num"=1 ,"rem0.len.tot"=1 ,"rem0.len.val"=1
 							,"rem1.num"=1 ,"rem1.len.tot"=1 ,"rem1.len.val"=1
+							,"c0.num"=1 ,"c0.len.tot"=1 ,"c0.len.val"=1
+							,"c1.num"=1 ,"c1.len.tot"=1 ,"c1.len.val"=1
+							,"f0.num"=1 ,"f0.len.tot"=1 ,"f0.len.val"=1
+							,"f1.num"=1 ,"f1.len.tot"=1 ,"f1.len.val"=1
 							,"zwNum"=1	,"zwC1Num"=1
 						)
 
 FCust_score9minMaxLst <- list( "rem0.num"=c(min=0,max=0) ,"rem0.len.tot"=c(min=0,max=0) ,"rem0.len.val"=c(min=0,max=0)
 								,"rem1.num"=c(min=0,max=0) ,"rem1.len.tot"=c(min=0,max=0) ,"rem1.len.val"=c(min=0,max=0)
+								,"c0.num"=c(min=0,max=0) ,"c0.len.tot"=c(min=0,max=0) ,"c0.len.val"=c(min=0,max=0)
+								,"c1.num"=c(min=0,max=0) ,"c1.len.tot"=c(min=0,max=0) ,"c1.len.val"=c(min=0,max=0)
+								,"f0.num"=c(min=0,max=0) ,"f0.len.tot"=c(min=0,max=0) ,"f0.len.val"=c(min=0,max=0)
+								,"f1.num"=c(min=0,max=0) ,"f1.len.tot"=c(min=0,max=0) ,"f1.len.val"=c(min=0,max=0)
 								,"zwNum"=c(min=0,max=0)	,"zwC1Num"=c(min=0,max=0)
 							)
 
