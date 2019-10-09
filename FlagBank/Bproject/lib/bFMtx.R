@@ -110,7 +110,7 @@ getFilter.grp <- function( stdMI.grp ,tgt.scMtx=NULL ){
 
 	getMtxObjLst <- function( stdMIObj ){
 		mtxObjLst <- list()
-		if( is.null(tgt.scMtx) || ("score2" %in%tgt.scMtx ) ){
+		if( is.null(tgt.scMtx) || ("score1" %in%tgt.scMtx ) ){
 			mtxObjLst[[1+length(mtxObjLst)]] <- bFMtx.score1( stdMIObj )
 		}
 		if( is.null(tgt.scMtx) || ("score2" %in%tgt.scMtx ) ){
@@ -149,6 +149,244 @@ getFilter.grp <- function( stdMI.grp ,tgt.scMtx=NULL ){
 	return( rObj )
 }
 
+
+#	fCutU.getFiltObjPair( stdMI$fStepTail )
+bFMtx.score1 <- function( stdMIObj ){
+	#	stdMIObj <- stdMI.grp$basic$basic
+	stdMI <- stdMIObj$stdMI
+	zMtx <- stdMIObj$zMtx
+	rObj <- list( 	idStr="score1"	,zMtx.size=nrow(zMtx)
+					,lastZoid=stdMI$lastZoid
+				)
+
+	getRemSeg <- function( aCode ){
+
+		segLst <- list()
+
+		tbl <- table(aCode)
+		if( all(tbl<2) ){
+			return( segLst )
+		} else {
+			tbl <- tbl[tbl>=2]
+		}
+
+		for( remVal in as.integer(names(tbl)) ){
+			segObj <- list( remVal=remVal ,idx=which(aCode==remVal) )
+			segLst[[1+length(segLst)]] <- segObj
+		}
+		names(segLst) <- paste("rem",names(tbl),sep="")
+
+		return( segLst )
+	}
+
+	rObj$lastSeg0 <- NULL	;rObj$lastSeg1 <- NULL
+	if( 0<nrow(stdMI$rawTail) ){
+		segLst <- getRemSeg( stdMI$lastZoid %% 10 )
+		remVal = if( 0==length(segLst) ) integer(0) else sapply( segLst ,function(obj){obj$remVal})
+		segLen = if( 0==length(segLst) ) integer(0) else sapply( segLst ,function(obj){length(obj$idx)})
+		rObj$lastSeg0 <- list( infoMtx=rbind(remVal,segLen)	,segLst=segLst	)
+	}
+	if( 1<nrow(stdMI$rawTail) ){
+		segLst <- getRemSeg( stdMI$rawTail[nrow(stdMI$rawTail)-1,] %% 10 )
+		remVal = if( 0==length(segLst) ) integer(0) else sapply( segLst ,function(obj){obj$remVal})
+		segLen = if( 0==length(segLst) ) integer(0) else sapply( segLst ,function(obj){length(obj$idx)})
+		rObj$lastSeg1 <- list( infoMtx=rbind(remVal,segLen)	,segLst=segLst	)
+	}
+	rObj$checkRemMatch <- function( aRem ,segObj ){
+
+		rVal <- c( num=0 ,len.tot=0 ,len.val=0 )
+			#	num : 매치가 일어난 세그먼트 수
+			#	len.tot : 매치가 일어난 세그먼트들의 길이를 합친 값.
+			#	len.val : rem 값까지 일치한 세그먼트들의 길이를 합친 값.
+
+		if( 0==length(segObj$segLst) ) return( rVal )
+
+		for( lIdx in 1:length(segObj$segLst) ){
+			seg <- segObj$segLst[[lIdx]]
+			if( !bUtil.allSame(aRem[seg$idx]) )	next
+
+			rVal["num"] <- 1 + rVal["num"]
+			rVal["len.tot"] <- length(seg$idx) + rVal["len.tot"]
+
+			if( seg$remVal==aRem[seg$idx[1]] ){
+				rVal["len.val"] <- length(seg$idx) + rVal["len.val"]
+			}
+		}
+
+		return( rVal )
+
+	}
+
+	rObj$zwBanMtx <- NULL
+	if( 1<nrow(stdMI$rawTail) ){
+		banLst <- list()
+		zw <- zMtx[,6]-zMtx[,1]	;names(zw) <- rownames(zMtx)
+		zw.len <- length(zw)
+
+		#	a ... a!
+		banLst[["H0"]] <- c(zw=zw[zw.len] ,c1=zMtx[zw.len,1] )
+
+		if( 2<=zw.len ){	#	a, a ... a!
+			banLst[["H1"]] <- c(zw=zw[zw.len-1] ,c1=zMtx[zw.len-1,1] )
+		}
+
+		if( 3<=zw.len ){	cur <- list( zw=zw[zw.len-2] ,c1=zMtx[zw.len-2,1] )
+
+			#	b, a, a ... b!
+			if( (cur$zw!=zw[zw.len]) && (zw[zw.len]==zw[zw.len-1]) ){
+				banLst[["H2.a"]] <- c(zw=cur$zw ,c1=cur$c1 )
+			}
+			#	b, a, b ... a!
+			if( (cur$zw!=zw[zw.len]) && (zw[zw.len]==zw[zw.len-1]) ){
+				banLst[["H2.b"]] <- banLst[["H0"]]
+			}
+			#	a, a, a ... a!
+			if( (cur$zw==zw[zw.len]) && (cur$zw==zw[zw.len-1]) ){
+				banLst[["H2.c"]] <- banLst[["H0"]]
+			}
+			#	a, a, b ... b!
+			if( (zw[zw.len-2]==zw[zw.len-1]) ){
+				banLst[["H2.d"]] <- banLst[["H0"]]
+			}
+		}
+
+		if( 4<=zw.len ){	cur <- list( zw=zw[zw.len-3] ,c1=zMtx[zw.len-3,1] )
+			#	b, a, *, a ... b!
+			if( (zw[zw.len]==zw[zw.len-2]) ){
+				banLst[["H3.a"]] <- c(zw=cur$zw ,c1=cur$c1 )
+			}
+			#	b, *, b, * ... b!
+			if( (zw[zw.len-1]==zw[zw.len-3]) ){
+				banLst[["H3.b"]] <- c(zw=cur$zw ,c1=cur$c1 )
+			}
+			#	a, a, a, b ... b!
+			if( all(zw[zw.len-1:2]==zw[zw.len-2:3]) ){
+				banLst[["H3.c"]] <- banLst[["H0"]]
+			}
+		}
+
+		if( 5<=zw.len ){	cur <- list( zw=zw[zw.len-4] ,c1=zMtx[zw.len-4,1] )
+			#	b, a, c, c, a ... b!
+			if( (zw[zw.len]==zw[zw.len-3]) && (zw[zw.len-1]==zw[zw.len-2]) ){
+				banLst[["H4.a"]] <- c(zw=cur$zw ,c1=cur$c1 )
+			}
+			#	a, c, b, a, c ... b!
+			if( (zw[zw.len-2]==zw[zw.len-4]) && (zw[zw.len-1]==zw[zw.len-3]) ){
+				banLst[["H4.b"]] <- c(zw=cur$zw ,c1=cur$c1 )
+			}
+		}
+
+		if( 6<=zw.len ){	cur <- list( zw=zw[zw.len-5] ,c1=zMtx[zw.len-5,1] )
+			#	b, a, c, *, c, a ... b!
+			if( all(zw[zw.len-c(0,1)]==zw[zw.len-c(4,3)]) ){
+				banLst[["H5.a"]] <- c(zw=cur$zw ,c1=cur$c1 )
+			}
+			#	b, *, a, *, a, * ... b!
+			if( (zw[zw.len-1]==zw[zw.len-3]) ){
+				banLst[["H5.b"]] <- c(zw=cur$zw ,c1=cur$c1 )
+			}
+			#	a, *, a, *, b, * ... b!
+			if( (zw[zw.len-3]==zw[zw.len-5]) ){
+				banLst[["H5.b"]] <- c(zw=cur$zw ,c1=cur$c1 )
+			}
+		}
+
+		if( 7<=zw.len ){	cur <- list( zw=zw[zw.len-6] ,c1=zMtx[zw.len-6,1] )
+			#	b, a, c, d, d, c, a ... b!
+			if( all(zw[zw.len-0:2]==zw[zw.len-5:3]) ){
+				banLst[["H6.a"]] <- c(zw=cur$zw ,c1=cur$c1 )
+			}
+			#	a, c, b, *, *, a, c ... b!
+			if( all(zw[zw.len-1:0]==zw[zw.len-6:5]) ){
+				banLst[["H6.b"]] <- c(zw=cur$zw ,c1=cur$c1 )
+			}
+		}
+
+		# -------------------------------------------------------------------------
+		zwMtx <- do.call( rbind ,banLst )
+		colnames(zwMtx) <- c("zw","c1")
+		fndPtn <- rownames( zwMtx )
+
+		zwBanLst <- list()
+		for( zwIdx in unique(zwMtx[,"zw"]) ){
+			zwFlag <- zwMtx[,"zw"]==zwIdx
+			for( c1Idx in unique(zwMtx[zwFlag,"c1"]) ){
+				c1Flag <- zwMtx[,"c1"]==c1Idx
+				zwBanLst[[1+length(zwBanLst)]] <- c( zw=zwIdx ,c1=c1Idx 
+														,zwCnt=sum(zwFlag) ,c1Cnt=sum(zwFlag&c1Flag) 
+													)
+			}
+		}
+
+		rObj$zwBanMtx <- do.call(rbind,zwBanLst)
+	}
+
+
+	rObj$fMtxObj <- function( aZoidMtx ,makeInfoStr=F ){
+		#	aZoidMtx <- gEnv$allZoidMtx[c(stdIdx,sample(10:nrow(gEnv$allZoidMtx),19)) ,] ;makeInfoStr=T
+
+		aLen <- nrow(aZoidMtx)
+		cName <- c(	"rem0.num" ,"rem0.len.tot" ,"rem0.len.val"
+					,"rem1.num" ,"rem1.len.tot" ,"rem1.len.val"
+					,"zwNum","zwC1Num"
+				)
+		scoreMtx <- matrix( 0, nrow=aLen, ncol=length(cName) )	;colnames(scoreMtx) <- cName
+
+		infoMtx <- NULL
+		if( makeInfoStr ){
+			cName <- c( "zMtx.size" )
+			infoMtx <- matrix( "" ,nrow=aLen ,ncol=length(cName) )	;colnames(infoMtx) <- cName
+			infoMtx[,"zMtx.size"] <- rObj$zMtx.size
+		}
+		if( 0==rObj$zMtx.size ){
+			return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
+		}
+
+		if( is.null(rObj$rawBan) ){ # stdMIObj$zMtx 데이터가 부족한 상태
+			return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
+		}
+
+		for( aIdx in 1:aLen ){
+			aZoid <- aZoidMtx[aIdx,]
+			aRem <- aZoid %% 10
+			# aCStep <- aZoid[2:6] - aZoid[1:5]	;aFStep <- aZoid - rObj$lastZoid
+
+			rVal <- rObj$checkRemMatch( aRem ,rObj$lastSeg0 )
+			scoreMtx[aIdx,"rem0.num"] 	<- rVal["num"]
+			scoreMtx[aIdx,"rem0.len.tot"] 	<- rVal["len.tot"]
+			scoreMtx[aIdx,"rem0.len.val"] 	<- rVal["len.val"]
+
+			rVal <- rObj$checkRemMatch( aRem ,rObj$lastSeg1 )
+			scoreMtx[aIdx,"rem1.num"] 	<- rVal["num"]
+			scoreMtx[aIdx,"rem1.len.tot"] 	<- rVal["len.tot"]
+			scoreMtx[aIdx,"rem1.len.val"] 	<- rVal["len.val"]
+
+			zw <- aZoid[6] - aZoid[1]
+			flag <- rObj$zwBanMtx[,"zw"]==zw
+			if( any(flag) ){
+				fIdx <- which(flag)
+				scoreMtx[aIdx,"zwNum"] 	<- rObj$zwBanMtx[fIdx,"zwCnt"][1]
+
+				if( aZoid[1] %in% rObj$zwBanMtx[fIdx,"c1"] ){
+					flag <- aZoid[1] %in% rObj$zwBanMtx[fIdx,"c1"]
+					scoreMtx[aIdx,"zwC1Num"] 	<- rObj$zwBanMtx[fIdx[flag],"c1Cnt"]
+				}
+			}
+
+			# if( makeInfoStr ){ }
+		}
+
+		# for( idx in 1:4 ){	# c3.x
+		# 	logId <- sprintf("c3%d",idx)
+		# 	scoreMtx[,logId] <- rObj$cInfo$mat3Lst[[logId]]$match( aZoidMtx[,0:2+idx,drop=F] )
+		# }
+
+		return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
+	}
+
+	return( rObj )
+
+} # bFMtx.score1( )
 
 
 bFMtx.score2 <- function( stdMIObj ){
@@ -1485,216 +1723,6 @@ bFMtx.score9 <- function( stdMIObj ){
 } # bFMtx.score9( )
 
 
-
-#	fCutU.getFiltObjPair( stdMI$fStepTail )
-bFMtx.score1 <- function( stdMIObj ){
-	#	stdMIObj <- stdMI.grp$basic$basic
-	stdMI <- stdMIObj$stdMI
-	zMtx <- stdMIObj$zMtx
-	rObj <- list( 	idStr="score1"	,zMtx.size=nrow(zMtx)
-					,lastZoid=stdMI$lastZoid
-				)
-
-	getRemSeg <- function( aCode ){
-
-		segLst <- list()
-
-		tbl <- table(aCode)
-		if( all(tbl<2) ){
-			return( segLst )
-		} else {
-			tbl <- tbl[tbl>=2]
-		}
-
-		for( remVal in as.integer(names(tbl)) ){
-			segObj <- list( remVal=remVal ,idx=which(aCode==remVal) )
-			segLst[[1+length(segLst)]] <- segObj
-		}
-		names(segLst) <- paste("rem",names(tbl),sep="")
-
-		return( segLst )
-	}
-
-	rObj$lastSeg0 <- NULL	;rObj$lastSeg1 <- NULL
-	if( 0<nrow(stdMI$rawTail) ){
-		segLst <- getRemSeg( stdMI$lastZoid %% 10 )
-		remVal = if( 0==length(segLst) ) integer(0) else sapply( segLst ,function(obj){obj$remVal})
-		segLen = if( 0==length(segLst) ) integer(0) else sapply( segLst ,function(obj){length(obj$idx)})
-		rObj$lastSeg0 <- list( infoMtx=rbind(remVal,segLen)	,segLst=segLst	)
-	}
-	if( 1<nrow(stdMI$rawTail) ){
-		segLst <- getRemSeg( stdMI$rawTail[nrow(stdMI$rawTail)-1,] %% 10 )
-		remVal = if( 0==length(segLst) ) integer(0) else sapply( segLst ,function(obj){obj$remVal})
-		segLen = if( 0==length(segLst) ) integer(0) else sapply( segLst ,function(obj){length(obj$idx)})
-		rObj$lastSeg1 <- list( infoMtx=rbind(remVal,segLen)	,segLst=segLst	)
-	}
-	rObj$checkRemMatch <- function( aRem ,segObj ){
-
-		rVal <- c( num=0 ,len.tot=0 ,len.val=0 )
-			#	num : 매치가 일어난 세그먼트 수
-			#	len.tot : 매치가 일어난 세그먼트들의 길이를 합친 값.
-			#	len.val : rem 값까지 일치한 세그먼트들의 길이를 합친 값.
-
-		if( 0==length(segObj$segLst) ) return( rVal )
-
-		for( lIdx in 1:length(segObj$segLst) ){
-			seg <- segObj$segLst[[lIdx]]
-			if( !bUtil.allSame(aRem[seg$idx]) )	next
-
-			rVal["num"] <- 1 + rVal["num"]
-			rVal["len.tot"] <- length(seg$idx) + rVal["len.tot"]
-
-			if( seg$remVal==aRem[seg$idx[1]] ){
-				rVal["len.val"] <- length(seg$idx) + rVal["len.val"]
-			}
-		}
-
-		return( rVal )
-
-	}
-
-	rObj$zwBanMtx <- NULL
-	if( 1<nrow(stdMI$rawTail) ){
-		banLst <- list()
-		zw <- zMtx[,6]-zMtx[,1]	;names(zw) <- rownames(zMtx)
-		zw.len <- length(zw)
-
-		#	a ... a!
-		banLst[["H0"]] <- c(zw=zw[zw.len] ,c1=zMtx[zw.len,1] )
-
-		if( 2<=zw.len ){	#	a, a ... a!
-			banLst[["H1"]] <- c(zw=zw[zw.len-1] ,c1=zMtx[zw.len-1,1] )
-		}
-
-		if( 3<=zw.len ){	cur <- list( zw=zw[zw.len-2] ,c1=zMtx[zw.len-2,1] )
-
-			#	b, a, a ... b!
-			if( (cur$zw!=zw[zw.len]) && (zw[zw.len]==zw[zw.len-1]) ){
-				banLst[["H2.a"]] <- c(zw=cur$zw ,c1=cur$c1 )
-			}
-			#	b, a, b ... a!
-			if( (cur$zw!=zw[zw.len]) && (zw[zw.len]==zw[zw.len-1]) ){
-				banLst[["H2.b"]] <- banLst[["H0"]]
-			}
-			#	a, a, a ... a!
-			if( (cur$zw==zw[zw.len]) && (cur$zw==zw[zw.len-1]) ){
-				banLst[["H2.c"]] <- banLst[["H0"]]
-			}
-		}
-
-		if( 4<=zw.len ){	cur <- list( zw=zw[zw.len-3] ,c1=zMtx[zw.len-3,1] )
-			#	b, a, *, a ... b!
-			if( (zw[zw.len]==zw[zw.len-2]) ){
-				banLst[["H3.a"]] <- c(zw=cur$zw ,c1=cur$c1 )
-			}
-			#	b, *, b, * ... b!
-			if( (zw[zw.len-1]==zw[zw.len-3]) ){
-				banLst[["H3.b"]] <- c(zw=cur$zw ,c1=cur$c1 )
-			}
-		}
-
-		if( 5<=zw.len ){	cur <- list( zw=zw[zw.len-4] ,c1=zMtx[zw.len-4,1] )
-			#	b, a, c, c, a ... b!
-			if( (zw[zw.len]==zw[zw.len-3]) && (zw[zw.len-1]==zw[zw.len-2]) ){
-				banLst[["H4.a"]] <- c(zw=cur$zw ,c1=cur$c1 )
-			}
-			#	a, c, b, a, c ... b!
-			if( (zw[zw.len-2]==zw[zw.len-4]) && (zw[zw.len-1]==zw[zw.len-3]) ){
-				banLst[["H4.b"]] <- c(zw=cur$zw ,c1=cur$c1 )
-			}
-		}
-
-		if( 6<=zw.len ){	cur <- list( zw=zw[zw.len-5] ,c1=zMtx[zw.len-5,1] )
-			#	b, a, c, *, c, a ... b!
-			if( all(zw[zw.len-c(0,1)]==zw[zw.len-c(4,3)]) ){
-				banLst[["H5.a"]] <- c(zw=cur$zw ,c1=cur$c1 )
-			}
-			#	b, *, a, *, a, * ... b!
-			if( (zw[zw.len-1]==zw[zw.len-3]) ){
-				banLst[["H5.b"]] <- c(zw=cur$zw ,c1=cur$c1 )
-			}
-		}
-
-		if( 7<=zw.len ){	cur <- list( zw=zw[zw.len-6] ,c1=zMtx[zw.len-6,1] )
-			#	b, a, c, d, d, c, a ... b!
-			if( all(zw[zw.len-0:2]==zw[zw.len-5:3]) ){
-				banLst[["H6.a"]] <- c(zw=cur$zw ,c1=cur$c1 )
-			}
-			#	a, c, b, *, *, a, c ... b!
-			if( all(zw[zw.len-1:0]==zw[zw.len-6:5]) ){
-				banLst[["H6.b"]] <- c(zw=cur$zw ,c1=cur$c1 )
-			}
-		}
-
-		# -------------------------------------------------------------------------
-		zwMtx <- do.call( rbind ,banLst )
-		colnames(zwMtx) <- c("zw","c1")
-		fndPtn <- rownames( zwMtx )
-
-		zwBanLst <- list()
-		for( zwIdx in unique(zwMtx[,"zw"]) ){
-			zwFlag <- zwMtx[,"zw"]==zwIdx
-			for( c1Idx in unique(zwMtx[zwFlag,"c1"]) ){
-				c1Flag <- zwMtx[,"c1"]==c1Idx
-				zwBanLst[[1+length(zwBanLst)]] <- c( zw=zwIdx ,c1=c1Idx 
-														,zwCnt=sum(zwFlag) ,c1Cnt=sum(zwFlag&c1Flag) 
-													)
-			}
-		}
-
-		rObj$zwBanMtx <- do.call(rbind,zwBanLst)
-	}
-
-
-	rObj$fMtxObj <- function( aZoidMtx ,makeInfoStr=F ){
-		#	aZoidMtx <- gEnv$allZoidMtx[c(stdIdx,sample(10:nrow(gEnv$allZoidMtx),19)) ,] ;makeInfoStr=T
-
-		aLen <- nrow(aZoidMtx)
-		cName <- c(	"rCnt","rD2","rDn","rLr","rRl"
-				)
-		scoreMtx <- matrix( 0, nrow=aLen, ncol=length(cName) )	;colnames(scoreMtx) <- cName
-
-		infoMtx <- NULL
-		if( makeInfoStr ){
-			cName <- c( "zMtx.size" )
-			infoMtx <- matrix( "" ,nrow=aLen ,ncol=length(cName) )	;colnames(infoMtx) <- cName
-			infoMtx[,"zMtx.size"] <- rObj$zMtx.size
-		}
-		if( 0==rObj$zMtx.size ){
-			return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
-		}
-
-		if( is.null(rObj$rawBan) ){ # stdMIObj$zMtx 데이터가 부족한 상태
-			return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
-		}
-
-		for( aIdx in 1:aLen ){
-			aZoid <- aZoidMtx[aIdx,]
-			aRem <- aZoid %% 10
-			# aCStep <- aZoid[2:6] - aZoid[1:5]	;aFStep <- aZoid - rObj$lastZoid
-
-			rVal <- rObj$checkRemMatch( aRem ,rObj$lastSeg0 )
-
-			rVal <- rObj$checkRemMatch( aRem ,rObj$lastSeg1 )
-
-			scoreMtx[aIdx,"seg0."] 	<- banR$cnt
-
-			banR <- rObj$checkBan( aZoid ,rObj$rawBan )
-
-			# if( makeInfoStr ){ }
-		}
-
-		# for( idx in 1:4 ){	# c3.x
-		# 	logId <- sprintf("c3%d",idx)
-		# 	scoreMtx[,logId] <- rObj$cInfo$mat3Lst[[logId]]$match( aZoidMtx[,0:2+idx,drop=F] )
-		# }
-
-		return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
-	}
-
-	return( rObj )
-
-} # bFMtx.score1( )
 
 
 
