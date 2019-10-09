@@ -1021,8 +1021,7 @@ bFCust.byHIdx_A_score9 <- function( ){
 
 			return( rCutId )
 		}
-		# cutterObj$cutLst[["F_colMat"]] <- function( scoreMtx ,chkEvt=NULL ){
-		F_colMat <- function( scoreMtx ,chkEvt=NULL ){
+		cutterObj$cutLst[["F_colMat"]] <- function( scoreMtx ,chkEvt=NULL ){
 
 			rCutId <- character(0)
 
@@ -1045,7 +1044,7 @@ bFCust.byHIdx_A_score9 <- function( ){
 			}
 
 			# raw match -------------------------------------------
-			surWindow <- c(min=0,max=4)	# survive window
+			surWindow <- c(min=0,max=5)	# survive window
 			for( cIdx in 2:ncol(scoreMtx) ){
 
 				matCnt <- sum( scoreMtx[,cIdx-1]!=scoreMtx[,cIdx] )
@@ -1058,21 +1057,20 @@ bFCust.byHIdx_A_score9 <- function( ){
 			return( rCutId )
 		}
 		# - custom --------------------------------------------------
-		# cutterObj$cutLst[["F_hpnInfo"]] <- function( scoreMtx ,chkEvt ){	# working
-		F_hpnInfo <- function( scoreMtx ,chkEvt ){	# working
+		cutterObj$cutLst[["F_hpnInfo"]] <- function( scoreMtx ,chkEvt ){	# working
 			rCutId <- character(0)
 
 			# Hpn(18*13) -------------------------------------------
 			tot <- chkEvt$hpnInfo$tot
-			surWindow <- c(min=1,max=12)
+			surWindow <- c(min=1,max=24)
 			if( !bUtil.in(tot,surWindow) ) rCutId <- c( rCutId, sprintf("HpnTot.%d(%d~%d)",tot,surWindow["min"],surWindow["max"]) )
 
 			tot <- sum(chkEvt$hpnInfo$fCol==0)
-			surWindow <- c(min=8,max=13)
+			surWindow <- c(min=10,max=19)
 			if( !bUtil.in(tot,surWindow) ) rCutId <- c( rCutId, sprintf("HpnFCol.%d(%d~%d)",tot,surWindow["min"],surWindow["max"]) )
 
 			tot <- sum(chkEvt$hpnInfo$phase==0)
-			surWindow <- c(min=6,max=12)
+			surWindow <- c(min=2,max=12)
 			if( !bUtil.in(tot,surWindow) ) rCutId <- c( rCutId, sprintf("HpnPh.%d(%d~%d)",tot,surWindow["min"],surWindow["max"]) )
 
 			# Hpn Last-----------------------------------------
@@ -1111,12 +1109,12 @@ bFCust.byHIdx_A_score9 <- function( ){
 			cnt.fCol <- sum(hpnInfo.c$fCol!=hpnInfo.l$fCol)
 			cnt.phase <- sum(hpnInfo.c$phase!=hpnInfo.l$phase)
 
-			surWindow <- c(min=1,max=7)
+			surWindow <- c(min=0,max=11)
 			if( !bUtil.in(cnt.fCol,surWindow) ) rCutId <- c( rCutId, sprintf("cnt.fCol.%d(%d~%d)",cnt.fCol,surWindow["min"],surWindow["max"]) )
-			surWindow <- c(min=3,max=10)
+			surWindow <- c(min=2,max=11)
 			if( !bUtil.in(cnt.phase,surWindow) ) rCutId <- c( rCutId, sprintf("cnt.phase.%d(%d~%d)",cnt.phase,surWindow["min"],surWindow["max"]) )
 
-			surWindow <- c(min=6,max=15)
+			surWindow <- c(min=2,max=21)
 			tot <- sum(cnt.fCol+cnt.phase)
 			if( !bUtil.in(tot,surWindow) ) rCutId <- c( rCutId, sprintf("HpnXY.%d(%d~%d)",tot,surWindow["min"],surWindow["max"]) )
 
@@ -1143,19 +1141,6 @@ bFCust.byHIdx_A_score9 <- function( ){
 			tot <- sum(FV0Flg)
 			surWin <- c(min=9,max=13)
 			if( !bUtil.in(tot,surWin) ) rCutId <- c( rCutId, sprintf("FV0Hpn.%d(%d~%d)",tot,surWin["min"],surWin["max"]) )
-			FV1Flg <- apply( scoreMtx[FVCol,] ,2 ,function(cVal){ all(cVal==1) })
-			tot <- sum(FV1Flg)
-			surWin <- c(min=0,max=2)
-			if( !bUtil.in(tot,surWin) ) rCutId <- c( rCutId, sprintf("FV1Hpn.%d(%d~%d)",tot,surWin["min"],surWin["max"]) )
-			FV2Cnt <- apply( scoreMtx[FVCol,] ,2 ,function(cVal){ sum(cVal==2) })
-			tot <- sum(FV2Cnt>0)
-			surWin <- c(min=0,max=1)
-			if( !bUtil.in(tot,surWin) ) rCutId <- c( rCutId, sprintf("FV2Hpn.%d(%d~%d)",tot,surWin["min"],surWin["max"]) )
-			FV3Cnt <- apply( scoreMtx[FVCol,] ,2 ,function(cVal){ sum(cVal==3) })
-			tot <- sum(FV3Cnt>0)
-			surWin <- c(min=0,max=0)
-			if( !bUtil.in(tot,surWin) ) rCutId <- c( rCutId, sprintf("FV3Hpn.%d(%d~%d)",tot,surWin["min"],surWin["max"]) )
-
 
 			return( rCutId )
 		}
