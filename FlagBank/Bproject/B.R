@@ -26,40 +26,6 @@ if( FALSE ){ # report sample
 if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
 
     names(fRstLst) <- names(allIdxLst$stdFiltedCnt)
-    get_testData.grp <- function( testSpan ,gEnv ,allIdxLst ,fRstLst ,tgt.scMtx=NULL ){
-
-        curHMtxLst.grp <- list( )
-        stdIdx.grp <- list()
-
-        tStmp <- Sys.time()
-        for( curHIdx in testSpan ){    # curHIdx <- testSpan[1] # 842
-
-            wLastH <-curHIdx-1
-            wLastSpan <- 1:which(names(fRstLst)==wLastH)
-
-            # ------------------------------------------------------------------------
-            # curHMtxLst.grp
-            gEnv.w <- gEnv              ;gEnv.w$zhF <- gEnv$zhF[1:wLastH,]
-            allIdxLst.w <- allIdxLst    ;allIdxLst.w$stdFiltedCnt <- allIdxLst$stdFiltedCnt[wLastSpan]
-                                        allIdxLst.w$infoMtx <- allIdxLst$infoMtx[wLastSpan,]
-            fRstLst.w <- fRstLst[wLastSpan]
-
-            curHMtxLst <- B.makeHMtxLst( gEnv.w, allIdxLst.w, fRstLst.w, tgt.scMtx )   
-
-            curHMtxLst.grp[[as.character(curHIdx)]] <- curHMtxLst
-
-            # ------------------------------------------------------------------------
-            # stdIdx.grp
-            stdZoid <- gEnv$zhF[curHIdx,]
-            stdIdx <- k.getIdx_AllZoidMtx( gEnv, stdZoid )
-            stdIdx.grp[[as.character(curHIdx)]] <- stdIdx
-        }
-        tDiff <- Sys.time() - tStmp
-        cat(sprintf("time : %.1f,%s   \n",tDiff,units(tDiff)))
-
-        return( list(curHMtxLst.grp=curHMtxLst.grp ,stdIdx.grp=stdIdx.grp) )
-    }
-
 
     tgt.scMtx <-        # default : NULL   하도 실수가 잦아서 일부러 문법 오류로 놔둔다.. -_-;
 
@@ -71,7 +37,7 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
 
 
     testSpan <- (lastH - 18:0)   # configH 보다는 큰 시점에서 시작해야 함을 유의.
-    testData.grp <- get_testData.grp( testSpan ,gEnv ,allIdxLst ,fRstLst ,tgt.scMtx=tgt.scMtx)  # 반복 테스트를 위한 속도향상
+    testData.grp <- B.get_testData.grp( testSpan ,gEnv ,allIdxLst ,fRstLst ,tgt.scMtx=tgt.scMtx)  # 반복 테스트를 위한 속도향상
     #   save( testData.grp ,file="Obj_testData.grp.save" )
     #   load( "Obj_testData.grp.save" )
 

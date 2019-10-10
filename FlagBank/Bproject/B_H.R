@@ -519,3 +519,37 @@ B.rptCutRstLst <- function( cutRstLst ,file="cutRstLst" ){
 } # B.rptCutRstLst()
 
 
+B.get_testData.grp <- function( testSpan ,gEnv ,allIdxLst ,fRstLst ,tgt.scMtx=NULL ){
+
+    curHMtxLst.grp <- list( )
+    stdIdx.grp <- list()
+
+    tStmp <- Sys.time()
+    for( curHIdx in testSpan ){    # curHIdx <- testSpan[1] # 842
+
+        wLastH <-curHIdx-1
+        wLastSpan <- 1:which(names(fRstLst)==wLastH)
+
+        # ------------------------------------------------------------------------
+        # curHMtxLst.grp
+        gEnv.w <- gEnv              ;gEnv.w$zhF <- gEnv$zhF[1:wLastH,]
+        allIdxLst.w <- allIdxLst    ;allIdxLst.w$stdFiltedCnt <- allIdxLst$stdFiltedCnt[wLastSpan]
+                                    allIdxLst.w$infoMtx <- allIdxLst$infoMtx[wLastSpan,]
+        fRstLst.w <- fRstLst[wLastSpan]
+
+        curHMtxLst <- B.makeHMtxLst( gEnv.w, allIdxLst.w, fRstLst.w, tgt.scMtx )   
+
+        curHMtxLst.grp[[as.character(curHIdx)]] <- curHMtxLst
+
+        # ------------------------------------------------------------------------
+        # stdIdx.grp
+        stdZoid <- gEnv$zhF[curHIdx,]
+        stdIdx <- k.getIdx_AllZoidMtx( gEnv, stdZoid )
+        stdIdx.grp[[as.character(curHIdx)]] <- stdIdx
+    }
+    tDiff <- Sys.time() - tStmp
+    cat(sprintf("time : %.1f,%s   \n",tDiff,units(tDiff)))
+
+    return( list(curHMtxLst.grp=curHMtxLst.grp ,stdIdx.grp=stdIdx.grp) )
+}
+
