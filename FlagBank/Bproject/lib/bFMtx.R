@@ -242,7 +242,7 @@ bFMtx.score1 <- function( stdMIObj ){
 			rVal["num"] <- 1 + rVal["num"]
 			rVal["len.tot"] <- length(seg$idx) + rVal["len.tot"]
 
-			if( seg$remVal==aCode[seg$idx[1]] ){
+			if( seg$val==aCode[seg$idx[1]] ){
 				rVal["len.val"] <- length(seg$idx) + rVal["len.val"]
 			}
 		}
@@ -378,7 +378,7 @@ bFMtx.score1 <- function( stdMIObj ){
 			return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
 		}
 
-		if( is.null(rObj$rawBan) ){ # stdMIObj$zMtx 데이터가 부족한 상태
+		if( is.null(rObj$lastSeg0) ){ # stdMIObj$zMtx 데이터가 부족한 상태
 			return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
 		}
 
@@ -433,7 +433,7 @@ bFMtx.score1 <- function( stdMIObj ){
 				scoreMtx[aIdx,"zwNum"] 	<- rObj$zwBanMtx[fIdx,"zwCnt"][1]
 
 				if( aZoid[1] %in% rObj$zwBanMtx[fIdx,"c1"] ){
-					flag <- aZoid[1] %in% rObj$zwBanMtx[fIdx,"c1"]
+					flag <- rObj$zwBanMtx[fIdx,"c1"] %in% aZoid[1]
 					scoreMtx[aIdx,"zwC1Num"] 	<- rObj$zwBanMtx[fIdx[flag],"c1Cnt"]
 				}
 			}
