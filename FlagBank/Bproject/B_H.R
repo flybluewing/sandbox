@@ -34,6 +34,7 @@ B.makeHMtxLst <- function( gEnv, allIdxLst, fRstLst ,tgt.scMtx=NULL ,lastH=NULL 
     }
 
     scoreMtxLst <- list()
+    bScrMtxLst <- list()
     for( sfcIdx in names(sfcHLst) ){    # sfcIdx <- names(sfcHLst)[2]
 
         scoreMtx.grp.lst <- list( )
@@ -51,8 +52,7 @@ B.makeHMtxLst <- function( gEnv, allIdxLst, fRstLst ,tgt.scMtx=NULL ,lastH=NULL 
             scoreMtx.grp.lst[[sprintf("hIdx:%d",hIdx)]] <- scoreMtx.grp
         }
 
-        # scoreMtx.grp.lst의 데이터를 히스토리 MTX 형태로 변환해서 저장.
-        #       mf나 bDup는 sfcHLst를 통해 H 파악.(아마 basic내 basic만 의미있겠지..)
+        # basicHMtxLst : scoreMtx.grp.lst의 데이터를 히스토리 MTX 형태로 변환해서 저장.
         basicHMtxLst <- list()
         scoreMtxNames <- names(scoreMtx.grp.lst[[1]]$basic[[1]]) # 필터링이 아닌 H를 보려하는 것이므로 basic만 다룬다.
         for( nIdx in names(scoreMtx.grp.lst[[1]]$basic) ){ # nIdx<-names(scoreMtx.grp.lst[[1]]$basic)[1]
@@ -83,7 +83,31 @@ B.makeHMtxLst <- function( gEnv, allIdxLst, fRstLst ,tgt.scMtx=NULL ,lastH=NULL 
             basicHMtxLst[[nIdx]] <- mtxLst
         }
 
+        # bScrHMtxLst : scoreMtx.grp.lst의 데이터를 히스토리 MTX 형태로 변환해서 저장.
+        bScrHMtxLst <- list()
+        bScrMtxName <- names(scoreMtx.grp.lst[[1]]$mf) # 필터링이 아닌 H를 보려하는 것이므로 basic만 다룬다.
+        for( mName in bScrMtxName ){    # mName <- bScrMtxName[1]
+            scoreMtx <- NULL    ;infoMtx<-NULL
+            for( rIdx in seq_len(length(scoreMtx.grp.lst)) ){
+                scoreObj <- scoreMtx.grp.lst[[rIdx]]$mf[[mName]]
+                scoreMtx <- rbind( scoreMtx ,scoreObj$scoreMtx[1,] )
+                if( any(is.na(scoreObj$scoreMtx[1,])) ){
+                    hStr <- sfcHLst[[sfcIdx]][rIdx]
+                    colStr <- paste( names(scoreObj$scoreMtx[1,])[which(is.na(scoreObj$scoreMtx[1,]))],collapse=",")
+                    k.FLogStr(sprintf("WARN : NA - %s, %s, %s(%s), %s",sfcIdx,nIdx,smnIdx,colStr,hStr)
+                                ,pConsole=T
+                            )
+                }
+                if( !is.null(scoreObj$infoMtx) ){
+                    infoMtx <- rbind( infoMtx ,scoreObj$infoMtx[1,] )
+                }
+            }
+
+            bScrHMtxLst[[mName]] <- list( scoreMtx=scoreMtx ,infoMtx=infoMtx )
+        }
+
         scoreMtxLst[[sfcIdx]] <- basicHMtxLst
+        bScrMtxLst[[sfcIdx]] <- bScrHMtxLst
     }
 
     mtxInfoLst <- lapply( scoreMtxLst[[1]][[1]] ,function( pLst ){
@@ -91,26 +115,10 @@ B.makeHMtxLst <- function( gEnv, allIdxLst, fRstLst ,tgt.scMtx=NULL ,lastH=NULL 
                     })
     phaseName <- names(scoreMtxLst[[1]])
 
-
-    # sfcLate monoSMtx
-    for( hIdx in sfcHLst[["sfcLate"]] ){   # hIdx <- sfcHLst[["sfcLate"]][1]
-        stdZoid <- gEnv$zhF[hIdx ,]
-        wEnv <- gEnv
-        wEnv$zhF <- gEnv$zhF[1:(hIdx-1),]
-
-        # fRstLst.w <- fRstLst[as.character(fRstLst.hSpan[fRstLst.hSpan<hIdx])]
-
-        # stdMI.grp <- bUtil.getStdMILst( wEnv ,fRstLst.w )
-        # filter.grp <- getFilter.grp( stdMI.grp ,tgt.scMtx )
-
-        # scoreMtx.grp <- getScoreMtx.grp.4H( stdZoid ,filter.grp )
-        # scoreMtx.grp.lst[[sprintf("hIdx:%d",hIdx)]] <- scoreMtx.grp
-    }
-
-
     rObj <- list( sfcHLst=sfcHLst ,lastH=lastH
                     ,mtxInfoLst=mtxInfoLst  ,phaseName=phaseName
                     ,scoreMtxLst=scoreMtxLst 
+                    ,mfMtxLst=bScrMtxLst
                 )
     rObj$getScoreMtxObj <- function( hName, mName, pName ){
         return( rObj$scoreMtxLst[[hName]][[pName]][[mName]] )
@@ -274,6 +282,29 @@ B.rptHMtxLst <- function( hMtxLst ){
                 mtx <- byHIdx[[hnIdx]][[mnIdx]][[hIdx]]
                 colnames(mtx) <- getShortPhaseName( colnames(mtx) )
                 wLog$fLogMtx( mtx )
+            }
+        }
+    }
+
+    # [mf(BScrMtx) ] -----------------------------
+    for( hName in names(hMtxLst$mfMtxLst) ){
+        mfMtxLst <- hMtxLst$mfMtxLst[[hName]]
+        lLst <- lapply( names(mfMtxLst) ,function( mName ){
+                            s <- k.getFlogObj( sprintf("./report/HMtxLst/%d_%s_%s_scoreMtx.txt",hMtxLst$lastH,hName,mName) )
+                            i <- k.getFlogObj( sprintf("./report/HMtxLst/%d_%s_%s_infoMtx.txt",hMtxLst$lastH,hName,mName) )
+                            s$fLogStr( sprintf("%s(hnIdx:%s)",mName,hName) , pTime=T ,pAppend=F )
+                            i$fLogStr( sprintf("%s(hnIdx:%s)",mName,hName) , pTime=T ,pAppend=F )
+                            return( list(s=s,i=i) )
+                        })
+        names(lLst) <- names(mfMtxLst)
+
+        for( mName in names(mfMtxLst) ){
+            scoreMtx <- mfMtxLst[[mName]]$scoreMtx
+            lLst[[mName]]$s$fLogMtx( scoreMtx )
+
+            infoMtx <- mfMtxLst[[mName]]$infoMtx
+            if( !is.null(infoMtx) ){
+                lLst[[mName]]$i$fLogMtx( infoMtx )
             }
         }
     }

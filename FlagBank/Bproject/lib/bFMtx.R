@@ -9,7 +9,8 @@ getScoreMtx.grp.4H <- function( aZoid ,filter.grp ){
 
 } # getScoreMtx.grp.4H()
 
-getScoreMtx.grp <- function( aZoidMtx ,filter.grp ,makeInfoStr=F ,cutter.grp=NULL ,tgt.scMtx=NULL ){
+getScoreMtx.grp <- function( aZoidMtx ,filter.grp ,makeInfoStr=F ){
+	#  ,cutter.grp=NULL ,tgt.scMtx=NULL
 
 	rObj <- list( basic=list() ,bDup=list() ,mf=list() )
 
@@ -37,8 +38,6 @@ getScoreMtx.grp <- function( aZoidMtx ,filter.grp ,makeInfoStr=F ,cutter.grp=NUL
 	for( nIdx.s in names(filter.grp$mf) ){
 		filterObj <- filter.grp$mf[[nIdx.s]]
 		scoreMtxObj <- filterObj$fMtxObj( aZoidMtx ,makeInfoStr=is.null(cutter.grp) )
-
-		#	QQE:todo cutter.grp 적용이 가능하도록 기능 추가할 것.
 		rObj$mf[[nIdx.s]] <- scoreMtxObj
 	}
 
@@ -141,8 +140,16 @@ getFilter.grp <- function( stdMI.grp ,tgt.scMtx=NULL ){
 		return( mtxObjLst )
 	}
 	getBMtxObjLst <- function( stdMIObj ,bScrNames ){
+		#	stdMI.grp$basic$basic
+		bScrLst <- bFMtxB.BScrLst
+		if( 0<length(bScrNames) ){
+			bScrLst <- bScrLst[bScrNames]
+		}
 
-	}
+		bMtxObjLst <- lapply( bScrLst ,function(bScr){ return(bScr(stdMIObj)) })
+		return( bMtxObjLst )
+
+	} # getBMtxObjLst()
 
 
 	rObj <- list()
@@ -152,8 +159,9 @@ getFilter.grp <- function( stdMI.grp ,tgt.scMtx=NULL ){
 
 	rObj$mf <- list()
 	bScrNames <- names(bFMtxB.BScrLst)
-	if( !is.null(tgt.scMtx) )	bScrNames <- intersect( tgt.scMtx ,bScrNames )
-
+	if( !is.null(tgt.scMtx) ){	
+		bScrNames <- intersect( tgt.scMtx ,bScrNames )
+	}
 	rObj$mf <- getBMtxObjLst( stdMI.grp$basic$basic ,bScrNames )
 
 	return( rObj )
