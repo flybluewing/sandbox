@@ -36,7 +36,7 @@ B.makeHMtxLst <- function( gEnv, allIdxLst, fRstLst ,tgt.scMtx=NULL ,lastH=NULL 
     scoreMtxLst <- list()
     for( sfcIdx in names(sfcHLst) ){    # sfcIdx <- names(sfcHLst)[2]
 
-        scoreMtx.grp.lst <- list()
+        scoreMtx.grp.lst <- list( )
         for( hIdx in sfcHLst[[sfcIdx]] ){   # hIdx <- sfcHLst[[sfcIdx]][1]
             stdZoid <- gEnv$zhF[hIdx ,]
             wEnv <- gEnv
@@ -51,10 +51,10 @@ B.makeHMtxLst <- function( gEnv, allIdxLst, fRstLst ,tgt.scMtx=NULL ,lastH=NULL 
             scoreMtx.grp.lst[[sprintf("hIdx:%d",hIdx)]] <- scoreMtx.grp
         }
 
-        #   필터링이 아닌 H를 보려하는 것이므로 basic만 다룬다.
+        # scoreMtx.grp.lst의 데이터를 히스토리 MTX 형태로 변환해서 저장.
         #       mf나 bDup는 sfcHLst를 통해 H 파악.(아마 basic내 basic만 의미있겠지..)
         basicHMtxLst <- list()
-        scoreMtxNames <- names(scoreMtx.grp.lst[[1]]$basic[[1]])
+        scoreMtxNames <- names(scoreMtx.grp.lst[[1]]$basic[[1]]) # 필터링이 아닌 H를 보려하는 것이므로 basic만 다룬다.
         for( nIdx in names(scoreMtx.grp.lst[[1]]$basic) ){ # nIdx<-names(scoreMtx.grp.lst[[1]]$basic)[1]
             mtxLst <- list()
             for( smnIdx in scoreMtxNames ){ # smnIdx <-scoreMtxNames[1]

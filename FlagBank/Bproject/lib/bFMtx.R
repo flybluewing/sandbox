@@ -140,11 +140,21 @@ getFilter.grp <- function( stdMI.grp ,tgt.scMtx=NULL ){
 		names(mtxObjLst) <- sapply(mtxObjLst,function(p){p$idStr})
 		return( mtxObjLst )
 	}
+	getBMtxObjLst <- function( stdMIObj ,bScrNames ){
+
+	}
+
 
 	rObj <- list()
 	rObj$basic <- lapply( stdMI.grp$basic ,getMtxObjLst )
 	rObj$bDup <- lapply( stdMI.grp$bDup ,getMtxObjLst )
-	rObj$mf <- lapply( stdMI.grp$mf ,getMtxObjLst )
+
+
+	rObj$mf <- list()
+	bScrNames <- names(bFMtxB.BScrLst)
+	if( !is.null(tgt.scMtx) )	bScrNames <- intersect( tgt.scMtx ,bScrNames )
+
+	rObj$mf <- getBMtxObjLst( stdMI.grp$basic$basic ,bScrNames )
 
 	return( rObj )
 }

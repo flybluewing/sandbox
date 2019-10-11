@@ -15,6 +15,7 @@ source("../Aproject/lib/ff0_H.R")
 
 source("./lib/bUtil.R")
 source("./lib/bFMtx.R")
+source("./lib/bFBMtx.R")
 source("./lib/FinalCut_H.R")
 
 source("FCust_H.R")
