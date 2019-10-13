@@ -9,7 +9,7 @@ getScoreMtx.grp.4H <- function( aZoid ,filter.grp ){
 
 } # getScoreMtx.grp.4H()
 
-getScoreMtx.grp <- function( aZoidMtx ,filter.grp ,makeInfoStr=F ){
+getScoreMtx.grp <- function( aZoidMtx ,filter.grp ,makeInfoStr=F ,cutter.grp=NULL ,tgt.scMtx=NULL ){
 	#  ,cutter.grp=NULL ,tgt.scMtx=NULL
 
 	rObj <- list( basic=list() ,bDup=list() ,mf=list() )

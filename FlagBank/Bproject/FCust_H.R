@@ -133,6 +133,8 @@ bFCust.getCust <- function(){
 
 	rObj$fLst_1Col <- list()	# check each col value in one row
 	if( TRUE ){
+		rObj$fLst_1Col[[1+length(rObj$fLst_1Col)]] <- bFCust.A_score1_A_A( )
+
 		rObj$fLst_1Col[[1+length(rObj$fLst_1Col)]] <- bFCust.A_score2_A_A( )
 		rObj$fLst_1Col[[1+length(rObj$fLst_1Col)]] <- bFCust.A_score2_A_rebVR( )
 		rObj$fLst_1Col[[1+length(rObj$fLst_1Col)]] <- bFCust.A_score2_A_rebL( )
@@ -181,6 +183,7 @@ bFCust.getCust <- function(){
 
 	rObj$fLst_NCol <- list()	# check by row
 	if( TRUE ){
+		rObj$fLst_NCol[[1+length(rObj$fLst_NCol)]] <- bFCust.A_score1_A_Row01()
 		rObj$fLst_NCol[[1+length(rObj$fLst_NCol)]] <- bFCust.A_score2_A_Row01()
 		rObj$fLst_NCol[[1+length(rObj$fLst_NCol)]] <- bFCust.A_score3_A_Row01()
 		rObj$fLst_NCol[[1+length(rObj$fLst_NCol)]] <- bFCust.A_score4_A_Row01()
@@ -220,6 +223,10 @@ bFCust.getCust <- function(){
 
 	rObj$fLst_rReb <- list()
 	if( TRUE ){
+
+		rObj$fLst_rReb[[1+length(rObj$fLst_rReb)]] <- bFCust.A_score1_A_rReb01()
+		rObj$fLst_rReb[[1+length(rObj$fLst_rReb)]] <- bFCust.A_score1_A_rRebAA()
+
 		rObj$fLst_rReb[[1+length(rObj$fLst_rReb)]] <- bFCust.A_score2_A_rReb01()
 		rObj$fLst_rReb[[1+length(rObj$fLst_rReb)]] <- bFCust.A_score2_A_rRebAA()
 		rObj$fLst_rReb[[1+length(rObj$fLst_rReb)]] <- bFCust.A_score3_A_rReb01()
