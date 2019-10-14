@@ -419,26 +419,26 @@ bFMtx.score1 <- function( stdMIObj ){
 			}
 
 			if( !is.null(rObj$lastSeg0.c) ){
-				rVal <- rObj$checkSegMatch( aRem ,rObj$lastSeg0 )
+				rVal <- rObj$checkSegMatch( aCStep ,rObj$lastSeg0.c )
 				scoreMtx[aIdx,"c0.num"] 	<- rVal["num"]
 				scoreMtx[aIdx,"c0.len.tot"] 	<- rVal["len.tot"]
 				scoreMtx[aIdx,"c0.len.val"] 	<- rVal["len.val"]
 			}
 			if( !is.null(rObj$lastSeg1.c) ){
-				rVal <- rObj$checkSegMatch( aRem ,rObj$lastSeg1 )
+				rVal <- rObj$checkSegMatch( aCStep ,rObj$lastSeg1.c )
 				scoreMtx[aIdx,"c1.num"] 	<- rVal["num"]
 				scoreMtx[aIdx,"c1.len.tot"] 	<- rVal["len.tot"]
 				scoreMtx[aIdx,"c1.len.val"] 	<- rVal["len.val"]
 			}
 
 			if( !is.null(rObj$lastSeg0.f) ){
-				rVal <- rObj$checkSegMatch( aRem ,rObj$lastSeg0 )
+				rVal <- rObj$checkSegMatch( aFStep ,rObj$lastSeg0.f )
 				scoreMtx[aIdx,"f0.num"] 	<- rVal["num"]
 				scoreMtx[aIdx,"f0.len.tot"] 	<- rVal["len.tot"]
 				scoreMtx[aIdx,"f0.len.val"] 	<- rVal["len.val"]
 			}
 			if( !is.null(rObj$lastSeg1.f) ){
-				rVal <- rObj$checkSegMatch( aRem ,rObj$lastSeg1 )
+				rVal <- rObj$checkSegMatch( aFStep ,rObj$lastSeg1.f )
 				scoreMtx[aIdx,"f1.num"] 	<- rVal["num"]
 				scoreMtx[aIdx,"f1.len.tot"] 	<- rVal["len.tot"]
 				scoreMtx[aIdx,"f1.len.val"] 	<- rVal["len.val"]

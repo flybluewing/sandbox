@@ -12,7 +12,7 @@ FCust_score1minMaxLst <- list( "rem0.num"=c(min=0,max=1) ,"rem0.len.tot"=c(min=0
 								,"c0.num"=c(min=0,max=1) ,"c0.len.tot"=c(min=0,max=2) ,"c0.len.val"=c(min=0,max=2)
 								,"c1.num"=c(min=0,max=2) ,"c1.len.tot"=c(min=0,max=4) ,"c1.len.val"=c(min=0,max=2)
 								,"f0.num"=c(min=0,max=1) ,"f0.len.tot"=c(min=0,max=2) ,"f0.len.val"=c(min=0,max=2)
-								,"f1.num"=c(min=0,max=2) ,"f1.len.tot"=c(min=0,max=4) ,"f1.len.val"=c(min=0,max=2)
+								,"f1.num"=c(min=0,max=1) ,"f1.len.tot"=c(min=0,max=2) ,"f1.len.val"=c(min=0,max=2)
 								,"zwNum"=c(min=0,max=1)	,"zwC1Num"=c(min=0,max=1)
 							)
 
@@ -87,7 +87,7 @@ bFCust.A_score1_A_Row01 <- function(  ){
 			crObj$cId <- c( crObj$cId ,sprintf( "<remN.len.tot %d>",remN.len.tot) )
 		}
 		remN.len.val <- sum(smRow[c("rem0.len.val","rem1.len.val")])
-		if( !bUtil.in(remN.len.val,c(min=0,max=3)) ){
+		if( !bUtil.in(remN.len.val,c(min=0,max=2)) ){
 			crObj$cutFlag <- TRUE
 			crObj$cId <- c( crObj$cId ,sprintf( "<remN.len.val %d>",remN.len.val) )
 		}
@@ -99,7 +99,7 @@ bFCust.A_score1_A_Row01 <- function(  ){
 			crObj$cId <- c( crObj$cId ,sprintf( "<cN.len.tot %d>",cN.len.tot) )
 		}
 		cN.len.val <- sum(smRow[c("c0.len.val","c1.len.val")])
-		if( !bUtil.in(cN.len.val,c(min=0,max=3)) ){
+		if( !bUtil.in(cN.len.val,c(min=0,max=2)) ){
 			crObj$cutFlag <- TRUE
 			crObj$cId <- c( crObj$cId ,sprintf( "<cN.len.val %d>",cN.len.val) )
 		}
@@ -111,19 +111,19 @@ bFCust.A_score1_A_Row01 <- function(  ){
 			crObj$cId <- c( crObj$cId ,sprintf( "<fN.len.tot %d>",fN.len.tot) )
 		}
 		fN.len.val <- sum(smRow[c("f0.len.val","f1.len.val")])
-		if( !bUtil.in(fN.len.val,c(min=0,max=3)) ){
+		if( !bUtil.in(fN.len.val,c(min=0,max=2)) ){
 			crObj$cutFlag <- TRUE
 			crObj$cId <- c( crObj$cId ,sprintf( "<fN.len.val %d>",fN.len.val) )
 		}
 
 		lenTotCnt <- remN.len.tot + cN.len.tot + fN.len.tot
-		if( !bUtil.in(lenTotCnt,c(min=0,max=12)) ){
+		if( !bUtil.in(lenTotCnt,c(min=0,max=6)) ){
 			crObj$cutFlag <- TRUE
 			crObj$cId <- c( crObj$cId ,sprintf( "<lenTotCnt %d>",lenTotCnt) )
 		}
 
 		valTotCnt <- remN.len.val + cN.len.val + fN.len.val
-		if( !bUtil.in(valTotCnt,c(min=0,max=6)) ){
+		if( !bUtil.in(valTotCnt,c(min=0,max=2)) ){
 			crObj$cutFlag <- TRUE
 			crObj$cId <- c( crObj$cId ,sprintf( "<valTotCnt %d>",valTotCnt) )
 		}
@@ -138,7 +138,7 @@ bFCust.A_score1_A_Row01 <- function(  ){
 		flag <- smRow[grp0.num]==smRow[grp1.num]
 		flag[smRow[grp0.num]==0] <- FALSE
 		grp.num.cnt <- sum(flag)
-		if( !bUtil.in(grp.num.cnt,c(min=0,max=3)) ){
+		if( !bUtil.in(grp.num.cnt,c(min=0,max=1)) ){
 			crObj$cutFlag <- TRUE
 			crObj$cId <- c( crObj$cId ,sprintf( "<grp.num.cnt %d>",grp.num.cnt) )
 		}
@@ -146,7 +146,7 @@ bFCust.A_score1_A_Row01 <- function(  ){
 		flag <- smRow[grp0.len]==smRow[grp1.len]
 		flag[smRow[grp0.len]==0] <- FALSE
 		grp.len.cnt <- sum(flag)
-		if( !bUtil.in(grp.len.cnt,c(min=0,max=3)) ){
+		if( !bUtil.in(grp.len.cnt,c(min=0,max=1)) ){
 			crObj$cutFlag <- TRUE
 			crObj$cId <- c( crObj$cId ,sprintf( "<grp.len.cnt %d>",grp.len.cnt) )
 		}
@@ -160,7 +160,7 @@ bFCust.A_score1_A_Row01 <- function(  ){
 		}
 
 		grp.cnt <- grp.num.cnt + grp.len.cnt + grp.val.cnt
-		if( !bUtil.in(grp.cnt,c(min=0,max=6)) ){
+		if( !bUtil.in(grp.cnt,c(min=0,max=2)) ){
 			crObj$cutFlag <- TRUE
 			crObj$cId <- c( crObj$cId ,sprintf( "<grp.cnt %d>",grp.cnt) )
 		}
@@ -172,13 +172,13 @@ bFCust.A_score1_A_Row01 <- function(  ){
 		}
 
 		gCnt <- grp.cnt + zwCnt
-		if( !bUtil.in(gCnt,c(min=0,max=6)) ){
+		if( !bUtil.in(gCnt,c(min=0,max=3)) ){
 			crObj$cutFlag <- TRUE
 			crObj$cId <- c( crObj$cId ,sprintf( "<gCnt %d>",gCnt) )
 		}
 
 		cnt <- sum( smRow==0 )
-		if( !bUtil.in(cnt,c(min=8,max=20)) ){
+		if( !bUtil.in(cnt,c(min=12,max=20)) ){
 			crObj$cutFlag <- TRUE
 			crObj$cId <- c( crObj$cId ,sprintf( "<ZeroCnt %d>",cnt) )
 		}
@@ -271,12 +271,12 @@ bFCust.A_score1_A_rReb01 <- function(  ){	# evt rebind
 			grp1.val <- c( "rem1.len.val" ,"c1.len.val" ,"f1.len.val" )
 
 			#	byHIdx에서 다수 발생 체크
-			# evtChkInfo <- list( cutId="grp0.num" ,fireThld=3 ,evtLst=rObj$evtLst[grp0.num] )
-			# evtChkInfo$evtLast <- bUtil.getEvtVal( scoreMtx.last ,evtChkInfo$evtLst )
-			# cutterObj$evtChkLst[[1+length(cutterObj$evtChkLst)]] <- evtChkInfo
-			# evtChkInfo <- list( cutId="grp1.num" ,fireThld=3 ,evtLst=rObj$evtLst[grp1.num] )
-			# evtChkInfo$evtLast <- bUtil.getEvtVal( scoreMtx.last ,evtChkInfo$evtLst )
-			# cutterObj$evtChkLst[[1+length(cutterObj$evtChkLst)]] <- evtChkInfo
+			evtChkInfo <- list( cutId="grp0.num" ,fireThld=2 ,evtLst=rObj$evtLst[grp0.num] )
+			evtChkInfo$evtLast <- bUtil.getEvtVal( scoreMtx.last ,evtChkInfo$evtLst )
+			cutterObj$evtChkLst[[1+length(cutterObj$evtChkLst)]] <- evtChkInfo
+			evtChkInfo <- list( cutId="grp1.num" ,fireThld=2 ,evtLst=rObj$evtLst[grp1.num] )
+			evtChkInfo$evtLast <- bUtil.getEvtVal( scoreMtx.last ,evtChkInfo$evtLst )
+			cutterObj$evtChkLst[[1+length(cutterObj$evtChkLst)]] <- evtChkInfo
 
 			evtChkInfo <- list( cutId="grp0.len" ,fireThld=1 ,evtLst=rObj$evtLst[grp0.len] )
 			evtChkInfo$evtLast <- bUtil.getEvtVal( scoreMtx.last ,evtChkInfo$evtLst )
@@ -296,17 +296,17 @@ bFCust.A_score1_A_rReb01 <- function(  ){	# evt rebind
 
 
 			cName <- c("rem0.num","rem1.num","c0.num","c1.num")
-			evtChkInfo <- list( cutId="rcN.num" ,fireThld=3 ,evtLst=rObj$evtLst[cName] )
+			evtChkInfo <- list( cutId="rcN.num" ,fireThld=2 ,evtLst=rObj$evtLst[cName] )
 			evtChkInfo$evtLast <- bUtil.getEvtVal( scoreMtx.last ,evtChkInfo$evtLst )
 			cutterObj$evtChkLst[[1+length(cutterObj$evtChkLst)]] <- evtChkInfo
 
 			cName <- c("rem0.num","rem1.num","f0.num","f1.num")
-			evtChkInfo <- list( cutId="rfN.num" ,fireThld=3 ,evtLst=rObj$evtLst[cName] )
+			evtChkInfo <- list( cutId="rfN.num" ,fireThld=2 ,evtLst=rObj$evtLst[cName] )
 			evtChkInfo$evtLast <- bUtil.getEvtVal( scoreMtx.last ,evtChkInfo$evtLst )
 			cutterObj$evtChkLst[[1+length(cutterObj$evtChkLst)]] <- evtChkInfo
 
 			cName <- c("c0.num","c1.num","f0.num","f1.num")
-			evtChkInfo <- list( cutId="cfN.num" ,fireThld=3 ,evtLst=rObj$evtLst[cName] )
+			evtChkInfo <- list( cutId="cfN.num" ,fireThld=2 ,evtLst=rObj$evtLst[cName] )
 			evtChkInfo$evtLast <- bUtil.getEvtVal( scoreMtx.last ,evtChkInfo$evtLst )
 			cutterObj$evtChkLst[[1+length(cutterObj$evtChkLst)]] <- evtChkInfo
 
@@ -317,7 +317,7 @@ bFCust.A_score1_A_rReb01 <- function(  ){	# evt rebind
 			# evtChkInfo$evtLast <- bUtil.getEvtVal( scoreMtx.last ,evtChkInfo$evtLst )
 			# cutterObj$evtChkLst[[1+length(cutterObj$evtChkLst)]] <- evtChkInfo
 
-			evtChkInfo <- list( cutId="evtAll" ,fireThld=4 ,evtLst=rObj$evtLst )
+			evtChkInfo <- list( cutId="evtAll" ,fireThld=2 ,evtLst=rObj$evtLst )
 			evtChkInfo$evtLast <- bUtil.getEvtVal( scoreMtx.last ,evtChkInfo$evtLst )
 			cutterObj$evtChkLst[[1+length(cutterObj$evtChkLst)]] <- evtChkInfo
 
@@ -345,7 +345,7 @@ bFCust.A_score1_A_rReb01 <- function(  ){	# evt rebind
 				chk <- (src==evtChkInfo$evtLast)[evtChkInfo$evtNaMask]
 
 				if( fireThld <= sum(chk,na.rm=T) ){
-					firedCutId <- c( firedCutId ,evtChkInfo$cutId )
+					firedCutId <- c( firedCutId ,sprintf("%s/%d",evtChkInfo$cutId,sum(chk,na.rm=T)) )
 				}
 
 			}
@@ -416,15 +416,16 @@ bFCust.A_score1_A_rRebAA <- function(  ){	#	이전 마지막 score(cutterObj$lastRow)
 
 			#	빈번하게 발생하는 컬럼은 확인대상 제외...
 			cName <- setdiff( names(cutterObj$lastRow) ,c() )
-			if( 2>sum(cutterObj$lastRow[cName] >0) ){
+			if( 3>sum(cutterObj$lastRow[cName] >0) ){
 				cutterObj$lastRow <- NULL
-			} else {
-				cName <- setdiff( names(cutterObj$lastRow) ,c("rem0.num","rem1.num","c0.num","c1.num","f0.num","f1.num") )
-				evtLast <- bUtil.getEvtVal( cutterObj$lastRow ,FCust_score1EvtLst[cName] )
-				if( 0==sum(evtLast,na.rm=T) ){
-					cutterObj$lastRow <- NULL
-				}
-			}
+			} 
+			# else {
+			# 	cName <- setdiff( names(cutterObj$lastRow) ,c("rem0.num","rem1.num","c0.num","c1.num","f0.num","f1.num") )
+			# 	evtLast <- bUtil.getEvtVal( cutterObj$lastRow ,FCust_score1EvtLst[cName] )
+			# 	if( 0==sum(evtLast,na.rm=T) ){
+			# 		cutterObj$lastRow <- NULL
+			# 	}
+			# }
 		}
 
 		cutterObj$cut <- function( scoreMtx ,alreadyDead=NULL ){
@@ -439,7 +440,7 @@ bFCust.A_score1_A_rRebAA <- function(  ){	#	이전 마지막 score(cutterObj$lastRow)
 
 				matFlag <- all( cutterObj$lastRow==scoreMtx[idx,] )
 				if( all(matFlag) ){
-					infoStr <- sprintf("cut Id : %s",cutterObj$idObjDesc["rFId"] )
+					infoStr <- sprintf("cut Id : %s mat:%d",cutterObj$idObjDesc["rFId"],sum(matFlag) )
 					cutLst[[1+length(cutLst)]] <- list( idx=idx ,idObjDesc=cutterObj$idObjDesc ,info=infoStr )
 				}
 			}
@@ -453,6 +454,392 @@ bFCust.A_score1_A_rRebAA <- function(  ){	#	이전 마지막 score(cutterObj$lastRow)
 	return( rObj )
 } # bFCust.A_score1_A_rRebAA()
 
+
+#	[score1:byFCol(Rebound/Sequencial)] ---------------------------------------------------------
+#		- mtxGrp <- getScoreMtx.grp_byFCol( scoreMtx.grp )
+#		- nRow 대상이긴 하지만, mtx는 각 scoreMtx 의 fCol 별로 생성된다는 점을 주의
+#		- column이 phase이므로 pName 구분이 없고, tgtId에서도 pName이 빠진다. 대신 fcName 필요.
+#	c( typ="c_byFCol"	,hName="*"	,mName="score4"	,fcName="*"  )
+bFCust.byFCol_A_score1_A <- function( ){
+
+	rObj <- list( )
+	rObj$defId <- c( typ="c_byFCol"	,hName="*"	,mName="score1"	,fcName="*"  )
+	rObj$description <- sprintf("(cust)  ")
+
+	rObj$cutFLst <- list()
+	if( TRUE ){	# build cutFLst
+		#	"rem0.num" ,"rem0.len.tot" ,"rem0.len.val"	,"rem1.num" ,"rem1.len.tot" ,"rem1.len.val"
+		rObj$cutFLst[["rem0.num"]] <- function( smRow ,fcName ){
+			crObj <- list( cutFlag=F ,cId="_A rem0.num" ) # cut result object, cut Id
+			cnt <- sum(smRow==1)
+			if( !bUtil.in(cnt,c(min=0,max=7)) ){
+				crObj$cutFlag <- TRUE	;crObj$cId <- sprintf("%s 01.%d",crObj$cId,cnt)
+			}
+			cnt <- sum(smRow==2)
+			if( !bUtil.in(cnt,c(min=0,max=1)) ){
+				crObj$cutFlag <- TRUE	;crObj$cId <- sprintf("%s 02.%d",crObj$cId,cnt)
+			}
+			cnt <- sum(smRow >2)
+			if( !bUtil.in(cnt,c(min=0,max=0)) ){
+				crObj$cutFlag <- TRUE	;crObj$cId <- sprintf("%s 0n.%d",crObj$cId,cnt)
+			}
+			return( crObj )
+		} # rObj$cutFLst[1]( )
+		rObj$cutFLst[["rem0.len.tot"]] <- function( smRow ,fcName ){
+			crObj <- list( cutFlag=F ,cId="_A rem0.len.tot" ) # cut result object, cut Id
+			cnt <- sum(smRow==2)
+			if( !bUtil.in(cnt,c(min=0,max=7)) ){
+				crObj$cutFlag <- TRUE	;crObj$cId <- sprintf("%s 02.%d",crObj$cId,cnt)
+			}
+			cnt <- sum(smRow==3)
+			if( !bUtil.in(cnt,c(min=0,max=1)) ){
+				crObj$cutFlag <- TRUE	;crObj$cId <- sprintf("%s 03.%d",crObj$cId,cnt)
+			}
+			cnt <- sum(smRow >3)
+			if( !bUtil.in(cnt,c(min=0,max=0)) ){
+				crObj$cutFlag <- TRUE	;crObj$cId <- sprintf("%s 0n.%d",crObj$cId,cnt)
+			}
+			return( crObj )
+		} # rObj$cutFLst[1]( )
+		rObj$cutFLst[["rem0.len.val"]] <- function( smRow ,fcName ){
+			crObj <- list( cutFlag=F ,cId="_A rem0.len.val" ) # cut result object, cut Id
+			cnt <- sum(smRow==2)
+			if( !bUtil.in(cnt,c(min=0,max=1)) ){
+				crObj$cutFlag <- TRUE	;crObj$cId <- sprintf("%s 02.%d",crObj$cId,cnt)
+			}
+			cnt <- sum(smRow==3)
+			if( !bUtil.in(cnt,c(min=0,max=0)) ){
+				crObj$cutFlag <- TRUE	;crObj$cId <- sprintf("%s 03.%d",crObj$cId,cnt)
+			}
+			cnt <- sum(smRow >3)
+			if( !bUtil.in(cnt,c(min=0,max=0)) ){
+				crObj$cutFlag <- TRUE	;crObj$cId <- sprintf("%s 0n.%d",crObj$cId,cnt)
+			}
+			return( crObj )
+		} # rObj$cutFLst[1]( )
+		rObj$cutFLst[["rem1.num"]] <- function( smRow ,fcName ){
+			crObj <- list( cutFlag=F ,cId="_A rem1.num" ) # cut result object, cut Id
+			cnt <- sum(smRow==1)
+			if( !bUtil.in(cnt,c(min=0,max=2)) ){
+				crObj$cutFlag <- TRUE	;crObj$cId <- sprintf("%s 01.%d",crObj$cId,cnt)
+			}
+			cnt <- sum(smRow==2)
+			if( !bUtil.in(cnt,c(min=0,max=1)) ){
+				crObj$cutFlag <- TRUE	;crObj$cId <- sprintf("%s 02.%d",crObj$cId,cnt)
+			}
+			cnt <- sum(smRow >2)
+			if( !bUtil.in(cnt,c(min=0,max=0)) ){
+				crObj$cutFlag <- TRUE	;crObj$cId <- sprintf("%s 0n.%d",crObj$cId,cnt)
+			}
+			return( crObj )
+		} # rObj$cutFLst[1]( )
+		rObj$cutFLst[["rem1.len.tot"]] <- function( smRow ,fcName ){
+			crObj <- list( cutFlag=F ,cId="_A rem1.len.tot" ) # cut result object, cut Id
+			cnt <- sum(smRow==2)
+			if( !bUtil.in(cnt,c(min=0,max=2)) ){
+				crObj$cutFlag <- TRUE	;crObj$cId <- sprintf("%s 02.%d",crObj$cId,cnt)
+			}
+			cnt <- sum(smRow==3)
+			if( !bUtil.in(cnt,c(min=0,max=1)) ){
+				crObj$cutFlag <- TRUE	;crObj$cId <- sprintf("%s 03.%d",crObj$cId,cnt)
+			}
+			cnt <- sum(smRow >3)
+			if( !bUtil.in(cnt,c(min=0,max=0)) ){
+				crObj$cutFlag <- TRUE	;crObj$cId <- sprintf("%s 0n.%d",crObj$cId,cnt)
+			}
+			return( crObj )
+		} # rObj$cutFLst[1]( )
+		rObj$cutFLst[["rem1.len.val"]] <- function( smRow ,fcName ){
+			crObj <- list( cutFlag=F ,cId="_A rem1.len.val" ) # cut result object, cut Id
+			cnt <- sum(smRow==2)
+			if( !bUtil.in(cnt,c(min=0,max=1)) ){
+				crObj$cutFlag <- TRUE	;crObj$cId <- sprintf("%s 02.%d",crObj$cId,cnt)
+			}
+			cnt <- sum(smRow==3)
+			if( !bUtil.in(cnt,c(min=0,max=0)) ){
+				crObj$cutFlag <- TRUE	;crObj$cId <- sprintf("%s 03.%d",crObj$cId,cnt)
+			}
+			cnt <- sum(smRow >3)
+			if( !bUtil.in(cnt,c(min=0,max=0)) ){
+				crObj$cutFlag <- TRUE	;crObj$cId <- sprintf("%s 0n.%d",crObj$cId,cnt)
+			}
+			return( crObj )
+		} # rObj$cutFLst[1]( )
+
+		#	,"c0.num" ,"c0.len.tot" ,"c0.len.val"	,"c1.num" ,"c1.len.tot" ,"c1.len.val"
+		#	,"f0.num" ,"f0.len.tot" ,"f0.len.val"	,"f1.num" ,"f1.len.tot" ,"f1.len.val"
+		rObj$cutFLst[["c0.num"]] <- function( smRow ,fcName ){
+			crObj <- list( cutFlag=F ,cId="_A c0.num" ) # cut result object, cut Id
+			cnt <- sum(smRow==1)
+			if( !bUtil.in(cnt,c(min=0,max=1)) ){
+				crObj$cutFlag <- TRUE	;crObj$cId <- sprintf("%s 01.%d",crObj$cId,cnt)
+			}
+			cnt <- sum(smRow==2)
+			if( !bUtil.in(cnt,c(min=0,max=0)) ){
+				crObj$cutFlag <- TRUE	;crObj$cId <- sprintf("%s 02.%d",crObj$cId,cnt)
+			}
+			cnt <- sum(smRow >2)
+			if( !bUtil.in(cnt,c(min=0,max=0)) ){
+				crObj$cutFlag <- TRUE	;crObj$cId <- sprintf("%s 0n.%d",crObj$cId,cnt)
+			}
+			return( crObj )
+		} # rObj$cutFLst[1]( )
+		rObj$cutFLst[["c0.len.tot"]] <- function( smRow ,fcName ){
+			crObj <- list( cutFlag=F ,cId="_A c0.len.tot" ) # cut result object, cut Id
+			cnt <- sum(smRow==2)
+			if( !bUtil.in(cnt,c(min=0,max=1)) ){
+				crObj$cutFlag <- TRUE	;crObj$cId <- sprintf("%s 02.%d",crObj$cId,cnt)
+			}
+			cnt <- sum(smRow==3)
+			if( !bUtil.in(cnt,c(min=0,max=2)) ){
+				crObj$cutFlag <- TRUE	;crObj$cId <- sprintf("%s 03.%d",crObj$cId,cnt)
+			}
+			cnt <- sum(smRow >3)
+			if( !bUtil.in(cnt,c(min=0,max=0)) ){
+				crObj$cutFlag <- TRUE	;crObj$cId <- sprintf("%s 0n.%d",crObj$cId,cnt)
+			}
+			return( crObj )
+		} # rObj$cutFLst[1]( )
+		rObj$cutFLst[["c0.len.val"]] <- function( smRow ,fcName ){
+			crObj <- list( cutFlag=F ,cId="_A c0.len.val" ) # cut result object, cut Id
+			cnt <- sum(smRow==2)
+			if( !bUtil.in(cnt,c(min=0,max=1)) ){
+				crObj$cutFlag <- TRUE	;crObj$cId <- sprintf("%s 01.%d",crObj$cId,cnt)
+			}
+			cnt <- sum(smRow==3)
+			if( !bUtil.in(cnt,c(min=0,max=0)) ){
+				crObj$cutFlag <- TRUE	;crObj$cId <- sprintf("%s 02.%d",crObj$cId,cnt)
+			}
+			cnt <- sum(smRow >3)
+			if( !bUtil.in(cnt,c(min=0,max=0)) ){
+				crObj$cutFlag <- TRUE	;crObj$cId <- sprintf("%s 0n.%d",crObj$cId,cnt)
+			}
+			return( crObj )
+		} # rObj$cutFLst[1]( )
+		rObj$cutFLst[["c1.num"]] <- function( smRow ,fcName ){
+			crObj <- list( cutFlag=F ,cId="_A c1.num" ) # cut result object, cut Id
+			cnt <- sum(smRow==1)
+			if( !bUtil.in(cnt,c(min=0,max=2)) ){
+				crObj$cutFlag <- TRUE	;crObj$cId <- sprintf("%s 01.%d",crObj$cId,cnt)
+			}
+			cnt <- sum(smRow==2)
+			if( !bUtil.in(cnt,c(min=0,max=1)) ){
+				crObj$cutFlag <- TRUE	;crObj$cId <- sprintf("%s 02.%d",crObj$cId,cnt)
+			}
+			cnt <- sum(smRow >2)
+			if( !bUtil.in(cnt,c(min=0,max=0)) ){
+				crObj$cutFlag <- TRUE	;crObj$cId <- sprintf("%s 0n.%d",crObj$cId,cnt)
+			}
+			return( crObj )
+		} # rObj$cutFLst[1]( )
+		rObj$cutFLst[["c1.len.tot"]] <- function( smRow ,fcName ){
+			crObj <- list( cutFlag=F ,cId="_A c1.len.tot" ) # cut result object, cut Id
+			cnt <- sum(smRow==2)
+			if( !bUtil.in(cnt,c(min=0,max=1)) ){
+				crObj$cutFlag <- TRUE	;crObj$cId <- sprintf("%s 01.%d",crObj$cId,cnt)
+			}
+			cnt <- sum(smRow==3)
+			if( !bUtil.in(cnt,c(min=0,max=1)) ){
+				crObj$cutFlag <- TRUE	;crObj$cId <- sprintf("%s 02.%d",crObj$cId,cnt)
+			}
+			cnt <- sum(smRow >3)
+			if( !bUtil.in(cnt,c(min=0,max=0)) ){
+				crObj$cutFlag <- TRUE	;crObj$cId <- sprintf("%s 0n.%d",crObj$cId,cnt)
+			}
+			return( crObj )
+		} # rObj$cutFLst[1]( )
+		rObj$cutFLst[["c1.len.val"]] <- function( smRow ,fcName ){
+			crObj <- list( cutFlag=F ,cId="_A c1.len.val" ) # cut result object, cut Id
+			cnt <- sum(smRow==2)
+			if( !bUtil.in(cnt,c(min=0,max=1)) ){
+				crObj$cutFlag <- TRUE	;crObj$cId <- sprintf("%s 01.%d",crObj$cId,cnt)
+			}
+			cnt <- sum(smRow==3)
+			if( !bUtil.in(cnt,c(min=0,max=0)) ){
+				crObj$cutFlag <- TRUE	;crObj$cId <- sprintf("%s 02.%d",crObj$cId,cnt)
+			}
+			cnt <- sum(smRow >3)
+			if( !bUtil.in(cnt,c(min=0,max=0)) ){
+				crObj$cutFlag <- TRUE	;crObj$cId <- sprintf("%s 0n.%d",crObj$cId,cnt)
+			}
+			return( crObj )
+		} # rObj$cutFLst[1]( )
+
+		rObj$cutFLst[["f0.num"]] <- function( smRow ,fcName ){
+			crObj <- list( cutFlag=F ,cId="_A f0.num" ) # cut result object, cut Id
+			cnt <- sum(smRow==1)
+			if( !bUtil.in(cnt,c(min=0,max=1)) ){
+				crObj$cutFlag <- TRUE	;crObj$cId <- sprintf("%s 01.%d",crObj$cId,cnt)
+			}
+			cnt <- sum(smRow==2)
+			if( !bUtil.in(cnt,c(min=0,max=0)) ){
+				crObj$cutFlag <- TRUE	;crObj$cId <- sprintf("%s 02.%d",crObj$cId,cnt)
+			}
+			cnt <- sum(smRow >2)
+			if( !bUtil.in(cnt,c(min=0,max=0)) ){
+				crObj$cutFlag <- TRUE	;crObj$cId <- sprintf("%s 0n.%d",crObj$cId,cnt)
+			}
+			return( crObj )
+		} # rObj$cutFLst[1]( )
+		rObj$cutFLst[["f0.len.tot"]] <- function( smRow ,fcName ){
+			crObj <- list( cutFlag=F ,cId="_A f0.len.tot" ) # cut result object, cut Id
+			cnt <- sum(smRow==2)
+			if( !bUtil.in(cnt,c(min=0,max=2)) ){
+				crObj$cutFlag <- TRUE	;crObj$cId <- sprintf("%s 02.%d",crObj$cId,cnt)
+			}
+			cnt <- sum(smRow==3)
+			if( !bUtil.in(cnt,c(min=0,max=0)) ){
+				crObj$cutFlag <- TRUE	;crObj$cId <- sprintf("%s 03.%d",crObj$cId,cnt)
+			}
+			cnt <- sum(smRow >3)
+			if( !bUtil.in(cnt,c(min=0,max=0)) ){
+				crObj$cutFlag <- TRUE	;crObj$cId <- sprintf("%s 0n.%d",crObj$cId,cnt)
+			}
+			return( crObj )
+		} # rObj$cutFLst[1]( )
+		rObj$cutFLst[["f0.len.val"]] <- function( smRow ,fcName ){
+			crObj <- list( cutFlag=F ,cId="_A f0.len.val" ) # cut result object, cut Id
+			cnt <- sum(smRow==2)
+			if( !bUtil.in(cnt,c(min=0,max=1)) ){
+				crObj$cutFlag <- TRUE	;crObj$cId <- sprintf("%s 01.%d",crObj$cId,cnt)
+			}
+			cnt <- sum(smRow==3)
+			if( !bUtil.in(cnt,c(min=0,max=0)) ){
+				crObj$cutFlag <- TRUE	;crObj$cId <- sprintf("%s 02.%d",crObj$cId,cnt)
+			}
+			cnt <- sum(smRow >3)
+			if( !bUtil.in(cnt,c(min=0,max=0)) ){
+				crObj$cutFlag <- TRUE	;crObj$cId <- sprintf("%s 0n.%d",crObj$cId,cnt)
+			}
+			return( crObj )
+		} # rObj$cutFLst[1]( )
+		rObj$cutFLst[["f1.num"]] <- function( smRow ,fcName ){
+			crObj <- list( cutFlag=F ,cId="_A f1.num" ) # cut result object, cut Id
+			cnt <- sum(smRow==1)
+			if( !bUtil.in(cnt,c(min=0,max=2)) ){
+				crObj$cutFlag <- TRUE	;crObj$cId <- sprintf("%s 01.%d",crObj$cId,cnt)
+			}
+			cnt <- sum(smRow==2)
+			if( !bUtil.in(cnt,c(min=0,max=0)) ){
+				crObj$cutFlag <- TRUE	;crObj$cId <- sprintf("%s 02.%d",crObj$cId,cnt)
+			}
+			cnt <- sum(smRow >2)
+			if( !bUtil.in(cnt,c(min=0,max=0)) ){
+				crObj$cutFlag <- TRUE	;crObj$cId <- sprintf("%s 0n.%d",crObj$cId,cnt)
+			}
+			return( crObj )
+		} # rObj$cutFLst[1]( )
+		rObj$cutFLst[["f1.len.tot"]] <- function( smRow ,fcName ){
+			crObj <- list( cutFlag=F ,cId="_A f1.len.tot" ) # cut result object, cut Id
+			cnt <- sum(smRow==2)
+			if( !bUtil.in(cnt,c(min=0,max=1)) ){
+				crObj$cutFlag <- TRUE	;crObj$cId <- sprintf("%s 01.%d",crObj$cId,cnt)
+			}
+			cnt <- sum(smRow==3)
+			if( !bUtil.in(cnt,c(min=0,max=0)) ){
+				crObj$cutFlag <- TRUE	;crObj$cId <- sprintf("%s 02.%d",crObj$cId,cnt)
+			}
+			cnt <- sum(smRow >3)
+			if( !bUtil.in(cnt,c(min=0,max=0)) ){
+				crObj$cutFlag <- TRUE	;crObj$cId <- sprintf("%s 0n.%d",crObj$cId,cnt)
+			}
+			return( crObj )
+		} # rObj$cutFLst[1]( )
+		rObj$cutFLst[["f1.len.val"]] <- function( smRow ,fcName ){
+			crObj <- list( cutFlag=F ,cId="_A f1.len.val" ) # cut result object, cut Id
+			cnt <- sum(smRow==2)
+			if( !bUtil.in(cnt,c(min=0,max=1)) ){
+				crObj$cutFlag <- TRUE	;crObj$cId <- sprintf("%s 01.%d",crObj$cId,cnt)
+			}
+			cnt <- sum(smRow==3)
+			if( !bUtil.in(cnt,c(min=0,max=0)) ){
+				crObj$cutFlag <- TRUE	;crObj$cId <- sprintf("%s 02.%d",crObj$cId,cnt)
+			}
+			cnt <- sum(smRow >3)
+			if( !bUtil.in(cnt,c(min=0,max=0)) ){
+				crObj$cutFlag <- TRUE	;crObj$cId <- sprintf("%s 0n.%d",crObj$cId,cnt)
+			}
+			return( crObj )
+		} # rObj$cutFLst[1]( )
+
+		#	,"zwNum"	,"zwC1Num"
+		rObj$cutFLst[["zwNum"]] <- function( smRow ,fcName ){
+			crObj <- list( cutFlag=F ,cId="_A zwNum" ) # cut result object, cut Id
+			cnt <- sum(smRow==1)
+			if( !bUtil.in(cnt,c(min=0,max=3)) ){
+				crObj$cutFlag <- TRUE	;crObj$cId <- sprintf("%s 01.%d",crObj$cId,cnt)
+			}
+			cnt <- sum(smRow==2)
+			if( !bUtil.in(cnt,c(min=0,max=0)) ){
+				crObj$cutFlag <- TRUE	;crObj$cId <- sprintf("%s 02.%d",crObj$cId,cnt)
+			}
+			cnt <- sum(smRow >2)
+			if( !bUtil.in(cnt,c(min=0,max=0)) ){
+				crObj$cutFlag <- TRUE	;crObj$cId <- sprintf("%s 0n.%d",crObj$cId,cnt)
+			}
+			return( crObj )
+		} # rObj$cutFLst[1]( )
+		rObj$cutFLst[["zwC1Num"]] <- function( smRow ,fcName ){
+			crObj <- list( cutFlag=F ,cId="_A zwC1Num" ) # cut result object, cut Id
+			cnt <- sum(smRow==1)
+			if( !bUtil.in(cnt,c(min=0,max=1)) ){
+				crObj$cutFlag <- TRUE	;crObj$cId <- sprintf("%s 01.%d",crObj$cId,cnt)
+			}
+			cnt <- sum(smRow==2)
+			if( !bUtil.in(cnt,c(min=0,max=0)) ){
+				crObj$cutFlag <- TRUE	;crObj$cId <- sprintf("%s 02.%d",crObj$cId,cnt)
+			}
+			cnt <- sum(smRow >2)
+			if( !bUtil.in(cnt,c(min=0,max=0)) ){
+				crObj$cutFlag <- TRUE	;crObj$cId <- sprintf("%s 0n.%d",crObj$cId,cnt)
+			}
+			return( crObj )
+		} # rObj$cutFLst[1]( )
+
+	}
+
+
+	rObj$createCutter <- function( lastMtx ,tgtId=c(hName="", mName="", fcName="") ,auxInfo=c(auxInfo="") ){
+
+		cutterObj <- rObj
+		cutterObj$createCutter <- NULL
+
+		#	hName="testNA"; mName="testNA"; pName="testNA"; fcName="testNA"; auxInfo=c(auxInfo="")
+		idObjDesc <- rObj$defId
+		if( idObjDesc["hName"]!=tgtId["hName"] ) idObjDesc["hName"] <- sprintf("(%s)%s",idObjDesc["hName"],tgtId["hName"])
+		if( idObjDesc["mName"]!=tgtId["mName"] ) idObjDesc["mName"] <- sprintf("(%s)%s",idObjDesc["mName"],tgtId["mName"])
+		if( idObjDesc["fcName"]!=tgtId["fcName"] ) idObjDesc["fcName"] <- sprintf("(%s)%s",idObjDesc["fcName"],tgtId["fcName"])
+		idObjDesc <- c( idObjDesc ,auxInfo )
+		cutterObj$idObjDesc <- idObjDesc
+
+		cutterObj$idObj <- rObj$defId
+		cutterObj$idObj[names(tgtId)] <- tgtId
+
+		cutterObj$cutF <- rObj$cutFLst[[ cutterObj$idObj[["fcName"]] ]]
+
+		cutterObj$cut <- function( scoreMtx ,alreadyDead=NULL ){
+			val.len <- nrow( scoreMtx )
+			if( is.null(alreadyDead) )	alreadyDead <- rep( F, val.len )
+
+			cutLst <- list()
+			for( idx in seq_len(val.len) ){
+				if( alreadyDead[idx] ) next
+
+				cObj <- cutterObj$cutF( scoreMtx[idx,] ,cutterObj$idObj[["fcName"]] )
+				if( cObj$cutFlag ){
+					infoStr <- sprintf("cut Id : %s",paste(cObj$cId,collapse=",") )
+					cutLst[[1+length(cutLst)]] <- list( idx=idx ,idObjDesc=cutterObj$idObjDesc ,info=infoStr )
+				}
+			}
+
+			return( cutLst )
+		} # cutterObj$cut()
+
+		return(cutterObj)
+	}
+
+	return( rObj )
+} # bFCust.byFCol_A_score1_A( )
 
 
 
