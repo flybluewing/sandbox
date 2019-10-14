@@ -277,7 +277,7 @@ bFCust.getCust <- function(){
 	rObj$fLst_byFCol <- list()
 	if( TRUE ){
 
-		# rObj$fLst_byFCol[[1+length(rObj$fLst_byFCol)]] <- bFCust.byFCol_A_score1_A()
+		rObj$fLst_byFCol[[1+length(rObj$fLst_byFCol)]] <- bFCust.byFCol_A_score1_A()
 		# rObj$fLst_byFCol[[1+length(rObj$fLst_byFCol)]] <- bFCust.byFCol_A_score1_A_rReb01()
 		# rObj$fLst_byFCol[[1+length(rObj$fLst_byFCol)]] <- bFCust.byFCol_A_score1_A_rRebAA()
 
