@@ -4,10 +4,10 @@ source("B_H.R")
 
 
 lastH <- 860
-testMode <- # 실수 방지를 위해 일부러 오류 코드로 남김.
+testMode <-                 # 실수 방지를 위해 일부러 오류 코드로 남김.
 
 stdFiltedCnt <- 0:2
-scoreMtx.name <- c("score2","score3","score4","score5","score6","score7")
+scoreMtx.name <- c("score1","score2","score3","score4","score5","score6","score7","score9")
 scoreMtx.name.hard <- c( "score8" ) # 실행 시간이 너무 오래 걸리는 것은 별도 그룹으로..
 stdFilted.NG <- c("D0000.A","A0100.A","AP000.E")
 
@@ -21,7 +21,7 @@ load(sprintf("./save/Obj_remLstZ%d.save",lastH) )
 tStmp <- Sys.time()
 stdMI.grp <- bUtil.getStdMILst( gEnv ,fRstLst )     ;stdMI.grp$anyWarn( )
 
-hMtxLst <- B.makeHMtxLst( gEnv, allIdxLst, fRstLst, lastH=lastH, scoreMtx.name )    # 12 min.
+hMtxLst <- B.makeHMtxLst( gEnv, allIdxLst, fRstLst, lastH=lastH, scoreMtx.name )    # 16 min.
 stdCtrlCfgGrp <- bUtil.makeStdCtrlCfgGrp(hMtxLst)
 cut.grp <- bFCust.getFCustGrp( stdCtrlCfgGrp ,hMtxLst )
 
@@ -94,6 +94,7 @@ for( curStdFiltedCnt in stdFiltedCnt ){   # curStdFiltedCnt <- stdFiltedCnt[1]
 
 
     #   bUtil.cut( hard ) : 초 장시간 시간 소요가 되는 scoreMtx 들.. --------------------------------------------
+    #       load("Obj_allIdxF.final608.save")
     for( tgt.scMtx in scoreMtx.name.hard ){   # tgt.scMtx <- scoreMtx.name[1]
 
         logger$fLogStr(sprintf("bUtil.cut( hard ) - tgt.scMtx:%s",tgt.scMtx),pTime=T)
