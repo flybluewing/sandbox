@@ -7,7 +7,7 @@ lastH <- 860
 testMode <-                 # 실수 방지를 위해 일부러 오류 코드로 남김.
 
 stdFiltedCnt <- 0:2
-scoreMtx.name <- c("score1","score2","score3","score4","score5","score6","score7","score9")
+scoreMtx.name <- c("score2","score3","score4","score5","score6","score7","score9"   ,"score1","score8")
 scoreMtx.name.hard <- c( "score8" ) # 실행 시간이 너무 오래 걸리는 것은 별도 그룹으로..
 stdFilted.NG <- c("D0000.A","A0100.A","AP000.E")
 
@@ -21,7 +21,7 @@ load(sprintf("./save/Obj_remLstZ%d.save",lastH) )
 tStmp <- Sys.time()
 stdMI.grp <- bUtil.getStdMILst( gEnv ,fRstLst )     ;stdMI.grp$anyWarn( )
 
-hMtxLst <- B.makeHMtxLst( gEnv, allIdxLst, fRstLst, lastH=lastH, scoreMtx.name )    # 16 min.
+hMtxLst <- B.makeHMtxLst( gEnv, allIdxLst, fRstLst, lastH=lastH, scoreMtx.name )    # 16 min.(30min for all)
 stdCtrlCfgGrp <- bUtil.makeStdCtrlCfgGrp(hMtxLst)
 cut.grp <- bFCust.getFCustGrp( stdCtrlCfgGrp ,hMtxLst )
 
