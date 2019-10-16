@@ -10,3 +10,7 @@ cnt <- apply( gEnv$zhF ,1 ,function(zoid){
 
 lCStep <- c( 1, 2, 3, 1, 2 )
 
+aZoidMtx <- rbind( aZoid ,aZoid-1 )
+aZoidMtx <- rbind( aZoidMtx ,aZoid+1 )
+aZoidMtx <- rbind( aZoidMtx ,aZoid+2 )
+
