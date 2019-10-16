@@ -144,6 +144,8 @@ B.getHMtxLst_byFCol <- function( hMtxLst ){ # scoreMtxLst <- hMtxLst$scoreMtxLst
 
     for( hnIdx in names(scoreMtxLst) ){ # hnIdx <- names(scoreMtxLst)[1]
         scmLst <- list()
+        if( 0==length(scoreMtxLst[[hnIdx]][[1]]) ) break
+
         rowSize <- nrow(scoreMtxLst[[hnIdx]][[1]][[1]]$scoreMtx)
         for( scmIdx in names(mtxInfoLst) ){ # scmIdx <- names(mtxInfoLst)[1]
             byColMtxLst <- list()
