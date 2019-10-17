@@ -661,3 +661,22 @@ k.blockLst <- function( totLen ,blockSize ){
 	return( rLst )
 } # k.blockLst()
 
+k.object_size <- function( obj ){
+
+	byteToStr <- function( rptByte ){
+		str <- sprintf("%s",capture.output(rptByte))
+		return(str)
+	}
+
+	rpt <- object_size( obj )
+	cat(sprintf( "Object total : %s \n",byteToStr(rpt) ))
+
+	subObjNames <- names(obj)
+	if( !is.null(subObjNames) ){
+		for( nIdx in subObjNames ){
+			rpt <- object_size( obj[nIdx] )
+			cat(sprintf( "    - %s : %s \n",nIdx,byteToStr(rpt) ))
+		}
+	}
+
+}

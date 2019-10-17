@@ -120,9 +120,12 @@ B.makeHMtxLst <- function( gEnv, allIdxLst, fRstLst ,tgt.scMtx=NULL ,lastH=NULL 
                     ,scoreMtxLst=scoreMtxLst 
                     ,mfMtxLst=bScrMtxLst
                 )
-    rObj$getScoreMtxObj <- function( hName, mName, pName ){
-        return( rObj$scoreMtxLst[[hName]][[pName]][[mName]] )
-    }
+
+    # rObj$getScoreMtxObj <- function( hName, mName, pName ){
+    #       # 폐지. rObj 를 붙잡고 있어서 메모리를 괴물처럼 잡아먹는다.
+    #       #   B.HMtxLst_getMtxLst() 사용으로 대치
+    #     return( rObj$scoreMtxLst[[hName]][[pName]][[mName]] )
+    # }
 
     cnt <- sapply(sfcHLst,length)
     tDiff <- Sys.time() - tStmp
@@ -133,6 +136,10 @@ B.makeHMtxLst <- function( gEnv, allIdxLst, fRstLst ,tgt.scMtx=NULL ,lastH=NULL 
 
     return( rObj )
 } # B.makeHMtxLst()
+
+B.HMtxLst_getMtxLst <- function( hMtxLst ,hName, mName, pName ){
+    return( hMtxLst$scoreMtxLst[[hName]][[pName]][[mName]] )
+}
 
 B.getHMtxLst_byFCol <- function( hMtxLst ){ # scoreMtxLst <- hMtxLst$scoreMtxLst
 
