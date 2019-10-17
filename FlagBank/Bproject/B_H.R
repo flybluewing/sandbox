@@ -559,7 +559,7 @@ B.rptCutRstLst <- function( cutRstLst ,file="cutRstLst" ){
 } # B.rptCutRstLst()
 
 
-B.get_testData.grp <- function( testSpan ,gEnv ,allIdxLst ,fRstLst ,tgt.scMtx=NULL ){
+B.get_testData.grp.old <- function( testSpan ,gEnv ,allIdxLst ,fRstLst ,tgt.scMtx=NULL ){
 
     curHMtxLst.grp <- list( )
     stdIdx.grp <- list()
@@ -587,6 +587,45 @@ B.get_testData.grp <- function( testSpan ,gEnv ,allIdxLst ,fRstLst ,tgt.scMtx=NU
         stdIdx <- k.getIdx_AllZoidMtx( gEnv, stdZoid )
         stdIdx.grp[[as.character(curHIdx)]] <- stdIdx
     }
+    tDiff <- Sys.time() - tStmp
+    cat(sprintf("time : %.1f,%s   \n",tDiff,units(tDiff)))
+
+    return( list(curHMtxLst.grp=curHMtxLst.grp ,stdIdx.grp=stdIdx.grp) )
+}
+
+B.get_testData.grp <- function( testSpan ,gEnv ,allIdxLst ,fRstLst ,tgt.scMtx=NULL ){
+
+    tStmp <- Sys.time()
+    sfExport("tgt.scMtx")
+    resultLst <- sfLapply(testSpan,function(curHIdx){
+        tStmp.prll <- Sys.time()
+
+        wLastH <-curHIdx-1
+        wLastSpan <- 1:which(names(fRstLst)==wLastH)
+
+        # ------------------------------------------------------------------------
+        # curHMtxLst.grp
+        gEnv.w <- gEnv              ;gEnv.w$zhF <- gEnv$zhF[1:wLastH,]
+        allIdxLst.w <- allIdxLst    ;allIdxLst.w$stdFiltedCnt <- allIdxLst$stdFiltedCnt[wLastSpan]
+                                    allIdxLst.w$infoMtx <- allIdxLst$infoMtx[wLastSpan,]
+        fRstLst.w <- fRstLst[wLastSpan]
+
+        curHMtxLst <- B.makeHMtxLst( gEnv.w, allIdxLst.w, fRstLst.w, tgt.scMtx )   
+
+        # ------------------------------------------------------------------------
+        # stdIdx.grp
+        stdZoid <- gEnv$zhF[curHIdx,]
+        stdIdx <- k.getIdx_AllZoidMtx( gEnv, stdZoid )
+
+        tDiff <- Sys.time() - tStmp.prll
+        prllLog$fLogStr(sprintf("    B.get_testData.grp - hIdx:%d finished %.1f%s",curHIdx,tDiff,units(tDiff)))
+        return(list( hIdx=curHIdx ,stdIdx=stdIdx ,hMtxLst=curHMtxLst ))
+    })
+    names(resultLst) <- sapply(resultLst,function(p){ p$hIdx })
+
+    curHMtxLst.grp <- lapply(resultLst,function(p){ p$hMtxLst })
+    stdIdx.grp <- lapply(resultLst,function(p){ p$stdIdx })
+
     tDiff <- Sys.time() - tStmp
     cat(sprintf("time : %.1f,%s   \n",tDiff,units(tDiff)))
 
