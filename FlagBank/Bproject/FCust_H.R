@@ -1,24 +1,18 @@
-source("FCust_Score01_H.R")
-source("FCust_Score02_H.R")
-source("FCust_Score03_H.R")
-source("FCust_Score04_H.R")
-source("FCust_Score05_H.R")
-source("FCust_Score06_H.R")
-source("FCust_Score07_H.R")
-source("FCust_Score08_H.R")
+source("FCust_Score01_H.R")	;source("FCust_Score02_H.R")	;source("FCust_Score03_H.R")	;source("FCust_Score04_H.R")
+source("FCust_Score05_H.R")	;source("FCust_Score06_H.R")	;source("FCust_Score07_H.R")	;source("FCust_Score08_H.R")
 source("FCust_Score09_H.R")
 
+source("FCust_bScr01_H.R")
 
 scoreEvtLst <- list()
-scoreEvtLst[["score1"]] <- FCust_score1EvtLst
-scoreEvtLst[["score2"]] <- FCust_score2EvtLst
-scoreEvtLst[["score3"]] <- FCust_score3EvtLst
-scoreEvtLst[["score4"]] <- FCust_score4EvtLst
-scoreEvtLst[["score5"]] <- FCust_score5EvtLst
-scoreEvtLst[["score6"]] <- FCust_score6EvtLst
-scoreEvtLst[["score7"]] <- FCust_score7EvtLst
-scoreEvtLst[["score8"]] <- FCust_score8EvtLst
+scoreEvtLst[["score1"]] <- FCust_score1EvtLst	;scoreEvtLst[["score2"]] <- FCust_score2EvtLst
+scoreEvtLst[["score3"]] <- FCust_score3EvtLst	;scoreEvtLst[["score4"]] <- FCust_score4EvtLst
+scoreEvtLst[["score5"]] <- FCust_score5EvtLst	;scoreEvtLst[["score6"]] <- FCust_score6EvtLst
+scoreEvtLst[["score7"]] <- FCust_score7EvtLst	;scoreEvtLst[["score8"]] <- FCust_score8EvtLst
 scoreEvtLst[["score9"]] <- FCust_score9EvtLst
+
+bScrEvtLst <- list()
+bScrEvtLst[["bScr01"]] <- FCust_bScr01EvtLst
 
 
 # -----------------------------------------------------
@@ -399,17 +393,92 @@ bFCust.getCust <- function(){
 
 	# ---------------------------------------------------------------------------------------------
 	#	bScr
+	rObj$fLst_1Col.bScr <- list()	# check each col value in one row
+	if( TRUE ){
+		rObj$fLst_1Col.bScr[[1+length(rObj$fLst_1Col.bScr)]] <- bFCust.A_bScr01_A_A( )
+	}
 	rObj$getCustF_1Col.bScr <- function( ctrlCfg ,tgtId=c(hName="", mName="", fcName="") ,auxInfo=c(auxInfo="") ){
+		# tgtId=c(hName="sfcHLst", mName="score2", fcName="inc.f")
 		fFLst <- list()	# found fLst
+		for( idx in seq_len(length(rObj$fLst_1Col.bScr)) ){
+			fF <- rObj$fLst_1Col.bScr[[idx]]$createCutter( ctrlCfg ,tgtId )
+			if( !(fF$defId["hName"]=="*" || fF$defId["hName"]==tgtId["hName"]) ) next
+			if( !(fF$defId["mName"]=="*" || fF$defId["mName"]==tgtId["mName"]) ) next
+			if( !(fF$defId["fcName"]=="*" || fF$defId["fcName"]==tgtId["fcName"]) ) next
+
+			fFLst[[1+length(fFLst)]] <- fF
+		}
+
+		#	fFLst에서 우선순위 밀리는 "*" 설정을 제외한다.
+		#		- 값이 정확히 지정된 FLst가 있다면, "*" 설정들은 배제.
+		#		- 우선순위는 hName, mName, pName, fcName
+
+		selVal <- sapply( fFLst ,function(fLst){ fLst$defId["hName"] })
+		if( any(selVal==tgtId["hName"]) )	fFLst <- fFLst[ selVal==tgtId["hName"] ]
+
+		selVal <- sapply( fFLst ,function(fLst){ fLst$defId["mName"] })
+		if( any(selVal==tgtId["mName"]) )	fFLst <- fFLst[ selVal==tgtId["mName"] ]
+
+		selVal <- sapply( fFLst ,function(fLst){ fLst$defId["fcName"] })
+		if( any(selVal==tgtId["fcName"]) )	fFLst <- fFLst[ selVal==tgtId["fcName"] ]
+		
 		return( fFLst )
 	}
+
+	rObj$fLst_NCol.bScr <- list()	# check by row
+	if( TRUE ){
+		# rObj$fLst_NCol.bScr[[1+length(rObj$fLst_NCol.bScr)]] <- bFCust.A_bScr01_A_Row01()
+    }
 	rObj$getCustF_NCol.bScr <- function( tgtId=c(hName="", mName="" ) ,auxInfo=c(auxInfo="") ){
+		# tgtId=c(hName="sfcHLst", mName="score2")
 		fFLst <- list()	# found fLst
+		for( idx in seq_len(length(rObj$fLst_NCol.bScr)) ){
+			fF <- rObj$fLst_NCol.bScr[[idx]]$createCutter( tgtId ,auxInfo )
+			if( !(fF$defId["hName"]=="*" || fF$defId["hName"]==tgtId["hName"]) ) next
+			if( !(fF$defId["mName"]=="*" || fF$defId["mName"]==tgtId["mName"]) ) next
+			fFLst[[1+length(fFLst)]] <- fF
+		}
+		if( 0==length(fFLst) ) return( fFLst )
+
+		selVal <- sapply( fFLst ,function(fLst){ fLst$defId["hName"] })
+		if( any(selVal==tgtId["hName"]) )	fFLst <- fFLst[ selVal==tgtId["hName"] ]
+
+		selVal <- sapply( fFLst ,function(fLst){ fLst$defId["mName"] })
+		if( any(selVal==tgtId["mName"]) )	fFLst <- fFLst[ selVal==tgtId["mName"] ]
+
+		names( fFLst ) <- paste("NCol",1:length(fFLst),sep="")
 		return( fFLst )
 	}
+
+	rObj$fLst_rReb.bScr <- list()
+	if( TRUE ){
+		# rObj$fLst_rReb.bScr[[1+length(rObj$fLst_rReb.bScr)]] <- bFCust.A_bScr01_A_rReb01()
+    }
 	rObj$getCustF_RReb.bScr <- function( lastMtx ,tgtId=c(hName="", mName="" ) ,auxInfo=c(auxInfo="") ){
+		# tgtId=c(hName="sfcHLst", mName="score2", pName="basic")
 		fFLst <- list()	# found fLst
+		for( idx in seq_len(length(rObj$fLst_rReb)) ){
+			fF <- rObj$fLst_rReb[[idx]]$createCutter( lastMtx ,tgtId ,auxInfo )
+			if( !(fF$defId["hName"]=="*" || fF$defId["hName"]==tgtId["hName"]) ) next
+			if( !(fF$defId["mName"]=="*" || fF$defId["mName"]==tgtId["mName"]) ) next
+			if( !(fF$defId["pName"]=="*" || fF$defId["pName"]==tgtId["pName"]) ) next
+
+			fFLst[[1+length(fFLst)]] <- fF
+		}
+		if( 0==length(fFLst) ) return( fFLst )
+
+		selVal <- sapply( fFLst ,function(fLst){ fLst$defId["hName"] })
+		if( any(selVal==tgtId["hName"]) )	fFLst <- fFLst[ selVal==tgtId["hName"] ]
+
+		selVal <- sapply( fFLst ,function(fLst){ fLst$defId["mName"] })
+		if( any(selVal==tgtId["mName"]) )	fFLst <- fFLst[ selVal==tgtId["mName"] ]
+
+		selVal <- sapply( fFLst ,function(fLst){ fLst$defId["pName"] })
+		if( any(selVal==tgtId["pName"]) )	fFLst <- fFLst[ selVal==tgtId["pName"] ]
+
+		names( fFLst ) <- paste("RReb",1:length(fFLst),sep="")
 		return( fFLst )
+
 	}
 
 	return( rObj )
