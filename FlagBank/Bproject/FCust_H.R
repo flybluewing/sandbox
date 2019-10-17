@@ -31,6 +31,7 @@ bFCust.getFCustGrp <- function( stdCtrlCfgGrp ,hMtxLst ){
 
     rObj <- list(   sfcHLst = hMtxLst$sfcHLst
                     ,mtxInfoLst = hMtxLst$mtxInfoLst
+					,mtxInfoLst.bScr = hMtxLst$mtxInfoLst.bScr
                     ,phaseName = hMtxLst$phaseName
     )
 
@@ -38,7 +39,9 @@ bFCust.getFCustGrp <- function( stdCtrlCfgGrp ,hMtxLst ){
 	custObj <- bFCust.getCust()
 
 	cutterLst <- list()
+	cutterLst.bScr <- list()
 	for( hName in names(rObj$sfcHLst) ){	# hName <- names(rObj$sfcHLst)[1]
+		# cutterLst ------------------------------------------------------------
         mLst <- list()
         for( mName in names(rObj$mtxInfoLst) ){	# mName <- names(rObj$mtxInfoLst)[1]
             #    stdLst ,fColLst ,hIdxLst
@@ -84,8 +87,29 @@ bFCust.getFCustGrp <- function( stdCtrlCfgGrp ,hMtxLst ){
 
             mLst[[mName]] <- list( stdLst=stdLst ,fColLst=fColLst ,hIdxLst=hIdxLst)
 		} # for(mName)
-
 		cutterLst[[hName]] <- mLst
+
+		# cutterLst.bScr -------------------------------------------------------
+		mLst <- list()
+		for( mName in names(rObj$mtxInfoLst.bScr) ){
+			stdLst <- list()
+			for( fcName in rObj$mtxInfoLst.bScr[[mName]] ){ # fcName <- rObj$mtxInfoLst.bScr[[mName]][1]
+				tgtId <- c(hName=hName, mName=mName, fcName=fcName)
+
+				fLst <- custObj$getCustF_1Col.bScr( tgtId ,auxInfo=c(fCol=fcName) )
+
+				# 일단 컬럼 하나 당 cutting 함수 하나씩이라고 가정.
+				stdLst[[fcName]] <- fLst[[1]]	# stdLst[[fcName]]$idObjDesc
+			}
+
+			# for each row
+			tgtId <- c(hName=hName, mName=mName )
+			stdLst <- append(stdLst ,custObj$getCustF_NCol.bScr(tgtId) ) 
+			stdLst <- append(stdLst ,custObj$getCustF_RReb.bScr(hMtxLst,tgtId) ) 
+
+			mLst[[mName]] <- list( stdLst=stdLst )
+		}
+		cutterLst.bScr[[hName]] <- mLst
     }
 
     rObj$cutterLst <- cutterLst
@@ -371,6 +395,22 @@ bFCust.getCust <- function(){
 		names( fFLst ) <- paste("byHIdx",1:length(fFLst),sep="")
 		return( fFLst )
 	} # rObj$getCustF_byHIdx()
+
+
+	# ---------------------------------------------------------------------------------------------
+	#	bScr
+	rObj$getCustF_1Col.bScr <- function( ctrlCfg ,tgtId=c(hName="", mName="", fcName="") ,auxInfo=c(auxInfo="") ){
+		fFLst <- list()	# found fLst
+		return( fFLst )
+	}
+	rObj$getCustF_NCol.bScr <- function( tgtId=c(hName="", mName="" ) ,auxInfo=c(auxInfo="") ){
+		fFLst <- list()	# found fLst
+		return( fFLst )
+	}
+	rObj$getCustF_RReb.bScr <- function( lastMtx ,tgtId=c(hName="", mName="" ) ,auxInfo=c(auxInfo="") ){
+		fFLst <- list()	# found fLst
+		return( fFLst )
+	}
 
 	return( rObj )
 

@@ -15,6 +15,11 @@ bUtil.cut <- function( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=NULL ,anaOnly=F 
     # scoreMtx.grp <- wScoreMtx.grp ;anaOnly=T
     scMtxName <- names(cut.grp$mtxInfoLst)
 	if( !is.null(tgt.scMtx) )	scMtxName <- intersect( scMtxName ,tgt.scMtx )
+
+	# bScrMtxName
+	bScrMtxName <- names(cut.grp$mtxInfoLst.bScr)
+	if( !is.null(tgt.scMtx) )	bScrMtxName <- intersect( bScrMtxName ,tgt.scMtx )
+
     datLen <- nrow(scoreMtx.grp$basic[[1]][[1]]$scoreMtx)
     cutInfoLst <- NULL
     if( anaOnly ){
@@ -84,6 +89,9 @@ bUtil.cut <- function( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=NULL ,anaOnly=F 
 			reportStatus( tStmp ,sprintf("[%s,%s] hIdxLst",hName,mName) ,surFlag ,logger )
 
         }
+
+		# for( mName in bScrMtxName ){		}
+
     }
 
     return( list( surFlag=surFlag ,cutInfoLst=cutInfoLst ) )

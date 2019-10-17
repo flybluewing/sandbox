@@ -36,8 +36,6 @@ cat(sprintf("* Parallel ready... see log : %s \n",prllLog$fileName))
 
 if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
 
-    names(fRstLst) <- names(allIdxLst$stdFiltedCnt)
-
     tgt.scMtx <-        # default : NULL   하도 실수가 잦아서 일부러 문법 오류로 놔둔다.. -_-;
         #   "bScr01"
 

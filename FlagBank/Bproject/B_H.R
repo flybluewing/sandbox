@@ -113,10 +113,12 @@ B.makeHMtxLst <- function( gEnv, allIdxLst, fRstLst ,tgt.scMtx=NULL ,lastH=NULL 
     mtxInfoLst <- lapply( scoreMtxLst[[1]][[1]] ,function( pLst ){
                         colnames(pLst$scoreMtx)
                     })
+    mtxInfoLst.bScr <- lapply( bScrMtxLst[[1]] ,function(pLst){ colnames(pLst$scoreMtx) })
     phaseName <- names(scoreMtxLst[[1]])
 
     rObj <- list( sfcHLst=sfcHLst ,lastH=lastH
-                    ,mtxInfoLst=mtxInfoLst  ,phaseName=phaseName
+                    ,mtxInfoLst=mtxInfoLst  ,mtxInfoLst.bScr=mtxInfoLst.bScr
+                    ,phaseName=phaseName
                     ,scoreMtxLst=scoreMtxLst 
                     ,mfMtxLst=bScrMtxLst
                 )
