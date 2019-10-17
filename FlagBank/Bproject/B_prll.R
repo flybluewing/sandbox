@@ -10,7 +10,7 @@ load(sprintf("../Aproject/save/Obj_gEnvZ%d.save",lastH))
 
 
 #-[Parallel init work]-------------------------------------------------------------
-prllNum <- 2
+prllNum <-      # ½Ç¼ö°¡ Àæ¾Æ¼­ ±×³É ¿À·ù ÄÚµå·Î ³öµÐ´Ù.
 prllLog <- k.getFlogObj( "./log/parallel_log.txt" )
 prll.initHeader <- function( ){
     k <- sfLapply(1:prllNum,function(prllId){
