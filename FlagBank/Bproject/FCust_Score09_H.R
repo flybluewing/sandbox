@@ -78,8 +78,8 @@ bFCust.A_score9_A_Row01 <- function(  ){
 
 		evt <- bUtil.getEvtVal( smRow ,FCust_score9EvtLst )
 
-		cntEvt <- sum( evt ,na.rm=T )
-		if( !bUtil.in(cntEvt,c(min=0,max=5)) ){
+		cntEvt <- sum( !is.na(evt) )
+		if( !bUtil.in(cntEvt,c(min=0,max=1)) ){
 			crObj$cutFlag <- TRUE
 			crObj$cId <- c( crObj$cId ,sprintf( "<cntEvt %d>",cntEvt) )
 		}
@@ -109,8 +109,8 @@ bFCust.A_score9_A_Row01 <- function(  ){
 			crObj$cId <- c( crObj$cId ,sprintf( "<dxCnt %d>",dxCnt) )
 		}
 
-		lrEvtCnt <- sum( evt[c("rLr","rRl","eLr","eRl","cLr","cRl","fLr","fRl")] ,na.rm=T )
-		if( !bUtil.in(lrEvtCnt,c(min=0,max=3)) ){
+		lrEvtCnt <- sum( !is.na(evt[c("rLr","rRl","eLr","eRl","cLr","cRl","fLr","fRl")]) )
+		if( !bUtil.in(lrEvtCnt,c(min=0,max=1)) ){
 			crObj$cutFlag <- TRUE
 			crObj$cId <- c( crObj$cId ,sprintf( "<lrEvtCnt %d>",lrEvtCnt) )
 		}

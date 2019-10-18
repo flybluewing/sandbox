@@ -76,6 +76,14 @@ bFCust.A_score8_A_Row01 <- function(  ){
 	rObj$cutFLst[[1+length(rObj$cutFLst)]] <- function( smRow ,evt ){
 		crObj <- list( cutFlag=F ,cId="hpnOne" ) # cut result object, cut Id
 
+		evt <- bUtil.getEvtVal( smRow ,FCust_score8EvtLst )
+
+		cntEvt <- sum( !is.na(evt) )
+		if( !bUtil.in(cntEvt,c(min=0,max=1)) ){
+			crObj$cutFlag <- TRUE
+			crObj$cId <- c( crObj$cId ,sprintf( "<cntEvt %d>",cntEvt) )
+		}
+
 		cntM3 <- sum(smRow[c("max3","min3")])
 		if( !bUtil.in(cntM3,c(min=0,max=1)) ){
 			crObj$cutFlag <- TRUE

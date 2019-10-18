@@ -103,6 +103,10 @@ B.makeHMtxLst <- function( gEnv, allIdxLst, fRstLst ,tgt.scMtx=NULL ,lastH=NULL 
                 }
             }
 
+            if( !is.null(scoreMtx) )    rownames(scoreMtx) <- sfcHLst[[sfcIdx]]
+
+            if( !is.null(infoMtx) )     rownames(infoMtx) <- sfcHLst[[sfcIdx]]
+
             bScrHMtxLst[[mName]] <- list( scoreMtx=scoreMtx ,infoMtx=infoMtx )
         }
 
@@ -139,8 +143,15 @@ B.makeHMtxLst <- function( gEnv, allIdxLst, fRstLst ,tgt.scMtx=NULL ,lastH=NULL 
     return( rObj )
 } # B.makeHMtxLst()
 
-B.HMtxLst_getMtxLst <- function( hMtxLst ,hName, mName, pName ){
-    return( hMtxLst$scoreMtxLst[[hName]][[pName]][[mName]] )
+B.HMtxLst_getMtxLst <- function( hMtxLst ,hName, mName, pName, tgt="scoreMtxLst" ){
+    mtxLst <- NULL
+    if( tgt=="scoreMtxLst" ){
+        mtxLst <- hMtxLst[[tgt]][[hName]][[pName]][[mName]]
+    } else if( tgt=="mfMtxLst" ){
+        mtxLst <- hMtxLst[[tgt]][[hName]][[mName]]
+    }
+
+    return( mtxLst )
 }
 
 B.getHMtxLst_byFCol <- function( hMtxLst ){ # scoreMtxLst <- hMtxLst$scoreMtxLst

@@ -1,0 +1,17 @@
+
+
+
+
+[evt 갯수 에러]
+    - 2019.10.18
+        evt에 대해서 "sum( evt ,na.rm=T )" 라는 식으로 카운팅 된 부분이 많다.
+        scoreN들 모두 검사해서 제거할 것. 특히 bFCust.A_scoreN_A_Row01() 함수들..
+        surviveWindow 재설정 할 것.
+
+		evt <- bUtil.getEvtVal( smRow ,FCust_score8EvtLst )
+
+		cntEvt <- sum( !is.na(evt) )
+		if( !bUtil.in(cntEvt,c(min=0,max=1)) ){
+			crObj$cutFlag <- TRUE
+			crObj$cId <- c( crObj$cId ,sprintf( "<cntEvt %d>",cntEvt) )
+		}

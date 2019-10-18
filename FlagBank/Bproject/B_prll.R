@@ -51,8 +51,9 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
     #   save( testData.grp ,file="Obj_testData.grp.save" )
     #   load( "Obj_testData.grp.save" )
 
-    prllLog$fLogStr("- bUtil.cut() ----------------------------",pTime=T)
     sfExport("testData.grp")    ;sfExport("stdCtrlCfgGrp")
+    prll.initHeader( )
+    prllLog$fLogStr("- bUtil.cut() ----------------------------",pTime=T)
     resultLst <- sfLapply( testSpan ,function( curHIdx ){
         wLastH <-curHIdx-1
         wLastSpan <- 1:which(names(fRstLst)==wLastH)
