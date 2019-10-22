@@ -2,7 +2,8 @@ source("FCust_Score01_H.R")	;source("FCust_Score02_H.R")	;source("FCust_Score03_
 source("FCust_Score05_H.R")	;source("FCust_Score06_H.R")	;source("FCust_Score07_H.R")	;source("FCust_Score08_H.R")
 source("FCust_Score09_H.R")
 
-source("FCust_bScr01_H.R")
+source("FCust_bScr01_H.R")	;source("FCust_bScr01_H.R")
+
 
 scoreEvtLst <- list()
 scoreEvtLst[["score1"]] <- FCust_score1EvtLst	;scoreEvtLst[["score2"]] <- FCust_score2EvtLst
@@ -12,7 +13,7 @@ scoreEvtLst[["score7"]] <- FCust_score7EvtLst	;scoreEvtLst[["score8"]] <- FCust_
 scoreEvtLst[["score9"]] <- FCust_score9EvtLst
 
 bScrEvtLst <- list()
-bScrEvtLst[["bScr01"]] <- FCust_bScr01EvtLst
+bScrEvtLst[["bScr01"]] <- FCust_bScr01EvtLst	;bScrEvtLst[["bScr01"]] <- FCust_bScr01EvtLst
 
 
 # -----------------------------------------------------
