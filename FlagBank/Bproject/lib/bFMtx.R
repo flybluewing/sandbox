@@ -139,18 +139,6 @@ getFilter.grp <- function( stdMI.grp ,tgt.scMtx=NULL ){
 		names(mtxObjLst) <- sapply(mtxObjLst,function(p){p$idStr})
 		return( mtxObjLst )
 	}
-	getBMtxObjLst <- function( stdMIObj ,bScrNames ){
-		#	stdMI.grp$basic$basic
-		bScrLst <- bFMtxB.BScrLst
-		if( 0<length(bScrNames) ){
-			bScrLst <- bScrLst[bScrNames]
-		}
-
-		bMtxObjLst <- lapply( bScrLst ,function(bScr){ return(bScr(stdMIObj)) })
-		return( bMtxObjLst )
-
-	} # getBMtxObjLst()
-
 
 	rObj <- list()
 	rObj$basic <- lapply( stdMI.grp$basic ,getMtxObjLst )
@@ -162,7 +150,12 @@ getFilter.grp <- function( stdMI.grp ,tgt.scMtx=NULL ){
 	if( !is.null(tgt.scMtx) ){	
 		bScrNames <- intersect( tgt.scMtx ,bScrNames )
 	}
-	rObj$mf <- getBMtxObjLst( stdMI.grp$basic$basic ,bScrNames )
+	if( 0<length(bScrNames) ){
+		bScrLst <- bFMtxB.BScrLst[bScrNames]
+
+		rObj$mf <- lapply( bScrLst ,function(bScr){ return(bScr(stdMIObj)) })
+
+	}
 
 	return( rObj )
 }
