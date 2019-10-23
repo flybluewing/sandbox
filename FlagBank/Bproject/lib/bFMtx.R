@@ -152,7 +152,7 @@ getFilter.grp <- function( stdMI.grp ,tgt.scMtx=NULL ){
 	}
 	if( 0<length(bScrNames) ){
 		bScrLst <- bFMtxB.BScrLst[bScrNames]
-
+		stdMIObj <- stdMI.grp$basic$basic
 		rObj$mf <- lapply( bScrLst ,function(bScr){ return(bScr(stdMIObj)) })
 
 	}

@@ -2,7 +2,7 @@ source("FCust_Score01_H.R")	;source("FCust_Score02_H.R")	;source("FCust_Score03_
 source("FCust_Score05_H.R")	;source("FCust_Score06_H.R")	;source("FCust_Score07_H.R")	;source("FCust_Score08_H.R")
 source("FCust_Score09_H.R")
 
-source("FCust_bScr01_H.R")	;source("FCust_bScr01_H.R")
+source("FCust_bScr01_H.R")	;source("FCust_bScr02_H.R")
 
 
 scoreEvtLst <- list()
@@ -14,6 +14,7 @@ scoreEvtLst[["score9"]] <- FCust_score9EvtLst
 
 bScrEvtLst <- list()
 bScrEvtLst[["bScr01"]] <- FCust_bScr01EvtLst	;bScrEvtLst[["bScr01"]] <- FCust_bScr01EvtLst
+bScrEvtLst[["bScr02"]] <- FCust_bScr02EvtLst	;bScrEvtLst[["bScr02"]] <- FCust_bScr02EvtLst
 
 
 # -----------------------------------------------------
@@ -398,6 +399,7 @@ bFCust.getCust <- function(){
 	rObj$fLst_1Col.bScr <- list()	# check each col value in one row
 	if( TRUE ){
 		rObj$fLst_1Col.bScr[[1+length(rObj$fLst_1Col.bScr)]] <- bFCust.A_bScr01_A_A( )
+		rObj$fLst_1Col.bScr[[1+length(rObj$fLst_1Col.bScr)]] <- bFCust.A_bScr02_A_A( )
 	}
 	rObj$getCustF_1Col.bScr <- function( tgtId=c(hName="", mName="", fcName="") ,auxInfo=c(auxInfo="") ){
 		# tgtId=c(hName="sfcHLst", mName="score2", fcName="inc.f")

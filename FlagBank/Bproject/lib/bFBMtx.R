@@ -124,16 +124,16 @@ bFMtxB.BScrLst[["bScr02"]] <- function( stdMIObj ){ # fCutCnt.colValSeqNext() ,a
 	rObj$checkRawVal <- function( aZoid ){
 		rVal <- c( lastMatch=0 ,mat2=0 ,matN=0 )
 		datSize <- nrow(rObj$banValMtx)
-		if( 0<datSize ){
-			rVal["lastMatch"] <- sum(rObj$banValMtx[1,]==aZoid ,na.rm=T)
-		}
-		if( 1<datSize ){
-			for( idx in 1:datSize ){
-				cnt <- sum(aZoid==rObj$banValMtx[idx,] ,na.rm=T)
-				if( cnt==2 ) rVal["mat2"] <- 1 + rVal["mat2"]
 
-				if( cnt >2 ) rVal["matN"] <- 1 + rVal["matN"]
-			}
+		if( 0<datSize ) return( rVal )
+
+		rVal["lastMatch"] <- sum(rObj$banValMtx[1,]==aZoid ,na.rm=T)
+
+		for( idx in 1:datSize ){
+			cnt <- sum(aZoid==rObj$banValMtx[idx,] ,na.rm=T)
+			if( cnt==2 ) rVal["mat2"] <- 1 + rVal["mat2"]
+
+			if( cnt >2 ) rVal["matN"] <- 1 + rVal["matN"]
 		}
 
 		return( rVal )
@@ -153,47 +153,48 @@ bFMtxB.BScrLst[["bScr02"]] <- function( stdMIObj ){ # fCutCnt.colValSeqNext() ,a
 		rVal <- c( lastMatAll=0 ,lastMatTot=0 , lastMatAll.rem=0 ,lastMatTot.rem=0 ,matAll.max=0 ,matTot.max=0 )
 
 		aRem <- aZoid %% 10
-		if( 0 < rObj$cvSeqNextLst2.lenMax ){
-			#	lastMatAll.rem ,lastMatTot.rem
-			remLst <- rObj$cvSeqNextLst2.rem
-			for( idx in 1:length(remLst) ){
-				if( 2>length(remLst[[idx]]) ) next
 
-				matCnt <- sum(aRem[0:1+idx]==remLst[[idx]])
-				rVal["lastMatTot.rem"] <- matCnt + rVal["lastMatTot.rem"]
+		if( 0==rObj$cvSeqNextLst2.lenMax ) return( rVal )
 
-				if( 2==matCnt ) rVal["lastMatAll.rem"] <- 1 + rVal["lastMatAll.rem"]
-			}
 
-			# lastMatAll ,lastMatTot
-			cvLst <- rObj$cvSeqNextLst2
-			for( idx in 1:length(cvLst) ){
-				if( 0==nrow(cvLst[[idx]]$fndMtx) ) next
+		#	lastMatAll.rem ,lastMatTot.rem
+		remLst <- rObj$cvSeqNextLst2.rem
+		for( idx in 1:length(remLst) ){
+			if( 2>length(remLst[[idx]]) ) next
 
-				matCnt <- sum(aZoid[0:1+idx]==cvLst$code)
-				rVal["lastMatTot"] <- matCnt + rVal["lastMatTot"]
+			matCnt <- sum(aRem[0:1+idx]==remLst[[idx]])
+			rVal["lastMatTot.rem"] <- matCnt + rVal["lastMatTot.rem"]
 
-				if( 2==matCnt ) rVal["lastMatAll"] <- 1 + lastMatAll["lastMatAll"]
+			if( 2==matCnt ) rVal["lastMatAll.rem"] <- 1 + rVal["lastMatAll.rem"]
+		}
+
+		# lastMatAll ,lastMatTot
+		cvLst <- rObj$cvSeqNextLst2
+		for( idx in 1:length(cvLst) ){
+			if( 0==nrow(cvLst[[idx]]$fndMtx) ) next
+
+			matCnt <- sum(aZoid[0:1+idx]==cvLst$code)
+			rVal["lastMatTot"] <- matCnt + rVal["lastMatTot"]
+
+			if( 2==matCnt ) rVal["lastMatAll"] <- 1 + lastMatAll["lastMatAll"]
+		}
+
+		# matAll.max ,matTot.max
+		matAll <- rep( 0 ,rObj$cvSeqNextLst2.lenMax )
+		matTot <- rep( 0 ,rObj$cvSeqNextLst2.lenMax )
+		cvLst <- rObj$cvSeqNextLst2
+		for( rIdx in 1:rObj$cvSeqNextLst2.lenMax ){
+			for( cIdx in 1:length(cvLst) ){
+				if( rIdx>nrow(cvLst[[cIdx]]$fndMtx) ) next
+
+				matCnt <- sum( aZoid[0:1+cIdx]==cvLst[[cIdx]]$fndMtx[rIdx,] )
+				matTot[rIdx] <- matCnt + matTot[rIdx]
+
+				if( 2==matCnt ) matAll[rIdx] <- 1 + matAll[rIdx]
 			}
 		}
-		if( 1 < rObj$cvSeqNextLst2.lenMax ){
-			# matAll.max ,matTot.max
-			matAll <- rep( 0 ,rObj$cvSeqNextLst2.lenMax )
-			matTot <- rep( 0 ,rObj$cvSeqNextLst2.lenMax )
-			cvLst <- rObj$cvSeqNextLst2
-			for( rIdx in 1:rObj$cvSeqNextLst2.lenMax ){
-				for( cIdx in 1:length(cvLst) ){
-					if( rIdx>nrow(cvLst[[cIdx]]$fndMtx) ) next
-
-					matCnt <- sum( aZoid[0:1+cIdx]==cvLst[[cIdx]]$fndMtx[rIdx,] )
-					matTot[rIdx] <- matCnt + matTot[rIdx]
-
-					if( 2==matCnt ) matAll[rIdx] <- 1 + matAll[rIdx]
-				}
-			}
-			rVal["matAll.max"] <- max(matAll)
-			rVal["matTot.max"] <- max(matTot)
-		}
+		rVal["matAll.max"] <- max(matAll)
+		rVal["matTot.max"] <- max(matTot)
 
 		return( rVal )
 	}
@@ -216,18 +217,19 @@ bFMtxB.BScrLst[["bScr02"]] <- function( stdMIObj ){ # fCutCnt.colValSeqNext() ,a
 	rObj$checkCStep2Mtx <- function( aZoid ){
 		rVal <- c( lastMatch=0 ,mat2=0 ,matN=0 )
 		aCStep <- aZoid[2:6]-aZoid[1:5]
-		if( 0< nrow(rObj$banCStep2Mtx) ){
-			rVal["lastMatch"] <- sum( aCStep==rObj$banCStep2Mtx[1,] ,na.rm=T)
-		}
-		if( 1< nrow(rObj$banCStep2Mtx) ){
-			for( rIdx in 1:nrow(rObj$banCStep2Mtx) ){
-				matCnt <- sum( aCStep==rObj$banCStep2Mtx[rIdx,] ,na.rm=T)
 
-				if( 2==matCnt ) rVal["mat2"] <- 1 + rVal["mat2"]
+		if( 0==nrow(rObj$banCStep2Mtx) ) return( rVal )
 
-				if( 2< matCnt ) rVal["matN"] <- 1 + rVal["matN"]
-			}
+		rVal["lastMatch"] <- sum( aCStep==rObj$banCStep2Mtx[1,] ,na.rm=T)
+
+		for( rIdx in 1:nrow(rObj$banCStep2Mtx) ){
+			matCnt <- sum( aCStep==rObj$banCStep2Mtx[rIdx,] ,na.rm=T)
+
+			if( 2==matCnt ) rVal["mat2"] <- 1 + rVal["mat2"]
+
+			if( 2< matCnt ) rVal["matN"] <- 1 + rVal["matN"]
 		}
+
 		return( rVal )
 	}
 
@@ -245,51 +247,51 @@ bFMtxB.BScrLst[["bScr02"]] <- function( stdMIObj ){ # fCutCnt.colValSeqNext() ,a
 		rVal <- c( lastMatAll=0 ,lastMatTot=0 , lastMatAll.rem=0 ,lastMatTot.rem=0 ,matAll.max=0 ,mat2.max=0  ,matTot.max=0 )
 
 		aRem <- aZoid %% 10
-		if( 0 < rObj$cvSeqNextLst3.lenMax ){
-			#	lastMatAll.rem ,lastMatTot.rem
-			remLst <- rObj$cvSeqNextLst3.rem
-			for( idx in 1:length(remLst) ){
-				if( 2>length(remLst[[idx]]) ) next
 
-				matCnt <- sum(aRem[0:2+idx]==remLst[[idx]])
-				rVal["lastMatTot.rem"] <- matCnt + rVal["lastMatTot.rem"]
+		if( 0==rObj$cvSeqNextLst3.lenMax ) return( rVal )
 
-				if( 2==matCnt ) rVal["lastMatAll.rem"] <- 1 + rVal["lastMatAll.rem"]
-			}
+		#	lastMatAll.rem ,lastMatTot.rem
+		remLst <- rObj$cvSeqNextLst3.rem
+		for( idx in 1:length(remLst) ){
+			if( 2>length(remLst[[idx]]) ) next
 
-			# lastMatAll ,lastMatTot
-			cvLst <- rObj$cvSeqNextLst3
-			for( idx in 1:length(cvLst) ){
-				if( 0==nrow(cvLst[[idx]]$fndMtx) ) next
+			matCnt <- sum(aRem[0:2+idx]==remLst[[idx]])
+			rVal["lastMatTot.rem"] <- matCnt + rVal["lastMatTot.rem"]
 
-				matCnt <- sum(aZoid[0:2+idx]==cvLst$code)
-				rVal["lastMatTot"] <- matCnt + rVal["lastMatTot"]
+			if( 2==matCnt ) rVal["lastMatAll.rem"] <- 1 + rVal["lastMatAll.rem"]
+		}
 
-				if( 2==matCnt ) rVal["lastMatAll"] <- 1 + lastMatAll["lastMatAll"]
+		# lastMatAll ,lastMatTot
+		cvLst <- rObj$cvSeqNextLst3
+		for( idx in 1:length(cvLst) ){
+			if( 0==nrow(cvLst[[idx]]$fndMtx) ) next
+
+			matCnt <- sum(aZoid[0:2+idx]==cvLst$code)
+			rVal["lastMatTot"] <- matCnt + rVal["lastMatTot"]
+
+			if( 2==matCnt ) rVal["lastMatAll"] <- 1 + lastMatAll["lastMatAll"]
+		}
+
+		# matAll.max ,matTot.max
+		matAll	<- rep( 0 ,rObj$cvSeqNextLst3.lenMax )
+		mat2	<- rep( 0 ,rObj$cvSeqNextLst3.lenMax )
+		matTot	<- rep( 0 ,rObj$cvSeqNextLst3.lenMax )
+		cvLst <- rObj$cvSeqNextLst3
+		for( rIdx in 1:rObj$cvSeqNextLst3.lenMax ){
+			for( cIdx in 1:length(cvLst) ){
+				if( rIdx>nrow(cvLst[[cIdx]]$fndMtx) ) next
+
+				matCnt <- sum( aZoid[0:1+cIdx]==cvLst[[cIdx]]$fndMtx[rIdx,] )
+				matTot[rIdx] <- matCnt + matTot[rIdx]
+
+				if( 2==matCnt ) mat2[rIdx] <- 1 + mat2[rIdx]
+
+				if( 3==matCnt ) matAll[rIdx] <- 1 + matAll[rIdx]
 			}
 		}
-		if( 1 < rObj$cvSeqNextLst3.lenMax ){
-			# matAll.max ,matTot.max
-			matAll	<- rep( 0 ,rObj$cvSeqNextLst3.lenMax )
-			mat2	<- rep( 0 ,rObj$cvSeqNextLst3.lenMax )
-			matTot	<- rep( 0 ,rObj$cvSeqNextLst3.lenMax )
-			cvLst <- rObj$cvSeqNextLst3
-			for( rIdx in 1:rObj$cvSeqNextLst3.lenMax ){
-				for( cIdx in 1:length(cvLst) ){
-					if( rIdx>nrow(cvLst[[cIdx]]$fndMtx) ) next
-
-					matCnt <- sum( aZoid[0:1+cIdx]==cvLst[[cIdx]]$fndMtx[rIdx,] )
-					matTot[rIdx] <- matCnt + matTot[rIdx]
-
-					if( 2==matCnt ) mat2[rIdx] <- 1 + mat2[rIdx]
-
-					if( 3==matCnt ) matAll[rIdx] <- 1 + matAll[rIdx]
-				}
-			}
-			rVal["matAll.max"] <- max(matAll)
-			rVal["mat2.max"] <- max(mat2)
-			rVal["matTot.max"] <- max(matTot)
-		}
+		rVal["matAll.max"] <- max(matAll)
+		rVal["mat2.max"] <- max(mat2)
+		rVal["matTot.max"] <- max(matTot)
 
 		return( rVal )
 	}
@@ -308,35 +310,36 @@ bFMtxB.BScrLst[["bScr02"]] <- function( stdMIObj ){ # fCutCnt.colValSeqNext() ,a
 		rVal <- c( lastMatAll=0 ,lastMatTot=0 ,matAll.max=0 ,matTot.max=0 )
 		aCStep <- aZoid[2:6]-aZoid[1:5]
 
-		if( 0 < rObj$cvSeqNextLst3.lenMax ){
+		if( 0 == rObj$cvSeqNextLst3.lenMax ) return( rVal )
+
+		# ---------------------------------------------------------------------
+		for( cIdx in 1:4 ){
+			if( 0==nrow(rObj$banCStep3Lst[[cIdx]]) ) next
+
+			matCnt <- sum( aCStep[0:1+cIdx]==rObj$banCStep3Lst[[cIdx]][1,] )
+
+			rVal["lastMatTot"] <- matCnt + rVal["lastMatTot"]
+
+			if( 2==matCnt ) rVal["lastMatAll"] <- 1 + rVal["lastMatAll"]
+		}
+
+		# ---------------------------------------------------------------------
+		matTot <- rep( 0 ,rObj$cvSeqNextLst3.lenMax )
+		matAll <- rep( 0 ,rObj$cvSeqNextLst3.lenMax )
+		for( rIdx in 1:rObj$cvSeqNextLst3.lenMax ){
 			for( cIdx in 1:4 ){
-				if( 0==nrow(rObj$banCStep3Lst[[cIdx]]) ) next
+				if( rIdx >nrow(rObj$banCStep3Lst[[cIdx]]) ) next
 
-				matCnt <- sum( aCStep[0:1+cIdx]==rObj$banCStep3Lst[[cIdx]][1,] )
+				matCnt <- sum( aCStep[0:1+cIdx]==rObj$banCStep3Lst[[cIdx]][rIdx,] )
 
-				rVal["lastMatTot"] <- matCnt + rVal["lastMatTot"]
+				matTot[rIdx] <- matCnt + matTot[rIdx]
 
-				if( 2==matCnt ) rVal["lastMatAll"] <- 1 + rVal["lastMatAll"]
+				if( 2==matCnt ) matAll[rIdx] <- 1 + matAll[rIdx]
+
 			}
 		}
-		if( 1 < rObj$cvSeqNextLst3.lenMax ){
-			matTot <- rep( 0 ,rObj$cvSeqNextLst3.lenMax )
-			matAll <- rep( 0 ,rObj$cvSeqNextLst3.lenMax )
-			for( rIdx in 1:rObj$cvSeqNextLst3.lenMax ){
-				for( cIdx in 1:4 ){
-					if( rIdx >nrow(rObj$banCStep3Lst[[cIdx]]) ) next
-
-					matCnt <- sum( aCStep[0:1+cIdx]==rObj$banCStep3Lst[[cIdx]][rIdx,] )
-
-					matTot <- matCnt + matTot
-
-					if( 2==matCnt ) matAll <- 1 + matAll
-
-				}
-			}
-			rVal["matTot.max"] <- max(matTot)
-			rVal["matAll.max"] <- max(matAll)
-		}
+		rVal["matTot.max"] <- max(matTot)
+		rVal["matAll.max"] <- max(matAll)
 
 		return( rVal )
 
