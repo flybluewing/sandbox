@@ -432,6 +432,7 @@ bFCust.getCust <- function(){
 	rObj$fLst_NCol.bScr <- list()	# check by row
 	if( TRUE ){
 		rObj$fLst_NCol.bScr[[1+length(rObj$fLst_NCol.bScr)]] <- bFCust.A_bScr01_A_Row01()
+		rObj$fLst_NCol.bScr[[1+length(rObj$fLst_NCol.bScr)]] <- bFCust.A_bScr02_A_Row01()
     }
 	rObj$getCustF_NCol.bScr <- function( tgtId=c(hName="", mName="" ) ,auxInfo=c(auxInfo="") ){
 		# tgtId=c(hName="sfcHLst", mName="score2")
@@ -458,6 +459,9 @@ bFCust.getCust <- function(){
 	if( TRUE ){
 		rObj$fLst_rReb.bScr[[1+length(rObj$fLst_rReb.bScr)]] <- bFCust.A_bScr01_A_rReb01()
 		rObj$fLst_rReb.bScr[[1+length(rObj$fLst_rReb.bScr)]] <- bFCust.A_bScr01_A_rRebAA()
+
+		# rObj$fLst_rReb.bScr[[1+length(rObj$fLst_rReb.bScr)]] <- bFCust.A_bScr02_A_rReb01()
+		# rObj$fLst_rReb.bScr[[1+length(rObj$fLst_rReb.bScr)]] <- bFCust.A_bScr02_A_rRebAA()
     }
 	rObj$getCustF_RReb.bScr <- function( lastMtx ,tgtId=c(hName="", mName="" ) ,auxInfo=c(auxInfo="") ){
 		# tgtId=c(hName="sfcHLst", mName="score2", pName="basic")

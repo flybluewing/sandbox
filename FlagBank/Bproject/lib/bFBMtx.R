@@ -281,7 +281,7 @@ bFMtxB.BScrLst[["bScr02"]] <- function( stdMIObj ){ # fCutCnt.colValSeqNext() ,a
 			for( cIdx in 1:length(cvLst) ){
 				if( rIdx>nrow(cvLst[[cIdx]]$fndMtx) ) next
 
-				matCnt <- sum( aZoid[0:1+cIdx]==cvLst[[cIdx]]$fndMtx[rIdx,] )
+				matCnt <- sum( aZoid[0:2+cIdx]==cvLst[[cIdx]]$fndMtx[rIdx,] )
 				matTot[rIdx] <- matCnt + matTot[rIdx]
 
 				if( 2==matCnt ) mat2[rIdx] <- 1 + mat2[rIdx]
