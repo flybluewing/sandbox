@@ -1,4 +1,5 @@
 #   BProject 디렉토리에서 실행한다고 전제.
+#       병렬 실행은 불가. cut.grp 사이즈가 엄청 크다.
 source("header.r")
 source("B_H.R")
 
@@ -8,7 +9,7 @@ testMode <-                 # 실수 방지를 위해 일부러 오류 코드로 남김.
 
 stdFiltedCnt <- 0:2
 scoreMtx.name <- c("score2","score3","score4","score5","score6","score7","score9"   ,"score1","score8")
-scoreMtx.name.hard <- c( "score8" ) # 실행 시간이 너무 오래 걸리는 것은 별도 그룹으로..
+# scoreMtx.name.hard <- c( "score8" ) # 실행 시간이 너무 오래 걸리는 것은 별도 그룹으로..
 stdFilted.NG <- c("D0000.A","A0100.A","AP000.E")
 
 load(sprintf("../Aproject/Obj_allIdxLstZ%d.save",lastH) )
@@ -24,6 +25,7 @@ stdMI.grp <- bUtil.getStdMILst( gEnv ,fRstLst )     ;stdMI.grp$anyWarn( )
 hMtxLst <- B.makeHMtxLst( gEnv, allIdxLst, fRstLst, lastH=lastH, scoreMtx.name )    # 16 min.(30min for all)
 stdCtrlCfgGrp <- bUtil.makeStdCtrlCfgGrp(hMtxLst)
 cut.grp <- bFCust.getFCustGrp( stdCtrlCfgGrp ,hMtxLst )
+    # cut.grp 사이즈가 엄청 커서 병렬실행 불가..
 
 tDiff <- Sys.time() - tStmp
 sprintf("Time cost : %.1f%s",tDiff,units(tDiff))
@@ -95,32 +97,34 @@ for( curStdFiltedCnt in stdFiltedCnt ){   # curStdFiltedCnt <- stdFiltedCnt[1]
 
     #   bUtil.cut( hard ) : 초 장시간 시간 소요가 되는 scoreMtx 들.. --------------------------------------------
     #       load("Obj_allIdxF.final608.save")
-    for( tgt.scMtx in scoreMtx.name.hard ){   # tgt.scMtx <- scoreMtx.name[1]
+    if( FALSE ){
+        for( tgt.scMtx in scoreMtx.name.hard ){   # tgt.scMtx <- scoreMtx.name[1]
 
-        logger$fLogStr(sprintf("bUtil.cut( hard ) - tgt.scMtx:%s",tgt.scMtx),pTime=T)
+            logger$fLogStr(sprintf("bUtil.cut( hard ) - tgt.scMtx:%s",tgt.scMtx),pTime=T)
 
-        filter.grp <- getFilter.grp( stdMI.grp ,tgt.scMtx=tgt.scMtx )
+            filter.grp <- getFilter.grp( stdMI.grp ,tgt.scMtx=tgt.scMtx )
 
-        surFlag <- rep( T ,length(allIdxF) )
-        bLst <- k.blockLst( length(allIdxF) ,1000*ifelse(testMode,1,100) )
-        for( bName in names(bLst) ){    # bName <- names(bLst)[1]
-            tStmp <- Sys.time()
-            span <- bLst[[bName]]["start"]:bLst[[bName]]["end"] 
+            surFlag <- rep( T ,length(allIdxF) )
+            bLst <- k.blockLst( length(allIdxF) ,1000*ifelse(testMode,1,100) )
+            for( bName in names(bLst) ){    # bName <- names(bLst)[1]
+                tStmp <- Sys.time()
+                span <- bLst[[bName]]["start"]:bLst[[bName]]["end"] 
 
-            logger.cut <- k.getFlogObj( sprintf("./log/FinalCut_%d_%s_bUtil.cut.txt",lastH,aZoidGrp) )
+                logger.cut <- k.getFlogObj( sprintf("./log/FinalCut_%d_%s_bUtil.cut.txt",lastH,aZoidGrp) )
 
-            scoreMtx.grp <- getScoreMtx.grp( gEnv$allZoidMtx[allIdxF[span],,drop=F] ,filter.grp )
-            cutRst <- bUtil.cut( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx ,logger=logger.cut )
-            surFlag[span] <- cutRst$surFlag
+                scoreMtx.grp <- getScoreMtx.grp( gEnv$allZoidMtx[allIdxF[span],,drop=F] ,filter.grp )
+                cutRst <- bUtil.cut( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx ,logger=logger.cut )
+                surFlag[span] <- cutRst$surFlag
 
-            tDiff <- Sys.time() - tStmp
-            logStr <- sprintf("  %s block finished.(remove:%d/%d) %5.1f%s"
-                                ,bName,sum(!cutRst$surFlag),length(cutRst$surFlag)
-                                ,tDiff  ,units(tDiff)
-                        )
+                tDiff <- Sys.time() - tStmp
+                logStr <- sprintf("  %s block finished.(remove:%d/%d) %5.1f%s"
+                                    ,bName,sum(!cutRst$surFlag),length(cutRst$surFlag)
+                                    ,tDiff  ,units(tDiff)
+                            )
+            }
+            allIdxF <- allIdxF[surFlag]
+            logger$fLogStr(sprintf("   - final size :%7d",length(allIdxF)),pTime=T)
         }
-        allIdxF <- allIdxF[surFlag]
-        logger$fLogStr(sprintf("   - final size :%7d",length(allIdxF)),pTime=T)
     }
 
 

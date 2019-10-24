@@ -1,3 +1,5 @@
+#   보류. cut.grp 사이즈가 너무 커서 병렬 실행이 불가하다.
+
 #   BProject 디렉토리에서 실행한다고 전제.
 source("header.r")
 source("B_H.R")
@@ -9,7 +11,6 @@ prllNum <-      # 실수가 잦아서 그냥 오류 코드로 놔둔다.
 
 stdFiltedCnt <- 0:2
 scoreMtx.name <- c("score2","score3","score4","score5","score6","score7","score9"   ,"score1","score8")
-scoreMtx.name.hard <- c( "score8" ) # 실행 시간이 너무 오래 걸리는 것은 별도 그룹으로..
 stdFilted.NG <- c("D0000.A","A0100.A","AP000.E")
 
 load(sprintf("../Aproject/Obj_allIdxLstZ%d.save",lastH) )
@@ -46,6 +47,7 @@ stdMI.grp <- bUtil.getStdMILst( gEnv ,fRstLst )     ;stdMI.grp$anyWarn( )
 hMtxLst <- B.makeHMtxLst( gEnv, allIdxLst, fRstLst, lastH=lastH, scoreMtx.name )    # 16 min.(30min for all)
 stdCtrlCfgGrp <- bUtil.makeStdCtrlCfgGrp(hMtxLst)
 cut.grp <- bFCust.getFCustGrp( stdCtrlCfgGrp ,hMtxLst )
+sfExport("cut.grp")
 
 tDiff <- Sys.time() - tStmp
 sprintf("Time cost : %.1f%s",tDiff,units(tDiff))
@@ -79,7 +81,7 @@ for( curStdFiltedCnt in stdFiltedCnt ){   # curStdFiltedCnt <- stdFiltedCnt[1]
 
         # FC.primaryCut.bySC <- function( allIdxF ,gEnv ,filter.grp ,fHName ,cut.grp ,logFile="primaryCut.bySC.txt" )
         logFile <- sprintf("primaryCut.bySC_H%d_%s_%s.txt",lastH,aZoidGrp,tgt.scMtx)
-        allIdxF <- FC.primaryCut.bySC( allIdxF ,gEnv ,filter.grp ,fHName ,cut.grp ,logFile=logFile)
+        allIdxF <- FC.primaryCut.bySC.prll( allIdxF ,gEnv ,filter.grp ,fHName ,cut.grp ,logFile=logFile)
 
         logger$fLogStr(sprintf("FC.primaryCut.bySC - size :%7d  tgt.scMtx:%s",length(allIdxF),tgt.scMtx),pTime=T)
     }
@@ -94,57 +96,33 @@ for( curStdFiltedCnt in stdFiltedCnt ){   # curStdFiltedCnt <- stdFiltedCnt[1]
 
         surFlag <- rep( T ,length(allIdxF) )
         bLst <- k.blockLst( length(allIdxF) ,1000*ifelse(testMode,1,100) )
-        for( bName in names(bLst) ){    # bName <- names(bLst)[1]
-            tStmp <- Sys.time()
-            span <- bLst[[bName]]["start"]:bLst[[bName]]["end"] 
 
-            logger.cut <- k.getFlogObj( sprintf("./log/FinalCut_%d_%s_bUtil.cut.txt",lastH,aZoidGrp) )
+        sfExport( "tgt.scMtx" ) ;sfExport("filter.grp") ;sfExport("allIdxF")    ;sfExport("fHName")
+        resultLst <- sfLapply( bLst ,function( blk ){
+            tStmp <- Sys.time()
+            span <- blk["start"]:blk["end"] 
 
             scoreMtx.grp <- getScoreMtx.grp( gEnv$allZoidMtx[allIdxF[span],,drop=F] ,filter.grp )
-            cutRst <- bUtil.cut( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx ,logger=logger.cut )
-            surFlag[span] <- cutRst$surFlag
+            cutRst <- bUtil.cut( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx ,logger=NULL )
 
             tDiff <- Sys.time() - tStmp
-            logStr <- sprintf("  %s block finished.(remove:%d/%d) %5.1f%s"
-                                ,bName,sum(!cutRst$surFlag),length(cutRst$surFlag)
+            logStr <- sprintf("  block finished. %d/%d  %5.1f%s for %d~%d "
+                                ,sum(!cutRst$surFlag),length(cutRst$surFlag)
                                 ,tDiff  ,units(tDiff)
+                                ,blk["start"] ,blk["end"]
                         )
+            prllLog$fLogStr( logStr )
+            
+            return( list( surFlag=cutRst$surFlag ,blk=blk ) )
+        })
+        for( idx in seq_len(length(resultLst)) ){
+            blk <- resultLst[[idx]]$blk
+            surFlag[ blk["start"]:blk["end"] ] <- resultLst[[idx]]$surFlag
         }
+
         allIdxF <- allIdxF[surFlag]
         logger$fLogStr(sprintf("   - final size :%7d",length(allIdxF)),pTime=T)
     }
-
-
-    #   bUtil.cut( hard ) : 초 장시간 시간 소요가 되는 scoreMtx 들.. --------------------------------------------
-    #       load("Obj_allIdxF.final608.save")
-    for( tgt.scMtx in scoreMtx.name.hard ){   # tgt.scMtx <- scoreMtx.name[1]
-
-        logger$fLogStr(sprintf("bUtil.cut( hard ) - tgt.scMtx:%s",tgt.scMtx),pTime=T)
-
-        filter.grp <- getFilter.grp( stdMI.grp ,tgt.scMtx=tgt.scMtx )
-
-        surFlag <- rep( T ,length(allIdxF) )
-        bLst <- k.blockLst( length(allIdxF) ,1000*ifelse(testMode,1,100) )
-        for( bName in names(bLst) ){    # bName <- names(bLst)[1]
-            tStmp <- Sys.time()
-            span <- bLst[[bName]]["start"]:bLst[[bName]]["end"] 
-
-            logger.cut <- k.getFlogObj( sprintf("./log/FinalCut_%d_%s_bUtil.cut.txt",lastH,aZoidGrp) )
-
-            scoreMtx.grp <- getScoreMtx.grp( gEnv$allZoidMtx[allIdxF[span],,drop=F] ,filter.grp )
-            cutRst <- bUtil.cut( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx ,logger=logger.cut )
-            surFlag[span] <- cutRst$surFlag
-
-            tDiff <- Sys.time() - tStmp
-            logStr <- sprintf("  %s block finished.(remove:%d/%d) %5.1f%s"
-                                ,bName,sum(!cutRst$surFlag),length(cutRst$surFlag)
-                                ,tDiff  ,units(tDiff)
-                        )
-        }
-        allIdxF <- allIdxF[surFlag]
-        logger$fLogStr(sprintf("   - final size :%7d",length(allIdxF)),pTime=T)
-    }
-
 
     #   QQE 다중 scoreMtx 필터링 추가.
 
