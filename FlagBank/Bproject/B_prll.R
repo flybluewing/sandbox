@@ -93,7 +93,7 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
                 # B.rptCutRst( cutRst )
 
         prllLog$fLogStr(sprintf("    curHIdx:%d done.",curHIdx),pTime=T)
-        
+
         return( list(hIdx=curHIdx ,cutRst=cutRst) )
     })
     names( resultLst ) <- sapply( resultLst ,function(p){p$hIdx})

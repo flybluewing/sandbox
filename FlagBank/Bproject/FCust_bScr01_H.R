@@ -367,7 +367,8 @@ bFCust.A_bScr01_A_rRebAA <- function(  ){	#	이전 마지막 score(cutterObj$lastRow)
 				if( is.null(cutterObj$lastRow) )	next
 
 				diffCnt <- sum( cutterObj$lastRow!=scoreMtx[idx,] )
-				if( 14 < diffCnt ){
+				# if( 14 < diffCnt ){
+				if( !bUtil.in(diffCnt,c(min=5,max=15)) ){
 					infoStr <- sprintf("cut Id : %s (diff %d)",cutterObj$idObjDesc["rFId"],diffCnt )
 					cutLst[[1+length(cutLst)]] <- list( idx=idx ,idObjDesc=cutterObj$idObjDesc ,info=infoStr )
 				}
