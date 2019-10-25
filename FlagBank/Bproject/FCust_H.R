@@ -157,9 +157,9 @@ bFCust.getCust <- function(){
 		rObj$fLst_1Col[[1+length(rObj$fLst_1Col)]] <- bFCust.A_score1_A_A( )
 
 		rObj$fLst_1Col[[1+length(rObj$fLst_1Col)]] <- bFCust.A_score2_A_A( )
-		rObj$fLst_1Col[[1+length(rObj$fLst_1Col)]] <- bFCust.A_score2_A_rebVR( )
-		rObj$fLst_1Col[[1+length(rObj$fLst_1Col)]] <- bFCust.A_score2_A_rebL( )
-		rObj$fLst_1Col[[1+length(rObj$fLst_1Col)]] <- bFCust.A_score2_A_rebR( )
+		# rObj$fLst_1Col[[1+length(rObj$fLst_1Col)]] <- bFCust.A_score2_A_rebVR( )
+		# rObj$fLst_1Col[[1+length(rObj$fLst_1Col)]] <- bFCust.A_score2_A_rebL( )
+		# rObj$fLst_1Col[[1+length(rObj$fLst_1Col)]] <- bFCust.A_score2_A_rebR( )
 
 		rObj$fLst_1Col[[1+length(rObj$fLst_1Col)]] <- bFCust.A_score3_A_A( )
 		rObj$fLst_1Col[[1+length(rObj$fLst_1Col)]] <- bFCust.A_score4_A_A( )
