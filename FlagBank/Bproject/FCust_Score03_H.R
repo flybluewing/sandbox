@@ -291,9 +291,9 @@ bFCust.A_score3_A_rRebAA <- function(  ){	#	이전 마지막 score(cutterObj$lastRow)
 
 				if( is.null(cutterObj$lastRow) )	next
 
-				matFlag <- all( cutterObj$lastRow==scoreMtx[idx,] )
-				if( all(matFlag) ){
-					infoStr <- sprintf("cut Id : %s",cutterObj$idObjDesc["rFId"] )
+				diffCnt <- sum( cutterObj$lastRow!=scoreMtx[idx,] )
+				if( !bUtil.in(diffCnt,c(min=2,max=3)) ){
+					infoStr <- sprintf("cut Id : %s diffCnt:%d",cutterObj$idObjDesc["rFId"],diffCnt )
 					cutLst[[1+length(cutLst)]] <- list( idx=idx ,idObjDesc=cutterObj$idObjDesc ,info=infoStr )
 				}
 			}
@@ -579,9 +579,9 @@ bFCust.byFCol_A_score3_A_rRebAA <- function( ){
 
 				if( 1>=sum(scoreMtx[idx,]) ) next
 
-				matFlag <- all( cutterObj$lastRow==scoreMtx[idx,] )
-				if( all(matFlag) ){
-					infoStr <- sprintf("cut Id : rRebAA (raw all Mat %d)",length(matFlag) )
+				diffCnt <- sum( cutterObj$lastRow!=scoreMtx[idx,] )
+				if( !bUtil.in(diffCnt,c(min=2,max=5)) ){
+					infoStr <- sprintf("cut Id : rRebAA (raw all Mat diffCnt:%d len:%d)",diffCnt,sum(cutterObj$lastRow>0) )
 					cutLst[[1+length(cutLst)]] <- list( idx=idx ,idObjDesc=cutterObj$idObjDesc ,info=infoStr )
 				}
 			}

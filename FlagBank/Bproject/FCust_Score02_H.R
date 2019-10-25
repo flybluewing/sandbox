@@ -65,7 +65,7 @@ bFCust.A_score2_A_A <- function(  ){
 	return(rObj)
 } # bFCust.A_score2_A_A( )
 
-bFCust.A_score2_A_A.old <- function(  ){
+bFCust.A_score2_A_A.old <- function(  ){	# ÆóÁö¿¹Á¤
 
 	rObj <- list( maxMin=c(max=2,min=0) ,evtVal=c(2) ,extVal=integer(0) )
 	rObj$defId <- c( typ="cust"	,hName="*"	,mName="score2"	,pName="*"	,fcName="*" )
@@ -116,7 +116,7 @@ bFCust.A_score2_A_A.old <- function(  ){
 } # bFCust.A_score2_A_A.old( )
 
 #	c( typ="cust"	,hName="*"	,mName="score2"	,pName="*"	,fcName="rebV.r" )
-bFCust.A_score2_A_rebVR <- function(  ){
+bFCust.A_score2_A_rebVR <- function(  ){	# ÆóÁö¿¹Á¤
 
 	rObj <- list( maxMin=c(max=3,min=0) ,evtVal=c(2,3) ,extVal=integer(0) )
 	rObj$defId <- c( typ="cust"	,hName="*"	,mName="score2"	,pName="*"	,fcName="rebV.r" )
@@ -168,7 +168,7 @@ bFCust.A_score2_A_rebVR <- function(  ){
 } # bFCust.A_score2_A_rebVR( )
 
 #	c( typ="cust"	,hName="*"	,mName="score2"	,pName="*"	,fcName="rebL" )
-bFCust.A_score2_A_rebL <- function(  ){
+bFCust.A_score2_A_rebL <- function(  ){		# ÆóÁö¿¹Á¤
 
 	rObj <- list( maxMin=c(max=1,min=0) ,evtVal=c(1) ,extVal=integer(0) )
 	rObj$defId <- c( typ="cust"	,hName="*"	,mName="score2"	,pName="*"	,fcName="rebL" )
@@ -220,7 +220,7 @@ bFCust.A_score2_A_rebL <- function(  ){
 } # bFCust.A_score2_A_rebL( )
 
 #	c( typ="cust"	,hName="*"	,mName="score2"	,pName="*"	,fcName="rebR" )
-bFCust.A_score2_A_rebR <- function(  ){
+bFCust.A_score2_A_rebR <- function(  ){		# ÆóÁö¿¹Á¤
 
 	rObj <- list( maxMin=c(max=1,min=0) ,evtVal=c(1) ,extVal=integer(0) )
 	rObj$defId <- c( typ="cust"	,hName="*"	,mName="score2"	,pName="*"	,fcName="rebR" )
