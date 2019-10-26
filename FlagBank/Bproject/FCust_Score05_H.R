@@ -124,6 +124,13 @@ bFCust.A_score5_A_Row01 <- function(  ){
 			crObj$cId <- c( crObj$cId ,sprintf( "<ZeroCnt %d>",cnt) )
 		}
 
+		evt <- bUtil.getEvtVal( smRow ,FCust_score5EvtLst )
+		cnt <- sum( !is.na(evt) )
+		if( !bUtil.in(cnt,c(min=0,max=5)) ){
+			crObj$cutFlag <- TRUE
+			crObj$cId <- c( crObj$cId ,sprintf( "<EvtCnt %d>",cnt) )
+		}
+
 		return( crObj )
 	} # rObj$cutFLst[1]( )
 
@@ -335,9 +342,9 @@ bFCust.A_score5_A_rRebAA <- function(  ){	#	이전 마지막 score(cutterObj$lastRow)
 
 				if( is.null(cutterObj$lastRow) )	next
 
-				matFlag <- all( cutterObj$lastRow==scoreMtx[idx,] )
-				if( all(matFlag) ){
-					infoStr <- sprintf("cut Id : %s",cutterObj$idObjDesc["rFId"] )
+				diffCnt <- sum( cutterObj$lastRow!=scoreMtx[idx,] )
+				if( 1 > diffCnt ){
+					infoStr <- sprintf("cut Id : %s diffCnt:%d",cutterObj$idObjDesc["rFId"],diffCnt )
 					cutLst[[1+length(cutLst)]] <- list( idx=idx ,idObjDesc=cutterObj$idObjDesc ,info=infoStr )
 				}
 			}
@@ -740,9 +747,9 @@ bFCust.byFCol_A_score5_A_rRebAA <- function( ){
 
 				if( !cutterObj$activated || is.null(cutterObj$lastRow) ) next
 
-				matFlag <- all( cutterObj$lastRow==scoreMtx[idx,] )
-				if( all(matFlag) ){
-					infoStr <- sprintf("cut Id : rRebAA (raw all Mat %d)",length(matFlag) )
+				diffCnt <- sum( cutterObj$lastRow!=scoreMtx[idx,] )
+				if( 1>diffCnt ){
+					infoStr <- sprintf("cut Id : rRebAA (raw diffCnt:%d)",diffCnt )
 					cutLst[[1+length(cutLst)]] <- list( idx=idx ,idObjDesc=cutterObj$idObjDesc ,info=infoStr )
 				}
 			}
