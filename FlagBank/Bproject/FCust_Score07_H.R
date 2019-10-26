@@ -123,6 +123,13 @@ bFCust.A_score7_A_Row01 <- function(  ){
 			crObj$cId <- c( crObj$cId ,sprintf( "<ZeroCnt %d>",cnt) )
 		}
 
+		evt <- bUtil.getEvtVal( smRow ,FCust_score1EvtLst )
+		cnt <- sum( !is.na(evt) )
+		if( !bUtil.in(cnt,c(min=0,max=0)) ){
+			crObj$cutFlag <- TRUE
+			crObj$cId <- c( crObj$cId ,sprintf( "<EvtCnt %d>",cnt) )
+		}
+
 		return( crObj )
 	} # rObj$cutFLst[1]( )
 
