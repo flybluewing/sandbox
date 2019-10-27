@@ -210,6 +210,8 @@ bFMtxB.BScrLst[["bScr02"]] <- function( stdMIObj ){ # fCutCnt.colValSeqNext() ,a
 	banCStep2Mtx <- matrix( NA ,ncol=5 ,nrow=max(valLen) )
 	for( idx in 1:length(banCStep2Lst) ){
 		len <- length(banCStep2Lst[[idx]])
+		if( 0==len ) next
+
 		banCStep2Mtx[1:len,idx] <- banCStep2Lst[[idx]]
 	}
 	valCnt <- apply(banCStep2Mtx,1,function(p){sum(!is.na(p))})

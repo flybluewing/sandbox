@@ -151,10 +151,8 @@ getFilter.grp <- function( stdMI.grp ,tgt.scMtx=NULL ){
 		bScrNames <- intersect( tgt.scMtx ,bScrNames )
 	}
 	if( 0<length(bScrNames) ){
-		bScrLst <- bFMtxB.BScrLst[bScrNames]
 		stdMIObj <- stdMI.grp$basic$basic
-		rObj$mf <- lapply( bScrLst ,function(bScr){ return(bScr(stdMIObj)) })
-
+		rObj$mf <- lapply( bFMtxB.BScrLst[bScrNames] ,function(bScr){ return(bScr(stdMIObj)) })
 	}
 
 	return( rObj )
