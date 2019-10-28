@@ -105,112 +105,14 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
 
 
 if( FALSE ){    # 실전 추출 예제 코드
+    # bFMM.getMetaScore.grp() in bFMtxMeta.R
+    load( "Obj_testData.grp.All.save" )
 
-    # remLst
-    load(sprintf("./save/Obj_remLstZ%d.save",lastH) )
-    logger <- k.getFlogObj( "./log/cutLog.txt" )
+    testSpan <- (lastH - 18:0)
 
-    configH <- 854  # 지정된 지점을 반복사용하므로..
-    stdZoid <- gEnv$zhF[configH,]
-    stdIdx <- k.getIdx_AllZoidMtx( gEnv, stdZoid )
+    for( curHIdx in testSpan ){
 
-
-    # stdCtrlCfgGrp
-    load("./save/HMtxLst/Obj_stdCtrlCfgGrp_840.save")
-
-    tgt.scMtx <-        # default : NULL        ; c("score2","score3")
-    curStdFiltedCnt <- 1
-    allIdx  <- allIdxLst[[sprintf("allZoid.idx%d",curStdFiltedCnt)]]
-    sampleNum <- 50*10000
-    if( sampleNum <= length(allIdx) ){
-        allIdx  <- allIdx[sample(1:length(allIdx),sampleNum)]
     }
-    allIdxF <- c( stdIdx ,allIdx ) 
-    #   50*10000 기준 
-    #       score2 :  7min, 1.2hour       --> 63,410/500,000
-    #       score3 : 57min, 1.2min       -->  47,571/ 63,410
-    # ---------------------------------------------------------------------
-    #   save( allIdxF ,file="Obj_allIdxF.save" )
-    #   load( "Obj_allIdxF.save" )
-
-
-    hMtxLst <- B.makeHMtxLst( gEnv, allIdxLst, fRstLst, tgt.scMtx=tgt.scMtx )
-    cut.grp <- bFCust.getFCustGrp( stdCtrlCfgGrp ,hMtxLst )
-
-    stdMI.grp <- bUtil.getStdMILst( gEnv ,fRstLst ) # B.rptStdMI.grp( stdMI.grp )
-    stdMI.grp$anyWarn( )
-
-    filter.grp <- getFilter.grp( stdMI.grp ,tgt.scMtx )
-
-    # ====================================================================
-    #   Cutting
-    # --------------------------------------------------------------------
-    stdFilted.NG <- c("D0000.A","A0100.A","AP000.E")
-        #   B.makeHMtxLst() 의 sfcHLst 생성코드 참고.(변수 stdFilter)
-    # --------------------------------------------------------------------
-    # stdFiltedCnt 그룹에 따라서 각각 시행.
-    #   - "allZoid.idx0","allZoid.idx1","allZoid.idx2","allZoid.idx3"
-    #   - 그룹 특성에 따라 stdFilted.NG 에서
-    #       하나 소속되지 않은 aZoid, 혹은 다수가 소속된 aZoid도 있을 수 있다.
-    # --------------------------------------------------------------------
-    #   시간 소요 8.8min/20k, 39min/20k
-    fHName <- bUtil.getSfcLstName( fRstLst[[length(fRstLst)]] ,curStdFiltedCnt=curStdFiltedCnt ,cut.grp )
-
-    tStmp <- Sys.time()
-    Rprof(filename="Work_Rprof.scoreMtx.out", append=FALSE,  interval=0.02 )
-    scoreMtx.grp <- getScoreMtx.grp( gEnv$allZoidMtx[allIdxF,,drop=F] ,filter.grp )
-    Rprof( NULL )
-    tDiff <- Sys.time() - tStmp     ;cat( sprintf("cost : %.1f%s \n",tDiff,units(tDiff)) )
-
-    Rprof(filename="Work_Rprof.out", append=FALSE,  interval=0.02 )
-    cutRst <- bUtil.cut( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx ,logger=logger )
-    Rprof( NULL )
-    tDiff <- Sys.time() - tStmp     ;cat( sprintf("cost : %.1f%s \n",tDiff,units(tDiff)) )
-    #   B.rptCutRstLst( list(cutRst) )
-
-
-    # logger$fLogStr("\n\n= Performance Prof======================================")
-    # logger$fLog( summaryRprof("Work_Rprof.out") )
-    allIdxF <- allIdxF[cutRst$surFlag]
-    rptStr <- sprintf( "Initial cut : %d -> %d \n" ,length(allIdx) ,length(allIdxF) )
-    cat( rptStr )
-    allIdx <- allIdxF
-
-    save( allIdxF ,file="Obj_allIdxF.save" )
-
-
-
-
-
-
-
-
-
-    # --------------------------------------------------------------------
-    # * stdFiled 한가지씩 적용
-    for( sfIdx in stdFilted.NG ){   # sfIdx <- stdFilted.NG[1]
-        allIdxF <- intersect( allIdxF ,remLst[[sfIdx]] )
-
-        scoreMtx.grp <- getScoreMtx.grp( gEnv$allZoidMtx[allIdxF,,drop=F] ,filter.grp )
-        fHName <- bUtil.getSfcLstName( fRstLst[[length(fRstLst)]] ,curStdFilted=sfIdx ,cut.grp )
-        cutRst <- bUtil.cut( scoreMtx.grp ,cut.grp ,fHName )
-        allIdxF <- allIdxF[cutRst$surFlag]
-        rptStr <- sprintf( "        left : %d (for stdFilted %s)\n" ,length(allIdxF),sfIdx )
-        cat( rptStr )
-    }
-
-    # --------------------------------------------------------------------
-    # * stdFilted 가 없는 aZoid들.
-    allIdxF.0 <- allIdxF
-    for( sfIdx in stdFilted.NG ){
-        allIdxF.0 <- setdiff( allIdxF.0 ,remLst[[sfIdx]] )
-    }
-    scoreMtx.grp <- getScoreMtx.grp( gEnv$allZoidMtx[allIdxF.0,,drop=F] ,filter.grp )
-    fHName <- bUtil.getSfcLstName( fRstLst[[length(fRstLst)]] ,curStdFilted=sfIdx ,cut.grp )
-    cutRst <- bUtil.cut( scoreMtx.grp ,cut.grp ,fHName )
-    allIdxF <- allIdxF[cutRst$surFlag]
-
-
 
 }
 
