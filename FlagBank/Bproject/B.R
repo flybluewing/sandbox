@@ -108,11 +108,9 @@ if( FALSE ){    # 실전 추출 예제 코드
     # bFMM.getMetaScore.grp() in bFMtxMeta.R
     load( "Obj_testData.grp.All.save" )
 
-    testSpan <- (lastH - 18:0)
+    testSpan <- (lastH - 18:0)   # configH 보다는 큰 시점에서 시작해야 함을 유의.
+    testData.grp <- B.get_testData.grp.old( testSpan ,gEnv ,allIdxLst ,fRstLst ,tgt.scMtx=tgt.scMtx ,get.scoreMtx.grp=T )
 
-    for( curHIdx in testSpan ){
-
-    }
 
 }
 

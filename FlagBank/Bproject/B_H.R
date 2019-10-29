@@ -572,10 +572,11 @@ B.rptCutRstLst <- function( cutRstLst ,file="cutRstLst" ){
 } # B.rptCutRstLst()
 
 
-B.get_testData.grp.old <- function( testSpan ,gEnv ,allIdxLst ,fRstLst ,tgt.scMtx=NULL ){
+B.get_testData.grp.old <- function( testSpan ,gEnv ,allIdxLst ,fRstLst ,tgt.scMtx=NULL ,get.scoreMtx.grp=FALSE ){
 
     curHMtxLst.grp <- list( )
-    stdIdx.grp <- list()
+    stdIdx.grp <- list( )
+    scoreMtxLst.grp <- list( )
 
     tStmp <- Sys.time()
     for( curHIdx in testSpan ){    # curHIdx <- testSpan[1] # 842
@@ -599,14 +600,25 @@ B.get_testData.grp.old <- function( testSpan ,gEnv ,allIdxLst ,fRstLst ,tgt.scMt
         stdZoid <- gEnv$zhF[curHIdx,]
         stdIdx <- k.getIdx_AllZoidMtx( gEnv, stdZoid )
         stdIdx.grp[[as.character(curHIdx)]] <- stdIdx
+
+        if( get.scoreMtx.grp ){
+            stdMI.grp <- bUtil.getStdMILst( gEnv.w ,fRstLst.w )
+            filter.grp <- getFilter.grp( stdMI.grp ,tgt.scMtx=tgt.scMtx )
+            scoreMtx.grp <- getScoreMtx.grp.4H( stdZoid ,filter.grp )
+            scoreMtxLst.grp[[as.character(curHIdx)]] <- scoreMtx.grp
+        }
+
     }
     tDiff <- Sys.time() - tStmp
     cat(sprintf("time : %.1f,%s   \n",tDiff,units(tDiff)))
 
-    return( list(curHMtxLst.grp=curHMtxLst.grp ,stdIdx.grp=stdIdx.grp) )
+    rLst <- list(curHMtxLst.grp=curHMtxLst.grp ,stdIdx.grp=stdIdx.grp)
+    if( get.scoreMtx.grp ) rLst$scoreMtxLst.grp <- scoreMtxLst.grp
+
+    return( rLst )
 }
 
-B.get_testData.grp <- function( testSpan ,gEnv ,allIdxLst ,fRstLst ,tgt.scMtx=NULL ){
+B.get_testData.grp <- function( testSpan ,gEnv ,allIdxLst ,fRstLst ,tgt.scMtx=NULL ,get.scoreMtx.grp=FALSE ){
 
     tStmp <- Sys.time()
     sfExport("tgt.scMtx")
@@ -632,7 +644,16 @@ B.get_testData.grp <- function( testSpan ,gEnv ,allIdxLst ,fRstLst ,tgt.scMtx=NU
 
         tDiff <- Sys.time() - tStmp.prll
         prllLog$fLogStr(sprintf("    B.get_testData.grp - hIdx:%d finished %.1f%s",curHIdx,tDiff,units(tDiff)))
-        return(list( hIdx=curHIdx ,stdIdx=stdIdx ,hMtxLst=curHMtxLst ))
+
+        rObj <- list( hIdx=curHIdx ,stdIdx=stdIdx ,hMtxLst=curHMtxLst ) 
+
+        if( get.scoreMtx.grp ){
+            stdMI.grp <- bUtil.getStdMILst( gEnv.w ,fRstLst.w )
+            filter.grp <- getFilter.grp( stdMI.grp ,tgt.scMtx=tgt.scMtx )
+            rObj$scoreMtx.grp <- getScoreMtx.grp.4H( stdZoid ,filter.grp )
+        }
+
+        return( rObj )
     })
     names(resultLst) <- sapply(resultLst,function(p){ p$hIdx })
 
@@ -642,6 +663,11 @@ B.get_testData.grp <- function( testSpan ,gEnv ,allIdxLst ,fRstLst ,tgt.scMtx=NU
     tDiff <- Sys.time() - tStmp
     cat(sprintf("time : %.1f,%s   \n",tDiff,units(tDiff)))
 
-    return( list(curHMtxLst.grp=curHMtxLst.grp ,stdIdx.grp=stdIdx.grp) )
+    rLst <- list(curHMtxLst.grp=curHMtxLst.grp ,stdIdx.grp=stdIdx.grp)
+    if( get.scoreMtx.grp ){
+        rLst$scoreMtxLst.grp <- lapply(resultLst,function(p){p$scoreMtx.grp})
+    }
+
+    return( rLst )
 }
 
