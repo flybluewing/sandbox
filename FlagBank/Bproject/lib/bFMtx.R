@@ -1760,21 +1760,21 @@ bFMtx.score9 <- function( stdMIObj ){
 			scoreMtx[aIdx,"rLr"]	<- ifelse(is.na(banR$typCnt["Slide\\"]),0,banR$typCnt["Slide\\"])
 			scoreMtx[aIdx,"rRl"]	<- ifelse(is.na(banR$typCnt["Slide/"]),0,banR$typCnt["Slide/"])
 
-			banE <- rObj$checkBan( aZoid ,rObj$remBan )
+			banE <- rObj$checkBan( aRem ,rObj$remBan )
 			scoreMtx[aIdx,"eCnt"] 	<- banE$cnt
 			scoreMtx[aIdx,"eD2"]	<- sum(banE$bDupCnt==2)
 			scoreMtx[aIdx,"eDn"]	<- sum(banE$bDupCnt >2)
 			scoreMtx[aIdx,"eLr"]	<- ifelse(is.na(banE$typCnt["Slide\\"]),0,banE$typCnt["Slide\\"])
 			scoreMtx[aIdx,"eRl"]	<- ifelse(is.na(banE$typCnt["Slide/"]),0,banE$typCnt["Slide/"])
 
-			banC <- rObj$checkBan( aZoid ,rObj$cBan )
+			banC <- rObj$checkBan( aCStep ,rObj$cBan )
 			scoreMtx[aIdx,"cCnt"] 	<- banC$cnt
 			scoreMtx[aIdx,"cD2"]	<- sum(banC$bDupCnt==2)
 			scoreMtx[aIdx,"cDn"]	<- sum(banC$bDupCnt >2)
 			scoreMtx[aIdx,"cLr"]	<- ifelse(is.na(banC$typCnt["Slide\\"]),0,banC$typCnt["Slide\\"])
 			scoreMtx[aIdx,"cRl"]	<- ifelse(is.na(banC$typCnt["Slide/"]),0,banC$typCnt["Slide/"])
 
-			banF <- rObj$checkBan( aZoid ,rObj$fBan )
+			banF <- rObj$checkBan( aFStep ,rObj$fBan )
 			scoreMtx[aIdx,"fCnt"] 	<- banF$cnt
 			scoreMtx[aIdx,"fD2"]	<- sum(banF$bDupCnt==2)
 			scoreMtx[aIdx,"fDn"]	<- sum(banF$bDupCnt >2)

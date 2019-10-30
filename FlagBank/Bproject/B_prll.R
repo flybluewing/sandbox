@@ -47,7 +47,11 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
 
 
     testSpan <- (lastH - 18:0)   # configH 보다는 큰 시점에서 시작해야 함을 유의.
-    testData.grp <- B.get_testData.grp( testSpan ,gEnv ,allIdxLst ,fRstLst ,tgt.scMtx=tgt.scMtx)  # 반복 테스트를 위한 속도향상
+    if( TRUE ){ # stdFiltedCnt 0~3내에서만 테스트
+        sfc.InTest <- allIdxLst$stdFiltedCnt[as.character(testSpan)]
+        testSpan <- testSpan[sfc.InTest %in% 0:3]
+    }
+    testData.grp <- B.get_testData.grp( testSpan ,gEnv ,allIdxLst ,fRstLst ,tgt.scMtx=tgt.scMtx)
     #   save( testData.grp ,file="Obj_testData.grp.save" )
     #   load( "Obj_testData.grp.save" )
 
