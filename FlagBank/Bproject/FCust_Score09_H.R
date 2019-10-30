@@ -5,8 +5,8 @@ FCust_score9EvtLst <- list(		"rCnt"=2:5 ,"rD2"=2:4 ,"rDn"=1:4 ,"rLr"=2:4 ,"rRl"=
 							)
 
 FCust_score9minMaxLst <- list( "rCnt"=c(min=0,max=2) ,"rD2"=c(min=0,max=1) ,"rDn"=c(min=0,max=0) ,"rLr"=c(min=0,max=2) ,"rRl"=c(min=0,max=2)
-								,"eCnt"=c(min=0,max=4) ,"eD2"=c(min=0,max=2) ,"eDn"=c(min=0,max=1) ,"eLr"=c(min=0,max=3) ,"eRl"=c(min=0,max=3)
-								,"cCnt"=c(min=0,max=2) ,"cD2"=c(min=0,max=1) ,"cDn"=c(min=0,max=1) ,"cLr"=c(min=0,max=2) ,"cRl"=c(min=0,max=2)
+								,"eCnt"=c(min=0,max=4) ,"eD2"=c(min=0,max=3) ,"eDn"=c(min=0,max=1) ,"eLr"=c(min=0,max=4) ,"eRl"=c(min=0,max=4)
+								,"cCnt"=c(min=0,max=3) ,"cD2"=c(min=0,max=2) ,"cDn"=c(min=0,max=1) ,"cLr"=c(min=0,max=3) ,"cRl"=c(min=0,max=3)
 								,"fCnt"=c(min=0,max=2) ,"fD2"=c(min=0,max=1) ,"fDn"=c(min=0,max=0) ,"fLr"=c(min=0,max=2) ,"fRl"=c(min=0,max=2)
 							)
 
@@ -92,19 +92,19 @@ bFCust.A_score9_A_Row01 <- function(  ){
 
 
 		d2Cnt <- sum( smRow[c("rD2","eD2","cD2","fD2")] )
-		if( !bUtil.in(d2Cnt,c(min=0,max=2)) ){
+		if( !bUtil.in(d2Cnt,c(min=0,max=3)) ){
 			crObj$cutFlag <- TRUE
 			crObj$cId <- c( crObj$cId ,sprintf( "<d2Cnt %d>",d2Cnt) )
 		}
 
 		dnCnt <- sum( smRow[c("rDn","eDn","cDn","fDn")] )
-		if( !bUtil.in(dnCnt,c(min=0,max=1)) ){
+		if( !bUtil.in(dnCnt,c(min=0,max=2)) ){
 			crObj$cutFlag <- TRUE
 			crObj$cId <- c( crObj$cId ,sprintf( "<dnCnt %d>",dnCnt) )
 		}
 
 		dxCnt <- d2Cnt + dnCnt
-		if( !bUtil.in(dxCnt,c(min=0,max=2)) ){
+		if( !bUtil.in(dxCnt,c(min=0,max=4)) ){
 			crObj$cutFlag <- TRUE
 			crObj$cId <- c( crObj$cId ,sprintf( "<dxCnt %d>",dxCnt) )
 		}
@@ -206,7 +206,7 @@ bFCust.A_score9_A_rReb01 <- function(  ){	# evt rebind
 			cutterObj$evtChkLst[[1+length(cutterObj$evtChkLst)]] <- evtChkInfo
 
 			cName <- c("rD2","eD2","cD2","fD2")
-			evtChkInfo <- list( cutId="d2Cnt" ,fireThld=1 ,evtLst=rObj$evtLst[cName] )
+			evtChkInfo <- list( cutId="d2Cnt" ,fireThld=2 ,evtLst=rObj$evtLst[cName] )
 			evtChkInfo$evtLast <- bUtil.getEvtVal( scoreMtx.last ,evtChkInfo$evtLst )
 			cutterObj$evtChkLst[[1+length(cutterObj$evtChkLst)]] <- evtChkInfo
 
@@ -221,7 +221,7 @@ bFCust.A_score9_A_rReb01 <- function(  ){	# evt rebind
 			cutterObj$evtChkLst[[1+length(cutterObj$evtChkLst)]] <- evtChkInfo
 
 			cName <- c("rLr","rRl","eLr","eRl","cLr","cRl","fLr","fRl")
-			evtChkInfo <- list( cutId="lrEvtCnt" ,fireThld=1 ,evtLst=rObj$evtLst[cName] )
+			evtChkInfo <- list( cutId="lrEvtCnt" ,fireThld=2 ,evtLst=rObj$evtLst[cName] )
 			evtChkInfo$evtLast <- bUtil.getEvtVal( scoreMtx.last ,evtChkInfo$evtLst )
 			cutterObj$evtChkLst[[1+length(cutterObj$evtChkLst)]] <- evtChkInfo
 
@@ -322,7 +322,7 @@ bFCust.A_score9_A_rRebAA <- function(  ){	#	이전 마지막 score(cutterObj$lastRow)
 		} else {
 			cutterObj$lastRow <- scoreMtxObj$scoreMtx[nrow(scoreMtxObj$scoreMtx),]
 
-			if( 2>=sum(cutterObj$lastRow) ){
+			if( 3>=sum(cutterObj$lastRow) ){
 				cutterObj$lastRow <- NULL
 			}
 
@@ -345,7 +345,7 @@ bFCust.A_score9_A_rRebAA <- function(  ){	#	이전 마지막 score(cutterObj$lastRow)
 
 				matFlag <- cutterObj$lastRow==scoreMtx[idx,]
 				if( all(matFlag) ){
-					infoStr <- sprintf("cut Id : %s",cutterObj$idObjDesc["rFId"] )
+					infoStr <- sprintf("cut Id : %s (hpn:%d)",cutterObj$idObjDesc["rFId"],sum(scoreMtx[idx,]>0) )
 					cutLst[[1+length(cutLst)]] <- list( idx=idx ,idObjDesc=cutterObj$idObjDesc ,info=infoStr )
 				}
 			}
