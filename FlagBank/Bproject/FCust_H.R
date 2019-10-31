@@ -330,9 +330,9 @@ bFCust.getCust <- function(){
 		rObj$fLst_byFCol[[1+length(rObj$fLst_byFCol)]] <- bFCust.byFCol_A_score8_A_rReb01()
 		rObj$fLst_byFCol[[1+length(rObj$fLst_byFCol)]] <- bFCust.byFCol_A_score8_A_rRebAA()
 
-		# rObj$fLst_byFCol[[1+length(rObj$fLst_byFCol)]] <- bFCust.byFCol_A_score9_A()
-		# rObj$fLst_byFCol[[1+length(rObj$fLst_byFCol)]] <- bFCust.byFCol_A_score9_A_rReb01()
-		# rObj$fLst_byFCol[[1+length(rObj$fLst_byFCol)]] <- bFCust.byFCol_A_score9_A_rRebAA()
+		rObj$fLst_byFCol[[1+length(rObj$fLst_byFCol)]] <- bFCust.byFCol_A_score9_A()
+		rObj$fLst_byFCol[[1+length(rObj$fLst_byFCol)]] <- bFCust.byFCol_A_score9_A_rReb01()
+		rObj$fLst_byFCol[[1+length(rObj$fLst_byFCol)]] <- bFCust.byFCol_A_score9_A_rRebAA()
 
 	}
 	rObj$getCustF_byFCol <- function( lastMtx ,tgtId=c(hName="", mName="", fcName="") ,auxInfo=c(auxInfo="") ){

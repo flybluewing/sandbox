@@ -462,12 +462,12 @@ bFCust.byFCol_A_score9_A <- function( ){
 			if( all(smRow==2) ) {
 				crObj$cutFlag <- TRUE	;crObj$cId <- sprintf("%s 02.all",crObj$cId)
 			}
-			cnt <- sum(smRow==3)
+			cnt <- sum(smRow==4)
 			if( !bUtil.in(cnt,c(min=0,max=3)) ){
 				crObj$cutFlag <- TRUE	;crObj$cId <- sprintf("%s 03.%d",crObj$cId,cnt)
 			}
 			cnt <- sum(smRow>=4)
-			if( !bUtil.in(cnt,c(min=0,max=1)) ){
+			if( !bUtil.in(cnt,c(min=0,max=2)) ){
 				crObj$cutFlag <- TRUE	;crObj$cId <- sprintf("%s 0n.%d",crObj$cId,cnt)
 			}
 
@@ -504,7 +504,7 @@ bFCust.byFCol_A_score9_A <- function( ){
 		rObj$cutFLst[["eLr"]] <- function( smRow ,fcName ){
 			crObj <- list( cutFlag=F ,cId="_A eLr" ) # cut result object, cut Id
 			cnt <- sum(smRow)
-			if( !bUtil.in(cnt,c(min=0,max=10)) ){
+			if( !bUtil.in(cnt,c(min=0,max=12)) ){
 				crObj$cutFlag <- TRUE	;crObj$cId <- sprintf("%s tot.%d",crObj$cId,cnt)
 			}
 			cnt <- sum(smRow>1)
@@ -516,7 +516,7 @@ bFCust.byFCol_A_score9_A <- function( ){
 		rObj$cutFLst[["eRl"]] <- function( smRow ,fcName ){
 			crObj <- list( cutFlag=F ,cId="_A eRl" ) # cut result object, cut Id
 			cnt <- sum(smRow)
-			if( !bUtil.in(cnt,c(min=0,max=10)) ){
+			if( !bUtil.in(cnt,c(min=0,max=12)) ){
 				crObj$cutFlag <- TRUE	;crObj$cId <- sprintf("%s tot.%d",crObj$cId,cnt)
 			}
 			cnt <- sum(smRow>1)
@@ -726,7 +726,7 @@ bFCust.byFCol_A_score9_A_rReb01 <- function( ){
 	rObj$description <- sprintf("(cust)  ")
 
 	rObj$evtLst <- FCust_score9EvtLst
-	rObj$fireThld.min <- c( "rCnt"=1 ,"rD2"=1 ,"rDn"=1 ,"rLr"=1 ,"rRl"=1 ,"eCnt"=1 ,"eD2"=1 ,"eDn"=1 ,"eLr"=1 ,"eRl"=1 
+	rObj$fireThld.min <- c( "rCnt"=1 ,"rD2"=1 ,"rDn"=1 ,"rLr"=1 ,"rRl"=1 ,"eCnt"=2 ,"eD2"=1 ,"eDn"=1 ,"eLr"=2 ,"eRl"=2 
 							,"cCnt"=4 ,"cD2"=1 ,"cDn"=1 ,"cLr"=1 ,"cRl"=1 ,"fCnt"=1 ,"fD2"=1 ,"fDn"=1 ,"fLr"=1 ,"fRl"=1
 					)
 
@@ -804,6 +804,13 @@ bFCust.byFCol_A_score9_A_rRebAA <- function( ){
 	rObj$defId <- c( typ="c_byFCol"	,hName="*"	,mName="score9"	,fcName="*"  )
 	rObj$description <- sprintf("(cust)  ")
 
+	# rObj$sum.min <- c( "rCnt"=2 ,"rD2"=1 ,"rDn"=1 ,"rLr"=1 ,"rRl"=1 ,"eCnt"=3 ,"eD2"=1 ,"eDn"=1 ,"eLr"=1 ,"eRl"=1
+	# 						,"cCnt"=2 ,"cD2"=1 ,"cDn"=1 ,"cLr"=1 ,"cRl"=1 ,"fCnt"=1 ,"fD2"=1 ,"fDn"=1 ,"fLr"=1 ,"fRl"=1
+	# 				)
+	rObj$sum.min <- c( "rCnt"=10 ,"rD2"=1 ,"rDn"=1 ,"rLr"=1 ,"rRl"=1 ,"eCnt"=1 ,"eD2"=1 ,"eDn"=1 ,"eLr"=1 ,"eRl"=1
+						,"cCnt"=1 ,"cD2"=1 ,"cDn"=1 ,"cLr"=1 ,"cRl"=1 ,"fCnt"=1 ,"fD2"=1 ,"fDn"=1 ,"fLr"=1 ,"fRl"=1
+					)
+
 	rObj$createCutter <- function( lastMtx ,tgtId=c(hName="", mName="", pName="") ,auxInfo=c(auxInfo="") ){
 
 		cutterObj <- rObj
@@ -821,10 +828,9 @@ bFCust.byFCol_A_score9_A_rRebAA <- function( ){
 		cutterObj$idObj[names(tgtId)] <- tgtId
 
 		cutterObj$lastRow <- lastMtx[nrow(lastMtx),]
-
-		rObj$sum.min <- c( "rCnt"=2 ,"rD2"=1 ,"rDn"=1 ,"rLr"=1 ,"rRl"=1 ,"eCnt"=3 ,"eD2"=1 ,"eDn"=1 ,"eLr"=1 ,"eRl"=1
-								,"cCnt"=2 ,"cD2"=1 ,"cDn"=1 ,"cLr"=1 ,"cRl"=1 ,"fCnt"=1 ,"fD2"=1 ,"fDn"=1 ,"fLr"=1 ,"fRl"=1
-						)
+		if( sum(cutterObj$lastRow) <= rObj$sum.min[ cutterObj$idObj[["fcName"]] ] ){
+			cutterObj$lastRow <- NULL
+		}
 
 		cutterObj$cut <- function( scoreMtx ,alreadyDead=NULL ){
 
@@ -834,18 +840,17 @@ bFCust.byFCol_A_score9_A_rRebAA <- function( ){
 			}
 
 			cutLst <- list()
+			# if( is.null(cutterObj$lastRow) ) return( cutLst )
+
 
 			for( idx in seq_len(val.len) ){
 				if( alreadyDead[idx] ) next
 
-				sumFlag <- sum(scoreMtx[idx,]) >= rObj$sum.min[ cutterObj$idObj[["fcName"]] ]
-
-				if( !sumFlag || is.null(cutterObj$lastRow) ) next
-
+				# sumFlag <- sum(scoreMtx[idx,]) >= rObj$sum.min[ cutterObj$idObj[["fcName"]] ]
 				matFlag <- cutterObj$lastRow==scoreMtx[idx,]
 				if( all(matFlag) ){
 
-					infoStr <- sprintf("cut Id : rRebAA (raw all Mat. cnt:%d)",sum(scoreMtx[idx,]) )
+					infoStr <- sprintf("cut Id : rRebAA (raw all Mat. cnt:%d cntL:%d)",sum(scoreMtx[idx,]),sum(cutterObj$lastRow) )
 					infoStr <- c( infoStr ,sprintf("- %s ",cutterObj$idObj[["fcName"]]) )
 					cutLst[[1+length(cutLst)]] <- list( idx=idx ,idObjDesc=cutterObj$idObjDesc ,info=infoStr )
 
