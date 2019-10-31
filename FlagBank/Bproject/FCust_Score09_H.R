@@ -807,11 +807,11 @@ bFCust.byFCol_A_score9_A_rRebAA <- function( ){
 	# rObj$sum.min <- c( "rCnt"=2 ,"rD2"=1 ,"rDn"=1 ,"rLr"=1 ,"rRl"=1 ,"eCnt"=3 ,"eD2"=1 ,"eDn"=1 ,"eLr"=1 ,"eRl"=1
 	# 						,"cCnt"=2 ,"cD2"=1 ,"cDn"=1 ,"cLr"=1 ,"cRl"=1 ,"fCnt"=1 ,"fD2"=1 ,"fDn"=1 ,"fLr"=1 ,"fRl"=1
 	# 				)
-	rObj$sum.min <- c( "rCnt"=10 ,"rD2"=1 ,"rDn"=1 ,"rLr"=1 ,"rRl"=1 ,"eCnt"=1 ,"eD2"=1 ,"eDn"=1 ,"eLr"=1 ,"eRl"=1
-						,"cCnt"=1 ,"cD2"=1 ,"cDn"=1 ,"cLr"=1 ,"cRl"=1 ,"fCnt"=1 ,"fD2"=1 ,"fDn"=1 ,"fLr"=1 ,"fRl"=1
+	rObj$sum.min <- c( "rCnt"=0 ,"rD2"=0 ,"rDn"=0 ,"rLr"=0 ,"rRl"=0 ,"eCnt"=0 ,"eD2"=0 ,"eDn"=0 ,"eLr"=0 ,"eRl"=0
+						,"cCnt"=0 ,"cD2"=0 ,"cDn"=0 ,"cLr"=0 ,"cRl"=0 ,"fCnt"=0 ,"fD2"=0 ,"fDn"=0 ,"fLr"=0 ,"fRl"=0
 					)
 
-	rObj$createCutter <- function( lastMtx ,tgtId=c(hName="", mName="", pName="") ,auxInfo=c(auxInfo="") ){
+	rObj$createCutter <- function( lastMtx ,tgtId=c(hName="", mName="", fcName="") ,auxInfo=c(auxInfo="") ){
 
 		cutterObj <- rObj
 		cutterObj$createCutter <- NULL	;cutterObj$evtLst <- NULL
@@ -840,8 +840,7 @@ bFCust.byFCol_A_score9_A_rRebAA <- function( ){
 			}
 
 			cutLst <- list()
-			# if( is.null(cutterObj$lastRow) ) return( cutLst )
-
+			if( is.null(cutterObj$lastRow) ) return( cutLst )
 
 			for( idx in seq_len(val.len) ){
 				if( alreadyDead[idx] ) next
