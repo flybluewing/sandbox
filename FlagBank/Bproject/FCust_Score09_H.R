@@ -804,11 +804,8 @@ bFCust.byFCol_A_score9_A_rRebAA <- function( ){
 	rObj$defId <- c( typ="c_byFCol"	,hName="*"	,mName="score9"	,fcName="*"  )
 	rObj$description <- sprintf("(cust)  ")
 
-	# rObj$sum.min <- c( "rCnt"=2 ,"rD2"=1 ,"rDn"=1 ,"rLr"=1 ,"rRl"=1 ,"eCnt"=3 ,"eD2"=1 ,"eDn"=1 ,"eLr"=1 ,"eRl"=1
-	# 						,"cCnt"=2 ,"cD2"=1 ,"cDn"=1 ,"cLr"=1 ,"cRl"=1 ,"fCnt"=1 ,"fD2"=1 ,"fDn"=1 ,"fLr"=1 ,"fRl"=1
-	# 				)
-	rObj$sum.min <- c( "rCnt"=0 ,"rD2"=0 ,"rDn"=0 ,"rLr"=0 ,"rRl"=0 ,"eCnt"=0 ,"eD2"=0 ,"eDn"=0 ,"eLr"=0 ,"eRl"=0
-						,"cCnt"=0 ,"cD2"=0 ,"cDn"=0 ,"cLr"=0 ,"cRl"=0 ,"fCnt"=0 ,"fD2"=0 ,"fDn"=0 ,"fLr"=0 ,"fRl"=0
+	rObj$sum.min <- c( "rCnt"=2 ,"rD2"=1 ,"rDn"=1 ,"rLr"=1 ,"rRl"=1 ,"eCnt"=3 ,"eD2"=1 ,"eDn"=1 ,"eLr"=1 ,"eRl"=1
+							,"cCnt"=2 ,"cD2"=1 ,"cDn"=1 ,"cLr"=1 ,"cRl"=1 ,"fCnt"=1 ,"fD2"=1 ,"fDn"=1 ,"fLr"=1 ,"fRl"=1
 					)
 
 	rObj$createCutter <- function( lastMtx ,tgtId=c(hName="", mName="", fcName="") ,auxInfo=c(auxInfo="") ){
