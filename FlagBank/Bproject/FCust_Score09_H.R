@@ -994,7 +994,7 @@ bFCust.byHIdx_A_score9 <- function( ){
 			if( fireThld<=cnt.allMat )	rCutId <- c( rCutId, sprintf("phRawMatCnt.%d",cnt.allMat) )
 
 			# fColRawMat -------------------------------------------
-			fireThld <- 1
+			fireThld <- 2
 			cnt.allMat <- 0
 			for( fColName in rownames(scoreMtx) ){
 				# 0 이 많으면 적용.
@@ -1073,12 +1073,12 @@ bFCust.byHIdx_A_score9 <- function( ){
 			if( !bUtil.in(tot,surWindow) ) rCutId <- c( rCutId, sprintf("HpnTot.%d(%d~%d)",tot,surWindow["min"],surWindow["max"]) )
 
 			tot <- sum(chkEvt$hpnInfo$fCol==0)
-			surWindow <- c(min=7,max=15)
-			if( !bUtil.in(tot,surWindow) ) rCutId <- c( rCutId, sprintf("HpnFCol.%d(%d~%d)",tot,surWindow["min"],surWindow["max"]) )
+			surWindow <- c(min=5,max=15)
+			if( !bUtil.in(tot,surWindow) ) rCutId <- c( rCutId, sprintf("0HpnFCol.%d(%d~%d)",tot,surWindow["min"],surWindow["max"]) )
 
 			tot <- sum(chkEvt$hpnInfo$phase==0)
 			surWindow <- c(min=0,max=4)
-			if( !bUtil.in(tot,surWindow) ) rCutId <- c( rCutId, sprintf("HpnPh.%d(%d~%d)",tot,surWindow["min"],surWindow["max"]) )
+			if( !bUtil.in(tot,surWindow) ) rCutId <- c( rCutId, sprintf("0HpnPh.%d(%d~%d)",tot,surWindow["min"],surWindow["max"]) )
 
 			# Hpn Last-----------------------------------------
 			#	hpn 값이 이전에도 특이했는데 이번에도 특이한 경우를 제거
@@ -1090,15 +1090,9 @@ bFCust.byHIdx_A_score9 <- function( ){
 			cnt.fCol <- sum(hpnInfo.c$fCol!=hpnInfo.l$fCol)
 			cnt.phase <- sum(hpnInfo.c$phase!=hpnInfo.l$phase)
 
-			# 의미 없는 듯.
-			# surWindow <- c(min=0,max=11)
-			# if( !bUtil.in(cnt.fCol,surWindow) ) rCutId <- c( rCutId, sprintf("cnt.fCol.%d(%d~%d)",cnt.fCol,surWindow["min"],surWindow["max"]) )
-			# surWindow <- c(min=2,max=11)
-			# if( !bUtil.in(cnt.phase,surWindow) ) rCutId <- c( rCutId, sprintf("cnt.phase.%d(%d~%d)",cnt.phase,surWindow["min"],surWindow["max"]) )
-
 			tot <- sum(cnt.fCol+cnt.phase)
-			minThld <- 14
-			if( minThld>=tot ) rCutId <- c( rCutId, sprintf("HpnXY.%d(%d)",tot,minThld) )
+			minThld <- 12
+			if( minThld>=tot ) rCutId <- c( rCutId, sprintf("HpnCntReb_XY.%d(%d)",tot,minThld) )
 
 			return( rCutId )
 		}
@@ -1166,3 +1160,114 @@ bFCust.chkRowEvt_score9 <- function( smRow ){
 
 	return( rEvt )
 }
+
+bUtil.getEvt_byHIdx <- function( scoreMtx ,evtLst ,lastEvt=NULL ){
+	#	lastEvt
+	#		hIdxObj <- B.getHMtxLst_byHIdx( curHMtxLst )
+	#		mtxLst=hIdxObj[[hName]][[mName]]
+	#		lastEvt <- bUtil.getEvt_byHIdx( mtxLst[[length(mtxLst)]] ,evtLst ,mtxLst[[length(mtxLst)-1]] )
+
+	getPhaseRebMtx <- function( mtx ,ignoreThld=0 ){ # 바로 다음 phase와의 동일여부
+
+		if( !is.null(ignoreThld) ){
+			mtx[mtx<=ignoreThld] <- NA
+		}
+		mtxCSize <- ncol(mtx)
+
+		rName <- c("reb","hpn","sum")
+		rebMtx <- matrix( 0 ,nrow=length(rName) ,ncol=(mtxCSize-1) )
+		rownames( rebMtx ) <- rName
+		colnames( rebMtx ) <- colnames(mtx)[1:(mtxCSize-1)]
+
+		for( cIdx in 1:(mtxCSize-1) ){
+			mat <- mtx[,cIdx] == mtx[,cIdx+1]
+			rebMtx["reb",cIdx] <- sum(mat,na.rm=T)
+			rebMtx["hpn",cIdx] <- sum( mtx[,cIdx]>0 ,na.rm=T )
+			rebMtx["sum",cIdx] <- sum( mtx[,cIdx] ,na.rm=T )
+		}
+
+		return( rebMtx )
+	}
+	getEvtInfo <- function( rawMtx ,evtLst ){
+		evtInfo <- list()
+
+		evtMtx <- rawMtx
+		for( cIdx in seq_len(ncol(evtMtx)) ){
+			evtMtx[,cIdx] <- mapply( function(val,evt){ return( if(val%in%evt) val else NA )	}
+									,rawMtx[,cIdx],evtLst
+								)
+		}
+
+		evtInfo$evtMtx <- evtMtx
+		evtInfo$evtMask <- !is.na(evtMtx)
+		evtInfo$tot = sum(!evtInfo$evtMask)
+		evtInfo$fCol = apply( evtInfo$evtMask ,1 ,function(byRV){ sum(byRV) })
+		evtInfo$phase = apply( evtInfo$evtMask ,2 ,function(byCV){ sum(byCV) } )
+		evtInfo$phaseReb <- getPhaseRebMtx( evtMtx ,ignoreThld=NULL )
+		return( evtInfo )
+	}
+	getHpnInfo <- function( rawMtx ){
+		hpnInfo <- list( tot=	sum(rawMtx>0)
+							,fCol=	apply( rawMtx ,1 ,function(byRV){ sum(byRV>0) })
+							,phase= apply( rawMtx ,2 ,function(byCV){ sum(byCV>0)})
+							,rawMtx=rawMtx
+						)
+		hpnInfo$phaseReb <- getPhaseRebMtx( rawMtx ,ignoreThld=0 )
+		return( hpnInfo )
+	}
+
+	rObj <- list( dim=dim(scoreMtx) )
+	rObj$hpnInfo <- getHpnInfo( scoreMtx )
+	rObj$evtInfo <- getEvtInfo( scoreMtx ,evtLst )
+
+	if( !is.null(lastEvt) ){
+		rebInfo <- list()
+
+		# raw hpn -------------------------------------------------
+		#	cntTot.hpn
+		rebMtx <- rObj$hpnInfo$rawMtx == lastEvt$hpnInfo$rawMtx
+		rebMtx[rObj$hpnInfo$rawMtx==0] <- FALSE
+		rebInfo$cntTot.hpn <- sum(rebMtx)
+
+		#	fCol.hpn
+		matFlag <- rObj$hpnInfo$fCol == lastEvt$hpnInfo$fCol
+		rebInfo$fCol.hpn <- rObj$hpnInfo$fCol
+		rebInfo$fCol.hpn[!matFlag] <- NA
+
+		#	phase.hpn
+		matFlag <- rObj$hpnInfo$phase == lastEvt$hpnInfo$phase
+		rebInfo$phase.hpn <- rObj$hpnInfo$phase
+		rebInfo$phase.hpn[!matFlag] <- NA
+
+		#	phaseReb.hpn
+		matFlag <- rObj$hpnInfo$phaseReb["reb",]==lastEvt$hpnInfo$phaseReb["reb",]
+		rebInfo$phaseReb.hpn <- rObj$hpnInfo$phaseReb
+		rebInfo$phaseReb.hpn[,!matFlag] <- NA
+
+
+		# evt -----------------------------------------------------
+		rebMtx <- rObj$evtInfo$evtMtx == lastEvt$evtInfo$evtMtx
+		rebInfo$cntTot.evt <- sum(rebMtx ,na.rm=T)
+
+		#	fCol.evt
+		matFlag <- rObj$evtInfo$fCol == lastEvt$evtInfo$fCol
+		rebInfo$fCol.evt <- rObj$evtInfo$fCol
+		rebInfo$fCol.evt[!matFlag] <- NA
+
+		#	phase.evt
+		matFlag <- rObj$evtInfo$phase == lastEvt$evtInfo$phase
+		rebInfo$phase.evt <- rObj$evtInfo$phase
+		rebInfo$phase.evt[!matFlag] <- NA
+
+		#	phaseReb.evt
+		matFlag <- rObj$evtInfo$phaseReb["reb",]==lastEvt$evtInfo$phaseReb["reb",]
+		rebInfo$phaseReb.evt <- rObj$evtInfo$phaseReb
+		rebInfo$phaseReb.evt[,!matFlag] <- NA
+
+	}
+
+	return( rObj )
+
+} # bUtil.getEvt_byHIdx()
+
+

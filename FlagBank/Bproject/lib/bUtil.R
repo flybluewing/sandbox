@@ -442,8 +442,8 @@ bUtil.getMtxRebPtn.skipZero <- function( mtxLst.h ,hpnThld.fCol=NA ,hpnThld.ph=N
 	# - 패턴을 찾지 못한 경우, rep( NA ,n ) 데이터가 주어진다.
 
 	# * mtxLst.h : fCol*phase 형태의 scoreMtx가 history 별로 저장된 상태.
-	#	hIdxObj <- B.getHMtxLst_byHIdx(hMtxLst)
-	#	mtxLst.h <- hIdxObj[["sfcLate"]][["score3"]]
+	#		hIdxObj <- B.getHMtxLst_byHIdx(hMtxLst)
+	#		mtxLst.h <- hIdxObj[["sfcLate"]][["score3"]]
 	# * hpnThld.fCol / hpnThld.ph : 0 이 많지않은 scoreMtx의 경우, 일정 hpn수 이상만 찾도록 제약
 	#		(NA 이면 무시.)
 
