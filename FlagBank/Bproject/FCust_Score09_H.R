@@ -879,7 +879,7 @@ bFCust.byHIdx_A_score9 <- function( ){
 	rObj$defId <- c( typ="cust_byHIdx"	,hName="*"	,mName="score9" )
 	rObj$description <- sprintf("(cust)  ")
 
-	rObj$evtLst <- FCust_score2EvtLst
+	rObj$evtLst <- FCust_score9EvtLst
 
 	rObj$createCutter <- function( mtxLst=NULL ,tgtId=c(hName="", mName="") ,auxInfo=c(auxInfo="") ){
 
@@ -903,6 +903,12 @@ bFCust.byHIdx_A_score9 <- function( ){
 
 		cutterObj$mtxLst <- mtxLst
 		cutterObj$rebPtn.skipZero <- bUtil.getMtxRebPtn.skipZero( mtxLst ,hpnThld.fCol=NA ,hpnThld.ph=NA )
+
+		stdEvt.l2 <- NULL
+		if( 1<length(mtxLst) ){
+			stdEvt.l2 <- bUtil.getEvt_byHIdx( mtxLst[[length(mtxLst)-1]] ,rObj$evtLst ,NULL )
+		}
+		cutterObj$stdEvt.l <- bUtil.getEvt_byHIdx( mtxLst[[length(mtxLst)]] ,rObj$evtLst ,lastEvt=stdEvt.l2 )
 
 		dimSize <- dim(mtxLst[[length(mtxLst)]])
 		cutterObj$dimStr <- sprintf("%d*%d",dimSize[1],dimSize[2])
@@ -952,6 +958,7 @@ bFCust.byHIdx_A_score9 <- function( ){
 			return( rCutId )
 		}
 		cutterObj$cutLst[["F_matEvt"]] <- function( scoreMtx ,chkEvt=NULL ){
+			#	Evt rebound 라고 했어야 적절했을텐데..
 
 			rCutId <- character(0)
 
@@ -968,7 +975,7 @@ bFCust.byHIdx_A_score9 <- function( ){
 			matMtx[is.na(matMtx)] <- FALSE
 
 			# match happen count ----------------------------------
-			if( 1<=sum( matMtx ) ) rCutId <- c( rCutId, sprintf("matHpnCnt.%d",sum( matMtx )) )
+			if( 2<=sum( matMtx ) ) rCutId <- c( rCutId, sprintf("matHpnCnt.%d",sum( matMtx )) )
 
 			# match happen count(sequencial rebind) ----------------------------------
 			rebCnt <- cutterObj$evt$rebCntMtx[matMtx]
@@ -1096,27 +1103,51 @@ bFCust.byHIdx_A_score9 <- function( ){
 
 			return( rCutId )
 		}
-		# cutterObj$cutLst[["F_RareCol"]] <- function( scoreMtx ,chkEvt ){	# working
-		F_RareCol <- function( scoreMtx ,chkEvt ){
+		cutterObj$cutLst[["F_RareCol"]] <- function( scoreMtx ,chkEvt ){
+
 			rCutId <- character(0)
+			stdEvt <- bUtil.getEvt_byHIdx( scoreMtx ,evtLst=rObj$evtLst ,lastEvt=cutterObj$stdEvt.l )
 
-			pRareCol <- c("pLCol","pE3","pE4","pMH","pfNum")
-			iRareCol <- c("iLCol","iE3","iE4","iMH","ifNum")
+			# <Standard> ----------------------------------------------------------------------
 
-			pRareHpn <- apply( scoreMtx[pRareCol,] ,2 ,function(cVal){ sum(cVal>0) })
-			iRareHpn <- apply( scoreMtx[iRareCol,] ,2 ,function(cVal){ sum(cVal>0) })
-			matFlag <- pRareHpn == iRareHpn
-			matFlag[pRareHpn==0] <- FALSE
-			tot <- sum(matFlag)
-			surWin <- c(min=0,max=0)
-			if( !bUtil.in(tot,surWin) ) rCutId <- c( rCutId, sprintf("RareHpnCntMat.%d(%d~%d)",tot,surWin["min"],surWin["max"]) )
+			rebCnt <- sum( stdEvt$hpnInfo$phaseReb["reb",] )
+			maxThld <- 3
+			if( rebCnt>=maxThld ) rCutId <- c( rCutId, sprintf("stdEvt.hpn.phaseReb %d",rebCnt) )
+
+			evtReb <- stdEvt$evtInfo$phaseReb["reb",]
+			evtCnt <- sum( evtReb[ stdEvt$evtInfo$phaseReb["hpn",]>0 ] )
+			maxThld <- 2
+			if( evtCnt>=maxThld ) rCutId <- c( rCutId, sprintf("stdEvt.evt.phaseReb %d",evtCnt) )
 
 
-			FVCol <- c("FVa.m","FVa.c","aFV.m","aFV.c")
-			FV0Flg <- apply( scoreMtx[FVCol,] ,2 ,function(cVal){ all(cVal==0) })
-			tot <- sum(FV0Flg)
-			surWin <- c(min=9,max=13)
-			if( !bUtil.in(tot,surWin) ) rCutId <- c( rCutId, sprintf("FV0Hpn.%d(%d~%d)",tot,surWin["min"],surWin["max"]) )
+			# <Custom> ----------------------------------------------------------------------
+			evtMask <- stdEvt$evtInfo$evtMask
+
+			evtSum.ph <- apply( evtMask[c("rCnt","eCnt","cCnt","fCnt"),] ,2 ,sum )
+			evtCnt <- sum(evtSum.ph >= 3)	# bFCust.A_score9_A_Row01() 참고
+			maxThld <- 2
+			if( evtCnt >= maxThld ) rCutId <- c( rCutId, sprintf("stdEvt evtCnt.%d",evtCnt) )
+
+			d2Sum <- apply( scoreMtx[c("rD2","eD2","cD2","fD2") ,] ,2 ,sum )
+			d2Cnt <- sum(d2Sum>=3)			# bFCust.A_score9_A_Row01() 참고
+			maxThld <- 2
+			if( d2Cnt >= maxThld ) rCutId <- c( rCutId, sprintf("stdEvt d2Cnt.%d",d2Cnt) )
+
+			dnSum <- apply( scoreMtx[c("rDn","eDn","cDn","fDn") ,] ,2 ,sum )
+			dnCnt <- sum(dnSum>=3)			# bFCust.A_score9_A_Row01() 참고
+			maxThld <- 2
+			if( dnCnt >= maxThld ) rCutId <- c( rCutId, sprintf("stdEvt dnCnt.%d",dnCnt) )
+
+			dxCnt <- sum( (d2Sum+dnSum) >= 4)	# bFCust.A_score9_A_Row01() 참고
+			maxThld <- 2
+			if( dxCnt >= maxThld ) rCutId <- c( rCutId, sprintf("stdEvt dxCnt.%d",dxCnt) )
+
+			lrEvtSum <- apply( evtMask[c("rLr","rRl","eLr","eRl","cLr","cRl","fLr","fRl") ,] ,2 ,sum )
+			lrEvtCnt <- sum(lrEvtSum >= 2)			# bFCust.A_score9_A_Row01() 참고
+			maxThld <- 2
+			if( lrEvtCnt >= maxThld ) rCutId <- c( rCutId, sprintf("stdEvt lrEvtCnt.%d",lrEvtCnt) )
+
+
 
 			return( rCutId )
 		}
@@ -1179,9 +1210,13 @@ bUtil.getEvt_byHIdx <- function( scoreMtx ,evtLst ,lastEvt=NULL ){
 		rownames( rebMtx ) <- rName
 		colnames( rebMtx ) <- colnames(mtx)[1:(mtxCSize-1)]
 
+		vCnt <- apply( mtx ,2 ,function(byCV){ sum(!is.na(byCV)) })
 		for( cIdx in 1:(mtxCSize-1) ){
-			mat <- mtx[,cIdx] == mtx[,cIdx+1]
-			rebMtx["reb",cIdx] <- sum(mat,na.rm=T)
+
+			matCnt <- sum( mtx[,cIdx]==mtx[,cIdx+1] ,na.rm=T )
+			if( vCnt[cIdx]==vCnt[cIdx+1] ){	# 전체 매치 여부만 T/F로 따지자.
+				rebMtx["reb",cIdx] <- matCnt == vCnt[cIdx]
+			}
 			rebMtx["hpn",cIdx] <- sum( mtx[,cIdx]>0 ,na.rm=T )
 			rebMtx["sum",cIdx] <- sum( mtx[,cIdx] ,na.rm=T )
 		}
@@ -1264,6 +1299,7 @@ bUtil.getEvt_byHIdx <- function( scoreMtx ,evtLst ,lastEvt=NULL ){
 		rebInfo$phaseReb.evt <- rObj$evtInfo$phaseReb
 		rebInfo$phaseReb.evt[,!matFlag] <- NA
 
+		rObj$rebInfo <- rebInfo
 	}
 
 	return( rObj )
