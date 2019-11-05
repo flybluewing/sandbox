@@ -960,7 +960,7 @@ bFCust.byFCol_A_score1_A_rRebAA <- function( ){
 			}
 
 			cutLst <- list()
-			fqCol <- c( "rem1.num" ,"rem1.len.tot" ,"f1.num" ,"f1.len.tot" )	# 발생이 빈번한 컬럼.
+			fqCol <- c( "rem1.num" ,"rem1.len.tot" ,"c1.num" ,"c1.len.tot" ,"f1.num" ,"f1.len.tot" )	# 발생이 빈번한 컬럼.
 
 			for( idx in seq_len(val.len) ){
 				if( alreadyDead[idx] ) next
@@ -1031,6 +1031,11 @@ bFCust.byHIdx_A_score1 <- function( ){
 		cutterObj$mtxLst <- mtxLst
 		cutterObj$rebPtn.skipZero <- bUtil.getMtxRebPtn.skipZero( mtxLst ,hpnThld.fCol=NA ,hpnThld.ph=NA )
 
+		if( tgtId["mName"]==cutterObj$defId["mName"] ){
+			cutterObj$chkEvt.last <- bFCust.get_byHIdx_score1ChkEvt( mtxLst[[length(mtxLst)]] )
+		}
+
+
 		cutterObj$cut <- function( scoreMtx ,aIdx ){
 			# scoreMtx 는 1개 aZoid에 관한 [fCol,phase] mtx임을 유의.
 			# 	(즉, 이 함수는 한 개 aZoid에 대한 처리로직이다.)
@@ -1061,13 +1066,13 @@ bFCust.byHIdx_A_score1 <- function( ){
 				rCutId <- c( rCutId, sprintf("skipZero.fCol.%d (%d~%d)",cnt.fCol,surWin["min"],surWin["max"]) )
 			}
 
-			surWin <- c(min=0,max=1)
+			surWin <- c(min=0,max=4)
 			cnt.ph <- sum( 0==cutterObj$rebPtn.skipZero$diffCnt.ph(scoreMtx) )
 			if( !bUtil.in(cnt.ph,surWin) ){
 				rCutId <- c( rCutId, sprintf("skipZero.ph.%d (%d~%d)",cnt.ph,surWin["min"],surWin["max"]) )
 			}
 
-			surWin <- c(min=0,max=3)
+			surWin <- c(min=0,max=4)
 			cntTot <- cnt.fCol + cnt.ph
 			if( !bUtil.in(cntTot,surWin) ){
 				rCutId <- c( rCutId, sprintf("skipZero.sum.%d (%d~%d)",cntTot,surWin["min"],surWin["max"]) )
@@ -1251,8 +1256,7 @@ bFCust.byHIdx_A_score1 <- function( ){
 
 			return( rCutId )
 		}
-		# cutterObj$cutLst[["F_RareCol"]] <- function( scoreMtx ,chkEvt ){	# working
-		F_RareCol <- function( scoreMtx ,chkEvt ){	# working
+		cutterObj$cutLst[["F_RareCol"]] <- function( scoreMtx ,chkEvt ){	# working
 
 			rCutId <- character(0)
 
