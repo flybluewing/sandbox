@@ -691,7 +691,7 @@ bFCust.byFCol_A_score9_A <- function( ){
 		cutterObj$idObj <- rObj$defId
 		cutterObj$idObj[names(tgtId)] <- tgtId
 
-		cutterObj$cutF <- rObj$cutFLst[[ cutterObj$idObj[["fcName"]] ]]
+		# cutterObj$cutF <- rObj$cutFLst[[ cutterObj$idObj[["fcName"]] ]]
 
 		cutterObj$cut <- function( scoreMtx ,alreadyDead=NULL ){
 			val.len <- nrow( scoreMtx )
@@ -701,7 +701,9 @@ bFCust.byFCol_A_score9_A <- function( ){
 			for( idx in seq_len(val.len) ){
 				if( alreadyDead[idx] ) next
 
-				cObj <- cutterObj$cutF( scoreMtx[idx,] ,cutterObj$idObj[["fcName"]] )
+				# cObj <- cutterObj$cutF( scoreMtx[idx,] ,cutterObj$idObj[["fcName"]] )
+				fcName <- cutterObj$idObj[["fcName"]]
+				cObj <- rObj$cutFLst[[ fcName ]]( scoreMtx[idx,] ,fcName )
 				if( cObj$cutFlag ){
 					infoStr <- sprintf("cut Id : %s",paste(cObj$cId,collapse=",") )
 					cutLst[[1+length(cutLst)]] <- list( idx=idx ,idObjDesc=cutterObj$idObjDesc ,info=infoStr )
@@ -820,6 +822,7 @@ bFCust.byFCol_A_score9_A_rRebAA <- function( ){
 		if( idObjDesc["fcName"]!=tgtId["fcName"] ) idObjDesc["fcName"] <- sprintf("(%s)%s",idObjDesc["fcName"],tgtId["fcName"])
 		idObjDesc <- c( idObjDesc ,auxInfo )
 		cutterObj$idObjDesc <- idObjDesc
+		if( idObjDesc["mName"]!=tgtId["mName"] ) return( cutterObj )	# 여기는 타 mName 에 의해서도 호출되는 비 보호 영역이라..
 
 		cutterObj$idObj <- rObj$defId
 		cutterObj$idObj[names(tgtId)] <- tgtId

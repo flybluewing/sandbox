@@ -1,19 +1,19 @@
 FCust_score1EvtLst <- list(	"rem0.num"=1:3 ,"rem0.len.tot"=3:8 ,"rem0.len.val"=2:6
 							,"rem1.num"=1:3 ,"rem1.len.tot"=3:8 ,"rem1.len.val"=2:6
-							,"c0.num"=1:3 ,"c0.len.tot"=3:8 ,"c0.len.val"=2:6
+							,"c0.num"=1:3 ,"c0.len.tot"=2:8 ,"c0.len.val"=2:6
 							,"c1.num"=1:3 ,"c1.len.tot"=3:8 ,"c1.len.val"=2:6
-							,"f0.num"=1:3 ,"f0.len.tot"=3:8 ,"f0.len.val"=2:6
-							,"f1.num"=1:3 ,"f1.len.tot"=3:8 ,"f1.len.val"=2:6
-							,"zwNum"=1	,"zwC1Num"=1
+							,"f0.num"=1:3 ,"f0.len.tot"=2:8 ,"f0.len.val"=2:6
+							,"f1.num"=1:3 ,"f1.len.tot"=2:8 ,"f1.len.val"=2:6
+							,"zwNum"=1:4	,"zwC1Num"=1:2
 						)
 
 FCust_score1minMaxLst <- list( "rem0.num"=c(min=0,max=1) ,"rem0.len.tot"=c(min=0,max=2) ,"rem0.len.val"=c(min=0,max=2)
 								,"rem1.num"=c(min=0,max=2) ,"rem1.len.tot"=c(min=0,max=4) ,"rem1.len.val"=c(min=0,max=2)
 								,"c0.num"=c(min=0,max=1) ,"c0.len.tot"=c(min=0,max=2) ,"c0.len.val"=c(min=0,max=2)
 								,"c1.num"=c(min=0,max=2) ,"c1.len.tot"=c(min=0,max=4) ,"c1.len.val"=c(min=0,max=2)
-								,"f0.num"=c(min=0,max=1) ,"f0.len.tot"=c(min=0,max=2) ,"f0.len.val"=c(min=0,max=2)
-								,"f1.num"=c(min=0,max=1) ,"f1.len.tot"=c(min=0,max=2) ,"f1.len.val"=c(min=0,max=2)
-								,"zwNum"=c(min=0,max=1)	,"zwC1Num"=c(min=0,max=1)
+								,"f0.num"=c(min=0,max=1) ,"f0.len.tot"=c(min=0,max=3) ,"f0.len.val"=c(min=0,max=2)
+								,"f1.num"=c(min=0,max=1) ,"f1.len.tot"=c(min=0,max=3) ,"f1.len.val"=c(min=0,max=2)
+								,"zwNum"=c(min=0,max=2)	,"zwC1Num"=c(min=0,max=1)
 							)
 
 #	[score1:Col Cutter(1 col)] ------------------------------------------------------------------
@@ -123,7 +123,7 @@ bFCust.A_score1_A_Row01 <- function(  ){
 		}
 
 		valTotCnt <- remN.len.val + cN.len.val + fN.len.val
-		if( !bUtil.in(valTotCnt,c(min=0,max=2)) ){
+		if( !bUtil.in(valTotCnt,c(min=0,max=4)) ){
 			crObj$cutFlag <- TRUE
 			crObj$cId <- c( crObj$cId ,sprintf( "<valTotCnt %d>",valTotCnt) )
 		}
@@ -289,7 +289,7 @@ bFCust.A_score1_A_rReb01 <- function(  ){	# evt rebind
 			evtChkInfo$evtLast <- bUtil.getEvtVal( scoreMtx.last ,evtChkInfo$evtLst )
 			cutterObj$evtChkLst[[1+length(cutterObj$evtChkLst)]] <- evtChkInfo
 
-			evtChkInfo <- list( cutId="grp1.len" ,fireThld=1 ,evtLst=rObj$evtLst[grp1.len] )
+			evtChkInfo <- list( cutId="grp1.len" ,fireThld=2 ,evtLst=rObj$evtLst[grp1.len] )
 			evtChkInfo$evtLast <- bUtil.getEvtVal( scoreMtx.last ,evtChkInfo$evtLst )
 			cutterObj$evtChkLst[[1+length(cutterObj$evtChkLst)]] <- evtChkInfo
 
@@ -324,7 +324,7 @@ bFCust.A_score1_A_rReb01 <- function(  ){	# evt rebind
 			# evtChkInfo$evtLast <- bUtil.getEvtVal( scoreMtx.last ,evtChkInfo$evtLst )
 			# cutterObj$evtChkLst[[1+length(cutterObj$evtChkLst)]] <- evtChkInfo
 
-			evtChkInfo <- list( cutId="evtAll" ,fireThld=2 ,evtLst=rObj$evtLst )
+			evtChkInfo <- list( cutId="evtAll" ,fireThld=3 ,evtLst=rObj$evtLst )
 			evtChkInfo$evtLast <- bUtil.getEvtVal( scoreMtx.last ,evtChkInfo$evtLst )
 			cutterObj$evtChkLst[[1+length(cutterObj$evtChkLst)]] <- evtChkInfo
 
@@ -439,7 +439,7 @@ bFCust.A_score1_A_rRebAA <- function(  ){	#	이전 마지막 score(cutterObj$lastRow)
 				if( is.null(cutterObj$lastRow) )	next
 
 				diffCnt <- sum(cutterObj$lastRow!=scoreMtx[idx,])
-				if( !bUtil.in(diffCnt,c(min=1,max=8)) ){
+				if( !bUtil.in(diffCnt,c(min=1,max=12)) ){
 					infoStr <- sprintf("cut Id : %s mat:%d",cutterObj$idObjDesc["rFId"],diffCnt )
 					cutLst[[1+length(cutLst)]] <- list( idx=idx ,idObjDesc=cutterObj$idObjDesc ,info=infoStr )
 				}
@@ -668,7 +668,7 @@ bFCust.byFCol_A_score1_A <- function( ){
 		rObj$cutFLst[["f0.num"]] <- function( smRow ,fcName ){
 			crObj <- list( cutFlag=F ,cId="_A f0.num" ) # cut result object, cut Id
 			cnt <- sum(smRow==1)
-			if( !bUtil.in(cnt,c(min=0,max=1)) ){
+			if( !bUtil.in(cnt,c(min=0,max=3)) ){
 				crObj$cutFlag <- TRUE	;crObj$cId <- sprintf("%s 01.%d",crObj$cId,cnt)
 			}
 			cnt <- sum(smRow==2)
@@ -684,7 +684,7 @@ bFCust.byFCol_A_score1_A <- function( ){
 		rObj$cutFLst[["f0.len.tot"]] <- function( smRow ,fcName ){
 			crObj <- list( cutFlag=F ,cId="_A f0.len.tot" ) # cut result object, cut Id
 			cnt <- sum(smRow==2)
-			if( !bUtil.in(cnt,c(min=0,max=1)) ){
+			if( !bUtil.in(cnt,c(min=0,max=2)) ){
 				crObj$cutFlag <- TRUE	;crObj$cId <- sprintf("%s 02.%d",crObj$cId,cnt)
 			}
 			cnt <- sum(smRow==3)
@@ -716,7 +716,7 @@ bFCust.byFCol_A_score1_A <- function( ){
 		rObj$cutFLst[["f1.num"]] <- function( smRow ,fcName ){
 			crObj <- list( cutFlag=F ,cId="_A f1.num" ) # cut result object, cut Id
 			cnt <- sum(smRow==1)
-			if( !bUtil.in(cnt,c(min=0,max=2)) ){
+			if( !bUtil.in(cnt,c(min=0,max=4)) ){
 				crObj$cutFlag <- TRUE	;crObj$cId <- sprintf("%s 01.%d",crObj$cId,cnt)
 			}
 			cnt <- sum(smRow==2)
@@ -732,7 +732,7 @@ bFCust.byFCol_A_score1_A <- function( ){
 		rObj$cutFLst[["f1.len.tot"]] <- function( smRow ,fcName ){
 			crObj <- list( cutFlag=F ,cId="_A f1.len.tot" ) # cut result object, cut Id
 			cnt <- sum(smRow==2)
-			if( !bUtil.in(cnt,c(min=0,max=2)) ){
+			if( !bUtil.in(cnt,c(min=0,max=3)) ){
 				crObj$cutFlag <- TRUE	;crObj$cId <- sprintf("%s 01.%d",crObj$cId,cnt)
 			}
 			cnt <- sum(smRow==3)
@@ -770,7 +770,7 @@ bFCust.byFCol_A_score1_A <- function( ){
 				crObj$cutFlag <- TRUE	;crObj$cId <- sprintf("%s 01.%d",crObj$cId,cnt)
 			}
 			cnt <- sum(smRow==2)
-			if( !bUtil.in(cnt,c(min=0,max=0)) ){
+			if( !bUtil.in(cnt,c(min=0,max=1)) ){
 				crObj$cutFlag <- TRUE	;crObj$cId <- sprintf("%s 02.%d",crObj$cId,cnt)
 			}
 			cnt <- sum(smRow >2)
@@ -851,9 +851,9 @@ bFCust.byFCol_A_score1_A_rReb01 <- function( ){
 
 	rObj$evtLst <- FCust_score1EvtLst
 	rObj$fireThld.min <- c(  "rem0.num"=2 ,"rem0.len.tot"=1 ,"rem0.len.val"=1
-							,"rem1.num"=2 ,"rem1.len.tot"=1 ,"rem1.len.val"=1
-							,"c0.num"=1 ,"c0.len.tot"=1 ,"c0.len.val"=1
-							,"c1.num"=1 ,"c1.len.tot"=1 ,"c1.len.val"=1
+							,"rem1.num"=3 ,"rem1.len.tot"=1 ,"rem1.len.val"=1
+							,"c0.num"=2 ,"c0.len.tot"=2 ,"c0.len.val"=1
+							,"c1.num"=2 ,"c1.len.tot"=2 ,"c1.len.val"=1
 							,"f0.num"=1 ,"f0.len.tot"=1 ,"f0.len.val"=1
 							,"f1.num"=2 ,"f1.len.tot"=1 ,"f1.len.val"=1
 							,"zwNum"=3	,"zwC1Num"=1 
