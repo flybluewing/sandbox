@@ -898,6 +898,7 @@ bFCust.byHIdx_A_score9 <- function( ){
 
 		cutterObj$idObj <- rObj$defId
 		cutterObj$idObj[names(tgtId)] <- tgtId
+		if( rObj$defId["mName"]!=tgtId["mName"] )	return( cutterObj )	# 여긴 다른 mName에서도 호출되는 공용 영역이라..
 
 		cutterObj$evt <- bUtil.getMtxEvt_byRow( mtxLst ,rObj$evtLst )
 		if( tgtId["mName"]==cutterObj$defId["mName"] ){
@@ -1114,7 +1115,7 @@ bFCust.byHIdx_A_score9 <- function( ){
 			# <Standard> ----------------------------------------------------------------------
 
 			rebCnt <- sum( stdEvt$hpnInfo$phaseReb["reb",] & (stdEvt$hpnInfo$phaseReb["hpn",]>0) )
-			maxThld <- 1
+			maxThld <- 2
 			if( rebCnt>=maxThld ) rCutId <- c( rCutId, sprintf("stdEvt.hpn.phaseReb %d",rebCnt) )
 
 			evtReb <- stdEvt$evtInfo$phaseReb["reb",]
@@ -1122,11 +1123,37 @@ bFCust.byHIdx_A_score9 <- function( ){
 			maxThld <- 2
 			if( evtCnt>=maxThld ) rCutId <- c( rCutId, sprintf("stdEvt.evt.phaseReb %d",evtCnt) )
 
+			if( !is.null(stdEvt$rebInfo) ){
+				summCnt <- apply( stdEvt$rebInfo$summMtx ,1 ,sum )
+				maxThld <- 3
+				if( summCnt["raw"] >=maxThld ){
+					summ <- stdEvt$rebInfo$summMtx["raw",]
+					summ <- summ[ summ>0 ]
+					rptStr <- paste( names(summ) ,summ ,sep=":")
+					rCutId <- c( rCutId, sprintf("stdEvt.rebInfo.summ raw - %s",paste(rptStr,collapse="/") ) )
+				}
+
+				maxThld <- 4
+				if( summCnt["evt"] >=maxThld ){
+					summ <- stdEvt$rebInfo$summMtx["evt",]
+					summ <- summ[ summ>0 ]
+					rptStr <- paste( names(summ) ,summ ,sep=":")
+					rCutId <- c( rCutId, sprintf("stdEvt.rebInfo.summ evt - %s",paste(rptStr,collapse="/") ) )
+				}
+			}
+
+			if( !is.null(stdEvt$rebSummReb) ){
+				rsrSum <- sum( stdEvt$rebSummReb$hpnRebMtx )	# tot sum of rebSummReb 
+				maxThld <- 2
+				if( rsrSum>=maxThld )	rCutId <- c( rCutId, sprintf("stdEvt.rebSummReb - %d",rsrSum) )
+			}
+
 			evtMask <- stdEvt$evtInfo$evtMask
 			colSum <- apply( evtMask ,2 ,sum )
 			evtCnt <- sum(colSum >= 4)
 			maxThld <- 1
 			if( evtCnt >= maxThld )	rCutId <- c( rCutId, sprintf("evtRowSum %d",evtCnt) )
+
 
 			# <Custom> ----------------------------------------------------------------------
 			evtMask <- stdEvt$evtInfo$evtMask

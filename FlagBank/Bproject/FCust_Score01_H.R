@@ -185,7 +185,7 @@ bFCust.A_score1_A_Row01 <- function(  ){
 
 		evt <- bUtil.getEvtVal( smRow ,FCust_score1EvtLst )
 		cnt <- sum( !is.na(evt) )
-		if( !bUtil.in(cnt,c(min=0,max=5)) ){
+		if( !bUtil.in(cnt,c(min=0,max=7)) ){
 			crObj$cutFlag <- TRUE
 			crObj$cId <- c( crObj$cId ,sprintf( "<EvtCnt %d>",cnt) )
 		}
@@ -1307,28 +1307,60 @@ bFCust.byHIdx_A_score1 <- function( ){
 			# <Custom> ----------------------------------------------------------------------
 
 			chkLst <- list()
-			chkLst[["remN.len.tot"]] <- list( max=2 ,evt=4 ,cName=c("rem0.len.tot","rem1.len.tot") )
+			chkLst[["remN.len.tot"]] <- list( max=3 ,evt=4 ,cName=c("rem0.len.tot","rem1.len.tot") )
 			chkLst[["remN.len.val"]] <- list( max=2 ,evt=2 ,cName=c("rem0.len.val","rem1.len.val") )
 			chkLst[["cN.len.tot"]] <- list( max=2 ,evt=4 ,cName=c("c0.len.tot","c1.len.tot") )
 			chkLst[["cN.len.val"]] <- list( max=2 ,evt=2 ,cName=c("c0.len.val","c1.len.val") )
 			chkLst[["fN.len.tot"]] <- list( max=2 ,evt=4 ,cName=c("f0.len.tot","f1.len.tot") )
 			chkLst[["fN.len.val"]] <- list( max=2 ,evt=4 ,cName=c("f0.len.val","f1.len.val") )
 
-			for( cnIdx in names(chkLst) ){
+			chkLst.over <- list( )
+			chkLst.over[["lenTotCnt"]] <- list( max=3 ,evt=6 ,cName=c("remN.len.tot","cN.len.tot","fN.len.tot") )
+			chkLst.over[["valTotCnt"]] <- list( max=2 ,evt=4 ,cName=c("remN.len.val","cN.len.val","fN.len.val") )
+
+			sumMtx <- sapply( chkLst ,function(chk){ apply(scoreMtx[chk$cName,],2,sum) })
+
+			for( cnIdx in names(chkLst) ){	# chkLst
 				chk <- chkLst[[cnIdx]]
-				colSum <- apply( scoreMtx[chk$cName,] ,2 ,sum )
-				evtCnt <- sum( colSum >= chk$evt )
+				evtCnt <- sum( sumMtx[,cnIdx] >= chk$evt )
 				if( evtCnt >= chk$max )	rCutId <- c( rCutId, sprintf("chkLst[[\"%s\"]] %d",cnIdx,evtCnt) )
 			}
+			for( lnIdx in names(chkLst.over) ){
+				co <- chkLst.over[[lnIdx]]
+				sumCnt <- apply( sumMtx[,co$cName] ,1 ,sum )
+				evtCnt <- sum( sumCnt >= co$evt )
+				if( evtCnt >= co$max )	rCutId <- c( rCutId, sprintf("chkLst.over[[\"%s\"]] %d",lnIdx,evtCnt) )
+			}
 
-			# chkLst.over <- list( )
-			# chkLst.over[["lenTotCnt"]] <- list( maxThld=1 ,evtThld=6 ,cName=c("remN.len.tot","cN.len.tot","fN.len.tot") )
-			# chkLst.over[["valTotCnt"]] <- list( maxThld=1 ,evtThld=4 ,cName=c("remN.len.val","cN.len.val","fN.len.val") )
-			# for( lnIdx in names(chkLst.over) ){
-			# 	co <- chkLst.over[[lnIdx]]
-			# 	sum( chk.evtCnt[co$cName] )
-			# }
 
+			grpLst <- list()
+			grpLst[["grp.num"]] <- list( max=2 ,evt=1 ,cName1=c("rem0.num","c0.num","f0.num") ,cName2=c("rem1.num","c1.num","f1.num") )
+			grpLst[["grp.len"]] <- list( max=2 ,evt=1 ,cName1=c("rem0.len.tot","c0.len.tot","f0.len.tot") ,cName2=c("rem1.len.tot","c1.len.tot","f1.len.tot") )
+			grpLst[["grp.val"]] <- list( max=2 ,evt=1 ,cName1=c("rem0.len.val","c0.len.val","f0.len.val") ,cName2=c("rem1.len.val","c1.len.val","f1.len.val") )
+			sumMtx <- sapply( grpLst ,function(grp){
+							matMtx <- scoreMtx[grp$cName1,] == scoreMtx[grp$cName2,]
+							matMtx[ scoreMtx[grp$cName1,]==0 ] <- FALSE
+							return( apply(matMtx,2,sum) )
+			})
+			for( gIdx in names(grpLst) ){
+				grp <- grpLst[[gIdx]]
+				evtCnt <- sum(sumMtx[,gIdx]>=grp$evt)
+				if( evtCnt >= grp$max )	rCutId <- c( rCutId, sprintf("grpLst[[\"%s\"]] %d",gIdx,evtCnt) )
+			}
+
+
+
+			gCnt <- apply( sumMtx ,1 ,sum )
+			evtCnt <- sum(gCnt>=2)
+			if( evtCnt >= 2 )	rCutId <- c( rCutId, sprintf("gCnt %d",evtCnt) )
+
+
+			zwCnt <- apply( scoreMtx[c("zwNum","zwC1Num") ,] ,2 ,sum )
+			evtCnt <- sum( zwCnt>=2 )
+			if( evtCnt >= 2 )	rCutId <- c( rCutId, sprintf("zwCnt %d",evtCnt) )
+
+			evtCnt <- sum( (gCnt+evtCnt)>= 3)
+			if( evtCnt >= 1 )	rCutId <- c( rCutId, sprintf("g+zw Cnt %d",evtCnt) )
 
 			return( rCutId )
 		}
