@@ -537,11 +537,23 @@ bUtil.getMtxRebPtn.skipZero <- function( mtxLst.h ,hpnThld.fCol=NA ,hpnThld.ph=N
 } # bUtil.getMtxRebPtn.skipZero( )
 
 
-bUtil.getEvt_byHIdx <- function( scoreMtx ,evtLst ,lastEvt=NULL ){
+bUtil.getEvt_byHIdx <- function( scoreMtx ,evtLst ,lastEvt=NULL ,ignoreOpt=NULL ){
+	#	ignoreOpt : 모든 확인에서 0을 무시하려면 "all"=0, 무시 없으려면 ignoreOpt=NULL
+	#				일부분만 무시하려면... 흠 나중에 추가하자.
 	#	lastEvt
 	#		hIdxObj <- B.getHMtxLst_byHIdx( curHMtxLst )
 	#		mtxLst=hIdxObj[[hName]][[mName]]
 	#		lastEvt <- bUtil.getEvt_byHIdx( mtxLst[[length(mtxLst)]] ,evtLst ,mtxLst[[length(mtxLst)-1]] )
+
+	ignLst <- list( hpnInfo_phaseReb=NULL 
+						,rebMtx.all.rebRaw=0	,rebMtx.ph.raw=0	,rebMtx.fCol.raw=0	,rebMtx.phReb.raw=0
+						,summary.raw.ph=0		,summary.raw.fCol=0
+					)	# NULL값이면 ignore가 없다는 의미
+	if( !is.null(ignLst) )	{
+		for( nIdx in names(ignoreOpt) ){
+			ignLst[[nIdx]] <- if( is.na(ignoreOpt[nIdx]) ) NULL else ignoreOpt[nIdx]
+		}
+	}
 
 	getPhaseRebMtx <- function( mtx ,ignoreThld=0 ){ # 바로 다음 phase와의 동일여부
 
@@ -589,10 +601,10 @@ bUtil.getEvt_byHIdx <- function( scoreMtx ,evtLst ,lastEvt=NULL ){
 	getHpnInfo <- function( rawMtx ){
 		hpnInfo <- list( tot=	sum(rawMtx>0)
 							,fCol=	apply( rawMtx ,1 ,function(byRV){ sum(byRV>0) })
-							,phase= apply( rawMtx ,2 ,function(byCV){ sum(byCV>0)})
+							,phase= apply( rawMtx ,2 ,function(byCV){ sum(byCV>0) })
 							,rawMtx=rawMtx
 						)
-		hpnInfo$phaseReb <- getPhaseRebMtx( rawMtx ,ignoreThld=0 )
+		hpnInfo$phaseReb <- getPhaseRebMtx( rawMtx ,ignoreThld=ignLst[["hpnInfo_phaseReb"]] )
 		return( hpnInfo )
 	}
 
@@ -614,6 +626,7 @@ bUtil.getEvt_byHIdx <- function( scoreMtx ,evtLst ,lastEvt=NULL ){
 			rownames(rebMtx.all) <- rName	;colnames(rebMtx.all) <- cName
 
 			matMask <- !( rObj$hpnInfo$rawMtx==0 & lastEvt$hpnInfo$rawMtx==0 )
+			if( is.null(ignLst[["rebMtx.all.rebRaw"]]) ) matMask[,] <- TRUE
 			rebMtx <- rObj$hpnInfo$rawMtx == lastEvt$hpnInfo$rawMtx
 			rebMtx[!matMask] <- F
 			rebMtx.all["hpn","rebRaw"] <- sum(rObj$hpnInfo$rawMtx >0)
@@ -636,6 +649,7 @@ bUtil.getEvt_byHIdx <- function( scoreMtx ,evtLst ,lastEvt=NULL ){
 			rebMtx.ph["hpn.evt",] <- apply( !is.na(rObj$evtInfo$evtMtx) ,2 ,sum )
 			for( pName in colnames(rObj$hpnInfo$rawMtx) ){
 				matMask <- !( rObj$hpnInfo$rawMtx[,pName]==0 & lastEvt$hpnInfo$rawMtx[,pName]==0 )
+				if( is.null(ignLst[["rebMtx.ph.raw"]]) ) matMask[] <- TRUE
 				rebFlag <- rObj$hpnInfo$rawMtx[,pName] == lastEvt$hpnInfo$rawMtx[,pName]
 				rebFlag[!matMask] <- F
 				rebMtx.ph["rebFlag.raw",pName] <- sum(rebFlag) == sum(matMask)
@@ -657,6 +671,7 @@ bUtil.getEvt_byHIdx <- function( scoreMtx ,evtLst ,lastEvt=NULL ){
 			rebMtx.fCol["hpn.evt",] <- apply( !is.na(rObj$evtInfo$evtMtx) ,1 ,sum )
 			for( fcName in rownames(rObj$hpnInfo$rawMtx) ){
 				matMask <- !( rObj$hpnInfo$rawMtx[fcName ,]==0 & lastEvt$hpnInfo$rawMtx[fcName ,]==0 )
+				if( is.null(ignLst[["rebMtx.fCol.raw"]]) ) matMask[] <- TRUE
 				rebFlag <- rObj$hpnInfo$rawMtx[fcName ,] == lastEvt$hpnInfo$rawMtx[fcName ,]
 				rebFlag[!matMask] <- F
 				rebMtx.fCol["rebFlag.raw" ,fcName] <- sum(rebFlag) == sum(matMask)
@@ -676,6 +691,7 @@ bUtil.getEvt_byHIdx <- function( scoreMtx ,evtLst ,lastEvt=NULL ){
 			rownames(rebMtx.phReb) <- rName	;colnames(rebMtx.phReb) <- cName
 
 			rebMask <- rObj$hpnInfo$phaseReb["hpn",]>0 & lastEvt$hpnInfo$phaseReb["hpn",]>0
+			if( is.null(ignLst[["rebMtx.phReb.raw"]]) ) rebMask[] <- TRUE
 			rebMtx.phReb["raw" ,] <- rObj$hpnInfo$phaseReb["reb",] & lastEvt$hpnInfo$phaseReb["reb",]
 			rebMtx.phReb["raw",!rebMask] <- FALSE
 			rebMask <- rObj$evtInfo$phaseReb["hpn",]>0 & lastEvt$evtInfo$phaseReb["hpn",]>0
@@ -709,9 +725,14 @@ bUtil.getEvt_byHIdx <- function( scoreMtx ,evtLst ,lastEvt=NULL ){
 
 			summMtx[,"all"]			<- rebInfo$rebMtx.all["rebFlag" ,]
 
-			summMtx["raw","ph"]		<- sum( rebInfo$rebMtx.ph["rebFlag.raw",] & (rebInfo$rebMtx.ph["hpn.raw",]>0) )
+			rowMask <- (rebInfo$rebMtx.ph["hpn.raw",]>0)
+			if( is.null(ignLst[["summary.raw.ph"]]) ) rowMask[] <- TRUE
+			summMtx["raw","ph"]		<- sum( rebInfo$rebMtx.ph["rebFlag.raw",] & rowMask )
 			summMtx["evt","ph"]		<- sum( rebInfo$rebMtx.ph["rebFlag.evt",] & (rebInfo$rebMtx.ph["hpn.evt",]>0) )
-			summMtx["raw","fCol"]	<- sum( rebInfo$rebMtx.fCol["rebFlag.raw",] & (rebInfo$rebMtx.fCol["hpn.raw",]>0) )
+
+			rowMask <- (rebInfo$rebMtx.fCol["hpn.raw",]>0)
+			if( is.null(ignLst[["summary.raw.fCol"]]) ) rowMask[] <- TRUE
+			summMtx["raw","fCol"]	<- sum( rebInfo$rebMtx.fCol["rebFlag.raw",] & rowMask )
 			summMtx["evt","fCol"]	<- sum( rebInfo$rebMtx.fCol["rebFlag.evt",] & (rebInfo$rebMtx.fCol["hpn.evt",]>0) )
 
 			summMtx[,"phReb"]		<- apply( rebInfo$rebMtx.phReb ,1 ,sum )
