@@ -782,7 +782,7 @@ bFCust.byHIdx_A_score5 <- function( ){
 	rObj$defId <- c( typ="cust_byHIdx"	,hName="*"	,mName="score5" )
 	rObj$description <- sprintf("(cust)  ")
 
-	rObj$evtLst <- FCust_score2EvtLst
+	rObj$evtLst <- FCust_score5EvtLst
 
 	rObj$createCutter <- function( mtxLst=NULL ,tgtId=c(hName="", mName="") ,auxInfo=c(auxInfo="") ){
 
@@ -1062,7 +1062,7 @@ bFCust.byHIdx_A_score5 <- function( ){
 	} # rObj$createCutter( )
 
 	return( rObj )
-} # bFCust.byHIdx_A_score2
+} # bFCust.byHIdx_A_score5
 
 
 

@@ -765,7 +765,7 @@ bFCust.byHIdx_A_score4 <- function( ){
 	rObj$defId <- c( typ="cust_byHIdx"	,hName="*"	,mName="score4" )
 	rObj$description <- sprintf("(cust)  ")
 
-	rObj$evtLst <- FCust_score2EvtLst
+	rObj$evtLst <- FCust_score4EvtLst
 
 	rObj$createCutter <- function( mtxLst=NULL ,tgtId=c(hName="", mName="") ,auxInfo=c(auxInfo="") ){
 		#	mtxLst : 사실상 맨 마지막 mtx만 필요하긴 한데, 차후 h간 연속발생 갯수도 체크할 기능을 만들 수 있게 하기 위해 전체 list를 받음.
