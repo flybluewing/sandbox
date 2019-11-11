@@ -4,13 +4,35 @@ FCust_score5EvtLst <- list( "pBanN.r"=2 ,"pBanN.n"=2 ,"pLCol"=1 ,"pE3"=2 ,"pE4"=
                             ,"m4"=1:4
 							)
 
-FCust_score5minMaxLst <- list( "pBanN.r"=c(min=0,max=2) ,"pBanN.n"=c(min=0,max=2) ,"pLCol"=c(min=0,max=1) 
+FCust_score5minMaxLst <- list( "pBanN.r"=c(min=0,max=2) ,"pBanN.n"=c(min=0,max=2) ,"pLCol"=c(min=0,max=2) 
+                                    ,"pE3"=c(min=0,max=2) ,"pE4"=c(min=0,max=1) ,"pMH"=c(min=0,max=1) ,"pfNum"=c(min=0,max=2) 
+                            ,"iBanN"=c(min=0,max=4) ,"iLCol"=c(min=0,max=3) 
+                                    ,"iE3"=c(min=0,max=3) ,"iE4"=c(min=0,max=1) ,"iMH"=c(min=0,max=1) ,"ifNum"=c(min=0,max=4) 
+                            ,"FVa.m"=c(min=0,max=3) ,"FVa.c"=c(min=0,max=4) ,"aFV.m"=c(min=0,max=3) ,"aFV.c"=c(min=0,max=4) 
+                            ,"m4"=c(min=0,max=0)
+							)
+
+FCust_score5minMaxLst.hard <- list( "pBanN.r"=c(min=0,max=2) ,"pBanN.n"=c(min=0,max=2) ,"pLCol"=c(min=0,max=1) 
                                     ,"pE3"=c(min=0,max=2) ,"pE4"=c(min=0,max=1) ,"pMH"=c(min=0,max=1) ,"pfNum"=c(min=0,max=2) 
                             ,"iBanN"=c(min=0,max=2) ,"iLCol"=c(min=0,max=1) 
                                     ,"iE3"=c(min=0,max=2) ,"iE4"=c(min=0,max=1) ,"iMH"=c(min=0,max=1) ,"ifNum"=c(min=0,max=2) 
                             ,"FVa.m"=c(min=0,max=3) ,"FVa.c"=c(min=0,max=4) ,"aFV.m"=c(min=0,max=3) ,"aFV.c"=c(min=0,max=4) 
                             ,"m4"=c(min=0,max=0)
 							)
+
+bFCust.score5HardFlag <- function( hName ,pName ){
+	hardPh	<- c("sfcLate")
+	hardH	<- c("basic")
+	
+	hFlag <- hName %in% hardPh
+	pFlag <- pName %in% hardH
+	
+	flag <- c( all=(hFlag&&pFlag) ,any=(hFlag||pFlag) ,h=hFlag ,p=pFlag )
+	return( list( flag=flag ,hardPh=hardPh ,hardH=hardH ,debugStr=sprintf("%s %s",hName,pName) ) )
+}
+
+
+
 
 
 #	[score5:Col Cutter(1 col)] ------------------------------------------------------------------
@@ -32,7 +54,11 @@ bFCust.A_score5_A_A <- function(  ){
 		idObjDesc <- c( idObjDesc ,auxInfo )
 		cutterObj$idObjDesc <- idObjDesc
 
+		cutterObj$hardFlag <- bFCust.score5HardFlag(cutterObj$idObj["hName"],cutterObj$idObj["pName"])$flag
         cutterObj$minMax <- FCust_score5minMaxLst[[tgtId["fcName"]]]
+		if( cutterObj$hardFlag["p"] ){
+			cutterObj$minMax <- FCust_score5minMaxLst.hard[[tgtId["fcName"]]]
+		}
 
         cutterObj$description <- sprintf("(%s.%s %d~%d)",cutterObj$idObj["mName"],tgtId["fcName"]
                                     ,cutterObj$minMax["min"],cutterObj$minMax["max"] 
@@ -76,11 +102,12 @@ bFCust.A_score5_A_Row01 <- function(  ){
 	rObj$evtLst <- FCust_score5EvtLst
 
 	rObj$cutFLst <- list()
-	rObj$cutFLst[[1+length(rObj$cutFLst)]] <- function( smRow ,evt ){
+	rObj$cutFLst[[1+length(rObj$cutFLst)]] <- function( smRow ,hardFlag ){
 		crObj <- list( cutFlag=F ,cId="hpnOne" ) # cut result object, cut Id
 
 		cnt <- sum(smRow[c("pBanN.r","pBanN.n","iBanN")])
-		if( !bUtil.in(cnt,c(min=0,max=3)) ){
+		surWin <- if( hardFlag["p"] ) c(min=0,max=3) else c(min=0,max=6)
+		if( !bUtil.in(cnt,surWin) ){
 			crObj$cutFlag <- TRUE
 			crObj$cId <- c( crObj$cId ,sprintf( "<BanCnt %d>",cnt) )
 		}
@@ -90,16 +117,19 @@ bFCust.A_score5_A_Row01 <- function(  ){
 		iRareCol <- c("iLCol","iE3","iE4","iMH","ifNum")
 
 		pCnt <- sum(smRow[pRareCol])
-		if( !bUtil.in(pCnt,c(min=0,max=3)) ){
+		surWin <- if( hardFlag["p"] ) c(min=0,max=1) else c(min=0,max=2)
+		if( !bUtil.in(pCnt,surWin) ){
 			crObj$cutFlag <- TRUE
 			crObj$cId <- c( crObj$cId ,sprintf( "<pEvtCnt %d>",pCnt) )
 		}
 		iCnt <- sum(smRow[iRareCol])
-		if( !bUtil.in(iCnt,c(min=0,max=3)) ){
+		surWin <- if( hardFlag["p"] ) c(min=0,max=1) else c(min=0,max=8)
+		if( !bUtil.in(iCnt,surWin) ){
 			crObj$cutFlag <- TRUE
 			crObj$cId <- c( crObj$cId ,sprintf( "<iEvtCnt %d>",iCnt) )
 		}
-		if( !bUtil.in((pCnt+iCnt),c(min=0,max=3)) ){
+		surWin <- if( hardFlag["p"] ) c(min=0,max=1) else c(min=0,max=8)
+		if( !bUtil.in((pCnt+iCnt),surWin) ){
 			crObj$cutFlag <- TRUE
 			crObj$cId <- c( crObj$cId ,sprintf( "<piEvtCnt %d>",(pCnt+iCnt)) )
 		}
@@ -119,14 +149,15 @@ bFCust.A_score5_A_Row01 <- function(  ){
 
 
 		cnt <- sum( smRow==0 )
-		if( !bUtil.in(cnt,c(min=10,max=18)) ){
+		if( !bUtil.in(cnt,c(min=8,max=18)) ){
 			crObj$cutFlag <- TRUE
 			crObj$cId <- c( crObj$cId ,sprintf( "<ZeroCnt %d>",cnt) )
 		}
 
 		evt <- bUtil.getEvtVal( smRow ,FCust_score5EvtLst )
 		cnt <- sum( !is.na(evt) )
-		if( !bUtil.in(cnt,c(min=0,max=5)) ){
+		surWin <- if( hardFlag["p"] ) c(min=0,max=3) else c(min=0,max=6)
+		if( !bUtil.in(cnt,surWin) ){
 			crObj$cutFlag <- TRUE
 			crObj$cId <- c( crObj$cId ,sprintf( "<EvtCnt %d>",cnt) )
 		}
@@ -149,6 +180,7 @@ bFCust.A_score5_A_Row01 <- function(  ){
 
 		cutterObj$idObj <- rObj$defId
 		cutterObj$idObj[names(tgtId)] <- tgtId
+		cutterObj$hardObj <- bFCust.score5HardFlag(cutterObj$idObj["hName"],cutterObj$idObj["pName"])
 
 		cutterObj$cut <- function( scoreMtx ,alreadyDead=NULL ){
 			val.len <- nrow( scoreMtx )
@@ -158,7 +190,7 @@ bFCust.A_score5_A_Row01 <- function(  ){
 			for( idx in seq_len(val.len) ){
 				if( alreadyDead[idx] ) next
 
-				lst <- lapply( rObj$cutFLst ,function( pFunc ){ pFunc( scoreMtx[idx,] ) } )
+				lst <- lapply( rObj$cutFLst ,function( pFunc ){ pFunc( scoreMtx[idx,] ,hardFlag=cutterObj$hardObj$flag ) } )
 				cutFlag <- sapply( lst ,function(p){ p$cutFlag })
 				if( any(cutFlag) ){
 					firedCId <- sapply( lst[cutFlag] ,function(p){p$cId})
