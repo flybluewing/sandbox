@@ -212,7 +212,7 @@ bFCust.getCust <- function(){
 		rObj$fLst_NCol[[1+length(rObj$fLst_NCol)]] <- bFCust.A_score6_A_Row01()
 		rObj$fLst_NCol[[1+length(rObj$fLst_NCol)]] <- bFCust.A_score7_A_Row01()
 
-		# rObj$fLst_NCol[[1+length(rObj$fLst_NCol)]] <- bFCust.A_score8_A_Row01()
+		rObj$fLst_NCol[[1+length(rObj$fLst_NCol)]] <- bFCust.A_score8_A_Row01()
 		# rObj$fLst_NCol[[1+length(rObj$fLst_NCol)]] <- bFCust.A_score9_A_Row01()
 
 	}
@@ -262,8 +262,8 @@ bFCust.getCust <- function(){
 		rObj$fLst_rReb[[1+length(rObj$fLst_rReb)]] <- bFCust.A_score7_A_rReb01()
 		rObj$fLst_rReb[[1+length(rObj$fLst_rReb)]] <- bFCust.A_score7_A_rRebAA()
 
-		# rObj$fLst_rReb[[1+length(rObj$fLst_rReb)]] <- bFCust.A_score8_A_rReb01()
-		# rObj$fLst_rReb[[1+length(rObj$fLst_rReb)]] <- bFCust.A_score8_A_rRebAA()
+		rObj$fLst_rReb[[1+length(rObj$fLst_rReb)]] <- bFCust.A_score8_A_rReb01()
+		rObj$fLst_rReb[[1+length(rObj$fLst_rReb)]] <- bFCust.A_score8_A_rRebAA()
 
 		# rObj$fLst_rReb[[1+length(rObj$fLst_rReb)]] <- bFCust.A_score9_A_rReb01()
 		# rObj$fLst_rReb[[1+length(rObj$fLst_rReb)]] <- bFCust.A_score9_A_rRebAA()
@@ -326,9 +326,9 @@ bFCust.getCust <- function(){
 		rObj$fLst_byFCol[[1+length(rObj$fLst_byFCol)]] <- bFCust.byFCol_A_score7_A_rReb01()
 		rObj$fLst_byFCol[[1+length(rObj$fLst_byFCol)]] <- bFCust.byFCol_A_score7_A_rRebAA()
 
-		# rObj$fLst_byFCol[[1+length(rObj$fLst_byFCol)]] <- bFCust.byFCol_A_score8_A()
-		# rObj$fLst_byFCol[[1+length(rObj$fLst_byFCol)]] <- bFCust.byFCol_A_score8_A_rReb01()
-		# rObj$fLst_byFCol[[1+length(rObj$fLst_byFCol)]] <- bFCust.byFCol_A_score8_A_rRebAA()
+		rObj$fLst_byFCol[[1+length(rObj$fLst_byFCol)]] <- bFCust.byFCol_A_score8_A()
+		rObj$fLst_byFCol[[1+length(rObj$fLst_byFCol)]] <- bFCust.byFCol_A_score8_A_rReb01()
+		rObj$fLst_byFCol[[1+length(rObj$fLst_byFCol)]] <- bFCust.byFCol_A_score8_A_rRebAA()
 
 		# rObj$fLst_byFCol[[1+length(rObj$fLst_byFCol)]] <- bFCust.byFCol_A_score9_A()
 		# rObj$fLst_byFCol[[1+length(rObj$fLst_byFCol)]] <- bFCust.byFCol_A_score9_A_rReb01()
@@ -370,7 +370,7 @@ bFCust.getCust <- function(){
 		rObj$fLst_byHIdx[[1+length(rObj$fLst_byHIdx)]] <- bFCust.byHIdx_A_score5()
 		rObj$fLst_byHIdx[[1+length(rObj$fLst_byHIdx)]] <- bFCust.byHIdx_A_score6()
 		rObj$fLst_byHIdx[[1+length(rObj$fLst_byHIdx)]] <- bFCust.byHIdx_A_score7()
-		# rObj$fLst_byHIdx[[1+length(rObj$fLst_byHIdx)]] <- bFCust.byHIdx_A_score8()
+		rObj$fLst_byHIdx[[1+length(rObj$fLst_byHIdx)]] <- bFCust.byHIdx_A_score8()
 		# rObj$fLst_byHIdx[[1+length(rObj$fLst_byHIdx)]] <- bFCust.byHIdx_A_score9()
 	}
 	rObj$getCustF_byHIdx <- function( mtxLst ,tgtId=c(hName="", mName="") ,auxInfo=c(auxInfo="") ){
