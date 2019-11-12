@@ -463,7 +463,7 @@ bFCust.getCust <- function(){
 		rObj$fLst_rReb.bScr[[1+length(rObj$fLst_rReb.bScr)]] <- bFCust.A_bScr02_A_rReb01()
 		rObj$fLst_rReb.bScr[[1+length(rObj$fLst_rReb.bScr)]] <- bFCust.A_bScr02_A_rRebAA()
     }
-	rObj$getCustF_RReb.bScr <- function( lastMtx ,tgtId=c(hName="", mName="" ) ,auxInfo=c(auxInfo="") ){
+	rObj$getCustF_RReb.bScr <- function( lastMtx ,tgtId=c(hName="", mName="" 	) ,auxInfo=c(auxInfo="") ){
 		# tgtId=c(hName="sfcHLst", mName="score2", pName="basic")
 		fFLst <- list()	# found fLst
 		for( idx in seq_len(length(rObj$fLst_rReb.bScr)) ){

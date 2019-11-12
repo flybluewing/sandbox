@@ -85,7 +85,7 @@ bFCust.A_bScr01_A_Row01 <- function(  ){
 		grpZW <-	c("raw.ZW" ,"rem.ZW" ,"c.ZW")
 
 		cntEvt <- sum( !is.na(evt) )
-		if( !bUtil.in(cntEvt,c(min=0,max=2)) ){
+		if( !bUtil.in(cntEvt,c(min=0,max=6)) ){
 			crObj$cutFlag <- TRUE
 			crObj$cId <- c( crObj$cId ,sprintf( "<cntEvt %d>",cntEvt) )
 		}
@@ -96,24 +96,24 @@ bFCust.A_bScr01_A_Row01 <- function(  ){
 			crObj$cId <- c( crObj$cId ,sprintf( "<grpRawN.Cnt2 %d>",grpRawN.Cnt2) )
 		}
 		grpRawN.CntEvt <- sum( !is.na(evt[grpRawN]) )
-		if( !bUtil.in(grpRawN.CntEvt,c(min=0,max=1)) ){
+		if( !bUtil.in(grpRawN.CntEvt,c(min=0,max=3)) ){
 			crObj$cutFlag <- TRUE
 			crObj$cId <- c( crObj$cId ,sprintf( "<grpRawN.CntEvt %d>",grpRawN.CntEvt) )
 		}
 
 		grpRemN.Cnt2 <- sum( smRow[grpRemN]==2 )
-		if( !bUtil.in(grpRemN.Cnt2,c(min=0,max=4)) ){
+		if( !bUtil.in(grpRemN.Cnt2,c(min=0,max=6)) ){
 			crObj$cutFlag <- TRUE
 			crObj$cId <- c( crObj$cId ,sprintf( "<grpRemN.Cnt2 %d>",grpRemN.Cnt2) )
 		}
 		grpRemN.CntEvt <- sum( !is.na(evt[grpRemN]) )
-		if( !bUtil.in(grpRemN.CntEvt,c(min=0,max=2)) ){
+		if( !bUtil.in(grpRemN.CntEvt,c(min=0,max=4)) ){
 			crObj$cutFlag <- TRUE
 			crObj$cId <- c( crObj$cId ,sprintf( "<grpRemN.CntEvt %d>",grpRemN.CntEvt) )
 		}
 
 		grpCN.Cnt0 <- sum( smRow[grpCN]==0 )
-		if( !bUtil.in(grpCN.Cnt0,c(min=2,max=6)) ){
+		if( !bUtil.in(grpCN.Cnt0,c(min=0,max=6)) ){
 			crObj$cutFlag <- TRUE
 			crObj$cId <- c( crObj$cId ,sprintf( "<grpCN.Cnt0 %d>",grpCN.Cnt0) )
 		}
@@ -134,7 +134,7 @@ bFCust.A_bScr01_A_Row01 <- function(  ){
 		}
 
 		grpZW.Cnt2 <- sum( smRow[grpZW]==2 )
-		if( !bUtil.in(grpZW.Cnt2,c(min=0,max=1)) ){
+		if( !bUtil.in(grpZW.Cnt2,c(min=0,max=3)) ){
 			crObj$cutFlag <- TRUE
 			crObj$cId <- c( crObj$cId ,sprintf( "<grpZW.Cnt2 %d>",grpZW.Cnt2) )
 		}
@@ -145,7 +145,7 @@ bFCust.A_bScr01_A_Row01 <- function(  ){
 		}
 
 		cnt <- sum( smRow==0 )	#	banCnt 에서 0이 존재하는 이상, 의미없음.
-		if( !bUtil.in(cnt,c(min=3,max=8)) ){
+		if( !bUtil.in(cnt,c(min=1,max=10)) ){
 			crObj$cutFlag <- TRUE
 			crObj$cId <- c( crObj$cId ,sprintf( "<ZeroCnt %d>",cnt) )
 		}
@@ -228,7 +228,7 @@ bFCust.A_bScr01_A_rReb01 <- function(  ){	# evt rebind
 			#	fireThld 는 fire가 일어날 동일 패턴 수. NA이면 전부 매치.
 			scoreMtx.last <- scoreMtx[nrow(scoreMtx),]
 
-			evtChkInfo <- list( cutId="evtAll" ,fireThld=2 ,evtLst=rObj$evtLst )
+			evtChkInfo <- list( cutId="evtAll" ,fireThld=4 ,evtLst=rObj$evtLst )
 			evtChkInfo$evtLast <- bUtil.getEvtVal( scoreMtx.last ,evtChkInfo$evtLst )
 			cutterObj$evtChkLst[[1+length(cutterObj$evtChkLst)]] <- evtChkInfo
 
@@ -237,11 +237,11 @@ bFCust.A_bScr01_A_rReb01 <- function(  ){	# evt rebind
 			grpCN <- 	c("c.1" ,"c.2" ,"c.3" ,"c.4" ,"c.5" ,"c.6")
 			grpZW <-	c("raw.ZW" ,"rem.ZW" ,"c.ZW")
 
-			evtChkInfo <- list( cutId="grpRawN" ,fireThld=1 ,evtLst=rObj$evtLst[grpRawN] )
+			evtChkInfo <- list( cutId="grpRawN" ,fireThld=2 ,evtLst=rObj$evtLst[grpRawN] )
 			evtChkInfo$evtLast <- bUtil.getEvtVal( scoreMtx.last ,evtChkInfo$evtLst )
 			cutterObj$evtChkLst[[1+length(cutterObj$evtChkLst)]] <- evtChkInfo
 
-			evtChkInfo <- list( cutId="grpRemN" ,fireThld=2 ,evtLst=rObj$evtLst[grpRemN] )
+			evtChkInfo <- list( cutId="grpRemN" ,fireThld=3 ,evtLst=rObj$evtLst[grpRemN] )
 			evtChkInfo$evtLast <- bUtil.getEvtVal( scoreMtx.last ,evtChkInfo$evtLst )
 			cutterObj$evtChkLst[[1+length(cutterObj$evtChkLst)]] <- evtChkInfo
 
@@ -368,7 +368,7 @@ bFCust.A_bScr01_A_rRebAA <- function(  ){	#	이전 마지막 score(cutterObj$lastRow)
 
 				diffCnt <- sum( cutterObj$lastRow!=scoreMtx[idx,] )
 				# if( 14 < diffCnt ){
-				if( !bUtil.in(diffCnt,c(min=5,max=15)) ){
+				if( !bUtil.in(diffCnt,c(min=1,max=15)) ){
 					infoStr <- sprintf("cut Id : %s (diff %d)",cutterObj$idObjDesc["rFId"],diffCnt )
 					cutLst[[1+length(cutLst)]] <- list( idx=idx ,idObjDesc=cutterObj$idObjDesc ,info=infoStr )
 				}

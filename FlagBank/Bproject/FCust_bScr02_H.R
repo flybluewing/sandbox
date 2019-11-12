@@ -271,10 +271,14 @@ bFCust.A_bScr02_A_rRebAA <- function(  ){	#	이전 마지막 score(cutterObj$lastRow)
 			cutterObj$lastRow <- scoreMtxObj$scoreMtx[nrow(scoreMtxObj$scoreMtx),]
 
 			#	빈번하게 발생하는 컬럼은 확인대상 제외...
-			# cName <- setdiff( names(cutterObj$lastRow) ,c("min2") )
+			cName <- setdiff( names(cutterObj$lastRow) ,c("min2") )
 			# if( all(cutterObj$lastRow[cName]==0) ){
 			# 	cutterObj$lastRow <- NULL
 			# }
+			if( 2>=sum(cutterObj$lastRow>0) ){
+				cutterObj$lastRow <- NULL
+			}
+
 		}
 
 		cutterObj$cut <- function( scoreMtx ,alreadyDead=NULL ){
@@ -288,8 +292,8 @@ bFCust.A_bScr02_A_rRebAA <- function(  ){	#	이전 마지막 score(cutterObj$lastRow)
 				if( is.null(cutterObj$lastRow) )	next
 
 				diffCnt <- sum( cutterObj$lastRow!=scoreMtx[idx,] )
-				if( !bUtil.in(diffCnt,c(min=2,max=11)) ){
-					infoStr <- sprintf("cut Id : %s (diff %d)",cutterObj$idObjDesc["rFId"],diffCnt )
+				if( !bUtil.in(diffCnt,c(min=1,max=11)) ){
+					infoStr <- sprintf("cut Id : %s (diff %d / %d)",cutterObj$idObjDesc["rFId"],diffCnt,sum(cutterObj$lastRow>0) )
 					cutLst[[1+length(cutLst)]] <- list( idx=idx ,idObjDesc=cutterObj$idObjDesc ,info=infoStr )
 				}
 			}
