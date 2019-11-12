@@ -900,7 +900,7 @@ bFCust.byHIdx_A_score6 <- function( ){
 
 			if( !is.null(stdEvt$rebSummReb) ){
 				rsrSum <- sum( stdEvt$rebSummReb$hpnRebMtx )	# tot sum of rebSummReb 
-				maxThld <- 3		;evtCnt.tot <- evtCnt.tot + rsrSum
+				maxThld <- 4		;evtCnt.tot <- evtCnt.tot + rsrSum
 				if( rsrSum>=maxThld )	rCutId <- c( rCutId, sprintf("stdEvt.rebSummReb - %d",rsrSum) )
 			}
 
