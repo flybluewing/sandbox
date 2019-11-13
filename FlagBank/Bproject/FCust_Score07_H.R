@@ -147,9 +147,10 @@ bFCust.A_score7_A_Row01 <- function(  ){
 			crObj$cId <- c( crObj$cId ,sprintf( "<ZeroCnt %d>",cnt) )
 		}
 
-		evt <- bUtil.getEvtVal( smRow ,FCust_score1EvtLst )
+		evt <- bUtil.getEvtVal( smRow ,FCust_score7EvtLst )
 		cnt <- sum( !is.na(evt) )
-		if( !bUtil.in(cnt,c(min=0,max=0)) ){
+		surWin <- if( hardFlag["p"] ) c(min=0,max=2) else c(min=0,max=4)
+		if( !bUtil.in(cnt,surWin) ){
 			crObj$cutFlag <- TRUE
 			crObj$cId <- c( crObj$cId ,sprintf( "<EvtCnt %d>",cnt) )
 		}
