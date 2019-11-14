@@ -52,7 +52,7 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
         testSpan <- testSpan[sfc.InTest %in% 0:3]
     }
     testData.grp <- B.get_testData.grp( testSpan ,gEnv ,allIdxLst ,fRstLst ,tgt.scMtx=tgt.scMtx)
-    #   save( testData.grp ,file=sprintf("Obj_testData.grp.%d.%s.save",lastH,tgt.scMtx) )
+    save( testData.grp ,file=sprintf("Obj_testData.grp.%d.%s.save",lastH,ifelse(is.null(tgt.scMtx),"all",tgt.scMtx) ) )
     #   save( testData.grp ,file="Obj_testData.grp.save" )
     #   load( "Obj_testData.grp.save" )
 
