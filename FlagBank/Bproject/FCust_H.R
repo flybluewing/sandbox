@@ -253,8 +253,8 @@ bFCust.getCust <- function(){
 
 		rObj$fLst_rReb[[1+length(rObj$fLst_rReb)]] <- bFCust.A_score4_A_rReb01()
 		rObj$fLst_rReb[[1+length(rObj$fLst_rReb)]] <- bFCust.A_score4_A_rRebAA()
-		# rObj$fLst_rReb[[1+length(rObj$fLst_rReb)]] <- bFCust.A_score5_A_rReb01()
-		# rObj$fLst_rReb[[1+length(rObj$fLst_rReb)]] <- bFCust.A_score5_A_rRebAA()
+		rObj$fLst_rReb[[1+length(rObj$fLst_rReb)]] <- bFCust.A_score5_A_rReb01()
+		rObj$fLst_rReb[[1+length(rObj$fLst_rReb)]] <- bFCust.A_score5_A_rRebAA()
 		rObj$fLst_rReb[[1+length(rObj$fLst_rReb)]] <- bFCust.A_score6_A_rReb01()
 		rObj$fLst_rReb[[1+length(rObj$fLst_rReb)]] <- bFCust.A_score6_A_rRebAA()
 		rObj$fLst_rReb[[1+length(rObj$fLst_rReb)]] <- bFCust.A_score7_A_rReb01()
@@ -312,9 +312,9 @@ bFCust.getCust <- function(){
 		rObj$fLst_byFCol[[1+length(rObj$fLst_byFCol)]] <- bFCust.byFCol_A_score4_A_rReb01()
 		rObj$fLst_byFCol[[1+length(rObj$fLst_byFCol)]] <- bFCust.byFCol_A_score4_A_rRebAA()
 
-		# rObj$fLst_byFCol[[1+length(rObj$fLst_byFCol)]] <- bFCust.byFCol_A_score5_A()
-		# rObj$fLst_byFCol[[1+length(rObj$fLst_byFCol)]] <- bFCust.byFCol_A_score5_A_rReb01()
-		# rObj$fLst_byFCol[[1+length(rObj$fLst_byFCol)]] <- bFCust.byFCol_A_score5_A_rRebAA()
+		rObj$fLst_byFCol[[1+length(rObj$fLst_byFCol)]] <- bFCust.byFCol_A_score5_A()
+		rObj$fLst_byFCol[[1+length(rObj$fLst_byFCol)]] <- bFCust.byFCol_A_score5_A_rReb01()
+		rObj$fLst_byFCol[[1+length(rObj$fLst_byFCol)]] <- bFCust.byFCol_A_score5_A_rRebAA()
 
 		rObj$fLst_byFCol[[1+length(rObj$fLst_byFCol)]] <- bFCust.byFCol_A_score6_A()
 		rObj$fLst_byFCol[[1+length(rObj$fLst_byFCol)]] <- bFCust.byFCol_A_score6_A_rReb01()
@@ -365,7 +365,7 @@ bFCust.getCust <- function(){
 		rObj$fLst_byHIdx[[1+length(rObj$fLst_byHIdx)]] <- bFCust.byHIdx_A_score2()
 		rObj$fLst_byHIdx[[1+length(rObj$fLst_byHIdx)]] <- bFCust.byHIdx_A_score3()
 		rObj$fLst_byHIdx[[1+length(rObj$fLst_byHIdx)]] <- bFCust.byHIdx_A_score4()
-		# rObj$fLst_byHIdx[[1+length(rObj$fLst_byHIdx)]] <- bFCust.byHIdx_A_score5()
+		rObj$fLst_byHIdx[[1+length(rObj$fLst_byHIdx)]] <- bFCust.byHIdx_A_score5()
 		rObj$fLst_byHIdx[[1+length(rObj$fLst_byHIdx)]] <- bFCust.byHIdx_A_score6()
 		rObj$fLst_byHIdx[[1+length(rObj$fLst_byHIdx)]] <- bFCust.byHIdx_A_score7()
 		rObj$fLst_byHIdx[[1+length(rObj$fLst_byHIdx)]] <- bFCust.byHIdx_A_score8()

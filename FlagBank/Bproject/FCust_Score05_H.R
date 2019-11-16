@@ -353,6 +353,7 @@ bFCust.A_score5_A_rRebAA <- function(  ){	#	이전 마지막 score(cutterObj$lastRow)
 
 		cutterObj$idObj <- rObj$defId
 		cutterObj$idObj[names(tgtId)] <- tgtId
+		cutterObj$hardFlag <- bFCust.score1HardFlag(cutterObj$idObj["hName"],cutterObj$idObj["pName"])$flag
 
 		scoreMtxObj <- B.HMtxLst_getMtxLst( hMtxLst , tgtId["hName"] ,tgtId["mName"] ,tgtId["pName"] )
 		if( is.null(scoreMtxObj) ){	cutterObj$lastRow <- NULL
@@ -361,7 +362,8 @@ bFCust.A_score5_A_rRebAA <- function(  ){	#	이전 마지막 score(cutterObj$lastRow)
 
 			#	허나, FV 그룹은 유사한 경우가 자주 있어서..
 			cName <- setdiff( names(cutterObj$lastRow) ,c("FVa.m","FVa.c","aFV.m","aFV.c") )
-			if( all(cutterObj$lastRow[cName]==0) ){
+			minThld <- ifelse( cutterObj$hardFlag["p"] ,0 ,1 )
+			if( minThld >= sum(cutterObj$lastRow[cName]>0) ){
 				cutterObj$lastRow <- NULL
 			}
 		}
@@ -485,7 +487,7 @@ bFCust.byFCol_A_score5_A <- function( ){
 		rObj$cutFLst[["iLCol"]] <- function( smRow ,fcName ){	# for testing
 			crObj <- list( cutFlag=F ,cId="_A iLCol" ) # cut result object, cut Id
 			cnt <- sum(smRow==1)
-			if( !bUtil.in(cnt,c(min=0,max=2)) ){
+			if( !bUtil.in(cnt,c(min=0,max=5)) ){
 				crObj$cutFlag <- TRUE	;crObj$cId <- sprintf("%s 01.%d",crObj$cId,cnt)
 			}
 			cnt <- sum(smRow>=2)
@@ -521,7 +523,7 @@ bFCust.byFCol_A_score5_A <- function( ){
 		rObj$cutFLst[["iMH"]] <- function( smRow ,fcName ){	# for testing
 			crObj <- list( cutFlag=F ,cId="_A iMH" ) # cut result object, cut Id
 			cnt <- sum(smRow==1)
-			if( !bUtil.in(cnt,c(min=0,max=1)) ){
+			if( !bUtil.in(cnt,c(min=0,max=3)) ){
 				crObj$cutFlag <- TRUE	;crObj$cId <- sprintf("%s 01.%d",crObj$cId,cnt)
 			}
 			cnt <- sum(smRow>=2)
@@ -577,7 +579,7 @@ bFCust.byFCol_A_score5_A <- function( ){
 		rObj$cutFLst[["aFV.m"]] <- function( smRow ,fcName ){	# for testing
 			crObj <- list( cutFlag=F ,cId="_A aFV.m" ) # cut result object, cut Id
 			cnt <- sum(smRow==1)
-			if( !bUtil.in(cnt,c(min=1,max=10)) ){
+			if( !bUtil.in(cnt,c(min=1,max=12)) ){
 				crObj$cutFlag <- TRUE	;crObj$cId <- sprintf("%s 01.%d",crObj$cId,cnt)
 			}
 			cnt <- sum(smRow==2)
@@ -593,7 +595,7 @@ bFCust.byFCol_A_score5_A <- function( ){
 		rObj$cutFLst[["aFV.c"]] <- function( smRow ,fcName ){	# for testing
 			crObj <- list( cutFlag=F ,cId="_A aFV.c" ) # cut result object, cut Id
 			cnt <- sum(smRow==1)
-			if( !bUtil.in(cnt,c(min=1,max=7)) ){
+			if( !bUtil.in(cnt,c(min=1,max=10)) ){
 				crObj$cutFlag <- TRUE	;crObj$cId <- sprintf("%s 01.%d",crObj$cId,cnt)
 			}
 			cnt <- sum(smRow==2)
@@ -671,7 +673,7 @@ bFCust.byFCol_A_score5_A_rReb01 <- function( ){
 	rObj$evtLst <- FCust_score5EvtLst
 	rObj$fireThld.min <- c( "pBanN.r"=1 ,"pBanN.n"=1 ,"pLCol"=2 ,"pE3"=1 ,"pE4"=1 ,"pMH"=1 ,"pfNum"=1
 							,"iBanN"=1 ,"iLCol"=2 ,"iE3"=1 ,"iE4"=1 ,"iMH"=1 ,"ifNum"=1
-							,"FVa.m"=2 ,"FVa.c"=2 ,"aFV.m"=2 ,"aFV.c"=2 ,"m4"=1
+							,"FVa.m"=3 ,"FVa.c"=2 ,"aFV.m"=2 ,"aFV.c"=2 ,"m4"=1
 					)
 
 
@@ -766,7 +768,7 @@ bFCust.byFCol_A_score5_A_rRebAA <- function( ){
 		cutterObj$idObj[names(tgtId)] <- tgtId
 
 		cutterObj$lastRow <- lastMtx[nrow(lastMtx),]
-		cutterObj$activated <- sum(cutterObj$lastRow>0) > 0
+		cutterObj$activated <- sum(cutterObj$lastRow>0) > 10
 
 		cutterObj$cut <- function( scoreMtx ,alreadyDead=NULL ){
 
@@ -913,7 +915,7 @@ bFCust.byHIdx_A_score5 <- function( ){
 			evtMask <- stdEvt$evtInfo$evtMask
 			colSum <- apply( evtMask ,2 ,sum )
 			evtCnt <- sum(colSum >= 4)
-			maxThld <- 2		;evtCnt.tot <- evtCnt.tot + evtCnt
+			maxThld <- 4		;evtCnt.tot <- evtCnt.tot + evtCnt
 			if( evtCnt >= maxThld )	rCutId <- c( rCutId, sprintf("evtRowSum %d",evtCnt) )
 
 			maxThld <- 4
@@ -1001,7 +1003,7 @@ bFCust.byHIdx_A_score5 <- function( ){
 
 			# banPastH -------------------------------------------
 			banPastH <- 40	# 바로 이전 H를 제외한 크기(rawDiffCnt에서 체크되므로)
-			surWindow <- c(min=27,max=67)
+			surWindow <- c(min=27,max=70)
 			mtxLst.len <- length(cutterObj$mtxLst)
 			endPoint <- mtxLst.len - banPastH -1
 			checkSpan <- (mtxLst.len-1):ifelse(1>endPoint,1,endPoint)
@@ -1056,7 +1058,7 @@ bFCust.byHIdx_A_score5 <- function( ){
 
 			# Hpn(18*13) -------------------------------------------
 			tot <- chkEvt$hpnInfo$tot
-			surWindow <- c(min=25,max=62)
+			surWindow <- c(min=25,max=65)
 			if( !bUtil.in(tot,surWindow) ) rCutId <- c( rCutId, sprintf("HpnTot.%d(%d~%d)",tot,surWindow["min"],surWindow["max"]) )
 
 			tot <- sum(chkEvt$hpnInfo$fCol==0)
@@ -1077,10 +1079,10 @@ bFCust.byHIdx_A_score5 <- function( ){
 
 			surWindow <- c(min=4,max=13)
 			if( !bUtil.in(cnt.fCol,surWindow) ) rCutId <- c( rCutId, sprintf("cnt.fCol.%d(%d~%d)",cnt.fCol,surWindow["min"],surWindow["max"]) )
-			surWindow <- c(min=8,max=13)
+			surWindow <- c(min=4,max=13)
 			if( !bUtil.in(cnt.phase,surWindow) ) rCutId <- c( rCutId, sprintf("cnt.phase.%d(%d~%d)",cnt.phase,surWindow["min"],surWindow["max"]) )
 
-			surWindow <- c(min=13,max=26)
+			surWindow <- c(min=9,max=26)
 			tot <- sum(cnt.fCol+cnt.phase)
 			if( !bUtil.in(tot,surWindow) ) rCutId <- c( rCutId, sprintf("HpnXY.%d(%d~%d)",tot,surWindow["min"],surWindow["max"]) )
 
@@ -1097,7 +1099,7 @@ bFCust.byHIdx_A_score5 <- function( ){
 			matFlag <- pRareHpn == iRareHpn
 			matFlag[pRareHpn==0] <- FALSE
 			tot <- sum(matFlag)
-			surWin <- c(min=0,max=0)
+			surWin <- c(min=0,max=1)
 			if( !bUtil.in(tot,surWin) ) rCutId <- c( rCutId, sprintf("RareHpnCntMat.%d(%d~%d)",tot,surWin["min"],surWin["max"]) )
 
 
@@ -1108,11 +1110,11 @@ bFCust.byHIdx_A_score5 <- function( ){
 			if( !bUtil.in(tot,surWin) ) rCutId <- c( rCutId, sprintf("FV0Hpn.%d(%d~%d)",tot,surWin["min"],surWin["max"]) )
 			FV1Flg <- apply( scoreMtx[FVCol,] ,2 ,function(cVal){ all(cVal==1) })
 			tot <- sum(FV1Flg)
-			surWin <- c(min=0,max=5)
+			surWin <- c(min=0,max=7)
 			if( !bUtil.in(tot,surWin) ) rCutId <- c( rCutId, sprintf("FV1Hpn.%d(%d~%d)",tot,surWin["min"],surWin["max"]) )
 			FV2Cnt <- apply( scoreMtx[FVCol,] ,2 ,function(cVal){ sum(cVal==2) })
 			tot <- sum(FV2Cnt>0)
-			surWin <- c(min=1,max=10)
+			surWin <- c(min=1,max=12)
 			if( !bUtil.in(tot,surWin) ) rCutId <- c( rCutId, sprintf("FV2Hpn.%d(%d~%d)",tot,surWin["min"],surWin["max"]) )
 			FV3Cnt <- apply( scoreMtx[FVCol,] ,2 ,function(cVal){ sum(cVal==3) })
 			tot <- sum(FV3Cnt>0)
