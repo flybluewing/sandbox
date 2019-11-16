@@ -117,7 +117,7 @@ bFCust.A_score5_A_Row01 <- function(  ){
 		iRareCol <- c("iLCol","iE3","iE4","iMH","ifNum")
 
 		pCnt <- sum(smRow[pRareCol])
-		surWin <- if( hardFlag["p"] ) c(min=0,max=1) else c(min=0,max=2)
+		surWin <- if( hardFlag["p"] ) c(min=0,max=2) else c(min=0,max=4)
 		if( !bUtil.in(pCnt,surWin) ){
 			crObj$cutFlag <- TRUE
 			crObj$cId <- c( crObj$cId ,sprintf( "<pEvtCnt %d>",pCnt) )
@@ -128,21 +128,23 @@ bFCust.A_score5_A_Row01 <- function(  ){
 			crObj$cutFlag <- TRUE
 			crObj$cId <- c( crObj$cId ,sprintf( "<iEvtCnt %d>",iCnt) )
 		}
-		surWin <- if( hardFlag["p"] ) c(min=0,max=1) else c(min=0,max=8)
+		surWin <- if( hardFlag["p"] ) c(min=0,max=2) else c(min=0,max=8)
 		if( !bUtil.in((pCnt+iCnt),surWin) ){
 			crObj$cutFlag <- TRUE
 			crObj$cId <- c( crObj$cId ,sprintf( "<piEvtCnt %d>",(pCnt+iCnt)) )
 		}
 
 		matFlag <- smRow[pRareCol]==smRow[iRareCol]
-		if( all(matFlag) && (sum(pCnt)>0) ){ 
+		minThld <- ifelse( hardFlag["p"] ,1, 1 )
+		if( all(matFlag) && (sum(pCnt)>minThld) ){ 
 			crObj$cutFlag <- TRUE
 			crObj$cId <- c( crObj$cId ,sprintf( "<piEvtSyn %d>",pCnt ) )
 		}
 
 		FVCol <- c("FVa.m","FVa.c","aFV.m","aFV.c")
 		cnt <- sum(smRow[FVCol]==4)
-		if( !bUtil.in(cnt,c(min=0,max=1)) ){
+		surWin <- if( hardFlag["p"] ) c(min=0,max=1) else c(min=0,max=2)
+		if( !bUtil.in(cnt,surWin) ){
 			crObj$cutFlag <- TRUE
 			crObj$cId <- c( crObj$cId ,sprintf( "<FVCol4 %d>",cnt) )
 		}
