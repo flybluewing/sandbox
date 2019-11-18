@@ -134,11 +134,12 @@ bFCust.A_score4_A_Row01 <- function(  ){
 		surWin <- if( hardFlag["p"] ) c(min=0,max=3) else c(min=0,max=5)
 		if( !bUtil.in(cnt,surWin) ){
 			crObj$cutFlag <- TRUE
-			crObj$cId <- c( crObj$cId ,sprintf( "<EvtCnt %d>",cnt) )
+			# crObj$cId <- c( crObj$cId ,sprintf( "<EvtCnt %d>",cnt) )
+			cId <- c( cId ,sprintf( "<EvtCnt %d>",cnt) )
 		}
 
-
-        crObj$cId <- sprintf( "%s %s" ,crObj$cId ,cId )
+        # crObj$cId <- sprintf( "%s %s" ,crObj$cId ,cId )
+		crObj$cId <- sprintf( "%s %s" ,crObj$cId ,paste(cId,collapse=" ") )
 		return( crObj )
 	} # rObj$cutFLst[1]( )
 
