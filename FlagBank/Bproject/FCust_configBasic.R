@@ -4,7 +4,7 @@ scoreMtxCfg <- list()
 
 mName <- "score1"
 scoreMtxCfg[[mName]] <- list(
-    mtxName = mName
+    mName = mName
     ,fCol = list(
         "rem0.num"=list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )
                         ,evt=matrix( c(c(1,1,3),c(10,20,30)) ,ncol=2)
@@ -73,7 +73,7 @@ scoreMtxCfg[[mName]] <- list(
 
 mName <- "score2"
 scoreMtxCfg[[mName]] <- list(
-    mtxName = mName
+    mName = mName
     ,fCol = list(
         "rebV.r"=list( rng=matrix( c(0,1 ,0,3) ,ncol=2 )
                         ,evt=matrix( c(c(1,1,3),c(10,20,30)) ,ncol=2)
