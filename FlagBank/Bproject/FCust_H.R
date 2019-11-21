@@ -24,7 +24,7 @@ bFCust.getEvt <- function( smRow ,fCol ){
 
     return( evtMtx )
 }
-bFCust.evtComp <- function( evtLevH1 ,evtLevH2 ,levMin=2 ){
+bFCust.evtComp <- function( evtLevH1 ,evtLevH2 ,levMin=1 ){
     # evtLevH1가 가장 최신, evtLevH2는 그 이전.
 
     matFlag <- evtLevH1 == evtLevH2
@@ -48,12 +48,25 @@ FCust_stdCut.rawRow <- function( hName ,mName ,scoreMtxH ){
 
     rObj <- list( hName=hName ,mName=mName )
 
-    cfg <- scoreMtxCfg[[mName]]
-
-    rObj$fCol <- cfg$fCol
     rObj$isHard <- if( is.null(cfg$isHard) ) bFCust.defaultHardFlag else cfg$isHard
 
+    hLen <- nrow(scoreMtxH)
+    rObj$lastScore <- scoreMtxH[hLen,]
 
+    if( TRUE ){
+        cfg <- scoreMtxCfg[[mName]]
+        rObj$lastEvt <- bFCust.getEvt( rObj$lastScore ,cfg$fCol )
+        if( hLen>1 ){
+            evt2 <- bFCust.getEvt( scoreMtxH[hLen-1 ,] ,cfg$fCol )
+            rObj$evtReb <- bFCust.evtComp( evt2["lev",] ,rObj$lastEvt["lev",] ) # ,levMin=2
+            if( all(is.na(rObj$evtReb$levDup)) )    rObj$evtReb <- NULL
+
+        }
+
+        rObj$checkRawReb.cnt <- sum(rObj$lastScore>0)
+        rObj$checkRawReb.flag <- rObj$checkRawReb.cnt >= cfg$rowReb["rawMin"]
+
+    }
 
     rObj$available <- TRUE
 
@@ -77,12 +90,11 @@ FCust_stdCut.rawRow <- function( hName ,mName ,scoreMtxH ){
                 surWin <- fCol$rng[ ,ifelse(hardFlag,"lev1","lev2")]
                 val <- scoreMtx[aIdx,fcName]
                 if( !bUtil.in(val,surWin) ){
-                    alreadyDead[aIdx] <- TRUE
                     if( anaMode ){
-                        infoStr <- sprintf("cut Id : %s",paste(cObj$cId,collapse=",") )
+                        infoStr <- sprintf("fCol:%s(%d)",fcName,val )
                         idObjDesc <- c(hName=rObj$hName,pName=rObj$mName,fcName=fcName)
                         cutLst[[1+length(cutLst)]] <- list( idx=aIdx ,idObjDesc=idObjDesc ,info=infoStr )
-                    }
+                    } else {    alreadyDead[aIdx] <- TRUE   }
                 }
 
             }
@@ -90,10 +102,34 @@ FCust_stdCut.rawRow <- function( hName ,mName ,scoreMtxH ){
         }
 
         # sm row --------------------------------------------
-        evtMtx <- 
+        cfg <- scoreMtxCfg[[rObj$mName]]
         for( aIdx in seq_len(val.len) ){
-            if( alreadyDead[aIdx] ) next
 
+            # raw Reb
+            if( alreadyDead[aIdx] ) next
+            if( rObj$checkRawReb.flag ){
+                if( all(rObj$lastScore==smRow) ){
+                    if( anaMode ){
+                        infoStr <- sprintf("RebRaw:%d",sum(smRow>0) )
+                        idObjDesc <- c(hName=rObj$hName,pName=rObj$mName)
+                        cutLst[[1+length(cutLst)]] <- list( idx=aIdx ,idObjDesc=idObjDesc ,info=infoStr )
+                    } else {    alreadyDead[aIdx] <- TRUE   }
+                }
+            }
+
+            # evt Reb
+            if( alreadyDead[aIdx] ) next
+            if( 0 < sum(rObj$lastEvt["lev",]>0,na.rm=T) ){
+                evt.sm <- bFCust.getEvt(smRow,cfg$fCol)
+                evtComp <- bFCust.evtComp( evt.sm["lev",] ,rObj$lastEvt["lev",] )
+                if( evtComp$allMat || 1<sum(!is.na(evtComp$levDup)) ){
+                    if( anaMode ){
+                        infoStr <- sprintf("RebEvt:%d",sum(smRow>0) )
+                        idObjDesc <- c(hName=rObj$hName,pName=rObj$mName)
+                        cutLst[[1+length(cutLst)]] <- list( idx=aIdx ,idObjDesc=idObjDesc ,info=infoStr )                        
+                    } else {    alreadyDead[aIdx] <- TRUE   }
+                }
+            }
 
         }
 

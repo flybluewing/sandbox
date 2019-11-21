@@ -19,3 +19,5 @@ source("./lib/bFBMtx.R")
 source("./lib/FinalCut_H.R")
 
 source("FCust_H.R")
+source("FCust_configBasic.R")
+
