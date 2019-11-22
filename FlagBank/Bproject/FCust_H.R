@@ -44,9 +44,9 @@ bFCust.evtComp <- function( evtLevH1 ,evtLevH2 ,levMin=1 ){
     return( list( levDup=evtLevDup ,allMat=allMat ) )
 }
 
-FCust_stdCut.rawRow <- function( hName ,mName ,scoreMtxH ){
+FCust_stdCut.rawRow <- function( hName ,mName ,pName ,scoreMtxH ){
 
-    rObj <- list( hName=hName ,mName=mName )
+    rObj <- list( defId=c(hName=hName,mName=mName,pName=pName) )
 
     rObj$isHard <- if( is.null(cfg$isHard) ) bFCust.defaultHardFlag else cfg$isHard
 
@@ -70,7 +70,7 @@ FCust_stdCut.rawRow <- function( hName ,mName ,scoreMtxH ){
 
     rObj$available <- TRUE
 
-    rObj$cut <- function( pName ,scoreMtx ,alreadyDead=NULL ,anaMode=TRUE ){
+    rObj$cut <- function( scoreMtx ,alreadyDead=NULL ,anaMode=TRUE ){
 
         val.len <- nrow(scoreMtx)
         if( is.null(alreadyDead) )	alreadyDead <- rep( F, val.len )
@@ -78,7 +78,7 @@ FCust_stdCut.rawRow <- function( hName ,mName ,scoreMtxH ){
         cutLst <- list()
         if( !rObj$available ) return( cutLst )
 
-        hardFlag <- rObj$isHard( pName )$flag["p"]
+        hardFlag <- rObj$isHard( rObj$defId["pName"] )$flag["p"]
         anaId <- sprintf( )
 
         # fCol --------------------------------------------
@@ -92,7 +92,7 @@ FCust_stdCut.rawRow <- function( hName ,mName ,scoreMtxH ){
                 if( !bUtil.in(val,surWin) ){
                     if( anaMode ){
                         infoStr <- sprintf("fCol:%s(%d)",fcName,val )
-                        idObjDesc <- c(hName=rObj$hName,pName=rObj$mName,fcName=fcName)
+                        idObjDesc <- c( rObj$defId ,fcName=fcName )
                         cutLst[[1+length(cutLst)]] <- list( idx=aIdx ,idObjDesc=idObjDesc ,info=infoStr )
                     } else {    alreadyDead[aIdx] <- TRUE   }
                 }
@@ -111,8 +111,7 @@ FCust_stdCut.rawRow <- function( hName ,mName ,scoreMtxH ){
                 if( all(rObj$lastScore==smRow) ){
                     if( anaMode ){
                         infoStr <- sprintf("RebRaw:%d",sum(smRow>0) )
-                        idObjDesc <- c(hName=rObj$hName,pName=rObj$mName)
-                        cutLst[[1+length(cutLst)]] <- list( idx=aIdx ,idObjDesc=idObjDesc ,info=infoStr )
+                        cutLst[[1+length(cutLst)]] <- list( idx=aIdx ,idObjDesc=rObj$defId ,info=infoStr )
                     } else {    alreadyDead[aIdx] <- TRUE   }
                 }
             }
@@ -125,8 +124,7 @@ FCust_stdCut.rawRow <- function( hName ,mName ,scoreMtxH ){
                 if( evtComp$allMat || 1<sum(!is.na(evtComp$levDup)) ){
                     if( anaMode ){
                         infoStr <- sprintf("RebEvt:%d",sum(smRow>0) )
-                        idObjDesc <- c(hName=rObj$hName,pName=rObj$mName)
-                        cutLst[[1+length(cutLst)]] <- list( idx=aIdx ,idObjDesc=idObjDesc ,info=infoStr )                        
+                        cutLst[[1+length(cutLst)]] <- list( idx=aIdx ,idObjDesc=rObj$defId ,info=infoStr )                        
                     } else {    alreadyDead[aIdx] <- TRUE   }
                 }
             }
@@ -139,3 +137,52 @@ FCust_stdCut.rawRow <- function( hName ,mName ,scoreMtxH ){
     return( rObj )
 
 }
+
+
+
+
+bFCust.getFCustGrp <- function( hMtxLst ,tgt.scMtx ){
+
+    rObj <- list(   sfcHLst = hMtxLst$sfcHLst
+                    ,mtxInfoLst = hMtxLst$mtxInfoLst
+					,mtxInfoLst.bScr = hMtxLst$mtxInfoLst.bScr
+                    ,phaseName = hMtxLst$phaseName
+    )
+
+	# custObj <- bFCust.getCust()
+    if( !is.null(tgt.scMtx) ){
+        availMtx <- intersect( tgt.scMtx ,names(rObj$mtxInfoLst) )
+        rObj$mtxInfoLst <- rObj$mtxInfoLst[availMtx]
+
+        availMtx <- intersect( tgt.scMtx ,names(rObj$mtxInfoLst.bScr) )
+        rObj$mtxInfoLst.bScr <- rObj$mtxInfoLst.bScr[availMtx]
+    }
+
+	cutterLst <- list()
+	cutterLst.bScr <- list()
+	for( hName in names(rObj$sfcHLst) ){	# hName <- names(rObj$sfcHLst)[1]
+        mLst <- list()
+        for( mName in names(rObj$mtxInfoLst) ){	# mName <- names(rObj$mtxInfoLst)[1]
+            stdLst <- list()
+            for( pName in rObj$phaseName ){
+                scoreMtxObj <- B.HMtxLst_getMtxLst( hMtxLst , hName ,mName ,pName )
+                stdLst[[pName]] <- FCust_stdCut.rawRow( hName ,mName ,scoreMtxObj$scoreMtx )
+            }
+            fColLst <- list()   # preserve
+            hIdxLst <- list()   # preserve
+            mLst[[mName]] <- list( stdLst=stdLst ,fColLst=fColLst ,hIdxLst=hIdxLst )
+        }
+        cutterLst[[hName]] <- mLst
+
+		mLst <- list()
+		for( mName in names(rObj$mtxInfoLst.bScr) ){
+
+        }
+		cutterLst.bScr[[hName]] <- mLst
+
+    }
+
+    return( rObj )
+
+}
+
