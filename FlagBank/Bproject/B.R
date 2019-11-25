@@ -183,3 +183,41 @@ if(FALSE){  # working code
 }
 
 #   source("header.r")
+
+
+
+if( FALSE ){
+
+    curHIdx <- 820
+
+    wLastH <-curHIdx-1
+    wLastSpan <- 1:which(names(fRstLst)==wLastH)
+
+    # ------------------------------------------------------------------------
+    # cut.grp : cutter grp 을 얻어내자.
+    gEnv.w <- gEnv              ;gEnv.w$zhF <- gEnv$zhF[1:wLastH,]
+    allIdxLst.w <- allIdxLst    ;allIdxLst.w$stdFiltedCnt <- allIdxLst$stdFiltedCnt[wLastSpan]
+                                allIdxLst.w$infoMtx <- allIdxLst$infoMtx[wLastSpan,]
+    fRstLst.w <- fRstLst[wLastSpan]
+
+    # <cut.grp>
+    curHMtxLst <- testData.grp$curHMtxLst.grp[[as.character(curHIdx)]]
+        # B.makeHMtxLst() 의 lastH는 allIdxLst.w$stdFiltedCnt에 의존한다.
+    cut.grp <- bFCust.getFCustGrp( curHMtxLst )  # curHMtxLst 적용 추가 필요.
+
+
+    # <scoreMtx.grp>
+    stdZoid <- gEnv$zhF[curHIdx,]
+    stdIdx <- testData.grp$stdIdx[[as.character(curHIdx)]]
+    curStdFilted <- fRstLst[[as.character(curHIdx)]]    #   평가가 아닌 실제에선, remLst 으로부터 가져올 것.
+    fHName <- bUtil.getSfcLstName( fRstLst.w[[length(fRstLst.w)]] ,curStdFiltedCnt=length(curStdFilted) ,cut.grp )
+    stdMI.grp <- bUtil.getStdMILst( gEnv.w ,fRstLst.w )
+    filter.grp <- getFilter.grp( stdMI.grp ,tgt.scMtx=tgt.scMtx )
+    scoreMtx.grp <- getScoreMtx.grp.4H( stdZoid ,filter.grp )
+
+    # <cutRst>
+    cutRst <- bFCust.cut( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx ,anaOnly=T ) 
+
+}
+
+
