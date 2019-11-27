@@ -67,6 +67,7 @@ scoreMtxCfg[[mName]] <- list(
                         ,evt=matrix( c(c(1,1,2,3,4),c(1,2,3,4,5)) ,ncol=2)
                     )
     )
+    ,evtMax = NULL
     ,rowReb = NULL  # use default   c( rawMin=  )
     ,isHard=NULL  # use default
 )
@@ -127,6 +128,7 @@ scoreMtxCfg[[mName]] <- list(
                         ,evt=matrix( c(c(1,1,3),c(10,20,30)) ,ncol=2)
                     ) 
     ) 
+    ,evtMax = NULL
     ,rowReb = NULL  # use default   c( rawMin=  )
     ,isHard=NULL  # use default
 )
@@ -141,8 +143,11 @@ for( mName in names(scoreMtxCfg) ){ # naming Ãß°¡.
 
         colnames(scoreMtxCfg[[mName]]$fCol[[fcName]]$evt) <- c("lev","val")
 
+        if( is.null(scoreMtxCfg[[mName]]$evtMax) ){
+            scoreMtxCfg[[mName]]$evtMax <- c( minLev=2 ,maxHpn=1 )
+        }
         if( is.null(scoreMtxCfg[[mName]]$rowReb) ){
-            scoreMtxCfg[[mName]]$rowReb <- c( rawMin=1 )
+            scoreMtxCfg[[mName]]$rowReb <- c( rawMin=1 ,lowE=2 ,rareE=1 )
         }
     }
 }

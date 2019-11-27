@@ -65,8 +65,6 @@ FCust_stdCut.rawRow <- function( hName ,mName ,pName ,scoreMtxH ){
 
             }
 
-            rObj$checkRawReb.cnt <- sum(rObj$lastScore>0)
-            rObj$checkRawReb.flag <- rObj$checkRawReb.cnt >= cfg$rowReb["rawMin"]
         } else {
             rObj$available <- FALSE
         }   # cfg
@@ -115,19 +113,43 @@ FCust_stdCut.rawRow <- function( hName ,mName ,pName ,scoreMtxH ){
 
         # sm row: evtCnt  --------------------------------------------
         cutLst.rowE <- list()
+        for( aIdx in seq_len(val.len) ){
+            if( !anaMode && alreadyDead[aIdx] ) next
+
+            evt.sm <- bFCust.getEvt( scoreMtx[aIdx ,] ,cfg$fCol )
+            evtCnt <- sum( evt.sm["lev" ,]>=cfg$evtMax["minLev"] ,na.rm=T )
+            if( evtCnt > cfg$evtMax["maxHpn"] ){
+                alreadyDead[aIdx] <- TRUE
+
+                infoStr <- sprintf("evtCnt:%d",evtCnt)
+                cObj <- cutLst.rowE[[as.character(aIdx)]]
+                if( is.null(cObj) ){
+                    cutLst.rowE[[as.character(aIdx)]] <- list( idx=aIdx ,info=infoStr )
+                } else {
+                    cutLst.rowE[[as.character(aIdx)]]$info <- paste( cObj$info, infoStr, collapse=", " )
+                }
+            }
+        }
+
 
         # sm row: rebound --------------------------------------------
         cutLst.reb <- list()
+        checkRawReb.cnt <- sum(rObj$lastScore>0)
+        checkRawReb.flag <- rObj$checkRawReb.cnt >= cfg$rowReb["rawMin"]
+        checkEvtReb.cnt <- c( lowE=sum(rObj$lastEvt["lev",]>1,na.rm=T) ,rareE=sum(rObj$lastEvt["lev",]>1,na.rm=T) )
+        checkEvtReb.str <- paste(names(checkEvtReb.cnt),checkEvtReb.cnt,sep=".")
+        checkEvtReb.str <- paste( checkEvtReb.str ,collapse="," )
+        checkEvtReb.flag <- any( checkEvtReb.cnt >= cfg$rowReb[c("lowE","rareE")] )
         for( aIdx in seq_len(val.len) ){
             smRow <- scoreMtx[aIdx ,]
 
             # raw Reb
             if( !anaMode && alreadyDead[aIdx] ) next
-            if( rObj$checkRawReb.flag ){
+            if( checkRawReb.flag ){
                 if( all(rObj$lastScore==smRow) ){
                     alreadyDead[aIdx] <- TRUE
 
-                    infoStr <- sprintf("rReb:%d",sum(smRow>0) )
+                    infoStr <- sprintf("rReb:%d",checkRawReb.cnt )
                     cObj <- cutLst.reb[[as.character(aIdx)]]
                     if( is.null(cObj) ){
                         cutLst.reb[[as.character(aIdx)]] <- list( idx=aIdx ,info=infoStr )
@@ -143,13 +165,13 @@ FCust_stdCut.rawRow <- function( hName ,mName ,pName ,scoreMtxH ){
 
             # evt Reb
             if( !anaMode && alreadyDead[aIdx] ) next
-            if( 0 < sum(rObj$lastEvt["lev",]>0,na.rm=T) ){
+            if( checkEvtReb.flag ){
                 evt.sm <- bFCust.getEvt(smRow,cfg$fCol)
                 evtComp <- bFCust.evtComp( evt.sm["lev",] ,rObj$lastEvt["lev",] )
                 if( evtComp$allMat || 1<sum(!is.na(evtComp$levDup)) ){
                     alreadyDead[aIdx] <- TRUE
 
-                    infoStr <- sprintf("eReb:%d",sum(!is.na(rObj$lastEvt["lev",])) )
+                    infoStr <- sprintf("rebE:%s",checkEvtReb.str)
                     cObj <- cutLst.reb[[as.character(aIdx)]]
                     if( is.null(cObj) ){
                         cutLst.reb[[as.character(aIdx)]] <- list( idx=aIdx ,info=infoStr )
