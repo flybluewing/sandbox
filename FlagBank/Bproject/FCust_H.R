@@ -132,18 +132,8 @@ bFCust.getEvt_byHIdx <- function( scMtx ,cfg ,lastEvt=NULL ,ignoreOpt=NULL ){
 		return( evtInfo )
 	}
 
-	ignLst <- list( hpnInfo_phaseReb=ifelse( cfg$style["freqZero"] ,0 ,-1 )
-						,rebMtx.all.rebRaw=0	,rebMtx.ph.raw=0	,rebMtx.fCol.raw=0	,rebMtx.phReb.raw=0
-						,summary.raw.ph=0		,summary.raw.fCol=0
-					)	# NULL값이면 ignore가 없다는 의미
-	if( !is.null(ignLst) )	{
-		for( nIdx in names(ignoreOpt) ){
-			ignLst[[nIdx]] <- if( is.na(ignoreOpt[nIdx]) ) NULL else ignoreOpt[nIdx]
-		}
-	}
-
 	rObj <- list( dim=dim(scMtx) )
-	rObj$hpnInfo <- getHpnInfo( scMtx ,ignoreThld=ignLst$hpnInfo_phaseReb )
+	rObj$hpnInfo <- getHpnInfo( scMtx ,ignoreThld=ifelse( cfg$style["freqZero"] ,0 ,-1 ) )
 	rObj$evtInfo <- getEvtInfo( scMtx ,cfg )
 
 
@@ -160,23 +150,132 @@ bFCust.getEvt_byHIdx <- function( scMtx ,cfg ,lastEvt=NULL ,ignoreOpt=NULL ){
 			rownames(rebMtx.all) <- rName	;colnames(rebMtx.all) <- cName
 
 			matMask <- !( rObj$hpnInfo$rawMtx==0 & lastEvt$hpnInfo$rawMtx==0 )
-			if( is.null(ignLst[["rebMtx.all.rebRaw"]]) ) matMask[,] <- TRUE
+			if( !cfg$style["freqZero"] ) matMask[,] <- TRUE
 			rebMtx <- rObj$hpnInfo$rawMtx == lastEvt$hpnInfo$rawMtx
 			rebMtx[!matMask] <- F
 			rebMtx.all["hpn","rebRaw"] <- sum(rObj$hpnInfo$rawMtx >0)
-			rebMtx.all["rebFlag","rebRaw"] <- sum(rebMtx)==sum(matMask)
+			rebMtx.all["rebFlag","rebRaw"] <- (sum(matMask)>0)  &&  (sum(rebMtx)==sum(matMask))
 
-			matMask <- !( is.na(rObj$evtInfo$evtMtx) & is.na(lastEvt$evtInfo$evtMtx) )
-			rebMtx <- rObj$evtInfo$evtMtx==lastEvt$evtInfo$evtMtx
-			rebMtx.all["hpn","rebEvt"] <- sum(rObj$evtInfo$evtMtx>0,na.rm=T)
-			rebMtx.all["rebFlag","rebEvt"] <- sum(rebMtx,na.rm=T)==sum(matMask)
+			matMask <- !( is.na(rObj$evtInfo$eValMtx) & is.na(lastEvt$evtInfo$eValMtx) )
+			rebMtx <- rObj$evtInfo$eValMtx==lastEvt$evtInfo$eValMtx
+			rebMtx.all["hpn","rebEvt"] <- sum(rObj$evtInfo$eValMtx>0,na.rm=T)
+			rebMtx.all["rebFlag","rebEvt"] <- (sum(matMask)>0) && (sum(rebMtx,na.rm=T)==sum(matMask))
 
 			rebInfo$rebMtx.all <- rebMtx.all
 
+			# rebInfo$rebMtx.ph (rawMtx/eValMtx)----------------------------------------------
+			rName <- c("rebFlag.raw","hpn.raw","rebFlag.evt","hpn.evt")
+			cName <- colnames(rObj$hpnInfo$rawMtx)
+			rebMtx.ph <- matrix( 0 ,nrow=length(rName) ,ncol=length(cName) )
+			rownames(rebMtx.ph) <- rName	;colnames(rebMtx.ph) <- cName
 
+			rebMtx.ph["hpn.raw",] <- apply( rObj$hpnInfo$rawMtx>0 ,2 ,sum )
+			rebMtx.ph["hpn.evt",] <- apply( !is.na(rObj$evtInfo$eValMtx) ,2 ,sum )
+			for( pName in colnames(rObj$hpnInfo$rawMtx) ){
+				matMask <- !( rObj$hpnInfo$rawMtx[,pName]==0 & lastEvt$hpnInfo$rawMtx[,pName]==0 )
+				if( !cfg$style["freqZero"] ) matMask[] <- TRUE
+				rebFlag <- rObj$hpnInfo$rawMtx[,pName] == lastEvt$hpnInfo$rawMtx[,pName]
+				rebFlag[!matMask] <- F
+				rebMtx.ph["rebFlag.raw",pName] <- (sum(matMask)>0) && (sum(rebFlag)==sum(matMask))
+
+				matMask <- !( is.na(rObj$evtInfo$eValMtx[,pName]) & is.na(lastEvt$evtInfo$eValMtx[,pName]) )
+				rebFlag <- rObj$evtInfo$eValMtx[,pName]==lastEvt$evtInfo$eValMtx[,pName]
+				rebMtx.ph["rebFlag.evt",pName] <- (sum(matMask)>0) && (sum(rebFlag,na.rm=T)==sum(matMask))
+			}
+
+			rebInfo$rebMtx.ph <- rebMtx.ph
+
+			# rebInfo$rebMtx.fCol (rawMtx/eValMtx)----------------------------------------------
+			rName <- c("rebFlag.raw","hpn.raw","rebFlag.evt","hpn.evt")
+			cName <- rownames(rObj$hpnInfo$rawMtx)
+			rebMtx.fCol <- matrix( 0 ,nrow=length(rName) ,ncol=length(cName) )
+			rownames(rebMtx.fCol) <- rName	;colnames(rebMtx.fCol) <- cName
+
+			rebMtx.fCol["hpn.raw",] <- apply( rObj$hpnInfo$rawMtx>0 ,1 ,sum )
+			rebMtx.fCol["hpn.evt",] <- apply( !is.na(rObj$evtInfo$eValMtx) ,1 ,sum )
+			for( fcName in rownames(rObj$hpnInfo$rawMtx) ){
+				matMask <- !( rObj$hpnInfo$rawMtx[fcName ,]==0 & lastEvt$hpnInfo$rawMtx[fcName ,]==0 )
+				if( !cfg$style["freqZero"] ) matMask[] <- TRUE
+				rebFlag <- rObj$hpnInfo$rawMtx[fcName ,] == lastEvt$hpnInfo$rawMtx[fcName ,]
+				rebFlag[!matMask] <- F
+				rebMtx.fCol["rebFlag.raw" ,fcName] <- (sum(matMask)>0)  &&  (sum(rebFlag)==sum(matMask))
+
+				matMask <- !( is.na(rObj$evtInfo$eValMtx[fcName ,]) & is.na(lastEvt$evtInfo$eValMtx[fcName ,]) )
+				rebFlag <- rObj$evtInfo$eValMtx[fcName ,]==lastEvt$evtInfo$eValMtx[fcName ,]
+				rebMtx.fCol["rebFlag.evt" ,fcName] <- (sum(matMask)>0)  &&  (sum(rebFlag,na.rm=T)==sum(matMask))
+			}
+
+			rebInfo$rebMtx.fCol <- rebMtx.fCol
+
+
+			# rebInfo$rebMtx.phReb (phaseReb)----------------------------------------------
+			rName <- c("raw","evt")
+			cName <- colnames(rObj$hpnInfo$phaseReb)
+			rebMtx.phReb <- matrix( 0 ,nrow=length(rName) ,ncol=length(cName) )
+			rownames(rebMtx.phReb) <- rName	;colnames(rebMtx.phReb) <- cName
+
+			rebMask <- rObj$hpnInfo$phaseReb["hpn",]>0 & lastEvt$hpnInfo$phaseReb["hpn",]>0
+            if( !cfg$style["freqZero"] ) matMask[] <- TRUE
+			rebMtx.phReb["raw" ,] <- rObj$hpnInfo$phaseReb["reb",] & lastEvt$hpnInfo$phaseReb["reb",]
+			rebMtx.phReb["raw",!rebMask] <- FALSE
+			rebMask <- rObj$evtInfo$phaseReb["hpn",]>0 & lastEvt$evtInfo$phaseReb["hpn",]>0
+			rebMtx.phReb["evt" ,] <- rObj$evtInfo$phaseReb["reb",] & lastEvt$evtInfo$phaseReb["reb",]
+			rebMtx.phReb["evt",!rebMask] <- FALSE
+
+			rebInfo$rebMtx.phReb <- rebMtx.phReb
+
+			# rebInfo$rebMtx.xyCnt ----------------------------------------------
+			rName <- c("raw","evt")
+			cName <- c("fCol.allMat","fCol.cntHpn","phase.allMat","phase.cntHpn")
+			rebMtx <- matrix( 0 ,nrow=length(rName) ,ncol=length(cName) )
+			rownames(rebMtx) <- rName	;colnames(rebMtx) <- cName
+
+			rebMtx["raw","fCol.allMat"] <- all( rObj$hpnInfo$fCol==lastEvt$hpnInfo$fCol )
+			rebMtx["raw","fCol.cntHpn"] <- sum( rObj$hpnInfo$fCol > 0 )
+			rebMtx["raw","phase.allMat"] <- all( rObj$hpnInfo$phase==lastEvt$hpnInfo$phase )
+			rebMtx["raw","phase.cntHpn"] <- sum( rObj$hpnInfo$phase > 0 )
+			rebMtx["evt","fCol.allMat"] <- all( rObj$evtInfo$fCol==lastEvt$evtInfo$fCol )
+			rebMtx["evt","fCol.cntHpn"] <- sum( rObj$evtInfo$fCol > 0 )
+			rebMtx["evt","phase.allMat"] <- all( rObj$evtInfo$phase==lastEvt$evtInfo$phase )
+			rebMtx["evt","phase.cntHpn"] <- sum( rObj$evtInfo$phase > 0 )
+
+			rebInfo$rebMtx.xyCnt <- rebMtx
+
+			# rebInfo$summary ----------------------------------------------
+			rName <- c("raw","evt")
+			cName <- c("all","ph","fCol","phReb","xyCnt.fCol","xyCnt.phase")
+			summMtx <- matrix( 0 ,nrow=length(rName) ,ncol=length(cName) )
+			rownames(summMtx) <- rName	;colnames(summMtx) <- cName
+
+			summMtx[,"all"]			<- rebInfo$rebMtx.all["rebFlag" ,]
+
+			rowMask <- (rebInfo$rebMtx.ph["hpn.raw",]>0)
+			if( !cfg$style["freqZero"] ) rowMask[] <- TRUE
+			summMtx["raw","ph"]		<- sum( rebInfo$rebMtx.ph["rebFlag.raw",] & rowMask )
+			summMtx["evt","ph"]		<- sum( rebInfo$rebMtx.ph["rebFlag.evt",] & (rebInfo$rebMtx.ph["hpn.evt",]>0) )
+
+			rowMask <- (rebInfo$rebMtx.fCol["hpn.raw",]>0)
+			if( !cfg$style["freqZero"] ) rowMask[] <- TRUE
+			summMtx["raw","fCol"]	<- sum( rebInfo$rebMtx.fCol["rebFlag.raw",] & rowMask )
+			summMtx["evt","fCol"]	<- sum( rebInfo$rebMtx.fCol["rebFlag.evt",] & (rebInfo$rebMtx.fCol["hpn.evt",]>0) )
+
+			summMtx[,"phReb"]		<- apply( rebInfo$rebMtx.phReb ,1 ,sum )
+
+			summMtx[,"xyCnt.fCol"]	<- rebInfo$rebMtx.xyCnt[,"fCol.allMat"]
+			summMtx[,"xyCnt.phase"]	<- rebInfo$rebMtx.xyCnt[,"phase.allMat"]
+
+			rebInfo$summMtx <- summMtx
         }
+		rObj$rebInfo <- rebInfo
+
 
 		if( !is.null(lastEvt$rebInfo) ){	# rObj$rebSummReb
+			hpnRebMtx <- rebInfo$summMtx>0 & lastEvt$rebInfo$summMtx>0
+
+			valMatMtx <- rebInfo$summMtx == lastEvt$rebInfo$summMtx
+			valMatMtx[ !hpnRebMtx ] <- FALSE
+
+			rObj$rebSummReb <- list( hpnRebMtx=hpnRebMtx ,valMatMtx=valMatMtx )
         }
     }
 
@@ -387,11 +486,16 @@ FCust_stdCut.hIdx <- function( hName ,mName ,mtxLst ){
         cfg <- scoreMtxCfg[[mName]]
         if( !is.null(cfg) ){
 
+            # standard Event check
             stdEvt.H2 <- NULL
             if( 1<length(mtxLst) ){
             	stdEvt.H2 <- bFCust.getEvt_byHIdx( mtxLst[[length(mtxLst)-1]] ,cfg ,NULL )
             }
-            # cutterObj$stdEvt.H1 <- bUtil.getEvt_byHIdx( mtxLst[[length(mtxLst)]] ,rObj$evtLst ,lastEvt=stdEvt.H2 )
+            rObj$stdEvt.H1 <- bFCust.getEvt_byHIdx( mtxLst[[length(mtxLst)]] ,cfg ,lastEvt=stdEvt.H2 )
+
+            # rebound check(skip zero)
+
+            # 
 
         } else {
             rObj$available <- FALSE
