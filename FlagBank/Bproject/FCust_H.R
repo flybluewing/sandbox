@@ -82,6 +82,14 @@ bFCust.getEvt_byHIdx <- function( scMtx ,cfg ,lastEvt=NULL ,ignoreOpt=NULL ){
 	#		mtxLst=hIdxObj[[hName]][[mName]]
 	#		lastEvt <- bUtil.getEvt_byHIdx( mtxLst[[length(mtxLst)]] ,evtLst ,mtxLst[[length(mtxLst)-1]] )
 
+    getEvtMatMtx <- function( eMtx1 ,eMtx2 ){
+        mask <- eMtx1==eMtx2
+        mask[is.na(mask)] <- F
+
+        matMtx <- eMtx1
+        matMtx[!mask] <- NA
+        return( matMtx )
+    }
 	getPhaseRebMtx <- function( mtx ,ignoreThld=0 ){ # 바로 다음 phase와의 동일여부
 
 		if( !is.null(ignoreThld) ){
@@ -265,6 +273,18 @@ bFCust.getEvt_byHIdx <- function( scMtx ,cfg ,lastEvt=NULL ,ignoreOpt=NULL ){
 			summMtx[,"xyCnt.phase"]	<- rebInfo$rebMtx.xyCnt[,"phase.allMat"]
 
 			rebInfo$summMtx <- summMtx
+
+
+
+			# eValMtx,eLevMtx ----------------------------------------------
+            #   H1,H2에서의 연속발생
+            #   연속발생이 아예 없으면 NULL
+            eObj.last <- bFCust.getEvtMtx( lastEvt$hpnInfo$rawMtx ,cfg )
+            eObj.cur <- bFCust.getEvtMtx( scMtx ,cfg )
+            rebInfo$eValMtx <- getEvtMatMtx( eObj.last$eValMtx ,eObj.cur$eValMtx )
+            rebInfo$eLevMtx <- getEvtMatMtx( eObj.last$eLevMtx ,eObj.cur$eLevMtx )
+            if( 0==sum(!is.na(rebInfo$eValMtx)) )   rebInfo$eValMtx <- NULL
+            if( 0==sum(!is.na(rebInfo$eLevMtx)) )   rebInfo$eLevMtx <- NULL
         }
 		rObj$rebInfo <- rebInfo
 
@@ -281,8 +301,57 @@ bFCust.getEvt_byHIdx <- function( scMtx ,cfg ,lastEvt=NULL ,ignoreOpt=NULL ){
 
 	return( rObj )
 }
-bFCust.getEvtSkipZero_byHIdx <- function(){
+bFCust.getSkipZero_byHIdx <- function( mtxLst ,cfg ){
 
+    getSkipZero <- function( mtxLst ){
+        hLen <- length(mtxLst)
+
+        mtx <- mtxLst[[1]]
+        mtx[,] <- 0
+
+        mtx.ph <- mtx
+        for( pName in colnames(mtx.ph) ){
+            for( hIdx in hLen:1 ){
+                if( 0 < sum(mtxLst[[hIdx]][,pName]>0,na.rm=T) ){
+                    mtx.ph[,pName] <- mtxLst[[hIdx]][,pName]
+                    break
+                }
+            }
+        }
+
+        mtx.fCol <- mtx
+        for( fColName in rownames(mtx.fCol) ){
+            for( hIdx in hLen:1 ){
+                if( 0 < sum(mtxLst[[hIdx]][fColName,]>0,na.rm=T) ){
+                    mtx.fCol[fColName,] <- mtxLst[[hIdx]][fColName,]
+                    break
+                }
+            }
+        }
+
+        matFlag <- mtx.ph==mtx.fCol
+        matFlag[is.na(matFlag)] <- FALSE
+
+        return( list(ph=mtx.ph ,fCol=mtx.fCol ,matFlag=matFlag) )
+    }
+
+    skipZero.raw <- getSkipZero(mtxLst)
+    szRaw <- list( ph=skipZero.raw$ph   ,fCol=skipZero.raw$fCol )
+    szRaw$dblHpn <- skipZero.raw$ph
+    szRaw$dblHpn[!skipZero.raw$matFlag] <- 0
+
+    mtxLst.eVal <- lapply( mtxLst ,function( mtx ){
+        eObj <- bFCust.getEvtMtx( mtx ,cfg )
+        return(eObj$eValMtx)
+    })
+    skipZero.eVal <- getSkipZero(mtxLst.eVal)
+    szEVal <- list( ph=skipZero.eVal$ph   ,fCol=skipZero.eVal$fCol )
+    szEVal$dblHpn <- skipZero.eVal$ph
+    szEVal$dblHpn[!skipZero.eVal$matFlag] <- NA
+
+    szObj <- list(raw=skipZero.raw ,eVal=ezEVal)
+
+    return( szObj )
 }
 
 
