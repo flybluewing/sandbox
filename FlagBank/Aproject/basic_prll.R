@@ -120,3 +120,90 @@ save( remLst ,file=sprintf("./save/Obj_remLst%s.save",saveId) )
 # load("Obj_remLst.save")
 k.FLogStr(sprintf("remLst is created.(logfile:%s)",logFile))
 
+
+
+
+# =====================================================================================
+# stdFiltedCnt
+stdFiltedCnt <- sapply( fRstLst ,length )   ;names(stdFiltedCnt) <- ( nrow(gEnv$zhF)-length(stdFiltedCnt)+1 ):nrow(gEnv$zhF)
+stdFilted.tbl <- table(stdFiltedCnt)
+stdFilted.per <- sprintf( "%.1f" ,100*stdFilted.tbl / length(fRstLst) )
+names(stdFilted.per) <- names(stdFilted.tbl)
+
+
+
+# =====================================================================================
+# stdFiltedCnt
+allZoid.lst <- vector("list",nrow(gEnv$allZoidMtx))
+for( nIdx in attributes(remLst)$name ){
+    for( aIdx in remLst[[nIdx]] ){
+        allZoid.lst[[aIdx]][1+length(allZoid.lst[[aIdx]])] <- nIdx
+    }
+}
+
+allZoid.fltCnt <- getAllZoidIdx.FltCnt( gEnv ,remLst )
+# allZoidMtx <- gEnv$allZoidMtx[(allZoid.fltCnt==0),]
+
+lastZoid <- gEnv$zhF[nrow(gEnv$zhF),]
+# 가정 : allZoid.fltCnt 는 1~3이다.
+allZoid.idx0 <- which(allZoid.fltCnt==0)
+allZoid.idx1 <- which(allZoid.fltCnt==1)
+allZoid.idx2 <- which(allZoid.fltCnt==2)
+if( TRUE ){ # allZoid.idx1, allZoid.idx2 동일 필터링 재발 가능성은 제외
+    stdFiltedCnt.idx1 <- which(stdFiltedCnt==1)
+    lastFlt <- fRstLst[[ stdFiltedCnt.idx1[[length(stdFiltedCnt.idx1)]] ]]
+    fName <- do.call( c ,allZoid.lst[allZoid.idx1] )
+    allZoid.idx1 <- allZoid.idx1[fName!=lastFlt]
+
+    neverFnd <- setdiff( attributes(remLst)$name ,unique(do.call(c,fRstLst[stdFiltedCnt==1])) )
+    fName <- do.call( c ,allZoid.lst[allZoid.idx1] )
+    flag <- sapply( allZoid.lst[allZoid.idx1] ,function(p){ p%in%neverFnd })
+    allZoid.idx1 <- allZoid.idx1[!flag]
+
+    # 가정 : allZoid.fltCnt의 2영역에서, 바로이전 필터링 결과는 포함되지 않는다.
+    #   단, 과거에 일어난 필터링 조합만 사용한다.
+    stdFiltedCnt.idx2 <- which(stdFiltedCnt==2)
+    lastFlt <- fRstLst[[ stdFiltedCnt.idx2[[length(stdFiltedCnt.idx2)]] ]]
+    lastFlt.name <- paste(sort(lastFlt),collapse="_")
+    flag <- sapply( allZoid.lst[allZoid.idx2] ,function(p){
+                        lastFlt.name != paste(sort(p),collapse="_")
+                    })
+    allZoid.idx2 <- allZoid.idx2[flag]
+
+    hnt.name <- unique(sapply(fRstLst[stdFiltedCnt.idx2] ,function(p){ paste(sort(p),collapse="_") } ))
+    flag <- sapply( allZoid.lst[allZoid.idx2] ,function(p){
+                        return( paste(sort(p),collapse="_") %in% hnt.name )
+                    })
+    allZoid.idx2 <- allZoid.idx2[flag]
+}
+
+# =====================================================================================
+# allIdxLst
+rebCnt <- sapply( 2:nrow(gEnv$zhF) ,function(hIdx){ sum(gEnv$zhF[hIdx,] %in% gEnv$zhF[(hIdx-1),]) } )
+rebCnt <- c( 0 ,rebCnt )    ;names(rebCnt) <- 1:nrow(gEnv$zhF)
+
+allIdxLst <- list( allZoid.idx0=allZoid.idx0 ,allZoid.idx1=allZoid.idx1 ,allZoid.idx2=allZoid.idx2 )
+allIdxLst$saveId <- saveId
+allIdxLst$stdFiltedCnt <- stdFiltedCnt
+allIdxLst$stdFiltedCnt.n0 <- names(stdFiltedCnt)[stdFiltedCnt==0]
+allIdxLst$stdFiltedCnt.n1 <- names(stdFiltedCnt)[stdFiltedCnt==1]
+allIdxLst$infoMtx <- cbind( stdFiltedCnt ,rebCnt[names(stdFiltedCnt)] )
+colnames( allIdxLst$infoMtx ) <- c("stdFiltedCnt","rebCnt")
+
+save( allIdxLst, file=sprintf("Obj_allIdxLst%s.save",saveId) )
+
+# Review ---------------------------------------------------------------------------------------
+{
+    reviewSpan <- 19:0
+    hSpan <- nrow(gEnv$zhF) - reviewSpan
+    lst <- fRstLst[length(fRstLst)-reviewSpan]
+    flt <- do.call( c ,lst )
+    tbl <- table(flt)
+    tbl[order(tbl,decreasing=T)]
+
+    for( idx in 1:length(hSpan) ){
+        rptStr <- sprintf( "H%d(%d)    %s\n",hSpan[idx] ,stdFiltedCnt[as.character(hSpan[idx])] ,paste(lst[[idx]],collapse=" ") )
+        cat( rptStr )
+    }
+}
+
