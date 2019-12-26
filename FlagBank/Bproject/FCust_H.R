@@ -330,7 +330,7 @@ bFCust.getSkipZero_byHIdx <- function( mtxLst ,cfg ){
         }
 
         matFlag <- mtx.ph==mtx.fCol
-        matFlag[is.na(matFlag)] <- FALSE
+        matFlag[is.na(matFlag) | mtx.ph==0] <- FALSE
 
         return( list(ph=mtx.ph ,fCol=mtx.fCol ,matFlag=matFlag) )
     }
@@ -338,7 +338,7 @@ bFCust.getSkipZero_byHIdx <- function( mtxLst ,cfg ){
     skipZero.raw <- getSkipZero(mtxLst)
     szRaw <- list( ph=skipZero.raw$ph   ,fCol=skipZero.raw$fCol )
     szRaw$dblHpn <- skipZero.raw$ph
-    szRaw$dblHpn[!skipZero.raw$matFlag] <- 0
+    szRaw$dblHpn[!skipZero.raw$matFlag] <- NA
 
     mtxLst.eVal <- lapply( mtxLst ,function( mtx ){
         eObj <- bFCust.getEvtMtx( mtx ,cfg )
@@ -349,11 +349,13 @@ bFCust.getSkipZero_byHIdx <- function( mtxLst ,cfg ){
     szEVal$dblHpn <- skipZero.eVal$ph
     szEVal$dblHpn[!skipZero.eVal$matFlag] <- NA
 
-    szObj <- list(raw=skipZero.raw ,eVal=ezEVal)
+    szObj <- list(raw=skipZero.raw ,eVal=szEVal)
 
     return( szObj )
 }
+bFCust.getSkipZero_byHIdx.ass <- function( szObj ,scMtx ,scMtxEvt ){
 
+}
 
 
 # Cutter =================================================================================
