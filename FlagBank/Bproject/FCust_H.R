@@ -349,11 +349,45 @@ bFCust.getSkipZero_byHIdx <- function( mtxLst ,cfg ){
     szEVal$dblHpn <- skipZero.eVal$ph
     szEVal$dblHpn[!skipZero.eVal$matFlag] <- NA
 
-    szObj <- list(raw=skipZero.raw ,eVal=szEVal)
+    szObj <- list(raw=szRaw ,eVal=szEVal)
 
     return( szObj )
 }
 bFCust.getSkipZero_byHIdx.ass <- function( szObj ,scMtx ,scMtxEvt ){
+    #   szObj <- bFCust.getSkipZero_byHIdx( mtxLst ,cfg )
+
+    chkMatch <- function( szInfo ,mtx ,hpnMin=1 ){
+        # ignrVal : NULL 이면 mtx를 NA를 비교대상에서 제외.
+        #           0 등의 값을 주면 mtx내 0을 비교대상에서 제외.
+
+        rName <- c("mat","hpn") # matFlag, hpnCnt
+
+        # ph
+        mtxPh <- matrix( 0 ,ncol=ncol(szInfo$ph) ,nrow=length(rName) )
+        colnames(mtxPh) <- colnames(szInfo$ph)  ;rownames(mtxPh) <- rName
+        mtxPh["hpn",] <- apply( szInfo$ph ,2 ,function(fCol){sum(fCol>0,na.rm=T)} )
+        for( pName in colnames(mtxPh) ){
+            matCnt <- sum( szInfo$ph[,pName]==mtx[,pName] ,na.rm=T )
+            availCnt <- sum( !is.na(szInfo$ph[,pName]) )
+            mtxPh["mat",pName] <- availCnt>0 && (matCnt==availCnt)
+        }
+        mtxFCol["mat" ,mtxPh["hpn",]<=hpnMin] <- 0
+
+        # fCol
+        mtxFCol <- matrix( 0 ,ncol=nrow(szInfo$fCol) ,nrow=length(rName) )
+        colnames(mtxFCol) <- rownames(szInfo$fCol)  ;rownames(mtxFCol) <- rName
+        mtxFCol["hpn",] <- apply( szInfo$fCol ,1 ,function(ph){sum(ph>0,na.rm=T)} )
+        for( fcName in colnames(mtxFCol) ){
+            matCnt <- sum( szInfo$fCol[fcName,]==mtx[fcName,] ,na.rm=T )
+            availCnt <- sum( !is.na(szInfo$fCol[fcName,]) )
+            mtxFCol["mat",fcName] <- availCnt>0 && (matCnt==availCnt)
+        }
+        mtxFCol["mat" ,mtxFCol["hpn",]<=hpnMin] <- 0
+
+        # dblHpn
+        #   QQE working
+
+    }
 
 }
 
@@ -565,8 +599,7 @@ FCust_stdCut.hIdx <- function( hName ,mName ,mtxLst ){
             rObj$stdEvt.H1 <- bFCust.getEvt_byHIdx( mtxLst[[length(mtxLst)]] ,cfg ,lastEvt=stdEvt.H2 )
 
             # rebound check(skip zero)
-
-            # 
+            rObj$szObj <- bFCust.getSkipZero_byHIdx( mtxLst ,cfg )
 
         } else {
             rObj$available <- FALSE
