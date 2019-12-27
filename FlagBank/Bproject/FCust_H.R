@@ -355,14 +355,15 @@ bFCust.getSkipZero_byHIdx <- function( mtxLst ,cfg ){
 }
 bFCust.getSkipZero_byHIdx.ass <- function( szObj ,scMtx ,scMtxEvt ){
     #   szObj <- bFCust.getSkipZero_byHIdx( mtxLst ,cfg )
+    #   scMtxEvt <- bFCust.getEvtMtx(scMtx,cfg)$eValMtx
 
-    chkMatch <- function( szInfo ,mtx ,hpnMin=1 ){
+    chkMatch <- function( szInfo ,mtx ,hpnMin=1 ,hpnMin.dbl=5 ){
         # ignrVal : NULL 이면 mtx를 NA를 비교대상에서 제외.
         #           0 등의 값을 주면 mtx내 0을 비교대상에서 제외.
 
         rName <- c("mat","hpn") # matFlag, hpnCnt
 
-        # ph
+        # mtxPh
         mtxPh <- matrix( 0 ,ncol=ncol(szInfo$ph) ,nrow=length(rName) )
         colnames(mtxPh) <- colnames(szInfo$ph)  ;rownames(mtxPh) <- rName
         mtxPh["hpn",] <- apply( szInfo$ph ,2 ,function(fCol){sum(fCol>0,na.rm=T)} )
@@ -371,9 +372,9 @@ bFCust.getSkipZero_byHIdx.ass <- function( szObj ,scMtx ,scMtxEvt ){
             availCnt <- sum( !is.na(szInfo$ph[,pName]) )
             mtxPh["mat",pName] <- availCnt>0 && (matCnt==availCnt)
         }
-        mtxFCol["mat" ,mtxPh["hpn",]<=hpnMin] <- 0
+        mtxFCol["mat" ,mtxPh["hpn",]<hpnMin] <- 0
 
-        # fCol
+        # mtxFCol
         mtxFCol <- matrix( 0 ,ncol=nrow(szInfo$fCol) ,nrow=length(rName) )
         colnames(mtxFCol) <- rownames(szInfo$fCol)  ;rownames(mtxFCol) <- rName
         mtxFCol["hpn",] <- apply( szInfo$fCol ,1 ,function(ph){sum(ph>0,na.rm=T)} )
@@ -382,13 +383,22 @@ bFCust.getSkipZero_byHIdx.ass <- function( szObj ,scMtx ,scMtxEvt ){
             availCnt <- sum( !is.na(szInfo$fCol[fcName,]) )
             mtxFCol["mat",fcName] <- availCnt>0 && (matCnt==availCnt)
         }
-        mtxFCol["mat" ,mtxFCol["hpn",]<=hpnMin] <- 0
+        mtxFCol["mat" ,mtxFCol["hpn",]<hpnMin] <- 0
 
         # dblHpn
-        #   QQE working
+        dblHpn <- c( mat=0 ,hpn=sum( !is.na(szInfo$dblHpn) ) )
+        if( dblHpn["hpn"] >=hpnMin.dbl ){
+            matCnt <- sum( szInfo$dblHpn==mtx  ,na.rm=T )
+            dblHpn["mat"] <- matCnt==dblHpn["hpn"]
+        }
 
+        return( list(ph=mtxPh,fCol=mtxFCol,dblHpn=dblHpn) )
     }
 
+    matRaw <- chkMatch( szObj$raw ,scMtx )
+    matEvt <- chkMatch( szObj$raw ,scMtxEvt )
+
+    return( list(matRaw=matRaw,matEvt=matEvt) )
 }
 
 
