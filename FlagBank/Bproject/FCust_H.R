@@ -617,6 +617,9 @@ FCust_stdCut.hIdx <- function( hName ,mName ,mtxLst ){
 
     }
 
+    rObj$check <- function( scoreMtx ,forScore=F ){
+        
+    }
 
     rObj$cut <- function( scoreMtx ,alreadyDead=NULL ){
 
