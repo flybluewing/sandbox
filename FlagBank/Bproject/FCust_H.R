@@ -355,8 +355,8 @@ bFCust.getSkipZero_byHIdx <- function( mtxLst ,cfg ,lastSZ=NULL ){
     if( !is.null(lastSZ) ){
         #   이전 대에서의 sz정보와 마지막 발생 값과의 비교.
         scMtx <- mtxLst[[length(mtxLst)]]
-        scMtxEvt <- bFCust.getEvtMtx( lastMtx ,cfg )$eValMtx
-        rstObj <- bFCust.getSkipZero_byHIdx.ass( szObj ,scMtx ,scMtxEvt )
+        scMtxEvt <- bFCust.getEvtMtx( scMtx ,cfg )$eValMtx
+        rstObj <- bFCust.getSkipZero_byHIdx.ass( lastSZ ,scMtx ,scMtxEvt )
     }
     szObj$rebInfo <- rebInfo
 
