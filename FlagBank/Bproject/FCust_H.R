@@ -356,7 +356,7 @@ bFCust.getSkipZero_byHIdx <- function( mtxLst ,cfg ,lastSZ=NULL ){
         #   이전 대에서의 sz정보와 마지막 발생 값과의 비교.
         scMtx <- mtxLst[[length(mtxLst)]]
         scMtxEvt <- bFCust.getEvtMtx( scMtx ,cfg )$eValMtx
-        rstObj <- bFCust.getSkipZero_byHIdx.ass( lastSZ ,scMtx ,scMtxEvt )
+        rebInfo <- bFCust.getSkipZero_byHIdx.ass( lastSZ ,scMtx ,scMtxEvt )
     }
     szObj$rebInfo <- rebInfo
 
@@ -632,8 +632,20 @@ FCust_stdCut.hIdx <- function( hName ,mName ,mtxLst ){
 
     }
 
-    rObj$check <- function( scoreMtx ,forScore=F ){
-        
+    rObj$getScore <- function( rawMtx ,forCut=F ){
+        scoreObj <- list( survive=T )
+
+        cfg <- scoreMtxCfg[[ rObj$defId["mName"] ]]
+        evtObj <- bFCust.getEvtMtx( rawMtx ,cfg )
+
+        #   stdEvt.H1 --------------------------------------------------------
+
+        #   szObj ------------------------------------------------------------
+        # szObj <- bFCust.getSkipZero_byHIdx( mtxLst ,cfg ,lastSZ=rObj$szObj )
+        rebInfo <- bFCust.getSkipZero_byHIdx.ass( rObj$szObj ,rawMtx ,evtObj$eValMtx )
+
+
+        return( scoreObj )
     }
 
     rObj$cut <- function( scoreMtx ,alreadyDead=NULL ){
