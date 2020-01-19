@@ -638,12 +638,39 @@ FCust_stdCut.hIdx <- function( hName ,mName ,mtxLst ){
         cfg <- scoreMtxCfg[[ rObj$defId["mName"] ]]
         evtObj <- bFCust.getEvtMtx( rawMtx ,cfg )
 
+        # 일단 scoreMtx들부터 만들고, forCut은 나중에 적용하자.
+
         #   stdEvt.H1 --------------------------------------------------------
 
-        #   szObj ------------------------------------------------------------
+        #   scMtx.sz / szObj ------------------------------------------------------------
         # szObj <- bFCust.getSkipZero_byHIdx( mtxLst ,cfg ,lastSZ=rObj$szObj )
         rebInfo <- bFCust.getSkipZero_byHIdx.ass( rObj$szObj ,rawMtx ,evtObj$eValMtx )
+        cName <- c("r.ph","r.fCol","r.dblHpnFlg" ,"e.ph","e.fCol","e.dblHpnFlg")
+        rName <- c("rebCnt","rebDup")   # 반복 수, H1에서의 재현이 반복되었는지? ,발생 수
+        scMtx.sz <- matrix( 0 ,ncol=length(cName) ,nrow=length(rName) )
+        colnames(scMtx.sz) <- cName     ;rownames(scMtx.sz) <- rName
+        if( TRUE ){
+            scMtx.sz["rebCnt","r.ph"] <- sum(rebInfo$matRaw$ph["mat",])
+            scMtx.sz["rebCnt","r.fCol"] <- sum(rebInfo$matRaw$fCol["mat",])
+            scMtx.sz["rebCnt","r.dblHpnFlg"] <- rebInfo$matRaw$dblHpn["mat"]
+            scMtx.sz["rebCnt","e.ph"] <- sum(rebInfo$matEvt$ph["mat",])
+            scMtx.sz["rebCnt","e.fCol"] <- sum(rebInfo$matEvt$fCol["mat",])
+            scMtx.sz["rebCnt","e.dblHpnFlg"] <- rebInfo$matEvt$dblHpn["mat"]
 
+            if( !is.null(rObj$szObj$rebInfo) ){
+                matFlag <- (rObj$szObj$rebInfo$matRaw$ph["mat",]>0) & (rebInfo$matRaw$ph["mat",]>0)
+                scMtx.sz["rebDup","r.ph"] <- sum( matFlag )
+                matFlag <- (rObj$szObj$rebInfo$matRaw$fCol["mat",]>0) & (rebInfo$matRaw$fCol["mat",]>0)
+                scMtx.sz["rebDup","r.fCol"] <- sum( matFlag )
+                scMtx.sz["rebDup","r.dblHpnFlg"] <- (rObj$szObj$rebInfo$matRaw$dblHpn["mat"]>0) && (rebInfo$matRaw$dblHpn["mat"]>0)
+
+                matFlag <- (rObj$szObj$rebInfo$matEvt$ph["mat",]>0) & (rebInfo$matEvt$ph["mat",]>0)
+                scMtx.sz["rebDup","e.ph"] <- sum( matFlag )
+                matFlag <- (rObj$szObj$rebInfo$matEvt$fCol["mat",]>0) & (rebInfo$matEvt$fCol["mat",]>0)
+                scMtx.sz["rebDup","e.fCol"] <- sum( matFlag )
+                scMtx.sz["rebDup","e.dblHpnFlg"] <- (rObj$szObj$rebInfo$matEvt$dblHpn["mat"]>0) && (rebInfo$matEvt$dblHpn["mat"]>0)
+            }            
+        }
 
         return( scoreObj )
     }

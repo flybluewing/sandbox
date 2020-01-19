@@ -13,7 +13,7 @@ headerFiles <- c( "../breedingPlace/20171116_A_H.R"
 )
 for( idx in 1:length(headerFiles) ) source(headerFiles[idx])
 
-prllNum <- 3     # ½Ç¼ö°¡ Àæ¾Æ¼­ ±×³É ¿À·ù ÄÚµå·Î ³öµĞ´Ù.
+prllNum <- 2     # ½Ç¼ö°¡ Àæ¾Æ¼­ ±×³É ¿À·ù ÄÚµå·Î ³öµĞ´Ù.
 prllLog <- k.getFlogObj( "./log/parallel_log.txt" )
 prll.initHeader <- function( ){
     k <- sfLapply(1:prllNum,function(prllId){
