@@ -640,10 +640,12 @@ FCust_stdCut.hIdx <- function( hName ,mName ,mtxLst ){
 
         # 일단 scoreMtx들부터 만들고, forCut은 나중에 적용하자.
 
-        #   stdEvt.H1 --------------------------------------------------------
+        #   scMtx.se / stdEvt.H1 --------------------------------------------------------
+        stdEvt <- bFCust.getEvt_byHIdx( rawMtx ,cfg ,lastEvt=rObj$stdEvt.H1 )
+        cName <- c("r.ph","r.fCol" ,"e.ph","e.fCol")
+        rName <- c("rebCnt","rebDup")
 
         #   scMtx.sz / szObj ------------------------------------------------------------
-        # szObj <- bFCust.getSkipZero_byHIdx( mtxLst ,cfg ,lastSZ=rObj$szObj )
         rebInfo <- bFCust.getSkipZero_byHIdx.ass( rObj$szObj ,rawMtx ,evtObj$eValMtx )
         cName <- c("r.ph","r.fCol","r.dblHpnFlg" ,"e.ph","e.fCol","e.dblHpnFlg")
         rName <- c("rebCnt","rebDup")   # 반복 수, H1에서의 재현이 반복되었는지? ,발생 수
@@ -671,6 +673,7 @@ FCust_stdCut.hIdx <- function( hName ,mName ,mtxLst ){
                 scMtx.sz["rebDup","e.dblHpnFlg"] <- (rObj$szObj$rebInfo$matEvt$dblHpn["mat"]>0) && (rebInfo$matEvt$dblHpn["mat"]>0)
             }            
         }
+        scoreObj$scMtx.sz <- scMtx.sz
 
         return( scoreObj )
     }
