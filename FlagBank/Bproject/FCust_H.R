@@ -640,17 +640,43 @@ FCust_stdCut.hIdx <- function( hName ,mName ,mtxLst ){
 
         # 일단 scoreMtx들부터 만들고, forCut은 나중에 적용하자.
 
-        #   scMtx.se / stdEvt.H1 --------------------------------------------------------
-        stdEvt <- bFCust.getEvt_byHIdx( rawMtx ,cfg ,lastEvt=rObj$stdEvt.H1 )
-        cName <- c("r.ph","r.fCol" ,"e.ph","e.fCol")
-        rName <- c("rebCnt","rebDup")
+        #   summMtx,summMtx.reb / stdEvt.H1 --------------------------------------------------------
+        curEvt <- bFCust.getEvt_byHIdx( rawMtx ,cfg ,lastEvt=rObj$stdEvt.H1 )
+        scoreObj$summMtx <- curEvt$rebInfo$summMtx
+        scoreObj$summMtx.reb <- NULL
+        if( !is.null(rObj$stdEvt.H1$rebInfo) ){
+            summMtx.reb <- scoreObj$summMtx
+            summMtx.reb[,] <- 0     # 하나라도 0 이 아니면 Cut...
+
+            rebInfo.H1 <- rObj$stdEvt.H1$rebInfo
+
+            summMtx.reb["raw","all"] <- scoreObj$summMtx["raw","all"]>0 && curEvt$rebInfo$summMtx["raw","all"]>0
+            summMtx.reb["evt","all"] <- scoreObj$summMtx["evt","all"]>0 && curEvt$rebInfo$summMtx["evt","all"]>0
+
+            summMtx.reb["raw","ph"] <- sum( rebInfo.H1$rebMtx.ph["rebFlag.raw",]>0 & curEvt$rebInfo$rebMtx.ph["rebFlag.raw",]>0 )
+            summMtx.reb["evt","ph"] <- sum( rebInfo.H1$rebMtx.ph["rebFlag.evt",]>0 & curEvt$rebInfo$rebMtx.ph["rebFlag.evt",]>0 )
+
+            summMtx.reb["raw","fCol"] <- sum( rebInfo.H1$rebMtx.fCol["rebFlag.raw",]>0 & curEvt$rebInfo$rebMtx.fCol["rebFlag.raw",]>0 )
+            summMtx.reb["evt","fCol"] <- sum( rebInfo.H1$rebMtx.fCol["rebFlag.evt",]>0 & curEvt$rebInfo$rebMtx.fCol["rebFlag.evt",]>0 )
+
+            summMtx.reb["raw","phReb"] <- sum( rebInfo.H1$rebMtx.phReb["raw",]>0 & curEvt$rebInfo$rebMtx.phReb["raw",]>0 )
+            summMtx.reb["evt","phReb"] <- sum( rebInfo.H1$rebMtx.phReb["evt",]>0 & curEvt$rebInfo$rebMtx.phReb["evt",]>0 )
+
+            summMtx.reb["raw","xyCnt.fCol"] <- rebInfo.H1$rebMtx.xyCnt["raw","fCol.allMat"]>0 && curEvt$rebInfo$rebMtx.xyCnt["raw","fCol.allMat"]
+            summMtx.reb["evt","xyCnt.fCol"] <- rebInfo.H1$rebMtx.xyCnt["evt","fCol.allMat"]>0 && curEvt$rebInfo$rebMtx.xyCnt["evt","fCol.allMat"]
+
+            summMtx.reb["raw","xyCnt.phase"] <- rebInfo.H1$rebMtx.xyCnt["raw","phase.allMat"]>0 && curEvt$rebInfo$rebMtx.xyCnt["raw","phase.allMat"]
+            summMtx.reb["evt","xyCnt.phase"] <- rebInfo.H1$rebMtx.xyCnt["evt","phase.allMat"]>0 && curEvt$rebInfo$rebMtx.xyCnt["evt","phase.allMat"]
+
+
+            scoreObj$summMtx.reb <- summMtx.reb
+        }
 
         #   scMtx.sz / szObj ------------------------------------------------------------
         rebInfo <- bFCust.getSkipZero_byHIdx.ass( rObj$szObj ,rawMtx ,evtObj$eValMtx )
         cName <- c("r.ph","r.fCol","r.dblHpnFlg" ,"e.ph","e.fCol","e.dblHpnFlg")
         rName <- c("rebCnt","rebDup")   # 반복 수, H1에서의 재현이 반복되었는지? ,발생 수
-        scMtx.sz <- matrix( 0 ,ncol=length(cName) ,nrow=length(rName) )
-        colnames(scMtx.sz) <- cName     ;rownames(scMtx.sz) <- rName
+        scMtx.sz <- matrix( 0 ,ncol=length(cName) ,nrow=length(rName) ,dimnames=list(rName,cName) )
         if( TRUE ){
             scMtx.sz["rebCnt","r.ph"] <- sum(rebInfo$matRaw$ph["mat",])
             scMtx.sz["rebCnt","r.fCol"] <- sum(rebInfo$matRaw$fCol["mat",])
