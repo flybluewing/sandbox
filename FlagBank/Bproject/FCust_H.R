@@ -632,8 +632,8 @@ FCust_stdCut.hIdx <- function( hName ,mName ,mtxLst ){
 
     }
 
-    rObj$getScore <- function( rawMtx ,forCut=F ){
-        scoreObj <- list( survive=T )
+    rObj$getScore <- function( rawMtx ){
+        scoreObj <- list( )
 
         cfg <- scoreMtxCfg[[ rObj$defId["mName"] ]]
         evtObj <- bFCust.getEvtMtx( rawMtx ,cfg )
@@ -709,7 +709,32 @@ FCust_stdCut.hIdx <- function( hName ,mName ,mtxLst ){
         cutLst <- list()
         if( !rObj$available ) return( cutLst=cutLst )
 
+        # alreadyDead 처리.
+
+        scObj <- rObj$getScore( rawMtx )
         cfg <- scoreMtxCfg[[ rObj$defId["mName"] ]]
+
+        #   fCol 에서의 높은 등급 Evt 갯수 제한도 있어야 하잖나 싶음.
+
+        if( TRUE ){ # summMtx
+            summMtx.cut <- scObj$summMtx >= cfg$summMtx
+            #     $summMtx    all ph fCol phReb xyCnt.fCol xyCnt.phase
+            #             raw   0  0    0     0          0           0
+            #             evt   0  0    0     0          0           0
+        }
+
+        if( TRUE ){ # summMtx.reb
+            #     $summMtx.reb    all ph fCol phReb xyCnt.fCol xyCnt.phase
+            #                 raw   0  0    0     0          0           0
+            #                 evt   0  0    0     0          0           0
+        }
+
+        if( TRUE ){ # scMtx.sz
+            #     $scMtx.sz   r.ph r.fCol r.dblHpnFlg e.ph e.fCol e.dblHpnFlg
+            #             rebCnt    0      0           0    0      0           0
+            #             rebDup    0      0           0    0      0           0
+        }
+
 
         return( cutLst )
     }

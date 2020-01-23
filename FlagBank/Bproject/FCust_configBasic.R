@@ -149,6 +149,46 @@ for( mName in names( scoreMtxCfg ) ){ # naming 추가.
         if( is.null(scoreMtxCfg[[mName]]$rowReb) ){
             scoreMtxCfg[[mName]]$rowReb <- c( rawMin=1 ,lowE=2 ,rareE=1 )
         }
+        if( is.null(scoreMtxCfg[[mName]]$summMtx) ){
+            #     $summMtx    all ph fCol phReb xyCnt.fCol xyCnt.phase
+            #             raw   0  0    0     0          0           0
+            #             evt   0  0    0     0          0           0
+            cName <- c( "all" ,"ph" ,"fCol" ,"phReb" ,"xyCnt.fCol" ,"xyCnt.phase" )
+            rName <- c( "raw" ,"evt" )
+            thldVal <- c(   1 ,2 ,2 ,2 ,1 ,1    # xyCnt.fCol, xyCnt.fCol은 봐가며 조절해야 할 듯.
+                           ,1 ,2 ,2 ,2 ,1 ,1 
+                        )
+            scoreMtxCfg[[mName]]$summMtx <- matrix( thldVal ,byrow=T
+                        ,ncol=length(cName) ,nrow=length(rName) ,dimnames=list(rName,cName)
+                    )
+        }
+        if( is.null(scoreMtxCfg[[mName]]$summMtx.reb ) ){
+            #     $summMtx.reb    all ph fCol phReb xyCnt.fCol xyCnt.phase
+            #                 raw   0  0    0     0          0           0
+            #                 evt   0  0    0     0          0           0
+            cName <- c( "all" ,"ph" ,"fCol" ,"phReb" ,"xyCnt.fCol" ,"xyCnt.phase" )
+            rName <- c( "raw" ,"evt" )
+            thldVal <- c(   1 ,1 ,1 ,1 ,1 ,1    # xyCnt.fCol, xyCnt.fCol은 봐가며 조절해야 할 듯.
+                           ,1 ,1 ,1 ,1 ,1 ,1 
+                        )
+            scoreMtxCfg[[mName]]$summMtx.reb <- matrix( thldVal ,byrow=T
+                        ,ncol=length(cName) ,nrow=length(rName) ,dimnames=list(rName,cName)
+                    )
+        }
+        if( is.null(scoreMtxCfg[[mName]]$scMtx.sz ) ){
+            #     $scMtx.sz      r.ph r.fCol r.dblHpnFlg e.ph e.fCol e.dblHpnFlg
+            #             rebCnt    0      0           0    0      0           0
+            #             rebDup    0      0           0    0      0           0
+            cName <- c( "r.ph" ,"r.fCol" ,"r.dblHpnFlg" ,"e.ph" ,"e.fCol" ,"e.dblHpnFlg" )
+            rName <- c( "rebCnt" ,"rebDup" )
+            thldVal <- c(   2 ,2 ,1 ,2 ,2 ,1    # xyCnt.fCol, xyCnt.fCol은 봐가며 조절해야 할 듯.
+                           ,1 ,1 ,1 ,1 ,1 ,1 
+                        )
+            scoreMtxCfg[[mName]]$scMtx.sz <- matrix( thldVal ,byrow=T
+                        ,ncol=length(cName) ,nrow=length(rName) ,dimnames=list(rName,cName)
+                    )
+        }
+
     }
 }
 
