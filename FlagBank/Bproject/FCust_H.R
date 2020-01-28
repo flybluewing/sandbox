@@ -431,7 +431,6 @@ FCust_stdCut.rawRow <- function( hName ,mName ,pName ,scoreMtxH ){
                 evt2 <- bFCust.getEvt( scoreMtxH[hLen-1 ,] ,cfg$fCol )
                 rObj$evtReb <- bFCust.evtComp( evt2["lev",] ,rObj$lastEvt["lev",] ) # ,levMin=2
                 if( all(is.na(rObj$evtReb$levDup)) )    rObj$evtReb <- NULL
-
             }
 
         } else {
@@ -490,13 +489,14 @@ FCust_stdCut.rawRow <- function( hName ,mName ,pName ,scoreMtxH ){
             if( evtCnt > cfg$evtMax["maxHpn"] ){
                 alreadyDead[aIdx] <- TRUE
 
-                infoStr <- sprintf("evtCnt:%d",evtCnt)
-                cObj <- cutLst.rowE[[as.character(aIdx)]]
-                if( is.null(cObj) ){
-                    cutLst.rowE[[as.character(aIdx)]] <- list( idx=aIdx ,info=infoStr )
-                } else {
-                    cutLst.rowE[[as.character(aIdx)]]$info <- paste( cObj$info, infoStr, collapse=", " )
+                infoStr=""
+                if( anaMode ){
+                    flag <- evt.sm["lev",]>=cfg$evtMax["minLev"]
+                    flag[is.na(flag)] <- F
+
+                    infoStr <- sprintf("evtCnt:%d(%s)",evtCnt,paste(evt.sm["lev" ,flag],collapse=","))
                 }
+                cutLst.rowE[[as.character(aIdx)]] <- list( idx=aIdx ,info=infoStr )
             }
         }
 
@@ -505,52 +505,70 @@ FCust_stdCut.rawRow <- function( hName ,mName ,pName ,scoreMtxH ){
         cutLst.reb <- list()
         checkRawReb.cnt <- sum(rObj$lastScore>0)
         checkRawReb.flag <- checkRawReb.cnt >= cfg$rowReb["rawMin"]
-        checkEvtReb.cnt <- c( lowE=sum(rObj$lastEvt["lev",]>1,na.rm=T) ,rareE=sum(rObj$lastEvt["lev",]>1,na.rm=T) )
-        checkEvtReb.str <- paste(names(checkEvtReb.cnt),checkEvtReb.cnt,sep=".")
-        checkEvtReb.str <- paste( checkEvtReb.str ,collapse="," )
-        checkEvtReb.flag <- any( checkEvtReb.cnt >= cfg$rowReb[c("lowE","rareE")] )
+        checkEvtReb.flag <- FALSE
+        if( 0<sum(rObj$lastEvt["lev"],na.rm=T) ){
+            checkEvtReb.cnt <- c( lowE=sum(rObj$lastEvt["lev",]>0,na.rm=T) ,rareE=sum(rObj$lastEvt["lev",]>1,na.rm=T) )
+            checkEvtReb.flag <- any( checkEvtReb.cnt >= cfg$rowReb[c("lowE","rareE")] )
+            checkEvtReb.str <- paste(names(checkEvtReb.cnt),checkEvtReb.cnt,sep=".")
+            checkEvtReb.str <- paste( checkEvtReb.str ,collapse="," )
+        }
+        checkEvtReb.Dbl.flag <- !is.null(rObj$evtReb)
+        if( checkEvtReb.Dbl.flag ){
+            levDup <- rObj$evtReb$levDup[!is.na(rObj$evtReb$levDup)]
+            str <- paste( names(levDup) ,levDup ,sep=":")
+            checkEvtReb.Dbl.str <- paste( str ,collapse=", ")
+            checkEvtReb.Dbl.levDup <- levDup
+        }
         for( aIdx in seq_len(val.len) ){
             smRow <- scoreMtx[aIdx ,]
+            evt.sm <- bFCust.getEvt(smRow,cfg$fCol)
 
             # raw Reb
-            if( !anaMode && alreadyDead[aIdx] ) next
             if( checkRawReb.flag ){
+                if( !anaMode && alreadyDead[aIdx] ) next
+
                 if( all(rObj$lastScore==smRow) ){
                     alreadyDead[aIdx] <- TRUE
 
-                    infoStr <- sprintf("rReb:%d",checkRawReb.cnt )
-                    cObj <- cutLst.reb[[as.character(aIdx)]]
-                    if( is.null(cObj) ){
-                        cutLst.reb[[as.character(aIdx)]] <- list( idx=aIdx ,info=infoStr )
-                    } else {
-                        cutLst.reb[[as.character(aIdx)]]$info <- paste( cObj$info, infoStr, collapse=", " )
-                    }
-
-                    # infoStr <- sprintf("rReb:%d",sum(smRow>0) )
-                    # idObjDesc <- c( typ="rawReb" ,rObj$defId )
-                    # cutLst[[1+length(cutLst)]] <- list( idx=aIdx ,idObjDesc=idObjDesc ,info=infoStr )
+                    infoStr <- sprintf("rReb(last:%d)",checkRawReb.cnt )
+                    cutLst.reb[[as.character(aIdx)]] <- list( idx=aIdx ,info=infoStr )
                 }
             }
 
             # evt Reb
-            if( !anaMode && alreadyDead[aIdx] ) next
             if( checkEvtReb.flag ){
-                evt.sm <- bFCust.getEvt(smRow,cfg$fCol)
+                if( !anaMode && alreadyDead[aIdx] ) next
+
                 evtComp <- bFCust.evtComp( evt.sm["lev",] ,rObj$lastEvt["lev",] )
-                if( evtComp$allMat || 1<sum(!is.na(evtComp$levDup)) ){
+                if( 1<sum(!is.na(evtComp$levDup)) ){    # evtComp$allMat으로 해야 하려나?
                     alreadyDead[aIdx] <- TRUE
 
-                    infoStr <- sprintf("rebE:%s",checkEvtReb.str)
+                    infoStr <- sprintf("rebE(last:%s)",checkEvtReb.str)
                     cObj <- cutLst.reb[[as.character(aIdx)]]
                     if( is.null(cObj) ){
                         cutLst.reb[[as.character(aIdx)]] <- list( idx=aIdx ,info=infoStr )
                     } else {
                         cutLst.reb[[as.character(aIdx)]]$info <- paste( cObj$info, infoStr, collapse=", " )
                     }
+                }
+            }
 
-                    # infoStr <- sprintf("eReb:%d",sum(smRow>0) )
-                    # idObjDesc <- c( typ="rawEvtReb" ,rObj$defId )
-                    # cutLst[[1+length(cutLst)]] <- list( idx=aIdx ,idObjDesc=idObjDesc ,info=infoStr )
+            # evt Reb Dup
+            if( checkEvtReb.Dbl.flag ){
+                if( !anaMode && alreadyDead[aIdx] ) next
+
+                dupFlag <- evt.sm["lev",names(checkEvtReb.Dbl.levDup)] == checkEvtReb.Dbl.levDup
+                if( 1<=sum(checkEvtReb.Dbl.levDup[dupFlag],na.rm=T) ){ 
+                    # 3연속 발생한 Evt의 총 합을... 2 이상으로 할까?
+                    alreadyDead[aIdx] <- TRUE
+
+                    infoStr <- sprintf("rebE.dup(last:%s)",checkEvtReb.Dbl.str)
+                    cObj <- cutLst.reb[[as.character(aIdx)]]
+                    if( is.null(cObj) ){
+                        cutLst.reb[[as.character(aIdx)]] <- list( idx=aIdx ,info=infoStr )
+                    } else {
+                        cutLst.reb[[as.character(aIdx)]]$info <- paste( cObj$info, infoStr, collapse=", " )
+                    }
                 }
             }
 
@@ -704,37 +722,31 @@ FCust_stdCut.hIdx <- function( hName ,mName ,mtxLst ){
         return( scoreObj )
     }
 
-    rObj$cut <- function( scoreMtx ,alreadyDead=NULL ){
+    rObj$cut <- function( scoreMtx ){
 
         cutLst <- list()
         if( !rObj$available ) return( cutLst=cutLst )
 
         # alreadyDead 처리.
 
-        scObj <- rObj$getScore( rawMtx )
+        scObj <- rObj$getScore( scoreMtx )
         cfg <- scoreMtxCfg[[ rObj$defId["mName"] ]]
 
         #   fCol 에서의 높은 등급 Evt 갯수 제한도 있어야 하잖나 싶음.
 
-        if( TRUE ){ # summMtx
-            summMtx.cut <- scObj$summMtx >= cfg$summMtx
+        if( TRUE ){
             #     $summMtx    all ph fCol phReb xyCnt.fCol xyCnt.phase
             #             raw   0  0    0     0          0           0
             #             evt   0  0    0     0          0           0
-        }
+            summMtx.cut <- scObj$summMtx >= cfg$summMtx
 
-        if( TRUE ){ # summMtx.reb
-            #     $summMtx.reb    all ph fCol phReb xyCnt.fCol xyCnt.phase
-            #                 raw   0  0    0     0          0           0
-            #                 evt   0  0    0     0          0           0
-        }
+            summMtx.reb.cut <- scObj$summMtx.reb >= cfg$summMtx.reb
 
-        if( TRUE ){ # scMtx.sz
             #     $scMtx.sz   r.ph r.fCol r.dblHpnFlg e.ph e.fCol e.dblHpnFlg
             #             rebCnt    0      0           0    0      0           0
             #             rebDup    0      0           0    0      0           0
+            scMtx.sz.cut <- scObj$scMtx.sz >= cfg$scMtx.sz
         }
-
 
         return( cutLst )
     }

@@ -2,6 +2,20 @@
 
 scoreMtxCfg <- list()
 
+#         scoreMtxCfg[["score1"]] <- list(
+#             mName = mName   ,style=c( freqZero=TRUE )
+#             ,fCol = list(
+#                 "fCol1"=list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )     # c("min","max"),c("lev1","lev2")
+#                                 ,evt=matrix( c(c(1,1,2,3,4),c(1,2,3,4,5)) ,ncol=2)  # c("lev","val")
+#                             ) 
+#                 ,"fCol2"= ...
+#             )
+#             ,evtMax.hard  = c( minLev=2 ,maxHpn=1 )  # evt in row over fCols
+#             ,evtMax       = c( minLev=2 ,maxHpn=1 )
+#             ,rowReb = c( rawMin=1 ,lowE=2 ,rareE=1 )  # use default   c( rawMin=  )
+#             ,isHard=NULL  # use default
+#         )
+
 mName <- "score1"
 scoreMtxCfg[[mName]] <- list(
     mName = mName   ,style=c( freqZero=TRUE )
@@ -144,7 +158,10 @@ for( mName in names( scoreMtxCfg ) ){ # naming 추가.
         colnames(scoreMtxCfg[[mName]]$fCol[[fcName]]$evt) <- c("lev","val")
 
         if( is.null(scoreMtxCfg[[mName]]$evtMax) ){
-            scoreMtxCfg[[mName]]$evtMax <- c( minLev=2 ,maxHpn=1 )
+            #   한 개 phase 내에서의 이벤트 발생 제한.
+            #   "minLev"이상 이벤트가 maxHpn 보다 초과할 때 Cut
+            scoreMtxCfg[[mName]]$evtMax.hard <- c( minLev=2 ,maxHpn=1 )
+            scoreMtxCfg[[mName]]$evtMax     <- c( minLev=2 ,maxHpn=1 )
         }
         if( is.null(scoreMtxCfg[[mName]]$rowReb) ){
             scoreMtxCfg[[mName]]$rowReb <- c( rawMin=1 ,lowE=2 ,rareE=1 )
