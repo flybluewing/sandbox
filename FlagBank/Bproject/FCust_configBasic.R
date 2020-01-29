@@ -5,16 +5,31 @@ scoreMtxCfg <- list()
 #         scoreMtxCfg[["score1"]] <- list(
 #             mName = mName   ,style=c( freqZero=TRUE )
 #             ,fCol = list(
-#                 "fCol1"=list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )     # c("min","max"),c("lev1","lev2")
-#                                 ,evt=matrix( c(c(1,1,2,3,4),c(1,2,3,4,5)) ,ncol=2)  # c("lev","val")
+#                 "fCol1"=list( rng=matrix(c(0,1,0,1),ncol=2)     # c("min","max"),c("lev1","lev2")
+#                                 ,evt=matrix(c(c(1,1,2,3,4),c(1,2,3,4,5)),ncol=2)  # c("lev","val")
 #                             ) 
 #                 ,"fCol2"= ...
 #             )
+#           # FCust_stdCut.rawRow---------------------------------
 #             ,evtMax.hard  = c( minLev=2 ,maxHpn=1 )  # evt in row over fCols
 #             ,evtMax       = c( minLev=2 ,maxHpn=1 )
 #             ,rowReb = c( rawMin=1 ,lowE=2 ,rareE=1 )  # use default   c( rawMin=  )
+#           # FCust_stdCut.hIdx-----------------------------------
+#                 $summMtx    all ph fCol phReb xyCnt.fCol xyCnt.phase
+#                         raw   1  2    2     2          1           1
+#                         evt   1  2    2     2          1           1
+#                 $summMtx.reb    all ph fCol phReb xyCnt.fCol xyCnt.phase
+#                             raw   1  1    1     1          1           1
+#                             evt   1  1    1     1          1           1
+#                 $scMtx.sz      r.ph r.fCol r.dblHpnFlg e.ph e.fCol e.dblHpnFlg
+#                         rebCnt    2      2           1    2      2           1
+#                         rebDup    1      1           1    1      1           1
+#               ,summMtx.sum    <- c(raw=2 ,evt=2)              # 개개 cut은 피했지만 전체 발생 총합은 한계를 넘는 경우.
+#               ,scMtx.sz.sum   <- c(rebCnt.r=2 ,rebCnt.e=2)    #   rebCnt.r = r.ph+r.fCol    rebCnt.e = e.ph+e.fCol
+#               ,evtMax.fCol    = c( minLev=2 ,maxHpn=2 )       # fCol 별 전체 phase 대상으로 evt 발생 제한.
 #             ,isHard=NULL  # use default
 #         )
+
 
 mName <- "score1"
 scoreMtxCfg[[mName]] <- list(
@@ -198,14 +213,25 @@ for( mName in names( scoreMtxCfg ) ){ # naming 추가.
             #             rebDup    0      0           0    0      0           0
             cName <- c( "r.ph" ,"r.fCol" ,"r.dblHpnFlg" ,"e.ph" ,"e.fCol" ,"e.dblHpnFlg" )
             rName <- c( "rebCnt" ,"rebDup" )
-            thldVal <- c(   2 ,2 ,1 ,2 ,2 ,1    # xyCnt.fCol, xyCnt.fCol은 봐가며 조절해야 할 듯.
+            thldVal <- c(   2 ,2 ,1 ,2 ,2 ,1
                            ,1 ,1 ,1 ,1 ,1 ,1 
                         )
             scoreMtxCfg[[mName]]$scMtx.sz <- matrix( thldVal ,byrow=T
                         ,ncol=length(cName) ,nrow=length(rName) ,dimnames=list(rName,cName)
                     )
         }
-
+        if( is.null(scoreMtxCfg[[mName]]$summMtx.sum) ){
+            # 개개 cut은 피했지만 전체 발생 총합은 한계를 넘는 경우.
+            scoreMtxCfg[[mName]]$summMtx.sum <- c(raw=2 ,evt=2)
+        }
+        if( is.null(scoreMtxCfg[[mName]]$scMtx.sz.sum ) ){
+            #   rebCnt.r = r.ph+r.fCol    rebCnt.e = e.ph+e.fCol
+            scoreMtxCfg[[mName]]$scMtx.sz.sum <- c(rebCnt.r=2 ,rebCnt.e=2)
+        }
+        if( is.null(scoreMtxCfg[[mName]]$evtMax.fCol ) ){
+            # fCol 별 전체 phase 대상으로 evt 발생 제한.
+            scoreMtxCfg[[mName]]$evtMax.fCol <- c( minLev=2 ,maxHpn=2 )
+        }
     }
 }
 

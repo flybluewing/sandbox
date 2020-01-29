@@ -722,33 +722,64 @@ FCust_stdCut.hIdx <- function( hName ,mName ,mtxLst ){
         return( scoreObj )
     }
 
-    rObj$cut <- function( scoreMtx ){
+    rObj$cut <- function( scoreMtx ,anaMode=TRUE ){   # 하나씩 오므로, alreadyDead 처리.
 
-        cutLst <- list()
-        if( !rObj$available ) return( cutLst=cutLst )
-
-        # alreadyDead 처리.
+        cLst <- list( )     #   cutLst[[1]]$cLst
+                            #   만약 생존했으면 cLst의 길이는 0
+        if( !rObj$available ) return( cLst )
 
         scObj <- rObj$getScore( scoreMtx )
         cfg <- scoreMtxCfg[[ rObj$defId["mName"] ]]
 
-        #   fCol 에서의 높은 등급 Evt 갯수 제한도 있어야 하잖나 싶음.
+        survive <- TRUE
 
-        if( TRUE ){
+        cutLst.cut <- list()
+        if( survive && !anaMode ){ #   summMtx.cut
+            infoStr <- ""
             #     $summMtx    all ph fCol phReb xyCnt.fCol xyCnt.phase
             #             raw   0  0    0     0          0           0
             #             evt   0  0    0     0          0           0
-            summMtx.cut <- scObj$summMtx >= cfg$summMtx
+            summMtx.cut <- scObj$summMtx >= cfg$summMtx            
+            if( any(summMtx.cut["raw",]) ){
+                survive <- F
+                cutLst.cut[["raw"]] <- "raw"
+                if( anaMode ){  # infoStr
+                    flag <- summMtx.cut["raw",]
+                    str <- paste( names(scObj$summMtx["raw",flag]) ,scObj$summMtx["raw",flag] ,sep=":" )
+                    infoStr <- sprintf("summMtx.cut - %s",paste(str,collapse=", ") )
+                    cutLst.cut[["raw"]] <- infoStr
+                }
+            }
+            if( any(summMtx.cut["evt",]) ){
+                survive <- F
+            }
+            
+            # sum(scObj$summMtx["raw",])
+            # sum(scObj$summMtx["evt",])
+        }
 
+        cutLst.reb.cut <- list()
+        if( survive && !anaMode ){ #   summMtx.reb.cut
+            #     $summMtx.reb  all ph fCol phReb xyCnt.fCol xyCnt.phase
+            #               raw   0  0    0     0          0           0
+            #               evt   0  0    0     0          0           0
             summMtx.reb.cut <- scObj$summMtx.reb >= cfg$summMtx.reb
 
+        }
+
+        cutLst.sz.cut <- list()
+        if( survive && !anaMode ){ #   scMtx.sz.cut
             #     $scMtx.sz   r.ph r.fCol r.dblHpnFlg e.ph e.fCol e.dblHpnFlg
             #             rebCnt    0      0           0    0      0           0
             #             rebDup    0      0           0    0      0           0
             scMtx.sz.cut <- scObj$scMtx.sz >= cfg$scMtx.sz
         }
 
-        return( cutLst )
+
+        #   fCol 에서의 높은 등급 Evt 갯수 제한도 있어야 하잖나 싶음.
+
+
+        return( cLst )
     }
 
 }
