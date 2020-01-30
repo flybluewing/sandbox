@@ -733,51 +733,135 @@ FCust_stdCut.hIdx <- function( hName ,mName ,mtxLst ){
 
         survive <- TRUE
 
-        cutLst.cut <- list()
         if( survive && !anaMode ){ #   summMtx.cut
             infoStr <- ""
             #     $summMtx    all ph fCol phReb xyCnt.fCol xyCnt.phase
             #             raw   0  0    0     0          0           0
             #             evt   0  0    0     0          0           0
-            summMtx.cut <- scObj$summMtx >= cfg$summMtx            
+            summMtx.cut <- scObj$summMtx >= cfg$summMtx
             if( any(summMtx.cut["raw",]) ){
                 survive <- F
-                cutLst.cut[["raw"]] <- "raw"
+                cLst[["summMtx.cut raw"]] <- "summMtx.cut raw"
                 if( anaMode ){  # infoStr
                     flag <- summMtx.cut["raw",]
-                    str <- paste( names(scObj$summMtx["raw",flag]) ,scObj$summMtx["raw",flag] ,sep=":" )
-                    infoStr <- sprintf("summMtx.cut - %s",paste(str,collapse=", ") )
-                    cutLst.cut[["raw"]] <- infoStr
+                    str <- paste( names(scObj$summMtx["raw",])[flag] ,scObj$summMtx["raw",flag] ,sep=":" )
+                    infoStr <- sprintf("summMtx.cut - raw %s",paste(str,collapse=", ") )
+                    cLst[["summMtx.cut raw"]] <- infoStr
                 }
             }
             if( any(summMtx.cut["evt",]) ){
                 survive <- F
+                cLst[["summMtx.cut evt"]] <- "summMtx.cut evt"
+                if( anaMode ){  # infoStr
+                    flag <- summMtx.cut["evt",]
+                    str <- paste( names(scObj$summMtx["evt",])[flag] ,scObj$summMtx["evt",flag] ,sep=":" )
+                    infoStr <- sprintf("summMtx.cut - evt %s",paste(str,collapse=", ") )
+                    cLst[["summMtx.cut evt"]] <- infoStr
+                }
             }
-            
-            # sum(scObj$summMtx["raw",])
-            # sum(scObj$summMtx["evt",])
+            if( cfg$summMtx.sum["raw"]<=sum(scObj$summMtx["raw",]) ){
+                survive <- F
+                cLst[["summMtx.cut raw.sum"]] <- "summMtx.cut raw.sum"
+                if( anaMode ){  # infoStr
+                    flag <- summMtx.cut["raw",]
+                    str <- paste( names(scObj$summMtx["raw",])[flag] ,scObj$summMtx["raw",flag] ,sep=":" )
+                    infoStr <- sprintf("summMtx.cut - raw.sum %s",paste(str,collapse=", ") )
+                    cLst[["summMtx.cut raw.sum"]] <- infoStr
+                }
+            }
+            if( cfg$summMtx.sum["evt"]<=sum(scObj$summMtx["evt",]) ){
+                survive <- F
+                cLst[["summMtx.cut evt.sum"]] <- "summMtx.cut evt.sum"
+                if( anaMode ){  # infoStr
+                    flag <- summMtx.cut["evt",]
+                    str <- paste( names(scObj$summMtx["evt",])[flag] ,scObj$summMtx["evt",flag] ,sep=":" )
+                    infoStr <- sprintf("summMtx.cut - evt.sum %s",paste(str,collapse=", ") )
+                    cLst[["summMtx.cut evt.sum"]] <- infoStr
+                }
+            }
         }
 
-        cutLst.reb.cut <- list()
         if( survive && !anaMode ){ #   summMtx.reb.cut
             #     $summMtx.reb  all ph fCol phReb xyCnt.fCol xyCnt.phase
             #               raw   0  0    0     0          0           0
             #               evt   0  0    0     0          0           0
             summMtx.reb.cut <- scObj$summMtx.reb >= cfg$summMtx.reb
-
+            if( any(summMtx.reb.cut["raw",]) ){
+                survive <- F
+                cLst[["summMtx.reb.cut raw"]] <- "summMtx.reb.cut raw"
+                if( anaMode ){  # infoStr
+                    flag <- summMtx.reb.cut["raw",]
+                    str <- paste( names(scObj$summMtx.reb["raw",])[flag] ,scObj$summMtx.reb["raw",flag] ,sep=":" )
+                    infoStr <- sprintf("summMtx.reb.cut - raw %s",paste(str,collapse=", ") )
+                    cLst[["summMtx.reb.cut raw"]] <- infoStr
+                }
+            }
+            if( any(summMtx.reb.cut["evt",]) ){
+                survive <- F
+                cLst[["summMtx.reb.cut evt"]] <- "summMtx.reb.cut evt"
+                if( anaMode ){  # infoStr
+                    flag <- summMtx.reb.cut["evt",]
+                    str <- paste( names(scObj$summMtx.reb["evt",])[flag] ,scObj$summMtx.reb["evt",flag] ,sep=":" )
+                    infoStr <- sprintf("summMtx.reb.cut - evt %s",paste(str,collapse=", ") )
+                    cLst[["summMtx.reb.cut evt"]] <- infoStr
+                }
+            }
+            # sum 체크를 해야 할 일은 없을 듯 하다.
         }
 
-        cutLst.sz.cut <- list()
         if( survive && !anaMode ){ #   scMtx.sz.cut
             #     $scMtx.sz   r.ph r.fCol r.dblHpnFlg e.ph e.fCol e.dblHpnFlg
             #             rebCnt    0      0           0    0      0           0
             #             rebDup    0      0           0    0      0           0
             scMtx.sz.cut <- scObj$scMtx.sz >= cfg$scMtx.sz
+            if( any(scMtx.sz.cut["rebCnt",]) ){
+                survive <- F
+                cLst[["scMtx.sz.cut rebCnt"]] <- "scMtx.sz.cut rebCnt"
+                if( anaMode ){  # infoStr
+                    flag <- scMtx.sz.cut["rebCnt",]
+                    str <- paste( names(scObj$scMtx.sz["rebCnt",])[flag] ,scObj$scMtx.sz["rebCnt",flag] ,sep=":" )
+                    infoStr <- sprintf("scMtx.sz.cut - rebCnt %s",paste(str,collapse=", ") )
+                    cLst[["scMtx.sz.cut rebCnt"]] <- infoStr
+                }
+            }
+            if( any(scMtx.sz.cut["rebDup",]) ){
+                survive <- F
+                cLst[["scMtx.sz.cut rebDup"]] <- "scMtx.sz.cut rebDup"
+                if( anaMode ){  # infoStr
+                    flag <- scMtx.sz.cut["rebDup",]
+                    str <- paste( names(scObj$scMtx.sz["rebDup",])[flag] ,scObj$scMtx.sz["rebDup",flag] ,sep=":" )
+                    infoStr <- sprintf("scMtx.sz.cut - rebDup %s",paste(str,collapse=", ") )
+                    cLst[["scMtx.sz.cut rebDup"]] <- infoStr
+                }
+            }
+
+            sumCol <- c("r.ph","r.fCol","r.dblHpnFlg")
+            if( cfg$scMtx.sz.sum["rebCnt.r"]<=sum(scObj$scMtx.sz["rebCnt",sumCol]) ){
+                survive <- F
+                cLst[["scMtx.sz.cut rebCnt.r.sum"]] <- "scMtx.sz.cut rebCnt.r.sum"
+                if( anaMode ){  # infoStr
+                    str <- paste( sumCol ,scObj$scMtx.sz["rebCnt",sumCol] ,sep=":" )
+                    infoStr <- sprintf("scMtx.sz.cut - rebCnt.r.sum %s",paste(str,collapse=", ") )
+                    cLst[["scMtx.sz.cut rebCnt.r.sum"]] <- infoStr
+                }
+            }
+            sumCol <- c("e.ph","e.fCol","e.dblHpnFlg")
+            if( cfg$scMtx.sz.sum["rebCnt.e"]<=sum(scObj$scMtx.sz["rebCnt",sumCol]) ){
+                survive <- F
+                cLst[["scMtx.sz.cut rebCnt.e.sum"]] <- "scMtx.sz.cut rebCnt.e.sum"
+                if( anaMode ){  # infoStr
+                    str <- paste( sumCol ,scObj$scMtx.sz["rebCnt",sumCol] ,sep=":" )
+                    infoStr <- sprintf("scMtx.sz.cut - rebCnt.e.sum %s",paste(str,collapse=", ") )
+                    cLst[["scMtx.sz.cut rebCnt.e.sum"]] <- infoStr
+                }
+            }
+
+            # cfg$scMtx.sz.sum["rebDup",] 의 총합을 체크해야 할 일은 없을 듯.
+
         }
 
-
-        #   fCol 에서의 높은 등급 Evt 갯수 제한도 있어야 하잖나 싶음.
-
+        #   fCol 에서의 높은 등급 Evt 갯수 제한도 있어야 함.
+        #    scoreMtxCfg[[mName]]$fCol[[fcName]]$evtMax.fCol <- c( minLev=2 ,maxHpn=2 )
 
         return( cLst )
     }
