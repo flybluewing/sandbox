@@ -73,7 +73,7 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
         curHMtxLst <- testData.grp$curHMtxLst.grp[[as.character(curHIdx)]]
             # B.makeHMtxLst() 의 lastH는 allIdxLst.w$stdFiltedCnt에 의존한다.
 
-        cut.grp <- bFCust.getFCustGrp( stdCtrlCfgGrp ,curHMtxLst )  # curHMtxLst 적용 추가 필요.
+        cut.grp <- bFCust.getFCustGrp( curHMtxLst )  # curHMtxLst 적용 추가 필요.
             #   B.rptCut.grp( cut.grp )
 
         # ------------------------------------------------------------------------
