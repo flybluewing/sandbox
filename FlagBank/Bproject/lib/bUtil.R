@@ -56,46 +56,15 @@ bUtil.cut <- function( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=NULL ,anaOnly=F 
             }
 			reportStatus( tStmp ,sprintf("[%s,%s] stdLst",hName,mName) ,surFlag ,logger )
 
-			#   "fColLst" ------------------------------------------
-			mtxGrp <- getScoreMtx.grp_byFCol( scoreMtx.grp )
-            for( fcName in cut.grp$mtxInfoLst[[mName]] ){	# fcName <- cut.grp$mtxInfoLst[[mName]][1]
-				cutLst <- cut.grp$cutterLst[[hName]][[mName]]$fColLst[[fcName]]
-				scoreMtx <- mtxGrp[[mName]][[fcName]]
-                for( cnIdx in names(cutLst) ){  # cnIdx <- names(cutLst)[1]
-                    cuttedLst <- cutLst[[cnIdx]]$cut( scoreMtx ,!surFlag )
-					if( 0<length(cuttedLst) ){
-						if( anaOnly ){	cutInfoLst[[1+length(cutInfoLst)]] <- c( cuttedLst[[1]]$idObjDesc ,cuttedLst[[1]]$info )
-						} else {
-							cut_aIdx <- sapply( cuttedLst ,function(p){p$idx} )
-	                        surFlag[cut_aIdx] <- FALSE
-						}
-					}
-                }
-			}
-			reportStatus( tStmp ,sprintf("[%s,%s] fColLst",hName,mName) ,surFlag ,logger )
-
 			#   "hIdxLst" ------------------------------------------
 			mtxGrp <- getScoreMtx.grp_byHIdx( scoreMtx.grp )
-			for( aIdx in seq_len(datLen) ){	# aIdx <- 1
-				# 이전과 달리, 1개 aZoid에 대한 처리임을 주의.
-				if( !surFlag[aIdx] && !anaOnly ) next
-
-				cutLst <- cut.grp$cutterLst[[hName]][[mName]]$hIdxLst
-				scoreMtx <- mtxGrp[[mName]][[aIdx]]
-                for( cnIdx in names(cutLst) ){  # cnIdx <- names(cutLst)[1]
-                    cuttedLst <- cutLst[[cnIdx]]$cut( scoreMtx ,aIdx )
-					if( 0<length(cuttedLst) ){
-						if( anaOnly ){	cutInfoLst[[1+length(cutInfoLst)]] <- c( cuttedLst[[1]]$idObjDesc ,cuttedLst[[1]]$info )
-						} else {
-	                        surFlag[aIdx] <- FALSE
-						}
-					}
-                }
-			}
+			#	cut.grp$cutterLst[[hName]][[mName]]$hIdxLst
 			reportStatus( tStmp ,sprintf("[%s,%s] hIdxLst",hName,mName) ,surFlag ,logger )
 
         }
 
+		# QQE:hold
+		bScrMtxName <- character(0)
 		for( mName in bScrMtxName ){
 			cutLst <- cut.grp$cutterLst.bScr[[hName]][[mName]]$stdLst
 			scoreMtx <- scoreMtx.grp$mf[[mName]]$scoreMtx

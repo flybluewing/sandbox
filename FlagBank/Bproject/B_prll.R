@@ -10,7 +10,7 @@ load(sprintf("../Aproject/save/Obj_gEnvZ%d.save",lastH))
 
 
 #-[Parallel init work]-------------------------------------------------------------
-prllNum <-      # 실수가 잦아서 그냥 오류 코드로 놔둔다.
+prllNum <- 2     # 실수가 잦아서 그냥 오류 코드로 놔둔다.
 prllLog <- k.getFlogObj( "./log/parallel_log.txt" )
 prll.initHeader <- function( ){
     k <- sfLapply(1:prllNum,function(prllId){
@@ -36,7 +36,7 @@ cat(sprintf("* Parallel ready... see log : %s \n",prllLog$fileName))
 
 if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
 
-    tgt.scMtx <-        # default : NULL   하도 실수가 잦아서 일부러 문법 오류로 놔둔다.. -_-;
+    tgt.scMtx <- c("score1","score2")       # default : NULL   하도 실수가 잦아서 일부러 문법 오류로 놔둔다.. -_-;
         #   "bScr01"
 
     configH <- lastH-20    # configH는 기본 cutting값을 얻기 위하는 시점에 따라 조절.
@@ -87,6 +87,7 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
         filter.grp <- getFilter.grp( stdMI.grp ,tgt.scMtx=tgt.scMtx )
         scoreMtx.grp <- getScoreMtx.grp.4H( stdZoid ,filter.grp )
             #   평가용이므로 getScoreMtx.grp.4H() 가 사용됨.   .4H !
+
 
         cutRst <- bUtil.cut( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx ,anaOnly=T ) 
             #   anaOnly=TRUE 에서, cutRst$surFlag는 항상 TRUE임을 유의.

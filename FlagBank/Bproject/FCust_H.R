@@ -866,6 +866,7 @@ FCust_stdCut.hIdx <- function( hName ,mName ,mtxLst ){
         return( cLst )
     }
 
+    return( rObj )
 }
 
 
@@ -889,7 +890,8 @@ bFCust.getFCustGrp <- function( hMtxLst ,tgt.scMtx=NULL ){
 	cutterLst <- list()
 	cutterLst.bScr <- list()
 	for( hName in names(rObj$sfcHLst) ){	# hName <- names(rObj$sfcHLst)[1]
-        mLst <- list()
+
+        mLst <- list()  #   cutterLst
         for( mName in names(rObj$mtxInfoLst) ){	# mName <- names(rObj$mtxInfoLst)[1]
             # <stdLst>
             stdLst <- list()
@@ -909,9 +911,9 @@ bFCust.getFCustGrp <- function( hMtxLst ,tgt.scMtx=NULL ){
         }
         cutterLst[[hName]] <- mLst
 
-		mLst <- list()
+		mLst <- list()  #   cutterLst.bScr
 		for( mName in names(rObj$mtxInfoLst.bScr) ){
-
+            #   QQE:todo
         }
 		cutterLst.bScr[[hName]] <- mLst
 
