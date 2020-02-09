@@ -41,6 +41,10 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
 
     configH <- lastH-20    # configH는 기본 cutting값을 얻기 위하는 시점에 따라 조절.
     hMtxLst <- B.makeHMtxLst( gEnv, allIdxLst, fRstLst, lastH=configH, tgt.scMtx )
+    stdCtrlCfgGrp <- bUtil.makeStdCtrlCfgGrp(hMtxLst)
+    save( stdCtrlCfgGrp ,file=sprintf("./save/HMtxLst/Obj_stdCtrlCfgGrp_%d.save",configH) )
+    #   load(sprintf("./save/HMtxLst/Obj_stdCtrlCfgGrp_%d.save",configH))
+
 
     testSpan <- (lastH - 18:0)   # configH 보다는 큰 시점에서 시작해야 함을 유의.
     if( TRUE ){ # stdFiltedCnt 0~3내에서만 테스트
@@ -52,7 +56,7 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
     #   save( testData.grp ,file="Obj_testData.grp.save" )
     #   load( "Obj_testData.grp.save" )
 
-    sfExport("testData.grp")
+    sfExport("testData.grp")    ;sfExport("stdCtrlCfgGrp")
     prll.initHeader( )
     prllLog$fLogStr("- bUtil.cut() ----------------------------",pTime=T)
     resultLst <- sfLapply( testSpan ,function( curHIdx ){

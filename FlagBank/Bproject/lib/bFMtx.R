@@ -20,8 +20,6 @@ getScoreMtx.grp <- function( aZoidMtx ,filter.grp ,makeInfoStr=F ,cutter.grp=NUL
 			filterObj <- filter.grp$basic[[nIdx]][[nIdx.s]]
 			scoreMtxObj <- filterObj$fMtxObj( aZoidMtx ,makeInfoStr=makeInfoStr )
 
-			#	QQE:todo cutter.grp 적용이 가능하도록 기능 추가할 것.
-			#		- scoreMtx 계산 즉시 cutting..
 			scoreMtxLst[[nIdx.s]] <- scoreMtxObj
 		}
 		rObj$basic[[nIdx]] <- scoreMtxLst
@@ -31,7 +29,6 @@ getScoreMtx.grp <- function( aZoidMtx ,filter.grp ,makeInfoStr=F ,cutter.grp=NUL
 		filterObj <- filter.grp$bDup[[nIdx.s]]
 		scoreMtxObj <- filterObj$fMtxObj( aZoidMtx ,makeInfoStr=is.null(cutter.grp) )
 
-		#	QQE:todo cutter.grp 적용이 가능하도록 기능 추가할 것.
 		rObj$bDup[[nIdx.s]] <- scoreMtxObj
 	}
 

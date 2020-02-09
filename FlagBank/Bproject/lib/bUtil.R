@@ -40,18 +40,23 @@ bUtil.cut <- function( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=NULL ,anaOnly=F 
         for( mName in scMtxName ){ # mName <- scMtxName[1]
             #   "stdLst" -------------------------------------------
             for( pName in cut.grp$phaseName ){   # pName <- cut.grp$phaseName[1]
-                cutLst <- cut.grp$cutterLst[[hName]][[mName]]$stdLst[[pName]]
-                scoreMtx <- scoreMtx.grp$basic[[pName]][[mName]]$scoreMtx
-                for( cnIdx in names(cutLst) ){  # cnIdx <- names(cutLst)[1]
-                    cuttedLst <- cutLst[[cnIdx]]$cut( scoreMtx ,!surFlag )
-					if( 0<length(cuttedLst) ){
-						if( anaOnly ){	cutInfoLst[[1+length(cutInfoLst)]] <- c( cuttedLst[[1]]$idObjDesc ,cuttedLst[[1]]$info )
-						} else {
-							cut_aIdx <- sapply( cuttedLst ,function(p){p$idx} )
-	                        surFlag[cut_aIdx] <- FALSE
-						}
-					}
-                }
+				scoreMtx <- scoreMtx.grp$basic[[pName]][[mName]]$scoreMtx
+                cutObj <- cut.grp$cutterLst[[hName]][[mName]]$stdLst[[pName]]
+                cRst <- cutObj$cut( scoreMtx ,alreadyDead=!surFlag ,anaMode=T )
+				#	cRst : cutLst ,surFlag
+
+
+                # for( cnIdx in names(cutLst) ){  # cnIdx <- names(cutLst)[1]
+                #     cuttedLst <- cutLst[[cnIdx]]$cut( scoreMtx ,!surFlag )
+				# 	if( 0<length(cuttedLst) ){
+				# 		if( anaOnly ){	cutInfoLst[[1+length(cutInfoLst)]] <- c( cuttedLst[[1]]$idObjDesc ,cuttedLst[[1]]$info )
+				# 		} else {
+				# 			cut_aIdx <- sapply( cuttedLst ,function(p){p$idx} )
+	            #             surFlag[cut_aIdx] <- FALSE
+				# 		}
+				# 	}
+                # }
+
 				reportStatus( tStmp ,sprintf("     %s",pName) ,surFlag ,logger )
             }
 			reportStatus( tStmp ,sprintf("[%s,%s] stdLst",hName,mName) ,surFlag ,logger )
