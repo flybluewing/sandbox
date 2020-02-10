@@ -500,7 +500,6 @@ FCust_stdCut.rawRow <- function( hName ,mName ,pName ,scoreMtxH ){
             }
         }
 
-
         # sm row: rebound --------------------------------------------
         cutLst.reb <- list()
         checkRawReb.cnt <- sum(rObj$lastScore>0)
@@ -574,7 +573,6 @@ FCust_stdCut.rawRow <- function( hName ,mName ,pName ,scoreMtxH ){
 
         }
 
-        # browser( TRUE )
         if( anaMode ){  # build cutLst 
             idxFCol <- if( length(cutLst.fCol)==0 ) integer(0) else sapply( cutLst.fCol  ,function(p){p$idx} )
             idxReb  <- if( length(cutLst.reb)==0 ) integer(0) else sapply( cutLst.reb   ,function(p){p$idx} )
@@ -601,8 +599,8 @@ FCust_stdCut.rawRow <- function( hName ,mName ,pName ,scoreMtxH ){
                     cLst[["rawReb"]]$idObjDesc <- c( typ="rawReb" ,rObj$defId )
                 }
                 if( !is.null(cutLst.rowE[[idStr]]) ){
-                    cLst[["rawE"]] <- cutLst.rowE[[idStr]]
-                    cLst[["rawE"]]$idObjDesc <- c( typ="rawE" ,rObj$defId )
+                    cLst[["rowE"]] <- cutLst.rowE[[idStr]]
+                    cLst[["rowE"]]$idObjDesc <- c( typ="rowE" ,rObj$defId )
                 }
 
                 cutLst[[idStr]] <- list( idx=aIdx ,cLst=cLst )
