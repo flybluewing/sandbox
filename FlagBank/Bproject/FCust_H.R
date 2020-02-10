@@ -893,21 +893,21 @@ bFCust.getFCustGrp <- function( hMtxLst ,tgt.scMtx=NULL ){
 
         mLst <- list()  #   cutterLst
         for( mName in names(rObj$mtxInfoLst) ){	# mName <- names(rObj$mtxInfoLst)[1]
-            # <stdLst>
-            stdLst <- list()
+            # <stdCut>
+            stdCut <- list()
             for( pName in rObj$phaseName ){
                 scoreMtxObj <- B.HMtxLst_getMtxLst( hMtxLst , hName ,mName ,pName )
-                stdLst[[pName]] <- FCust_stdCut.rawRow( hName ,mName ,pName ,scoreMtxObj$scoreMtx )
+                stdCut[[pName]] <- FCust_stdCut.rawRow( hName ,mName ,pName ,scoreMtxObj$scoreMtx )
             }
 
-            # <fColLst>
-            fColLst <- list()   # preserve
+            # <fColCut>
+            fColCut <- list()   # preserve
 
-            # <hIdxLst>
+            # <hIdxCut>
 			hIdxObj <- B.getHMtxLst_byHIdx( hMtxLst )
-            hIdxLst <- FCust_stdCut.hIdx( hName ,mName ,mtxLst=hIdxObj[[hName]][[mName]] )
+            hIdxCut <- FCust_stdCut.hIdx( hName ,mName ,mtxLst=hIdxObj[[hName]][[mName]] )
 
-            mLst[[mName]] <- list( stdLst=stdLst ,fColLst=fColLst ,hIdxLst=hIdxLst )
+            mLst[[mName]] <- list( stdCut=stdCut ,fColCut=fColCut ,hIdxCut=hIdxCut )
         }
         cutterLst[[hName]] <- mLst
 

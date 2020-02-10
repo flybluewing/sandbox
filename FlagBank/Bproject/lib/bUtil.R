@@ -38,13 +38,15 @@ bUtil.cut <- function( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=NULL ,anaOnly=F 
     surFlag <- rep( T ,datLen )
     for( hName in fHName ){ # hName <- fHName[1]
         for( mName in scMtxName ){ # mName <- scMtxName[1]
-            #   "stdLst" -------------------------------------------
+            #   "stdCut" -------------------------------------------
             for( pName in cut.grp$phaseName ){   # pName <- cut.grp$phaseName[1]
 				scoreMtx <- scoreMtx.grp$basic[[pName]][[mName]]$scoreMtx
-                cutObj <- cut.grp$cutterLst[[hName]][[mName]]$stdLst[[pName]]
-                cRst <- cutObj$cut( scoreMtx ,alreadyDead=!surFlag ,anaMode=T )
+                cutObj <- cut.grp$cutterLst[[hName]][[mName]]$stdCut[[pName]]
+                cRst <- cutObj$cut( scoreMtx ,alreadyDead=!surFlag ,anaMode=anaOnly )
 				#	cRst : cutLst ,surFlag
-
+				if( 1<length(cRst$cutLst) ){
+					cutInfoLst[[1+length(cutInfoLst)]] <- cRst
+				}
 
                 # for( cnIdx in names(cutLst) ){  # cnIdx <- names(cutLst)[1]
                 #     cuttedLst <- cutLst[[cnIdx]]$cut( scoreMtx ,!surFlag )
@@ -63,6 +65,15 @@ bUtil.cut <- function( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=NULL ,anaOnly=F 
 
 			#   "hIdxLst" ------------------------------------------
 			mtxGrp <- getScoreMtx.grp_byHIdx( scoreMtx.grp )
+			hIdxCut <- cut.grp$cutterLst[[hName]][[mName]]$hIdxCut
+			for( aIdx in seq_len(datLen) ){
+				if( !anaOnly && !surFlag[aIdx] )	next
+
+				cRst <- hIdxCut$cut( mtxGrp[[aIdx]] ,anaMode=anaOnly )
+				if( 1<length(cRst$cutLst) ){
+					cutInfoLst[[1+length(cutInfoLst)]] <- cRst
+				}
+			}
 			#	cut.grp$cutterLst[[hName]][[mName]]$hIdxLst
 			reportStatus( tStmp ,sprintf("[%s,%s] hIdxLst",hName,mName) ,surFlag ,logger )
 
