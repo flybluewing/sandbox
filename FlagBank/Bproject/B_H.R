@@ -462,7 +462,7 @@ B.rptCutRst <- function( cutRst ,file="cutRst" ){
 } # B.rptCutRst()
 
 
-B.rptCutRstLst <- function( cutRstLst ,file="cutRstLst" ){
+B.rptCutRstLst <- function( cutRstLst ,file="cutRstLst" ,rptBanTyp=NULL ){
 
     getPortion <- function( fieldName ,cutRstLst ,headLen=NULL ){
         # fieldName <- "typ"
@@ -554,6 +554,7 @@ B.rptCutRstLst <- function( cutRstLst ,file="cutRstLst" ){
 
     # ====================================================================
     log.meta$fLogStr("\n\n")
+    rptHidden <- if(0==length(rptBanTyp)) "" else sprintf("skipped type:%s",paste(rptBanTyp,collapse=",") )
     for( nIdx in names(cutRstLst) ){   # nIdx <- names(cutRstLst)[1]
         cutRst <- cutRstLst[[nIdx]]
         log.meta$fLogStr( sprintf("<%s>",nIdx) )
@@ -561,10 +562,19 @@ B.rptCutRstLst <- function( cutRstLst ,file="cutRstLst" ){
         cutLen <- length(cutRst$cutInfoLst)
         if( 0 == cutLen )    next
 
+        reportSkipCount <- 0
         for( idx in 1:cutLen ){
             cutInfo <- cutRst$cutInfoLst[[idx]]
+            if( cutInfo["typ"] %in% rptBanTyp ){
+                reportSkipCount <- reportSkipCount + 1
+                next    # report skip
+            }
             log.meta$fLogStr( sprintf("  %4d %s",idx,paste(names(cutInfo),collapse="\t") ) )
             log.meta$fLogStr( sprintf("       %s",    paste(cutInfo,collapse="\t") ) )
+        }
+        if( 0<reportSkipCount ){
+            log.meta$fLogStr( sprintf("  ** report skip : %d", reportSkipCount ) )
+            log.meta$fLogStr( sprintf("            %s ", rptHidden ) )
         }
 
     }

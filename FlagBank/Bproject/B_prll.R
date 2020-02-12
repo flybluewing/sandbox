@@ -52,7 +52,7 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
     #   save( testData.grp ,file="Obj_testData.grp.save" )
     #   load( "Obj_testData.grp.save" )
 
-    sfExport("testData.grp")
+    sfExport("testData.grp")    ;sfExport("tgt.scMtx")
     prll.initHeader( )
     prllLog$fLogStr("- bUtil.cut() ----------------------------",pTime=T)
     resultLst <- sfLapply( testSpan ,function( curHIdx ){
@@ -112,7 +112,9 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
         rptFile <- ifelse(1==length(tgt.scMtx),sprintf("cutRstLst_%s",tgt.scMtx),"cutRstLst")
         rptFile
     }
-    B.rptCutRstLst( cutRstLst ,file=rptFile )
+    # rptBanTyp <- c( "rawFCol" ,"rowE" )
+    rptBanTyp <- NULL
+    B.rptCutRstLst( cutRstLst ,file=rptFile ,rptBanTyp=rptBanTyp )
 
 }
 

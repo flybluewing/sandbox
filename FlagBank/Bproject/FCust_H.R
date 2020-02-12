@@ -731,7 +731,7 @@ FCust_stdCut.hIdx <- function( hName ,mName ,mtxLst ){
 
         survive <- TRUE
 
-        if( survive && !anaMode ){ #   summMtx.cut
+        if( survive ){ #   summMtx.cut
             infoStr <- ""
             #     $summMtx    all ph fCol phReb xyCnt.fCol xyCnt.phase
             #             raw   0  0    0     0          0           0
@@ -779,7 +779,7 @@ FCust_stdCut.hIdx <- function( hName ,mName ,mtxLst ){
             }
         }
 
-        if( survive && !anaMode ){ #   summMtx.reb.cut
+        if( survive ){ #   summMtx.reb.cut
             #     $summMtx.reb  all ph fCol phReb xyCnt.fCol xyCnt.phase
             #               raw   0  0    0     0          0           0
             #               evt   0  0    0     0          0           0
@@ -807,7 +807,7 @@ FCust_stdCut.hIdx <- function( hName ,mName ,mtxLst ){
             # sum 체크를 해야 할 일은 없을 듯 하다.
         }
 
-        if( survive && !anaMode ){ #   scMtx.sz.cut
+        if( survive ){ #   scMtx.sz.cut
             #     $scMtx.sz   r.ph r.fCol r.dblHpnFlg e.ph e.fCol e.dblHpnFlg
             #             rebCnt    0      0           0    0      0           0
             #             rebDup    0      0           0    0      0           0
