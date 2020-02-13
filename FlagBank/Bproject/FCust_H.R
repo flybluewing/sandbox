@@ -485,13 +485,15 @@ FCust_stdCut.rawRow <- function( hName ,mName ,pName ,scoreMtxH ){
             if( !anaMode && alreadyDead[aIdx] ) next
 
             evt.sm <- bFCust.getEvt( scoreMtx[aIdx ,] ,cfg$fCol )
-            evtCnt <- sum( evt.sm["lev" ,]>=cfg$evtMax["minLev"] ,na.rm=T )
-            if( evtCnt > cfg$evtMax["maxHpn"] ){
+            evtMin <- cfg$evtMax[ifelse(hardFlag,"lev1","lev2"),]
+            evtCnt <- sum( evt.sm["lev" ,]>=evtMin["minLev"] ,na.rm=T )
+            evtCntH <- sum( evt.sm["lev" ,]>=evtMin["minLevH"] ,na.rm=T )
+            if( evtCnt>evtMin["maxHpn"] || evtCntH>evtMin["maxHpnH"] ){
                 alreadyDead[aIdx] <- TRUE
 
                 infoStr=""
                 if( anaMode ){
-                    flag <- evt.sm["lev",]>=cfg$evtMax["minLev"]
+                    flag <- evt.sm["lev",]>=evtMin["minLev"]
                     flag[is.na(flag)] <- F
 
                     infoStr <- sprintf("evtCnt:%d(%s)",evtCnt,paste(evt.sm["lev" ,flag],collapse=","))

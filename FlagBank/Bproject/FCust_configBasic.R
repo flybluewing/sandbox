@@ -12,8 +12,9 @@ scoreMtxCfg <- list()
 #                 ,"fCol2"= ...
 #             )
 #           # FCust_stdCut.rawRow---------------------------------
-#             ,evtMax.hard  = c( minLev=2 ,maxHpn=1 )  # evt in row over fCols
-#             ,evtMax       = c( minLev=2 ,maxHpn=1 )
+#             ,evtMax      minLev maxHpn minLevH maxHpnH    # evt in one phase over fCols
+#                     lev1      2      2       3       1
+#                     lev2      2      3       3       2
 #             ,rowReb = c( rawMin=1 ,lowE=2 ,rareE=1 )  # use default   c( rawMin=  )
 #           # FCust_stdCut.hIdx-----------------------------------
 #                 $summMtx    all ph fCol phReb xyCnt.fCol xyCnt.phase
@@ -184,8 +185,11 @@ for( mName in names( scoreMtxCfg ) ){ # naming 추가.
     if( is.null(scoreMtxCfg[[mName]]$evtMax) ){
         #   한 개 phase 내에서의 이벤트 발생 제한.
         #   "minLev"이상 이벤트가 maxHpn 보다 초과할 때 Cut
-        scoreMtxCfg[[mName]]$evtMax.hard <- c( minLev=2 ,maxHpn=1 )
-        scoreMtxCfg[[mName]]$evtMax     <- c( minLev=2 ,maxHpn=1 )
+        evtMax <- matrix( c(2,2,3,1 ,2,3,3,2)
+                            ,byrow=T ,ncol=4
+                            ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
+                        )
+        scoreMtxCfg[[mName]]$evtMax     <- evtMax
     }
     if( is.null(scoreMtxCfg[[mName]]$rowReb) ){
         scoreMtxCfg[[mName]]$rowReb <- c( rawMin=1 ,lowE=2 ,rareE=1 )
