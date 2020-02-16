@@ -218,6 +218,7 @@ B.getHMtxLst_byHIdx <- function( hMtxLst ){ # scoreMtxLst <- hMtxLst$scoreMtxLst
     return( rLst )
 } # B.getHMtxLst_byHIdx()
 
+
 B.rptHMtxLst <- function( hMtxLst ){
 
     getShortPhaseName <- function( phaseName ){

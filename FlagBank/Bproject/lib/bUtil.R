@@ -746,3 +746,9 @@ bUtil.getEvt_byHIdx <- function( scoreMtx ,evtLst ,lastEvt=NULL ,ignoreOpt=NULL 
 
 } # bUtil.getEvt_byHIdx()
 
+bUtil.getShortPhaseName <- function( phaseName ){
+    phaseName <- gsub("^next","",phaseName)
+    phaseName <- gsub("^ColVal_","cv",phaseName)
+    phaseName <- gsub("StepBin","Bin",phaseName)
+    return( phaseName )
+} # bUtil.getShortPhaseName()

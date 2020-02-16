@@ -33,7 +33,6 @@ cat(sprintf("* Parallel ready... see log : %s \n",prllLog$fileName))
 
 
 
-
 if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
 
     tgt.scMtx <- c("score1")       # default : NULL   하도 실수가 잦아서 일부러 문법 오류로 놔둔다.. -_-;
@@ -95,6 +94,22 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
                 # B.rptCutRst( cutRst )
 
         prllLog$fLogStr(sprintf("    curHIdx:%d done.",curHIdx),pTime=T)
+        if( TRUE ){ # debug info
+            dbgFileName <- sprintf("Dbg_H%d.stdMI",curHIdx)
+
+            # cLastSpan <- 1:which(names(fRstLst)==curHIdx)
+            # gEnv.c <- gEnv              ;gEnv.c$zhF <- gEnv$zhF[1:curHIdx,]
+            # fRstLst.c <- fRstLst[cLastSpan]
+
+            # stdMI.grp <- bUtil.getStdMILst( gEnv.c ,fRstLst.c )
+            # B.rptStdMI.grp( stdMI.grp ,file=dbgFileName )
+            B.rptStdMI.grp( stdMI.grp ,file=dbgFileName )
+
+            scMtx <- getScoreMtx.grp_byHIdx( scoreMtx.grp )[[1]][[1]]
+            colnames(scMtx) <- bUtil.getShortPhaseName( colnames(scMtx) )
+            log.c <- k.getFlogObj( sprintf("./report/workRpt/%s.txt",dbgFileName) )
+            log.c$fLog( scMtx )
+        }
 
         return( list(hIdx=curHIdx ,cutRst=cutRst) )
     })
