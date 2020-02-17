@@ -42,9 +42,9 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
     hMtxLst <- B.makeHMtxLst( gEnv, allIdxLst, fRstLst, lastH=configH, tgt.scMtx )
 
     testSpan <- (lastH - 18:0)   # configH 보다는 큰 시점에서 시작해야 함을 유의.
-    if( TRUE ){ # stdFiltedCnt 0~3내에서만 테스트
+    if( TRUE ){ # stdFiltedCnt 0~2내에서만 테스트
         sfc.InTest <- allIdxLst$stdFiltedCnt[as.character(testSpan)]
-        testSpan <- testSpan[sfc.InTest %in% 0:3]
+        testSpan <- testSpan[sfc.InTest %in% 0:2]
     }
     testData.grp <- B.get_testData.grp( testSpan ,gEnv ,allIdxLst ,fRstLst ,tgt.scMtx=tgt.scMtx)
     save( testData.grp ,file=sprintf("Obj_testData.grp.%d.%s.save",lastH,ifelse(is.null(tgt.scMtx),"all",tgt.scMtx) ) )
@@ -127,7 +127,9 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
         rptFile <- ifelse(1==length(tgt.scMtx),sprintf("cutRstLst_%s",tgt.scMtx),"cutRstLst")
         rptFile
     }
-    # rptBanTyp <- c( "rawFCol" ,"rowE" )
+    # rptBanTyp <- c(   "rawFCol" ,"rowE" ,"rawReb"
+    #                   ,"scMtx.sz.cut rebCnt" ,"scMtx.sz.cut rebCnt.e.sum"
+    #               )
     rptBanTyp <- NULL
     B.rptCutRstLst( cutRstLst ,file=rptFile ,rptBanTyp=rptBanTyp )
 

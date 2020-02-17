@@ -60,7 +60,7 @@ scoreMtxCfg[[mName]] <- list(
         ,"c0.len.tot"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
                         ,evt=matrix( c(c(1,3,3,3),c(2,3,4,5)) ,ncol=2)
                     )
-        ,"c0.len.val"=list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+        ,"c0.len.val"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
                         ,evt=matrix( c(c(3,3,3,3),c(2,3,4,5)) ,ncol=2)
                     )
         ,"c1.num"=list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )
@@ -69,7 +69,7 @@ scoreMtxCfg[[mName]] <- list(
         ,"c1.len.tot"=list( rng=matrix( c(0,2 ,0,3) ,ncol=2 )
                         ,evt=matrix( c(c(1,2,3,3),c(2,3,4,5)) ,ncol=2)
                     )
-        ,"c1.len.val"=list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )
+        ,"c1.len.val"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
                         ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
                     )
 
@@ -99,8 +99,12 @@ scoreMtxCfg[[mName]] <- list(
                         ,evt=matrix( c(c(3,3,3,3,3),c(1,2,3,4,5)) ,ncol=2)
                     )
     )
-    ,evtMax = NULL  # evt in row over fCols
-    ,rowReb = NULL  # use default   c( rawMin=  )
+    #   XXX.tot, XXX.val 관계 때문에 2개 fCol 동시발생이 흔함을 고려.
+    ,evtMax <- matrix( c(2,1,3,1 ,2,2,3,2)  # evt in row over fCols
+                        ,byrow=T ,ncol=4
+                        ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
+                    )
+    ,rowReb = c( rawMin=3 ,lowE=3 ,rareE=1 )
     ,isHard=NULL  # use default
 )
 
