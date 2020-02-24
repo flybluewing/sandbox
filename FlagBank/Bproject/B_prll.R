@@ -97,18 +97,16 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
         if( TRUE ){ # debug info
             dbgFileName <- sprintf("Dbg_H%d.stdMI",curHIdx)
 
-            # cLastSpan <- 1:which(names(fRstLst)==curHIdx)
-            # gEnv.c <- gEnv              ;gEnv.c$zhF <- gEnv$zhF[1:curHIdx,]
-            # fRstLst.c <- fRstLst[cLastSpan]
-
-            # stdMI.grp <- bUtil.getStdMILst( gEnv.c ,fRstLst.c )
-            # B.rptStdMI.grp( stdMI.grp ,file=dbgFileName )
             B.rptStdMI.grp( stdMI.grp ,file=dbgFileName )
+
+            log.c <- k.getFlogObj( sprintf("./report/workRpt/%s.txt",dbgFileName) )
+            stdZoid.str <- sprintf("stdZoid : %s",paste( sprintf("%2d",stdZoid) ,collapse=" ") )
+            log.c$fLogStr( stdZoid.str )
 
             scMtx <- getScoreMtx.grp_byHIdx( scoreMtx.grp )[[1]][[1]]
             colnames(scMtx) <- bUtil.getShortPhaseName( colnames(scMtx) )
-            log.c <- k.getFlogObj( sprintf("./report/workRpt/%s.txt",dbgFileName) )
             log.c$fLog( scMtx )
+
         }
 
         return( list(hIdx=curHIdx ,cutRst=cutRst) )
