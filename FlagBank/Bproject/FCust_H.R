@@ -377,6 +377,11 @@ bFCust.getSkipZero_byHIdx.ass <- function( szObj ,scMtx ,scMtxEvt ){
         colnames(mtxPh) <- colnames(szInfo$ph)  ;rownames(mtxPh) <- rName
         mtxPh["hpn",] <- apply( szInfo$ph ,2 ,function(fCol){sum(fCol>0,na.rm=T)} )
         for( pName in colnames(mtxPh) ){
+            if( mtxPh["hpn",pName]!=sum(mtx[,pName],na.rm=T) ){
+                mtxPh["mat",pName] <- 0
+                next    
+            }
+
             matCnt <- sum( szInfo$ph[,pName]==mtx[,pName] ,na.rm=T )
             availCnt <- sum( !is.na(szInfo$ph[,pName]) )
             mtxPh["mat",pName] <- availCnt>0 && (matCnt==availCnt)
@@ -388,6 +393,11 @@ bFCust.getSkipZero_byHIdx.ass <- function( szObj ,scMtx ,scMtxEvt ){
         colnames(mtxFCol) <- rownames(szInfo$fCol)  ;rownames(mtxFCol) <- rName
         mtxFCol["hpn",] <- apply( szInfo$fCol ,1 ,function(ph){sum(ph>0,na.rm=T)} )
         for( fcName in colnames(mtxFCol) ){
+            if( mtxFCol["hpn",fcName] != sum(mtx[fcName,],na.rm=T) ){
+                mtxFCol["mat",fcName] <- 0
+                next
+            }
+
             matCnt <- sum( szInfo$fCol[fcName,]==mtx[fcName,] ,na.rm=T )
             availCnt <- sum( !is.na(szInfo$fCol[fcName,]) )
             mtxFCol["mat",fcName] <- availCnt>0 && (matCnt==availCnt)
