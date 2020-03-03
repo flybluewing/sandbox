@@ -366,7 +366,7 @@ bFMtx.score1 <- function( stdMIObj ){
 		#	aZoidMtx <- gEnv$allZoidMtx[c(stdIdx,sample(10:nrow(gEnv$allZoidMtx),19)) ,] ;makeInfoStr=T
 
 		aLen <- nrow(aZoidMtx)
-		cName <- c(	"rem0.num" ,"rem0.len.tot" ,"rem0.len.val"
+		cName <- c(	"rem0.num" ,"rem0.len.tot" ,"rem0.len.val"	# 이전에 값이 동일했던 컬럼이, 다음에도 동일 값이 된 경우.
 					,"rem1.num" ,"rem1.len.tot" ,"rem1.len.val"
 					,"c0.num" ,"c0.len.tot" ,"c0.len.val" ,"c1.num" ,"c1.len.tot" ,"c1.len.val"
 					,"f0.num" ,"f0.len.tot" ,"f0.len.val" ,"f1.num" ,"f1.len.tot" ,"f1.len.val"

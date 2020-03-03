@@ -35,7 +35,7 @@ cat(sprintf("* Parallel ready... see log : %s \n",prllLog$fileName))
 
 if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
 
-    tgt.scMtx <- c("score1")       # default : NULL   하도 실수가 잦아서 일부러 문법 오류로 놔둔다.. -_-;
+    tgt.scMtx <- c("score2")       # default : NULL   하도 실수가 잦아서 일부러 문법 오류로 놔둔다.. -_-;
         #   "bScr01"
 
     configH <- lastH-20    # configH는 기본 cutting값을 얻기 위하는 시점에 따라 조절.
@@ -68,7 +68,7 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
         curHMtxLst <- testData.grp$curHMtxLst.grp[[as.character(curHIdx)]]
             # B.makeHMtxLst() 의 lastH는 allIdxLst.w$stdFiltedCnt에 의존한다.
 
-        cut.grp <- bFCust.getFCustGrp( curHMtxLst )  # curHMtxLst 적용 추가 필요.
+        cut.grp <- bFCust.getFCustGrp( curHMtxLst ,tgt.scMtx )  # curHMtxLst 적용 추가 필요.
             #   B.rptCut.grp( cut.grp )
 
         # ------------------------------------------------------------------------
