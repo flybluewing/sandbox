@@ -15,7 +15,9 @@ scoreMtxCfg <- list()
 #             ,evtMax      minLev maxHpn minLevH maxHpnH    # evt in one phase over fCols
 #                     lev1      2      2       3       1
 #                     lev2      2      3       3       2
-#             ,rowReb = c( rawMin=1 ,lowE=2 ,rareE=1 )  # use default   c( rawMin=  )
+#             ,rowReb = c( rawMin=3 ,lowE=2 ,rareE=1 )  # 3개 이상 발생. 그 중의 2개 이상 low Evt가 존재하거나 희귀 Evt 하나이상 존재
+#                                                       #   하는 상태에서 반복 발생.
+#             ,rowRebDup = c( lowE=4 ,rareE=1 )         # low Evt 4개 이상이거나 희귀 Evt 하나이상의 반복 발생(3연속 발생.)
 #           # FCust_stdCut.hIdx-----------------------------------
 #                 $summMtx    all ph fCol phReb xyCnt.fCol xyCnt.phase
 #                         raw   1  2    2     2          1           1
@@ -105,6 +107,7 @@ scoreMtxCfg[[mName]] <- list(
                         ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
                     )
     ,rowReb = c( rawMin=3 ,lowE=3 ,rareE=1 )
+    ,rowRebDup=NULL
     ,isHard=NULL  # use default
 )
 
@@ -113,7 +116,7 @@ scoreMtxCfg[[mName]] <- list(
     mName = mName   ,style=c( freqZero=TRUE )
     ,fCol = list(
         "rebV.r"=list( rng=matrix( c(0,1 ,0,3) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
-                        ,evt=matrix( c(c(1,2,3,3,3,3),c(1,2,3,4,5,6)) ,ncol=2)
+                        ,evt=matrix( c(c(1,1,2,3,3,3),c(1,2,3,4,5,6)) ,ncol=2)
                     )
         ,"rebL"=list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )
                         ,evt=matrix( c(c(2,3,3,3,3),c(1,2,3,4,5)) ,ncol=2)
@@ -168,7 +171,8 @@ scoreMtxCfg[[mName]] <- list(
                     ) 
     ) 
     ,evtMax = NULL
-    ,rowReb = NULL  # use default   c( rawMin=  )
+    ,rowReb = c( rawMin=3 ,lowE=1 ,rareE=1 )
+    ,rowRebDup = c( lowE=4 ,rareE=1 )
     ,isHard=NULL  # use default
 )
 
@@ -278,7 +282,9 @@ for( mName in names( scoreMtxCfg ) ){ # naming 추가.
     }
     if( is.null(scoreMtxCfg[[mName]]$rowReb) ){
         scoreMtxCfg[[mName]]$rowReb <- c( rawMin=1 ,lowE=2 ,rareE=1 )
-        scoreMtxCfg[[mName]]$rowReb.dup <- c( rawMin=1 ,lowE=2 ,rareE=1 )
+    }
+    if( is.null(scoreMtxCfg[[mName]]$rowRebDup) ){
+        scoreMtxCfg[[mName]]$rowRebDup <- c( lowE=1 ,rareE=1 )
     }
     if( is.null(scoreMtxCfg[[mName]]$summMtx) ){
         #     $summMtx    all ph fCol phReb xyCnt.fCol xyCnt.phase

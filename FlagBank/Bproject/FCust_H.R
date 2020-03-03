@@ -526,8 +526,8 @@ FCust_stdCut.rawRow <- function( hName ,mName ,pName ,scoreMtxH ){
         checkEvtReb.Dbl.flag <- !is.null(rObj$evtReb)
         if( checkEvtReb.Dbl.flag ){
             levDup <- rObj$evtReb$levDup[!is.na(rObj$evtReb$levDup)]
-            str <- paste( names(levDup) ,levDup ,sep=":")
-            checkEvtReb.Dbl.str <- paste( str ,collapse=", ")
+            # str <- paste( names(levDup) ,levDup ,sep=":")
+            # checkEvtReb.Dbl.str <- paste( str ,collapse=", ")
             checkEvtReb.Dbl.levDup <- levDup
         }
         for( aIdx in seq_len(val.len) ){
@@ -565,22 +565,47 @@ FCust_stdCut.rawRow <- function( hName ,mName ,pName ,scoreMtxH ){
             }
 
             # evt Reb Dup
-            if( checkEvtReb.Dbl.flag ){
+            if( checkEvtReb.Dbl.flag && (sum(evt.sm["lev",]>0,na.rm=T)>0) ){
                 if( !anaMode && alreadyDead[aIdx] ) next
 
-                dupFlag <- evt.sm["lev",names(checkEvtReb.Dbl.levDup)] == checkEvtReb.Dbl.levDup
-                if( 1<=sum(checkEvtReb.Dbl.levDup[dupFlag],na.rm=T) ){ 
-                    # 3연속 발생한 Evt의 총 합을... 2 이상으로 할까?
+                levDupName <- names(checkEvtReb.Dbl.levDup)
+                evtComp <- bFCust.evtComp( evt.sm["lev",levDupName] ,rObj$lastEvt["lev",levDupName] )
+                names(evtComp$levDup) <- levDupName # 값이 1개일때는 컬럼명이 따라오지 않아서..
+
+                # cfg$rowReb.dup <- c( lowE=1 ,rareE=1 )
+
+                eRebDup.cnt <- c( lowE=sum(evtComp$levDup>0,na.rm=T) ,rareE=sum(evtComp$levDup>1,na.rm=T) )
+                eRebDup.flag <- any( eRebDup.cnt >= cfg$rowRebDup[c("lowE","rareE")] )
+                if( eRebDup.flag ){ 
                     alreadyDead[aIdx] <- TRUE
 
-                    infoStr <- sprintf("rebE.dup(last:%s)",checkEvtReb.Dbl.str)
+                    levDup <- evtComp$levDup[!is.na(evtComp$levDup)]
+                    str <- paste( paste( levDupName[!is.na(evtComp$levDup)] ,levDup ,sep=":" ) ,collapse=", " )
+                    infoStr <- sprintf("rebE.dup(last:%s)",str)
                     cObj <- cutLst.reb[[as.character(aIdx)]]
                     if( is.null(cObj) ){
                         cutLst.reb[[as.character(aIdx)]] <- list( idx=aIdx ,info=infoStr )
                     } else {
                         cutLst.reb[[as.character(aIdx)]]$info <- paste( cObj$info, infoStr, collapse=", " )
                     }
+
                 }
+
+                # dupFlag <- evt.sm["lev",names(checkEvtReb.Dbl.levDup)] == checkEvtReb.Dbl.levDup
+                # if( 1<=sum(checkEvtReb.Dbl.levDup[dupFlag],na.rm=T) ){ 
+                #     # 3연속 발생한 Evt의 총 합을... 2 이상으로 할까?
+                #     alreadyDead[aIdx] <- TRUE
+
+                #     infoStr <- sprintf("rebE.dup(last:%s)",checkEvtReb.Dbl.str)
+                #     cObj <- cutLst.reb[[as.character(aIdx)]]
+                #     if( is.null(cObj) ){
+                #         cutLst.reb[[as.character(aIdx)]] <- list( idx=aIdx ,info=infoStr )
+                #     } else {
+                #         cutLst.reb[[as.character(aIdx)]]$info <- paste( cObj$info, infoStr, collapse=", " )
+                #     }
+                # }
+
+
             }
 
         }
