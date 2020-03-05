@@ -180,15 +180,28 @@ mName <- "score3"
 scoreMtxCfg[[mName]] <- list(
     mName = mName   ,style=c( freqZero=TRUE )
     ,fCol = list(
-        "fCol1"=list( rng=matrix( c(0,1 ,0,3) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
+        "rebPtn.1"=list( rng=matrix( c(0,1 ,0,3) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
                         ,evt=matrix( c(c(1,1,2,3,4),c(1,2,3,4,5)) ,ncol=2)
                     )
-        ,"fCol2"=list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )
+        ,"rebPtn.n"=list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )
+                        ,evt=matrix( c(c(1,1,2,3,4),c(1,2,3,4,5)) ,ncol=2)
+                    ) 
+        ,"snMax.r"=list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )
+                        ,evt=matrix( c(c(1,1,2,3,4),c(1,2,3,4,5)) ,ncol=2)
+                    ) 
+        ,"snFCnt.r"=list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )
+                        ,evt=matrix( c(c(1,1,2,3,4),c(1,2,3,4,5)) ,ncol=2)
+                    ) 
+        ,"snMax.c"=list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )
+                        ,evt=matrix( c(c(1,1,2,3,4),c(1,2,3,4,5)) ,ncol=2)
+                    ) 
+        ,"snFCnt.c"=list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )
                         ,evt=matrix( c(c(1,1,2,3,4),c(1,2,3,4,5)) ,ncol=2)
                     ) 
     ) 
     ,evtMax = NULL
     ,rowReb = NULL  # use default   c( rawMin=  )
+    ,rowRebDup = NULL
     ,isHard=NULL  # use default
 )
 
@@ -205,6 +218,7 @@ scoreMtxCfg[[mName]] <- list(
     ) 
     ,evtMax = NULL
     ,rowReb = NULL  # use default   c( rawMin=  )
+    ,rowRebDup = NULL
     ,isHard=NULL  # use default
 )
 
@@ -221,6 +235,7 @@ scoreMtxCfg[[mName]] <- list(
     ) 
     ,evtMax = NULL
     ,rowReb = NULL  # use default   c( rawMin=  )
+    ,rowRebDup = NULL
     ,isHard=NULL  # use default
 )
 
@@ -237,6 +252,7 @@ scoreMtxCfg[[mName]] <- list(
     ) 
     ,evtMax = NULL
     ,rowReb = NULL  # use default   c( rawMin=  )
+    ,rowRebDup = NULL
     ,isHard=NULL  # use default
 )
 
@@ -253,6 +269,7 @@ scoreMtxCfg[[mName]] <- list(
     ) 
     ,evtMax = NULL
     ,rowReb = NULL  # use default   c( rawMin=  )
+    ,rowRebDup = NULL
     ,isHard=NULL  # use default
 )
 
