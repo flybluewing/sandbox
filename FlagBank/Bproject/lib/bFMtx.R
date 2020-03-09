@@ -772,7 +772,7 @@ bFMtx.score3 <- function( stdMIObj ){
 				fColIdx <- which(mtx[rIdx,]==lc)
 				if( 0<length(fColIdx) ){
 					fRowIdx <- rIdx
-					dbgStr <- sprintf("col:%d(val:%d)  found in row:%d col:%s",cIdx,lc,fRowIdx,paste(fColIdx,collapse=","))
+					# dbgStr <- sprintf("col:%d(val:%d)  found in row:%d col:%s",cIdx,lc,fRowIdx,paste(fColIdx,collapse=","))
 					break
 				}
 			}
@@ -782,16 +782,22 @@ bFMtx.score3 <- function( stdMIObj ){
 				olSpan <- fCutU.overlapSpan( colLen ,colIdx.pre=fcIdx ,colIdx.post=cIdx )
 				if( 1>sum(olSpan$info[c("lMargin","rMargin")]) )	next
 
-				valInc <- mtx[fRowIdx+1,olSpan$span.pre]-mtx[fRowIdx,olSpan$span.pre]
+				# valInc <- mtx[fRowIdx+1,olSpan$span.pre]-mtx[fRowIdx,olSpan$span.pre] <- bug?
+				valInc <- mtx[rowLen,olSpan$span.post]-mtx[fRowIdx,olSpan$span.pre]
 				banVal <- mtx[rowLen,olSpan$span.post]+valInc
 				fixPoint <- banVal	;fixPoint[-(olSpan$info["lMargin"]+1)] <- NA
 				dbgStr <- sprintf("colIdx:%d(val:%d) from (%d,%d)  %s/%s --> %s/%s..?",cIdx,lc,fRowIdx,fcIdx
 									,paste(mtx[fRowIdx  ,olSpan$span.pre],collapse=",")
-									,paste(mtx[fRowIdx+1,olSpan$span.pre],collapse=",")
-									,paste(mtx[rowLen,olSpan$span.post],collapse=",")
+									,paste(mtx[rowLen	,olSpan$span.post],collapse=",")
+									,paste(mtx[rowLen	,olSpan$span.post],collapse=",")
 									,paste(banVal,collapse=",")
 								)
 				banObj <- list( banVal=banVal ,banSpan=olSpan$span.post ,fixPoint=fixPoint ,dbgStr=dbgStr )
+
+				fixIdx <- which( !is.na(fixPoint) )
+				banObj$info <- c( length(banVal) ,fixIdx )
+				names(banObj$info) <- c("len","fixIdx")
+
 				banLst[[1+length(banLst)]] <- banObj
 			}
 			
@@ -828,10 +834,12 @@ bFMtx.score3 <- function( stdMIObj ){
 					,seqNextPtn.raw=getSeqPtn( stdMI$rawTail )	,seqNextPtn.cStep=getSeqPtn( stdMI$cStepTail )
 				)
 
-	#	cName <- c("rebPtn.1","rebPtn.n","snMax.r" ,"snFCnt.r" ,"snMax.c" ,"snFCnt.c")
+	#	cName <- c("rebPtn.1","rebPtn.n","snR3","snMax.r" ,"snFCnt.r" ,"snMax.c" ,"snFCnt.c")
+	#				snMax.r ,snFCnt.r 은 기준 값이 동일 칼럼에 반복될 때의 좌우 증감량이 유지되는 지 여부
+	#				snR3는 기준값이 다른 컬럼이지만 좌우 증감량이 2개 이상인 경우.( Flag )
 	rObj$fMtxObj <- function( aZoidMtx ,makeInfoStr=F ){
 		aLen <- nrow(aZoidMtx)
-		cName <- c("rebPtn.1","rebPtn.n","snMax.r" ,"snFCnt.r" ,"snMax.c" ,"snFCnt.c")
+		cName <- c("rebPtn.1","rebPtn.n","snR3","snMax.r" ,"snFCnt.r" ,"snMax.c" ,"snFCnt.c")
 		scoreMtx <- matrix( 0, nrow=aLen, ncol=length(cName) )	;colnames(scoreMtx) <- cName
 
 		infoMtx <- NULL
@@ -843,6 +851,7 @@ bFMtx.score3 <- function( stdMIObj ){
 		if( 0==rObj$zMtx.size ){
 			return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
 		}
+
 
 		for( aIdx in 1:aLen ){
 			aZoid <- aZoidMtx[aIdx,]
@@ -876,13 +885,27 @@ bFMtx.score3 <- function( stdMIObj ){
 				}
 			}
 
+			#	"snR3"	- 재발값을 기준으로 증감이 동일하게 반복되는 것이 3개 이상.
+			banLst <- rObj$seqNextPtn.raw$banLst
+			for( idx in seq_len(length(banLst)) ){
+				if( 3>banLst[[idx]]$info["len"] ) next
+
+				flag <- fCutU.hasPtn( banLst[[idx]]$banVal, aZoid ,thld=3 ,fixIdx=banLst[[idx]]$info["fixIdx"] )
+				if( flag ){
+					scoreMtx[aIdx,"snR3"] <- TRUE
+					break
+				}
+			}
+			#	fCutU.hasPtn( src, aZoid ,thld=3 ,fixIdx=c(2,4) )
+			#	scoreMtx[aIdx,"snR3"] <- 
+
 			#	"sncMax.raw" ,"sncFCnt.raw" 
 			snMatCnt.raw <- rObj$seqNextPtn.raw$filt( aZoid )$matCnt
 			scoreMtx[aIdx,"snMax.r"] <- max( snMatCnt.raw )
 			scoreMtx[aIdx,"snFCnt.r"] <- sum( snMatCnt.raw>=2 )
 
 			#	"sncMax.cStep" ,"sncFCnt.cStep"
-			snMatCnt.cStep <- rObj$seqNextPtn.cStep$filt( aZoid )$matCnt
+			snMatCnt.cStep <- rObj$seqNextPtn.cStep$filt( aCStep )$matCnt
 			scoreMtx[aIdx,"snMax.c"] <- max( snMatCnt.cStep )
 			scoreMtx[aIdx,"snFCnt.c"] <- sum( snMatCnt.cStep>=2 )
 

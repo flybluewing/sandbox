@@ -186,6 +186,9 @@ scoreMtxCfg[[mName]] <- list(
         ,"rebPtn.n"=list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )
                         ,evt=matrix( c(c(1,1,2,3,4),c(1,2,3,4,5)) ,ncol=2)
                     ) 
+        ,"snR3" =list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )    # flag
+                        ,evt=matrix( c(c(1),c(3)) ,ncol=2)
+                    )
         ,"snMax.r"=list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )
                         ,evt=matrix( c(c(1,1,2,3,4),c(1,2,3,4,5)) ,ncol=2)
                     ) 
