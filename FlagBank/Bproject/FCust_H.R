@@ -798,7 +798,7 @@ FCust_stdCut.hIdx <- function( hName ,mName ,mtxLst ){
                 survive <- F
                 cLst[["summMtx.cut raw.sum"]] <- "summMtx.cut raw.sum"
                 if( anaMode ){  # infoStr
-                    flag <- summMtx.cut["raw",]
+                    flag <- scObj$summMtx["raw",]>0
                     str <- paste( names(scObj$summMtx["raw",])[flag] ,scObj$summMtx["raw",flag] ,sep=":" )
                     infoStr <- sprintf("summMtx.cut - raw.sum %s",paste(str,collapse=", ") )
                     cLst[["summMtx.cut raw.sum"]] <- infoStr
@@ -808,7 +808,7 @@ FCust_stdCut.hIdx <- function( hName ,mName ,mtxLst ){
                 survive <- F
                 cLst[["summMtx.cut evt.sum"]] <- "summMtx.cut evt.sum"
                 if( anaMode ){  # infoStr
-                    flag <- summMtx.cut["evt",]
+                    flag <- scObj$summMtx["evt",]>0
                     str <- paste( names(scObj$summMtx["evt",])[flag] ,scObj$summMtx["evt",flag] ,sep=":" )
                     infoStr <- sprintf("summMtx.cut - evt.sum %s",paste(str,collapse=", ") )
                     cLst[["summMtx.cut evt.sum"]] <- infoStr

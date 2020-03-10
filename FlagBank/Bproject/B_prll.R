@@ -10,7 +10,7 @@ load(sprintf("../Aproject/save/Obj_gEnvZ%d.save",lastH))
 
 
 #-[Parallel init work]-------------------------------------------------------------
-prllNum <- 2     # 실수가 잦아서 그냥 오류 코드로 놔둔다.
+prllNum <- 1     # 실수가 잦아서 그냥 오류 코드로 놔둔다.
 prllLog <- k.getFlogObj( "./log/parallel_log.txt" )
 prll.initHeader <- function( ){
     k <- sfLapply(1:prllNum,function(prllId){
@@ -39,20 +39,20 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
         #   "bScr01"
 
     configH <- lastH-20    # configH는 기본 cutting값을 얻기 위하는 시점에 따라 조절.
-    hMtxLst <- B.makeHMtxLst( gEnv, allIdxLst, fRstLst, lastH=configH, tgt.scMtx )
-
     testSpan <- (lastH - 18:0)   # configH 보다는 큰 시점에서 시작해야 함을 유의.
     if( TRUE ){ # stdFiltedCnt 0~2내에서만 테스트
         sfc.InTest <- allIdxLst$stdFiltedCnt[as.character(testSpan)]
         testSpan <- testSpan[sfc.InTest %in% 0:2]
     }
+
+    hMtxLst <- B.makeHMtxLst( gEnv, allIdxLst, fRstLst, lastH=configH, tgt.scMtx )
     testData.grp <- B.get_testData.grp( testSpan ,gEnv ,allIdxLst ,fRstLst ,tgt.scMtx=tgt.scMtx)
     save( testData.grp ,file=sprintf("Obj_testData.grp.%d.%s.save",lastH,ifelse(is.null(tgt.scMtx),"all",tgt.scMtx) ) )
     #   save( testData.grp ,file="Obj_testData.grp.save" )
     #   load( "Obj_testData.grp820.save" )
 
     sfExport("testData.grp")    ;sfExport("tgt.scMtx")
-    prll.initHeader( )
+    prll.initHeader( )              #   source("FCust_configBasic.R")
     prllLog$fLogStr("- bUtil.cut() ----------------------------",pTime=T)
     resultLst <- sfLapply( testSpan ,function( curHIdx ){
         wLastH <-curHIdx-1

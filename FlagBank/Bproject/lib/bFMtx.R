@@ -831,20 +831,22 @@ bFMtx.score3 <- function( stdMIObj ){
 	rObj <- list( 	idStr="score3"	,zMtx.size=nrow(zMtx)
 					,lastZoid=stdMI$lastZoid
 					,rebPtn.1=getRebPtn.1(stdMI)	,rebPtn.n=getRebPtn.n( stdMI )
-					,seqNextPtn.raw=getSeqPtn( stdMI$rawTail )	,seqNextPtn.cStep=getSeqPtn( stdMI$cStepTail )
+					,seqNextPtn.raw=getSeqPtn( stdMI$rawTail )
+					,seqNextPtn.cStep=getSeqPtn( stdMI$cStepTail )
+					,seqNextPtn.fStep=getSeqPtn( stdMI$fStepTail )
 				)
 
-	#	cName <- c("rebPtn.1","rebPtn.n","snR3","snMax.r" ,"snFCnt.r" ,"snMax.c" ,"snFCnt.c")
+	#	cName <- c("rebPtn.1","rebPtn.n","snR3"  ,"snMax.r","snFCnt.r"  ,"snMax.c","snFCnt.c"  ,"snMax.f","snFCnt.f")
 	#				snMax.r ,snFCnt.r 은 기준 값이 동일 칼럼에 반복될 때의 좌우 증감량이 유지되는 지 여부
 	#				snR3는 기준값이 다른 컬럼이지만 좌우 증감량이 2개 이상인 경우.( Flag )
 	rObj$fMtxObj <- function( aZoidMtx ,makeInfoStr=F ){
 		aLen <- nrow(aZoidMtx)
-		cName <- c("rebPtn.1","rebPtn.n","snR3","snMax.r" ,"snFCnt.r" ,"snMax.c" ,"snFCnt.c")
+		cName <- c("rebPtn.1","rebPtn.n","snR3" ,"snMax.r","snFCnt.r"  ,"snMax.c","snFCnt.c"  ,"snMax.f","snFCnt.f")
 		scoreMtx <- matrix( 0, nrow=aLen, ncol=length(cName) )	;colnames(scoreMtx) <- cName
 
 		infoMtx <- NULL
 		if( makeInfoStr ){
-			cName <- c("rebPtn.1","rebPtn.n","snXXX.r","snXXX.c","zMtx.size")
+			cName <- c("rebPtn.1","rebPtn.n","snXXX.r","snXXX.c","snXXX.f","zMtx.size")
 			infoMtx <- matrix( "" ,nrow=aLen ,ncol=length(cName) )	;colnames(infoMtx) <- cName
 			infoMtx[,"zMtx.size"] <- rObj$zMtx.size
 		}
@@ -902,18 +904,27 @@ bFMtx.score3 <- function( stdMIObj ){
 			#	"sncMax.raw" ,"sncFCnt.raw" 
 			snMatCnt.raw <- rObj$seqNextPtn.raw$filt( aZoid )$matCnt
 			scoreMtx[aIdx,"snMax.r"] <- max( snMatCnt.raw )
+			if( 1==scoreMtx[aIdx,"snMax.r"] ) scoreMtx[aIdx,"snMax.r"] <- 0
 			scoreMtx[aIdx,"snFCnt.r"] <- sum( snMatCnt.raw>=2 )
 
 			#	"sncMax.cStep" ,"sncFCnt.cStep"
 			snMatCnt.cStep <- rObj$seqNextPtn.cStep$filt( aCStep )$matCnt
 			scoreMtx[aIdx,"snMax.c"] <- max( snMatCnt.cStep )
+			if( 1==scoreMtx[aIdx,"snMax.c"] ) scoreMtx[aIdx,"snMax.c"] <- 0
 			scoreMtx[aIdx,"snFCnt.c"] <- sum( snMatCnt.cStep>=2 )
+
+			#	"sncMax.fStep" ,"sncFCnt.fStep"
+			snMatCnt.fStep <- rObj$seqNextPtn.fStep$filt( aFStep )$matCnt
+			scoreMtx[aIdx,"snMax.f"] <- max( snMatCnt.fStep )
+			if( 1==scoreMtx[aIdx,"snMax.f"] ) scoreMtx[aIdx,"snMax.f"] <- 0
+			scoreMtx[aIdx,"snFCnt.f"] <- sum( snMatCnt.fStep>=2 )
 
 			if( makeInfoStr ){
 				infoMtx[aIdx,"rebPtn.1"] <- if( nrow(rObj$rebPtn.1$matInfo) >0 ) infoStr.rebPtn.1 else "N/A"
 				infoMtx[aIdx,"rebPtn.n"] <- if( length(rObj$rebPtn.n) >0 ) infoStr.rebPtn.n else "N/A"
 				infoMtx[aIdx,"snXXX.r"] <- if( 0==sum(snMatCnt.raw) ) "N/A" else sprintf("matCnt:%s",paste(snMatCnt.raw,collapse=" "))
 				infoMtx[aIdx,"snXXX.c"] <- if( 0==sum(snMatCnt.cStep) ) "N/A" else sprintf("matCnt:%s",paste(snMatCnt.cStep,collapse=" "))
+				infoMtx[aIdx,"snXXX.f"] <- if( 0==sum(snMatCnt.fStep) ) "N/A" else sprintf("matCnt:%s",paste(snMatCnt.fStep,collapse=" "))
 			}
 
 		}
