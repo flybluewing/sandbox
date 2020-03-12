@@ -1322,7 +1322,7 @@ bFMtx.util.fMtxObj.score4567 <- function( aCode ,fInfo ,makeInfoStr=F ){
 								,hpnCnt=pI["hpn"] ,foundNum=nrow(foundIdxMtx) 
 				)
 				rebLastCol.F <- apply( foundIdxMtx ,1 ,function(fIdx){all(fIdx==pI[c("cf1","cf2")])} )
-				foundInfo["rebLastCol"] <- sum( rebLastCol.F )
+				foundInfo["rebLastCol"] <- any( rebLastCol.F )
 
 				flag <- fCutU.hasPtn(pBI$incPtn.banVal,aCode,thld=3,fixIdx=pBI$incPtn.fixIdx)
 				if( flag )	foundInfo["extMatNum"] <- 1	# 초과 매치 수 3 - 2
@@ -1388,7 +1388,7 @@ bFMtx.util.fMtxObj.score4567 <- function( aCode ,fInfo ,makeInfoStr=F ){
 						)
 			
 			rebLastCol <- apply( foundIdxMtx ,1 ,function(fIdx){all(fIdx==infoDf[c("cIdx1.f","cIdx2.f")])} )
-			foundInfo["rebLastCol"] <- sum(rebLastCol)
+			foundInfo["rebLastCol"] <- any(rebLastCol)
 
 			if( 2<length(iBanInfo$incPtn.banVal) ){
 				flag=fCutU.hasPtn(iBanInfo$incPtn.banVal,aCode,thld=3,fixIdx=iBanInfo$incPtn.fixIdx)
@@ -1429,11 +1429,11 @@ bFMtx.util.fMtxObj.score4567 <- function( aCode ,fInfo ,makeInfoStr=F ){
 		foundInfo <- c( FVa.max=0 ,FVa.hpnCnt=0 ,aFV.max=0 ,aFV.hpnCnt=0 )
 		if( 0<length(matCntLst[["FVa"]]) ){
 			foundInfo["FVa.max"] <- max(matCntLst[["FVa"]])
-			foundInfo["FVa.hpnCnt"] <- sum(matCntLst[["FVa"]]>0)
+			foundInfo["FVa.hpnCnt"] <- sum(matCntLst[["FVa"]]>1)
 		}
 		if( 0<length(matCntLst[["aFV"]]) ){
 			foundInfo["aFV.max"] <- max(matCntLst[["aFV"]])
-			foundInfo["aFV.hpnCnt"] <- sum(matCntLst[["aFV"]]>0)			
+			foundInfo["aFV.hpnCnt"] <- sum(matCntLst[["aFV"]]>1)			
 		}
 		pairHpn <- list( foundInfo=foundInfo )
 		if( makeInfoStr ){
