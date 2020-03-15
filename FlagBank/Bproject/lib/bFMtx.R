@@ -998,6 +998,10 @@ bFMtx.score4 <- function( stdMIObj ){
 			if( 0<length(rstObj$pairHpn) ){
 				workCol <- c("FVa.m","FVa.c","aFV.m","aFV.c")
 				scoreMtx[aIdx ,workCol ] <- rstObj$pairHpn$foundInfo[c("FVa.max","FVa.hpnCnt","aFV.max","aFV.hpnCnt")]
+				
+				#	"FVa.m","aFV.m" 에서 1은 너무 흔한 듯.
+				if( 1==scoreMtx[aIdx ,"FVa.m" ] )	scoreMtx[aIdx ,"FVa.m" ] <- 0
+				if( 1==scoreMtx[aIdx ,"aFV.m" ] )	scoreMtx[aIdx ,"aFV.m" ] <- 0
 			}
 
 			# match4
@@ -1424,15 +1428,15 @@ bFMtx.util.fMtxObj.score4567 <- function( aCode ,fInfo ,makeInfoStr=F ){
 				}
 			}
 			return( fCnt )
-		})
+		})		# match count List : Gen 별로 매치가 몇 개 발견되었는지?
 		names(matCntLst) <- c("FVa","aFV")
 		foundInfo <- c( FVa.max=0 ,FVa.hpnCnt=0 ,aFV.max=0 ,aFV.hpnCnt=0 )
 		if( 0<length(matCntLst[["FVa"]]) ){
-			foundInfo["FVa.max"] <- max(matCntLst[["FVa"]])
+			foundInfo["FVa.max"] <- max(matCntLst[["FVa"]])	# max가 1개인 것은 별 의미 없을 듯.
 			foundInfo["FVa.hpnCnt"] <- sum(matCntLst[["FVa"]]>1)
 		}
 		if( 0<length(matCntLst[["aFV"]]) ){
-			foundInfo["aFV.max"] <- max(matCntLst[["aFV"]])
+			foundInfo["aFV.max"] <- max(matCntLst[["aFV"]])	# max가 1개인 것은 별 의미 없을 듯.
 			foundInfo["aFV.hpnCnt"] <- sum(matCntLst[["aFV"]]>1)			
 		}
 		pairHpn <- list( foundInfo=foundInfo )
