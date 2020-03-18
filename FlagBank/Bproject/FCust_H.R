@@ -247,6 +247,13 @@ bFCust.getEvt_byHIdx <- function( scMtx ,cfg ,lastEvt=NULL ,ignoreOpt=NULL ){
 			rebMtx["evt","phase.allMat"] <- all( rObj$evtInfo$phase==lastEvt$evtInfo$phase )
 			rebMtx["evt","phase.cntHpn"] <- sum( rObj$evtInfo$phase > 0 )
 
+            if( cfg$style["freqZero"] ){
+                if( 0==rebMtx["raw","fCol.cntHpn"] )    rebMtx["raw","fCol.allMat"] <- FALSE
+                if( 0==rebMtx["raw","phase.cntHpn"] )   rebMtx["raw","phase.allMat"] <- FALSE
+                if( 0==rebMtx["evt","fCol.cntHpn"] )    rebMtx["evt","fCol.allMat"] <- FALSE
+                if( 0==rebMtx["evt","phase.cntHpn"] )   rebMtx["evt","phase.allMat"] <- FALSE
+            }
+
 			rebInfo$rebMtx.xyCnt <- rebMtx
 
 			# rebInfo$summary ----------------------------------------------

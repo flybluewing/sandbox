@@ -1094,6 +1094,10 @@ bFMtx.score5 <- function( stdMIObj ){
 			if( 0<length(rstObj$pairHpn) ){
 				workCol <- c("FVa.m","FVa.c","aFV.m","aFV.c")
 				scoreMtx[aIdx ,workCol ] <- rstObj$pairHpn$foundInfo[c("FVa.max","FVa.hpnCnt","aFV.max","aFV.hpnCnt")]
+
+				#	"FVa.m","aFV.m" 에서 1은 너무 흔한 듯.
+				if( 1==scoreMtx[aIdx ,"FVa.m" ] )	scoreMtx[aIdx ,"FVa.m" ] <- 0
+				if( 1==scoreMtx[aIdx ,"aFV.m" ] )	scoreMtx[aIdx ,"aFV.m" ] <- 0
 			}
 
 			# match4
