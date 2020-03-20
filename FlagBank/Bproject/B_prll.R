@@ -35,7 +35,7 @@ cat(sprintf("* Parallel ready... see log : %s \n",prllLog$fileName))
 
 if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
 
-    tgt.scMtx <- c("score4","score5","score6","score7")       # default : NULL   하도 실수가 잦아서 일부러 문법 오류로 놔둔다.. -_-;
+    tgt.scMtx <- c("score9")       # default : NULL   하도 실수가 잦아서 일부러 문법 오류로 놔둔다.. -_-;
         #   "bScr01"
 
     configH <- lastH-20    # configH는 기본 cutting값을 얻기 위하는 시점에 따라 조절.
@@ -52,7 +52,7 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
     #   load( "Obj_testData.grp820.save" )
 
     sfExport("testData.grp")    ;sfExport("tgt.scMtx")
-    prll.initHeader( )              #   source("FCust_configBasic.R")
+    prll.initHeader( )          ;source("FCust_configBasic.R")
     prllLog$fLogStr("- bUtil.cut() ----------------------------",pTime=T)
     resultLst <- sfLapply( testSpan ,function( curHIdx ){
         wLastH <-curHIdx-1

@@ -1605,6 +1605,11 @@ bFMtx.score8 <- function( stdMIObj ){
 		cInfo$cTbl <- table(stdMI$cStep)
 
 		rObj$cInfo <- cInfo
+
+		rObj$fTbl <- NULL
+		if( 1<nrow(stdMI$rawTail) ){
+			rObj$fTbl <- table(stdMI$fStep)
+		}
 	}
 
 	rObj$fMtxObj <- function( aZoidMtx ,makeInfoStr=F ){
@@ -1615,7 +1620,7 @@ bFMtx.score8 <- function( stdMIObj ){
 					"c31","c32","c33","c34"
 					,"c21","c22","c23","c24","c25"
 					,"max3","min3","max2","min2"
-					,"cTbl"
+					,"cTbl","fTbl"
 				)
 		scoreMtx <- matrix( 0, nrow=aLen, ncol=length(cName) )	;colnames(scoreMtx) <- cName
 
@@ -1630,12 +1635,14 @@ bFMtx.score8 <- function( stdMIObj ){
 		}
 
 		if( is.null(rObj$cInfo) ){ # stdMIObj$zMtx 데이터가 부족한 상태
+			# cInfo가 없으면 aFStep 관련 제약조건들도 없겠지.
 			return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
 		}
 
 		for( aIdx in 1:aLen ){
 			aZoid <- aZoidMtx[aIdx,]
 			aCStep <- aZoid[2:6] - aZoid[1:5]	# ;aFStep <- aZoid - rObj$lastZoid	;aRem <- aZoid %% 10
+			aFStep <- aZoid - rObj$lastZoid
 
 			# minN, maxN
 			aCStep.srt <- sort(unique(aCStep))
@@ -1654,6 +1661,12 @@ bFMtx.score8 <- function( stdMIObj ){
 				scoreMtx[aIdx ,"cTbl"] <- all(names(cTbl)==names(rObj$cInfo$cTbl)) && all(cTbl==rObj$cInfo$cTbl)
 			}
 
+			if( !is.null(rObj$fTbl) ){
+				fTbl <- table(aFStep)
+				if( length(rObj$fTbl)==length(fTbl) ){
+					scoreMtx[aIdx ,"fTbl"] <- all(names(fTbl)==names(rObj$fTbl)) && all(fTbl==rObj$fTbl)
+				}
+			}
 			# if( makeInfoStr ){ }
 		}
 
