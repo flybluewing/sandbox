@@ -1,6 +1,6 @@
 source("header.r")
 source("B_H.R")
-lastH <- 820    # 최종 데이터의 로딩 기준일 뿐, 작업시점(workH)은 다를 수 있다.
+lastH <- 880    # 최종 데이터의 로딩 기준일 뿐, 작업시점(workH)은 다를 수 있다.
 #source(sprintf("./toFinal/toZ%d_H.R",workH))	# working
 
 load(sprintf("../Aproject/Obj_allIdxLstZ%d.save",lastH) )
@@ -10,7 +10,7 @@ load(sprintf("../Aproject/save/Obj_gEnvZ%d.save",lastH))
 
 
 #-[Parallel init work]-------------------------------------------------------------
-prllNum <- 1     # 실수가 잦아서 그냥 오류 코드로 놔둔다.
+prllNum <- 2     # 실수가 잦아서 그냥 오류 코드로 놔둔다.
 prllLog <- k.getFlogObj( "./log/parallel_log.txt" )
 prll.initHeader <- function( ){
     k <- sfLapply(1:prllNum,function(prllId){
@@ -35,11 +35,11 @@ cat(sprintf("* Parallel ready... see log : %s \n",prllLog$fileName))
 
 if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
 
-    tgt.scMtx <- c("score9")       # default : NULL   하도 실수가 잦아서 일부러 문법 오류로 놔둔다.. -_-;
+    tgt.scMtx <- NULL       # default : NULL   하도 실수가 잦아서 일부러 문법 오류로 놔둔다.. -_-;
         #   "bScr01"
 
-    configH <- lastH-20    # configH는 기본 cutting값을 얻기 위하는 시점에 따라 조절.
-    testSpan <- (lastH - 18:0)   # configH 보다는 큰 시점에서 시작해야 함을 유의.
+    configH <- lastH-80    # configH는 기본 cutting값을 얻기 위하는 시점에 따라 조절.
+    testSpan <- (lastH - 79:0)   # configH 보다는 큰 시점에서 시작해야 함을 유의.
     if( TRUE ){ # stdFiltedCnt 0~2내에서만 테스트
         sfc.InTest <- allIdxLst$stdFiltedCnt[as.character(testSpan)]
         testSpan <- testSpan[sfc.InTest %in% 0:2]
