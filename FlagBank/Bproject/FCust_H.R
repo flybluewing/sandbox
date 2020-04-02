@@ -384,7 +384,7 @@ bFCust.getSkipZero_byHIdx.ass <- function( szObj ,scMtx ,scMtxEvt ){
         colnames(mtxPh) <- colnames(szInfo$ph)  ;rownames(mtxPh) <- rName
         mtxPh["hpn",] <- apply( szInfo$ph ,2 ,function(fCol){sum(fCol>0,na.rm=T)} )
         for( pName in colnames(mtxPh) ){
-            if( mtxPh["hpn",pName]!=sum(mtx[,pName],na.rm=T) ){
+            if( mtxPh["hpn",pName]!=sum(mtx[,pName]>0,na.rm=T) ){
                 mtxPh["mat",pName] <- 0
                 next    
             }
@@ -400,7 +400,7 @@ bFCust.getSkipZero_byHIdx.ass <- function( szObj ,scMtx ,scMtxEvt ){
         colnames(mtxFCol) <- rownames(szInfo$fCol)  ;rownames(mtxFCol) <- rName
         mtxFCol["hpn",] <- apply( szInfo$fCol ,1 ,function(ph){sum(ph>0,na.rm=T)} )
         for( fcName in colnames(mtxFCol) ){
-            if( mtxFCol["hpn",fcName] != sum(mtx[fcName,],na.rm=T) ){
+            if( mtxFCol["hpn",fcName] != sum(mtx[fcName,]>0,na.rm=T) ){
                 mtxFCol["mat",fcName] <- 0
                 next
             }
@@ -856,7 +856,7 @@ FCust_stdCut.hIdx <- function( hName ,mName ,mtxLst ){
             #             rebCnt    0      0           0    0      0           0
             #             rebDup    0      0           0    0      0           0
             scMtx.sz.cut <- scObj$scMtx.sz >= cfg$scMtx.sz
-            if( any(scMtx.sz.cut["rebCnt",]) ){
+            if( any(scMtx.sz.cut["rebCnt",]) ){ #   rebCnt
                 survive <- F
                 cLst[["scMtx.sz.cut rebCnt"]] <- "scMtx.sz.cut rebCnt"
                 if( anaMode ){  # infoStr
@@ -866,7 +866,7 @@ FCust_stdCut.hIdx <- function( hName ,mName ,mtxLst ){
                     cLst[["scMtx.sz.cut rebCnt"]] <- infoStr
                 }
             }
-            if( any(scMtx.sz.cut["rebDup",]) ){
+            if( any(scMtx.sz.cut["rebDup",]) ){ #   rebDup
                 survive <- F
                 cLst[["scMtx.sz.cut rebDup"]] <- "scMtx.sz.cut rebDup"
                 if( anaMode ){  # infoStr

@@ -1,6 +1,6 @@
 source("header.r")
 source("B_H.R")
-lastH <- 880    # 최종 데이터의 로딩 기준일 뿐, 작업시점(workH)은 다를 수 있다.
+lastH <- 840    # 최종 데이터의 로딩 기준일 뿐, 작업시점(workH)은 다를 수 있다.
 #source(sprintf("./toFinal/toZ%d_H.R",workH))	# working
 
 load(sprintf("../Aproject/Obj_allIdxLstZ%d.save",lastH) )
@@ -10,7 +10,7 @@ load(sprintf("../Aproject/save/Obj_gEnvZ%d.save",lastH))
 
 
 #-[Parallel init work]-------------------------------------------------------------
-prllNum <- 2     # 실수가 잦아서 그냥 오류 코드로 놔둔다.
+prllNum <- 3     # 실수가 잦아서 그냥 오류 코드로 놔둔다.
 prllLog <- k.getFlogObj( "./log/parallel_log.txt" )
 prll.initHeader <- function( ){
     k <- sfLapply(1:prllNum,function(prllId){
@@ -38,8 +38,8 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
     tgt.scMtx <- NULL       # default : NULL   하도 실수가 잦아서 일부러 문법 오류로 놔둔다.. -_-;
         #   "bScr01"
 
-    configH <- lastH-80    # configH는 기본 cutting값을 얻기 위하는 시점에 따라 조절.
-    testSpan <- (lastH - 79:0)   # configH 보다는 큰 시점에서 시작해야 함을 유의.
+    configH <- lastH-20    # configH는 기본 cutting값을 얻기 위하는 시점에 따라 조절.
+    testSpan <- (lastH - 19:0)   # configH 보다는 큰 시점에서 시작해야 함을 유의.
     if( TRUE ){ # stdFiltedCnt 0~2내에서만 테스트
         sfc.InTest <- allIdxLst$stdFiltedCnt[as.character(testSpan)]
         testSpan <- testSpan[sfc.InTest %in% 0:2]
@@ -49,7 +49,7 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
     testData.grp <- B.get_testData.grp( testSpan ,gEnv ,allIdxLst ,fRstLst ,tgt.scMtx=tgt.scMtx)
     save( testData.grp ,file=sprintf("Obj_testData.grp.%d.%s.save",lastH,ifelse(is.null(tgt.scMtx),"all",tgt.scMtx) ) )
     #   save( testData.grp ,file="Obj_testData.grp.save" )
-    #   load( "Obj_testData.grp820.save" )
+    #   load( "Obj_testData.grp.880.all.save" )
 
     sfExport("testData.grp")    ;sfExport("tgt.scMtx")
     prll.initHeader( )          ;source("FCust_configBasic.R")
@@ -80,7 +80,8 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
 
         stdMI.grp <- bUtil.getStdMILst( gEnv.w ,fRstLst.w )
         filter.grp <- getFilter.grp( stdMI.grp ,tgt.scMtx=tgt.scMtx )
-        scoreMtx.grp <- getScoreMtx.grp.4H( stdZoid ,filter.grp )
+        #   scoreMtx.grp <- getScoreMtx.grp.4H( stdZoid ,filter.grp )
+        scoreMtx.grp <- getScoreMtx.grp( matrix(stdZoid,nrow=1) ,filter.grp ,makeInfoStr=T )
             #   평가용이므로 getScoreMtx.grp.4H() 가 사용됨.   .4H !
 
 

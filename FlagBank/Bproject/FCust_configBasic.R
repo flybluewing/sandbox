@@ -85,10 +85,10 @@ scoreMtxCfg[[mName]] <- list(
                     )
 
         ,"f0.num"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
-                        ,evt=matrix( c(c(2,3,3,3,3),c(1,2,3,4,5)) ,ncol=2)
+                        ,evt=matrix( c(c(1,2,3,3,3),c(1,2,3,4,5)) ,ncol=2)
                     )
         ,"f0.len.tot"=list( rng=matrix( c(0,2 ,0,3) ,ncol=2 )
-                        ,evt=matrix( c(c(2,2,3,3,3),c(2,3,4,5,6)) ,ncol=2)
+                        ,evt=matrix( c(c(1,2,3,3,3),c(2,3,4,5,6)) ,ncol=2)
                     )
         ,"f0.len.val"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
                         ,evt=matrix( c(c(3,3,3,3,3),c(2,3,4,5,6)) ,ncol=2)
@@ -118,7 +118,13 @@ scoreMtxCfg[[mName]] <- list(
     ,rowReb = c( rawMin=3 ,lowE=3 ,rareE=1 )
     ,rowRebDup=NULL
     ,summMtx = NULL ,summMtx.reb = NULL ,summMtx.sum = NULL
-    ,scMtx.sz = NULL    ,scMtx.sz.sum = NULL
+    ,scMtx.sz = matrix( c( 2 ,4 ,1 ,3 ,3 ,1     ,2 ,3 ,1 ,1 ,1 ,1 ) ,byrow=T
+                        #   "r.ph" ,"r.fCol" ,"r.dblHpnFlg" ,"e.ph" ,"e.fCol" ,"e.dblHpnFlg"
+                        #   "rebCnt" ,"rebDup"
+                    ,ncol=length(scMtx.szName$cName) ,nrow=length(scMtx.szName$rName) 
+                    ,dimnames=list(scMtx.szName$rName,scMtx.szName$cName)
+                )
+    ,scMtx.sz.sum = NULL
     ,isHard=NULL  # use default
 )
 
