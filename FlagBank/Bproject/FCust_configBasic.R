@@ -376,14 +376,21 @@ scoreMtxCfg[[mName]] <- list(
     ,evtMax = NULL
     ,rowReb = c( rawMin=2 ,lowE=2 ,rareE=1 )
     ,rowRebDup = NULL
-    ,summMtx = NULL ,summMtx.reb = NULL ,summMtx.sum = NULL
-    ,scMtx.sz = matrix( c( 3 ,3 ,1 ,2 ,2 ,1     ,1 ,1 ,1 ,1 ,1 ,1 ) ,byrow=T
+    ,summMtx = NULL 
+    # ,summMtx.reb = NULL 
+    ,summMtx.reb = matrix( c( 1 ,2 ,2 ,1 ,1 ,1      ,1 ,1 ,1 ,1 ,1 ,1 ) ,byrow=T
+                    #   c( "all" ,"ph" ,"fCol" ,"phReb" ,"xyCnt.fCol" ,"xyCnt.phase" )
+                    #   c( "raw" ,"evt" )
+                    ,ncol=length(cName) ,nrow=length(rName) ,dimnames=list(rName,cName)
+                )
+    ,summMtx.sum = NULL
+    ,scMtx.sz = matrix( c( 3 ,3 ,1 ,2 ,2 ,1     ,2 ,2 ,1 ,1 ,1 ,1 ) ,byrow=T
                         #   "r.ph" ,"r.fCol" ,"r.dblHpnFlg" ,"e.ph" ,"e.fCol" ,"e.dblHpnFlg"
                         #   "rebCnt" ,"rebDup"
                     ,ncol=length(scMtx.szName$cName) ,nrow=length(scMtx.szName$rName) 
                     ,dimnames=list(scMtx.szName$rName,scMtx.szName$cName)
                 )
-    ,scMtx.sz.sum = NULL
+    ,scMtx.sz.sum = c(rebCnt.r=3 ,rebCnt.e=2)
     ,isHard=NULL  # use default
 )
 
