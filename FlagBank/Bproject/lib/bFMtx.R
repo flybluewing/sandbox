@@ -939,9 +939,7 @@ bFMtx.score4 <- function( stdMIObj ){
 	#	stdMIObj <- stdMI.grp$basic$basic
 	stdMI <- stdMIObj$stdMI
 	zMtx <- stdMIObj$zMtx
-	rObj <- list( 	idStr="score4"	,zMtx.size=nrow(zMtx)
-					,lastZoid=stdMI$lastZoid
-				)
+	rObj <- list( 	idStr="score4"	,zMtx.size=nrow(zMtx)	,lastZoid=stdMI$lastZoid )
 
 	rObj$fInfo <- NULL
 	if( 1<nrow(stdMI$rawTail) ){
@@ -956,7 +954,8 @@ bFMtx.score4 <- function( stdMIObj ){
 					,"pLCol" ,"pE3" ,"pE4"	,"pMH" ,"pfNum"
 					,"iBanN"							# found num of inc.ptn
 					,"iLCol" ,"iE3" ,"iE4"	,"iMH" ,"ifNum"	#  rebLastCol     extMat3     extMat4 multiHpn.TF    foundNum 
-					,"FVa.m","FVa.c","aFV.m","aFV.c"	# FVa.max FVa.hpnCnt  aFV.max aFV.hpnCnt 
+					,"FVa.m","FVa.c"	# FVa.max FVa.hpnCnt
+					# ,"aFV.m","aFV.c"	# aFV.max aFV.hpnCnt 사실상 중복되는 경우가 많아 폐지.
 					,"m4"								# match4
 				)
 		scoreMtx <- matrix( 0, nrow=aLen, ncol=length(cName) )	;colnames(scoreMtx) <- cName
@@ -996,12 +995,12 @@ bFMtx.score4 <- function( stdMIObj ){
 
 			# pairHpn
 			if( 0<length(rstObj$pairHpn) ){
-				workCol <- c("FVa.m","FVa.c","aFV.m","aFV.c")
-				scoreMtx[aIdx ,workCol ] <- rstObj$pairHpn$foundInfo[c("FVa.max","FVa.hpnCnt","aFV.max","aFV.hpnCnt")]
+				workCol <- c("FVa.m","FVa.c")	#	,"aFV.m","aFV.c" 폐지
+				scoreMtx[aIdx ,workCol ] <- rstObj$pairHpn$foundInfo[c("FVa.max","FVa.hpnCnt")]	#	,"aFV.max","aFV.hpnCnt" 폐지
 				
 				#	"FVa.m","aFV.m" 에서 1은 너무 흔한 듯.
 				if( 1==scoreMtx[aIdx ,"FVa.m" ] )	scoreMtx[aIdx ,"FVa.m" ] <- 0
-				if( 1==scoreMtx[aIdx ,"aFV.m" ] )	scoreMtx[aIdx ,"aFV.m" ] <- 0
+				# if( 1==scoreMtx[aIdx ,"aFV.m" ] )	scoreMtx[aIdx ,"aFV.m" ] <- 0
 			}
 
 			# match4
@@ -1034,9 +1033,7 @@ bFMtx.score5 <- function( stdMIObj ){
 	#	stdMIObj <- stdMI.grp$basic$basic
 	stdMI <- stdMIObj$stdMI
 	zMtx <- stdMIObj$zMtx
-	rObj <- list( 	idStr="score5"	,zMtx.size=nrow(zMtx)
-					,lastZoid=stdMI$lastZoid
-				)
+	rObj <- list( 	idStr="score5"	,zMtx.size=nrow(zMtx)	,lastZoid=stdMI$lastZoid )
 
 	rObj$fInfo <- NULL
 	if( 1<nrow(stdMI$rawTail) ){
@@ -1052,7 +1049,8 @@ bFMtx.score5 <- function( stdMIObj ){
 					,"pLCol" ,"pE3" ,"pE4"	,"pMH" ,"pfNum"
 					,"iBanN"							# found num of inc.ptn
 					,"iLCol" ,"iE3" ,"iE4"	,"iMH" ,"ifNum"	#  rebLastCol     extMat3     extMat4 multiHpn.TF    foundNum 
-					,"FVa.m","FVa.c","aFV.m","aFV.c"	# FVa.max FVa.hpnCnt  aFV.max aFV.hpnCnt 
+					,"FVa.m","FVa.c"
+					# ,"aFV.m","aFV.c"	# FVa.max FVa.hpnCnt  aFV.max aFV.hpnCnt 
 					,"m4"								# match4
 				)
 		scoreMtx <- matrix( 0, nrow=aLen, ncol=length(cName) )	;colnames(scoreMtx) <- cName
@@ -1092,12 +1090,12 @@ bFMtx.score5 <- function( stdMIObj ){
 
 			# pairHpn
 			if( 0<length(rstObj$pairHpn) ){
-				workCol <- c("FVa.m","FVa.c","aFV.m","aFV.c")
-				scoreMtx[aIdx ,workCol ] <- rstObj$pairHpn$foundInfo[c("FVa.max","FVa.hpnCnt","aFV.max","aFV.hpnCnt")]
+				workCol <- c("FVa.m","FVa.c")	#	,"aFV.m","aFV.c" 폐지
+				scoreMtx[aIdx ,workCol ] <- rstObj$pairHpn$foundInfo[c("FVa.max","FVa.hpnCnt")]	# ,"aFV.max","aFV.hpnCnt" 폐지
 
 				#	"FVa.m","aFV.m" 에서 1은 너무 흔한 듯.
 				if( 1==scoreMtx[aIdx ,"FVa.m" ] )	scoreMtx[aIdx ,"FVa.m" ] <- 0
-				if( 1==scoreMtx[aIdx ,"aFV.m" ] )	scoreMtx[aIdx ,"aFV.m" ] <- 0
+				# if( 1==scoreMtx[aIdx ,"aFV.m" ] )	scoreMtx[aIdx ,"aFV.m" ] <- 0
 			}
 
 			# match4
@@ -1130,9 +1128,7 @@ bFMtx.score6 <- function( stdMIObj ){
 	#	stdMIObj <- stdMI.grp$basic$basic
 	stdMI <- stdMIObj$stdMI
 	zMtx <- stdMIObj$zMtx
-	rObj <- list( 	idStr="score6"	,zMtx.size=nrow(zMtx)
-					,lastZoid=stdMI$lastZoid
-				)
+	rObj <- list( 	idStr="score6"	,zMtx.size=nrow(zMtx)	,lastZoid=stdMI$lastZoid )
 
 	rObj$fInfo <- NULL
 	if( 1<nrow(stdMI$rawTail) ){
@@ -1148,7 +1144,8 @@ bFMtx.score6 <- function( stdMIObj ){
 					,"pLCol" ,"pE3" ,"pE4"	,"pMH" ,"pfNum"
 					,"iBanN"							# found num of inc.ptn
 					,"iLCol" ,"iE3" ,"iE4"	,"iMH" ,"ifNum"	#  rebLastCol     extMat3     extMat4 multiHpn.TF    foundNum 
-					,"FVa.m","FVa.c","aFV.m","aFV.c"	# FVa.max FVa.hpnCnt  aFV.max aFV.hpnCnt 
+					,"FVa.m","FVa.c"
+					# ,"aFV.m","aFV.c"	# FVa.max FVa.hpnCnt  aFV.max aFV.hpnCnt 
 					,"m4"								# match4
 				)
 		scoreMtx <- matrix( 0, nrow=aLen, ncol=length(cName) )	;colnames(scoreMtx) <- cName
@@ -1188,12 +1185,12 @@ bFMtx.score6 <- function( stdMIObj ){
 
 			# pairHpn
 			if( 0<length(rstObj$pairHpn) ){
-				workCol <- c("FVa.m","FVa.c","aFV.m","aFV.c")
-				scoreMtx[aIdx ,workCol ] <- rstObj$pairHpn$foundInfo[c("FVa.max","FVa.hpnCnt","aFV.max","aFV.hpnCnt")]
+				workCol <- c("FVa.m","FVa.c")	# ,"aFV.m","aFV.c"
+				scoreMtx[aIdx ,workCol ] <- rstObj$pairHpn$foundInfo[c("FVa.max","FVa.hpnCnt")]	# ,"aFV.max","aFV.hpnCnt"
 
 				#	"FVa.m","aFV.m" 에서 1은 너무 흔한 듯.
 				if( 1==scoreMtx[aIdx ,"FVa.m" ] )	scoreMtx[aIdx ,"FVa.m" ] <- 0
-				if( 1==scoreMtx[aIdx ,"aFV.m" ] )	scoreMtx[aIdx ,"aFV.m" ] <- 0
+				# if( 1==scoreMtx[aIdx ,"aFV.m" ] )	scoreMtx[aIdx ,"aFV.m" ] <- 0
 			}
 
 			# match4
@@ -1226,9 +1223,7 @@ bFMtx.score7 <- function( stdMIObj ){
 	#	stdMIObj <- stdMI.grp$basic$basic
 	stdMI <- stdMIObj$stdMI
 	zMtx <- stdMIObj$zMtx
-	rObj <- list( 	idStr="score7"	,zMtx.size=nrow(zMtx)
-					,lastZoid=stdMI$lastZoid
-				)
+	rObj <- list( 	idStr="score7"	,zMtx.size=nrow(zMtx)	,lastZoid=stdMI$lastZoid )
 
 	rObj$fInfo <- NULL
 	if( 2<nrow(stdMI$rawTail) ){
@@ -1244,7 +1239,8 @@ bFMtx.score7 <- function( stdMIObj ){
 					,"pLCol" ,"pE3" ,"pE4"	,"pMH" ,"pfNum"
 					,"iBanN"							# found num of inc.ptn
 					,"iLCol" ,"iE3" ,"iE4"	,"iMH" ,"ifNum"	#  rebLastCol     extMat3     extMat4 multiHpn.TF    foundNum 
-					,"FVa.m","FVa.c","aFV.m","aFV.c"	# FVa.max FVa.hpnCnt  aFV.max aFV.hpnCnt 
+					,"FVa.m","FVa.c"
+					# ,"aFV.m","aFV.c"	# FVa.max FVa.hpnCnt  aFV.max aFV.hpnCnt 
 					,"m4"								# match4
 				)
 		scoreMtx <- matrix( 0, nrow=aLen, ncol=length(cName) )	;colnames(scoreMtx) <- cName
@@ -1284,12 +1280,12 @@ bFMtx.score7 <- function( stdMIObj ){
 
 			# pairHpn
 			if( 0<length(rstObj$pairHpn) ){
-				workCol <- c("FVa.m","FVa.c","aFV.m","aFV.c")
-				scoreMtx[aIdx ,workCol ] <- rstObj$pairHpn$foundInfo[c("FVa.max","FVa.hpnCnt","aFV.max","aFV.hpnCnt")]
+				workCol <- c("FVa.m","FVa.c")	# ,"aFV.m","aFV.c"
+				scoreMtx[aIdx ,workCol ] <- rstObj$pairHpn$foundInfo[c("FVa.max","FVa.hpnCnt")]	# ,"aFV.max","aFV.hpnCnt"
 
 				#	"FVa.m","aFV.m" 에서 1은 너무 흔한 듯.
 				if( 1==scoreMtx[aIdx ,"FVa.m" ] )	scoreMtx[aIdx ,"FVa.m" ] <- 0
-				if( 1==scoreMtx[aIdx ,"aFV.m" ] )	scoreMtx[aIdx ,"aFV.m" ] <- 0
+				# if( 1==scoreMtx[aIdx ,"aFV.m" ] )	scoreMtx[aIdx ,"aFV.m" ] <- 0
 			}
 
 			# match4
