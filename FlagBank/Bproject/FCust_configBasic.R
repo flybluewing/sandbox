@@ -37,10 +37,12 @@ scoreMtxCfg <- list()
 summMtxName <- list( cName=c( "all" ,"ph" ,"fCol" ,"phReb" ,"xyCnt.fCol" ,"xyCnt.phase" ) 
                     ,rName=c( "raw" ,"evt" )
 )
+summMtx.rebName <- list( cName=c( "all" ,"ph" ,"fCol" ,"phReb" ,"xyCnt.fCol" ,"xyCnt.phase" )
+                    ,rName=c( "raw" ,"evt" )
+)
 scMtx.szName <- list(   cName=c( "r.ph" ,"r.fCol" ,"r.dblHpnFlg" ,"e.ph" ,"e.fCol" ,"e.dblHpnFlg" )
                         ,rName=c( "rebCnt" ,"rebDup" )
 )
-
 
 
 mName <- "score1"
@@ -381,7 +383,8 @@ scoreMtxCfg[[mName]] <- list(
     ,summMtx.reb = matrix( c( 1 ,2 ,2 ,1 ,1 ,1      ,1 ,1 ,1 ,1 ,1 ,1 ) ,byrow=T
                     #   c( "all" ,"ph" ,"fCol" ,"phReb" ,"xyCnt.fCol" ,"xyCnt.phase" )
                     #   c( "raw" ,"evt" )
-                    ,ncol=length(cName) ,nrow=length(rName) ,dimnames=list(rName,cName)
+                    ,ncol=length(summMtx.rebName$cName) ,nrow=length(summMtx.rebName$rName) 
+                    ,dimnames=list(summMtx.rebName$rName,summMtx.rebName$cName)
                 )
     ,summMtx.sum = NULL
     ,scMtx.sz = matrix( c( 3 ,3 ,1 ,2 ,2 ,1     ,2 ,2 ,1 ,1 ,1 ,1 ) ,byrow=T
