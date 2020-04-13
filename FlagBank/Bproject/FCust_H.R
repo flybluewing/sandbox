@@ -692,16 +692,49 @@ FCust_stdCut.hIdx <- function( hName ,mName ,mtxLst ){
 
     }
 
-    rObj$getScore <- function( rawMtx ){
-        scoreObj <- list( )
+    rObj$getRawScore <- function( rawMtx ){
+
+        if( !rObj$available ) return( NULL )
 
         cfg <- scoreMtxCfg[[ rObj$defId["mName"] ]]
         evtObj <- bFCust.getEvtMtx( rawMtx ,cfg )
 
+        curEvt <- bFCust.getEvt_byHIdx( rawMtx ,cfg ,lastEvt=rObj$stdEvt.H1 )
+        rebInfo <- bFCust.getSkipZero_byHIdx.ass( rObj$szObj ,rawMtx ,evtObj$eValMtx )
+
+        return( list( cfg=cfg ,evtObj=evtObj ,curEvt=curEvt ,rebInfo=rebInfo ) )
+    }
+
+    rObj$getSummScore <- function( rawMtx ){
+        scoreObj <- list( )
+
+        # cfg <- scoreMtxCfg[[ rObj$defId["mName"] ]]
+        # evtObj <- bFCust.getEvtMtx( rawMtx ,cfg )
+        rawObj <- rObj$getRawScore( rawMtx )
+        if( is.null(rawObj) ){
+            rName <- c("raw","evt")
+			cName <- c("all","ph","fCol","phReb","xyCnt.fCol","xyCnt.phase")
+			summMtx <- matrix( 0 ,nrow=length(rName) ,ncol=length(cName) )
+			rownames(summMtx) <- rName	;colnames(summMtx) <- cName
+
+            scoreObj$summMtx        <- summMtx
+            scoreObj$summMtx.reb    <- summMtx # 내부 구조는 같다.
+
+            cName <- c("r.ph","r.fCol","r.dblHpnFlg" ,"e.ph","e.fCol","e.dblHpnFlg")
+            rName <- c("rebCnt","rebDup")   # 반복 수, H1에서의 재현이 반복되었는지? ,발생 수
+            scMtx.sz <- matrix( 0 ,ncol=length(cName) ,nrow=length(rName) ,dimnames=list(rName,cName) )
+            scoreObj$scMtx.sz
+            return( scoreObj )
+        }
+        cfg     <- rawObj$cfg
+        evtObj  <- rawObj$evtObj
+        curEvt  <- rawObj$curEvt
+        rebInfo <- rawObj$rebInfo
+
         # 일단 scoreMtx들부터 만들고, forCut은 나중에 적용하자.
 
         #   summMtx,summMtx.reb / stdEvt.H1 --------------------------------------------------------
-        curEvt <- bFCust.getEvt_byHIdx( rawMtx ,cfg ,lastEvt=rObj$stdEvt.H1 )
+        # curEvt <- bFCust.getEvt_byHIdx( rawMtx ,cfg ,lastEvt=rObj$stdEvt.H1 )
         scoreObj$summMtx <- curEvt$rebInfo$summMtx
         scoreObj$summMtx.reb <- NULL
         if( !is.null(rObj$stdEvt.H1$rebInfo) ){
@@ -733,7 +766,7 @@ FCust_stdCut.hIdx <- function( hName ,mName ,mtxLst ){
         }
 
         #   scMtx.sz / szObj ------------------------------------------------------------
-        rebInfo <- bFCust.getSkipZero_byHIdx.ass( rObj$szObj ,rawMtx ,evtObj$eValMtx )
+        # rebInfo <- bFCust.getSkipZero_byHIdx.ass( rObj$szObj ,rawMtx ,evtObj$eValMtx )
         cName <- c("r.ph","r.fCol","r.dblHpnFlg" ,"e.ph","e.fCol","e.dblHpnFlg")
         rName <- c("rebCnt","rebDup")   # 반복 수, H1에서의 재현이 반복되었는지? ,발생 수
         scMtx.sz <- matrix( 0 ,ncol=length(cName) ,nrow=length(rName) ,dimnames=list(rName,cName) )
@@ -770,7 +803,7 @@ FCust_stdCut.hIdx <- function( hName ,mName ,mtxLst ){
                             #   만약 생존했으면 cLst의 길이는 0
         if( !rObj$available ) return( cLst )
 
-        scObj <- rObj$getScore( scoreMtx )
+        scObj <- rObj$getSummScore( scoreMtx )
         cfg <- scoreMtxCfg[[ rObj$defId["mName"] ]]
 
         survive <- TRUE

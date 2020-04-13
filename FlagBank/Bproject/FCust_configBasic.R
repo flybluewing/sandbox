@@ -158,10 +158,10 @@ scoreMtxCfg[[mName]] <- list(
                         ,evt=matrix( c(c(1,2,3,3,3,3),c(1,2,3,4,5,6)) ,ncol=2)
                     )
         ,"rebC2.r"=list( rng=matrix( c(0,2 ,0,3) ,ncol=2 )
-                        ,evt=matrix( c(c(1,2,3,3,3,3),c(1,2,3,4,5,6)) ,ncol=2)
+                        ,evt=matrix( c(c(1,3,3,3,3),c(2,3,4,5,6)) ,ncol=2)
                     )
         ,"rebC2.c"=list( rng=matrix( c(0,2 ,0,3) ,ncol=2 )
-                        ,evt=matrix( c(c(1,2,3,3,3),c(1,2,3,4,5)) ,ncol=2)
+                        ,evt=matrix( c(c(1,3,3,3),c(2,3,4,5)) ,ncol=2)
                     ) 
         ,"rebC2.f"=list( rng=matrix( c(0,2 ,0,3) ,ncol=2 )
                         ,evt=matrix( c(c(1,2,3,3,3,3),c(1,2,3,4,5,6)) ,ncol=2)
@@ -180,24 +180,33 @@ scoreMtxCfg[[mName]] <- list(
                         ,evt=matrix( c(c(1,2,3,3,3,3),c(1,2,3,4,5,6)) ,ncol=2)
                     ) 
         ,"inc.c2"=list( rng=matrix( c(0,2 ,0,3) ,ncol=2 )
-                        ,evt=matrix( c(c(1,2,3,3,3),c(1,2,3,4,5)) ,ncol=2)
+                        ,evt=matrix( c(c(1,3,3,3),c(2,3,4,5)) ,ncol=2)
                     ) 
         ,"inc.f2"=list( rng=matrix( c(0,2 ,0,3) ,ncol=2 )
                         ,evt=matrix( c(c(1,2,3,3,3,3),c(1,2,3,4,5,6)) ,ncol=2)
                     )
 
         ,"inc.r3"=list( rng=matrix( c(0,2 ,0,3) ,ncol=2 )
-                        ,evt=matrix( c(c(1,2,2,3,3,3),c(1,2,3,4,5,6)) ,ncol=2)
+                        ,evt=matrix( c(c(1,2,3,3,3),c(2,3,4,5,6)) ,ncol=2)
                     ) 
         ,"inc.c3"=list( rng=matrix( c(0,2 ,0,3) ,ncol=2 )
-                        ,evt=matrix( c(c(1,2,2,3,3),c(1,2,3,4,5)) ,ncol=2)
+                        ,evt=matrix( c(c(1,2,3,3),c(2,3,4,5)) ,ncol=2)
                     ) 
     ) 
     ,evtMax = NULL
     ,rowReb = c( rawMin=3 ,lowE=1 ,rareE=1 )
     ,rowRebDup = c( lowE=4 ,rareE=1 )
-    ,summMtx = NULL ,summMtx.reb = NULL ,summMtx.sum = NULL
-    ,scMtx.sz = NULL    ,scMtx.sz.sum = NULL
+    ,summMtx = NULL 
+    ,summMtx.reb = NULL 
+    ,summMtx.sum = c(raw=2 ,evt=3)
+    # ,scMtx.sz = NULL    
+    ,scMtx.sz = matrix( c( 2 ,2 ,1 ,2 ,2 ,1     ,1 ,1 ,1 ,1 ,1 ,1 ) ,byrow=T
+                        #   "r.ph" ,"r.fCol" ,"r.dblHpnFlg" ,"e.ph" ,"e.fCol" ,"e.dblHpnFlg"
+                        #   "rebCnt" ,"rebDup"
+                    ,ncol=length(scMtx.szName$cName) ,nrow=length(scMtx.szName$rName) 
+                    ,dimnames=list(scMtx.szName$rName,scMtx.szName$cName)
+                )
+    ,scMtx.sz.sum = c(rebCnt.r=2 ,rebCnt.e=3)
     ,isHard=NULL  # use default
 )
 
