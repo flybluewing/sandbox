@@ -1179,7 +1179,10 @@ bFMtx.score6 <- function( stdMIObj ){
 
 			# iBanLst
 			iBan.cutInfo <- rstObj$F_iBanLst( makeInfoStr )
-			scoreMtx[aIdx ,"iBanN"] <- length(rstObj$iBanLst)
+			scoreMtx[aIdx,"iBanN"] <- length(rstObj$iBanLst)
+			if( 0<scoreMtx[aIdx,"iBanN"] ){	# 1 개 발생은 흔한 듯.
+				scoreMtx[aIdx,"iBanN"] <- scoreMtx[aIdx,"iBanN"] - 1
+			}
 			workCol <- c("iLCol" ,"iE3" ,"iE4"	,"iMH" ,"ifNum")
 			scoreMtx[aIdx ,workCol] <- iBan.cutInfo$cutHpn[c("rebLastCol","extMat3","extMat4","multiHpn","foundNum")]
 
@@ -1227,7 +1230,7 @@ bFMtx.score7 <- function( stdMIObj ){
 
 	rObj$fInfo <- NULL
 	if( 2<nrow(stdMI$rawTail) ){
-		rObj$fInfo <- fCutU.getFiltObjPair( stdMI$cStepTail )	# rObj$fInfo$explain( )
+		rObj$fInfo <- fCutU.getFiltObjPair( stdMI$fStepTail )	# rObj$fInfo$explain( )
 	}
 
 	#	cName <- c("rebPtn.1")
