@@ -1173,6 +1173,9 @@ bFMtx.score6 <- function( stdMIObj ){
 			# pairBanLst
 			pBan.cutInfo <- rstObj$F_pBanLst( makeInfoStr )
 			scoreMtx[aIdx ,"pBanN.r"] <- pBan.cutInfo$cutHpn["rebPtn"]
+			if( 0<scoreMtx[aIdx,"pBanN.r"] ){	# 1 개 발생은 흔한 듯.
+				scoreMtx[aIdx,"pBanN.r"] <- scoreMtx[aIdx,"pBanN.r"] - 1
+			}
 			scoreMtx[aIdx ,"pBanN.n"] <- pBan.cutInfo$cutHpn["nextPtn"]
 			workCol <- c("pLCol" ,"pE3" ,"pE4"	,"pMH" ,"pfNum")
 			scoreMtx[aIdx ,workCol] <- pBan.cutInfo$cutHpn[c("rebLastCol","extMat3","extMat4","multiHpn","foundNum")]
@@ -1271,6 +1274,9 @@ bFMtx.score7 <- function( stdMIObj ){
 			# pairBanLst
 			pBan.cutInfo <- rstObj$F_pBanLst( makeInfoStr )
 			scoreMtx[aIdx ,"pBanN.r"] <- pBan.cutInfo$cutHpn["rebPtn"]
+			if( 0<scoreMtx[aIdx,"pBanN.r"] ){	# 1 개 발생은 흔한 듯.
+				scoreMtx[aIdx,"pBanN.r"] <- scoreMtx[aIdx,"pBanN.r"] - 1
+			}
 			scoreMtx[aIdx ,"pBanN.n"] <- pBan.cutInfo$cutHpn["nextPtn"]
 			workCol <- c("pLCol" ,"pE3" ,"pE4"	,"pMH" ,"pfNum")
 			scoreMtx[aIdx ,workCol] <- pBan.cutInfo$cutHpn[c("rebLastCol","extMat3","extMat4","multiHpn","foundNum")]
@@ -1278,6 +1284,9 @@ bFMtx.score7 <- function( stdMIObj ){
 			# iBanLst
 			iBan.cutInfo <- rstObj$F_iBanLst( makeInfoStr )
 			scoreMtx[aIdx ,"iBanN"] <- length(rstObj$iBanLst)
+			if( 0<scoreMtx[aIdx,"iBanN"] ){	# 1 개 발생은 흔한 듯.
+				scoreMtx[aIdx,"iBanN"] <- scoreMtx[aIdx,"iBanN"] - 1
+			}
 			workCol <- c("iLCol" ,"iE3" ,"iE4"	,"iMH" ,"ifNum")
 			scoreMtx[aIdx ,workCol] <- iBan.cutInfo$cutHpn[c("rebLastCol","extMat3","extMat4","multiHpn","foundNum")]
 
@@ -1686,6 +1695,7 @@ bFMtx.score8 <- function( stdMIObj ){
 			logId <- sprintf("c2%d",idx)
 			scoreMtx[,logId] <- rObj$cInfo$mat2Lst[[logId]]$match( aZoidMtx[,0:1+idx,drop=F] )
 		}
+
 
 
 		return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
