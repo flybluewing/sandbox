@@ -1,6 +1,6 @@
 source("header.r")
 source("B_H.R")
-lastH <- 840    # 최종 데이터의 로딩 기준일 뿐, 작업시점(workH)은 다를 수 있다.
+lastH <- 880    # 최종 데이터의 로딩 기준일 뿐, 작업시점(workH)은 다를 수 있다.
 #source(sprintf("./toFinal/toZ%d_H.R",workH))	# working
 
 load(sprintf("../Aproject/Obj_allIdxLstZ%d.save",lastH) )
