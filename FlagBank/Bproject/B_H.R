@@ -682,3 +682,57 @@ B.get_testData.grp <- function( testSpan ,gEnv ,allIdxLst ,fRstLst ,tgt.scMtx=NU
     return( rLst )
 }
 
+B.get_cutRst1.grp <- function( testData.grp ,gEnv ,allIdxLst ,fRstLst ){
+    #   bUtil.cutRst1( )
+
+    testSpan <- as.integer(names(testData.grp$curHMtxLst.grp))
+    tgt.scMtx <- c( names(testData.grp$curHMtxLst[[1]]$mtxInfoLst) 
+                    ,names(testData.grp$curHMtxLst[[1]]$mtxInfoLst.bScr) 
+                )
+
+    resultLst <- sfLapply( testSpan ,function( curHIdx ){
+        wLastH <-curHIdx-1
+        wLastSpan <- 1:which(names(fRstLst)==wLastH)
+
+        # ------------------------------------------------------------------------
+        # cut.grp : cutter grp 을 얻어내자.
+        gEnv.w <- gEnv              ;gEnv.w$zhF <- gEnv$zhF[1:wLastH,]
+        allIdxLst.w <- allIdxLst    ;allIdxLst.w$stdFiltedCnt <- allIdxLst$stdFiltedCnt[wLastSpan]
+                                    allIdxLst.w$infoMtx <- allIdxLst$infoMtx[wLastSpan,]
+        fRstLst.w <- fRstLst[wLastSpan]
+
+        curHMtxLst <- testData.grp$curHMtxLst.grp[[as.character(curHIdx)]]
+            # B.makeHMtxLst() 의 lastH는 allIdxLst.w$stdFiltedCnt에 의존한다.
+            # curHIdx-1 시점까지의 scoreMtx가 curHMtxLst에 담겨있다.
+
+        cut.grp <- bFCust.getFCustGrp( curHMtxLst ,tgt.scMtx )  #   레포팅 : B.rptCut.grp( cut.grp ) 
+
+        # ------------------------------------------------------------------------
+        # 이제, 현재 stdZoid의 특성(sfcHLst, scoreMtx)을 얻자.
+        stdZoid <- gEnv$zhF[curHIdx,]
+        stdIdx <- testData.grp$stdIdx[[as.character(curHIdx)]]
+        curStdFilted <- fRstLst[[as.character(curHIdx)]]    #   평가가 아닌 실제에선, remLst 으로부터 가져올 것.
+        fHName <- bUtil.getSfcLstName( fRstLst.w[[length(fRstLst.w)]] ,curStdFiltedCnt=length(curStdFilted) ,cut.grp )
+
+        stdMI.grp <- bUtil.getStdMILst( gEnv.w ,fRstLst.w )
+        filter.grp <- getFilter.grp( stdMI.grp ,tgt.scMtx=tgt.scMtx )
+        scoreMtx.grp <- getScoreMtx.grp( matrix(stdZoid,nrow=1) ,filter.grp ,makeInfoStr=T )
+
+        cutRst1 <- bUtil.getCut1Score( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx )
+        cutRst1$metaInfo$curHIdx <- curHIdx
+
+        return( cutRst1 )
+    })
+    cutRst1Lst.grp <- resultLst
+    names( cutRst1Lst.grp ) <- sapply( cutRst1Lst.grp ,function(p){p$metaInfo$curHIdx})
+    lNames <- names(cutRst1Lst.grp)
+    names(cutRst1Lst.grp) <- paste("H",lNames,"_",allIdxLst$stdFiltedCnt[lNames],sep="")
+
+    # cutRst1 <- cutRst1Lst.grp[[1]]$aLst[[1]]
+    # metaInfo <- cutRst1Lst.grp[[1]]$metaInfo
+
+    # cutRstScrSet <- bUtil.cutRst1_scoreMtx(cutRst1Lst.grp[[1]]$aLst[[1]])
+
+    return( cutRst1Lst.grp )
+
+}   # B.get_cutRst1.grp

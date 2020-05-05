@@ -705,12 +705,25 @@ FCust_stdCut.hIdx <- function( hName ,mName ,mtxLst ){
         return( list( cfg=cfg ,evtObj=evtObj ,curEvt=curEvt ,rebInfo=rebInfo ) )
     }
 
-    rObj$getSummScore <- function( rawMtx ){
+    rObj$getRaw4Ass <- function( rawObj ){
+        #   mName 단위가 아닌, 전체 mName 범위로 평가하기 위한 데이터 추출.
+        #   bUtil.getCut1Score( ) 함수 참고.
+
+        r4Ass <- list()
+
+        
+
+
+        return( r4Ass )
+
+    }
+
+    rObj$getSummScore <- function( rawObj ){
         scoreObj <- list( )
 
         # cfg <- scoreMtxCfg[[ rObj$defId["mName"] ]]
         # evtObj <- bFCust.getEvtMtx( rawMtx ,cfg )
-        rawObj <- rObj$getRawScore( rawMtx )
+        # rawObj <- rObj$getRawScore( rawMtx )
         if( is.null(rawObj) ){
             rName <- c("raw","evt")
 			cName <- c("all","ph","fCol","phReb","xyCnt.fCol","xyCnt.phase")
@@ -803,7 +816,9 @@ FCust_stdCut.hIdx <- function( hName ,mName ,mtxLst ){
                             #   만약 생존했으면 cLst의 길이는 0
         if( !rObj$available ) return( cLst )
 
-        scObj <- rObj$getSummScore( scoreMtx )
+        rawObj <- rObj$getRawScore( scoreMtx )
+        scObj <- rObj$getSummScore( rawObj )
+        # scObj <- rObj$getSummScore( scoreMtx )
         cfg <- scoreMtxCfg[[ rObj$defId["mName"] ]]
 
         survive <- TRUE

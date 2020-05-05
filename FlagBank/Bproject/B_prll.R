@@ -51,6 +51,8 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
     #   save( testData.grp ,file="Obj_testData.grp.save" )
     #   load( "Obj_testData.grp.880.all.save" )
 
+    #   B.get_cutRst1.grp()
+
     sfExport("testData.grp")    ;sfExport("tgt.scMtx")
     prll.initHeader( )          ;source("FCust_configBasic.R")
     prllLog$fLogStr("- bUtil.cut() ----------------------------",pTime=T)
@@ -86,7 +88,7 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
             #   평가용이므로 getScoreMtx.grp.4H() 가 사용됨.   .4H !
 
 
-        cutRst <- bUtil.cut( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx ,anaOnly=T ) 
+        cutRst <- bUtil.cut1( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx ,anaOnly=T ) 
             #   anaOnly=TRUE 에서, cutRst$surFlag는 항상 TRUE임을 유의.
             # report example =================================================
                 # B.rptHMtxLst( curHMtxLst )

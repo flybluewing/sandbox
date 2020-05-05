@@ -49,10 +49,10 @@ mName <- "score1"
 scoreMtxCfg[[mName]] <- list(
     mName = mName   ,style=c( freqZero=TRUE )
     ,fCol = list(
-        "rem0.num"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+        "rem0.num"=list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )
                         ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
                     ) 
-        ,"rem0.len.tot"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+        ,"rem0.len.tot"=list( rng=matrix( c(0,2 ,0,2) ,ncol=2 )
                         ,evt=matrix( c(c(2,3,3,3,3),c(2,3,4,5,6)) ,ncol=2)
                     )
         ,"rem0.len.val"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
@@ -104,7 +104,7 @@ scoreMtxCfg[[mName]] <- list(
                         ,evt=matrix( c(c(1,2,3,3,3),c(2,3,4,5,6)) ,ncol=2)
                     )
 
-        ,"zwNum"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+        ,"zwNum"=list( rng=matrix( c(0,1 ,0,2) ,ncol=2 )
                         ,evt=matrix( c(c(2,3,3,3,3),c(1,2,3,4,5)) ,ncol=2)
                     )
         ,"zwC1Num"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
@@ -118,13 +118,13 @@ scoreMtxCfg[[mName]] <- list(
                     )
     ,rowReb = c( rawMin=3 ,lowE=3 ,rareE=1 )
     ,rowRebDup=NULL
-    ,summMtx = matrix( c( 1 ,2 ,3 ,2 ,1 ,1     ,1 ,2 ,3 ,2 ,1 ,1 ) ,byrow=T # all ph fCol phReb xyCnt.fCol xyCnt.phase
+    ,summMtx = matrix( c( 1 ,2 ,3 ,2 ,2 ,1     ,1 ,2 ,3 ,2 ,2 ,1 ) ,byrow=T # all ph fCol phReb xyCnt.fCol xyCnt.phase
             ,ncol=length(summMtxName$cName) ,nrow=length(summMtxName$rName)
             ,dimnames=list(summMtxName$rName,summMtxName$cName)
         )
     ,summMtx.reb = NULL
     ,summMtx.sum = c(raw=4 ,evt=4)
-    ,scMtx.sz = matrix( c( 3 ,4 ,1 ,3 ,4 ,1     ,2 ,3 ,1 ,1 ,1 ,1 ) ,byrow=T
+    ,scMtx.sz = matrix( c( 4 ,4 ,1 ,4 ,4 ,1     ,2 ,3 ,1 ,1 ,1 ,1 ) ,byrow=T
                         #   "r.ph" ,"r.fCol" ,"r.dblHpnFlg" ,"e.ph" ,"e.fCol" ,"e.dblHpnFlg"
                         #   "rebCnt" ,"rebDup"
                     ,ncol=length(scMtx.szName$cName) ,nrow=length(scMtx.szName$rName) 
@@ -251,10 +251,14 @@ scoreMtxCfg[[mName]] <- list(
     ,evtMax = NULL
     ,rowReb = c( rawMin=2 ,lowE=2 ,rareE=1 )
     ,rowRebDup = c( lowE=2 ,rareE=1 )
-    ,summMtx = NULL
+    # ,summMtx = NULL
+    ,summMtx = matrix( c(  1 ,2 ,3 ,2 ,2 ,1   ,1 ,2 ,3 ,2 ,2 ,1 ) ,byrow=T # all ph fCol phReb xyCnt.fCol xyCnt.phase
+            ,ncol=length(summMtxName$cName) ,nrow=length(summMtxName$rName)
+            ,dimnames=list(summMtxName$rName,summMtxName$cName)
+        )
     ,summMtx.reb = NULL
-    ,summMtx.sum = NULL
-    ,scMtx.sz = matrix( c( 3 ,3 ,1 ,3 ,3 ,1     ,1 ,1 ,1 ,1 ,1 ,1 ) ,byrow=T
+    ,summMtx.sum = c(raw=4 ,evt=4)
+    ,scMtx.sz = matrix( c( 4 ,3 ,1 ,4 ,3 ,1     ,1 ,1 ,1 ,1 ,1 ,1 ) ,byrow=T
                         #   "r.ph" ,"r.fCol" ,"r.dblHpnFlg" ,"e.ph" ,"e.fCol" ,"e.dblHpnFlg"
                         #   "rebCnt" ,"rebDup"
                     ,ncol=length(scMtx.szName$cName) ,nrow=length(scMtx.szName$rName) 
@@ -327,7 +331,7 @@ scoreMtxCfg[[mName]] <- list(
     ,rowReb = NULL  # use default   c( rawMin=  )
     ,rowRebDup = NULL
     ,summMtx = NULL ,summMtx.reb = NULL ,summMtx.sum = NULL
-    ,scMtx.sz = matrix( c( 2 ,1 ,1 ,2 ,1 ,1     ,1 ,1 ,1 ,1 ,1 ,1 ) ,byrow=T
+    ,scMtx.sz = matrix( c( 2 ,2 ,1 ,2 ,2 ,1     ,1 ,1 ,1 ,1 ,1 ,1 ) ,byrow=T
                         #   "r.ph" ,"r.fCol" ,"r.dblHpnFlg" ,"e.ph" ,"e.fCol" ,"e.dblHpnFlg"
                         #   "rebCnt" ,"rebDup"
                     ,ncol=length(scMtx.szName$cName) ,nrow=length(scMtx.szName$rName) 
@@ -397,7 +401,7 @@ scoreMtxCfg[[mName]] <- list(
                     )
     ) 
     ,evtMax = NULL
-    ,rowReb = c( rawMin=2 ,lowE=2 ,rareE=1 )
+    ,rowReb = c( rawMin=4 ,lowE=2 ,rareE=1 )
     ,rowRebDup = NULL
     ,summMtx = NULL 
     ,summMtx.reb = matrix( c( 1 ,2 ,2 ,1 ,1 ,1      ,1 ,1 ,1 ,1 ,1 ,1 ) ,byrow=T
@@ -619,7 +623,13 @@ scoreMtxCfg[[mName]] <- list(
     ,evtMax = NULL
     ,rowReb = c( rawMin=2 ,lowE=2 ,rareE=1 )
     ,rowRebDup = NULL
-    ,summMtx = NULL ,summMtx.reb = NULL ,summMtx.sum = NULL
+    # ,summMtx = NULL 
+    ,summMtx = matrix( c(   1 ,2 ,2 ,2 ,2 ,2     , 1 ,2 ,2 ,2 ,2 ,2 ) ,byrow=T # all ph fCol phReb xyCnt.fCol xyCnt.phase
+            ,ncol=length(summMtxName$cName) ,nrow=length(summMtxName$rName)
+            ,dimnames=list(summMtxName$rName,summMtxName$cName)
+        )
+    ,summMtx.reb = NULL 
+    ,summMtx.sum = NULL
     ,scMtx.sz = matrix( c( 3 ,2 ,1 ,3 ,2 ,1     ,2 ,1 ,1 ,2 ,1 ,1 ) ,byrow=T
                         #   "r.ph" ,"r.fCol" ,"r.dblHpnFlg" ,"e.ph" ,"e.fCol" ,"e.dblHpnFlg"
                         #   "rebCnt" ,"rebDup"
@@ -695,7 +705,7 @@ scoreMtxCfg[[mName]] <- list(
     ,evtMax = NULL
     ,rowReb = c( rawMin=3 ,lowE=2 ,rareE=1 )
     ,rowRebDup = c( lowE=2 ,rareE=2 )
-    ,summMtx = matrix( c(  1 ,3 ,2 ,2 ,1 ,1     , 1 ,3 ,2 ,2 ,1 ,1 ) ,byrow=T # all ph fCol phReb xyCnt.fCol xyCnt.phase
+    ,summMtx = matrix( c(  1 ,3 ,2 ,2 ,2 ,1     , 1 ,3 ,2 ,2 ,2 ,1 ) ,byrow=T # all ph fCol phReb xyCnt.fCol xyCnt.phase
             ,ncol=length(summMtxName$cName) ,nrow=length(summMtxName$rName)
             ,dimnames=list(summMtxName$rName,summMtxName$cName)
         )
@@ -752,8 +762,8 @@ for( mName in names( scoreMtxCfg ) ){ # naming 추가.
         #             evt   0  0    0     0          0           0
         # cName <- c( "all" ,"ph" ,"fCol" ,"phReb" ,"xyCnt.fCol" ,"xyCnt.phase" )
         # rName <- c( "raw" ,"evt" )
-        thldVal <- c(   1 ,2 ,2 ,2 ,1 ,1    # xyCnt.fCol, xyCnt.fCol은 봐가며 조절해야 할 듯.
-                        ,1 ,2 ,2 ,2 ,1 ,1 
+        thldVal <- c(   1 ,2 ,2 ,2 ,2 ,1    # xyCnt.fCol, xyCnt.fCol은 
+                        ,1 ,2 ,2 ,2 ,2 ,1 
                     )
         scoreMtxCfg[[mName]]$summMtx <- matrix( thldVal ,byrow=T
                     ,ncol=length(summMtxName$cName) ,nrow=length(summMtxName$rName)

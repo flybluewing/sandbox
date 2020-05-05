@@ -1,6 +1,6 @@
 
 
-bUtil.cut <- function( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=NULL ,anaOnly=F ,logger=NULL ){
+bUtil.cut1 <- function( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=NULL ,anaOnly=F ,logger=NULL ){
     #   anaOnly=T : scoreMtx[1,] 만 분석하며, 그 대신 cutting 정보를 추가한다.
 	#	logger <- k.getFlogObj( "./log/cutLog.txt" )
 
@@ -103,13 +103,216 @@ bUtil.cut <- function( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=NULL ,anaOnly=F 
 
     return( list( surFlag=surFlag ,cutInfoLst=cutInfoLst ) )
 
-} # bUtil.cut()
+} # bUtil.cut1()
 
+bUtil.getCut1Score <- function(  scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=NULL ,logger=NULL  ){
 
+	reportStatus <- function( tStmp ,strWhere ,surFlag ,logger ){
+		#	strWhere <- sprintf("[%s,%s] stdLst",hName,mName)
+		if( is.null(logger) )	return( NULL )
+		tDiff <- Sys.time() - tStmp
+		rptStr <- sprintf("    %s  %d/%d  %.1f%s ",strWhere,sum(surFlag),length(surFlag),tDiff,units(tDiff) )
+		logger$fLogStr( rptStr )
+	}
 
-bUtil.cutAZoidMtx <- function( gEnv ,allIdxF ,cutGrp ){
-	#	cutGrp <- bFCust.getFCustGrp( stdCtrlCfgGrp )
-} # bUtil.cutAZoidMtx( )
+    scMtxName <- names(cut.grp$mtxInfoLst)
+	if( !is.null(tgt.scMtx) )	scMtxName <- intersect( scMtxName ,tgt.scMtx )
+	bScrMtxName <- names(cut.grp$mtxInfoLst.bScr)
+	if( !is.null(tgt.scMtx) )	bScrMtxName <- intersect( bScrMtxName ,tgt.scMtx )
+
+	datLen <- nrow(scoreMtx.grp$basic[[1]][[ scMtxName[1] ]]$scoreMtx)
+	if( is.null(datLen) ){
+		datLen <- nrow(scoreMtx.grp$mf[[ bScrMtxName[1] ]]$scoreMtx)
+	}
+
+	tStmp <- Sys.time()
+	if( !is.null(logger) ) logger$fLogStr("Start", pTime=T ,pAppend=F )
+
+	aLst <- list()
+	for( aIdx in seq_len(datLen) ){
+		hLst <- list()
+		for( hName in fHName ){ # hName <- fHName[1]
+			basicLst <- list()
+			for( mName in scMtxName ){ # mName <- scMtxName[1]
+				#   "hIdxLst" ------------------------------------------
+				mtxGrp <- getScoreMtx.grp_byHIdx( scoreMtx.grp )
+				hIdxCut <- cut.grp$cutterLst[[hName]][[mName]]$hIdxCut
+				rawObj <- hIdxCut$getRawScore( mtxGrp[[mName]][[aIdx]] )
+				raw4Ass <- hIdxCut$getRaw4Ass( rawObj )
+				summObj <- hIdxCut$getSummScore( rawObj )
+
+				basicLst[[mName]] <- list(raw=raw4Ass ,summ=summObj)
+				reportStatus( tStmp ,sprintf("[%s,%s] hIdxLst",hName,mName) ,surFlag ,logger )
+			}
+
+			bScrLst <- list()	# QQE:hold
+			bScrMtxName <- character(0)
+			# for( mName in bScrMtxName ){
+			# 	cutLst <- cut.grp$cutterLst.bScr[[hName]][[mName]]$stdLst
+			# 	scoreMtx <- scoreMtx.grp$mf[[mName]]$scoreMtx
+			# 	for( cnIdx in names(cutLst) ){  # cnIdx <- names(cutLst)[1]
+			# 		cuttedLst <- cutLst[[cnIdx]]$cut( scoreMtx ,!surFlag )
+			# 		if( 0<length(cuttedLst) ){
+			# 			if( anaOnly ){	cutInfoLst[[1+length(cutInfoLst)]] <- c( cuttedLst[[1]]$idObjDesc ,cuttedLst[[1]]$info )
+			# 			} else {
+			# 				cut_aIdx <- sapply( cuttedLst ,function(p){p$idx} )
+			# 				surFlag[cut_aIdx] <- FALSE
+			# 			}
+			# 		}
+			# 	}
+
+			# 	reportStatus( tStmp ,sprintf("[%s,%s] bScrMtx",hName,mName) ,surFlag ,logger )
+			# }
+
+			hLst[[hName]] <- list( basic=basicLst ,bScr=bScrLst )
+		}
+
+		aLst[[as.character(aIdx)]] <- hLst
+	}	# for(aIdx)
+
+	cut1ScoreObj <- list( aLst=aLst )
+	cut1ScoreObj$metaInfo <- list( datLen=datLen ,scMtxName=scMtxName ,bScrMtxName=bScrMtxName )
+
+	return( cut1ScoreObj )
+} # bUtil.cut1Score()
+
+# bUtil.cutAZoidMtx <- function( gEnv ,allIdxF ,cutGrp ){	# 용도 까먹음.
+# 	#	cutGrp <- bFCust.getFCustGrp( stdCtrlCfgGrp )
+# } # bUtil.cutAZoidMtx( )
+
+bUtil.cutRst1_scoreMtx <- function( cutRst1 ){
+	# cutRst1 <- cutRst1Lst.grp[[1]]$aLst[[1]]
+
+	mtxObj <- list()
+	for( hName in names(cutRst1) ){	# hName <- names(cutRst1)[1]
+		basicLst <- list()
+		basicMName <- names(cutRst1[[hName]]$basic)
+		if( 0<length(basicMName) ){
+			summ <- cutRst1[[hName]]$basic[[1]]$summ	# 이건 단순히 메타정보 파악 용.
+
+			summColName <- colnames(summ$summMtx)
+			summMtxRaw <- matrix( 0 ,nrow=length(basicMName) ,ncol=length(summColName)
+								,dimnames=list(basicMName,summColName)
+							)
+			summMtxEvt		<- summMtxRaw
+			summMtx.RebRaw	<- summMtxRaw
+			summMtx.RebEvt	<- summMtxRaw
+
+			szColName <- colnames(summ$scMtx.sz)
+			szMtxCnt <- matrix( 0 ,nrow=length(basicMName) ,ncol=length(szColName)
+								,dimnames=list(basicMName,szColName)
+							)
+			szMtxDup <- szMtxCnt
+			for( mName in basicMName ){
+				summ <- cutRst1[[hName]]$basic[[mName]]$summ
+				summMtxRaw[mName,]		<- summ$summMtx["raw",]
+				summMtxEvt[mName,]		<- summ$summMtx["evt",]
+				summMtx.RebRaw[mName,]	<- summ$summMtx.reb["raw",]
+				summMtx.RebEvt[mName,]	<- summ$summMtx.reb["evt",]
+				szMtxCnt[mName,]		<- summ$scMtx.sz["rebCnt",]
+				szMtxDup[mName,]		<- summ$scMtx.sz["rebDup",]
+			}
+
+			basicLst$summMtxRaw		<- summMtxRaw
+			basicLst$summMtxEvt		<- summMtxEvt
+			basicLst$summMtx.RebRaw	<- summMtx.RebRaw
+			basicLst$summMtx.RebEvt	<- summMtx.RebEvt
+			basicLst$szMtxCnt		<- szMtxCnt
+			basicLst$szMtxDup		<- szMtxDup
+
+			#	sumMtx
+			cName <- c("summRawSum" ,"summEvtSum" ,"szRawSum" ,"szEvtSum")
+				#	szRawSum : c("r.ph","r.fCol","r.dblHpnFlg")
+				#	szEvtSum : c("e.ph","e.fCol","e.dblHpnFlg")
+			sumMtx <- matrix( 0 ,nrow=length(basicMName) ,ncol=length(cName) 
+							,dimname=list( basicMName ,cName )
+						)
+			for( mName in basicMName ){
+				sumMtx[mName,"summRawSum"]	<- sum( basicLst$summMtxRaw[mName,] )
+				sumMtx[mName,"summEvtSum"]	<- sum( basicLst$summMtxEvt[mName,] )
+				sumMtx[mName,"szRawSum"]	<- sum( basicLst$szMtxCnt[mName,c("r.ph","r.fCol","r.dblHpnFlg")] )
+				sumMtx[mName,"szEvtSum"]	<- sum( basicLst$szMtxCnt[mName,c("e.ph","e.fCol","e.dblHpnFlg")] )
+			}
+			basicLst$sumMtx	<- sumMtx
+
+		}
+
+		bScrLst <- list()
+		bScrMName <- names(cutRst1[[hName]]$bScr)
+		# for( mName in names(cutRst1[[hName]]$bScr) ){		}
+
+		mtxObj[[hName]] <- list( basic=basicLst ,bScr=bScrLst )
+	}
+
+	return( mtxObj )
+}
+
+bUtil.cutRst1_assScore <- function( cr1ScrGrp ){
+	#	cr1ScrGrp : cutRst1 ScoreMtx Grp (for 1 hName)
+	#		basic ,bScr
+
+	getLev <- function( val ,eadgeMax ){
+		
+		maxScore <- 4
+		valLen <- length(val)
+		lev <- rep( 0 ,valLen )
+
+		for( idx in seq_len(valLen) ){
+
+			lev <- 4 - (eadgeMax-val)
+
+			lev[lev<0	] <- 0
+			lev[val<=0	] <- 0
+			lev[val>=eadgeMax] <- maxScore
+			
+		}
+
+		return(lev)
+	}
+
+	assScore <- cr1ScrGrp	# 리턴되는 구조는 같으므로.
+
+	# basic
+	if( 0<length(cr1ScrGrp$basic) ){
+		for( mName in rownames(assScore$basic$summMtxRaw) ){
+			cfg <- scoreMtxCfg[[mName]]
+
+			val <- cr1ScrGrp$basic$summMtxRaw[mName,]
+			eadgeMax <- cfg$summMtx["raw",]
+			assScore$basic$summMtxRaw[mName,] <- getLev( val, eadgeMax )
+
+			val <- cr1ScrGrp$basic$summMtxEvt[mName,]
+			eadgeMax <- cfg$summMtx["evt",]
+			assScore$basic$summMtxEvt[mName,] <- getLev( val, eadgeMax )
+
+			val <- cr1ScrGrp$basic$summMtx.RebRaw[mName,]
+			eadgeMax <- cfg$summMtx.reb["raw",]
+			assScore$basic$summMtx.RebRaw[mName,] <- getLev( val, eadgeMax )
+
+			val <- cr1ScrGrp$basic$summMtx.RebRaw[mName,]
+			eadgeMax <- cfg$summMtx.reb["evt",]
+			assScore$basic$summMtx.RebEvt[mName,] <- getLev( val, eadgeMax )
+
+			val <- cr1ScrGrp$basic$szMtxCnt[mName,]
+			eadgeMax <- cfg$scMtx.sz["rebCnt",]
+			assScore$basic$szMtxCnt[mName,] <- getLev( val, eadgeMax )
+
+			val <- cr1ScrGrp$basic$szMtxDup[mName,]
+			eadgeMax <- cfg$scMtx.sz["rebDup",]
+			assScore$basic$szMtxDup[mName,] <- getLev( val, eadgeMax )
+
+			val <- cr1ScrGrp$basic$sumMtx[mName,]
+			eadgeMax <- c( cfg$summMtx.sum ,cfg$scMtx.sz.sum )
+			assScore$basic$sumMtx[mName,] <- getLev( val, eadgeMax )
+		}
+	}
+
+	# assScore$bScr	# todo
+	assScore$bScr <- list()	# dummy
+
+	return( assScore )
+}
+
 
 
 bUtil.makeStdCtrlCfgGrp <- function( hMtxLst ){
