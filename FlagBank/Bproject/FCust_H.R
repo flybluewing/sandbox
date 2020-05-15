@@ -711,8 +711,14 @@ FCust_stdCut.hIdx <- function( hName ,mName ,mtxLst ){
 
         r4Ass <- list()
 
-        
+        phaseHpnCnt <- rbind( rObj$stdEvt.H1$hpnInfo$phase ,rObj$stdEvt.H1$evtInfo$phase )
+        rownames( phaseHpnCnt ) <- c("raw","evt")
 
+        phaseRebCnt <- rbind( rObj$stdEvt.H1$hpnInfo$phaseReb["reb",] ,rObj$stdEvt.H1$evtInfo$phaseReb["reb",] )
+        rownames( phaseRebCnt ) <- c("raw","evt")
+
+        r4Ass$phaseHpnCnt <- phaseHpnCnt
+        r4Ass$phaseRebCnt <- phaseRebCnt
 
         return( r4Ass )
 

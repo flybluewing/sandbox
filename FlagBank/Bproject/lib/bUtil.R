@@ -105,7 +105,7 @@ bUtil.cut1 <- function( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=NULL ,anaOnly=F
 
 } # bUtil.cut1()
 
-bUtil.getCut1Score <- function(  scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=NULL ,logger=NULL  ){
+bUtil.getCut1Score <- function(  scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=NULL ,logger=NULL ){
 
 	reportStatus <- function( tStmp ,strWhere ,surFlag ,logger ){
 		#	strWhere <- sprintf("[%s,%s] stdLst",hName,mName)
@@ -188,6 +188,31 @@ bUtil.cutRst1_scoreMtx <- function( cutRst1 ){
 		basicLst <- list()
 		basicMName <- names(cutRst1[[hName]]$basic)
 		if( 0<length(basicMName) ){
+
+			# raw value ------------------------------------------------------------------------
+			rawGrp <- cutRst1[[hName]]$basic[[1]]$raw	# 메타정보 가져오기.
+
+			hpnMtxRaw <- matrix( 0 ,nrow=length(basicMName) ,ncol=ncol(rawGrp$phaseHpnCnt) 
+								,dimnames=list( basicMName ,colnames(rawGrp$phaseHpnCnt) )
+							)
+			phRebMtxRaw <- matrix( 0 ,nrow=length(basicMName) ,ncol=ncol(rawGrp$phaseRebCnt) 
+								,dimnames=list( basicMName ,colnames(rawGrp$phaseRebCnt) )
+							)
+			hpnMtxEvt <- hpnMtxRaw
+			phRebMtxEvt <- phRebMtxRaw
+
+			for( mName in basicMName ){
+				hpnMtxRaw[mName,]	<- cutRst1[[hName]]$basic[[mName]]$raw$phaseHpnCnt["raw",]
+				hpnMtxEvt[mName,]	<- cutRst1[[hName]]$basic[[mName]]$raw$phaseHpnCnt["evt",]
+				phRebMtxRaw[mName,]	<- cutRst1[[hName]]$basic[[mName]]$raw$phaseRebCnt["raw",]
+				phRebMtxEvt[mName,]	<- cutRst1[[hName]]$basic[[mName]]$raw$phaseRebCnt["evt",]
+			}
+			basicLst$hpnMtxRaw		<- hpnMtxRaw
+			basicLst$hpnMtxEvt		<- hpnMtxEvt
+			basicLst$phRebMtxRaw	<- phRebMtxRaw
+			basicLst$phRebMtxEvt	<- phRebMtxEvt
+
+			# summary --------------------------------------------------------------------------
 			summ <- cutRst1[[hName]]$basic[[1]]$summ	# 이건 단순히 메타정보 파악 용.
 
 			summColName <- colnames(summ$summMtx)
@@ -213,6 +238,7 @@ bUtil.cutRst1_scoreMtx <- function( cutRst1 ){
 				szMtxDup[mName,]		<- summ$scMtx.sz["rebDup",]
 			}
 
+			#	info summ * mName
 			basicLst$summMtxRaw		<- summMtxRaw
 			basicLst$summMtxEvt		<- summMtxEvt
 			basicLst$summMtx.RebRaw	<- summMtx.RebRaw
@@ -220,7 +246,7 @@ bUtil.cutRst1_scoreMtx <- function( cutRst1 ){
 			basicLst$szMtxCnt		<- szMtxCnt
 			basicLst$szMtxDup		<- szMtxDup
 
-			#	sumMtx
+			#	sumMtx : sume of column value
 			cName <- c("summRawSum" ,"summEvtSum" ,"szRawSum" ,"szEvtSum")
 				#	szRawSum : c("r.ph","r.fCol","r.dblHpnFlg")
 				#	szEvtSum : c("e.ph","e.fCol","e.dblHpnFlg")
