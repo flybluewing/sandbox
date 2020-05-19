@@ -32,6 +32,13 @@ B.makeHMtxLst <- function( gEnv, allIdxLst, fRstLst ,tgt.scMtx=NULL ,lastH=NULL 
         hSpan.NG <- hSpan.NG[hSpan.NG<=lastH]
         sfcHLst[[sprintf("NG%s",sfnIdx)]] <- hSpan.NG
     }
+    lenMax <- 20
+    for( hName in names(sfcHLst) ){ # hLst 범위는 20 이내로 하자.
+        hLen <- length(sfcHLst[[hName]])
+        if( lenMax < hLen ){
+            sfcHLst[[hName]] <- sfcHLst[[hName]][ (hLen-lenMax+1):hLen ]
+        }
+    }
 
     scoreMtxLst <- list()
     bScrMtxLst <- list()
@@ -683,6 +690,8 @@ B.get_testData.grp <- function( testSpan ,gEnv ,allIdxLst ,fRstLst ,tgt.scMtx=NU
 }
 
 B.get_cutRst1.grp <- function( testData.grp ,gEnv ,allIdxLst ,fRstLst ){
+    #   주의 : (1) testData.grp 의 hIdx는 건너뜀없이 연속적이어야 한다. 
+    #
     #   bUtil.cutRst1( )
 
     testSpan <- as.integer(names(testData.grp$curHMtxLst.grp))
