@@ -1113,4 +1113,64 @@ bFCust.cut <- function( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=NULL ,anaOnly=F
     return( list( surFlag=surFlag ,cutInfoLst=cutInfoLst ) )
 }
 
+FCust_stdCut_AllM <- function(){
+    rObj <- list( )
+
+    rObj$rawMtxSum <- function( mtx ){
+        #   mtx : mName * phName
+        sumRst <- list()
+        sumRst$zeroCntM <- apply( mtx ,1 ,function(val){sum(0==val)})
+        sumRst$zeroCntPh <- apply( mtx ,2 ,function(val){sum(0==val)})
+
+        # rebind next
+        colName <- rownames(mtx)[1:(nrow(mtx)-1)]
+        rebMtxM <- matrix( 0 ,ncol=length(colName) ,nrow=2 ,dimnames=list(c("flag","cnt"),colName) )
+        rebMtxM["cnt",] <- apply(mtx,1,function(val){sum(val>0)})[1:ncol(rebMtxM)]
+        for( idx in 1:ncol(rebMtxM) ){
+            if( 0<rebMtxM["cnt",idx] ){
+                rebMtxM["flag",idx] <- all(mtx[idx,]==mtx[idx+1,])
+            }
+        }
+        sumRst$rebMtxM <- rebMtxM
+
+        colName <- colnames(mtx)[1:(ncol(mtx)-1)]
+        rebMtxPh <- matrix( 0 ,ncol=length(colName) ,nrow=2 ,dimnames=list(c("flag","cnt"),colName) )
+        rebMtxPh["cnt",] <- apply( mtx, 2, function(val){sum(val>0)})[1:ncol(rebMtxPh)]
+        for( idx in 1:ncol(rebMtxPh) ){
+            if( 0<rebMtxPh["cnt",idx] ){
+                rebMtxPh["flag",idx] <- all(mtx[,idx]==mtx[,idx+1])
+            }
+        }
+        sumRst$rebMtxPh <- rebMtxPh
+
+        return( sumRst )
+    }
+
+    rObj$getSummScore <- function( cutRstScr ){ 
+        # cutRst1Score <- bUtil.getCut1Score( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx )
+        # cutRstScrSet <- bUtil.cutRst1_scoreMtx(cutRst1Score$aLst[[1]])
+        # cutRstScr <- cutRstScrSet[[hName]]
+
+        # basic -----------------------------------------------------------
+        basicLst <- list()
+        basicLst$hpnMtxRaw      <- rObj$rawMtxSum( cutRstScr$basic$hpnMtxRaw )
+        basicLst$hpnMtxEvt      <- rObj$rawMtxSum( cutRstScr$basic$hpnMtxEvt )
+        basicLst$phRebMtxRaw    <- rObj$rawMtxSum( cutRstScr$basic$phRebMtxRaw )
+        basicLst$phRebMtxEvt    <- rObj$rawMtxSum( cutRstScr$basic$phRebMtxEvt )
+
+        #   summMtxRaw ,summMtxEvt      summMtx.RebRaw ,summMtx.RebEvt
+        #   szMtxCnt ,szMtxDup
+        #   sumMtx
+
+        # bScr -----------------------------------------------------------
+        bScrLst <- list()
+
+    }
+
+    rObj$cut <- function( summScore ){
+
+    }
+
+    return( rObj )
+}
 

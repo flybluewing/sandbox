@@ -339,7 +339,7 @@ bUtil.cutRst1_assScore <- function( cr1ScrGrp ){
 	return( assScore )
 }
 
-bUtil.cut2 <- function( cutRst1Score ,cut2.grp ,fHName ,tgt.scMtx=NULL ,anaOnly=F ,logger=NULL ){
+bUtil.cut2 <- function( cutRst1Score ,tgt.scMtx=NULL ,anaOnly=F ,logger=NULL ){
 	#	cutRst1Score <- bUtil.getCut1Score( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx )
 
 	reportStatus <- function( tStmp ,strWhere ,surFlag ,logger ){
@@ -373,22 +373,16 @@ bUtil.cut2 <- function( cutRst1Score ,cut2.grp ,fHName ,tgt.scMtx=NULL ,anaOnly=
 	tStmp <- Sys.time()
 	if( !is.null(logger) ) logger$fLogStr("Start", pTime=T ,pAppend=F )
 
+	stdCut <- FCust_stdCut_AllM
     surFlag <- rep( T ,datLen )
-    for( hName in fHName ){ # hName <- fHName[1]
-        for( mName in scMtxName ){ # mName <- scMtxName[1]
+	for( aIdx in seq_len(datLen) ){	# aIdx <- 1
+		cutRstScrSet <- bUtil.cutRst1_scoreMtx(cutRst1Score$aLst[[aIdx]])
 
-			for( aIdx in seq_len(datLen) ){	# aIdx <- 1
-				cutRst1Score$aLst[[aIdx]]
-				cutRstScrSet <- bUtil.cutRst1_scoreMtx(cutRst1Score$aLst[[1]])
-			}
-
-			# QQE:hold
-			bScrMtxName <- character(0)
-			for( mName in bScrMtxName ){	}
-
+		for( hName in names(cutRstScrSet) ){	# hName <- names(cutRstScrSet)[1]
+			summScoreGrp <- stdCut$getSummScore( cutRstScrSet[[hName]] )
+			cutRst <- stdCut$cut( summScoreGrp )
 		}
 	}
-
 
     return( list( surFlag=surFlag ,cutInfoLst=cutInfoLst ) )
 
