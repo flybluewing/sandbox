@@ -1161,6 +1161,7 @@ FCust_stdCut_AllM <- function(){
         #   summMtxRaw ,summMtxEvt      summMtx.RebRaw ,summMtx.RebEvt
         #   szMtxCnt ,szMtxDup
         #   sumMtx
+        # -------------> bUtil.cutRst1_assScore( )
 
         # bScr -----------------------------------------------------------
         bScrLst <- list()
