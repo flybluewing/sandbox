@@ -67,7 +67,8 @@ bUtil.cut1 <- function( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=NULL ,anaOnly=F
 					if( !anaOnly ){	surFlag[aIdx] <- FALSE
 					} else {
 						for( idx in seq_len(length(cRst)) ){
-							cutInfoLst[[1+length(cutInfoLst)]] <- c( typ=names(cRst)[idx] ,hIdxCut$defId ,pName="ALL" ,info=cRst[[idx]] )
+							idxName <- sprintf("hIdxCu_%dth",1+length(cutInfoLst))
+							cutInfoLst[[idxName]] <- c( typ=names(cRst)[idx] ,hIdxCut$defId ,pName="ALL" ,info=cRst[[idx]] )
 						}
 					}
 				}
@@ -198,19 +199,24 @@ bUtil.cutRst1_scoreMtx <- function( cutRst1 ){
 			phRebMtxRaw <- matrix( 0 ,nrow=length(basicMName) ,ncol=ncol(rawGrp$phaseRebCnt) 
 								,dimnames=list( basicMName ,colnames(rawGrp$phaseRebCnt) )
 							)
+			rebMtxRaw <- matrix( 0 ,nrow=length(basicMName) ,ncol=ncol(rawGrp$rebMtx.ph)
+								,dimnames=list( basicMName ,colnames(rawGrp$rebMtx.ph) )
+							)
 			hpnMtxEvt <- hpnMtxRaw
 			phRebMtxEvt <- phRebMtxRaw
+			rebMtxEvt <- rebMtxRaw
 
 			for( mName in basicMName ){
 				hpnMtxRaw[mName,]	<- cutRst1[[hName]]$basic[[mName]]$raw$phaseHpnCnt["raw",]
 				hpnMtxEvt[mName,]	<- cutRst1[[hName]]$basic[[mName]]$raw$phaseHpnCnt["evt",]
 				phRebMtxRaw[mName,]	<- cutRst1[[hName]]$basic[[mName]]$raw$phaseRebCnt["raw",]
 				phRebMtxEvt[mName,]	<- cutRst1[[hName]]$basic[[mName]]$raw$phaseRebCnt["evt",]
+				rebMtxRaw[mName,]	<- cutRst1[[hName]]$basic[[mName]]$raw$rebMtx.ph["rebFlag.raw",]
+				rebMtxEvt[mName,]	<- cutRst1[[hName]]$basic[[mName]]$raw$rebMtx.ph["rebFlag.evt",]
 			}
-			basicLst$hpnMtxRaw		<- hpnMtxRaw
-			basicLst$hpnMtxEvt		<- hpnMtxEvt
-			basicLst$phRebMtxRaw	<- phRebMtxRaw
-			basicLst$phRebMtxEvt	<- phRebMtxEvt
+			basicLst$hpnMtxRaw		<- hpnMtxRaw			;basicLst$hpnMtxEvt		<- hpnMtxEvt
+			basicLst$phRebMtxRaw	<- phRebMtxRaw			;basicLst$phRebMtxEvt	<- phRebMtxEvt
+			basicLst$rebMtxRaw		<- rebMtxRaw			;basicLst$rebMtxEvt		<- rebMtxEvt
 
 			# summary --------------------------------------------------------------------------
 			summ <- cutRst1[[hName]]$basic[[1]]$summ	# 이건 단순히 메타정보 파악 용.
@@ -373,14 +379,14 @@ bUtil.cut2 <- function( cutRst1Score ,tgt.scMtx=NULL ,anaOnly=F ,logger=NULL ){
 	tStmp <- Sys.time()
 	if( !is.null(logger) ) logger$fLogStr("Start", pTime=T ,pAppend=F )
 
-	stdCut <- FCust_stdCut_AllM
+	stdCut <- FCust_stdCut_AllM( )
     surFlag <- rep( T ,datLen )
 	for( aIdx in seq_len(datLen) ){	# aIdx <- 1
 		cutRstScrSet <- bUtil.cutRst1_scoreMtx(cutRst1Score$aLst[[aIdx]])
 
 		for( hName in names(cutRstScrSet) ){	# hName <- names(cutRstScrSet)[1]
 			summScoreGrp <- stdCut$getSummScore( cutRstScrSet[[hName]] )
-			cutRst <- stdCut$cut( summScoreGrp )
+			cutRst <- stdCut$cut( summScoreGrp ,hName )
 		}
 	}
 

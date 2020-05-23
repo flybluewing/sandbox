@@ -720,6 +720,8 @@ FCust_stdCut.hIdx <- function( hName ,mName ,mtxLst ){
         r4Ass$phaseHpnCnt <- phaseHpnCnt
         r4Ass$phaseRebCnt <- phaseRebCnt
 
+        r4Ass$rebMtx.ph <- rawObj$curEvt$rebInfo$rebMtx.ph
+
         return( r4Ass )
 
     }
@@ -1146,11 +1148,7 @@ FCust_stdCut_AllM <- function(){
         return( sumRst )
     }
 
-    rObj$getSummScore <- function( cutRstScr ){ 
-        # cutRst1Score <- bUtil.getCut1Score( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx )
-        # cutRstScrSet <- bUtil.cutRst1_scoreMtx(cutRst1Score$aLst[[1]])
-        # cutRstScr <- cutRstScrSet[[hName]]
-
+    rObj$getRawScore <- function( cutRstScr ){
         # basic -----------------------------------------------------------
         basicLst <- list()
         basicLst$hpnMtxRaw      <- rObj$rawMtxSum( cutRstScr$basic$hpnMtxRaw )
@@ -1166,10 +1164,64 @@ FCust_stdCut_AllM <- function(){
         # bScr -----------------------------------------------------------
         bScrLst <- list()
 
+        return( list(basic=basicLst ,bScr=bScrLst) )
     }
 
-    rObj$cut <- function( summScore ){
+    rObj$getSummScore <- function( cutRstScr ){ 
+        # cutRst1Score <- bUtil.getCut1Score( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx )
+        # cutRstScrSet <- bUtil.cutRst1_scoreMtx(cutRst1Score$aLst[[1]])
+        # cutRstScr <- cutRstScrSet[[hName]]
 
+        rawScore <- rObj$getRawScore( cutRstScr )
+
+        # basic --------------------------------------------------------------------------
+        hpnMtxRaw <- rawScore$basic$hpnMtxRaw
+        hpnMtxEvt <- rawScore$basic$hpnMtxEvt
+        phRebMtxRaw <- rawScore$basic$phRebMtxRaw
+        phRebMtxEvt <- rawScore$basic$phRebMtxEvt
+        
+        #   summMtxRaw ,summMtxEvt      summMtx.RebRaw ,summMtx.RebEvt
+        #   szMtxCnt ,szMtxDup
+        #   sumMtx
+
+        scoreBasic <- c( zeroCntM=sum(0==hpnMtxRaw$zeroCntM) ,zeroCntPh=sum(0==hpnMtxEvt$zeroCntPh) 
+                    )
+
+        # bScr --------------------------------------------------------------------------
+        scoreBScr <- c()
+
+        return( list(basic=scoreBasic,bScr=scoreBScr) )
+    }
+
+    rObj$cut <- function( summScoreGrp ,hName ){
+        #   summScoreGrp <- rObj$getSummScore( cutRstScr )
+
+        cLst <- list( )     #   cutLst[[1]]$cLst
+                            #   만약 생존했으면 cLst의 길이는 0
+
+        cfg <- sfcMtxCfg[[hName]]
+
+        if( !is.null(summScoreGrp$basic) ){
+
+            cutId <- "zeroCntM"
+            inFlag <- bUtil.in( summScoreGrp$basic[cutId] ,eadge=cfg$basic$zeroCnt[cutId,] )
+            if( !inFlag ){
+                cLst[[sprintf("basic_%s",cutId)]] <- sprintf("basic %s:%d",cutId,summScoreGrp$basic[cutId])
+            }
+            cutId <- "zeroCntPh"
+            inFlag <- bUtil.in( summScoreGrp$basic[cutId] ,eadge=cfg$basic$zeroCnt[cutId,] )
+            if( !inFlag ){
+                cLst[[sprintf("basic_%s",cutId)]] <- sprintf("basic %s:%d",cutId,summScoreGrp$basic[cutId])
+            }
+
+            # keep working
+        }
+
+        if( !is.null(summScoreGrp$bScr) ){
+            # todo
+        }
+
+        return( cLst )
     }
 
     return( rObj )

@@ -812,7 +812,34 @@ for( mName in names( scoreMtxCfg ) ){ # naming 추가.
 }
 
 
+# =============================================================================================================
+#   sfcMtxCfg
+# =============================================================================================================
+sfcMtxCfg <- list()   # B.makeHMtxLst() 의 stdFilter참고
 
+sfcName <- "sfcLate"
+sfcMtxCfg[[sfcName]] <- list(
+    basic=list(  )
+    ,bScr=list(  )
+)
 
+sfcName <- "sfc0"
+sfcName <- "sfc1"
+sfcName <- "sfc2"
+sfcName <- "NGD0000.A"
+sfcName <- "NGA0100.A"
+sfcName <- "NGAP000.E"
 
+for( hName in names(sfcMtxCfg) ){
+
+    if( is.null(sfcMtxCfg[[hName]]$basic$zeroCnt) ){
+        sfcMtxCfg[[hName]]$basic$zeroCntM <- matrix( c(0,1 ,0,1) 
+                            ,nrow=2 ,byrow=T 
+                            ,dimnames=list(c("zeroCntM","zeroCntPh"),c("min","max")) 
+                        )
+    }
+
+    # if( is.null(sfcMtxCfg[[hName]]$evtMax) ){   }
+
+}
 
