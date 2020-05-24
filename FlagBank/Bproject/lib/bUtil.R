@@ -67,7 +67,7 @@ bUtil.cut1 <- function( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=NULL ,anaOnly=F
 					if( !anaOnly ){	surFlag[aIdx] <- FALSE
 					} else {
 						for( idx in seq_len(length(cRst)) ){
-							idxName <- sprintf("hIdxCu_%dth",1+length(cutInfoLst))
+							idxName <- sprintf("hIdxCut_%dth",1+length(cutInfoLst))
 							cutInfoLst[[idxName]] <- c( typ=names(cRst)[idx] ,hIdxCut$defId ,pName="ALL" ,info=cRst[[idx]] )
 						}
 					}
@@ -345,7 +345,7 @@ bUtil.cutRst1_assScore <- function( cr1ScrGrp ){
 	return( assScore )
 }
 
-bUtil.cut2 <- function( cutRst1Score ,tgt.scMtx=NULL ,anaOnly=F ,logger=NULL ){
+bUtil.cut2 <- function( cutRst1Score ,fHName ,tgt.scMtx=NULL ,anaOnly=F ,logger=NULL ){
 	#	cutRst1Score <- bUtil.getCut1Score( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx )
 
 	reportStatus <- function( tStmp ,strWhere ,surFlag ,logger ){
@@ -357,11 +357,11 @@ bUtil.cut2 <- function( cutRst1Score ,tgt.scMtx=NULL ,anaOnly=F ,logger=NULL ){
 	}
 
     # scoreMtx.grp <- wScoreMtx.grp ;anaOnly=T
-    scMtxName <- names(cut.grp$mtxInfoLst)
+    scMtxName <- cutRst1Score$metaInfo$scMtxName
 	if( !is.null(tgt.scMtx) )	scMtxName <- intersect( scMtxName ,tgt.scMtx )
 
 	# bScrMtxName
-	bScrMtxName <- names(cut.grp$mtxInfoLst.bScr)
+	bScrMtxName <- cutRst1Score$metaInfo$bScrMtxName
 	if( !is.null(tgt.scMtx) )	bScrMtxName <- intersect( bScrMtxName ,tgt.scMtx )
 
     datLen <- 1
@@ -386,8 +386,21 @@ bUtil.cut2 <- function( cutRst1Score ,tgt.scMtx=NULL ,anaOnly=F ,logger=NULL ){
 
 		for( hName in names(cutRstScrSet) ){	# hName <- names(cutRstScrSet)[1]
 			summScoreGrp <- stdCut$getSummScore( cutRstScrSet[[hName]] )
-			cutRst <- stdCut$cut( summScoreGrp ,hName )
+			cRst <- stdCut$cut( summScoreGrp ,hName )
+			if( 0 < length(cRst) ){
+				if( !anaOnly ){	surFlag[aIdx] <- FALSE	;break
+				} else {
+					for( idx in seq_len(length(cRst)) ){
+						idxName <- sprintf("cut2_%dth",1+length(cutInfoLst))
+						cutInfoLst[[idxName]] <- c( typ="cut2_byHName" ,hName=hName ,mName="m*" ,pName="p*" ,info=cRst[[idx]] )
+					}
+				}
+			}
+			# c( typ=names(cRst)[idx] ,hIdxCut$defId ,pName="ALL" ,info=cRst[[idx]] )
 		}
+
+		# todo
+		# if( surFlag[aIdx] ){	}	# hName 전체에 대한 cutting
 	}
 
     return( list( surFlag=surFlag ,cutInfoLst=cutInfoLst ) )

@@ -816,24 +816,54 @@ for( mName in names( scoreMtxCfg ) ){ # naming 추가.
 #   sfcMtxCfg
 # =============================================================================================================
 sfcMtxCfg <- list()   # B.makeHMtxLst() 의 stdFilter참고
+if( 0==length(sfcMtxCfg) ){
+    sfcName <- "sfcLate"
+    sfcMtxCfg[[sfcName]] <- list(
+        basic=list( zeroCntM=NULL )
+        ,bScr=list(  )
+    )
 
-sfcName <- "sfcLate"
-sfcMtxCfg[[sfcName]] <- list(
-    basic=list(  )
-    ,bScr=list(  )
-)
+    sfcName <- "sfc0"
+    sfcMtxCfg[[sfcName]] <- list(
+        basic=list( zeroCntM=NULL )
+        ,bScr=list(  )
+    )
 
-sfcName <- "sfc0"
-sfcName <- "sfc1"
-sfcName <- "sfc2"
-sfcName <- "NGD0000.A"
-sfcName <- "NGA0100.A"
-sfcName <- "NGAP000.E"
+    sfcName <- "sfc1"
+    sfcMtxCfg[[sfcName]] <- list(
+        basic=list( zeroCntM=NULL )
+        ,bScr=list(  )
+    )
+
+    sfcName <- "sfc2"
+    sfcMtxCfg[[sfcName]] <- list(
+        basic=list( zeroCntM=NULL )
+        ,bScr=list(  )
+    )
+
+    sfcName <- "NGD0000.A"
+    sfcMtxCfg[[sfcName]] <- list(
+        basic=list( zeroCntM=NULL )
+        ,bScr=list(  )
+    )
+
+    sfcName <- "NGA0100.A"
+    sfcMtxCfg[[sfcName]] <- list(
+        basic=list( zeroCntM=NULL )
+        ,bScr=list(  )
+    )
+
+    sfcName <- "NGAP000.E"
+    sfcMtxCfg[[sfcName]] <- list(
+        basic=list( zeroCntM=NULL )
+        ,bScr=list(  )
+    )
+}
 
 for( hName in names(sfcMtxCfg) ){
 
     if( is.null(sfcMtxCfg[[hName]]$basic$zeroCnt) ){
-        sfcMtxCfg[[hName]]$basic$zeroCntM <- matrix( c(0,1 ,0,1) 
+        sfcMtxCfg[[hName]]$basic$zeroCntM <- matrix( c(0,2 ,0,1) 
                             ,nrow=2 ,byrow=T 
                             ,dimnames=list(c("zeroCntM","zeroCntPh"),c("min","max")) 
                         )
