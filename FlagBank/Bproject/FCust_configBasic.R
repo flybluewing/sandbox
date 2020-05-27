@@ -819,55 +819,75 @@ sfcMtxCfg <- list()   # B.makeHMtxLst() ÀÇ stdFilterÂü°í
 if( 0==length(sfcMtxCfg) ){
     sfcName <- "sfcLate"
     sfcMtxCfg[[sfcName]] <- list(
-        basic=list( zeroCntM=NULL )
+        basic=list( prime=NULL
+        )
         ,bScr=list(  )
     )
 
     sfcName <- "sfc0"
     sfcMtxCfg[[sfcName]] <- list(
-        basic=list( zeroCntM=NULL )
+        basic=list( prime=NULL
+        )
         ,bScr=list(  )
     )
 
     sfcName <- "sfc1"
     sfcMtxCfg[[sfcName]] <- list(
-        basic=list( zeroCntM=NULL )
+        basic=list( prime=NULL
+        )
         ,bScr=list(  )
     )
 
     sfcName <- "sfc2"
     sfcMtxCfg[[sfcName]] <- list(
-        basic=list( zeroCntM=NULL )
+        basic=list( prime=NULL
+        )
         ,bScr=list(  )
     )
 
     sfcName <- "NGD0000.A"
     sfcMtxCfg[[sfcName]] <- list(
-        basic=list( zeroCntM=NULL )
+        basic=list( prime=NULL
+        )
         ,bScr=list(  )
     )
 
     sfcName <- "NGA0100.A"
     sfcMtxCfg[[sfcName]] <- list(
-        basic=list( zeroCntM=NULL )
+        basic=list( prime=NULL
+        )
         ,bScr=list(  )
     )
 
     sfcName <- "NGAP000.E"
     sfcMtxCfg[[sfcName]] <- list(
-        basic=list( zeroCntM=NULL )
+        basic=list( prime=NULL
+        )
         ,bScr=list(  )
     )
 }
 
 for( hName in names(sfcMtxCfg) ){
 
-    if( is.null(sfcMtxCfg[[hName]]$basic$zeroCnt) ){
-        sfcMtxCfg[[hName]]$basic$zeroCntM <- matrix( c(0,0 ,0,1) 
-                            ,nrow=2 ,byrow=T 
-                            ,dimnames=list(c("zeroCntM","zeroCntPh"),c("min","max")) 
+    if( is.null(sfcMtxCfg[[hName]]$basic$prime) ){
+        sfcMtxCfg[[hName]]$basic$prime <- matrix( c(0,2,0,1 ,0,1,0,1 ,0,1,0,1 ,0,1,0,2 ) 
+                            ,ncol=2 ,byrow=T
+                            ,dimnames=list(c(   "zeroCntM_raw" ,"zeroCntPh_raw" 
+                                                ,"rebMtxM_raw" ,"rebMtxPh_raw" 
+                                                ,"zeroCntM_evt","zeroCntPh_evt"
+                                                ,"rebMtxM_evt" ,"rebMtxPh_evt"
+                                            )
+                                            ,c("min","max")
+                            ) 
                         )
     }
+
+    # if( is.null(sfcMtxCfg[[hName]]$basic$zeroCnt) ){
+    #     sfcMtxCfg[[hName]]$basic$zeroCntM <- matrix( c(0,0 ,0,1) 
+    #                         ,nrow=2 ,byrow=T 
+    #                         ,dimnames=list(c("zeroCntM","zeroCntPh"),c("min","max")) 
+    #                     )
+    # }
 
     # if( is.null(sfcMtxCfg[[hName]]$evtMax) ){   }
 

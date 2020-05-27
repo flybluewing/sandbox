@@ -1116,6 +1116,7 @@ bFCust.cut <- function( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=NULL ,anaOnly=F
 }
 
 FCust_stdCut_AllM <- function(){
+
     rObj <- list( )
 
     rObj$rawMtxSum <- function( mtx ,hpn=F ){
@@ -1162,7 +1163,7 @@ FCust_stdCut_AllM <- function(){
         basicLst$phRebMtxEvt    <- rObj$rawMtxSum( cutRstScr$basic$phRebMtxEvt )
 
         basicLst$summMtxRaw     <- rObj$rawMtxSum( cutRstScr$basic$summMtxRaw ,hpn=T )
-        basicLst$summMtxRaw.rebRaw  <- rObj$rawMtxSum( cutRstScr$basic$summMtxRaw.rebRaw ,hpn=T )
+        basicLst$summMtx.RebRaw  <- rObj$rawMtxSum( cutRstScr$basic$summMtx.RebRaw ,hpn=T )
         basicLst$sumMtx         <- cutRstScr$basic$sumMtx
         #   summMtxRaw ,summMtxEvt      summMtx.RebRaw ,summMtx.RebEvt
         #   szMtxCnt ,szMtxDup
@@ -1188,28 +1189,28 @@ FCust_stdCut_AllM <- function(){
         phRebMtxRaw <- rawScore$basic$phRebMtxRaw
         phRebMtxEvt <- rawScore$basic$phRebMtxEvt
         summMtxRaw  <- rawScore$basic$summMtxRaw
-        
+
         #   summMtxRaw ,summMtxEvt      summMtx.RebRaw ,summMtx.RebEvt
         #   szMtxCnt ,szMtxDup
         #   sumMtx
 
-        scoreBasic <- c( zeroCntM_raw=sum(0==hpnMtxRaw$zeroCntM)        ,zeroCntPh_raw=sum(0==hpnMtxRaw$zeroCntPh)
+        primeSumm <- c( zeroCntM_raw=sum(0==hpnMtxRaw$zeroCntM)        ,zeroCntPh_raw=sum(0==hpnMtxRaw$zeroCntPh)
                         ,rebMtxM_raw=sum(hpnMtxRaw$rebMtxM["flag",])    ,rebMtxPh_raw=sum(hpnMtxRaw$rebMtxPh["flag",])
                         ,zeroCntM_evt=sum(0==hpnMtxEvt$zeroCntM)        ,zeroCntPh_evt=sum(0==hpnMtxEvt$zeroCntPh)
                         ,rebMtxM_evt=sum(hpnMtxEvt$rebMtxM["flag",])    ,rebMtxPh_evt=sum(hpnMtxEvt$rebMtxPh["flag",])
                     )
 
-        basicLst <- list( primeSumm = scoreBasic
+        basicLst <- list( prime = primeSumm
                     ,summMtxRaw=rawScore$basic$summMtxRaw
                 )
 
         # bScr --------------------------------------------------------------------------
-        scoreBScr <- c()
+        bScrLst <- list()
 
-        return( list(basic=scoreBasic,bScr=scoreBScr) )
+        return( list(basic=basicLst,bScr=bScrLst) )
     }
 
-    rObj$cut <- function( summScoreGrp ,hName ){
+    rObj$cut <- function( summScoreGrp ,hName ,anaOnly=F ){
         #   summScoreGrp <- rObj$getSummScore( cutRstScr )
 
         cLst <- list( )     #   cutLst[[1]]$cLst
@@ -1217,17 +1218,19 @@ FCust_stdCut_AllM <- function(){
 
         cfg <- sfcMtxCfg[[hName]]
 
-        if( !is.null(summScoreGrp$basic) ){
+        if( !is.null(summScoreGrp$basic$prime) ){
 
-            cutId <- "zeroCntM"
-            inFlag <- bUtil.in( summScoreGrp$basic[cutId] ,eadge=cfg$basic$zeroCnt[cutId,] )
-            if( !inFlag ){
-                cLst[[sprintf("basic_%s",cutId)]] <- sprintf("basic %s:%d",cutId,summScoreGrp$basic[cutId])
-            }
-            cutId <- "zeroCntPh"
-            inFlag <- bUtil.in( summScoreGrp$basic[cutId] ,eadge=cfg$basic$zeroCnt[cutId,] )
-            if( !inFlag ){
-                cLst[[sprintf("basic_%s",cutId)]] <- sprintf("basic %s:%d",cutId,summScoreGrp$basic[cutId])
+            for( nIdx in names(summScoreGrp$basic$prime) ){ # nIdx <- names(summScoreGrp$basic$prime)[1]
+                inFlag <- bUtil.in(summScoreGrp$basic$prime[nIdx],cfg$basic$prime[nIdx,])
+                if( !inFlag ){
+                    if( anaOnly ){
+                        keyId <- sprintf("basic_prime_%s",nIdx)
+                        cLst[[keyId]] <- sprintf("basic_prime_%s:%d",nIdx,summScoreGrp$basic$prime[nIdx])
+                    } else {
+                        cLst[["basic_prime"]] <- "basic$prime"
+                        return( cLst )
+                    }
+                }
             }
 
             # keep working

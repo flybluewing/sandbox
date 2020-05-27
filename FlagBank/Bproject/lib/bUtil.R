@@ -381,7 +381,7 @@ bUtil.cut2 <- function( cutRst1Score ,fHName ,tgt.scMtx=NULL ,anaOnly=F ,logger=
 
 		for( hName in names(cutRstScrSet) ){	# hName <- names(cutRstScrSet)[1]
 			summScoreGrp <- stdCut$getSummScore( cutRstScrSet[[hName]] )
-			cRst <- stdCut$cut( summScoreGrp ,hName )
+			cRst <- stdCut$cut( summScoreGrp ,hName ,anaOnly )
 			if( 0 < length(cRst) ){
 				if( !anaOnly ){	surFlag[aIdx] <- FALSE	;break
 				} else {
