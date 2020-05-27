@@ -863,7 +863,7 @@ if( 0==length(sfcMtxCfg) ){
 for( hName in names(sfcMtxCfg) ){
 
     if( is.null(sfcMtxCfg[[hName]]$basic$zeroCnt) ){
-        sfcMtxCfg[[hName]]$basic$zeroCntM <- matrix( c(0,2 ,0,1) 
+        sfcMtxCfg[[hName]]$basic$zeroCntM <- matrix( c(0,0 ,0,1) 
                             ,nrow=2 ,byrow=T 
                             ,dimnames=list(c("zeroCntM","zeroCntPh"),c("min","max")) 
                         )
@@ -872,4 +872,9 @@ for( hName in names(sfcMtxCfg) ){
     # if( is.null(sfcMtxCfg[[hName]]$evtMax) ){   }
 
 }
+
+
+
+
+
 

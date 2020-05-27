@@ -1118,11 +1118,16 @@ bFCust.cut <- function( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=NULL ,anaOnly=F
 FCust_stdCut_AllM <- function(){
     rObj <- list( )
 
-    rObj$rawMtxSum <- function( mtx ){
+    rObj$rawMtxSum <- function( mtx ,hpn=F ){
         #   mtx : mName * phName
         sumRst <- list()
-        sumRst$zeroCntM <- apply( mtx ,1 ,function(val){sum(0==val)})
-        sumRst$zeroCntPh <- apply( mtx ,2 ,function(val){sum(0==val)})
+        if( hpn ){
+            sumRst$hpnCntM <- apply( mtx ,1 ,function(val){sum(0<val)})
+            sumRst$hpnCntPh <- apply( mtx ,2 ,function(val){sum(0<val)})
+        } else {
+            sumRst$zeroCntM <- apply( mtx ,1 ,function(val){sum(0==val)})
+            sumRst$zeroCntPh <- apply( mtx ,2 ,function(val){sum(0==val)})
+        }
 
         # rebind next
         colName <- rownames(mtx)[1:(nrow(mtx)-1)]
@@ -1156,6 +1161,9 @@ FCust_stdCut_AllM <- function(){
         basicLst$phRebMtxRaw    <- rObj$rawMtxSum( cutRstScr$basic$phRebMtxRaw )
         basicLst$phRebMtxEvt    <- rObj$rawMtxSum( cutRstScr$basic$phRebMtxEvt )
 
+        basicLst$summMtxRaw     <- rObj$rawMtxSum( cutRstScr$basic$summMtxRaw ,hpn=T )
+        basicLst$summMtxRaw.rebRaw  <- rObj$rawMtxSum( cutRstScr$basic$summMtxRaw.rebRaw ,hpn=T )
+        basicLst$sumMtx         <- cutRstScr$basic$sumMtx
         #   summMtxRaw ,summMtxEvt      summMtx.RebRaw ,summMtx.RebEvt
         #   szMtxCnt ,szMtxDup
         #   sumMtx
@@ -1179,13 +1187,21 @@ FCust_stdCut_AllM <- function(){
         hpnMtxEvt <- rawScore$basic$hpnMtxEvt
         phRebMtxRaw <- rawScore$basic$phRebMtxRaw
         phRebMtxEvt <- rawScore$basic$phRebMtxEvt
+        summMtxRaw  <- rawScore$basic$summMtxRaw
         
         #   summMtxRaw ,summMtxEvt      summMtx.RebRaw ,summMtx.RebEvt
         #   szMtxCnt ,szMtxDup
         #   sumMtx
 
-        scoreBasic <- c( zeroCntM=sum(0==hpnMtxRaw$zeroCntM) ,zeroCntPh=sum(0==hpnMtxEvt$zeroCntPh) 
+        scoreBasic <- c( zeroCntM_raw=sum(0==hpnMtxRaw$zeroCntM)        ,zeroCntPh_raw=sum(0==hpnMtxRaw$zeroCntPh)
+                        ,rebMtxM_raw=sum(hpnMtxRaw$rebMtxM["flag",])    ,rebMtxPh_raw=sum(hpnMtxRaw$rebMtxPh["flag",])
+                        ,zeroCntM_evt=sum(0==hpnMtxEvt$zeroCntM)        ,zeroCntPh_evt=sum(0==hpnMtxEvt$zeroCntPh)
+                        ,rebMtxM_evt=sum(hpnMtxEvt$rebMtxM["flag",])    ,rebMtxPh_evt=sum(hpnMtxEvt$rebMtxPh["flag",])
                     )
+
+        basicLst <- list( primeSumm = scoreBasic
+                    ,summMtxRaw=rawScore$basic$summMtxRaw
+                )
 
         # bScr --------------------------------------------------------------------------
         scoreBScr <- c()

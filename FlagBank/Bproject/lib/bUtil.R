@@ -368,12 +368,7 @@ bUtil.cut2 <- function( cutRst1Score ,fHName ,tgt.scMtx=NULL ,anaOnly=F ,logger=
 	cutInfoLst <- list()
 	if( !anaOnly ){
 		cutInfoLst <- NULL
-
-		if( 0<length(scMtxName) ){
-			datLen <- nrow(scoreMtx.grp$basic[[1]][[ scMtxName[1] ]]$scoreMtx)
-		} else if( 0<length(bScrMtxName) ){
-			datLen <- nrow(scoreMtx.grp$mf[[ bScrMtxName[1] ]]$scoreMtx)
-		}
+		datLen <- cutRst1Score$metaInfo$datLen
 	}
 
 	tStmp <- Sys.time()
