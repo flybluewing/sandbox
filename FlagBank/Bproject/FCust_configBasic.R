@@ -815,6 +815,7 @@ for( mName in names( scoreMtxCfg ) ){ # naming 추가.
 # =============================================================================================================
 #   sfcMtxCfg
 # =============================================================================================================
+
 sfcMtxCfg <- list()   # B.makeHMtxLst() 의 stdFilter참고
 if( 0==length(sfcMtxCfg) ){
     sfcName <- "sfcLate"
@@ -870,12 +871,12 @@ if( 0==length(sfcMtxCfg) ){
 for( hName in names(sfcMtxCfg) ){
 
     if( is.null(sfcMtxCfg[[hName]]$basic$prime) ){
-        sfcMtxCfg[[hName]]$basic$prime <- matrix( c(0,2,0,1 ,0,1,0,1 ,0,1,0,1 ,0,1,0,2 ) 
+        sfcMtxCfg[[hName]]$basic$prime <- matrix( c(0,3,0,1 ,0,1,0,1 ,0,5,0,4 ,0,0,0,1 ) 
                             ,ncol=2 ,byrow=T
                             ,dimnames=list(c(   "zeroCntM_raw" ,"zeroCntPh_raw" 
                                                 ,"rebMtxM_raw" ,"rebMtxPh_raw" 
                                                 ,"zeroCntM_evt","zeroCntPh_evt"
-                                                ,"rebMtxM_evt" ,"rebMtxPh_evt"
+                                                ,"rebMtxM_evt" ,"rebMtxPh_evt"  # 추가조건 : hpn > 1
                                             )
                                             ,c("min","max")
                             ) 

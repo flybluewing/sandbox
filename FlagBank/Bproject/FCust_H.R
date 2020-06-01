@@ -1157,10 +1157,10 @@ FCust_stdCut_AllM <- function(){
     rObj$getRawScore <- function( cutRstScr ){
         # basic -----------------------------------------------------------
         basicLst <- list()
-        basicLst$hpnMtxRaw      <- rObj$rawMtxSum( cutRstScr$basic$hpnMtxRaw )
-        basicLst$hpnMtxEvt      <- rObj$rawMtxSum( cutRstScr$basic$hpnMtxEvt )
-        basicLst$phRebMtxRaw    <- rObj$rawMtxSum( cutRstScr$basic$phRebMtxRaw )
-        basicLst$phRebMtxEvt    <- rObj$rawMtxSum( cutRstScr$basic$phRebMtxEvt )
+        basicLst$hpnMtxRaw      <- rObj$rawMtxSum( cutRstScr$basic$hpnMtxRaw ,hpn=T )
+        basicLst$hpnMtxEvt      <- rObj$rawMtxSum( cutRstScr$basic$hpnMtxEvt ,hpn=T )
+        basicLst$phRebMtxRaw    <- rObj$rawMtxSum( cutRstScr$basic$phRebMtxRaw ,hpn=T )
+        basicLst$phRebMtxEvt    <- rObj$rawMtxSum( cutRstScr$basic$phRebMtxEvt ,hpn=T )
 
         basicLst$summMtxRaw     <- rObj$rawMtxSum( cutRstScr$basic$summMtxRaw ,hpn=T )
         basicLst$summMtx.RebRaw  <- rObj$rawMtxSum( cutRstScr$basic$summMtx.RebRaw ,hpn=T )
@@ -1194,10 +1194,12 @@ FCust_stdCut_AllM <- function(){
         #   szMtxCnt ,szMtxDup
         #   sumMtx
 
-        primeSumm <- c( zeroCntM_raw=sum(0==hpnMtxRaw$zeroCntM)        ,zeroCntPh_raw=sum(0==hpnMtxRaw$zeroCntPh)
+        rebMtxM_evt =sum(hpnMtxEvt$rebMtxM["flag",] & hpnMtxEvt$rebMtxM["flag",]>1)
+        rebMtxPh_evt=sum(hpnMtxEvt$rebMtxPh["flag",] & hpnMtxEvt$rebMtxPh["cnt",]>1)
+        primeSumm <- c( zeroCntM_raw=sum(0==hpnMtxRaw$hpnCntM)          ,zeroCntPh_raw=sum(0==hpnMtxRaw$hpnCntPh)
                         ,rebMtxM_raw=sum(hpnMtxRaw$rebMtxM["flag",])    ,rebMtxPh_raw=sum(hpnMtxRaw$rebMtxPh["flag",])
-                        ,zeroCntM_evt=sum(0==hpnMtxEvt$zeroCntM)        ,zeroCntPh_evt=sum(0==hpnMtxEvt$zeroCntPh)
-                        ,rebMtxM_evt=sum(hpnMtxEvt$rebMtxM["flag",])    ,rebMtxPh_evt=sum(hpnMtxEvt$rebMtxPh["flag",])
+                        ,zeroCntM_evt=sum(0==hpnMtxEvt$hpnCntM)         ,zeroCntPh_evt=sum(0==hpnMtxEvt$hpnCntPh)
+                        ,rebMtxM_evt=rebMtxM_evt                        ,rebMtxPh_evt=rebMtxPh_evt
                     )
 
         basicLst <- list( prime = primeSumm

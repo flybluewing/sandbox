@@ -11,7 +11,7 @@ load(sprintf("../Aproject/save/Obj_gEnvZ%d.save",lastH))
 
 #-[Parallel init work]-------------------------------------------------------------
 prllNum <- 3     # 실수가 잦아서 그냥 오류 코드로 놔둔다.
-prllLog <- k.getFlogObj( "./log/parallel_log.txt" )
+prllLog <- k.getFlogObj( "./log/parallel_log_Hist.txt" )
 prll.initHeader <- function( ){
     k <- sfLapply(1:prllNum,function(prllId){
         curWd <- getwd()
@@ -92,7 +92,7 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
             #   anaOnly=TRUE 에서, cutRst$surFlag는 항상 TRUE임을 유의.
 
         cutRst1Score <- bUtil.getCut1Score( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx )
-        cut2Rst <- bUtil.cut2( cutRst1Score ,fHName ,tgt.scMtx=tgt.scMtx ,anaOnly=T ) 
+        cut2Rst <- bUtil.cut2( cutRst1Score ,fHName ,tgt.scMtx=tgt.scMtx ,anaOnly=T )
 
         cutRst$cutInfoLst <- append( cutRst$cutInfoLst ,cut2Rst$cutInfoLst )
 

@@ -1,8 +1,8 @@
 source("header.r")
 source("B_H.R")
-lastH <- 912
+lastH <- 913
 tgt.scMtx <- NULL
-testMode <- 
+testMode <- TRUE        # check
 
 load(sprintf("../Aproject/Obj_allIdxLstZ%d.save",lastH) )
 load(sprintf("../Aproject/save/Obj_fRstLstZ%d.save",lastH) )    ;names(fRstLst) <- names(allIdxLst$stdFiltedCnt)
