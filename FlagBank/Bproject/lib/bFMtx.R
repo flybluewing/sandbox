@@ -13,10 +13,15 @@ getScoreMtx.grp <- function( aZoidMtx ,filter.grp ,makeInfoStr=F ,cutter.grp=NUL
 	#  ,cutter.grp=NULL ,tgt.scMtx=NULL
 
 	rObj <- list( basic=list() ,bDup=list() ,mf=list() )
-
+	
 	for( nIdx in names(filter.grp$basic) ){
 		scoreMtxLst <- list()
-		for( nIdx.s in names(filter.grp$basic[[nIdx]]) ){
+		scMtxName <- names(filter.grp$basic[[nIdx]])
+		if( !is.null(tgt.scMtx) ){
+			scMtxName <- intersect( tgt.scMtx ,scMtxName )
+		}
+
+		for( nIdx.s in scMtxName ){
 			filterObj <- filter.grp$basic[[nIdx]][[nIdx.s]]
 			scoreMtxObj <- filterObj$fMtxObj( aZoidMtx ,makeInfoStr=makeInfoStr )
 
@@ -25,14 +30,22 @@ getScoreMtx.grp <- function( aZoidMtx ,filter.grp ,makeInfoStr=F ,cutter.grp=NUL
 		rObj$basic[[nIdx]] <- scoreMtxLst
 	}
 
-	for( nIdx.s in names(filter.grp$bDup) ){
+	scMtxName <- names(filter.grp$bDup)
+	if( !is.null(tgt.scMtx) ){
+		scMtxName <- intersect( tgt.scMtx ,scMtxName )
+	}
+	for( nIdx.s in scMtxName ){
 		filterObj <- filter.grp$bDup[[nIdx.s]]
 		scoreMtxObj <- filterObj$fMtxObj( aZoidMtx ,makeInfoStr=is.null(cutter.grp) )
 
 		rObj$bDup[[nIdx.s]] <- scoreMtxObj
 	}
 
-	for( nIdx.s in names(filter.grp$mf) ){
+	scMtxName <- names(filter.grp$mf)
+	if( !is.null(tgt.scMtx) ){
+		scMtxName <- intersect( tgt.scMtx ,scMtxName )
+	}
+	for( nIdx.s in scMtxName ){
 		filterObj <- filter.grp$mf[[nIdx.s]]
 		scoreMtxObj <- filterObj$fMtxObj( aZoidMtx ,makeInfoStr=is.null(cutter.grp) )
 		rObj$mf[[nIdx.s]] <- scoreMtxObj
