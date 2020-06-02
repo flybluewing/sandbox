@@ -330,7 +330,12 @@ scoreMtxCfg[[mName]] <- list(
     ,evtMax = NULL
     ,rowReb = NULL  # use default   c( rawMin=  )
     ,rowRebDup = NULL
-    ,summMtx = NULL ,summMtx.reb = NULL ,summMtx.sum = NULL
+    # ,summMtx = NULL
+    ,summMtx = matrix( c(  1 ,2 ,2 ,2 ,2 ,2     , 1 ,2 ,2 ,2 ,2 ,1 ) ,byrow=T # all ph fCol phReb xyCnt.fCol xyCnt.phase
+            ,ncol=length(summMtxName$cName) ,nrow=length(summMtxName$rName)
+            ,dimnames=list(summMtxName$rName,summMtxName$cName)
+        )
+    ,summMtx.reb = NULL ,summMtx.sum = NULL
     ,scMtx.sz = matrix( c( 2 ,2 ,1 ,2 ,2 ,1     ,1 ,1 ,1 ,1 ,1 ,1 ) ,byrow=T
                         #   "r.ph" ,"r.fCol" ,"r.dblHpnFlg" ,"e.ph" ,"e.fCol" ,"e.dblHpnFlg"
                         #   "rebCnt" ,"rebDup"
@@ -629,7 +634,7 @@ scoreMtxCfg[[mName]] <- list(
             ,dimnames=list(summMtxName$rName,summMtxName$cName)
         )
     ,summMtx.reb = NULL 
-    ,summMtx.sum = NULL
+    ,summMtx.sum = c(raw=3 ,evt=3)
     ,scMtx.sz = matrix( c( 3 ,2 ,1 ,3 ,2 ,1     ,2 ,1 ,1 ,2 ,1 ,1 ) ,byrow=T
                         #   "r.ph" ,"r.fCol" ,"r.dblHpnFlg" ,"e.ph" ,"e.fCol" ,"e.dblHpnFlg"
                         #   "rebCnt" ,"rebDup"
@@ -705,7 +710,7 @@ scoreMtxCfg[[mName]] <- list(
     ,evtMax = NULL
     ,rowReb = c( rawMin=3 ,lowE=2 ,rareE=1 )
     ,rowRebDup = c( lowE=2 ,rareE=2 )
-    ,summMtx = matrix( c(  1 ,3 ,2 ,2 ,2 ,1     , 1 ,3 ,2 ,2 ,2 ,1 ) ,byrow=T # all ph fCol phReb xyCnt.fCol xyCnt.phase
+    ,summMtx = matrix( c(  1 ,3 ,2 ,2 ,2 ,1     , 1 ,3 ,2 ,2 ,2 ,2 ) ,byrow=T # all ph fCol phReb xyCnt.fCol xyCnt.phase
             ,ncol=length(summMtxName$cName) ,nrow=length(summMtxName$rName)
             ,dimnames=list(summMtxName$rName,summMtxName$cName)
         )
@@ -871,7 +876,7 @@ if( 0==length(sfcMtxCfg) ){
 for( hName in names(sfcMtxCfg) ){
 
     if( is.null(sfcMtxCfg[[hName]]$basic$prime) ){
-        sfcMtxCfg[[hName]]$basic$prime <- matrix( c(0,3,0,1 ,0,1,0,1 ,0,5,0,4 ,0,0,0,1 ) 
+        sfcMtxCfg[[hName]]$basic$prime <- matrix( c(0,5,0,1 ,0,1,0,1 ,0,5,0,4 ,0,0,0,1 ) 
                             ,ncol=2 ,byrow=T
                             ,dimnames=list(c(   "zeroCntM_raw" ,"zeroCntPh_raw" 
                                                 ,"rebMtxM_raw" ,"rebMtxPh_raw" 

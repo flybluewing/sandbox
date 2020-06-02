@@ -59,7 +59,7 @@ for( sfcIdx in 0 ){ # 0:2
     if( testMode ){
         allIdxF <- allIdxF[sample(1:length(allIdxF),500)]
     }
-    save( allIdxF ,file=sprintf("Obj_allIdxF%d_cut0.save",sfcIdx) )
+    save( allIdxF ,file=sprintf("Obj_allIdxF%d_cutInit.save",sfcIdx) )
     logger$fLogStr(sprintf("Initial size :%7d",length(allIdxF)),pTime=T)
 
     #   primary cut --------------------------------------------------------------------
