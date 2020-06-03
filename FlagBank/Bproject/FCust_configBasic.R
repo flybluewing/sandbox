@@ -1,38 +1,58 @@
 
 
 scoreMtxCfg <- list()
+if( FALSE ){    # comment for value example & templete
+    #         scoreMtxCfg[["score1"]] <- list(
+    #             mName = mName   ,style=c( freqZero=TRUE )
+    #             ,fCol = list(
+    #                 "fCol1"=list( rng=matrix(c(0,1,0,1),ncol=2)     # c("min","max"),c("lev1","lev2")
+    #                                 ,evt=matrix(c(c(1,1,2,3,4),c(1,2,3,4,5)),ncol=2)  # c("lev","val")
+    #                                 ,evtMax.fCol = c( minLev=2 ,maxHpn=2 )       # fCol 별 전체 phase 대상으로 evt 발생 제한.
+    #                             ) 
+    #                 ,"fCol2"= ...
+    #             )
+    #           # FCust_stdCut.rawRow---------------------------------
+    #             ,evtMax      minLev maxHpn minLevH maxHpnH    # evt in one phase over fCols
+    #                     lev1      2      2       3       1
+    #                     lev2      2      3       3       2
+    #             ,rowReb = c( rawMin=3 ,lowE=2 ,rareE=1 )  # 3개 이상 발생. 그 중의 2개 이상 low Evt가 존재하거나 희귀 Evt 하나이상 존재
+    #                                                       #   하는 상태에서 반복 발생.
+    #             ,rowRebDup = c( lowE=4 ,rareE=1 )         # low Evt 4개 이상이거나 희귀 Evt 하나이상의 반복 발생(3연속 발생.)
+    #           # FCust_stdCut.hIdx-----------------------------------
+    #                 $summMtx    all ph fCol phReb xyCnt.fCol xyCnt.phase
+    #                         raw   1  2    2     2          1           1
+    #                         evt   1  2    2     2          1           1
+    #                 $summMtx.reb    all ph fCol phReb xyCnt.fCol xyCnt.phase
+    #                             raw   1  1    1     1          1           1
+    #                             evt   1  1    1     1          1           1
+    #                 $scMtx.sz      r.ph r.fCol r.dblHpnFlg e.ph e.fCol e.dblHpnFlg
+    #                         rebCnt    2      2           1    2      2           1
+    #                         rebDup    1      1           1    1      1           1
+    #               ,summMtx.sum    <- c(raw=2 ,evt=2)              # 개개 cut은 피했지만 전체 발생 총합은 한계를 넘는 경우.
+    #               ,scMtx.sz.sum   <- c(rebCnt.r=2 ,rebCnt.e=2)    # rebCnt.r = r.ph+r.fCol+r.dblHpnFlg    rebCnt.e = e.ph+e.fCol+e.dblHpnFlg
+    #             ,isHard=NULL  # use default
+    #         )
 
-#         scoreMtxCfg[["score1"]] <- list(
-#             mName = mName   ,style=c( freqZero=TRUE )
-#             ,fCol = list(
-#                 "fCol1"=list( rng=matrix(c(0,1,0,1),ncol=2)     # c("min","max"),c("lev1","lev2")
-#                                 ,evt=matrix(c(c(1,1,2,3,4),c(1,2,3,4,5)),ncol=2)  # c("lev","val")
-#                                 ,evtMax.fCol = c( minLev=2 ,maxHpn=2 )       # fCol 별 전체 phase 대상으로 evt 발생 제한.
-#                             ) 
-#                 ,"fCol2"= ...
-#             )
-#           # FCust_stdCut.rawRow---------------------------------
-#             ,evtMax      minLev maxHpn minLevH maxHpnH    # evt in one phase over fCols
-#                     lev1      2      2       3       1
-#                     lev2      2      3       3       2
-#             ,rowReb = c( rawMin=3 ,lowE=2 ,rareE=1 )  # 3개 이상 발생. 그 중의 2개 이상 low Evt가 존재하거나 희귀 Evt 하나이상 존재
-#                                                       #   하는 상태에서 반복 발생.
-#             ,rowRebDup = c( lowE=4 ,rareE=1 )         # low Evt 4개 이상이거나 희귀 Evt 하나이상의 반복 발생(3연속 발생.)
-#           # FCust_stdCut.hIdx-----------------------------------
-#                 $summMtx    all ph fCol phReb xyCnt.fCol xyCnt.phase
-#                         raw   1  2    2     2          1           1
-#                         evt   1  2    2     2          1           1
-#                 $summMtx.reb    all ph fCol phReb xyCnt.fCol xyCnt.phase
-#                             raw   1  1    1     1          1           1
-#                             evt   1  1    1     1          1           1
-#                 $scMtx.sz      r.ph r.fCol r.dblHpnFlg e.ph e.fCol e.dblHpnFlg
-#                         rebCnt    2      2           1    2      2           1
-#                         rebDup    1      1           1    1      1           1
-#               ,summMtx.sum    <- c(raw=2 ,evt=2)              # 개개 cut은 피했지만 전체 발생 총합은 한계를 넘는 경우.
-#               ,scMtx.sz.sum   <- c(rebCnt.r=2 ,rebCnt.e=2)    # rebCnt.r = r.ph+r.fCol+r.dblHpnFlg    rebCnt.e = e.ph+e.fCol+e.dblHpnFlg
-#             ,isHard=NULL  # use default
-#         )
 
+    # mName <- "template"
+    # scoreMtxCfg[[mName]] <- list(
+    #     mName = mName   ,style=c( freqZero=TRUE )
+    #     ,fCol = list(
+    #         "col1"=list( rng=matrix( c(NA,NA ,0,0) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
+    #                         ,evt=matrix( c(c(1,2,3,3),c(1,2,3,4)) ,ncol=2 ) # colname c("lev","val")
+    #                     )
+    #         ,"col2"=list( rng=matrix( c(NA,NA ,0,0) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
+    #                         ,evt=matrix( c(c(1,2,3,3),c(1,2,3,4)) ,ncol=2 ) # colname c("lev","val")
+    #                     )
+    #     )
+    #     ,evtMax = NULL
+    #     ,rowReb = NULL  ,rowRebDup = NULL
+    #     ,summMtx = NULL ,summMtx.reb = NULL ,summMtx.sum = NULL
+    #     ,scMtx.sz = NULL,scMtx.sz.sum = NULL
+    #     ,isHard=NULL  # use default
+    # )
+
+}
 
 summMtxName <- list( cName=c( "all" ,"ph" ,"fCol" ,"phReb" ,"xyCnt.fCol" ,"xyCnt.phase" ) 
                     ,rName=c( "raw" ,"evt" )
@@ -730,7 +750,143 @@ scoreMtxCfg[[mName]] <- list(
     ,isHard=NULL  # use default
 )
 
+mName <- "bScr01"
+scoreMtxCfg[[mName]] <- list(
+    mName = mName   ,style=c( freqZero=TRUE )
+    ,fCol = list(
+        "raw.1"=list( rng=matrix( c(NA,NA ,1,2) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
+                        ,evt=matrix( c(c(2,3,3,3,3),c(2,3,4,5,6)) ,ncol=2 ) # colname c("lev","val")
+                    )
+        ,"raw.3"=list( rng=matrix( c(NA,NA ,1,2) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
+                        ,evt=matrix( c(c(2,3,3,3,3),c(2,3,4,5,6)) ,ncol=2 ) # colname c("lev","val")
+                    )
+        ,"raw.4"=list( rng=matrix( c(NA,NA ,1,2) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
+                        ,evt=matrix( c(c(1,2,3,3,3),c(2,3,4,5,6)) ,ncol=2 ) # colname c("lev","val")
+                    )
+        ,"raw.6"=list( rng=matrix( c(NA,NA ,1,2) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
+                        ,evt=matrix( c(c(1,2,3,3,3),c(2,3,4,5,6)) ,ncol=2 ) # colname c("lev","val")
+                    )
+        ,"rem.1"=list( rng=matrix( c(NA,NA ,1,3) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
+                        ,evt=matrix( c(c(1,2,3,3,3),c(2,3,4,5,6)) ,ncol=2 ) # colname c("lev","val")
+                    )
+        ,"rem.3"=list( rng=matrix( c(NA,NA ,1,3) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
+                        ,evt=matrix( c(c(1,2,3,3,3),c(2,3,4,5,6)) ,ncol=2 ) # colname c("lev","val")
+                    )
+        ,"rem.4"=list( rng=matrix( c(NA,NA ,1,3) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
+                        ,evt=matrix( c(c(1,2,3,3,3),c(2,3,4,5,6)) ,ncol=2 ) # colname c("lev","val")
+                    )
+        ,"rem.6"=list( rng=matrix( c(NA,NA ,1,3) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
+                        ,evt=matrix( c(c(1,2,3,3,3),c(2,3,4,5,6)) ,ncol=2 ) # colname c("lev","val")
+                    )
+        ,"c.1"=list( rng=matrix( c(NA,NA ,1,2) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
+                        ,evt=matrix( c(c(3,3,3,3),c(2,3,4,5)) ,ncol=2 ) # colname c("lev","val")
+                    )
+        ,"c.3"=list( rng=matrix( c(NA,NA ,1,2) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
+                        ,evt=matrix( c(c(3,3,3,3),c(2,3,4,5)) ,ncol=2 ) # colname c("lev","val")
+                    )
+        ,"c.4"=list( rng=matrix( c(NA,NA ,1,2) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
+                        ,evt=matrix( c(c(3,3,3,3),c(2,3,4,5)) ,ncol=2 ) # colname c("lev","val")
+                    )
+        ,"c.6"=list( rng=matrix( c(NA,NA ,1,2) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
+                        ,evt=matrix( c(c(3,3,3,3),c(2,3,4,5)) ,ncol=2 ) # colname c("lev","val")
+                    )
+        ,"raw.ZW"=list( rng=matrix( c(NA,NA ,0,2) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
+                        ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2 ) # colname c("lev","val")
+                    )
+        ,"rem.ZW"=list( rng=matrix( c(NA,NA ,0,3) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
+                        ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2 ) # colname c("lev","val")
+                    )
+        ,"c.ZW"=list( rng=matrix( c(NA,NA ,0,2) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
+                        ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2 ) # colname c("lev","val")
+                    )
+    )
+    ,evtMax = NULL
+    ,rowReb = NULL  ,rowRebDup = NULL
+    ,summMtx = NULL ,summMtx.reb = NULL ,summMtx.sum = NULL
+    ,scMtx.sz = NULL,scMtx.sz.sum = NULL
+    ,isHard=NULL  # use default
+)
 
+mName <- "bScr02"
+scoreMtxCfg[[mName]] <- list(
+    mName = mName   ,style=c( freqZero=TRUE )
+    ,fCol = list(
+        "r.lm"=list( rng=matrix( c(NA,NA ,0,0) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
+                        ,evt=matrix( c(c(1,2,3,3),c(1,2,3,4)) ,ncol=2 ) # colname c("lev","val")
+                    )
+        ,"r.m2"=list( rng=matrix( c(NA,NA ,0,0) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
+                        ,evt=matrix( c(c(1,2,3,3),c(1,2,3,4)) ,ncol=2 ) # colname c("lev","val")
+                    )
+        ,"r.mN"=list( rng=matrix( c(NA,NA ,0,0) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
+                        ,evt=matrix( c(c(1,2,3,3),c(1,2,3,4)) ,ncol=2 ) # colname c("lev","val")
+                    )
+        ,"sq.lma"=list( rng=matrix( c(NA,NA ,0,0) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
+                        ,evt=matrix( c(c(1,2,3,3),c(1,2,3,4)) ,ncol=2 ) # colname c("lev","val")
+                    )
+        ,"sq.lmt"=list( rng=matrix( c(NA,NA ,0,0) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
+                        ,evt=matrix( c(c(1,2,3,3),c(1,2,3,4)) ,ncol=2 ) # colname c("lev","val")
+                    )
+        ,"sq.lmaRem"=list( rng=matrix( c(NA,NA ,0,0) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
+                        ,evt=matrix( c(c(1,2,3,3),c(1,2,3,4)) ,ncol=2 ) # colname c("lev","val")
+                    )
+        ,"sq.lmtRem"=list( rng=matrix( c(NA,NA ,0,0) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
+                        ,evt=matrix( c(c(1,2,3,3),c(1,2,3,4)) ,ncol=2 ) # colname c("lev","val")
+                    )
+        ,"sq.ma"=list( rng=matrix( c(NA,NA ,0,0) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
+                        ,evt=matrix( c(c(1,2,3,3),c(1,2,3,4)) ,ncol=2 ) # colname c("lev","val")
+                    )
+        ,"sq.mt"=list( rng=matrix( c(NA,NA ,0,0) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
+                        ,evt=matrix( c(c(1,2,3,3),c(1,2,3,4)) ,ncol=2 ) # colname c("lev","val")
+                    )
+        ,"c2.lm"=list( rng=matrix( c(NA,NA ,0,0) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
+                        ,evt=matrix( c(c(1,2,3,3),c(1,2,3,4)) ,ncol=2 ) # colname c("lev","val")
+                    )
+        ,"c2.m2"=list( rng=matrix( c(NA,NA ,0,0) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
+                        ,evt=matrix( c(c(1,2,3,3),c(1,2,3,4)) ,ncol=2 ) # colname c("lev","val")
+                    )
+        ,"c2.mN"=list( rng=matrix( c(NA,NA ,0,0) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
+                        ,evt=matrix( c(c(1,2,3,3),c(1,2,3,4)) ,ncol=2 ) # colname c("lev","val")
+                    )
+        ,"sq3.lma"=list( rng=matrix( c(NA,NA ,0,0) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
+                        ,evt=matrix( c(c(1,2,3,3),c(1,2,3,4)) ,ncol=2 ) # colname c("lev","val")
+                    )
+        ,"sq3.lmt"=list( rng=matrix( c(NA,NA ,0,0) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
+                        ,evt=matrix( c(c(1,2,3,3),c(1,2,3,4)) ,ncol=2 ) # colname c("lev","val")
+                    )
+        ,"sq3.lmaRem"=list( rng=matrix( c(NA,NA ,0,0) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
+                        ,evt=matrix( c(c(1,2,3,3),c(1,2,3,4)) ,ncol=2 ) # colname c("lev","val")
+                    )
+        ,"sq3.lmtRem"=list( rng=matrix( c(NA,NA ,0,0) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
+                        ,evt=matrix( c(c(1,2,3,3),c(1,2,3,4)) ,ncol=2 ) # colname c("lev","val")
+                    )
+        ,"sq3.ma"=list( rng=matrix( c(NA,NA ,0,0) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
+                        ,evt=matrix( c(c(1,2,3,3),c(1,2,3,4)) ,ncol=2 ) # colname c("lev","val")
+                    )
+        ,"sq3.m2"=list( rng=matrix( c(NA,NA ,0,0) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
+                        ,evt=matrix( c(c(1,2,3,3),c(1,2,3,4)) ,ncol=2 ) # colname c("lev","val")
+                    )
+        ,"sq3.mt"=list( rng=matrix( c(NA,NA ,0,0) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
+                        ,evt=matrix( c(c(1,2,3,3),c(1,2,3,4)) ,ncol=2 ) # colname c("lev","val")
+                    )
+        ,"c3.lma"=list( rng=matrix( c(NA,NA ,0,0) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
+                        ,evt=matrix( c(c(1,2,3,3),c(1,2,3,4)) ,ncol=2 ) # colname c("lev","val")
+                    )
+        ,"c3.lmt"=list( rng=matrix( c(NA,NA ,0,0) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
+                        ,evt=matrix( c(c(1,2,3,3),c(1,2,3,4)) ,ncol=2 ) # colname c("lev","val")
+                    )
+        ,"c3.ma"=list( rng=matrix( c(NA,NA ,0,0) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
+                        ,evt=matrix( c(c(1,2,3,3),c(1,2,3,4)) ,ncol=2 ) # colname c("lev","val")
+                    )
+        ,"c3.mt"=list( rng=matrix( c(NA,NA ,0,0) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
+                        ,evt=matrix( c(c(1,2,3,3),c(1,2,3,4)) ,ncol=2 ) # colname c("lev","val")
+                    )
+    )
+    ,evtMax = NULL
+    ,rowReb = NULL  ,rowRebDup = NULL
+    ,summMtx = NULL ,summMtx.reb = NULL ,summMtx.sum = NULL
+    ,scMtx.sz = NULL,scMtx.sz.sum = NULL
+    ,isHard=NULL  # use default
+)
 
 for( mName in names( scoreMtxCfg ) ){ # naming 추가.
 

@@ -51,8 +51,8 @@ bFMtxB.BScrLst[["bScr01"]] <- function( stdMIObj ){
 	rObj$fMtxObj <- function( aZoidMtx ,makeInfoStr=F ){
 
 		aLen <- nrow(aZoidMtx)
-		cName <- c(	"raw.1" ,"raw.3" ,"raw.4" ,"raw.6"	,"rem.1" ,"rem.2" ,"rem.3" ,"rem.4" ,"rem.5" ,"rem.6"
-					,"c.1" ,"c.2" ,"c.3" ,"c.4" ,"c.5" ,"c.6"
+		cName <- c(	"raw.1" ,"raw.3" ,"raw.4" ,"raw.6"	,"rem.1" ,"rem.3" ,"rem.4" ,"rem.6"
+					,"c.1" ,"c.3" ,"c.4" ,"c.6"
 					,"raw.ZW" ,"rem.ZW" ,"c.ZW"
 				)
 		scoreMtx <- matrix( 0, nrow=aLen, ncol=length(cName) )	;colnames(scoreMtx) <- cName
@@ -77,9 +77,9 @@ bFMtxB.BScrLst[["bScr01"]] <- function( stdMIObj ){
 					iObj <- rObj$valPtnLst[[colIdx]]$infoLst[[fIdx]]
 					if( colIdx %in% c(1,3,4,6) ){	# 2,4는 각각 1과 6을 너무 고정시키기 때문에.
 						scoreMtx[aIdx,sprintf("raw.%d",colIdx)] <- sum(aZoid==iObj$lastZoid)
+						scoreMtx[aIdx,sprintf("rem.%d",colIdx)] <- sum(aRem==iObj$rem)
+						scoreMtx[aIdx,sprintf("c.%d",colIdx)] <- sum(aCStep==iObj$cStep)
 					}
-					scoreMtx[aIdx,sprintf("rem.%d",colIdx)] <- sum(aRem==iObj$rem)
-					scoreMtx[aIdx,sprintf("c.%d",colIdx)] <- sum(aCStep==iObj$cStep)
 				}
 			}
 
@@ -141,7 +141,8 @@ bFMtxB.BScrLst[["bScr02"]] <- function( stdMIObj ){ # fCutCnt.colValSeqNext() ,a
 
 	#= ptn2 ==================================================
 	# rObj$checkBanRem2() -----------------------------
-	cvSeqNextLst <- colValSeqNext( gEnv$zhF ,pColSize=2 )
+	# cvSeqNextLst <- colValSeqNext( gEnv$zhF ,pColSize=2 )
+	cvSeqNextLst <- colValSeqNext( zMtx ,pColSize=2 )
 	banRem2Lst <- lapply( cvSeqNextLst, function(p){ 
 						if( 0<nrow(p$fndMtx) ) p$fndMtx[1,]%%10 else integer(0)
 					})
@@ -173,7 +174,7 @@ bFMtxB.BScrLst[["bScr02"]] <- function( stdMIObj ){ # fCutCnt.colValSeqNext() ,a
 		for( idx in 1:length(cvLst) ){
 			if( 0==nrow(cvLst[[idx]]$fndMtx) ) next
 
-			matCnt <- sum(aZoid[0:1+idx]==cvLst$code)
+			matCnt <- sum(aZoid[0:1+idx]==cvLst[[idx]]$fndMtx[1,])
 			rVal["lastMatTot"] <- matCnt + rVal["lastMatTot"]
 
 			if( 2==matCnt ) rVal["lastMatAll"] <- 1 + lastMatAll["lastMatAll"]
@@ -236,7 +237,8 @@ bFMtxB.BScrLst[["bScr02"]] <- function( stdMIObj ){ # fCutCnt.colValSeqNext() ,a
 	}
 
 	#= ptn3 ==================================================
-	cvSeqNextLst <- colValSeqNext( gEnv$zhF ,pColSize=3 )
+	# cvSeqNextLst <- colValSeqNext( gEnv$zhF ,pColSize=3 )
+	cvSeqNextLst <- colValSeqNext( zMtx ,pColSize=3 )
 	# rObj$checkCvSeqNextLst3 -----------------------------
 	banRem3Lst <- lapply( cvSeqNextLst, function(p){ 
 						if( 0<nrow(p$fndMtx) ) p$fndMtx[1,]%%10 else integer(0)
@@ -268,7 +270,7 @@ bFMtxB.BScrLst[["bScr02"]] <- function( stdMIObj ){ # fCutCnt.colValSeqNext() ,a
 		for( idx in 1:length(cvLst) ){
 			if( 0==nrow(cvLst[[idx]]$fndMtx) ) next
 
-			matCnt <- sum(aZoid[0:2+idx]==cvLst$code)
+			matCnt <- sum(aZoid[0:2+idx]==cvLst[[idx]]$fndMtx[1,])
 			rVal["lastMatTot"] <- matCnt + rVal["lastMatTot"]
 
 			if( 2==matCnt ) rVal["lastMatAll"] <- 1 + lastMatAll["lastMatAll"]

@@ -1011,7 +1011,8 @@ bFCust.getFCustGrp <- function( hMtxLst ,tgt.scMtx=NULL ){
 
 		mLst <- list()  #   cutterLst.bScr
 		for( mName in names(rObj$mtxInfoLst.bScr) ){
-            #   QQE:todo
+            scoreMtxObj <- B.HMtxLst_getMtxLst( hMtxLst , hName ,mName ,pName=NULL ,tgt="mfMtxLst" )
+            mLst[[mName]] <- FCust_stdCut.rawRow( hName ,mName ,pName="N/A" ,scoreMtxObj$scoreMtx )
         }
 		cutterLst.bScr[[hName]] <- mLst
 
