@@ -81,22 +81,18 @@ bUtil.cut1 <- function( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=NULL ,anaOnly=F
 
         }
 
-		# QQE:hold
-		bScrMtxName <- character(0)
 		for( mName in bScrMtxName ){
-			cutLst <- cut.grp$cutterLst.bScr[[hName]][[mName]]$stdLst
+			cutObj <- cut.grp$cutterLst.bScr[[hName]][[mName]]
 			scoreMtx <- scoreMtx.grp$mf[[mName]]$scoreMtx
-			for( cnIdx in names(cutLst) ){  # cnIdx <- names(cutLst)[1]
-				cuttedLst <- cutLst[[cnIdx]]$cut( scoreMtx ,!surFlag )
-				if( 0<length(cuttedLst) ){
-					if( anaOnly ){	cutInfoLst[[1+length(cutInfoLst)]] <- c( cuttedLst[[1]]$idObjDesc ,cuttedLst[[1]]$info )
-					} else {
-						cut_aIdx <- sapply( cuttedLst ,function(p){p$idx} )
-						surFlag[cut_aIdx] <- FALSE
-					}
+			cRst <- cutObj$cut( scoreMtx ,alreadyDead=!surFlag ,anaMode=anaOnly )
+			if( !anaOnly ){	surFlag <- surFlag & cRst$surFlag
+			} else {
+				if( 0<length(cRst$cutLst) ){
+					cutInfoLst <- append( cutInfoLst 
+										,lapply( cRst$cutLst[[1]]$cLst ,function(p){ c(p$idObjDesc ,info=p$info) } ) 
+									)
 				}
 			}
-
 			reportStatus( tStmp ,sprintf("[%s,%s] bScrMtx",hName,mName) ,surFlag ,logger )
 		}
 

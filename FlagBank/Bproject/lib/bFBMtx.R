@@ -262,7 +262,7 @@ bFMtxB.BScrLst[["bScr02"]] <- function( stdMIObj ){ # fCutCnt.colValSeqNext() ,a
 			matCnt <- sum(aRem[0:2+idx]==remLst[[idx]])
 			rVal["lastMatTot.rem"] <- matCnt + rVal["lastMatTot.rem"]
 
-			if( 2==matCnt ) rVal["lastMatAll.rem"] <- 1 + rVal["lastMatAll.rem"]
+			if( 3==matCnt ) rVal["lastMatAll.rem"] <- 1 + rVal["lastMatAll.rem"]
 		}
 
 		# lastMatAll ,lastMatTot
@@ -273,7 +273,7 @@ bFMtxB.BScrLst[["bScr02"]] <- function( stdMIObj ){ # fCutCnt.colValSeqNext() ,a
 			matCnt <- sum(aZoid[0:2+idx]==cvLst[[idx]]$fndMtx[1,])
 			rVal["lastMatTot"] <- matCnt + rVal["lastMatTot"]
 
-			if( 2==matCnt ) rVal["lastMatAll"] <- 1 + rVal["lastMatAll"]
+			if( 3==matCnt ) rVal["lastMatAll"] <- 1 + rVal["lastMatAll"]
 		}
 
 		# matAll.max ,matTot.max

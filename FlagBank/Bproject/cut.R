@@ -1,6 +1,4 @@
-source("header.r")
-source("B_H.R")
-source("cut_H.R")
+source("header.r")  ;source("B_H.R")    ;source("cut_H.R")
 lastH <- 913
 tgt.scMtx <- NULL
 testMode <- TRUE        # check
