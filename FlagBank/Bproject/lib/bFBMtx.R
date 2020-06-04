@@ -125,7 +125,7 @@ bFMtxB.BScrLst[["bScr02"]] <- function( stdMIObj ){ # fCutCnt.colValSeqNext() ,a
 		rVal <- c( lastMatch=0 ,mat2=0 ,matN=0 )
 		datSize <- nrow(rObj$banValMtx)
 
-		if( 0<datSize ) return( rVal )
+		if( 0==datSize ) return( rVal )
 
 		rVal["lastMatch"] <- sum(rObj$banValMtx[1,]==aZoid ,na.rm=T)
 
@@ -177,7 +177,7 @@ bFMtxB.BScrLst[["bScr02"]] <- function( stdMIObj ){ # fCutCnt.colValSeqNext() ,a
 			matCnt <- sum(aZoid[0:1+idx]==cvLst[[idx]]$fndMtx[1,])
 			rVal["lastMatTot"] <- matCnt + rVal["lastMatTot"]
 
-			if( 2==matCnt ) rVal["lastMatAll"] <- 1 + lastMatAll["lastMatAll"]
+			if( 2==matCnt ) rVal["lastMatAll"] <- 1 + rVal["lastMatAll"]
 		}
 
 		# matAll.max ,matTot.max
@@ -243,7 +243,7 @@ bFMtxB.BScrLst[["bScr02"]] <- function( stdMIObj ){ # fCutCnt.colValSeqNext() ,a
 	banRem3Lst <- lapply( cvSeqNextLst, function(p){ 
 						if( 0<nrow(p$fndMtx) ) p$fndMtx[1,]%%10 else integer(0)
 					})
-	rObj$cvSeqNextLste.rem <- banRem3Lst
+	rObj$cvSeqNextLst3.rem <- banRem3Lst
 	rObj$cvSeqNextLst3 <- cvSeqNextLst
 	rObj$cvSeqNextLst3.lenMax <- max( sapply(rObj$cvSeqNextLst3,function(p){nrow(p$fndMtx)}) )
 	rObj$checkCvSeqNextLst3 <- function( aZoid ){
@@ -273,7 +273,7 @@ bFMtxB.BScrLst[["bScr02"]] <- function( stdMIObj ){ # fCutCnt.colValSeqNext() ,a
 			matCnt <- sum(aZoid[0:2+idx]==cvLst[[idx]]$fndMtx[1,])
 			rVal["lastMatTot"] <- matCnt + rVal["lastMatTot"]
 
-			if( 2==matCnt ) rVal["lastMatAll"] <- 1 + lastMatAll["lastMatAll"]
+			if( 2==matCnt ) rVal["lastMatAll"] <- 1 + rVal["lastMatAll"]
 		}
 
 		# matAll.max ,matTot.max
