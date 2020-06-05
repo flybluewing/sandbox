@@ -1037,7 +1037,7 @@ for( hName in names(sfcMtxCfg) ){
                             ,dimnames=list(c(   "zeroCntM_raw" ,"zeroCntPh_raw" 
                                                 ,"rebMtxM_raw" ,"rebMtxPh_raw" 
                                                 ,"zeroCntM_evt","zeroCntPh_evt"
-                                                ,"rebMtxM_evt" ,"rebMtxPh_evt"  # 추가조건 : hpn > 1
+                                                ,"rebMtxM_evt" ,"rebMtxPh_evt"  # 전제조건 : hpn > 1
                                             )
                                             ,c("min","max")
                             ) 
