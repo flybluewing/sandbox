@@ -377,22 +377,22 @@ bFMtxB.BScrLst[["bScr02"]] <- function( stdMIObj ){ # fCutCnt.colValSeqNext() ,a
 			#	aRem <- aZoid %% 10	;aFStep <- aZoid - rObj$lastZoid
 
 			rVal <- rObj$checkRawVal( aZoid )
-			scoreMtx[,c("r.lm","r.m2","r.mN")] <- rVal[c("lastMatch","mat2","matN")]
+			scoreMtx[aIdx,c("r.lm","r.m2","r.mN")] <- rVal[c("lastMatch","mat2","matN")]
 
 			rVal <- rObj$checkCvSeqNextLst2( aZoid )
 			cName <- c("lastMatAll","lastMatTot","lastMatAll.rem","lastMatTot.rem","matAll.max","matTot.max") 
-			scoreMtx[,c("sq.lma","sq.lmt","sq.lmaRem","sq.lmtRem","sq.ma","sq.mt")] <- rVal[cName]
+			scoreMtx[aIdx,c("sq.lma","sq.lmt","sq.lmaRem","sq.lmtRem","sq.ma","sq.mt")] <- rVal[cName]
 
 			rVal <- rObj$checkCStep2Mtx( aZoid )
-			scoreMtx[,c("c2.lm","c2.m2","c2.mN")] <- rVal[c("lastMatch","mat2","matN")]
+			scoreMtx[aIdx,c("c2.lm","c2.m2","c2.mN")] <- rVal[c("lastMatch","mat2","matN")]
 
 			rVal <- rObj$checkCvSeqNextLst3( aZoid )
 			cName <- c("lastMatAll","lastMatTot","lastMatAll.rem","lastMatTot.rem","matAll.max","mat2.max","matTot.max" ) 
-			scoreMtx[,c("sq3.lma","sq3.lmt","sq3.lmaRem","sq3.lmtRem","sq3.ma","sq3.m2","sq3.mt")] <- rVal[cName]
+			scoreMtx[aIdx,c("sq3.lma","sq3.lmt","sq3.lmaRem","sq3.lmtRem","sq3.ma","sq3.m2","sq3.mt")] <- rVal[cName]
 
 			rVal <- rObj$checkCStep3( aZoid )
 			cName <- c( "lastMatAll" ,"lastMatTot" ,"matAll.max" ,"matTot.max" ) 
-			scoreMtx[,c("c3.lma","c3.lmt","c3.ma","c3.mt")] <- rVal[cName]
+			scoreMtx[aIdx,c("c3.lma","c3.lmt","c3.ma","c3.mt")] <- rVal[cName]
 
             # for( idx in 1:4 ){	# c3.x
             # 	logId <- sprintf("c3%d",idx)

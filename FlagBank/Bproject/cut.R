@@ -40,7 +40,7 @@ filter.grp <- getFilter.grp( stdMI.grp ,tgt.scMtx=tgt.scMtx )
 sfExport("tgt.scMtx")   ;sfExport("hMtxLst")    ;sfExport("cut.grp")    ;sfExport("filter.grp")
 
 tDiff <- Sys.time() - tStmp
-sprintf("hMtxLs,cut.grp    Time cost : %.1f%s",tDiff,units(tDiff))
+sprintf("hMtxLs,cut.grp    Time cost : %.1f%s",tDiff,units(tDiff))  # 15min
 
 
 
