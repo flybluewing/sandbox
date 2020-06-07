@@ -1,5 +1,5 @@
 source("header.r")  ;source("B_H.R")    ;source("cut_H.R")
-lastH <- 913
+lastH <- 914
 tgt.scMtx <- NULL
 testMode <- TRUE        # check
 
@@ -92,7 +92,7 @@ for( sfcIdx in 0 ){ # 0:2
     }
     allIdxF <- allIdxF[surFlag]
     logger$fLogStr(sprintf("   - bUtil.cut1()   final size :%7d",length(allIdxF)),pTime=T)
-    save( allIdxF ,file=sprintf("Obj_allIdxF%d_cut0_byM.save",sfcIdx) )
+    save( allIdxF ,file=sprintf("Obj_allIdxF%d_cut0_byM_%d.save",sfcIdx,lastH) )
 
 
     # bUtil.cut1() ----------------------------------------------------------------------
@@ -157,7 +157,7 @@ for( sfcIdx in 0 ){ # 0:2
     }
     allIdxF <- allIdxF[surFlag]
     logger$fLogStr(sprintf("   - bUtil.cut2()   final size :%7d",length(allIdxF)),pTime=T)
-    save( allIdxF ,file=sprintf("Obj_allIdxF%d_cut2.save",sfcIdx) )
+    save( allIdxF ,file=sprintf("Obj_allIdxF%d_cut2_%d.save",sfcIdx,lastH) )
 
 
 
