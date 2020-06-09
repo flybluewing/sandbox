@@ -659,6 +659,15 @@ bUtil.allSame <- function( val ){
 	return( all(val[1]==val[2:val.len]) )
 } # bUtil.allSame()
 
+bUtil.closeMax <- function( score ,wind=c(min=0,max=1) ,distVal=3 ){	# max 값과 얼마나 가까운가.
+	distScore <- distVal - ( wind["max"]-score )
+	distScore[ distScore>distVal ] <- distVal
+	distScore[ distScore<0 ] <- 0
+	distScore[ score<=wind["min"] ] <- 0
+
+	return( distVal )
+}
+
 #	src컬럼을 지정할 필요 없음. evtLst 의 이름을 이용함.
 bUtil.getEvtVal <- function( src ,evtLst ){
 	evtVal <- src[names(evtLst)]

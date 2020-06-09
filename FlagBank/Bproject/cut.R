@@ -1,14 +1,22 @@
 source("header.r")  ;source("B_H.R")    ;source("cut_H.R")
+
 lastH <- 914
 tgt.scMtx <- NULL
-testMode <- TRUE        # check
+testMode <-             #check
+prllNum <-              #check
+
+QQE:Trouble      # 실수 방지를 위해 의도된 오류코드
+
+# lastH <- 914
+# tgt.scMtx <- NULL
+# testMode <-         # check
 
 load(sprintf("../Aproject/Obj_allIdxLstZ%d.save",lastH) )
 load(sprintf("../Aproject/save/Obj_fRstLstZ%d.save",lastH) )    ;names(fRstLst) <- names(allIdxLst$stdFiltedCnt)
 load(sprintf("../Aproject/save/Obj_gEnvZ%d.save",lastH))
 
 #-[Parallel init work]-------------------------------------------------------------
-prllNum <- 3     # 실수가 잦아서 그냥 오류 코드로 놔둔다.
+# prllNum <- 4     # 실수가 잦아서 그냥 오류 코드로 놔둔다.
 prllLog <- k.getFlogObj( "./log/parallel_log_Cut.txt" )
 prll.initHeader <- function( ){
     k <- sfLapply(1:prllNum,function(prllId){
@@ -35,6 +43,7 @@ tStmp <- Sys.time()
 # ----------------------------------------------------------------------------------
 stdMI.grp <- bUtil.getStdMILst( gEnv ,fRstLst )     ;stdMI.grp$anyWarn( )
 hMtxLst <- B.makeHMtxLst( gEnv, allIdxLst, fRstLst, lastH=lastH, tgt.scMtx )
+save( hMtxLst ,file=sprintf("Obj_cut_hMtxLst_%d.save",lastH) )
 cut.grp <- bFCust.getFCustGrp( hMtxLst ,tgt.scMtx )
 filter.grp <- getFilter.grp( stdMI.grp ,tgt.scMtx=tgt.scMtx )
 sfExport("tgt.scMtx")   ;sfExport("hMtxLst")    ;sfExport("cut.grp")    ;sfExport("filter.grp")
@@ -68,7 +77,7 @@ for( sfcIdx in 0 ){ # 0:2
 
     # bUtil.cut1( byMethod ) --------------------------------------------------------
     surFlag <- rep( T ,length(allIdxF) )
-    bLst <- k.blockLst( length(allIdxF) ,100*ifelse(testMode,2,1000) )
+    bLst <- k.blockLst( length(allIdxF) ,100*ifelse(testMode,5,500) )
 
     sfExport("fHName")  ;sfExport("allIdxF")    ;sfExport("cutH.InitialCut")
     resultLst <- sfLapply( bLst ,function( blk ){
