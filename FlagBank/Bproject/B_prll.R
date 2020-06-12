@@ -50,6 +50,7 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
     save( testData.grp ,file=sprintf("Obj_testData.grp.%d.%s.save",lastH,ifelse(is.null(tgt.scMtx),"all",tgt.scMtx) ) )
     #   save( testData.grp ,file="Obj_testData.grp.save" )
     #   load( "Obj_testData.grp.880.all.save" )
+    #           Obj_testData.grp.900.w100.save : configH <- lastH-100 (4hours)
 
     #   B.get_cutRst1.grp()
 
@@ -120,13 +121,29 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
 
         }
 
-        return( list(hIdx=curHIdx ,cutRst=cutRst) )
+        auxTest <- list()
+        if( TRUE ){ # temp test
+            # cutRst1Score$aLst[[1]]$sfcLate$basic$score1$raw$phaseHpnCnt
+            cutRstScrSet <- bUtil.cutRst1_scoreMtx(cutRst1Score$aLst[[1]])
+            # cutRstScrSet$sfcLate$basic
+            #     "hpnMtxRaw"      "hpnMtxEvt"      "phRebMtxRaw"    "phRebMtxEvt"    "rebMtxRaw"      "rebMtxEvt"      
+            #     "summMtxRaw"     "summMtxEvt"     "summMtx.RebRaw" "summMtx.RebEvt" "szMtxCnt"       "szMtxDup"       
+            #     "sumMtx" 
+            hpnMtxRaw <- cutRstScrSet$sfcLate$basic$hpnMtxRaw
+            hpnCnt <- apply( hpnMtxRaw ,1 ,function(mVal){ sum(mVal>0) })
+            auxTest$zeroM <- names(hpnCnt)[hpnCnt==0]
+        }
+
+        return( list(hIdx=curHIdx ,cutRst=cutRst ,auxTest=auxTest ) )
     })
     names( resultLst ) <- sapply( resultLst ,function(p){p$hIdx})
     cutRstLst <- lapply( resultLst ,function(p){p$cutRst})
     names(cutRstLst) <- paste("H",testSpan,sep="")
     names(cutRstLst) <- paste( names(cutRstLst) ,allIdxLst$stdFiltedCnt[as.character(testSpan)] ,sep="_" )
 
+    # zeroTot
+    # score1 score3 score4 score6 score7 score8 <-- score2, score5, score9
+    #      3     10     37     32     57      4 
 
     save( cutRstLst ,file=sprintf("./save/HMtxLst/Obj_cutRstLst%d.save",configH) )
         # load("./save/HMtxLst/Obj_cutRstLst840.save")

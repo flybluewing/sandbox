@@ -36,6 +36,7 @@ bUtil.cut1 <- function( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=NULL ,anaOnly=F
 	if( !is.null(logger) ) logger$fLogStr("Start", pTime=T ,pAppend=F )
 
     surFlag <- rep( T ,datLen )
+	auxInfoLst <- list( basic=list() ,mf=list() )
     for( hName in fHName ){ # hName <- fHName[1]
         for( mName in scMtxName ){ # mName <- scMtxName[1]
             #   "stdCut" -------------------------------------------
@@ -62,15 +63,19 @@ bUtil.cut1 <- function( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=NULL ,anaOnly=F
 			for( aIdx in seq_len(datLen) ){
 				if( !anaOnly && !surFlag[aIdx] )	next
 
-				cRst <- hIdxCut$cut( mtxGrp[[mName]][[aIdx]] ,anaMode=anaOnly )
-				if( 0<length(cRst) ){
+				cutInfo <- hIdxCut$cut( mtxGrp[[mName]][[aIdx]] ,anaMode=anaOnly )
+				if( 0<length(cutInfo$cRst) ){
 					if( !anaOnly ){	surFlag[aIdx] <- FALSE
 					} else {
-						for( idx in seq_len(length(cRst)) ){
+						for( idx in seq_len(length(cutInfo$cRst)) ){
 							idxName <- sprintf("hIdxCut_%dth",1+length(cutInfoLst))
-							cutInfoLst[[idxName]] <- c( typ=names(cRst)[idx] ,hIdxCut$defId ,pName="ALL" ,info=cRst[[idx]] )
+							cutInfoLst[[idxName]] <- c( typ=names(cutInfo$cRst)[idx] ,hIdxCut$defId ,pName="ALL" ,info=cutInfo$cRst[[idx]] )
 						}
 					}
+				}
+
+				if( anaOnly && ("sfcLate"==hName) ){	# anaOnly상태이면 aIdx는 항상 1이라는 가정.
+					auxInfoLst$basic[[mName]] <- cutInfo$scObj
 				}
 				# if( 1<length(cRst$cutLst) ){
 				# 	cutInfoLst[[1+length(cutInfoLst)]] <- cRst
@@ -81,6 +86,7 @@ bUtil.cut1 <- function( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=NULL ,anaOnly=F
 
         }
 
+		# QQE : auxInfoLst$mf 추가
 		for( mName in bScrMtxName ){
 			cutObj <- cut.grp$cutterLst.bScr[[hName]][[mName]]
 			scoreMtx <- scoreMtx.grp$mf[[mName]]$scoreMtx
@@ -94,11 +100,16 @@ bUtil.cut1 <- function( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=NULL ,anaOnly=F
 				}
 			}
 			reportStatus( tStmp ,sprintf("[%s,%s] bScrMtx",hName,mName) ,surFlag ,logger )
+
+			if( anaOnly && ("sfcLate"==hName) ){	# anaOnly상태이면 aIdx는 항상 1이라는 가정.
+				auxInfoLst$mf[[mName]] <- cutInfo$scObj
+			}
+
 		}
 
     }
 
-    return( list( surFlag=surFlag ,cutInfoLst=cutInfoLst ) )
+    return( list( surFlag=surFlag ,cutInfoLst=cutInfoLst ,auxInfoLst=auxInfoLst ) )
 
 } # bUtil.cut1()
 

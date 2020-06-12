@@ -961,7 +961,7 @@ FCust_stdCut.hIdx <- function( hName ,mName ,mtxLst ){
         #   fCol 에서의 높은 등급 Evt 갯수 제한도 있어야 함.
         #    scoreMtxCfg[[mName]]$fCol[[fcName]]$evtMax.fCol <- c( minLev=2 ,maxHpn=2 )
 
-        return( cLst )
+        return( list( cLst=cLst ,scObj=scObj ) )
     }
 
     return( rObj )

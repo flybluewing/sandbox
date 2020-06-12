@@ -1032,7 +1032,7 @@ if( 0==length(sfcMtxCfg) ){
 for( hName in names(sfcMtxCfg) ){
 
     if( is.null(sfcMtxCfg[[hName]]$basic$prime) ){
-        sfcMtxCfg[[hName]]$basic$prime <- matrix( c(0,5,0,1 ,0,1,0,1 ,0,5,0,4 ,0,0,0,1 ) 
+        sfcMtxCfg[[hName]]$basic$prime <- matrix( c(1,5,0,1 ,0,1,0,1 ,0,5,0,4 ,0,0,0,1 ) 
                             ,ncol=2 ,byrow=T
                             ,dimnames=list(c(   "zeroCntM_raw" ,"zeroCntPh_raw" 
                                                 ,"rebMtxM_raw" ,"rebMtxPh_raw" 
