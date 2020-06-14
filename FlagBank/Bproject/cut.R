@@ -1,6 +1,6 @@
 source("header.r")  ;source("B_H.R")    ;source("cut_H.R")
 
-lastH <- 914
+lastH <- 915
 tgt.scMtx <- NULL
 testMode <-             #check
 prllNum <-              #check
@@ -49,7 +49,7 @@ filter.grp <- getFilter.grp( stdMI.grp ,tgt.scMtx=tgt.scMtx )
 sfExport("tgt.scMtx")   ;sfExport("hMtxLst")    ;sfExport("cut.grp")    ;sfExport("filter.grp")
 
 tDiff <- Sys.time() - tStmp
-sprintf("hMtxLs,cut.grp    Time cost : %.1f%s",tDiff,units(tDiff))  # 15min
+sprintf("hMtxLs,cut.grp    Time cost : %.1f%s",tDiff,units(tDiff))  # 16 min
 
 
 
