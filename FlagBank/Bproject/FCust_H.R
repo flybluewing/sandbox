@@ -962,7 +962,7 @@ FCust_stdCut.hIdx <- function( hName ,mName ,mtxLst ){
             # bUtil.closeMax_Mtx <- function( scoreMtx ,windMtxMin=0 ,windMtxMax ,distVal=3 )
             windMtxMin <- cfg$scMtx.sz
             windMtxMin[,] <- 0
-            cm_scMtx.sz <- bUtil.closeMax_Mtx( scObj$scMtx.sz ,windMtxMin=windMtxMin ,windMtxMax=cfg$scMtx.sz )
+            cm_scMtx.sz <- bUtil.closeMax_Mtx( scObj$scMtx.sz ,windMtxMin=NULL ,windMtxMax=cfg$scMtx.sz )
                 # close max for scObj$scMtx.sz by cfg$scMtx.sz
                 #   예 시 (distVal=3 일때) : 
                 #         scObj$scMtx.sz
