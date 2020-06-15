@@ -958,6 +958,27 @@ FCust_stdCut.hIdx <- function( hName ,mName ,mtxLst ){
 
         }
 
+        if( TRUE ){ # bUtil.closeMax() QQE 차후 적용 필요.
+            # bUtil.closeMax_Mtx <- function( scoreMtx ,windMtxMin=0 ,windMtxMax ,distVal=3 )
+            windMtxMin <- cfg$scMtx.sz
+            windMtxMin[,] <- 0
+            cm_scMtx.sz <- bUtil.closeMax_Mtx( scObj$scMtx.sz ,windMtxMin=windMtxMin ,windMtxMax=cfg$scMtx.sz )
+                # close max for scObj$scMtx.sz by cfg$scMtx.sz
+                #   예 시 (distVal=3 일때) : 
+                #         scObj$scMtx.sz
+                #                        r.ph r.fCol r.dblHpnFlg e.ph e.fCol e.dblHpnFlg
+                #                 rebCnt    0      1           0    0      1           0
+                #                 rebDup    0      1           0    0      1           0
+                #         cfg$scMtx.sz
+                #                        r.ph r.fCol r.dblHpnFlg e.ph e.fCol e.dblHpnFlg
+                #                 rebCnt    2      2           1    2      2           1
+                #                 rebDup    1      1           1    1      1           1
+                #         cm_scMtx.sz
+                #                        r.ph r.fCol r.dblHpnFlg e.ph e.fCol e.dblHpnFlg
+                #                 rebCnt    0      2           0    0      2           0
+                #                 rebDup    0      3           0    0      3           0
+        }
+
         #   fCol 에서의 높은 등급 Evt 갯수 제한도 있어야 함.
         #    scoreMtxCfg[[mName]]$fCol[[fcName]]$evtMax.fCol <- c( minLev=2 ,maxHpn=2 )
 

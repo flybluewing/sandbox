@@ -676,8 +676,31 @@ bUtil.closeMax <- function( score ,wind=c(min=0,max=1) ,distVal=3 ){	# max 값과 
 	distScore[ distScore<0 ] <- 0
 	distScore[ score<=wind["min"] ] <- 0
 
-	return( distVal )
+	return( distScore )
 }
+
+bUtil.closeMax_Mtx <- function( scoreMtx ,windMtxMin=NULL ,windMtxMax ,distVal=3 ){
+
+	distMtx <- scoreMtx
+	distMtx[,] <- 0
+
+	if( is.null(windMtxMin) ){
+		windMtxMin <- windMtxMax
+		windMtxMin[,] <- 0
+	}
+
+	for( rIdx in seq_len(nrow(scoreMtx)) ){
+		for( cIdx in seq_len(ncol(scoreMtx)) ){
+			distMtx[rIdx,cIdx] <- bUtil.closeMax( scoreMtx[rIdx,cIdx] 
+										,wind=c(min=windMtxMin[rIdx,cIdx],max=windMtxMax[rIdx,cIdx]) 
+										,distVal=distVal 
+									)
+		}
+	}
+
+	return(distMtx)
+}
+
 
 #	src컬럼을 지정할 필요 없음. evtLst 의 이름을 이용함.
 bUtil.getEvtVal <- function( src ,evtLst ){
