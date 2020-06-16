@@ -1,5 +1,5 @@
 
-cutH.InitialCut <- function( gEnv ,allIdxF ,blk ,filter.grp ,fHName=NULL ,logger=NULL ){
+cutH.InitialCut <- function( gEnv ,allIdxF ,blk ,filter.grp ,fHName=NULL ,exeCfg=NULL ,logger=NULL ){
     #   logger <- k.getFlogObj( "./log/commonLog.txt" )
 
     logMsg <- function( msgStr ,tStmp=NULL ){
@@ -12,6 +12,11 @@ cutH.InitialCut <- function( gEnv ,allIdxF ,blk ,filter.grp ,fHName=NULL ,logger
         logger$fLogStr( msgStr )
     }
 
+    if( is.null(exeCfg) ){  
+        # 적용 대기. "FCust_stdCut.rawRow"들만을 먼저 돌리는 게 속도향상이 될까?
+        #   scoreMtx.grp의 중복계산이 될 수 있음...
+        exeCfg <- c( "stdCut.rawRow"=T ,"stdCut.hIdx"=T )
+    }
     hName <- "sfcLate"  # fHName 을 sfcLate 로만 고정.(근데 별 쓸모없다...)
     if( !is.null(fHName) ){
         hName <- fHName
@@ -50,6 +55,9 @@ cutH.InitialCut <- function( gEnv ,allIdxF ,blk ,filter.grp ,fHName=NULL ,logger
         surFlag[ surIdxSpan[!cutRst$surFlag] ] <- FALSE
 
         logMsg( sprintf("    %s is done.(cut %d/%d)",mName,sum(!cutRst$surFlag),length(cutRst$surFlag)) ,tStmp )
+        
+        if( !all(surFlag) ) break
+
         # logMsg( sprintf("    %s is done.",mName) ,tStmp )
     }
 

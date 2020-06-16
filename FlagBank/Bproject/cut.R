@@ -3,7 +3,7 @@ source("header.r")  ;source("B_H.R")    ;source("cut_H.R")
 lastH <- 915
 tgt.scMtx <- NULL
 testMode <-             #check
-prllNum <-              #check
+prllNum <- 2            #check  2개 이상을 사용하면 CPU 과열로 효율이 떨어지는 듯...
 
 QQE:Trouble      # 실수 방지를 위해 의도된 오류코드
 
@@ -44,6 +44,7 @@ tStmp <- Sys.time()
 stdMI.grp <- bUtil.getStdMILst( gEnv ,fRstLst )     ;stdMI.grp$anyWarn( )
 hMtxLst <- B.makeHMtxLst( gEnv, allIdxLst, fRstLst, lastH=lastH, tgt.scMtx )
 save( hMtxLst ,file=sprintf("Obj_cut_hMtxLst_%d.save",lastH) )
+    #   load( sprintf("Obj_cut_hMtxLst_%d.save",lastH) )
 cut.grp <- bFCust.getFCustGrp( hMtxLst ,tgt.scMtx )
 filter.grp <- getFilter.grp( stdMI.grp ,tgt.scMtx=tgt.scMtx )
 sfExport("tgt.scMtx")   ;sfExport("hMtxLst")    ;sfExport("cut.grp")    ;sfExport("filter.grp")
@@ -76,6 +77,7 @@ for( sfcIdx in 0 ){ # 0:2
     # logger$fLogStr(sprintf("FC.primaryCut :%7d",length(allIdxF)),pTime=T)
 
     # bUtil.cut1( byMethod ) --------------------------------------------------------
+    #   prllNum 2개 에서 1.8 mins 소모(bLst[[1]] : 1~50000)
     surFlag <- rep( T ,length(allIdxF) )
     bLst <- k.blockLst( length(allIdxF) ,100*ifelse(testMode,5,500) )
 
