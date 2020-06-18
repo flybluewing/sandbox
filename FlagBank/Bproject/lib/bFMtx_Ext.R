@@ -31,7 +31,6 @@ if( TRUE ){
             rVal["fN.len.tot"]  <- sum(score[c("f0.len.tot","f1.len.tot")])
             rVal["fN.len.val"]  <- sum(score[c("f0.len.val","f1.len.val")])
 
-            rVal <- sample( 0:1 ,length(rVal) ,replace=T )
             return( rVal )
         }
         fltObj$getScoreMtx <- function( scoreMtx ){
@@ -41,13 +40,14 @@ if( TRUE ){
             for( rIdx in seq_len(nrow(rMtx)) ){
                 rMtx[rIdx,] <- fltObj$getScore( scoreMtx[rIdx,] )
             }
+            rownames(rMtx) <- rownames(scoreMtx)
 
             return( rMtx )
         }
 
         return(fltObj)
     }
-    bFMtxExtFltLst[[mName]]$flter01 <- fltCreater(mName)    #   bFMtxExtFltLst[[mName]]$flter01$getScoreMtx( scoreMtx.grp$basic$basic$score1$scoreMtx )
+    bFMtxExtFltLst[[mName]]$filter01 <- fltCreater(mName)    #   bFMtxExtFltLst[[mName]]$flter01$getScoreMtx( scoreMtx.grp$basic$basic$score1$scoreMtx )
 
     fltCreater <- function( mName ){    # $flter01
 
@@ -68,7 +68,6 @@ if( TRUE ){
             rVal["evt1.len.tot"]<- sum(scrEvt[c("rem1.len.tot","c1.len.tot","f1.len.tot")] ,na.rm=T)
             rVal["evt1.len.val"]<- sum(scrEvt[c("rem1.len.val","c1.len.val","f1.len.val")] ,na.rm=T)
 
-            rVal <- sample( 0:1 ,length(rVal) ,replace=T )
             return( rVal )
         }
         fltObj$getScoreMtx <- function( scoreMtx ){
@@ -78,13 +77,14 @@ if( TRUE ){
             for( rIdx in seq_len(nrow(rMtx)) ){
                 rMtx[rIdx,] <- fltObj$getScore( scoreMtx[rIdx,] )
             }
+            rownames(rMtx) <- rownames(scoreMtx)
 
             return( rMtx )
         }
 
         return(fltObj)
     }
-    bFMtxExtFltLst[[mName]]$flter02 <- fltCreater(mName)
+    bFMtxExtFltLst[[mName]]$filter02 <- fltCreater(mName)
 }
 
 mName <- "score2"
@@ -113,7 +113,6 @@ if( TRUE ){
             rVal["incN.c"]  <- sum(score[c("inc.c","inc.c2")])
             rVal["incN.f"]  <- sum(score[c("inc.f","inc.f2")])
 
-            rVal <- sample( 0:1 ,length(rVal) ,replace=T )
             return( rVal )
         }
         fltObj$getScoreMtx <- function( scoreMtx ){
@@ -123,13 +122,14 @@ if( TRUE ){
             for( rIdx in seq_len(nrow(rMtx)) ){
                 rMtx[rIdx,] <- fltObj$getScore( scoreMtx[rIdx,] )
             }
+            rownames(rMtx) <- rownames(scoreMtx)
 
             return( rMtx )
         }
 
         return(fltObj)
     }
-    bFMtxExtFltLst[[mName]]$flter01 <- fltCreater(mName)
+    bFMtxExtFltLst[[mName]]$filter01 <- fltCreater(mName)
 
     fltCreater <- function( mName ){    # $flter01
 
@@ -150,7 +150,6 @@ if( TRUE ){
             rVal["evtInc2"]     <- sum(scrEvt[c("inc.r2","inc.c2","inc.f2")] ,na.rm=T)
             rVal["evtInc3"]     <- sum(scrEvt[c("inc.r3","inc.c3")] ,na.rm=T)
 
-            rVal <- sample( 0:1 ,length(rVal) ,replace=T )
             return( rVal )
         }
         fltObj$getScoreMtx <- function( scoreMtx ){
@@ -160,13 +159,14 @@ if( TRUE ){
             for( rIdx in seq_len(nrow(rMtx)) ){
                 rMtx[rIdx,] <- fltObj$getScore( scoreMtx[rIdx,] )
             }
+            rownames(rMtx) <- rownames(scoreMtx)
 
             return( rMtx )
         }
 
         return(fltObj)
     }
-    bFMtxExtFltLst[[mName]]$flter02 <- fltCreater(mName)
+    bFMtxExtFltLst[[mName]]$filter02 <- fltCreater(mName)
 
 }
 
