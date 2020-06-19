@@ -42,9 +42,9 @@ bUtil.cut1 <- function( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=NULL ,anaOnly=F
             #   "stdCut" -------------------------------------------
             for( pName in cut.grp$phaseName ){   # pName <- cut.grp$phaseName[1]
 				scoreMtx <- scoreMtx.grp$basic[[pName]][[mName]]$scoreMtx
+
                 cutObj <- cut.grp$cutterLst[[hName]][[mName]]$stdCut[[pName]]
                 cRst <- cutObj$cut( scoreMtx ,alreadyDead=!surFlag ,anaMode=anaOnly )
-
 				if( !anaOnly ){	surFlag <- surFlag & cRst$surFlag
 				} else {
 					if( 0<length(cRst$cutLst) ){
@@ -53,6 +53,20 @@ bUtil.cut1 <- function( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=NULL ,anaOnly=F
 										)
 					}
 				}
+
+				for( extFltName in names(cut.grp$cutterExtLst[[hName]][[mName]]$stdCut[[pName]]) ){
+					cutExtObj <- cut.grp$cutterExtLst[[hName]][[mName]]$stdCut[[pName]][[extFltName]]
+					cRst <- cutExtObj$cut( scoreMtx ,alreadyDead=!surFlag ,anaMode=anaOnly )
+					if( !anaOnly ){	surFlag <- surFlag & cRst$surFlag
+					} else {
+						if( 0<length(cRst$cutLst) ){
+							cutInfoLst <- append( cutInfoLst 
+												,lapply( cRst$cutLst[[1]]$cLst ,function(p){ c(p$idObjDesc ,info=p$info) } ) 
+											)
+						}
+					}
+				}
+
 				reportStatus( tStmp ,sprintf("     %s",pName) ,surFlag ,logger )
             }
 			reportStatus( tStmp ,sprintf("[%s,%s] stdLst",hName,mName) ,surFlag ,logger )
@@ -86,10 +100,11 @@ bUtil.cut1 <- function( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=NULL ,anaOnly=F
 
         }
 
-		# QQE : auxInfoLst$mf 추가
+		# QQE : auxInfoLst$mf 추가( auxInfoLst: cut2()의 실행시간이 너무 오래걸려서 cut1()에서 처리시도하기 위한 정보.)
 		for( mName in bScrMtxName ){
-			cutObj <- cut.grp$cutterLst.bScr[[hName]][[mName]]
 			scoreMtx <- scoreMtx.grp$mf[[mName]]$scoreMtx
+
+			cutObj <- cut.grp$cutterLst.bScr[[hName]][[mName]]
 			cRst <- cutObj$cut( scoreMtx ,alreadyDead=!surFlag ,anaMode=anaOnly )
 			if( !anaOnly ){	surFlag <- surFlag & cRst$surFlag
 			} else {
@@ -99,6 +114,20 @@ bUtil.cut1 <- function( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=NULL ,anaOnly=F
 									)
 				}
 			}
+
+			for( extFltName in names(cut.grp$cutterExtLst.bScr[[hName]][[mName]]) ){
+				cutExtObj <- cut.grp$cutterExtLst.bScr[[hName]][[mName]][[extFltName]]
+				cRst <- cutExtObj$cut( scoreMtx ,alreadyDead=!surFlag ,anaMode=anaOnly )
+				if( !anaOnly ){	surFlag <- surFlag & cRst$surFlag
+				} else {
+					if( 0<length(cRst$cutLst) ){
+						cutInfoLst <- append( cutInfoLst 
+											,lapply( cRst$cutLst[[1]]$cLst ,function(p){ c(p$idObjDesc ,info=p$info) } ) 
+										)
+					}
+				}
+			}
+
 			reportStatus( tStmp ,sprintf("[%s,%s] bScrMtx",hName,mName) ,surFlag ,logger )
 
 			if( anaOnly && ("sfcLate"==hName) ){	# anaOnly상태이면 aIdx는 항상 1이라는 가정.

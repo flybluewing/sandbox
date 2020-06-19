@@ -14,10 +14,10 @@ source("../Aproject/lib/ff0_H.R")
 # source("./lib/refine0_H.R") ;source("./lib/refine1_H.R") ;source("./lib/refine2_H.R") ;source("./lib/refine3_H.R") ;source("./lib/refine4_H.R")
 
 source("./lib/bUtil.R")
-source("./lib/bFMtx.R")
+source("./lib/bFMtx.R")             ;source("./lib/bFMtx_Ext.R")
 source("./lib/bFBMtx.R")
 source("./lib/FinalCut_H.R")
 
 source("FCust_H.R")
-source("FCust_configBasic.R")
+source("FCust_configBasic.R")       ;source("FCust_configExt.R")
 

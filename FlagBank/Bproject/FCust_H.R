@@ -1232,17 +1232,27 @@ bFCust.getFCustGrp <- function( hMtxLst ,tgt.scMtx=NULL ){
         rObj$mtxInfoLst.bScr <- rObj$mtxInfoLst.bScr[availMtx]
     }
 
-	cutterLst <- list()
-	cutterLst.bScr <- list()
-	for( hName in names(rObj$sfcHLst) ){	# hName <- names(rObj$sfcHLst)[1]
+	cutterLst <- list()         ;cutterExtLst <- list()
+	cutterLst.bScr <- list()    ;cutterExtLst.bScr <- list()
+	for( hName in names(rObj$sfcHLst) ){	    # hName <- names(rObj$sfcHLst)[1]
 
-        mLst <- list()  #   cutterLst
+        mLst <- list()  ;mExtLst <- list()  #   cutterLst
         for( mName in names(rObj$mtxInfoLst) ){	# mName <- names(rObj$mtxInfoLst)[1]
             # <stdCut>
-            stdCut <- list()
-            for( pName in rObj$phaseName ){
+            stdCut <- list()    ;stdCutExt <- list()
+            for( pName in rObj$phaseName ){     # pName <- rObj$phaseName[1]
                 scoreMtxObj <- B.HMtxLst_getMtxLst( hMtxLst , hName ,mName ,pName )
                 stdCut[[pName]] <- FCust_stdCut.rawRow( hName ,mName ,pName ,scoreMtxObj$scoreMtx )
+
+                if( is.null(bFMtxExtFltLst[[mName]]) ){   stdCutExt[[mName]] <- list()
+                } else {
+                    fltLst <- list()
+                    for( nIdx in names(bFMtxExtFltLst[[mName]]) ){
+                        # bFMtxExtFltLst[[mName]][[nIdx]] 는 FCust_stdCutExt.rawRow() 내부에서 이용됨.
+                        fltLst[[nIdx]] <- FCust_stdCutExt.rawRow( hName ,mName ,pName ,scoreMtxObj$scoreMtx ,fltName=nIdx )
+                    }
+                    stdCutExt[[pName]] <- fltLst
+                }
             }
 
             # <fColCut>
@@ -1253,20 +1263,35 @@ bFCust.getFCustGrp <- function( hMtxLst ,tgt.scMtx=NULL ){
             hIdxCut <- FCust_stdCut.hIdx( hName ,mName ,mtxLst=hIdxObj[[hName]][[mName]] )
 
             mLst[[mName]] <- list( stdCut=stdCut ,fColCut=fColCut ,hIdxCut=hIdxCut )
+            mExtLst[[mName]] <- list( stdCut=stdCutExt )
         }
         cutterLst[[hName]] <- mLst
+        cutterExtLst[[hName]] <- mExtLst
 
-		mLst <- list()  #   cutterLst.bScr
+		mLst <- list()  ;mExtLst <- list()  #   cutterLst.bScr
 		for( mName in names(rObj$mtxInfoLst.bScr) ){
             scoreMtxObj <- B.HMtxLst_getMtxLst( hMtxLst , hName ,mName ,pName=NULL ,tgt="mfMtxLst" )
             mLst[[mName]] <- FCust_stdCut.rawRow( hName ,mName ,pName="N/A" ,scoreMtxObj$scoreMtx )
+
+            if( is.null(bFMtxExtFltLst[[mName]]) ){   mExtLst[[mName]] <- list()
+            } else {
+                fltLst <- list()
+                for( nIdx in names(bFMtxExtFltLst[[mName]]) ){
+                    # bFMtxExtFltLst[[mName]][[nIdx]] 는 FCust_stdCutExt.rawRow() 내부에서 이용됨.
+                    fltLst[[nIdx]] <- FCust_stdCutExt.rawRow( hName ,mName ,pName ,scoreMtxObj$scoreMtx ,fltName=nIdx )
+                }
+                mExtLst[[mName]] <- fltLst
+            }
         }
 		cutterLst.bScr[[hName]] <- mLst
+        cutterExtLst.bScr[[hName]] <- mExtLst
 
     }
 
     rObj$cutterLst <- cutterLst
     rObj$cutterLst.bScr <- cutterLst.bScr
+    rObj$cutterExtLst <- cutterExtLst
+    rObj$cutterExtLst.bScr <- cutterExtLst.bScr
 
     return( rObj )
 
