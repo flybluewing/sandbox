@@ -90,17 +90,20 @@ if( TRUE ){
 mName <- "score2"
 if( TRUE ){
     bFMtxExtFltLst[[mName]] <- list()
-        # rebV.r    rebL    rebR  inc.r3  inc.c3
+        # rebV.r    rebL    rebR  
         # rebC.r  rebC.c  rebC.f 
         # rebC2.r rebC2.c rebC2.f   
         # inc.r   inc.c   inc.f  
         # inc.r2  inc.c2  inc.f2
+        # inc.r3  inc.c3
 
     fltCreater <- function( mName ){    # $flter01
 
         fltObj <- list( mInfo=list() )
         fltObj$mInfo$mName = mName
-        fltObj$mInfo$cName <- c("rebCN.r","rebCN.c","rebCN.f","incN.r","incN.c","incN.f")
+        fltObj$mInfo$cName <- c("rebCN.r","rebCN.c","rebCN.f","incN.r","incN.c","incN.f"
+                                    ,"matCntRebC12","matCntInc12","matCntInc123"
+                                )
 
         fltObj$getScore <- function( score ){
             #   score <- scoreMtx.grp$basic$basic[[mName]]$scoreMtx[1,]
@@ -112,6 +115,22 @@ if( TRUE ){
             rVal["incN.r"]  <- sum(score[c("inc.r","inc.r2")])
             rVal["incN.c"]  <- sum(score[c("inc.c","inc.c2")])
             rVal["incN.f"]  <- sum(score[c("inc.f","inc.f2")])
+
+            if( all(score[c("rebC.r","rebC.c","rebC.f")]==score[c("rebC2.r","rebC2.c","rebC2.f")]) ){
+                #   그냥 3개 컬럼 매치 여부로만 하면 빈도가 높을 것 같아, 매치되는 총 갯수로 한다.
+                #   물론 모두 0 이라면 matCnt 값도 0
+                rVal["matCntRebC12"]  <- sum(score[c("rebC.r","rebC.c","rebC.f")])
+            }
+            if( all(score[c("inc.r","inc.c","inc.f")]==score[c("inc.r2","inc.c2","inc.f2")]) ){
+                #   그냥 3개 컬럼 매치 여부로만 하면 빈도가 높을 것 같아, 매치되는 총 갯수로 한다.
+                rVal["matCntInc12"]  <- sum(score[c("inc.r","inc.c","inc.f")])
+            }
+
+            matFlag <- all( score[c("inc.r","inc.c")]==score[c("inc.r2","inc.c2")] ) && all( score[c("inc.r","inc.c")]==score[c("inc.r3","inc.c3")] )
+            if( matFlag ){
+                #   그냥 3개 컬럼 매치 여부로만 하면 빈도가 높을 것 같아, 매치되는 총 갯수로 한다.
+                rVal["matCntInc12"]  <- sum(score[c("inc.r","inc.c")])
+            }
 
             return( rVal )
         }

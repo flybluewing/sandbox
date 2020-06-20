@@ -167,6 +167,7 @@ scoreMtxCfg[[mName]] <- list(
         ,"rebR"=list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )
                         ,evt=matrix( c(c(1,3,3,3,3),c(1,2,3,4,5)) ,ncol=2)
                     )
+
         ,"rebC.r"=list( rng=matrix( c(0,1 ,0,2) ,ncol=2 )
                         ,evt=matrix( c(c(1,2,3,3,3,3),c(1,2,3,4,5,6)) ,ncol=2)
                     ) 
