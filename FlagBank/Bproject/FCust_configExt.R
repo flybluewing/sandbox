@@ -79,7 +79,7 @@ if( TRUE ){
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
             "rebCN.r"=list( rng=matrix( c(0,3 ,0,5) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
-                            ,evt=matrix( c(c(1,2,3,3,3),c(2,3,4,5,6)) ,ncol=2)
+                            ,evt=matrix( c(c(2,3,3,3),c(3,4,5,6)) ,ncol=2)
                         ) 
             ,"rebCN.c"=list( rng=matrix( c(0,5 ,0,5) ,ncol=2 )
                             ,evt=matrix( c(c(1,2,3,3,3),c(3,4,5,6,7)) ,ncol=2)
@@ -107,7 +107,7 @@ if( TRUE ){
                         )
         )
         ,evtMax = NULL        
-        ,rowReb = c( rawMin=2 ,lowE=2 ,rareE=1 )
+        ,rowReb = c( rawMin=3 ,lowE=2 ,rareE=1 )
         ,rowRebDup=NULL
         ,summMtx = NULL       ,summMtx.reb = NULL   ,summMtx.sum = NULL
         ,scMtx.sz = NULL      ,scMtx.sz.sum = NULL
@@ -136,7 +136,7 @@ if( TRUE ){
                         )
         )
         ,evtMax = NULL        
-        ,rowReb = c( rawMin=2 ,lowE=2 ,rareE=1 )
+        ,rowReb = c( rawMin=3 ,lowE=2 ,rareE=1 )
         ,rowRebDup=NULL
         ,summMtx = NULL       ,summMtx.reb = NULL   ,summMtx.sum = NULL
         ,scMtx.sz = NULL      ,scMtx.sz.sum = NULL
