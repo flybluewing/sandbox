@@ -54,18 +54,18 @@ bUtil.cut1 <- function( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=NULL ,anaOnly=F
 					}
 				}
 
-				for( extFltName in names(cut.grp$cutterExtLst[[hName]][[mName]]$stdCut[[pName]]) ){
-					cutExtObj <- cut.grp$cutterExtLst[[hName]][[mName]]$stdCut[[pName]][[extFltName]]
-					cRst <- cutExtObj$cut( scoreMtx ,alreadyDead=!surFlag ,anaMode=anaOnly )
-					if( !anaOnly ){	surFlag <- surFlag & cRst$surFlag
-					} else {
-						if( 0<length(cRst$cutLst) ){
-							cutInfoLst <- append( cutInfoLst 
-												,lapply( cRst$cutLst[[1]]$cLst ,function(p){ c(p$idObjDesc ,info=p$info) } ) 
-											)
-						}
-					}
-				}
+				# for( extFltName in names(cut.grp$cutterExtLst[[hName]][[mName]]$stdCut[[pName]]) ){
+				# 	cutExtObj <- cut.grp$cutterExtLst[[hName]][[mName]]$stdCut[[pName]][[extFltName]]
+				# 	cRst <- cutExtObj$cut( scoreMtx ,alreadyDead=!surFlag ,anaMode=anaOnly )
+				# 	if( !anaOnly ){	surFlag <- surFlag & cRst$surFlag
+				# 	} else {
+				# 		if( 0<length(cRst$cutLst) ){
+				# 			cutInfoLst <- append( cutInfoLst 
+				# 								,lapply( cRst$cutLst[[1]]$cLst ,function(p){ c(p$idObjDesc ,info=p$info) } ) 
+				# 							)
+				# 		}
+				# 	}
+				# }
 
 				reportStatus( tStmp ,sprintf("     %s",pName) ,surFlag ,logger )
             }
@@ -115,18 +115,18 @@ bUtil.cut1 <- function( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=NULL ,anaOnly=F
 				}
 			}
 
-			for( extFltName in names(cut.grp$cutterExtLst.bScr[[hName]][[mName]]) ){
-				cutExtObj <- cut.grp$cutterExtLst.bScr[[hName]][[mName]][[extFltName]]
-				cRst <- cutExtObj$cut( scoreMtx ,alreadyDead=!surFlag ,anaMode=anaOnly )
-				if( !anaOnly ){	surFlag <- surFlag & cRst$surFlag
-				} else {
-					if( 0<length(cRst$cutLst) ){
-						cutInfoLst <- append( cutInfoLst 
-											,lapply( cRst$cutLst[[1]]$cLst ,function(p){ c(p$idObjDesc ,info=p$info) } ) 
-										)
-					}
-				}
-			}
+			# for( extFltName in names(cut.grp$cutterExtLst.bScr[[hName]][[mName]]) ){
+			# 	cutExtObj <- cut.grp$cutterExtLst.bScr[[hName]][[mName]][[extFltName]]
+			# 	cRst <- cutExtObj$cut( scoreMtx ,alreadyDead=!surFlag ,anaMode=anaOnly )
+			# 	if( !anaOnly ){	surFlag <- surFlag & cRst$surFlag
+			# 	} else {
+			# 		if( 0<length(cRst$cutLst) ){
+			# 			cutInfoLst <- append( cutInfoLst 
+			# 								,lapply( cRst$cutLst[[1]]$cLst ,function(p){ c(p$idObjDesc ,info=p$info) } ) 
+			# 							)
+			# 		}
+			# 	}
+			# }
 
 			reportStatus( tStmp ,sprintf("[%s,%s] bScrMtx",hName,mName) ,surFlag ,logger )
 

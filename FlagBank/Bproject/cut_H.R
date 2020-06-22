@@ -55,8 +55,8 @@ cutH.InitialCut <- function( gEnv ,allIdxF ,blk ,filter.grp ,fHName=NULL ,exeCfg
         surFlag[ surIdxSpan[!cutRst$surFlag] ] <- FALSE
 
         logMsg( sprintf("    %s is done.(cut %d/%d)",mName,sum(!cutRst$surFlag),length(cutRst$surFlag)) ,tStmp )
-        
-        if( !all(surFlag) ) break
+
+        if( all(!surFlag) ) break
 
         # logMsg( sprintf("    %s is done.",mName) ,tStmp )
     }
