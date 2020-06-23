@@ -144,6 +144,44 @@ if( TRUE ){
     )
 }
 
+mName <- "score3"
+scrExtMtxCfg[[mName]] <- list()
+if( TRUE ){
+    scrExtMtxCfg[[mName]]$filter01 <- list(
+        mName = mName   ,style=c( freqZero=TRUE )
+        ,fCol = list(
+            "rebPtnESum"=list( rng=matrix( c(0,2 ,0,3) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
+                            ,evt=matrix( c(c(1,2,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"snR3E"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(3),c(1)) ,ncol=2)
+                        )
+            ,"snMaxESum"=list( rng=matrix( c(0,3 ,0,4) ,ncol=2 )
+                            ,evt=matrix( c(c(1,2,3,3,3),c(3,4,5,6,7)) ,ncol=2)
+                        )
+            ,"snFCntESum"=list( rng=matrix( c(0,3 ,0,4) ,ncol=2 )
+                            ,evt=matrix( c(c(1,2,3,3),c(2,3,4,5)) ,ncol=2)
+                        )
+            ,"snRESum"=list( rng=matrix( c(0,2 ,0,3) ,ncol=2 )
+                            ,evt=matrix( c(c(1,2,3,3,3),c(3,4,5,6,7)) ,ncol=2)
+                        )
+            ,"snCESum"=list( rng=matrix( c(0,2 ,0,3) ,ncol=2 )
+                            ,evt=matrix( c(c(1,2,3,3,3),c(3,4,5,6,7)) ,ncol=2)
+                        )
+            ,"snFESum"=list( rng=matrix( c(0,2 ,0,3) ,ncol=2 )
+                            ,evt=matrix( c(c(1,2,3,3,3),c(3,4,5,6,7)) ,ncol=2)
+                        )
+        )
+        ,evtMax = NULL        
+        ,rowReb = c( rawMin=2 ,lowE=2 ,rareE=1 )
+        ,rowRebDup=NULL
+        ,summMtx = NULL       ,summMtx.reb = NULL   ,summMtx.sum = NULL
+        ,scMtx.sz = NULL      ,scMtx.sz.sum = NULL
+        ,isHard=NULL  # use default
+    )
+
+}
+
 
 
 mName <- "codeSample"
