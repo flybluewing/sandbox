@@ -1716,6 +1716,37 @@ bFMtx.score8 <- function( stdMIObj ){
 
 	return( rObj )
 
+	if( FALSE ){	# rObj$cInfo$mat3Lst ,rObj$cInfo$mat2Lst 살펴보기 용도.
+
+		mat3MtxLst <- list()
+		for( matName in names(fltObj$cInfo$mat3Lst) ){
+			matObj <- fltObj$cInfo$mat3Lst[[matName]]
+			hpnMtx <- sapply( matObj$hpnLst ,function( p ){ 
+						names(p$cStep) <- paste( "cStep",names(p$cStep),sep="_" )
+						names(p$raw) <- paste( "raw",names(p$raw),sep="_" )
+						return( c(p$cStep,p$raw) )
+			})
+			hpnMtx <- t( hpnMtx )
+			rName <- rownames(hpnMtx)
+			mat3MtxLst[[matName]] <- hpnMtx[order(rName),]
+		}
+
+		mat2MtxLst <- list()
+		for( matName in names(fltObj$cInfo$mat2Lst) ){
+			matObj <- fltObj$cInfo$mat2Lst[[matName]]
+			hpnMtx <- sapply( matObj$hpnLst ,function( p ){ 
+						names(p$cStep) <- paste( "cStep",names(p$cStep),sep="_" )
+						names(p$raw) <- paste( "raw",names(p$raw),sep="_" )
+						return( c(p$cStep,p$raw) )
+			})
+			hpnMtx <- t( hpnMtx )
+			rName <- rownames(hpnMtx)
+			mat2MtxLst[[matName]] <- hpnMtx[order(rName),]
+		}
+
+	}
+
+
 } # bFMtx.score8( )
 
 
