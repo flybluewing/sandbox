@@ -255,7 +255,7 @@ if( TRUE ){    # sample
 }
 
 mName <- "score6"
-if( FALSE ){    # sample
+if( TRUE ){    # sample
     scrExtMtxCfg[[mName]] <- list()
 
     scrExtMtxCfg[[mName]]$filter01 <- list(
@@ -276,7 +276,7 @@ if( FALSE ){    # sample
             ,"xMH"=list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )
                             ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
                         )
-            ,"eSum_FVaM4"=list( rng=matrix( c(0,2 ,0,2) ,ncol=2 )
+            ,"eSum_FVaM4"=list( rng=matrix( c(0,5 ,0,5) ,ncol=2 )
                             ,evt=matrix( c(c(1,2,3,3),c(2,3,4,5)) ,ncol=2)
                         )
         )
