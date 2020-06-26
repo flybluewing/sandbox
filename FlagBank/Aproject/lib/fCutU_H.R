@@ -454,12 +454,25 @@ fCutU.logAllZoidMtx <- function( zoidMtx ,logId ){
 	return( fileName )
 } # fCutU.logAllZoidMtx()
 
-fCutU.getQuoObj <- function( zoid ){
-	rObj <- list( tbl=table(zoid%/%10) )
+fCutU.getQuoObj <- function( zoid ,valSet=F ){
+	rObj <- list( tbl=table(zoid%/%10) ,valSet=valSet )
 	rObj$size <- rep(0,5)	;names(rObj$size) <- 0:(length(rObj$size)-1)
 	rObj$size[names(rObj$tbl)] <- rObj$tbl
 	rObj$valStr <- paste( rObj$tbl ,collapse=" " )
 	rObj$idStr <- sprintf("V:%s Q:%s",rObj$valStr,paste(names(rObj$tbl),collapse=" "))
+
+	if( valSet ){
+		zoidQ <- zoid %/% 10
+		qName <- names(rObj$size)
+		valLst <- list()
+		for( qIdx in 0:(length(rObj$size)-1) ){
+			if( 0 == rObj$size[qIdx+1] ){ valLst[[ qName[qIdx+1] ]] <- integer(0)
+			} else {
+				valLst[[ qName[qIdx+1] ]] <- zoid[zoidQ==qIdx]
+			}
+		}
+		rObj$qValLst <- valLst
+	}
 
 	rObj$sameTbl <- function( tbl ,fullMatch=FALSE ){
 		if( length(rObj$tbl)!=length(tbl) ) return( FALSE )

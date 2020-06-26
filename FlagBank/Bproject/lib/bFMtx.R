@@ -1910,6 +1910,68 @@ bFMtx.score9 <- function( stdMIObj ){
 } # bFMtx.score9( )
 
 
+bFMtx.scoreA <- function( stdMIObj ){
+	#	stdMIObj <- stdMI.grp$basic$basic
+	stdMI <- stdMIObj$stdMI
+	zMtx <- stdMIObj$zMtx
+	rObj <- list( 	idStr="scoreA"	,zMtx.size=nrow(zMtx)	,lastZoid=stdMI$lastZoid	)
+
+	rObj$rawBan <- NULL	;rObj$remBan <- NULL	;rObj$cBan <- NULL	;rObj$fBan <- NULL
+	if( 0<nrow(stdMI$rawTail) ){
+	}
+
+	rObj$fMtxObj <- function( aZoidMtx ,makeInfoStr=F ){
+		#	aZoidMtx <- gEnv$allZoidMtx[c(stdIdx,sample(10:nrow(gEnv$allZoidMtx),19)) ,] ;makeInfoStr=T
+
+		aLen <- nrow(aZoidMtx)
+		cName <- c(	"xxx","xxx","xxx","xxx","xxx","xxx" )
+		scoreMtx <- matrix( 0, nrow=aLen, ncol=length(cName) )	;colnames(scoreMtx) <- cName
+
+		infoMtx <- NULL
+		if( makeInfoStr ){
+			cName <- c( "zMtx.size" )
+			infoMtx <- matrix( "" ,nrow=aLen ,ncol=length(cName) )	;colnames(infoMtx) <- cName
+			infoMtx[,"zMtx.size"] <- rObj$zMtx.size
+		}
+		if( 0==rObj$zMtx.size ){
+			return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
+		}
+
+		if( is.null(rObj$rawBan) ){ # stdMIObj$zMtx 데이터가 부족한 상태
+			return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
+		}
+
+		for( aIdx in 1:aLen ){
+			aZoid <- aZoidMtx[aIdx,]
+			# aRem <- aZoid %% 10		;aCStep <- aZoid[2:6] - aZoid[1:5]		;aFStep <- aZoid - rObj$lastZoid
+
+			# quoObj <- fCutU.getQuoObj( gEnv$zhF[800,] ,valSet=T )
+					# rObj <- list( tbl=table(zoid%/%10) )
+					# rObj$size <- rep(0,5)	;names(rObj$size) <- 0:(length(rObj$size)-1)
+					# rObj$size[names(rObj$tbl)] <- rObj$tbl
+					# rObj$valStr <- paste( rObj$tbl ,collapse=" " )
+					# rObj$idStr <- sprintf("V:%s Q:%s",rObj$valStr,paste(names(rObj$tbl),collapse=" "))
+
+					# rObj$sameTbl <- function( tbl ,fullMatch=FALSE ){
+					# 	if( length(rObj$tbl)!=length(tbl) ) return( FALSE )
+
+					# 	if( all(rObj$tbl==tbl) ){
+					# 		if( fullMatch ){
+					# 			if( all(names(rObj$tbl)==names(tbl)) ) return(FALSE)
+					# 		}
+					# 		return( TRUE )
+					# 	}
+					# 	return( FALSE )
+					# } # rObj$sameTbl()
 
 
+
+			return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
+		}
+
+	}
+
+	return( rObj )
+
+}
 

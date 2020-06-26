@@ -288,7 +288,7 @@ if( TRUE ){
 
 
 mName <- "score5"
-if( FALSE ){
+if( TRUE ){
 
     bFMtxExtFltLst[[mName]] <- list()
         # pBanN.r pBanN.n pLCol pE3 pE4 pMH pfNum 
@@ -309,7 +309,7 @@ if( FALSE ){
 
             rVal["xBan.x"]  <- sum(score[c("pBanN.r","pBanN.n","iBanN")] ,na.rm=T)
             rVal["xLCol"]   <- sum(score[c("pLCol","iLCol")] ,na.rm=T)
-            rVal["xEn"]     <- sum(score[c("pE3","pE4","iE3","iE4",)] ,na.rm=T)
+            rVal["xEn"]     <- sum(score[c("pE3","pE4","iE3","iE4")] ,na.rm=T)
             rVal["xfNum"]   <- sum(score[c("pfNum","ifNum")] ,na.rm=T)
             rVal["xMH"]     <- sum(score[c("pMH","iMH")] ,na.rm=T)
             rVal["eSum_FVaM4"]  <- sum(scrEvt[c("FVa.m","FVa.c","m4")] ,na.rm=T)
@@ -356,7 +356,7 @@ if( FALSE ){
 
             rVal["xBan.x"]  <- sum(score[c("pBanN.r","pBanN.n","iBanN")] ,na.rm=T)
             rVal["xLCol"]   <- sum(score[c("pLCol","iLCol")] ,na.rm=T)
-            rVal["xEn"]     <- sum(score[c("pE3","pE4","iE3","iE4",)] ,na.rm=T)
+            rVal["xEn"]     <- sum(score[c("pE3","pE4","iE3","iE4")] ,na.rm=T)
             rVal["xfNum"]   <- sum(score[c("pfNum","ifNum")] ,na.rm=T)
             rVal["xMH"]     <- sum(score[c("pMH","iMH")] ,na.rm=T)
             rVal["eSum_FVaM4"]  <- sum(scrEvt[c("FVa.m","FVa.c","m4")] ,na.rm=T)
@@ -403,7 +403,7 @@ if( FALSE ){
 
             rVal["xBan.x"]  <- sum(score[c("pBanN.r","pBanN.n","iBanN")] ,na.rm=T)
             rVal["xLCol"]   <- sum(score[c("pLCol","iLCol")] ,na.rm=T)
-            rVal["xEn"]     <- sum(score[c("pE3","pE4","iE3","iE4",)] ,na.rm=T)
+            rVal["xEn"]     <- sum(score[c("pE3","pE4","iE3","iE4")] ,na.rm=T)
             rVal["xfNum"]   <- sum(score[c("pfNum","ifNum")] ,na.rm=T)
             rVal["xMH"]     <- sum(score[c("pMH","iMH")] ,na.rm=T)
             rVal["eSum_FVaM4"]  <- sum(scrEvt[c("FVa.m","FVa.c","m4")] ,na.rm=T)
