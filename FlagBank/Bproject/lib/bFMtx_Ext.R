@@ -382,7 +382,7 @@ if( TRUE ){
 }
 
 mName <- "score7"
-if( FALSE ){
+if( TRUE ){
 
     bFMtxExtFltLst[[mName]] <- list()
         # pBanN.r pBanN.n pLCol pE3 pE4 pMH pfNum 
