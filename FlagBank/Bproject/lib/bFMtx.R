@@ -1911,14 +1911,59 @@ bFMtx.score9 <- function( stdMIObj ){
 
 
 bFMtx.scoreA <- function( stdMIObj ){
-	#	stdMIObj <- stdMI.grp$basic$basic
+	#	stdMIObj <- stdMI.grp$basic[[pName]]
 	stdMI <- stdMIObj$stdMI
 	zMtx <- stdMIObj$zMtx
 	rObj <- list( 	idStr="scoreA"	,zMtx.size=nrow(zMtx)	,lastZoid=stdMI$lastZoid	)
 
-	rObj$rawBan <- NULL	;rObj$remBan <- NULL	;rObj$cBan <- NULL	;rObj$fBan <- NULL
-	if( 0<nrow(stdMI$rawTail) ){
+	hSize <- nrow(stdMI$rawTail)
+	if( 0 <- hSize ){
+		rObj$quoTail <- stdMI$quoTail
+
+		rObj$quoLst <- list()	#	$size		,$qValLst
+		for( hIdx in seq_len(hSize) ){
+			rObj$quoLst[[hIdx]] <- fCutU.getQuoObj( stdMI$rawTail[hIdx,] ,valSet=T )
+		}
+
+		remTbl <- table(stdMI$lastZoid %% 10)
+		remTbl <- remTbl[ order(names(remTbl)) ]
+		rObj$remMtx <- matrix( c( as.integer(names(remTbl)) ,remTbl ) ,byrow=T
+					,nrow=2 ,ncol=length(remTbl) ,dimnames=list(c("rem","cnt")) 
+		)
 	}
+
+	rObj$findQuoMatch <- function( aQuoObj ){
+		rstObj <- list()
+
+		matInfoLst <- list()
+		for( rIdx in seq_len(nrow(rObj$quoTail)) ){
+
+			if( !all(rObj$quoTail[rIdx,]==aQuoObj$size) ){
+				matInfoLst[[1+length(matInfoLst)]] <- list( matFlag=F )
+				next
+			}
+
+			matInfo <- list( matFlag=T )
+
+			valMat <- rep( F ,length(aQuoObj$size) )
+			for( qIdx in 1:length(aQuoObj$size) ){
+				if( 0 == length(aQuoObj$qValLst[[qIdx]]) ) next
+				
+				matFlag <- rObj$quoLst[[rIdx]]$qValLst[[qIdx]] == aQuoObj$qValLst[[qIdx]]
+				valMat[qIdx] <- all(matFlag)
+			}
+			matInfo$valMat <- valMat
+
+			matInfoLst[[1+length(matInfoLst)]] <- matInfo
+		}
+
+		rstObj$matFlag <- sapply(matInfoLst,function(p){p$matFlag})
+		sapply(matInfoLst,function(p){ p$valMat })
+		working
+
+		return( rstObj )
+	}
+
 
 	rObj$fMtxObj <- function( aZoidMtx ,makeInfoStr=F ){
 		#	aZoidMtx <- gEnv$allZoidMtx[c(stdIdx,sample(10:nrow(gEnv$allZoidMtx),19)) ,] ;makeInfoStr=T
@@ -1944,6 +1989,8 @@ bFMtx.scoreA <- function( stdMIObj ){
 		for( aIdx in 1:aLen ){
 			aZoid <- aZoidMtx[aIdx,]
 			# aRem <- aZoid %% 10		;aCStep <- aZoid[2:6] - aZoid[1:5]		;aFStep <- aZoid - rObj$lastZoid
+
+			aQuoObj <- fCutU.getQuoObj( aZoid ,valSet=T )
 
 			# quoObj <- fCutU.getQuoObj( gEnv$zhF[800,] ,valSet=T )
 					# rObj <- list( tbl=table(zoid%/%10) )
