@@ -79,7 +79,7 @@ for( sfcIdx in 0 ){ # 0:2
     # bUtil.cut1( byMethod ) --------------------------------------------------------
     #   prllNum 2개 에서 1.8 mins 소모(bLst[[1]] : 1~50000)
     surFlag <- rep( T ,length(allIdxF) )
-    bLst <- k.blockLst( length(allIdxF) ,100*ifelse(testMode,5,500) )
+    bLst <- k.blockLst( length(allIdxF) ,100*ifelse(testMode,5,400) )
 
     sfExport("fHName")  ;sfExport("allIdxF")    ;sfExport("cutH.InitialCut")
     resultLst <- sfLapply( bLst ,function( blk ){
