@@ -730,6 +730,78 @@ bUtil.closeMax_Mtx <- function( scoreMtx ,windMtxMin=NULL ,windMtxMax ,distVal=3
 	return(distMtx)
 }
 
+bUtil.mtxPtn <- function( mtx ){
+
+	rObj <- list( hpnCode=rep(0,nrow(mtx)) )
+	rObj$mHpnLst <- list()	# multi happen
+	rObj$nHpnLst <- list()	# next happen
+	rObj$symmHpn <- c( "abbA"=0 ,"abxbA"=0 )	# Symmetry happen
+
+	rNum <- nrow(mtx)
+	if( 1>= rNum ){
+		return( rObj )
+	}
+
+	mHpnLst <- list()	# multi happen
+	checkedFlag <- rep( F ,rNum )
+	fndIdx <- rep( NA ,rNum )
+	for( aIdx in 1:(rNum-1) ){
+		fndIdx[] <- NA
+		for( bIdx in (aIdx+1):rNum ){
+			if(checkedFlag[bIdx]) next 
+
+			if( all(mtx[aIdx,]==mtx[bIdx,]) ){
+				fndIdx[ which(is.na(fndIdx))[1] ] <- bIdx
+				checkedFlag[bIdx] <- TRUE
+			}
+		}
+		if( 0<any(!is.na(fndIdx)) ){
+			mHpnLst[[1+length(mHpnLst)]] <- c( aIdx ,fndIdx[!is.na(fndIdx)] )
+		}
+	}
+
+	if( 0<length(mHpnLst) ){
+		rObj$mHpnLst <- mHpnLst
+		for( mhIdx in 1:length(mHpnLst) ){
+			rObj$hpnCode[ mHpnLst[[mhIdx]] ] <- mhIdx
+		}
+	}
+
+
+	if( 0<length(mHpnLst) ){	# next happen
+		nHpnLst <- list()
+		for( mhIdx in 1:length(mHpnLst) ){
+			hpnPos <- mHpnLst[[mhIdx]]
+			nHpn <- rep( 0, length(hpnPos)-1 )
+			for( idx in 1:(length(hpnPos)-1) ){
+				stepSize <- rNum - hpnPos[idx+1]
+				nHpn[idx] <- hpnPos[idx]+(stepSize+1)
+			}
+			nHpnLst[[mhIdx]] <- nHpn
+		}
+		rObj$nHpnLst <- nHpnLst	# next happen
+	}
+
+
+	if( 0<length(mHpnLst) ){	# Symmetry happen
+		#	"babA", "baaA", "bbaA", "a,x,x,a,x,x" 등의 패턴은 nHpnLst에 이미 포함되어 있다.
+
+		if( rNum>=3 ){	# symmCode["abbA"]
+			if( rObj$hpnCode[rNum]==rObj$hpnCode[rNum-1] ){
+				rObj$symmHpn["abbA"] <- rNum-2
+			}
+		}
+
+		if( rNum>=4 ){	# symmCode["abxbA"]
+			if( rObj$hpnCode[rNum]==rObj$hpnCode[rNum-2] ){
+				rObj$symmHpn["abxbA"] <- rNum-3
+			}
+		}
+
+	}
+
+	return( rObj )
+}
 
 #	src컬럼을 지정할 필요 없음. evtLst 의 이름을 이용함.
 bUtil.getEvtVal <- function( src ,evtLst ){
