@@ -1911,6 +1911,10 @@ bFMtx.score9 <- function( stdMIObj ){
 
 
 bFMtx.scoreA <- function( stdMIObj ){
+
+	# QQE : bUtil.mtxPtn() 함수 적용.
+
+
 	#	stdMIObj <- stdMI.grp$basic[[pName]]
 	stdMI <- stdMIObj$stdMI
 	zMtx <- stdMIObj$zMtx
