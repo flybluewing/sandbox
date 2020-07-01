@@ -803,6 +803,71 @@ bUtil.mtxPtn <- function( mtx ){
 	return( rObj )
 }
 
+bUtil.mtxColPtn0 <- function( mtx ,thldMtx=NULL ,rmAllCol=T ){
+	# rmAllCol : 모든 컬럼이 아닌 일부 컬럼에서의 패턴 발생만 추적.
+
+	rObj <- list( )
+	# "aaA"	"bbaA" "babA" "abxbA"
+	rObj$ptn$aaALst	<- list()	# "baaB"는 "aaA" 패턴에서 자동적으로 유추된다.
+	rObj$ptn$bbaA	<- list()
+	rObj$ptn$babA	<- list()
+	rObj$ptn$abxbA	<- list()
+
+	rNum <- nrow(mtx)	;cNum <- ncol(mtx)
+	if( 1>=rNum ){
+		return( rObj )
+	}
+
+
+	if( is.null(thldMtx) ){
+		thldMtx <- matrix( 0, nrow=0 ,ncol=2 )
+		colnames(thldMtx) <- c("colThld","rowThld")
+		for( idx in 1:3 ){
+			if( idx >= rNum ) break
+
+			thldMtx <- rbind( thldMtx ,c(rNum-idx ,cNum-idx) )
+		}
+	}
+
+	aaALst <- list()	# erIdx(eadge row idx) ,mFlag(match flag) ,dbgStr
+	cmFlag <- NULL
+	for( rIdx in (rNum-1):1 ){
+		matFlag <- mtx[rIdx,]==mtx[rIdx+1,]
+		if( is.null(cmFlag) )	cmFlag <- matFlag
+
+		matFlag[ !cmFlag ] <- F	# 이전까지의 연속적으로 일치해 온 것만 남김.
+
+		if( !all(matFlag==cmFlag) ){
+			idStr <- paste(ifelse(cmFlag,"T","."),collapse="")
+			dbgStr <- sprintf("%d %s",(rIdx+1),idStr)
+
+			aaALst[[1+length(aaALst)]] <- list( erIdx=(rIdx+1) ,mFlag=cmFlag ,dbgStr=dbgStr )
+
+			cmFlag <- matFlag
+		}
+
+		if( !any(cmFlag) )
+			break
+	}
+	rObj$ptn$aaALst <- aaALst
+
+
+	bbaA <- list()
+	if( 3<=rNum ){
+		matFlag <- mtx[rNum-1,]==mtx[rNum,]
+		if( any(matFlag) ){
+			bbaA$mFlag <- matFlag
+		}
+	}
+	rObj$ptn$bbaA	<- bbaA
+
+
+	# "babA"
+	# "abxbA"
+
+	return( rObj )
+}
+
 #	src컬럼을 지정할 필요 없음. evtLst 의 이름을 이용함.
 bUtil.getEvtVal <- function( src ,evtLst ){
 	evtVal <- src[names(evtLst)]
