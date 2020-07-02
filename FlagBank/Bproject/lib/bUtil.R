@@ -805,6 +805,7 @@ bUtil.mtxPtn <- function( mtx ){
 
 bUtil.mtxColPtn0 <- function( mtx ,thldMtx=NULL ,rmAllCol=T ){
 	# rmAllCol : 모든 컬럼이 아닌 일부 컬럼에서의 패턴 발생만 추적.
+	#			bUtil.mtxPtn() 결과와의 중복 회피용.
 
 	rObj <- list( )
 	# "aaA"	"bbaA" "babA" "abxbA"
@@ -857,11 +858,18 @@ bUtil.mtxColPtn0 <- function( mtx ,thldMtx=NULL ,rmAllCol=T ){
 		matFlag <- mtx[rNum-1,]==mtx[rNum,]
 		if( any(matFlag) ){
 			bbaA$mFlag <- matFlag
+			bbaA$erIdx <- rNum
 		}
 	}
 	rObj$ptn$bbaA	<- bbaA
 
+	babA <- list()
+	if( 3<=rNum ){
+		matFlag <- mtx[rNum,]==mtx[rNum-2,]
+		if( any(matFlag) ){
 
+		}
+	}
 	# "babA"
 	# "abxbA"
 
