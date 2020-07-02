@@ -1921,19 +1921,64 @@ bFMtx.scoreA <- function( stdMIObj ){
 	rObj <- list( 	idStr="scoreA"	,zMtx.size=nrow(zMtx)	,lastZoid=stdMI$lastZoid	)
 
 	hSize <- nrow(stdMI$rawTail)
-	if( 0 <- hSize ){
-		rObj$quoTail <- stdMI$quoTail
+	if( 0 <= hSize ){
 
+		# quoTail  -------------------------------------------------------------
+		rObj$quoTail <- stdMI$quoTail
 		rObj$quoLst <- list()	#	$size		,$qValLst
 		for( hIdx in seq_len(hSize) ){
 			rObj$quoLst[[hIdx]] <- fCutU.getQuoObj( stdMI$rawTail[hIdx,] ,valSet=T )
 		}
 
+		mtxPtnObj <- bUtil.mtxPtn( rObj$quoTail )
+		mtxColPtnObj <- bUtil.mtxColPtn( rObj$quoTail )
+
+
+		# remTblMtx  -----------------------------------------------------------
 		remTbl <- table(stdMI$lastZoid %% 10)
 		remTbl <- remTbl[ order(names(remTbl)) ]
 		rObj$remMtx <- matrix( c( as.integer(names(remTbl)) ,remTbl ) ,byrow=T
 					,nrow=2 ,ncol=length(remTbl) ,dimnames=list(c("rem","cnt")) 
 		)
+
+		cName <- c(	"aMHpn","aMHpnVLen","aNHpnF","aNHpnVLen","aSHpnVLen_abbA","aSHpnVLen_abxbA"
+					,"paaAH1","paaAH1VLen","paaAH2","paaAH2VLen","paaAH3","paaAH3VLen","paaAHn","paaAHnVLen"
+					,"pabbAH1","pabbAH1VLen","pabbAH2","pabbAH2VLen","pabbAH3","pabbAH3VLen","pabbAHn","pabbAHnVLen"
+					,"pbbaA" ,"pbbaAVLen" ,"pbabA" ,"pbabAVLen" ,"pabxbA" ,"pabxbAVLen"
+					,"remTblF" 
+				)
+			# aMHpn		: all match - multi hpn 갯수 (multi hpn이 2개 이상이더라도 어차피 매치는 한쪽만 된다는 걸 참고.)
+			# aMHpnVLen	: all match - multi hpn 에서 quo 블럭의 값이 일치한 것들의 총 길이(발생이 없으면 0)
+			# aNHpnF	: all match - multi Hpn에 대한 next hpn과 일치하는지 여부.
+			# aNHpnVLen	: all match - next hpn 일치 상태에서, 값이 동일한 quo 블럭의 총 길이(발생이 없으면 0)
+			# aSHpnVLen_abbA	: all match - Symm 형태(abbA) 매치 발생 상태에서 동일 값 Quo 블럭 총 길이(발생이 없으면 0)
+			# aSHpnVLen_abxbA	: all match - Symm 형태(abxbA) 매치 발생 상태에서 동일 값 Quo 블럭 총 길이(발생이 없으면 0)
+			# paaAH1	:   aaA 형태 발생이 일어난 컬럼 수(전체 컬럼이 아닌 부분매치)
+			# paaAH1VLen:   aaA 형태 발생이 일어난 컬럼들에서 동일 값 Quo 블럭의 총 길이.(발생이 없으면 0)
+			# paaAH2	:  aaaA 형태 발생이 일어난  수. paaAHn은 4이상의 H 연속발생을 다룬다. (aaa..aaA)
+			# pabbAH1,pabbAH1VLen	:   aaA 형태 발생에 대한 바로 이전 H, 즉 Symm 패턴을 다룬다.
+
+	}
+
+	rObj$quoMatch <- function( aQuo ,hQuo ){
+		#	aQuo <- fCutU.getQuoObj( aZoid ,valSet=T )
+		matRst <- list( lenMatFlag=rep(F,length(aQuo$qValLst)) )
+		names( matRst$lenMatFlag ) <- names( hQuo$size )
+		matRst$info <- c( "allMatF"=F ,"matColCnt"=0 ,"matValLen"=0 )
+
+		qValMat <- matRst$lenMatFlag
+		for( qIdx in 1:length(aQuo$qValLst) ){
+			matRst$lenMatFlag[qIdx] <- aQuo$size[qIdx]==hQuo$size[qIdx]
+			if( matRst$lenMatFlag[qIdx] ){
+				qValMat <- all( aQuo$qValLst[[qIdx]]==hQuo$qValLst[[qIdx]] )
+			}
+		}
+
+		matRst$info["allMatF"]		<- all(matRst$lenMatFlag)
+		matRst$info["matColCnt"]	<- sum(matRst$lenMatFlag)
+		matRst$info["matValLen"]	<- sum(aQuo$size[qValMat])
+
+		return( matRst )
 	}
 
 	rObj$findQuoMatch <- function( aQuoObj ){
@@ -1973,7 +2018,22 @@ bFMtx.scoreA <- function( stdMIObj ){
 		#	aZoidMtx <- gEnv$allZoidMtx[c(stdIdx,sample(10:nrow(gEnv$allZoidMtx),19)) ,] ;makeInfoStr=T
 
 		aLen <- nrow(aZoidMtx)
-		cName <- c(	"xxx","xxx","xxx","xxx","xxx","xxx" )
+		cName <- c(	"aMHpn","aMHpnVLen","aNHpnF","aNHpnVLen","aSHpnVLen_abbA","aSHpnVLen_abxbA"
+					,"paaAH1","paaAH1VLen","paaAH2","paaAH2VLen","paaAH3","paaAH3VLen","paaAHn","paaAHnVLen"
+					,"pabbAH1","pabbAH1VLen","pabbAH2","pabbAH2VLen","pabbAH3","pabbAH3VLen","pabbAHn","pabbAHnVLen"
+					,"pbbaA" ,"pbbaAVLen" ,"pbabA" ,"pbabAVLen" ,"pabxbA" ,"pabxbAVLen"
+					,"remTblF" 
+				)
+			# aMHpn		: all match - multi hpn 갯수 (multi hpn이 2개 이상이더라도 어차피 매치는 한쪽만 된다는 걸 참고.)
+			# aMHpnVLen	: all match - multi hpn 에서 quo 블럭의 값이 일치한 것들의 총 길이(발생이 없으면 0)
+			# aNHpnF	: all match - multi Hpn에 대한 next hpn과 일치하는지 여부.
+			# aNHpnVLen	: all match - next hpn 일치 상태에서, 값이 동일한 quo 블럭의 총 길이(발생이 없으면 0)
+			# aSHpnVLen_abbA	: all match - Symm 형태(abbA) 매치 발생 상태에서 동일 값 Quo 블럭 총 길이(발생이 없으면 0)
+			# aSHpnVLen_abxbA	: all match - Symm 형태(abxbA) 매치 발생 상태에서 동일 값 Quo 블럭 총 길이(발생이 없으면 0)
+			# paaAH1	:   aaA 형태 발생이 일어난 컬럼 수(전체 컬럼이 아닌 부분매치)
+			# paaAH1VLen:   aaA 형태 발생이 일어난 컬럼들에서 동일 값 Quo 블럭의 총 길이.(발생이 없으면 0)
+			# paaAH2	:  aaaA 형태 발생이 일어난  수. paaAHn은 4이상의 H 연속발생을 다룬다. (aaa..aaA)
+			# pabbAH1,pabbAH1VLen	:   aaA 형태 발생에 대한 바로 이전 H, 즉 Symm 패턴을 다룬다.
 		scoreMtx <- matrix( 0, nrow=aLen, ncol=length(cName) )	;colnames(scoreMtx) <- cName
 
 		infoMtx <- NULL

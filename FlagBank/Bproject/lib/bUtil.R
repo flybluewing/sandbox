@@ -786,13 +786,13 @@ bUtil.mtxPtn <- function( mtx ){
 	if( 0<length(mHpnLst) ){	# Symmetry happen
 		#	"babA", "baaA", "bbaA", "a,x,x,a,x,x" 등의 패턴은 nHpnLst에 이미 포함되어 있다.
 
-		if( rNum>=3 ){	# symmCode["abbA"]
+		if( rNum>=3 && rObj$hpnCode[rNum]>0 ){	# symmCode["abbA"]
 			if( rObj$hpnCode[rNum]==rObj$hpnCode[rNum-1] ){
 				rObj$symmHpn["abbA"] <- rNum-2
 			}
 		}
 
-		if( rNum>=4 ){	# symmCode["abxbA"]
+		if( rNum>=4 && rObj$hpnCode[rNum]>0){	# symmCode["abxbA"]
 			if( rObj$hpnCode[rNum]==rObj$hpnCode[rNum-2] ){
 				rObj$symmHpn["abxbA"] <- rNum-3
 			}
@@ -803,31 +803,16 @@ bUtil.mtxPtn <- function( mtx ){
 	return( rObj )
 }
 
-bUtil.mtxColPtn0 <- function( mtx ,thldMtx=NULL ,rmAllCol=T ){
-	# rmAllCol : 모든 컬럼이 아닌 일부 컬럼에서의 패턴 발생만 추적.
+bUtil.mtxColPtn <- function( mtx ,rmAllMat=T ){
+	# rmAllMat : 모든 컬럼이 해당되는 경우를 제외.
 	#			bUtil.mtxPtn() 결과와의 중복 회피용.
 
-	rObj <- list( )
-	# "aaA"	"bbaA" "babA" "abxbA"
-	rObj$ptn$aaALst	<- list()	# "baaB"는 "aaA" 패턴에서 자동적으로 유추된다.
-	rObj$ptn$bbaA	<- list()
-	rObj$ptn$babA	<- list()
-	rObj$ptn$abxbA	<- list()
+	rObj <- list( aaALst=list() ,bbaA=list() ,babA=list() ,abxbA=list() )
+			# "baaB"는 "aaA" 패턴에서 자동적으로 유추된다.
 
 	rNum <- nrow(mtx)	;cNum <- ncol(mtx)
 	if( 1>=rNum ){
 		return( rObj )
-	}
-
-
-	if( is.null(thldMtx) ){
-		thldMtx <- matrix( 0, nrow=0 ,ncol=2 )
-		colnames(thldMtx) <- c("colThld","rowThld")
-		for( idx in 1:3 ){
-			if( idx >= rNum ) break
-
-			thldMtx <- rbind( thldMtx ,c(rNum-idx ,cNum-idx) )
-		}
 	}
 
 	aaALst <- list()	# erIdx(eadge row idx) ,mFlag(match flag) ,dbgStr
@@ -850,28 +835,75 @@ bUtil.mtxColPtn0 <- function( mtx ,thldMtx=NULL ,rmAllCol=T ){
 		if( !any(cmFlag) )
 			break
 	}
-	rObj$ptn$aaALst <- aaALst
-
 
 	bbaA <- list()
 	if( 3<=rNum ){
-		matFlag <- mtx[rNum-1,]==mtx[rNum,]
+		matFlag <- mtx[rNum-1,]==mtx[rNum-2,]
 		if( any(matFlag) ){
 			bbaA$mFlag <- matFlag
 			bbaA$erIdx <- rNum
 		}
 	}
-	rObj$ptn$bbaA	<- bbaA
 
 	babA <- list()
 	if( 3<=rNum ){
 		matFlag <- mtx[rNum,]==mtx[rNum-2,]
 		if( any(matFlag) ){
-
+			babA$mFlag <- matFlag
+			babA$erIdx <- rNum-1
 		}
 	}
-	# "babA"
-	# "abxbA"
+
+	abxbA <- list()
+	if( 4<=rNum ){
+		matFlag <- mtx[rNum-2,] == mtx[rNum,]
+		if( any(matFlag) ){
+			abxbA$mFlag <- matFlag
+			abxbA$erIdx <- rNum-3
+		}
+	}
+
+
+	if( rmAllMat ){
+
+		# aaALst
+		mCnt <- sapply( aaALst ,function(p){sum(p$mFlag)})
+		aaALst <- aaALst[mCnt<cNum]
+
+		if( cNum<=sum(bbaA$mFlag) ){
+			bbaA <- list()
+		}
+		if( cNum<=sum(babA$mFlag) ){
+			babA <- list()
+		}
+		if( cNum<=sum(abxbA$mFlag) ){
+			abxbA <- list()
+		}
+
+	}
+
+	rObj$aaALst <- aaALst
+	rObj$bbaA	<- bbaA
+	rObj$babA	<- babA
+	rObj$abxbA	<- abxbA
+
+
+	# rObj$cutMinThld <- function( mcPtnObj ,thldMtx=NULL ){
+	# 	#	mcPtnObj <- bUtil.mtxColPtn( mtx )
+	# 	#		작업보류... 필요 없을 거 같기도 하다.
+
+	# 	if( is.null(thldMtx) ){
+	# 		thldMtx <- matrix( 0, nrow=0 ,ncol=2 )
+	# 		colnames(thldMtx) <- c("colThld","rowThld")
+	# 		for( idx in 1:3 ){
+	# 			if( idx >= rNum ) break
+
+	# 			thldMtx <- rbind( thldMtx ,c(rNum-idx ,cNum-idx) )
+	# 		}
+	# 	}
+
+	# 	return( mcPtnObj )
+	# }
 
 	return( rObj )
 }
