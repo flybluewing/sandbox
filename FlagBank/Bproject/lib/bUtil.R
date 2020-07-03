@@ -788,7 +788,8 @@ bUtil.mtxPtn <- function( mtx ){
 
 		if( rNum>=3 && rObj$hpnCode[rNum]>0 ){	# symmCode["abbA"]
 			if( rObj$hpnCode[rNum]==rObj$hpnCode[rNum-1] ){
-				rObj$symmHpn["abbA"] <- rNum-2
+				rObj$symmHpn["abbA"] <- which( rObj$hpnCode[rNum]==rObj$hpnCode )[1] - 1
+					# -1 이므로, mtx의 모든 row가 동일하다면 자연스레 0 이 됨.
 			}
 		}
 

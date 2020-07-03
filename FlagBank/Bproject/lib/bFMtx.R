@@ -1940,7 +1940,7 @@ bFMtx.scoreA <- function( stdMIObj ){
 		)
 
 		cName <- c(	"xaAVLen","axAVLen"
-			        ,"aMHpn","aMHpnVLen","aNHpnF","aNHpnVLen","aSHpnVLen_abbA","aSHpnVLen_abxbA"
+			        ,"aMHpn","aMHpnVLen","aNHpn","aNHpnVLen","aSHpnVLen_abbA","aSHpnVLen_abxbA"
 					,"paaAH1","paaAH1VLen","paaAH2","paaAH2VLen","paaAH3","paaAH3VLen","paaAHn","paaAHnVLen"
 					,"pabbAH1","pabbAH1VLen","pabbAH2","pabbAH2VLen","pabbAH3","pabbAH3VLen","pabbAHn","pabbAHnVLen"
 					,"pbbaA" ,"pbbaAVLen" ,"pbabA" ,"pbabAVLen" ,"pabxbA" ,"pabxbAVLen"
@@ -1949,7 +1949,7 @@ bFMtx.scoreA <- function( stdMIObj ){
 			# xaAVLen, axAVLen : quo size가 모두 일치하는 h, h-1가 있는 경우, quo 값 까지 일치하는 길이.
 			# aMHpn		: all match - multi hpn 갯수 (multi hpn이 2개 이상이더라도 어차피 매치는 한쪽만 된다는 걸 참고.)
 			# aMHpnVLen	: all match - multi hpn 에서 quo 블럭의 값이 일치한 것들의 총 길이(발생이 없으면 0)
-			# aNHpnF	: all match - multi Hpn에 대한 next hpn과 일치하는지 여부.
+			# aNHpn		: all match - multi Hpn에 대한 next hpn과 일치하는지 여부.
 			# aNHpnVLen	: all match - next hpn 일치 상태에서, 값이 동일한 quo 블럭의 총 길이(발생이 없으면 0)
 			# aSHpnVLen_abbA	: all match - Symm 형태(abbA) 매치 발생 상태에서 동일 값 Quo 블럭 총 길이(발생이 없으면 0)
 			# aSHpnVLen_abxbA	: all match - Symm 형태(abxbA) 매치 발생 상태에서 동일 값 Quo 블럭 총 길이(발생이 없으면 0)
@@ -1986,7 +1986,7 @@ bFMtx.scoreA <- function( stdMIObj ){
 
 		aLen <- nrow(aZoidMtx)
 		cName <- c(	"xaAVLen","axAVLen"
-					,"aMHpn","aMHpnVLen","aNHpnF","aNHpnVLen","aSHpnVLen_abbA","aSHpnVLen_abxbA"
+					,"aMHpn","aMHpnVLen","aNHpn","aNHpnVLen","aSHpnVLen_abbA","aSHpnVLen_abxbA"
 					,"paaAH1","paaAH1VLen","paaAH2","paaAH2VLen","paaAH3","paaAH3VLen","paaAHn","paaAHnVLen"
 					,"pabbAH1","pabbAH1VLen","pabbAH2","pabbAH2VLen","pabbAH3","pabbAH3VLen","pabbAHn","pabbAHnVLen"
 					,"pbbaA" ,"pbbaAVLen" ,"pbabA" ,"pbabAVLen" ,"pabxbA" ,"pabxbAVLen"
@@ -1995,7 +1995,7 @@ bFMtx.scoreA <- function( stdMIObj ){
 			# xaAVLen, axAVLen : quo size가 모두 일치하는 h, h-1가 있는 경우, quo 값 까지 일치하는 길이.
 			# aMHpn		: all match - multi hpn 갯수 (multi hpn이 2개 이상이더라도 어차피 매치는 한쪽만 된다는 걸 참고.)
 			# aMHpnVLen	: all match - multi hpn 에서 quo 블럭의 값이 일치한 것들의 총 길이(발생이 없으면 0)
-			# aNHpnF	: all match - multi Hpn에 대한 next hpn과 일치하는지 여부.
+			# aNHpn		: all match - multi Hpn에 대한 next hpn과 일치하는지 여부.(다수가 될 수 있을까??)
 			# aNHpnVLen	: all match - next hpn 일치 상태에서, 값이 동일한 quo 블럭의 총 길이(발생이 없으면 0)
 			# aSHpnVLen_abbA	: all match - Symm 형태(abbA) 매치 발생 상태에서 동일 값 Quo 블럭 총 길이(발생이 없으면 0)
 			# aSHpnVLen_abxbA	: all match - Symm 형태(abxbA) 매치 발생 상태에서 동일 값 Quo 블럭 총 길이(발생이 없으면 0)
@@ -2024,22 +2024,63 @@ bFMtx.scoreA <- function( stdMIObj ){
 			aQuo <- fCutU.getQuoObj( aZoid ,valSet=T )
 
 			if( 1<=hSize ){
-				quoMat <- rObj$quoMatch( aQuo ,rObj$quoLst[[hSize]] )
-				scoreMtx[aIdx,"xaAVLen"] 	<- ifelse( 0==quoMat$info["allMatF"] ,0 ,quoMat$info["matValLen"] )
+				hQuo <- rObj$quoLst[[hSize]]
+				if( all(aQuo$size==hQuo$size) ){
+					quoMat <- rObj$quoMatch( aQuo ,hQuo )
+					scoreMtx[aIdx,"xaAVLen"] 	<- ifelse( 0==quoMat$info["allMatF"] ,0 ,quoMat$info["matValLen"] )
+				}
 			}
 			if( 2<=hSize ){
-				quoMat <- rObj$quoMatch( aQuo ,rObj$quoLst[[hSize-1]] )
-				scoreMtx[aIdx,"axAVLen"] 	<- ifelse( 0==quoMat$info["allMatF"] ,0 ,quoMat$info["matValLen"] )
+				hQuo <- rObj$quoLst[[hSize-1]]
+				if( all(aQuo$size==hQuo$size) ){
+					quoMat <- rObj$quoMatch( aQuo ,hQuo )
+					scoreMtx[aIdx,"axAVLen"] 	<- ifelse( 0==quoMat$info["allMatF"] ,0 ,quoMat$info["matValLen"] )
+				}
 
 
-				# ,"aMHpn","aMHpnVLen","aNHpnF","aNHpnVLen","aSHpnVLen_abbA","aSHpnVLen_abxbA"
+				# "aMHpn","aMHpnVLen","aNHpn","aNHpnVLen","aSHpnVLen_abbA","aSHpnVLen_abxbA"
+				if( 0<length(rObj$mtxPtnObj$mHpnLst) ){
 
-				# > rObj$mtxPtnObj
-				# 	$hpnCode	[1] 1 0 0 1 0 0
-				# 	$mHpnLst	$mHpnLst[[1]]	[1] 1 4
-				# 	$nHpnLst	$nHpnLst[[1]]	[1] 4
-				# 	$symmHpn		abbA abxbA 
-				# 						0     0 
+					# "aMHpn","aMHpnVLen"
+					for( mhIdx in 1:length(rObj$mtxPtnObj$mHpnLst) ){
+						fndRow <- rObj$mtxPtnObj$mHpnLst[[mhIdx]]
+						lastRow <- fndRow[length(fndRow)]
+
+						quoMat <- rObj$quoMatch( aQuo ,rObj$quoLst[[lastRow]] )
+						if( quoMat$info["allMatF"] ){
+							scoreMtx[aIdx,"aMHpn"] <- length(fndRow)
+
+							aMHpnVLen <- 0
+							for( rIdx in fndRow ){
+								quoMat <- rObj$quoMatch( aQuo ,rObj$quoLst[[rIdx]] )
+								aMHpnVLen <- aMHpnVLen + quoMat$info["matValLen"]
+							}
+							scoreMtx[aIdx,"aMHpnVLen"] <- aMHpnVLen
+							break
+						}
+					}
+
+					# "aNHpn","aNHpnVLen"
+					for( nhIdx in 1:length(rObj$mtxPtnObj$nHpnLst) ){
+						# break를 적용하지 않음.(mHpnLst와 달리...)
+						# 	mHpnLst는 서로 다른 ptn끼리 그룹이지만, nHpnLst는 mHpn의 next step에서 나타나는 패턴들이기 때문에
+						# 	다른 ptn 그룹으로 인한 next ptn이라고 해도 같은 ptn인 경우가 생길 수 있다.
+						for( frIdx in rObj$mtxPtnObj$nHpnLst[[nhIdx]] ){
+							quoMat <- rObj$quoMatch( aQuo ,rObj$quoLst[[frIdx]] )
+							if( quoMat$info["allMatF"] ){
+								scoreMtx[aIdx,"aNHpn"] <- scoreMtx[aIdx,"aNHpn"] + 1
+								scoreMtx[aIdx,"aNHpnVLen"] <- scoreMtx[aIdx,"aNHpnVLen"] + quoMat$info["matValLen"]
+							}
+						}
+					}
+
+					# rObj$mtxPtnObj
+					# 	$symmHpn	abbA abxbA 
+					# 					4     0 
+
+				}
+
+
 
 
 			}
