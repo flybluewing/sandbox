@@ -1912,13 +1912,11 @@ bFMtx.score9 <- function( stdMIObj ){
 
 bFMtx.scoreA <- function( stdMIObj ){
 
-	# QQE : bUtil.mtxPtn() 함수 적용.
-
-
 	#	stdMIObj <- stdMI.grp$basic[[pName]]
 	stdMI <- stdMIObj$stdMI
 	zMtx <- stdMIObj$zMtx
 	rObj <- list( 	idStr="scoreA"	,zMtx.size=nrow(zMtx)	,lastZoid=stdMI$lastZoid	)
+	rObj$mtxPtnObj	<- NULL		;rObj$mtxColPtnObj <- NULL
 
 	hSize <- nrow(stdMI$rawTail)
 	if( 0 <= hSize ){
@@ -1930,8 +1928,8 @@ bFMtx.scoreA <- function( stdMIObj ){
 			rObj$quoLst[[hIdx]] <- fCutU.getQuoObj( stdMI$rawTail[hIdx,] ,valSet=T )
 		}
 
-		mtxPtnObj <- bUtil.mtxPtn( rObj$quoTail )
-		mtxColPtnObj <- bUtil.mtxColPtn( rObj$quoTail )
+		rObj$mtxPtnObj <- bUtil.mtxPtn( rObj$quoTail )
+		rObj$mtxColPtnObj <- bUtil.mtxColPtn( rObj$quoTail )
 
 
 		# remTblMtx  -----------------------------------------------------------
@@ -1941,12 +1939,14 @@ bFMtx.scoreA <- function( stdMIObj ){
 					,nrow=2 ,ncol=length(remTbl) ,dimnames=list(c("rem","cnt")) 
 		)
 
-		cName <- c(	"aMHpn","aMHpnVLen","aNHpnF","aNHpnVLen","aSHpnVLen_abbA","aSHpnVLen_abxbA"
+		cName <- c(	"xaAVLen","axAVLen"
+			        ,"aMHpn","aMHpnVLen","aNHpnF","aNHpnVLen","aSHpnVLen_abbA","aSHpnVLen_abxbA"
 					,"paaAH1","paaAH1VLen","paaAH2","paaAH2VLen","paaAH3","paaAH3VLen","paaAHn","paaAHnVLen"
 					,"pabbAH1","pabbAH1VLen","pabbAH2","pabbAH2VLen","pabbAH3","pabbAH3VLen","pabbAHn","pabbAHnVLen"
 					,"pbbaA" ,"pbbaAVLen" ,"pbabA" ,"pbabAVLen" ,"pabxbA" ,"pabxbAVLen"
 					,"remTblF" 
 				)
+			# xaAVLen, axAVLen : quo size가 모두 일치하는 h, h-1가 있는 경우, quo 값 까지 일치하는 길이.
 			# aMHpn		: all match - multi hpn 갯수 (multi hpn이 2개 이상이더라도 어차피 매치는 한쪽만 된다는 걸 참고.)
 			# aMHpnVLen	: all match - multi hpn 에서 quo 블럭의 값이 일치한 것들의 총 길이(발생이 없으면 0)
 			# aNHpnF	: all match - multi Hpn에 대한 next hpn과 일치하는지 여부.
@@ -1970,7 +1970,7 @@ bFMtx.scoreA <- function( stdMIObj ){
 		for( qIdx in 1:length(aQuo$qValLst) ){
 			matRst$lenMatFlag[qIdx] <- aQuo$size[qIdx]==hQuo$size[qIdx]
 			if( matRst$lenMatFlag[qIdx] ){
-				qValMat <- all( aQuo$qValLst[[qIdx]]==hQuo$qValLst[[qIdx]] )
+				qValMat[qIdx] <- all( aQuo$qValLst[[qIdx]]==hQuo$qValLst[[qIdx]] )
 			}
 		}
 
@@ -1981,49 +1981,18 @@ bFMtx.scoreA <- function( stdMIObj ){
 		return( matRst )
 	}
 
-	rObj$findQuoMatch <- function( aQuoObj ){
-		rstObj <- list()
-
-		matInfoLst <- list()
-		for( rIdx in seq_len(nrow(rObj$quoTail)) ){
-
-			if( !all(rObj$quoTail[rIdx,]==aQuoObj$size) ){
-				matInfoLst[[1+length(matInfoLst)]] <- list( matFlag=F )
-				next
-			}
-
-			matInfo <- list( matFlag=T )
-
-			valMat <- rep( F ,length(aQuoObj$size) )
-			for( qIdx in 1:length(aQuoObj$size) ){
-				if( 0 == length(aQuoObj$qValLst[[qIdx]]) ) next
-				
-				matFlag <- rObj$quoLst[[rIdx]]$qValLst[[qIdx]] == aQuoObj$qValLst[[qIdx]]
-				valMat[qIdx] <- all(matFlag)
-			}
-			matInfo$valMat <- valMat
-
-			matInfoLst[[1+length(matInfoLst)]] <- matInfo
-		}
-
-		rstObj$matFlag <- sapply(matInfoLst,function(p){p$matFlag})
-		sapply(matInfoLst,function(p){ p$valMat })
-		working
-
-		return( rstObj )
-	}
-
-
 	rObj$fMtxObj <- function( aZoidMtx ,makeInfoStr=F ){
 		#	aZoidMtx <- gEnv$allZoidMtx[c(stdIdx,sample(10:nrow(gEnv$allZoidMtx),19)) ,] ;makeInfoStr=T
 
 		aLen <- nrow(aZoidMtx)
-		cName <- c(	"aMHpn","aMHpnVLen","aNHpnF","aNHpnVLen","aSHpnVLen_abbA","aSHpnVLen_abxbA"
+		cName <- c(	"xaAVLen","axAVLen"
+					,"aMHpn","aMHpnVLen","aNHpnF","aNHpnVLen","aSHpnVLen_abbA","aSHpnVLen_abxbA"
 					,"paaAH1","paaAH1VLen","paaAH2","paaAH2VLen","paaAH3","paaAH3VLen","paaAHn","paaAHnVLen"
 					,"pabbAH1","pabbAH1VLen","pabbAH2","pabbAH2VLen","pabbAH3","pabbAH3VLen","pabbAHn","pabbAHnVLen"
 					,"pbbaA" ,"pbbaAVLen" ,"pbabA" ,"pbabAVLen" ,"pabxbA" ,"pabxbAVLen"
 					,"remTblF" 
 				)
+			# xaAVLen, axAVLen : quo size가 모두 일치하는 h, h-1가 있는 경우, quo 값 까지 일치하는 길이.
 			# aMHpn		: all match - multi hpn 갯수 (multi hpn이 2개 이상이더라도 어차피 매치는 한쪽만 된다는 걸 참고.)
 			# aMHpnVLen	: all match - multi hpn 에서 quo 블럭의 값이 일치한 것들의 총 길이(발생이 없으면 0)
 			# aNHpnF	: all match - multi Hpn에 대한 next hpn과 일치하는지 여부.
@@ -2046,36 +2015,34 @@ bFMtx.scoreA <- function( stdMIObj ){
 			return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
 		}
 
-		if( is.null(rObj$rawBan) ){ # stdMIObj$zMtx 데이터가 부족한 상태
-			return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
-		}
-
+		hSize <- length(rObj$quoLst)
 		for( aIdx in 1:aLen ){
 			aZoid <- aZoidMtx[aIdx,]
-			# aRem <- aZoid %% 10		;aCStep <- aZoid[2:6] - aZoid[1:5]		;aFStep <- aZoid - rObj$lastZoid
+			aRem <- aZoid %% 10
+			# aCStep <- aZoid[2:6] - aZoid[1:5]		;aFStep <- aZoid - rObj$lastZoid
 
-			aQuoObj <- fCutU.getQuoObj( aZoid ,valSet=T )
+			aQuo <- fCutU.getQuoObj( aZoid ,valSet=T )
 
-			# quoObj <- fCutU.getQuoObj( gEnv$zhF[800,] ,valSet=T )
-					# rObj <- list( tbl=table(zoid%/%10) )
-					# rObj$size <- rep(0,5)	;names(rObj$size) <- 0:(length(rObj$size)-1)
-					# rObj$size[names(rObj$tbl)] <- rObj$tbl
-					# rObj$valStr <- paste( rObj$tbl ,collapse=" " )
-					# rObj$idStr <- sprintf("V:%s Q:%s",rObj$valStr,paste(names(rObj$tbl),collapse=" "))
-
-					# rObj$sameTbl <- function( tbl ,fullMatch=FALSE ){
-					# 	if( length(rObj$tbl)!=length(tbl) ) return( FALSE )
-
-					# 	if( all(rObj$tbl==tbl) ){
-					# 		if( fullMatch ){
-					# 			if( all(names(rObj$tbl)==names(tbl)) ) return(FALSE)
-					# 		}
-					# 		return( TRUE )
-					# 	}
-					# 	return( FALSE )
-					# } # rObj$sameTbl()
+			if( 1<=hSize ){
+				quoMat <- rObj$quoMatch( aQuo ,rObj$quoLst[[hSize]] )
+				scoreMtx[aIdx,"xaAVLen"] 	<- ifelse( 0==quoMat$info["allMatF"] ,0 ,quoMat$info["matValLen"] )
+			}
+			if( 2<=hSize ){
+				quoMat <- rObj$quoMatch( aQuo ,rObj$quoLst[[hSize-1]] )
+				scoreMtx[aIdx,"axAVLen"] 	<- ifelse( 0==quoMat$info["allMatF"] ,0 ,quoMat$info["matValLen"] )
 
 
+				# ,"aMHpn","aMHpnVLen","aNHpnF","aNHpnVLen","aSHpnVLen_abbA","aSHpnVLen_abxbA"
+
+				# > rObj$mtxPtnObj
+				# 	$hpnCode	[1] 1 0 0 1 0 0
+				# 	$mHpnLst	$mHpnLst[[1]]	[1] 1 4
+				# 	$nHpnLst	$nHpnLst[[1]]	[1] 4
+				# 	$symmHpn		abbA abxbA 
+				# 						0     0 
+
+
+			}
 
 			return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
 		}
