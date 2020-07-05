@@ -795,7 +795,9 @@ bUtil.mtxPtn <- function( mtx ){
 
 		if( rNum>=4 && rObj$hpnCode[rNum]>0){	# symmCode["abxbA"]
 			if( rObj$hpnCode[rNum]==rObj$hpnCode[rNum-2] ){
-				rObj$symmHpn["abxbA"] <- rNum-3
+				if( rObj$hpnCode[rNum]!=rObj$hpnCode[rNum-1] ){
+					rObj$symmHpn["abxbA"] <- rNum-3
+				}
 			}
 		}
 

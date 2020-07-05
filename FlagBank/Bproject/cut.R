@@ -1,6 +1,6 @@
 source("header.r")  ;source("B_H.R")    ;source("cut_H.R")
 
-lastH <- 917
+lastH <- 918
 tgt.scMtx <- NULL
 testMode <-             #check
 prllNum <- 2            #check  2개 이상을 사용하면 CPU 과열로 효율이 떨어지는 듯...

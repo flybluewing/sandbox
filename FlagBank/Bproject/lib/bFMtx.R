@@ -1960,8 +1960,9 @@ bFMtx.scoreA <- function( stdMIObj ){
 
 	}
 
-	rObj$quoMatch <- function( aQuo ,hQuo ){
+	rObj$quoMatch <- function( aQuo ,hQuo ,matFilter=NULL ){
 		#	aQuo <- fCutU.getQuoObj( aZoid ,valSet=T )
+
 		matRst <- list( lenMatFlag=rep(F,length(aQuo$qValLst)) )
 		names( matRst$lenMatFlag ) <- names( hQuo$size )
 		matRst$info <- c( "allMatF"=F ,"matColCnt"=0 ,"matValLen"=0 )
@@ -1976,7 +1977,11 @@ bFMtx.scoreA <- function( stdMIObj ){
 
 		matRst$info["allMatF"]		<- all(matRst$lenMatFlag)
 		matRst$info["matColCnt"]	<- sum(matRst$lenMatFlag)
-		matRst$info["matValLen"]	<- sum(aQuo$size[qValMat])
+		if( is.null(matFilter) ){
+			matRst$info["matValLen"] <- sum(aQuo$size[qValMat])
+		} else {
+			matRst$info["matValLen"] <- sum(aQuo$size[qValMat&matFilter])
+		}
 
 		return( matRst )
 	}
@@ -2002,7 +2007,7 @@ bFMtx.scoreA <- function( stdMIObj ){
 			# paaAH1	:   aaA 형태 발생이 일어난 컬럼 수(전체 컬럼이 아닌 부분매치)
 			# paaAH1VLen:   aaA 형태 발생이 일어난 컬럼들에서 동일 값 Quo 블럭의 총 길이.(발생이 없으면 0)
 			# paaAH2	:  aaaA 형태 발생이 일어난  수. paaAHn은 4이상의 H 연속발생을 다룬다. (aaa..aaA)
-			# pabbAH1,pabbAH1VLen	:   aaA 형태 발생에 대한 바로 이전 H, 즉 Symm 패턴을 다룬다.
+			# pabbAH1,pabbAH1VLen	:   aaA 형태 발생에 대한 바로 이전 H, 즉 Symm 패턴을 다룬다.(즉, 숫자는 패턴 반복 수임)
 		scoreMtx <- matrix( 0, nrow=aLen, ncol=length(cName) )	;colnames(scoreMtx) <- cName
 
 		infoMtx <- NULL
@@ -2074,14 +2079,109 @@ bFMtx.scoreA <- function( stdMIObj ){
 						}
 					}
 
-					# rObj$mtxPtnObj
-					# 	$symmHpn	abbA abxbA 
-					# 					4     0 
+					# "aSHpnVLen_abbA","aSHpnVLen_abxbA"
+					if( 0<rObj$mtxPtnObj$symmHpn["abbA"] ){
+						hQuo <- rObj$quoLst[[ rObj$mtxPtnObj$symmHpn["abbA"] ]]
+						if( all(hQuo$size==aQuo$size) ){
+							quoMat <- rObj$quoMatch( aQuo ,hQuo )
+							scoreMtx[aIdx,"aSHpnVLen_abbA"] <- quoMat$info["matValLen"]
+						}
+					}
+					if( 0<rObj$mtxPtnObj$symmHpn["abxbA"] ){
+						hQuo <- rObj$quoLst[[ rObj$mtxPtnObj$symmHpn["abxbA"] ]]
+						if( all(hQuo$size==aQuo$size) ){
+							quoMat <- rObj$quoMatch( aQuo ,hQuo )
+							scoreMtx[aIdx,"aSHpnVLen_abxbA"] <- quoMat$info["matValLen"]
+						}
+					}
 
 				}
 
+				# ,"paaAH1","paaAH1VLen","paaAH2","paaAH2VLen","paaAH3","paaAH3VLen","paaAHn","paaAHnVLen"
+				# ,"pabbAH1","pabbAH1VLen","pabbAH2","pabbAH2VLen","pabbAH3","pabbAH3VLen","pabbAHn","pabbAHnVLen"
+				# ,"pbbaA" ,"pbbaAVLen" ,"pbabA" ,"pbabAVLen" ,"pabxbA" ,"pabxbAVLen"
+				if( 0 < length(rObj$mtxColPtnObj$aaALst) ){
 
+					for( lIdx in 1:length(rObj$mtxColPtnObj$aaALst) ){
+						aaA <- rObj$mtxColPtnObj$aaALst[[lIdx]]
 
+						# paaAH, paaAHVLen
+						hQuo <- rObj$quoLst[[ hSize ]]
+						quoMat <- rObj$quoMatch( aQuo ,hQuo ,matFilter=aaA$mFlag )
+						if( quoMat$info["allMatF"] ){
+							paaAH <- sum(aaA$mFlag)
+							paaAHVLen <- quoMat$info["matValLen"]
+						}
+
+						# pabbAH, pabbAHVLen
+						pabbAH <- 0		;pabbAHVLen <- 0
+						if( 1 < aaA$erIdx ){
+							hQuo <- rObj$quoLst[[ aaA$erIdx-1 ]]
+							quoMat <- rObj$quoMatch( aQuo ,hQuo ,matFilter=aaA$mFlag )
+							if( quoMat$info["allMatF"] ){
+								pabbAH <- sum(aaA$mFlag)
+								pabbAHVLen <- quoMat$info["matValLen"]
+							}
+						}
+
+						if( aaA$erIdx == (hSize-1) ){
+							scoreMtx[aIdx,"paaAH1"]		<- scoreMtx[aIdx,"paaAH1"]		+ paaAH
+							scoreMtx[aIdx,"paaAH1VLen"]	<- scoreMtx[aIdx,"paaAH1VLen"]	+ paaAHVLen
+							scoreMtx[aIdx,"pabbAH1"]	<- scoreMtx[aIdx,"pabbAH1"]		+ pabbAH
+							scoreMtx[aIdx,"pabbAH1VLen"]<- scoreMtx[aIdx,"pabbAH1VLen"]	+ pabbAHVLen
+						} else if( aaA$erIdx == (hSize-2) ){
+							scoreMtx[aIdx,"paaAH2"]		<- scoreMtx[aIdx,"paaAH2"]		+ paaAH
+							scoreMtx[aIdx,"paaAH2VLen"]	<- scoreMtx[aIdx,"paaAH2VLen"]	+ paaAHVLen
+							scoreMtx[aIdx,"pabbAH2"]	<- scoreMtx[aIdx,"pabbAH2"]		+ pabbAH
+							scoreMtx[aIdx,"pabbAH2VLen"]<- scoreMtx[aIdx,"pabbAH2VLen"]	+ pabbAHVLen
+						} else if( aaA$erIdx == (hSize-3) ){
+							scoreMtx[aIdx,"paaAH3"]		<- scoreMtx[aIdx,"paaAH3"]		+ paaAH
+							scoreMtx[aIdx,"paaAH3VLen"]	<- scoreMtx[aIdx,"paaAH3VLen"]	+ paaAHVLen
+							scoreMtx[aIdx,"pabbAH3"]	<- scoreMtx[aIdx,"pabbAH3"]		+ pabbAH
+							scoreMtx[aIdx,"pabbAH3VLen"]<- scoreMtx[aIdx,"pabbAH3VLen"]	+ pabbAHVLen
+						} else {
+							scoreMtx[aIdx,"paaAHn"]		<- scoreMtx[aIdx,"paaAHn"]		+ paaAH
+							scoreMtx[aIdx,"paaAHnVLen"]	<- scoreMtx[aIdx,"paaAHnVLen"]	+ paaAHVLen
+							scoreMtx[aIdx,"pabbAHn"]	<- scoreMtx[aIdx,"pabbAHn"]		+ pabbAH
+							scoreMtx[aIdx,"pabbAHnVLen"]<- scoreMtx[aIdx,"pabbAHnVLen"]	+ pabbAHVLen
+						}
+
+					}
+
+					# "pbbaA" ,"pbbaAVLen" 
+					if( 0 < length(rObj$mtxColPtnObj$bbaA) {						
+						bbaA <- rObj$mtxColPtnObj$bbaA
+						hQuo <- rObj$quoLst[[ bbaA$erIdx ]]
+						quoMat <- rObj$quoMatch( aQuo ,hQuo ,matFilter=bbaA$mFlag )
+						if( quoMat$info["allMatF"] ){
+							scoreMtx[aIdx,"pbbaA"]		<- sum(bbaA$mFlag)
+							scoreMtx[aIdx,"pbbaAVLen"]	<- quoMat$info["matValLen"]
+						}
+					}
+
+					# "pbabA" ,"pbabAVLen" 
+					if( 0 < length(rObj$mtxColPtnObj$babA) {
+						babA <- rObj$mtxColPtnObj$babA
+						hQuo <- rObj$quoLst[[ babA$erIdx ]]
+						quoMat <- rObj$quoMatch( aQuo ,hQuo ,matFilter=babA$mFlag )
+						if( quoMat$info["allMatF"] ){
+							scoreMtx[aIdx,"pbabA"]		<- sum(bbaA$mFlag)
+							scoreMtx[aIdx,"pbabAVLen"]	<- quoMat$info["matValLen"]
+						}
+					}
+
+					# "pabxbA" ,"pabxbAVLen"
+					if( 0 < length(rObj$mtxColPtnObj$abxbA) {
+						abxbA <- rObj$mtxColPtnObj$abxbA
+						hQuo <- rObj$quoLst[[ abxbA$erIdx ]]
+						quoMat <- rObj$quoMatch( aQuo ,hQuo ,matFilter=abxbA$mFlag )
+						if( quoMat$info["allMatF"] ){
+							scoreMtx[aIdx,"pabxbA"]		<- sum(bbaA$mFlag)
+							scoreMtx[aIdx,"pabxbAVLen"]	<- quoMat$info["matValLen"]
+						}
+					}
+
+				}
 
 			}
 
