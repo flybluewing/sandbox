@@ -146,6 +146,9 @@ getFilter.grp <- function( stdMI.grp ,tgt.scMtx=NULL ){
 		if( is.null(tgt.scMtx) || ("score9" %in%tgt.scMtx ) ){
 			mtxObjLst[[1+length(mtxObjLst)]] <- bFMtx.score9( stdMIObj )
 		}
+		if( is.null(tgt.scMtx) || ("scoreA" %in%tgt.scMtx ) ){
+			mtxObjLst[[1+length(mtxObjLst)]] <- bFMtx.scoreA( stdMIObj )
+		}
 		names(mtxObjLst) <- sapply(mtxObjLst,function(p){p$idStr})
 		return( mtxObjLst )
 	}
@@ -1919,7 +1922,7 @@ bFMtx.scoreA <- function( stdMIObj ){
 	rObj$mtxPtnObj	<- NULL		;rObj$mtxColPtnObj <- NULL
 
 	hSize <- nrow(stdMI$rawTail)
-	if( 0 <= hSize ){
+	if( 0 < hSize ){
 
 		# quoTail  -------------------------------------------------------------
 		rObj$quoTail <- stdMI$quoTail
@@ -1934,10 +1937,7 @@ bFMtx.scoreA <- function( stdMIObj ){
 
 		# remTblMtx  -----------------------------------------------------------
 		remTbl <- table(stdMI$lastZoid %% 10)
-		remTbl <- remTbl[ order(names(remTbl)) ]
-		rObj$remMtx <- matrix( c( as.integer(names(remTbl)) ,remTbl ) ,byrow=T
-					,nrow=2 ,ncol=length(remTbl) ,dimnames=list(c("rem","cnt")) 
-		)
+		rObj$remTbl <- remTbl[ order(names(remTbl)) ]
 
 		cName <- c(	"xaAVLen","axAVLen"
 			        ,"aMHpn","aMHpnVLen","aNHpn","aNHpnVLen","aSHpnVLen_abbA","aSHpnVLen_abxbA"
@@ -2034,6 +2034,16 @@ bFMtx.scoreA <- function( stdMIObj ){
 					quoMat <- rObj$quoMatch( aQuo ,hQuo )
 					scoreMtx[aIdx,"xaAVLen"] 	<- ifelse( 0==quoMat$info["allMatF"] ,0 ,quoMat$info["matValLen"] )
 				}
+
+				aRemTbl <- table(aRem)
+				aRemTbl <- aRemTbl[ order(names(aRemTbl)) ]
+				if( length(aRemTbl)==length(rObj$remTbl) ){	# remTbl
+					if( all(aRemTbl==rObj$remTbl) ){
+						if( all(names(aRemTbl)==names(rObj$remTbl)) ){
+							scoreMtx[aIdx,"remTblF"] <- TRUE
+						}
+					}
+				}
 			}
 			if( 2<=hSize ){
 				hQuo <- rObj$quoLst[[hSize-1]]
@@ -2106,6 +2116,7 @@ bFMtx.scoreA <- function( stdMIObj ){
 						aaA <- rObj$mtxColPtnObj$aaALst[[lIdx]]
 
 						# paaAH, paaAHVLen
+						paaAH <- 0		;paaAHVLen <- 0
 						hQuo <- rObj$quoLst[[ hSize ]]
 						quoMat <- rObj$quoMatch( aQuo ,hQuo ,matFilter=aaA$mFlag )
 						if( quoMat$info["allMatF"] ){
@@ -2149,7 +2160,7 @@ bFMtx.scoreA <- function( stdMIObj ){
 					}
 
 					# "pbbaA" ,"pbbaAVLen" 
-					if( 0 < length(rObj$mtxColPtnObj$bbaA) {						
+					if( 0 < length(rObj$mtxColPtnObj$bbaA) ){
 						bbaA <- rObj$mtxColPtnObj$bbaA
 						hQuo <- rObj$quoLst[[ bbaA$erIdx ]]
 						quoMat <- rObj$quoMatch( aQuo ,hQuo ,matFilter=bbaA$mFlag )
@@ -2160,23 +2171,23 @@ bFMtx.scoreA <- function( stdMIObj ){
 					}
 
 					# "pbabA" ,"pbabAVLen" 
-					if( 0 < length(rObj$mtxColPtnObj$babA) {
+					if( 0 < length(rObj$mtxColPtnObj$babA) ){
 						babA <- rObj$mtxColPtnObj$babA
 						hQuo <- rObj$quoLst[[ babA$erIdx ]]
 						quoMat <- rObj$quoMatch( aQuo ,hQuo ,matFilter=babA$mFlag )
 						if( quoMat$info["allMatF"] ){
-							scoreMtx[aIdx,"pbabA"]		<- sum(bbaA$mFlag)
+							scoreMtx[aIdx,"pbabA"]		<- sum(babA$mFlag)
 							scoreMtx[aIdx,"pbabAVLen"]	<- quoMat$info["matValLen"]
 						}
 					}
 
 					# "pabxbA" ,"pabxbAVLen"
-					if( 0 < length(rObj$mtxColPtnObj$abxbA) {
+					if( 0 < length(rObj$mtxColPtnObj$abxbA) ){
 						abxbA <- rObj$mtxColPtnObj$abxbA
 						hQuo <- rObj$quoLst[[ abxbA$erIdx ]]
 						quoMat <- rObj$quoMatch( aQuo ,hQuo ,matFilter=abxbA$mFlag )
 						if( quoMat$info["allMatF"] ){
-							scoreMtx[aIdx,"pabxbA"]		<- sum(bbaA$mFlag)
+							scoreMtx[aIdx,"pabxbA"]		<- sum(abxbA$mFlag)
 							scoreMtx[aIdx,"pabxbAVLen"]	<- quoMat$info["matValLen"]
 						}
 					}
@@ -2185,8 +2196,9 @@ bFMtx.scoreA <- function( stdMIObj ){
 
 			}
 
-			return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
 		}
+
+		return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
 
 	}
 

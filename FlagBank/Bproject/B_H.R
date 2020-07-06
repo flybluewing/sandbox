@@ -639,7 +639,7 @@ B.get_testData.grp.old <- function( testSpan ,gEnv ,allIdxLst ,fRstLst ,tgt.scMt
 B.get_testData.grp <- function( testSpan ,gEnv ,allIdxLst ,fRstLst ,tgt.scMtx=NULL ,get.scoreMtx.grp=FALSE ){
 
     tStmp <- Sys.time()
-    sfExport("tgt.scMtx")
+    sfExport("tgt.scMtx")   ;sfExport("get.scoreMtx.grp")
     resultLst <- sfLapply(testSpan,function(curHIdx){
         tStmp.prll <- Sys.time()
 
@@ -653,7 +653,7 @@ B.get_testData.grp <- function( testSpan ,gEnv ,allIdxLst ,fRstLst ,tgt.scMtx=NU
                                     allIdxLst.w$infoMtx <- allIdxLst$infoMtx[wLastSpan,]
         fRstLst.w <- fRstLst[wLastSpan]
 
-        curHMtxLst <- B.makeHMtxLst( gEnv.w, allIdxLst.w, fRstLst.w, tgt.scMtx )   
+        curHMtxLst <- B.makeHMtxLst( gEnv.w, allIdxLst.w, fRstLst.w, tgt.scMtx )
 
         # ------------------------------------------------------------------------
         # stdIdx.grp

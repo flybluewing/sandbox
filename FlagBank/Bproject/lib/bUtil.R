@@ -843,8 +843,13 @@ bUtil.mtxColPtn <- function( mtx ,rmAllMat=T ){
 	if( 3<=rNum ){
 		matFlag <- mtx[rNum-1,]==mtx[rNum-2,]
 		if( any(matFlag) ){
-			bbaA$mFlag <- matFlag
-			bbaA$erIdx <- rNum
+
+			exmFlag <- mtx[rNum-1,]==mtx[rNum  ,]	# a와 b는 달라야 한다.
+			if( !all(exmFlag[matFlag]) ){
+				bbaA$mFlag <- matFlag
+				bbaA$erIdx <- rNum
+			}
+
 		}
 	}
 
@@ -852,8 +857,12 @@ bUtil.mtxColPtn <- function( mtx ,rmAllMat=T ){
 	if( 3<=rNum ){
 		matFlag <- mtx[rNum,]==mtx[rNum-2,]
 		if( any(matFlag) ){
-			babA$mFlag <- matFlag
-			babA$erIdx <- rNum-1
+
+			exmFlag <- mtx[rNum-1,]==mtx[rNum  ,]	# a와 b는 달라야 한다.
+			if( !all(exmFlag[matFlag]) ){
+				babA$mFlag <- matFlag
+				babA$erIdx <- rNum-1
+			}
 		}
 	}
 
@@ -861,8 +870,15 @@ bUtil.mtxColPtn <- function( mtx ,rmAllMat=T ){
 	if( 4<=rNum ){
 		matFlag <- mtx[rNum-2,] == mtx[rNum,]
 		if( any(matFlag) ){
-			abxbA$mFlag <- matFlag
-			abxbA$erIdx <- rNum-3
+
+			exmFlagAB <- mtx[rNum-3,]==mtx[rNum-2,]	# a와 b는 달라야 한다.
+			exmFlagAX <- mtx[rNum-3,]==mtx[rNum-1,]	# a와 x는 달라야 한다.
+			exmFlagBX <- mtx[rNum-2,]==mtx[rNum-1,]	# b와 x는 달라야 한다.
+
+			if( !all(exmFlagAB[matFlag]) && !all(exmFlagAX[matFlag]) && !all(exmFlagBX[matFlag]) ){
+				abxbA$mFlag <- matFlag
+				abxbA$erIdx <- rNum-3
+			}
 		}
 	}
 
@@ -893,14 +909,12 @@ bUtil.mtxColPtn <- function( mtx ,rmAllMat=T ){
 
 	# rObj$cutMinThld <- function( mcPtnObj ,thldMtx=NULL ){
 	# 	#	mcPtnObj <- bUtil.mtxColPtn( mtx )
-	# 	#		작업보류... 필요 없을 거 같기도 하다.
-
+	# 	#		최소 매치 기준을 한정지으려는 건데, 작업보류... 필요 없을 거 같기도 하다.
 	# 	if( is.null(thldMtx) ){
 	# 		thldMtx <- matrix( 0, nrow=0 ,ncol=2 )
 	# 		colnames(thldMtx) <- c("colThld","rowThld")
 	# 		for( idx in 1:3 ){
 	# 			if( idx >= rNum ) break
-
 	# 			thldMtx <- rbind( thldMtx ,c(rNum-idx ,cNum-idx) )
 	# 		}
 	# 	}
