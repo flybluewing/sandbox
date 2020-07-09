@@ -2206,3 +2206,71 @@ bFMtx.scoreA <- function( stdMIObj ){
 
 }
 
+
+bFMtx.scoreB <- function( stdMIObj ){
+
+	stdMI <- stdMIObj$stdMI
+	zMtx <- stdMIObj$zMtx
+	rObj <- list( 	idStr="scoreB"	,zMtx.size=nrow(zMtx)	,lastZoid=stdMI$lastZoid	)
+	rObj$mtxPtnObj	<- NULL		;rObj$mtxColPtnObj <- NULL
+
+	hSize <- nrow(stdMI$rawTail)
+	if( 0 < hSize ){
+		codeMtx <- stdMI$rawTail %% 2
+		rObj$mtxPtnObj <- bUtil.mtxPtn( codeMtx )
+		rObj$mtxColPtnObj <- bUtil.mtxColPtn( codeMtx )
+	}
+
+	rObj$codeMatch <- function( ){
+
+	}
+
+	rObj$fMtxObj <- function( aZoidMtx ,makeInfoStr=F ){
+
+		aLen <- nrow(aZoidMtx)
+		cName <- c(	"xaAVLen","axAVLen"
+					,"aMHpn","aMHpnVLen","aNHpn","aNHpnVLen","aSHpnVLen_abbA","aSHpnVLen_abxbA"
+					,"paaAH1","paaAH1VLen","paaAH2","paaAH2VLen","paaAH3","paaAH3VLen","paaAHn","paaAHnVLen"
+					,"pabbAH1","pabbAH1VLen","pabbAH2","pabbAH2VLen","pabbAH3","pabbAH3VLen","pabbAHn","pabbAHnVLen"
+					,"pbbaA" ,"pbbaAVLen" ,"pbabA" ,"pbabAVLen" ,"pabxbA" ,"pabxbAVLen"
+					,"remTblF" 
+				)
+			# xaAVLen, axAVLen : quo size가 모두 일치하는 h, h-1가 있는 경우, quo 값 까지 일치하는 길이.
+			# aMHpn		: all match - multi hpn 갯수 (multi hpn이 2개 이상이더라도 어차피 매치는 한쪽만 된다는 걸 참고.)
+			# aMHpnVLen	: all match - multi hpn 에서 quo 블럭의 값이 일치한 것들의 총 길이(발생이 없으면 0)
+			# aNHpn		: all match - multi Hpn에 대한 next hpn과 일치하는지 여부.(다수가 될 수 있을까??)
+			# aNHpnVLen	: all match - next hpn 일치 상태에서, 값이 동일한 quo 블럭의 총 길이(발생이 없으면 0)
+			# aSHpnVLen_abbA	: all match - Symm 형태(abbA) 매치 발생 상태에서 동일 값 Quo 블럭 총 길이(발생이 없으면 0)
+			# aSHpnVLen_abxbA	: all match - Symm 형태(abxbA) 매치 발생 상태에서 동일 값 Quo 블럭 총 길이(발생이 없으면 0)
+			# paaAH1	:   aaA 형태 발생이 일어난 컬럼 수(전체 컬럼이 아닌 부분매치)
+			# paaAH1VLen:   aaA 형태 발생이 일어난 컬럼들에서 동일 값 Quo 블럭의 총 길이.(발생이 없으면 0)
+			# paaAH2	:  aaaA 형태 발생이 일어난  수. paaAHn은 4이상의 H 연속발생을 다룬다. (aaa..aaA)
+			# pabbAH1,pabbAH1VLen	:   aaA 형태 발생에 대한 바로 이전 H, 즉 Symm 패턴을 다룬다.(즉, 숫자는 패턴 반복 수임)
+		scoreMtx <- matrix( 0, nrow=aLen, ncol=length(cName) )	;colnames(scoreMtx) <- cName
+
+		infoMtx <- NULL
+		if( makeInfoStr ){
+			cName <- c( "zMtx.size" )
+			infoMtx <- matrix( "" ,nrow=aLen ,ncol=length(cName) )	;colnames(infoMtx) <- cName
+			infoMtx[,"zMtx.size"] <- rObj$zMtx.size
+		}
+		if( 0==rObj$zMtx.size ){
+			return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
+		}
+
+		hSize <- length(rObj$quoLst)
+		for( aIdx in 1:aLen ){
+			aZoid <- aZoidMtx[aIdx,]
+			aCode <- aZoid %% 2
+
+			
+		}
+
+		return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
+
+	}
+
+	return( rObj )
+
+}
+
