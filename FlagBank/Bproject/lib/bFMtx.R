@@ -2214,15 +2214,33 @@ bFMtx.scoreB <- function( stdMIObj ){
 	rObj <- list( 	idStr="scoreB"	,zMtx.size=nrow(zMtx)	,lastZoid=stdMI$lastZoid	)
 	rObj$mtxPtnObj	<- NULL		;rObj$mtxColPtnObj <- NULL
 
-	hSize <- nrow(stdMI$rawTail)
+	rObj$rawTail <- stdMI$rawTail
+	hSize <- nrow( rObj$rawTail )
 	if( 0 < hSize ){
 		codeMtx <- stdMI$rawTail %% 2
 		rObj$mtxPtnObj <- bUtil.mtxPtn( codeMtx )
 		rObj$mtxColPtnObj <- bUtil.mtxColPtn( codeMtx )
 	}
 
-	rObj$codeMatch <- function( ){
+	rObj$binMatch <- function( aZoid ,hZoid ,matFilter=NULL ){
 
+		matRst <- list( matFlag=rep(F,length(hZoid)) )
+		matRst$info <- c( "allMatF"=F ,"matValLen"=0 )
+
+		aCode <- aZoid %% 2
+		hCode <- hZoid %% 2
+		matRst$matFlag <- aCode == hCode
+
+		matRst$info["allMatF"] <- all(matRst$matFlag)
+
+		vMatFlag <- aZoid == hZoid
+		if( is.null(matFilter) ){
+			matRst$info["matValLen"] <- sum( vMatFlag )
+		} else {
+			matRst$info["matValLen"] <- sum( vMatFlag & matFilter )
+		}
+
+		return( matRst )
 	}
 
 	rObj$fMtxObj <- function( aZoidMtx ,makeInfoStr=F ){
@@ -2233,7 +2251,6 @@ bFMtx.scoreB <- function( stdMIObj ){
 					,"paaAH1","paaAH1VLen","paaAH2","paaAH2VLen","paaAH3","paaAH3VLen","paaAHn","paaAHnVLen"
 					,"pabbAH1","pabbAH1VLen","pabbAH2","pabbAH2VLen","pabbAH3","pabbAH3VLen","pabbAHn","pabbAHnVLen"
 					,"pbbaA" ,"pbbaAVLen" ,"pbabA" ,"pbabAVLen" ,"pabxbA" ,"pabxbAVLen"
-					,"remTblF" 
 				)
 			# xaAVLen, axAVLen : quo size가 모두 일치하는 h, h-1가 있는 경우, quo 값 까지 일치하는 길이.
 			# aMHpn		: all match - multi hpn 갯수 (multi hpn이 2개 이상이더라도 어차피 매치는 한쪽만 된다는 걸 참고.)
@@ -2258,11 +2275,156 @@ bFMtx.scoreB <- function( stdMIObj ){
 			return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
 		}
 
-		hSize <- length(rObj$quoLst)
+		hSize <- nrow(rObj$rawTail)
 		for( aIdx in 1:aLen ){
 			aZoid <- aZoidMtx[aIdx,]
-			aCode <- aZoid %% 2
 
+			if( 1<=hSize ){
+				binMat <- rObj$binMatch( aZoid ,rObj$rawTail[hSize,] )
+				if( binMat$info["allMatF"] ){
+					scoreMtx[aIdx,"xaAVLen"] <- binMat$info["matValLen"]
+				}
+			}
+			if( 2<=hSize ){
+
+				binMat <- rObj$binMatch( aZoid ,rObj$rawTail[hSize-1,] )
+				if( binMat$info["allMatF"] ){
+					scoreMtx[aIdx,"axAVLen"] <- binMat$info["matValLen"]
+				}
+
+				# "aMHpn","aMHpnVLen","aNHpn","aNHpnVLen","aSHpnVLen_abbA","aSHpnVLen_abxbA"
+				if( 0<length(rObj$mtxPtnObj$mHpnLst) ){
+
+					# "aMHpn","aMHpnVLen"
+					for( mhIdx in 1:length(rObj$mtxPtnObj$mHpnLst) ){
+						fndRow <- rObj$mtxPtnObj$mHpnLst[[mhIdx]]
+						lastRow <- fndRow[length(fndRow)]
+
+						binMat <- rObj$binMatch( aZoid ,rObj$rawTail[lastRow,] )
+						if( binMat$info["allMatF"] ){
+							scoreMtx[aIdx,"aMHpn"] <- length(fndRow)
+
+							aMHpnVLen <- 0
+							for( rIdx in fndRow ){
+								binMat <- rObj$binMatch( aZoid ,rObj$rawTail[rIdx,] )
+								aMHpnVLen <- aMHpnVLen + binMat$info["matValLen"]
+							}
+							scoreMtx[aIdx,"aMHpnVLen"] <- aMHpnVLen
+
+							break		# rObj$mtxPtnObj$mHpnLst 에서 같은 그룹은 없으므로.
+						}
+					}
+
+					# "aNHpn","aNHpnVLen"
+					for( nhIdx in 1:length(rObj$mtxPtnObj$nHpnLst) ){
+						# break를 적용하지 않음.(mHpnLst와 달리...)
+						# 	mHpnLst는 서로 다른 ptn끼리 그룹이지만, nHpnLst는 mHpn의 next step에서 나타나는 패턴들이기 때문에
+						# 	다른 ptn 그룹으로 인한 next ptn이라고 해도 같은 ptn인 경우가 생길 수 있다.
+						for( frIdx in rObj$mtxPtnObj$nHpnLst[[nhIdx]] ){
+							binMat <- rObj$binMatch( aZoid ,rObj$rawTail[frIdx,] )
+							if( binMat$info["allMatF"] ){
+								scoreMtx[aIdx,"aNHpn"] <- scoreMtx[aIdx,"aNHpn"] + 1
+								scoreMtx[aIdx,"aNHpnVLen"] <- scoreMtx[aIdx,"aNHpnVLen"] + binMat$info["matValLen"]
+							}
+						}
+					}
+
+					# "aSHpnVLen_abbA","aSHpnVLen_abxbA"
+					if( 0<rObj$mtxPtnObj$symmHpn["abbA"] ){
+						hZoid <- rObj$rawTail[ rObj$mtxPtnObj$symmHpn["abbA"] ,]
+						binMat <- rObj$binMatch( aZoid ,hZoid )
+						if( binMat$info["allMatF"] ){
+							scoreMtx[aIdx,"aSHpnVLen_abbA"] <- binMat$info["matValLen"]
+						}						
+					}
+					if( 0<rObj$mtxPtnObj$symmHpn["abxbA"] ){
+						hZoid <- rObj$rawTail[ rObj$mtxPtnObj$symmHpn["abxbA"] ,]
+						binMat <- rObj$binMatch( aZoid ,hZoid )
+						if( binMat$info["allMatF"] ){
+							scoreMtx[aIdx,"aSHpnVLen_abxbA"] <- binMat$info["matValLen"]
+						}
+					}
+
+				}
+
+				# ,"paaAH1","paaAH1VLen","paaAH2","paaAH2VLen","paaAH3","paaAH3VLen","paaAHn","paaAHnVLen"
+				# ,"pabbAH1","pabbAH1VLen","pabbAH2","pabbAH2VLen","pabbAH3","pabbAH3VLen","pabbAHn","pabbAHnVLen"
+				if( 0 < length(rObj$mtxColPtnObj$aaALst) ){
+
+					for( lIdx in 1:length(rObj$mtxColPtnObj$aaALst) ){
+						aaA <- rObj$mtxColPtnObj$aaALst[[lIdx]]
+
+						# paaAH, paaAHVLen
+						paaAH <- 0		;paaAHVLen <- 0
+						binMat <- rObj$binMatch( aZoid ,rObj$rawTail[hSize,] ,matFilter=aaA$mFlag )
+						if( binMat$info["allMatF"] ){
+							paaAH <- sum(aaA$mFlag)
+							paaAHVLen <- binMat$info["matValLen"]
+						}
+
+						# pabbAH, pabbAHVLen
+						pabbAH <- 0		;pabbAHVLen <- 0
+						if( 1 < aaA$erIdx ){
+							binMat <- rObj$binMatch( aZoid ,rObj$rawTail[aaA$erIdx-1,] ,matFilter=aaA$mFlag )
+							if( binMat$info["allMatF"] ){
+								pabbAH <- sum(aaA$mFlag)
+								pabbAHVLen <- binMat$info["matValLen"]
+							}
+						}
+
+						if( aaA$erIdx == (hSize-1) ){
+							scoreMtx[aIdx,"paaAH1"]		<- scoreMtx[aIdx,"paaAH1"]		+ paaAH
+							scoreMtx[aIdx,"paaAH1VLen"]	<- scoreMtx[aIdx,"paaAH1VLen"]	+ paaAHVLen
+							scoreMtx[aIdx,"pabbAH1"]	<- scoreMtx[aIdx,"pabbAH1"]		+ pabbAH
+							scoreMtx[aIdx,"pabbAH1VLen"]<- scoreMtx[aIdx,"pabbAH1VLen"]	+ pabbAHVLen
+						} else if( aaA$erIdx == (hSize-2) ){
+							scoreMtx[aIdx,"paaAH2"]		<- scoreMtx[aIdx,"paaAH2"]		+ paaAH
+							scoreMtx[aIdx,"paaAH2VLen"]	<- scoreMtx[aIdx,"paaAH2VLen"]	+ paaAHVLen
+							scoreMtx[aIdx,"pabbAH2"]	<- scoreMtx[aIdx,"pabbAH2"]		+ pabbAH
+							scoreMtx[aIdx,"pabbAH2VLen"]<- scoreMtx[aIdx,"pabbAH2VLen"]	+ pabbAHVLen
+						} else if( aaA$erIdx == (hSize-3) ){
+							scoreMtx[aIdx,"paaAH3"]		<- scoreMtx[aIdx,"paaAH3"]		+ paaAH
+							scoreMtx[aIdx,"paaAH3VLen"]	<- scoreMtx[aIdx,"paaAH3VLen"]	+ paaAHVLen
+							scoreMtx[aIdx,"pabbAH3"]	<- scoreMtx[aIdx,"pabbAH3"]		+ pabbAH
+							scoreMtx[aIdx,"pabbAH3VLen"]<- scoreMtx[aIdx,"pabbAH3VLen"]	+ pabbAHVLen
+						} else {
+							scoreMtx[aIdx,"paaAHn"]		<- scoreMtx[aIdx,"paaAHn"]		+ paaAH
+							scoreMtx[aIdx,"paaAHnVLen"]	<- scoreMtx[aIdx,"paaAHnVLen"]	+ paaAHVLen
+							scoreMtx[aIdx,"pabbAHn"]	<- scoreMtx[aIdx,"pabbAHn"]		+ pabbAH
+							scoreMtx[aIdx,"pabbAHnVLen"]<- scoreMtx[aIdx,"pabbAHnVLen"]	+ pabbAHVLen
+						}
+
+                    }
+					# "pbbaA" ,"pbbaAVLen" 
+					if( 0 < length(rObj$mtxColPtnObj$bbaA) ){
+						bbaA <- rObj$mtxColPtnObj$bbaA
+						binMat <- rObj$binMatch( aZoid ,rObj$rawTail[bbaA$erIdx,] ,matFilter=bbaA$mFlag )
+						if( binMat$info["allMatF"] ){
+							scoreMtx[aIdx,"pbbaA"]		<- sum(bbaA$mFlag)
+							scoreMtx[aIdx,"pbbaAVLen"]	<- binMat$info["matValLen"]
+						}
+                    }
+					# "pbabA" ,"pbabAVLen" 
+					if( 0 < length(rObj$mtxColPtnObj$babA) ){
+						babA <- rObj$mtxColPtnObj$babA
+						binMat <- rObj$binMatch( aZoid ,rObj$rawTail[babA$erIdx,] ,matFilter=babA$mFlag )
+						if( binMat$info["allMatF"] ){
+							scoreMtx[aIdx,"pbabA"]		<- sum(babA$mFlag)
+							scoreMtx[aIdx,"pbabAVLen"]	<- binMat$info["matValLen"]
+						}
+                    }
+					# "pabxbA" ,"pabxbAVLen"
+					if( 0 < length(rObj$mtxColPtnObj$abxbA) ){
+						abxbA <- rObj$mtxColPtnObj$abxbA
+						binMat <- rObj$binMatch( aZoid ,rObj$rawTail[abxbA$erIdx,] ,matFilter=abxbA$mFlag )
+						if( binMat$info["allMatF"] ){
+							scoreMtx[aIdx,"pabxbA"]		<- sum(abxbA$mFlag)
+							scoreMtx[aIdx,"pabxbAVLen"]	<- binMat$info["matValLen"]
+						}
+                    }
+				}
+
+			}
 			
 		}
 
