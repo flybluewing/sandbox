@@ -2030,6 +2030,10 @@ bFMtx.scoreA <- function( stdMIObj ){
 		}
 
 		hSize <- length(rObj$quoLst)
+		if( hSize < 1){
+			return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
+		}
+
 		for( aIdx in 1:aLen ){
 			aZoid <- aZoidMtx[aIdx,]
 			aRem <- aZoid %% 10
@@ -2285,6 +2289,10 @@ bFMtx.scoreB <- function( stdMIObj ){
 		}
 
 		hSize <- nrow(rObj$rawTail)
+		if( hSize < 1){
+			return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
+		}
+
 		for( aIdx in 1:aLen ){
 			aZoid <- aZoidMtx[aIdx,]
 
@@ -2455,6 +2463,10 @@ bFMtx.scoreC <- function( stdMIObj ){
 
 	rObj$rawTail <- stdMI$rawTail
     rObj$cStepTail <- stdMI$cStepTail
+	if( is.null(rObj$cStepTail) ){	# rObj$rawTail 데이터가 아예 없는 경우.
+		rObj$cStepTail <- matrix( 0 ,nrow=0 ,ncol=5 )
+	}
+
 	hSize <- nrow( rObj$cStepTail )
 	if( 0 < hSize ){
 		codeMtx <- rObj$cStepTail %% 2
@@ -2688,12 +2700,19 @@ bFMtx.scoreD <- function( stdMIObj ){
 
 	rObj$rawTail <- stdMI$rawTail
     rObj$fStepTail <- stdMI$fStepTail
+	if( is.null(stdMI$fStepTail) ){	# rObj$rawTail 데이터가 아예 없는 경우.
+		rObj$fStepTail <- matrix( 0 ,nrow=0 ,ncol=6 )
+	}
+
 	hSize <- nrow( rObj$fStepTail )
+
+	if( (hSize>1) && all(is.na(rObj$fStepTail[1,])) ){	# zMtx 데이터가 6 보다 부족한 경우.
+		rObj$fStepTail <- rObj$fStepTail[ 2:hSize ,,drop=F]
+		hSize <- nrow( rObj$fStepTail )
+	}
+
 	if( 0 < hSize ){
 		codeMtx <- rObj$fStepTail %% 2
-		if( all(is.na(codeMtx[1,])) ){
-			codeMtx[1,] <- -10		# 데이터가 부족(zMtx가 7를 넘지 못하는 경우)한 경우, fStep의 1 row 값들은 NA로 표기되는 것에 대응하기 위해.
-		}
 		rObj$mtxPtnObj <- bUtil.mtxPtn( codeMtx )
 		rObj$mtxColPtnObj <- bUtil.mtxColPtn( codeMtx )
 	}
@@ -2917,3 +2936,4 @@ bFMtx.scoreD <- function( stdMIObj ){
 	return( rObj )
 
 }
+
