@@ -2691,6 +2691,9 @@ bFMtx.scoreD <- function( stdMIObj ){
 	hSize <- nrow( rObj$fStepTail )
 	if( 0 < hSize ){
 		codeMtx <- rObj$fStepTail %% 2
+		if( all(is.na(codeMtx[1,])) ){
+			codeMtx[1,] <- -10		# 데이터가 부족(zMtx가 7를 넘지 못하는 경우)한 경우, fStep의 1 row 값들은 NA로 표기되는 것에 대응하기 위해.
+		}
 		rObj$mtxPtnObj <- bUtil.mtxPtn( codeMtx )
 		rObj$mtxColPtnObj <- bUtil.mtxColPtn( codeMtx )
 	}
@@ -2749,6 +2752,10 @@ bFMtx.scoreD <- function( stdMIObj ){
 		}
 
 		hSize <- nrow(rObj$fStepTail)
+		if( hSize < 1){
+			return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
+		}
+
 		for( aIdx in 1:aLen ){
 			aZoid <- aZoidMtx[aIdx,]
 			aCStep <- aZoid[2:6] - aZoid[1:5]	
