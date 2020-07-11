@@ -36,7 +36,10 @@ cat(sprintf("* Parallel ready... see log : %s \n",prllLog$fileName))
 if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
 
     tgt.scMtx <- NULL       # default : NULL   하도 실수가 잦아서 일부러 문법 오류로 놔둔다.. -_-;
-        #   "bScr01"
+        #   tgt.scMtx <- c( "score1","score2","score3","score4","score5","score6","score7","score8","score9" )
+        #   tgt.scMtx <- c( tgt.scMtx  ,c("bScr01","bScr02") )
+        #   tgt.scMtx <- c( tgt.scMtx  ,c("scoreA") )
+
 
     configH <- lastH-20    # configH는 기본 cutting값을 얻기 위하는 시점에 따라 조절.
     testSpan <- (lastH - 19:0)   # configH 보다는 큰 시점에서 시작해야 함을 유의.
@@ -50,6 +53,7 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
     save( testData.grp ,file=sprintf("Obj_testData.grp.%d.%s.save",lastH,ifelse(is.null(tgt.scMtx),"all",tgt.scMtx) ) )
     #   save( testData.grp ,file="Obj_testData.grp.save" )
     #   load( sprintf("Obj_testData.grp.%d.%s.save",lastH,ifelse(is.null(tgt.scMtx),"all",tgt.scMtx) ) )
+    #           sprintf("Obj_testData.grp.%d.%s.save",lastH,"all" )
     #           Obj_testData.grp.900.w100.save : configH <- lastH-100 (4hours)
 
     #   B.get_cutRst1.grp()
