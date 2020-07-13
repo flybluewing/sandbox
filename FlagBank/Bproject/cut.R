@@ -2,7 +2,7 @@ source("header.r")  ;source("B_H.R")    ;source("cut_H.R")
 
 lastH <- 919
 tgt.scMtx <- NULL
-testMode <-             #check
+testMode <- F            #check
 prllNum <- 2            #check  2개 이상을 사용하면 CPU 과열로 효율이 떨어지는 듯...
 
 QQE:Trouble      # 실수 방지를 위해 의도된 오류코드

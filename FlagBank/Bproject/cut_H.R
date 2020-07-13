@@ -28,20 +28,25 @@ cutH.InitialCut <- function( gEnv ,allIdxF ,blk ,filter.grp ,fHName=NULL ,exeCfg
     blkSpan <- blk["start"]:blk["end"]
 
     # mName 별 소요시간 참고(aIdx 1000개). bScr도 나중에 추가할 것.
-    #     score1 : 19.4secs (cut  85/1000)
-    #     score2 : 16.4secs (cut 232/1000)
-    #     score3 : 14.9secs (cut 155/1000)
-    #     score4 :  1.0mins (cut  30/1000)
-    #     score5 :  1.9mins (cut 324/1000)
-    #     score6 : 59.2secs (cut  31/1000)
-    #     score7 :  1.1mins (cut  14/1000)
-    #     score8 : 22.8secs (cut  43/1000)
-    #     score9 : 30.9secs (cut 130/1000)
-    #     bScr01 :  0.5secs (cut 175/1000)
-    #     bScr02 :  1.1secs (cut  86/1000) <--- 확인 요.
+    #         score1 is done.(cut  925/10000)   cost:  2.6mins
+    #         score2 is done.(cut 1152/10000)   cost:  2.3mins
+    #         score3 is done.(cut  836/10000)   cost:  1.9mins
+    #         score4 is done.(cut  209/10000)   cost:  5.9mins
+    #         score5 is done.(cut 2608/10000)   cost:  9.4mins
+    #         score6 is done.(cut 1150/10000)   cost:  5.4mins
+    #         score7 is done.(cut   66/10000)   cost:  6.1mins
+    #         score8 is done.(cut 4904/10000)   cost:  2.1mins
+    #         score9 is done.(cut 1827/10000)   cost:  3.0mins
+    #         bScr01 is done.(cut 1296/10000)   cost:  3.3secs
+    #         bScr02 is done.(cut  508/10000)   cost:  6.8secs
+    #         scoreA is done.(cut 2705/10000)   cost:  2.9mins
+    #         scoreB is done.(cut 1397/10000)   cost:  2.4mins
+    #         scoreC is done.(cut 1143/10000)   cost:  2.4mins
+    #         scoreD is done.(cut  474/10000)   cost:  2.6mins
 
-    timeCost <- c( "score1"=19 ,"score2"=16 ,"score3"=15 ,"score4"=60 ,"score5"=114 ,"score6"=59 ,"score7"=66 ,"score8"=23 ,"score9"=30 )
-    timeCost <- c( timeCost ,"bScr01"=0 ,"bScr02"=1 )
+    timeCost <- c( "score1"=26 ,"score2"=23 ,"score3"=19 ,"score4"=59 ,"score5"=94 ,"score6"=54 ,"score7"=61 ,"score8"=21 ,"score9"=30 )
+    timeCost <- c( timeCost ,"bScr01"=1 ,"bScr02"=1 )
+    timeCost <- c( timeCost ,"scoreA"=29 ,"scoreB"=24 ,"scoreC"=24 ,"scoreD"=26 )
 
     mtxNames <- names(timeCost)[order(timeCost)]    # 가장 소요시작 작은 것 부터 mtxNames 등록
     for( mName in mtxNames ){   # mName <- mtxNames[1]
