@@ -72,7 +72,7 @@ bUtil.cut1 <- function( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=NULL ,anaOnly=F
 			reportStatus( tStmp ,sprintf("[%s,%s] stdLst",hName,mName) ,surFlag ,logger )
 
 			#   "hIdxLst" ------------------------------------------
-			mtxGrp <- getScoreMtx.grp_byHIdx( scoreMtx.grp )
+			mtxGrp <- getScoreMtx.grp_byHIdx( scoreMtx.grp )	# 루프 밖으로 빼도 될 듯.
 			hIdxCut <- cut.grp$cutterLst[[hName]][[mName]]$hIdxCut
 			for( aIdx in seq_len(datLen) ){
 				if( !anaOnly && !surFlag[aIdx] )	next

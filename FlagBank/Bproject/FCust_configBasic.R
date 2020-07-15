@@ -71,6 +71,7 @@ scoreMtxCfg[[mName]] <- list(
     ,fCol = list(
         "rem0.num"=list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )
                         ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        ,evtMax.fCol=NULL   # c( lev2Max=3 ,lev3Max=2 )
                     ) 
         ,"rem0.len.tot"=list( rng=matrix( c(0,2 ,0,2) ,ncol=2 )
                         ,evt=matrix( c(c(2,3,3,3,3),c(2,3,4,5,6)) ,ncol=2)
@@ -1299,7 +1300,8 @@ for( mName in names( scoreMtxCfg ) ){ # naming 추가.
 
         if( is.null(scoreMtxCfg[[mName]]$fCol[[fcName]]$evtMax.fCol ) ){
             # fCol 별 전체 phase 대상으로 evt 발생 제한.
-            scoreMtxCfg[[mName]]$fCol[[fcName]]$evtMax.fCol <- c( minLev=2 ,maxHpn=2 )
+            #   >=
+            scoreMtxCfg[[mName]]$fCol[[fcName]]$evtMax.fCol <- c( lev2Max=3 ,lev3Max=2 )
         }
     }
 
