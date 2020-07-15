@@ -308,6 +308,39 @@ bFCust.getEvt_byHIdx <- function( scMtx ,cfg ,lastEvt=NULL ,ignoreOpt=NULL ){
 
 	return( rObj )
 }
+bFCust.getEvt_byFCol <- function( evtObj ,cfg ){
+
+    fEvtObj <- list()
+
+    fEvtMtx <- matrix( 0 ,ncol=2 ,nrow=nrow(evtObj$eLevMtx) 
+                        ,dimnames=list( rownames(evtObj$eLevMtx) ,c("lev2Cnt","lev3Cnt") )
+    )
+    fClMMtx <- matrix( 0 ,ncol=2 ,nrow=nrow(evtObj$eLevMtx)       # close max
+                        ,dimnames=list( rownames(evtObj$eLevMtx) ,c("lev2ClM","lev3ClM") )
+    )
+    closeMaxDistVal <- 3
+    for( fColIdx in names(cfg$fCol) ){
+        fEvtMtx[fColIdx,"lev2Cnt"] <- sum( evtObj$eLevMtx[fColIdx,]==2 ,na.rm=T )
+        fEvtMtx[fColIdx,"lev3Cnt"] <- sum( evtObj$eLevMtx[fColIdx,]>=3 ,na.rm=T )   # 3 이상은 모두 포함.
+
+        evtMax.fCol <- cfg$fCol[[fColIdx]]$evtMax.fCol
+
+        wind <- c( 0 ,evtMax.fCol["lev2Max"] )  # evtMax.fCol["lev2Max"] 이름을 따라가서 이렇게 귀찮은... 방법이 없나?
+        names( wind ) <- c("min","max")
+        fClMMtx[fColIdx,"lev2ClM"] <- bUtil.closeMax( fEvtMtx[fColIdx,"lev2Cnt"] ,wind ,distVal=closeMaxDistVal)
+
+        wind <- c( 0 ,evtMax.fCol["lev3Max"] )  # evtMax.fCol["lev2Max"] 이름을 따라가서 이렇게 귀찮은... 방법이 없나?
+        names( wind ) <- c("min","max")
+        fClMMtx[fColIdx,"lev3ClM"] <- bUtil.closeMax( fEvtMtx[fColIdx,"lev3Cnt"] ,wind ,distVal=closeMaxDistVal)
+    }
+
+    fEvtObj$fEvtMtx <- fEvtMtx
+    fEvtObj$fClMMtx <- fClMMtx
+    fEvtObj$closeMaxDistVal <- closeMaxDistVal
+
+    return( fEvtObj )
+
+}
 bFCust.getSkipZero_byHIdx <- function( mtxLst ,cfg ,lastSZ=NULL ){
 
     getSkipZero <- function( mtxLst ){
@@ -926,9 +959,10 @@ FCust_stdCut.hIdx <- function( hName ,mName ,mtxLst ){
         evtObj <- bFCust.getEvtMtx( rawMtx ,cfg )
 
         curEvt <- bFCust.getEvt_byHIdx( rawMtx ,cfg ,lastEvt=rObj$stdEvt.H1 )
+        fColEvt <- bFCust.getEvt_byFCol( evtObj ,cfg )
         rebInfo <- bFCust.getSkipZero_byHIdx.ass( rObj$szObj ,rawMtx ,evtObj$eValMtx )
 
-        return( list( cfg=cfg ,evtObj=evtObj ,curEvt=curEvt ,rebInfo=rebInfo ) )
+        return( list( cfg=cfg ,evtObj=evtObj ,curEvt=curEvt ,fColEvt=fColEvt ,rebInfo=rebInfo ) )
     }
 
     rObj$getRaw4Ass <- function( rawObj ){
@@ -976,9 +1010,11 @@ FCust_stdCut.hIdx <- function( hName ,mName ,mtxLst ){
         cfg     <- rawObj$cfg
         evtObj  <- rawObj$evtObj
         curEvt  <- rawObj$curEvt
+        fColEvt <- rawObj$fColEvt
         rebInfo <- rawObj$rebInfo
 
         # 일단 scoreMtx들부터 만들고, forCut은 나중에 적용하자.
+        # fColEvt 평가 적용.
 
         #   summMtx,summMtx.reb / stdEvt.H1 --------------------------------------------------------
         # curEvt <- bFCust.getEvt_byHIdx( rawMtx ,cfg ,lastEvt=rObj$stdEvt.H1 )
