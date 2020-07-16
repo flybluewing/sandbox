@@ -71,7 +71,7 @@ scoreMtxCfg[[mName]] <- list(
     ,fCol = list(
         "rem0.num"=list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )
                         ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
-                        ,evtMax.fCol=NULL   # c( lev2Max=3 ,lev3Max=2 )
+                        ,evtMax.fCol=NULL   # c( lev2Max=5 ,lev2Max=3 ,lev3Max=2 )
                     ) 
         ,"rem0.len.tot"=list( rng=matrix( c(0,2 ,0,2) ,ncol=2 )
                         ,evt=matrix( c(c(2,3,3,3,3),c(2,3,4,5,6)) ,ncol=2)
@@ -133,7 +133,7 @@ scoreMtxCfg[[mName]] <- list(
                     )
     )
     #   XXX.tot, XXX.val 관계 때문에 2개 fCol 동시발생이 흔함을 고려.
-    ,evtMax <- matrix( c(2,1,3,1 ,2,2,3,2)  # evt in row over fCols
+    ,evtMax = matrix( c(2,1,3,1 ,2,2,3,2)  # evt in row over fCols
                         ,byrow=T ,ncol=4
                         ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
                     )
@@ -1299,12 +1299,16 @@ for( mName in names( scoreMtxCfg ) ){ # naming 추가.
         colnames(scoreMtxCfg[[mName]]$fCol[[fcName]]$evt) <- c("lev","val")
 
         if( is.null(scoreMtxCfg[[mName]]$fCol[[fcName]]$evtMax.fCol ) ){
-            # fCol 별 전체 phase 대상으로 evt 발생 제한.
-            #   >=
-            scoreMtxCfg[[mName]]$fCol[[fcName]]$evtMax.fCol <- c( lev2Max=3 ,lev3Max=2 )
+            # fCol 별 전체 phase 대상으로 evt 발생 제한.( >= 기준 cut )
+            # scoreMtxCfg[[mName]]$fCol[[fcName]]$evtMax.fCol <- c( lev1Max=2 ,lev2Max=2 ,lev3Max=2 )
+            scoreMtxCfg[[mName]]$fCol[[fcName]]$evtMax.fCol <- c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
         }
     }
 
+    if( is.null(scoreMtxCfg[[mName]]$evtMaxFColTot) ){
+        #   fCol 4 all Ph에서 CloseMax 가 나타난 fCol 수.
+        scoreMtxCfg[[mName]]$evtMaxFColTot  <- c( lev1Max=2 ,lev2Max=2 ,lev3Max=2 )
+    }
     if( is.null(scoreMtxCfg[[mName]]$evtMax) ){
         #   한 개 phase 내에서의 이벤트 발생 제한.
         #   "minLev"이상 이벤트가 maxHpn 보다 초과할 때 Cut

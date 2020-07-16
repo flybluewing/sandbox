@@ -308,22 +308,27 @@ bFCust.getEvt_byHIdx <- function( scMtx ,cfg ,lastEvt=NULL ,ignoreOpt=NULL ){
 
 	return( rObj )
 }
-bFCust.getEvt_byFCol <- function( evtObj ,cfg ){
+bFCust.getEvt_byFCol <- function( evtObj ,cfg ,closeMaxDistVal=3 ){
 
     fEvtObj <- list()
 
-    fEvtMtx <- matrix( 0 ,ncol=2 ,nrow=nrow(evtObj$eLevMtx) 
-                        ,dimnames=list( rownames(evtObj$eLevMtx) ,c("lev2Cnt","lev3Cnt") )
+    fEvtMtx <- matrix( 0 ,ncol=3 ,nrow=nrow(evtObj$eLevMtx) 
+                        ,dimnames=list( rownames(evtObj$eLevMtx) ,c("lev1Cnt","lev2Cnt","lev3Cnt") )
     )
-    fClMMtx <- matrix( 0 ,ncol=2 ,nrow=nrow(evtObj$eLevMtx)       # close max
-                        ,dimnames=list( rownames(evtObj$eLevMtx) ,c("lev2ClM","lev3ClM") )
+    fClMMtx <- matrix( 0 ,ncol=3 ,nrow=nrow(evtObj$eLevMtx)       # close max
+                        ,dimnames=list( rownames(evtObj$eLevMtx) ,c("lev1ClM","lev2ClM","lev3ClM") )
     )
-    closeMaxDistVal <- 3
+
     for( fColIdx in names(cfg$fCol) ){
+        fEvtMtx[fColIdx,"lev1Cnt"] <- sum( evtObj$eLevMtx[fColIdx,]==1 ,na.rm=T )
         fEvtMtx[fColIdx,"lev2Cnt"] <- sum( evtObj$eLevMtx[fColIdx,]==2 ,na.rm=T )
         fEvtMtx[fColIdx,"lev3Cnt"] <- sum( evtObj$eLevMtx[fColIdx,]>=3 ,na.rm=T )   # 3 이상은 모두 포함.
 
         evtMax.fCol <- cfg$fCol[[fColIdx]]$evtMax.fCol
+
+        wind <- c( 0 ,evtMax.fCol["lev1Max"] )  # evtMax.fCol["lev1Max"] 이름을 따라가서 이렇게 귀찮은... 방법이 없나?
+        names( wind ) <- c("min","max")
+        fClMMtx[fColIdx,"lev1ClM"] <- bUtil.closeMax( fEvtMtx[fColIdx,"lev1Cnt"] ,wind ,distVal=closeMaxDistVal)
 
         wind <- c( 0 ,evtMax.fCol["lev2Max"] )  # evtMax.fCol["lev2Max"] 이름을 따라가서 이렇게 귀찮은... 방법이 없나?
         names( wind ) <- c("min","max")
@@ -1013,8 +1018,9 @@ FCust_stdCut.hIdx <- function( hName ,mName ,mtxLst ){
         fColEvt <- rawObj$fColEvt
         rebInfo <- rawObj$rebInfo
 
-        # 일단 scoreMtx들부터 만들고, forCut은 나중에 적용하자.
         # fColEvt 평가 적용.
+        #   cfg의 evtMax.fCol이 이미 적용되었음(close max 값이므로)
+        scoreObj$fColEvt <- fColEvt
 
         #   summMtx,summMtx.reb / stdEvt.H1 --------------------------------------------------------
         # curEvt <- bFCust.getEvt_byHIdx( rawMtx ,cfg ,lastEvt=rObj$stdEvt.H1 )
@@ -1088,10 +1094,103 @@ FCust_stdCut.hIdx <- function( hName ,mName ,mtxLst ){
 
         rawObj <- rObj$getRawScore( scoreMtx )
         scObj <- rObj$getSummScore( rawObj )
-        # scObj <- rObj$getSummScore( scoreMtx )
         cfg <- scoreMtxCfg[[ rObj$defId["mName"] ]]
 
         survive <- TRUE
+        if( survive ){  # fCol Evt Cnt 
+            closeMaxDistVal <- scObj$fColEvt$closeMaxDistVal
+            fEvtMtx <- scObj$fColEvt$fEvtMtx
+            fClMMtx <- scObj$fColEvt$fClMMtx
+
+            # fCol 별로 전체 ph에서의 evt 발생 수 한계 제약.
+            if( any(fClMMtx[,"lev1ClM"]>=closeMaxDistVal) ){
+                survive <- F
+                cLst[["fCol EvtCnt4AllPh(lev1ClM)"]] <- "fCol EvtCnt4AllPh(lev1ClM)"
+                if( anaMode ){
+                    flag <- fClMMtx[,"lev1ClM"]>=closeMaxDistVal
+                    str <- paste( names( fClMMtx[,"lev1ClM"] )[flag] ,fEvtMtx[flag,"lev1Cnt"] ,sep=":" )
+                    infoStr <- sprintf("fCol EvtCnt4AllPh(lev1ClM) %s",paste(str,collapse=", "))
+                    cLst[["fCol EvtCnt4AllPh(lev1ClM)"]] <- infoStr
+                }
+            }
+            if( any(fClMMtx[,"lev2ClM"]>=closeMaxDistVal) ){
+                survive <- F
+                cLst[["fCol EvtCnt4AllPh(lev2ClM)"]] <- "fCol EvtCnt4AllPh(lev2ClM)"
+                if( anaMode ){
+                    flag <- fClMMtx[,"lev2ClM"]>=closeMaxDistVal
+                    str <- paste( names( fClMMtx[,"lev2ClM"] )[flag] ,fEvtMtx[flag,"lev2Cnt"] ,sep=":" )
+                    infoStr <- sprintf("fCol EvtCnt4AllPh(lev2ClM) %s",paste(str,collapse=", "))
+                    cLst[["fCol EvtCnt4AllPh(lev2ClM)"]] <- infoStr
+                }
+            }
+            if( any(fClMMtx[,"lev3ClM"]>=closeMaxDistVal) ){
+                survive <- F
+                cLst[["fCol EvtCnt4AllPh(lev3ClM)"]] <- "fCol EvtCnt4AllPh(lev3ClM)"
+                if( anaMode ){
+                    flag <- fClMMtx[,"lev3ClM"]>=closeMaxDistVal
+                    str <- paste( names( fClMMtx[,"lev3ClM"] )[flag] ,fEvtMtx[flag,"lev3Cnt"] ,sep=":" )
+                    infoStr <- sprintf("fCol EvtCnt4AllPh(lev3ClM) %s",paste(str,collapse=", "))
+                    cLst[["fCol EvtCnt4AllPh(lev3ClM)"]] <- infoStr
+                }
+            }
+
+            # 이제 오버매치가 발생한 fCol 들의 갯수를 제한하자.
+            #   evtMaxFColTot  <- c( lev1Max=1 ,lev2Max=1 ,lev3Max=1 )
+            botThld <- closeMaxDistVal - closeMaxDistVal    # 0
+            eSumLev1 <- sum(scObj$fColEvt$fClMMtx[,"lev1ClM"] > botThld )
+            if( eSumLev1>=cfg$evtMaxFColTot["lev1Max"] ){
+                survive <- F
+                cLst[["fCol evtMaxFColTot(lev1ClM)"]] <- "fCol evtMaxFColTot(lev1ClM)"
+                if( anaMode ){
+                    flag <- scObj$fColEvt$fClMMtx[,"lev1ClM"] > botThld
+                    str <- paste( names( scObj$fColEvt$fClMMtx[,"lev1ClM"] )[flag] ,scObj$fColEvt$fEvtMtx[flag,"lev1Cnt"] ,sep=":" )
+                    infoStr <- sprintf("fCol evtMaxFColTot(lev1ClM) %s",paste(str,collapse=", "))
+                    cLst[["fCol evtMaxFColTot(lev1ClM)"]] <- infoStr
+                }
+            }
+            botThld <- closeMaxDistVal - 2
+            eSumLev2 <- sum(scObj$fColEvt$fClMMtx[,"lev2ClM"] > botThld )
+            if( eSumLev2>=cfg$evtMaxFColTot["lev2Max"] ){
+                survive <- F
+                cLst[["fCol evtMaxFColTot(lev2ClM)"]] <- "fCol evtMaxFColTot(lev2ClM)"
+                if( anaMode ){
+                    flag <- scObj$fColEvt$fClMMtx[,"lev2ClM"] > botThld
+                    str <- paste( names( scObj$fColEvt$fClMMtx[,"lev2ClM"] )[flag] ,scObj$fColEvt$fEvtMtx[flag,"lev2Cnt"] ,sep=":" )
+                    infoStr <- sprintf("fCol evtMaxFColTot(lev2ClM) %s",paste(str,collapse=", "))
+                    cLst[["fCol evtMaxFColTot(lev2ClM)"]] <- infoStr
+                }
+            }
+            botThld <- closeMaxDistVal - 2
+            eSumLev3 <- sum(scObj$fColEvt$fClMMtx[,"lev3ClM"] > botThld )
+            if( eSumLev3>=cfg$evtMaxFColTot["lev3Max"] ){
+                survive <- F
+                cLst[["fCol evtMaxFColTot(lev3ClM)"]] <- "fCol evtMaxFColTot(lev3ClM)"
+                if( anaMode ){
+                    flag <- scObj$fColEvt$fClMMtx[,"lev3ClM"] > botThld
+                    str <- paste( names( scObj$fColEvt$fClMMtx[,"lev3ClM"] )[flag] ,scObj$fColEvt$fEvtMtx[flag,"lev3Cnt"] ,sep=":" )
+                    infoStr <- sprintf("fCol evtMaxFColTot(lev3ClM) %s",paste(str,collapse=", "))
+                    cLst[["fCol evtMaxFColTot(lev3ClM)"]] <- infoStr
+                }
+            }
+
+            # eSumLev1,eSumLev2,eSumLev3 전체적 검토.
+            eSumFlag <- c("eSumLev1"=0,"eSumLev2"=0,"eSumLev3"=0)
+            wind <- c( 0 ,cfg$evtMaxFColTot["lev1Max"] )        ;names( wind ) <- c("min","max")
+            eSumFlag["eSumLev1"] <- bUtil.closeMax( eSumLev1 ,wind )
+            wind <- c( 0 ,cfg$evtMaxFColTot["lev2Max"] )        ;names( wind ) <- c("min","max")
+            eSumFlag["eSumLev2"] <- bUtil.closeMax( eSumLev2 ,wind )
+            wind <- c( 0 ,cfg$evtMaxFColTot["lev3Max"] )        ;names( wind ) <- c("min","max")
+            eSumFlag["eSumLev3"] <- bUtil.closeMax( eSumLev2 ,wind )
+            if( 1 < sum(eSumFlag) ){
+                survive <- F
+                cLst[["fCol eSumFlag"]] <- "fCol eSumFlag"
+                if( anaMode ){
+                    infoStr <- sprintf("fCol eSumFlag eSumLev1:%d,eSumLev2:%d,eSumLev3:%d",eSumLev1,eSumLev2,eSumLev3)
+                    cLst[["fCol eSumFlag"]] <- infoStr
+                }
+            }
+
+        }
 
         if( survive ){ #   summMtx.cut
             infoStr <- ""
@@ -1443,9 +1542,11 @@ FCust_stdCut_AllM <- function(){
         colName <- rownames(mtx)[1:(nrow(mtx)-1)]
         rebMtxM <- matrix( 0 ,ncol=length(colName) ,nrow=2 ,dimnames=list(c("flag","cnt"),colName) )
         rebMtxM["cnt",] <- apply(mtx,1,function(val){sum(val>0)})[1:ncol(rebMtxM)]
-        for( idx in 1:ncol(rebMtxM) ){
-            if( 0<rebMtxM["cnt",idx] ){
-                rebMtxM["flag",idx] <- all(mtx[idx,]==mtx[idx+1,])
+        if( 1<nrow(mtx) ){  # 테스트 등의 작업으로 tgt.scMtx 가 1개 뿐일 때.
+            for( idx in 1:ncol(rebMtxM) ){
+                if( 0<rebMtxM["cnt",idx] ){
+                    rebMtxM["flag",idx] <- all(mtx[idx,]==mtx[idx+1,])
+                }
             }
         }
         sumRst$rebMtxM <- rebMtxM

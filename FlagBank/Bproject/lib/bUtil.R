@@ -78,12 +78,12 @@ bUtil.cut1 <- function( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=NULL ,anaOnly=F
 				if( !anaOnly && !surFlag[aIdx] )	next
 
 				cutInfo <- hIdxCut$cut( mtxGrp[[mName]][[aIdx]] ,anaMode=anaOnly )
-				if( 0<length(cutInfo$cRst) ){
+				if( 0<length(cutInfo$cLst) ){
 					if( !anaOnly ){	surFlag[aIdx] <- FALSE
 					} else {
-						for( idx in seq_len(length(cutInfo$cRst)) ){
+						for( idx in seq_len(length(cutInfo$cLst)) ){
 							idxName <- sprintf("hIdxCut_%dth",1+length(cutInfoLst))
-							cutInfoLst[[idxName]] <- c( typ=names(cutInfo$cRst)[idx] ,hIdxCut$defId ,pName="ALL" ,info=cutInfo$cRst[[idx]] )
+							cutInfoLst[[idxName]] <- c( typ=names(cutInfo$cLst)[idx] ,hIdxCut$defId ,pName="ALL" ,info=cutInfo$cLst[[idx]] )
 						}
 					}
 				}
