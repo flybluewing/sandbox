@@ -1097,7 +1097,8 @@ FCust_stdCut.hIdx <- function( hName ,mName ,mtxLst ){
         cfg <- scoreMtxCfg[[ rObj$defId["mName"] ]]
 
         survive <- TRUE
-        if( survive ){  # fCol Evt Cnt 
+        # if( survive ){  # fCol Evt Cnt 
+        if( FALSE ){  # fCol Evt Cnt 
             closeMaxDistVal <- scObj$fColEvt$closeMaxDistVal
             fEvtMtx <- scObj$fColEvt$fEvtMtx
             fClMMtx <- scObj$fColEvt$fClMMtx

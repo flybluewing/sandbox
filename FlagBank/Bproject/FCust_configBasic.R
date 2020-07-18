@@ -133,7 +133,7 @@ scoreMtxCfg[[mName]] <- list(
                     )
     )
     #   XXX.tot, XXX.val 관계 때문에 2개 fCol 동시발생이 흔함을 고려.
-    ,evtMax = matrix( c(2,1,3,1 ,2,2,3,2)  # evt in row over fCols
+    ,evtMax = matrix( c(2,3,3,1 ,2,4,3,2)  # evt in row over fCols
                         ,byrow=T ,ncol=4
                         ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
                     )
@@ -273,23 +273,23 @@ scoreMtxCfg[[mName]] <- list(
     ,evtMax = NULL
     ,rowReb = c( rawMin=2 ,lowE=2 ,rareE=1 )
     ,rowRebDup = c( lowE=2 ,rareE=1 )
-    ,summMtx = NULL
-    # ,summMtx = matrix( c(  1 ,2 ,3 ,2 ,2 ,1   ,1 ,2 ,3 ,2 ,2 ,1 ) ,byrow=T # all ph fCol phReb xyCnt.fCol xyCnt.phase
-    #         ,ncol=length(summMtxName$cName) ,nrow=length(summMtxName$rName)
-    #         ,dimnames=list(summMtxName$rName,summMtxName$cName)
-    #     )
+    # ,summMtx = NULL
+    ,summMtx = matrix( c(  1 ,2 ,3 ,2 ,2 ,1   ,1 ,2 ,3 ,2 ,2 ,2 ) ,byrow=T # all ph fCol phReb xyCnt.fCol xyCnt.phase
+            ,ncol=length(summMtxName$cName) ,nrow=length(summMtxName$rName)
+            ,dimnames=list(summMtxName$rName,summMtxName$cName)
+        )
     ,summMtx.reb = NULL
     ,summMtx.sum = NULL
     # ,summMtx.sum = c(raw=4 ,evt=4)
-    ,scMtx.sz = NULL
-    # ,scMtx.sz = matrix( c( 4 ,3 ,1 ,4 ,3 ,1     ,1 ,1 ,1 ,1 ,1 ,1 ) ,byrow=T
-    #                     #   "r.ph" ,"r.fCol" ,"r.dblHpnFlg" ,"e.ph" ,"e.fCol" ,"e.dblHpnFlg"
-    #                     #   "rebCnt" ,"rebDup"
-    #                 ,ncol=length(scMtx.szName$cName) ,nrow=length(scMtx.szName$rName) 
-    #                 ,dimnames=list(scMtx.szName$rName,scMtx.szName$cName)
-    #             )
-    ,scMtx.sz.sum = NULL
-    # ,scMtx.sz.sum = c(rebCnt.r=5 ,rebCnt.e=5)
+    # ,scMtx.sz = NULL
+    ,scMtx.sz = matrix( c( 4 ,2 ,1 ,4 ,2 ,1     ,1 ,1 ,1 ,1 ,1 ,1 ) ,byrow=T
+                        #   "r.ph" ,"r.fCol" ,"r.dblHpnFlg" ,"e.ph" ,"e.fCol" ,"e.dblHpnFlg"
+                        #   "rebCnt" ,"rebDup"
+                    ,ncol=length(scMtx.szName$cName) ,nrow=length(scMtx.szName$rName) 
+                    ,dimnames=list(scMtx.szName$rName,scMtx.szName$cName)
+                )
+    # ,scMtx.sz.sum = NULL
+    ,scMtx.sz.sum = c(rebCnt.r=4 ,rebCnt.e=4)
     ,isHard=NULL  # use default
 )
 
@@ -421,21 +421,24 @@ scoreMtxCfg[[mName]] <- list(
     ,evtMax = NULL
     ,rowReb = c( rawMin=4 ,lowE=2 ,rareE=1 )
     ,rowRebDup = NULL
-    ,summMtx = NULL 
+    ,summMtx = matrix( c( 1 ,3 ,2 ,2 ,2 ,1   ,1 ,2 ,2 ,2 ,2 ,1 ) ,byrow=T
+                    ,ncol=length(summMtxName$cName) ,nrow=length(summMtxName$rName)
+                    ,dimnames=list(summMtxName$rName,summMtxName$cName)
+                )
     ,summMtx.reb = matrix( c( 1 ,2 ,2 ,1 ,1 ,1      ,1 ,1 ,1 ,1 ,1 ,1 ) ,byrow=T
                     #   c( "all" ,"ph" ,"fCol" ,"phReb" ,"xyCnt.fCol" ,"xyCnt.phase" )
                     #   c( "raw" ,"evt" )
                     ,ncol=length(summMtx.rebName$cName) ,nrow=length(summMtx.rebName$rName) 
                     ,dimnames=list(summMtx.rebName$rName,summMtx.rebName$cName)
                 )
-    ,summMtx.sum = NULL
+    ,summMtx.sum = c(raw=4 ,evt=2)
     ,scMtx.sz = matrix( c( 3 ,3 ,1 ,2 ,2 ,1     ,2 ,2 ,1 ,1 ,1 ,1 ) ,byrow=T
                         #   "r.ph" ,"r.fCol" ,"r.dblHpnFlg" ,"e.ph" ,"e.fCol" ,"e.dblHpnFlg"
                         #   "rebCnt" ,"rebDup"
                     ,ncol=length(scMtx.szName$cName) ,nrow=length(scMtx.szName$rName) 
                     ,dimnames=list(scMtx.szName$rName,scMtx.szName$cName)
                 )
-    ,scMtx.sz.sum = c(rebCnt.r=3 ,rebCnt.e=2)
+    ,scMtx.sz.sum = c(rebCnt.r=4 ,rebCnt.e=2)
     ,isHard=NULL  # use default
 )
 
