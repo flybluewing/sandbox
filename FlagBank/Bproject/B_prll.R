@@ -101,6 +101,23 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
 
         cutRst$cutInfoLst <- append( cutRst$cutInfoLst ,cut2Rst$cutInfoLst )
 
+        if( TRUE ){ # aux cut : stdFiltedCnt
+            fRst <- fRstLst[[as.character(curHIdx)]]
+
+            if( 0 < length(fRst) ){
+                sfCnt <- sapply(fRstLst.w,length)
+                fndIdx <- which( sfCnt==length(fRst) )
+                if( 0<length(fndIdx) ){
+                    lastFRst <- fRstLst.w[[ fndIdx[length(fndIdx)] ]]
+                    if( all(lastFRst==fRst) ){
+                        infoStr <- sprintf("stdFiltedCnt rebound!! %s",paste( fRst ,collapse=" ,"))
+                        auxCutInfoLst <- list( auxCut=c( typ="aux_sfc" ,hName="N/A" ,mName="N/A" ,pName="N/A" ,info=infoStr ) )
+                        cutRst$cutInfoLst <- append( auxCutInfoLst ,cutRst$cutInfoLst )
+                    }
+                }
+            }
+        }
+
         # report example =================================================
             # B.rptHMtxLst( curHMtxLst )
             # B.rptStdMI.grp( stdMI.grp )
