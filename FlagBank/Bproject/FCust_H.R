@@ -1098,7 +1098,7 @@ FCust_stdCut.hIdx <- function( hName ,mName ,mtxLst ){
 
         survive <- TRUE
         # if( survive ){  # fCol Evt Cnt 
-        if( FALSE ){  # fCol Evt Cnt 
+        if( TRUE ){  # fCol Evt Cnt 
             closeMaxDistVal <- scObj$fColEvt$closeMaxDistVal
             fEvtMtx <- scObj$fColEvt$fEvtMtx
             fClMMtx <- scObj$fColEvt$fClMMtx
@@ -1139,7 +1139,7 @@ FCust_stdCut.hIdx <- function( hName ,mName ,mtxLst ){
             #   evtMaxFColTot  <- c( lev1Max=1 ,lev2Max=1 ,lev3Max=1 )
             botThld <- closeMaxDistVal - closeMaxDistVal    # 0
             eSumLev1 <- sum(scObj$fColEvt$fClMMtx[,"lev1ClM"] > botThld )
-            if( eSumLev1>=cfg$evtMaxFColTot["lev1Max"] ){
+            if( FALSE && eSumLev1>=cfg$evtMaxFColTot["lev1Max"] ){
                 survive <- F
                 cLst[["fCol evtMaxFColTot(lev1ClM)"]] <- "fCol evtMaxFColTot(lev1ClM)"
                 if( anaMode ){
@@ -1151,7 +1151,7 @@ FCust_stdCut.hIdx <- function( hName ,mName ,mtxLst ){
             }
             botThld <- closeMaxDistVal - 2
             eSumLev2 <- sum(scObj$fColEvt$fClMMtx[,"lev2ClM"] > botThld )
-            if( eSumLev2>=cfg$evtMaxFColTot["lev2Max"] ){
+            if( FALSE && eSumLev2>=cfg$evtMaxFColTot["lev2Max"] ){
                 survive <- F
                 cLst[["fCol evtMaxFColTot(lev2ClM)"]] <- "fCol evtMaxFColTot(lev2ClM)"
                 if( anaMode ){
@@ -1163,7 +1163,7 @@ FCust_stdCut.hIdx <- function( hName ,mName ,mtxLst ){
             }
             botThld <- closeMaxDistVal - 2
             eSumLev3 <- sum(scObj$fColEvt$fClMMtx[,"lev3ClM"] > botThld )
-            if( eSumLev3>=cfg$evtMaxFColTot["lev3Max"] ){
+            if( FALSE && eSumLev3>=cfg$evtMaxFColTot["lev3Max"] ){
                 survive <- F
                 cLst[["fCol evtMaxFColTot(lev3ClM)"]] <- "fCol evtMaxFColTot(lev3ClM)"
                 if( anaMode ){
@@ -1182,7 +1182,7 @@ FCust_stdCut.hIdx <- function( hName ,mName ,mtxLst ){
             eSumFlag["eSumLev2"] <- bUtil.closeMax( eSumLev2 ,wind )
             wind <- c( 0 ,cfg$evtMaxFColTot["lev3Max"] )        ;names( wind ) <- c("min","max")
             eSumFlag["eSumLev3"] <- bUtil.closeMax( eSumLev2 ,wind )
-            if( 1 < sum(eSumFlag) ){
+            if( FALSE && 1 < sum(eSumFlag) ){
                 survive <- F
                 cLst[["fCol eSumFlag"]] <- "fCol eSumFlag"
                 if( anaMode ){

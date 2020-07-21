@@ -96,10 +96,10 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
         cutRst <- bUtil.cut1( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx ,anaOnly=T ) 
             #   anaOnly=TRUE 에서, cutRst$surFlag는 항상 TRUE임을 유의.
 
-        cutRst1Score <- bUtil.getCut1Score( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx )
-        cut2Rst <- bUtil.cut2( cutRst1Score ,fHName ,tgt.scMtx=tgt.scMtx ,anaOnly=T )
+        # cutRst1Score <- bUtil.getCut1Score( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx )
+        # cut2Rst <- bUtil.cut2( cutRst1Score ,fHName ,tgt.scMtx=tgt.scMtx ,anaOnly=T )
 
-        cutRst$cutInfoLst <- append( cutRst$cutInfoLst ,cut2Rst$cutInfoLst )
+        # cutRst$cutInfoLst <- append( cutRst$cutInfoLst ,cut2Rst$cutInfoLst )
 
         if( TRUE ){ # aux cut : stdFiltedCnt
             fRst <- fRstLst[[as.character(curHIdx)]]
@@ -127,7 +127,7 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
 
 
         prllLog$fLogStr(sprintf("    curHIdx:%d done.",curHIdx),pTime=T)
-        if( TRUE ){ # debug info
+        if( FALSE ){ # debug info
             dbgFileName <- sprintf("Dbg_H%d.stdMI",curHIdx)
 
             B.rptStdMI.grp( stdMI.grp ,file=dbgFileName )
@@ -143,7 +143,7 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
         }
 
         auxTest <- list()
-        if( TRUE ){ # temp test
+        if( FALSE ){ # temp test
             # cutRst1Score$aLst[[1]]$sfcLate$basic$score1$raw$phaseHpnCnt
             cutRstScrSet <- bUtil.cutRst1_scoreMtx(cutRst1Score$aLst[[1]])
             # cutRstScrSet$sfcLate$basic
