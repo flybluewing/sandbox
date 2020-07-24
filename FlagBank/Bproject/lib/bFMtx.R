@@ -1610,7 +1610,12 @@ bFMtx.score8 <- function( stdMIObj ){
 			cInfo$max3 <- cStep.srt[cLen-0:2]	;cInfo$min3 <- cStep.srt[1:3]
 		}
 		if( 2<=cLen ){
-			cInfo$max2 <- cStep.srt[cLen-0:1]	;cInfo$min2 <- cStep.srt[1:2]
+			# cInfo$max2 <- cStep.srt[cLen-0:1]
+			# cInfo$min2 <- cStep.srt[1:2]
+			# max2, min2 재발은 너무 흔해서, col idx도 맞추기로 한다.
+			cInfo$max2MatFlag <- (stdMI$cStep %in% max2)
+			cInfo$min2MatFlag <- (stdMI$cStep %in% min2)
+			cInfo$cStep <- stdMI$cStep
 		}
 
 		#	c5.x ,c4.x 폐지. 시간이 너무 오래걸리는 듯.
@@ -1652,7 +1657,7 @@ bFMtx.score8 <- function( stdMIObj ){
 		cName <- c(	# "c51","c52","c41","c42","c43"		# 폐지. 시간이 너무 오래걸리는 듯 하다.
 					"c31","c32","c33","c34"
 					,"c21","c22","c23","c24","c25"
-					,"max3","min3","max2","min2"
+					,"max3","min3","max2MatCnt","min2MatCnt"
 					,"cTbl","fTbl"
 				)
 		scoreMtx <- matrix( 0, nrow=aLen, ncol=length(cName) )	;colnames(scoreMtx) <- cName
@@ -1685,8 +1690,13 @@ bFMtx.score8 <- function( stdMIObj ){
 				scoreMtx[aIdx ,"min3"] <- all( aCStep.srt[1:3]==rObj$cInfo$min3 )
 			}
 			if( 2<=cLen ){
-				scoreMtx[aIdx ,"max2"] <- all( aCStep.srt[cLen-0:1]==rObj$cInfo$max2 )
-				scoreMtx[aIdx ,"min2"] <- all( aCStep.srt[1:2]==rObj$cInfo$min2 )
+				# rObj$cInfo$max2MatFlag
+				# rObj$cInfo$min2MatFlag
+				matFlag <- ( aCStep==rObj$cInfo$cStep )
+				scoreMtx[aIdx ,"max2MatCnt"] <- sum(matFlag[rObj$cInfo$max2MatFlag])
+				scoreMtx[aIdx ,"min2MatCnt"] <- sum(matFlag[rObj$cInfo$min2MatFlag])
+				# scoreMtx[aIdx ,"max2"] <- all( aCStep.srt[cLen-0:1]==rObj$cInfo$max2 )
+				# scoreMtx[aIdx ,"min2"] <- all( aCStep.srt[1:2]==rObj$cInfo$min2 )
 			}
 
 			cTbl <- table(aCStep)
