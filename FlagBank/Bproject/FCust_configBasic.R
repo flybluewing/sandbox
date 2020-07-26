@@ -144,6 +144,7 @@ scoreMtxCfg[[mName]] <- list(
                         ,byrow=T ,ncol=4
                         ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
                     )
+    ,evtMaxFColTot = c( lev1Max=4 ,lev2Max=3 ,lev3Max=3 )
     ,rowReb = c( rawMin=3 ,lowE=3 ,rareE=1 )
     ,rowRebDup=NULL
     ,summMtx = matrix( c( 1 ,2 ,3 ,2 ,2 ,1     ,1 ,2 ,3 ,2 ,2 ,1 ) ,byrow=T # all ph fCol phReb xyCnt.fCol xyCnt.phase
@@ -223,6 +224,7 @@ scoreMtxCfg[[mName]] <- list(
                     ) 
     ) 
     ,evtMax = NULL
+    ,evtMaxFColTot = c( lev1Max=5 ,lev2Max=3 ,lev3Max=3 )
     ,rowReb = c( rawMin=4 ,lowE=1 ,rareE=1 )
     ,rowRebDup = c( lowE=4 ,rareE=1 )
     # ,summMtx = NULL ,summMtx.reb = NULL 
@@ -718,7 +720,7 @@ scoreMtxCfg[[mName]] <- list(
                         ,evt=matrix( c(c(3,3,3,3),c(2,3,4,5)) ,ncol=2)
                         ,evtMax.fCol=c( lev1Max=2 ,lev2Max=2 ,lev3Max=2 )
                     ) 
-        ,"min2MatCnt"=list( rng=matrix( c(0,2 ,0,2) ,ncol=2 )   # 862
+        ,"min2MatCnt"=list( rng=matrix( c(0,2 ,0,2) ,ncol=2 )
                         ,evt=matrix( c(c(3,3,3,3),c(2,3,4,5)) ,ncol=2)
                         ,evtMax.fCol=c( lev1Max=3 ,lev2Max=3 ,lev3Max=3 )
                     )
@@ -1104,6 +1106,7 @@ scoreMtxCfg[[mName]] <- list(
                         ,evtMax.fCol=c( lev1Max=3 ,lev2Max=2 ,lev3Max=2 )
                     )
     )
+    ,evtMaxFColTot = c( lev1Max=4 ,lev2Max=4 ,lev3Max=4 )
     ,evtMax = NULL      ,rowReb = NULL          ,rowRebDup = NULL
     ,summMtx = NULL     ,summMtx.reb = NULL     ,summMtx.sum = NULL
     ,scMtx.sz = matrix( c(  1 ,2 ,1 ,1 ,2 ,1   ,1 ,1 ,1 ,1 ,1 ,1 ) ,byrow=T
@@ -1559,7 +1562,7 @@ for( mName in names( scoreMtxCfg ) ){ # naming 추가.
 
     if( is.null(scoreMtxCfg[[mName]]$evtMaxFColTot) ){
         #   fCol 4 all Ph에서 CloseMax 가 나타난 fCol 수.
-        scoreMtxCfg[[mName]]$evtMaxFColTot  <- c( lev1Max=2 ,lev2Max=2 ,lev3Max=2 )
+        scoreMtxCfg[[mName]]$evtMaxFColTot  <- c( lev1Max=3 ,lev2Max=3 ,lev3Max=3 )
     }
     if( is.null(scoreMtxCfg[[mName]]$evtMax) ){
         #   한 개 phase 내에서의 이벤트 발생 제한.
