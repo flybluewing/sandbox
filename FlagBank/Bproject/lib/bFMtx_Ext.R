@@ -436,13 +436,13 @@ if( TRUE ){
         # c31 c32 c33 c34 
         # c21 c22 c23 c24 c25 
         # max3 min3 
-        # max2 min2 
+        # max2MatCnt min2MatCnt
         # cTbl fTbl
 
     fltCreater <- function( mName ){
         fltObj <- list( mInfo=list() )
         fltObj$mInfo$mName = mName
-        fltObj$mInfo$cName <- c("c3x" ,"c2x" ,"c3x2xOvLAll","c3x2xOvLPar","c3x2xOvLNo","maxMin3","maxMin2","max3min2","max2min3","cfTbl")
+        fltObj$mInfo$cName <- c("c3x" ,"c2x" ,"c3x2xOvLAll","c3x2xOvLPar","c3x2xOvLNo","maxMin3","max3min2","max2min3","cfTbl")
 
         fltObj$getScore <- function( score ){
             #   score <- scoreMtx.grp$basic$basic[[mName]]$scoreMtx[1,]
@@ -482,9 +482,8 @@ if( TRUE ){
             rVal["c3x2xOvLNo" ] <- sum(c3c2Overlap_None_Name)
 
             rVal["maxMin3"] <- sum(score[c("max3","min3")] ,na.rm=T)
-            rVal["maxMin2"] <- sum(score[c("max2","min2")] ,na.rm=T)
-            rVal["max3min2"]<- (score["max3"]>0 && score["min2"]>0)
-            rVal["max2min3"]<- (score["max2"]>0 && score["min3"]>0)
+            rVal["max3min2"]<- (score["max3"]>0 && score["min2MatCnt"]>=2)
+            rVal["max2min3"]<- (score["max2MatCnt"]>=2 && score["min3"]>0)
             rVal["cfTbl"]   <- sum(scrEvt[c("cTbl","fTbl")] ,na.rm=T)
             #   "maxMin3", "max3min2", "max2min3" <--- max,min table 길이가 5가 아닌 경우, 의미있다!
 
