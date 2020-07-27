@@ -1174,24 +1174,6 @@ FCust_stdCut.hIdx <- function( hName ,mName ,mtxLst ){
                 }
             }
 
-            # eSumLev1,eSumLev2,eSumLev3 전체적 검토.
-            #   일단 보류. mName 별로 조정가능해야 할 듯 하다.
-            eSumFlag <- c("eSumLev1"=0,"eSumLev2"=0,"eSumLev3"=0)
-            wind <- c( 0 ,cfg$evtMaxFColTot["lev1Max"] )        ;names( wind ) <- c("min","max")
-            eSumFlag["eSumLev1"] <- bUtil.closeMax( eSumLev1 ,wind )
-            wind <- c( 0 ,cfg$evtMaxFColTot["lev2Max"] )        ;names( wind ) <- c("min","max")
-            eSumFlag["eSumLev2"] <- bUtil.closeMax( eSumLev2 ,wind )
-            wind <- c( 0 ,cfg$evtMaxFColTot["lev3Max"] )        ;names( wind ) <- c("min","max")
-            eSumFlag["eSumLev3"] <- bUtil.closeMax( eSumLev2 ,wind )
-            if( FALSE && 2 < sum(eSumFlag) ){
-                survive <- F
-                cLst[["fCol eSumFlag"]] <- "fCol eSumFlag"
-                if( anaMode ){
-                    infoStr <- sprintf("fCol eSumFlag eSumLev1:%d,eSumLev2:%d,eSumLev3:%d",eSumLev1,eSumLev2,eSumLev3)
-                    cLst[["fCol eSumFlag"]] <- infoStr
-                }
-            }
-
         }
 
         if( survive ){ #   summMtx.cut

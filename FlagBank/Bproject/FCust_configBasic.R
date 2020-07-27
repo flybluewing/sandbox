@@ -144,7 +144,7 @@ scoreMtxCfg[[mName]] <- list(
                         ,byrow=T ,ncol=4
                         ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
                     )
-    ,evtMaxFColTot = c( lev1Max=4 ,lev2Max=3 ,lev3Max=3 )
+    ,evtMaxFColTot = c( lev1Max=5 ,lev2Max=3 ,lev3Max=3 )
     ,rowReb = c( rawMin=3 ,lowE=3 ,rareE=1 )
     ,rowRebDup=NULL
     ,summMtx = matrix( c( 1 ,2 ,3 ,2 ,2 ,1     ,1 ,2 ,3 ,2 ,2 ,1 ) ,byrow=T # all ph fCol phReb xyCnt.fCol xyCnt.phase
@@ -169,7 +169,7 @@ scoreMtxCfg[[mName]] <- list(
     ,fCol = list(
         "rebV.r"=list( rng=matrix( c(0,2 ,0,3) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
                         ,evt=matrix( c(c(1,1,2,3,3,3),c(1,2,3,4,5,6)) ,ncol=2)
-                        ,evtMax.fCol=c( lev1Max=12 ,lev2Max=3 ,lev3Max=2 )   # lev1Max 0은 아예 없는 듯..
+                        ,evtMax.fCol=c( lev1Max=13 ,lev2Max=3 ,lev3Max=2 )   # lev1Max 0은 아예 없는 듯..
                     )
         ,"rebL"=list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )
                         ,evt=matrix( c(c(1,3,3,3,3),c(1,2,3,4,5)) ,ncol=2)
@@ -179,7 +179,7 @@ scoreMtxCfg[[mName]] <- list(
                     )
         ,"rebC.r"=list( rng=matrix( c(0,1 ,0,2) ,ncol=2 )
                         ,evt=matrix( c(c(1,2,3,3,3,3),c(1,2,3,4,5,6)) ,ncol=2)
-                        ,evtMax.fCol=c( lev1Max=6 ,lev2Max=3 ,lev3Max=2 )
+                        ,evtMax.fCol=c( lev1Max=9 ,lev2Max=3 ,lev3Max=2 )
                     ) 
         ,"rebC.c"=list( rng=matrix( c(0,2 ,0,2) ,ncol=2 )
                         ,evt=matrix( c(c(1,3,3,3),c(2,3,4,5)) ,ncol=2)
@@ -745,7 +745,7 @@ scoreMtxCfg[[mName]] <- list(
                     ,dimnames=list(summMtxName$rName,summMtxName$cName)
     )
     ,summMtx.reb = NULL ,summMtx.sum = NULL
-    ,scMtx.sz = matrix( c(  2 ,2 ,1 ,2 ,2 ,1     ,1 ,1 ,1 ,1 ,1 ,1 ) ,byrow=T
+    ,scMtx.sz = matrix( c(  3 ,2 ,1 ,3 ,2 ,1     ,1 ,1 ,1 ,1 ,1 ,1 ) ,byrow=T
                         #   "r.ph" ,"r.fCol" ,"r.dblHpnFlg" ,"e.ph" ,"e.fCol" ,"e.dblHpnFlg"
                         #   "rebCnt" ,"rebDup"
                     ,ncol=length(scMtx.szName$cName) ,nrow=length(scMtx.szName$rName) 
@@ -946,7 +946,7 @@ scoreMtxCfg[[mName]] <- list(
                         ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
                         ,evtMax.fCol=c( lev1Max=3 ,lev2Max=2 ,lev3Max=2 )
                     )
-        ,"pbbaA" =list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+        ,"pbbaA" =list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
                         ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
                         ,evtMax.fCol=c( lev1Max=3 ,lev2Max=2 ,lev3Max=2 )
                     )
@@ -954,7 +954,7 @@ scoreMtxCfg[[mName]] <- list(
                         ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
                         ,evtMax.fCol=c( lev1Max=3 ,lev2Max=2 ,lev3Max=2 )
                     )
-        ,"pbabA" =list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+        ,"pbabA" =list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
                         ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
                         ,evtMax.fCol=c( lev1Max=3 ,lev2Max=2 ,lev3Max=2 )
                     )
@@ -1390,6 +1390,7 @@ scoreMtxCfg[[mName]] <- list(
                         ,evtMax.fCol=c( lev1Max=3 ,lev2Max=2 ,lev3Max=2 )
                     )
     )
+    ,evtMaxFColTot = c( lev1Max=4 ,lev2Max=4 ,lev3Max=3 )
     ,evtMax = NULL      ,rowReb = NULL          ,rowRebDup = NULL
     ,summMtx = NULL     ,summMtx.reb = NULL     ,summMtx.sum = NULL
     ,scMtx.sz = matrix( c(  2 ,2 ,1 ,2 ,1 ,1   ,1 ,1 ,1 ,1 ,1 ,1 ) ,byrow=T
