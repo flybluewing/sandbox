@@ -105,7 +105,7 @@ for( sfcIdx in 0 ){ # 0:2
     allIdxF <- allIdxF[surFlag]
     logger$fLogStr(sprintf("   - bUtil.cut1()   final size :%7d",length(allIdxF)),pTime=T)
     save( allIdxF ,file=sprintf("Obj_allIdxF%d_cut0_byM_%d.save",sfcIdx,lastH) )
-
+    sprintf( "allIdxF size : %dk" ,length(allIdxF) %/% 1000 )
 
     # bUtil.cut1() ----------------------------------------------------------------------
     if( FALSE ){    # cutH.InitialCut() 사용 이후로 필요 없어진 듯 하다.
