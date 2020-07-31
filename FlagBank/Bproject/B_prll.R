@@ -1,5 +1,5 @@
 source("header.r")
-source("B_H.R")
+source("B_H.R") ;source("B_prll_H.R")
 lastH <- 880    # 최종 데이터의 로딩 기준일 뿐, 작업시점(workH)은 다를 수 있다.
 #source(sprintf("./toFinal/toZ%d_H.R",workH))	# working
 
@@ -96,10 +96,10 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
         cutRst <- bUtil.cut1( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx ,anaOnly=T ) 
             #   anaOnly=TRUE 에서, cutRst$surFlag는 항상 TRUE임을 유의.
 
-        # cutRst1Score <- bUtil.getCut1Score( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx )
-        # cut2Rst <- bUtil.cut2( cutRst1Score ,fHName ,tgt.scMtx=tgt.scMtx ,anaOnly=T )
+        cutRst1Score <- bUtil.getCut1Score( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx )
+        cut2Rst <- bUtil.cut2( cutRst1Score ,fHName ,tgt.scMtx=tgt.scMtx ,anaOnly=T )
 
-        # cutRst$cutInfoLst <- append( cutRst$cutInfoLst ,cut2Rst$cutInfoLst )
+        cutRst$cutInfoLst <- append( cutRst$cutInfoLst ,cut2Rst$cutInfoLst )
 
         if( TRUE ){ # aux cut : stdFiltedCnt
             fRst <- fRstLst[[as.character(curHIdx)]]
@@ -143,7 +143,7 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
         }
 
         auxTest <- list()
-        if( FALSE ){ # temp test
+        if( TRUE ){ # temp test
             # cutRst1Score$aLst[[1]]$sfcLate$basic$score1$raw$phaseHpnCnt
             cutRstScrSet <- bUtil.cutRst1_scoreMtx(cutRst1Score$aLst[[1]])
             # cutRstScrSet$sfcLate$basic
