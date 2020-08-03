@@ -96,10 +96,10 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
         cutRst <- bUtil.cut1( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx ,anaOnly=T ) 
             #   anaOnly=TRUE 에서, cutRst$surFlag는 항상 TRUE임을 유의.
 
-        cutRst1Score <- bUtil.getCut1Score( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx )
-        cut2Rst <- bUtil.cut2( cutRst1Score ,fHName ,tgt.scMtx=tgt.scMtx ,anaOnly=T )
+        # cutRst1Score <- bUtil.getCut1Score( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx )
+        # cut2Rst <- bUtil.cut2( cutRst1Score ,fHName ,tgt.scMtx=tgt.scMtx ,anaOnly=T )
 
-        cutRst$cutInfoLst <- append( cutRst$cutInfoLst ,cut2Rst$cutInfoLst )
+        # cutRst$cutInfoLst <- append( cutRst$cutInfoLst ,cut2Rst$cutInfoLst )
 
         if( TRUE ){ # aux cut : stdFiltedCnt
             fRst <- fRstLst[[as.character(curHIdx)]]
@@ -153,6 +153,7 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
             hpnMtxRaw <- cutRstScrSet$sfcLate$basic$hpnMtxRaw
             hpnCnt <- apply( hpnMtxRaw ,1 ,function(mVal){ sum(mVal>0) })
             auxTest$zeroM <- names(hpnCnt)[hpnCnt==0]
+            auxTest$cutRstScrSet <- cutRstScrSet
         }
 
         return( list(hIdx=curHIdx ,cutRst=cutRst ,auxTest=auxTest ) )
