@@ -9,14 +9,14 @@ if( FALSE ){    # template
     # )
 }
 
-mName <- "crScrN01"
+crMName <- "crScrN01"
 if( TRUE ){
-    bCMtxCfg[[mName]] <- list(  mName = mName
+    bCMtxCfg[[crMName]] <- list(  mName = crMName
         ,fCol = list(
-            "rHpnE0Cnt" = list( rng=c(min=0,max=2) )
-            ,"eHpnl1Cnt" = list( rng=c(min=0,max=2) )
-            ,"phRebCntR" = list( rng=c(min=0,max=2) )
-            ,"phRebCntE" = list( rng=c(min=0,max=2) )
+            "rHpnE0Cnt" = list( rng=c(min=10,max=12) )
+            ,"eHpnl1Cnt" = list( rng=c(min=10,max=12) )
+            ,"phRebCntR" = list( rng=c(min=10,max=12) )
+            ,"phRebCntE" = list( rng=c(min=10,max=12) )
         )
     )
 }

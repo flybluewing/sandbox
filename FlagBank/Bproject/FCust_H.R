@@ -1642,3 +1642,69 @@ FCust_stdCut_AllM <- function(){
     return( rObj )
 }
 
+FCust_stdCut.CMtxRow <- function( crMName ){
+
+    rObj <- list( defId=c(hName="N/A",mName=crMName,pName="N/A") )
+    rObj$available <- TRUE
+
+    rObj$cut <- function( crScrMtx ,alreadyDead=NULL ,anaMode=TRUE ){
+
+        val.len <- nrow(crScrMtx)
+        if( is.null(alreadyDead) )	alreadyDead <- rep( F, val.len )
+
+        if( !rObj$available ) return( list(cutLst=list(),surFlag=!alreadyDead) )
+
+        cfg <- bCMtxCfg[[ rObj$defId["mName"] ]]
+
+        cutLst.fCol <- list()
+        for( fcName in names(cfg$fCol) ){
+            for( aIdx in seq_len(val.len) ){
+                if( !anaMode && alreadyDead[aIdx] ) next
+
+                surWin <- cfg$fCol[[fcName]]$rng
+                val <- crScrMtx[aIdx,fcName]
+                if( !bUtil.in(val,surWin) ){
+                    alreadyDead[aIdx] <- TRUE
+
+                    infoStr <- sprintf("%s(%d)",fcName,val )
+                    cObj <- cutLst.fCol[[as.character(aIdx)]]
+                    if( is.null(cObj) ){
+                        cutLst.fCol[[as.character(aIdx)]] <- list( idx=aIdx ,info=infoStr )
+                    } else {
+                        cutLst.fCol[[as.character(aIdx)]]$info <- paste( cObj$info, infoStr, collapse=", " )
+                    }
+                }
+            }
+        }
+
+        cutLst <- list()
+        if( TRUE ){ 
+            # 나중에 rebound 체크 타입 추가할 수 있도록 cutLst와 cLst 별도구분하여 저장.
+            idxFCol <- if( length(cutLst.fCol)==0 ) integer(0) else sapply( cutLst.fCol  ,function(p){p$idx} )
+            idxAll <- sort(union(idxFCol,integer(0)))   # 지금은 idxFCol 뿐이지만 나중엔 늘어날 것임.
+
+            names(cutLst.fCol)  <- idxFCol
+
+            for( aIdx in idxAll ){
+                idStr <- as.character(aIdx)
+                cLst <- list()
+                if( !is.null(cutLst.fCol[[idStr]]) ){
+                    cLst[["crRawFCol"]] <- cutLst.fCol[[idStr]]
+                    cLst[["crRawFCol"]]$idObjDesc <- c( typ="crMtxFCol" ,rObj$defId )
+                }
+
+                cutLst[[idStr]] <- list( idx=aIdx ,cLst=cLst )
+            }
+
+        }
+
+
+        return( list(cutLst=cutLst,surFlag=!alreadyDead) )
+
+    }
+
+    return( rObj )
+
+}
+
+

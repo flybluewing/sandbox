@@ -96,10 +96,16 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
         cutRst <- bUtil.cut1( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx ,anaOnly=T ) 
             #   anaOnly=TRUE 에서, cutRst$surFlag는 항상 TRUE임을 유의.
 
-        # cutRst1Score <- bUtil.getCut1Score( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx )
-        # cut2Rst <- bUtil.cut2( cutRst1Score ,fHName ,tgt.scMtx=tgt.scMtx ,anaOnly=T )
+        cutRst1Score <- bUtil.getCut1Score( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx )
+        cut2Rst <- bUtil.cut2( cutRst1Score ,fHName ,tgt.scMtx=tgt.scMtx ,anaOnly=T )
 
-        # cutRst$cutInfoLst <- append( cutRst$cutInfoLst ,cut2Rst$cutInfoLst )
+        cutRst$cutInfoLst <- append( cutRst$cutInfoLst ,cut2Rst$cutInfoLst )
+
+        for( crMName in names(bCMtxCfg) ){
+            crCutRst <- bC.cut( crMName ,scoreMtx.grp ,cut.grp ,anaOnly=T )
+            cutRst$cutInfoLst <- append( cutRst$cutInfoLst ,crCutRst$cutInfoLst )
+        }
+
 
         if( TRUE ){ # aux cut : stdFiltedCnt
             fRst <- fRstLst[[as.character(curHIdx)]]
@@ -167,6 +173,7 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
     # score1 score3 score4 score6 score7 score8 <-- score2, score5, score9
     #      3     10     37     32     57      4 
 
+    save( resultLst ,file=sprintf("./save/HMtxLst/Obj_resultLst%d.save",configH) )
     save( cutRstLst ,file=sprintf("./save/HMtxLst/Obj_cutRstLst%d.save",configH) )
         # load("./save/HMtxLst/Obj_cutRstLst840.save")
 

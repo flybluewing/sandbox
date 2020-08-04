@@ -3,13 +3,13 @@
 bCMtxLst <- list()
 
 
-mfName <- "crScrN01"  # Cut-Result, Score N
+crMName <- "crScrN01"  # Cut-Result, Score N
 if( TRUE ){
 
-    bCMtxLst[[mfName]] <- function( hCRScr=NULL ){
+    bCMtxLst[[crMName]] <- function( hCRScr=NULL ){
         # hCRScr : cutRst1Score 히스토리. Rebound 체크 기능은 나중에 구현한다.
 
-        rObj <- list( 	idStr="mfName"  ,mName=c("score1","score3","score8")
+        rObj <- list( 	idStr=crMName  ,mName=c("score1","score3","score8")
 		)
 
         rObj$fMtxObj <- function( scoreMtx.grp ,cut.grp ,fHName="sfcLate" ){
