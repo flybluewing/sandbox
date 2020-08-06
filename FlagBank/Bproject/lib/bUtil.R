@@ -100,6 +100,20 @@ bUtil.cut1 <- function( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=NULL ,anaOnly=F
 
         }
 
+		# bFMtxMulti 작업중.
+		# for( pName in cut.grp$phaseName ){
+		# 	scoreMtxLst <- scoreMtx.grp$basic[[pName]]
+		# 	mFltLst <- list()
+		# 	for( mfName in names(bFMtxMFltLst) ){
+		# 		mFltLst[[mfName]] <- bFMtxMFltLst[[mfName]](scoreMtxLst,tgt.scMtx)
+		# 	}
+
+		# 	# tgt.scMtx 이외의 mName 사용하는 필터는 제외
+		# 	availFlag <- sapply( mFltLst ,function(p){p$available}) 
+		# 	mFltLst <- mFltLst[availFlag]
+
+		# }
+
 		# QQE : auxInfoLst$mf 추가( auxInfoLst: cut2()의 실행시간이 너무 오래걸려서 cut1()에서 처리시도하기 위한 정보.)
 		for( mName in bScrMtxName ){
 			scoreMtx <- scoreMtx.grp$mf[[mName]]$scoreMtx

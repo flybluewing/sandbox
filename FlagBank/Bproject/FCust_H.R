@@ -1351,8 +1351,11 @@ bFCust.getFCustGrp <- function( hMtxLst ,tgt.scMtx=NULL ){
         rObj$mtxInfoLst.bScr <- rObj$mtxInfoLst.bScr[availMtx]
     }
 
-	cutterLst <- list()         ;cutterExtLst <- list()
-	cutterLst.bScr <- list()    ;cutterExtLst.bScr <- list()
+    # 가용 bFMtxLstMFltLst 추출.
+    #   tgt.scMtx가 일부 mName만 갖고있을 수 있으므로.
+
+	cutterLst <- list()         ;cutterExtLst <- list()         ;cutterExtMLst <- list()
+	cutterLst.bScr <- list()    ;cutterExtLst.bScr <- list()    # ;cutterExtMLst.bScr <- list()
 	for( hName in names(rObj$sfcHLst) ){	    # hName <- names(rObj$sfcHLst)[1]
 
         mLst <- list()  ;mExtLst <- list()  #   cutterLst
@@ -1387,6 +1390,23 @@ bFCust.getFCustGrp <- function( hMtxLst ,tgt.scMtx=NULL ){
         cutterLst[[hName]] <- mLst
         cutterExtLst[[hName]] <- mExtLst
 
+        # QQE working : bFMtxMFltLst 에 available 적용.
+        pLst <- list()
+        for( pName in rObj$phaseName ){     # pName <- rObj$phaseName[1]
+            mExtMLst <- list()
+            for( nIdx in names(bFMtxMFltLst) ){
+                scoreMtxLst <- hMtxLst$scoreMtxLst[[hName]][[pName]]
+                mExtMLst[[nIdx]] <- bFMtxMFltLst[[nIdx]]( scoreMtxLst ,tgt.scMtx )
+            }
+            available <- sapply(mExtMLst,function(p){p$available})
+
+            if( any(available) ){   pLst[[pName]] <- mExtMLst[available]
+            } else {    pLst[[pName]] <- list( )
+            }
+        }
+        cutterExtMLst <- pLst
+
+
 		mLst <- list()  ;mExtLst <- list()  #   cutterLst.bScr
 		for( mName in names(rObj$mtxInfoLst.bScr) ){
             scoreMtxObj <- B.HMtxLst_getMtxLst( hMtxLst , hName ,mName ,pName=NULL ,tgt="mfMtxLst" )
@@ -1407,10 +1427,11 @@ bFCust.getFCustGrp <- function( hMtxLst ,tgt.scMtx=NULL ){
 
     }
 
-    rObj$cutterLst <- cutterLst
-    rObj$cutterLst.bScr <- cutterLst.bScr
-    rObj$cutterExtLst <- cutterExtLst
-    rObj$cutterExtLst.bScr <- cutterExtLst.bScr
+    rObj$cutterLst          <- cutterLst
+    rObj$cutterLst.bScr     <- cutterLst.bScr
+    rObj$cutterExtLst       <- cutterExtLst
+    rObj$cutterExtLst.bScr  <- cutterExtLst.bScr
+    rObj$cutterExtMLst      <- cutterExtMLst
 
     return( rObj )
 
