@@ -7,7 +7,7 @@ bFMtxMFltLst <- list()
 mfName <- "mfABCD"
 if( TRUE ){
 
-    bFMtxMFltLst[[mfName]] <- function( scoreMtxLst ,tgt.scMtx ){
+    bFMtxMFltLst[[mfName]] <- function( tgt.scMtx ){
         # scoreMtxLst <- scoreMtx.grp$basic[[pName]]
 
         fltObj <- list( mInfo=list() )
@@ -22,12 +22,12 @@ if( TRUE ){
                                 ,"pNearSum" # ("pbbaA"+"pbabA"+"pabxbA") -3
 		)
 
-        fltObj$thldMtx <- matrix( c(    1,2,2,2 ,NA,NA,NA,NA   # "aMHpn","aNHpn"
-                                       ,2,3,3,3 ,2,3,3,3 ,1,2,2,2
-                                    )
-                            ,nrow=length(fltObj$mInfo$cName) ,ncol=length(fltObj$fltMNames)
-                            dimmnames=list( fltObj$mInfo$cName, fltObj$fltMNames )
-        )
+        # tgt.scMtx가 fltObj$fltMNames 를 모두 포함하고 있는 지 체크.
+        if( !is.null(tgt.scMtx) ){
+            #   scoreMtxLst는 체크하지 않는다. 차라리 나중에 에러나는 게 인지하기 쉬우므로.            
+            mFlag <- fltObj$fltMNames %in% tgt.scMtx
+            fltObj$available <- ifelse( all(mFlag) ,fltObj$available ,FALSE )
+        }
 
         fltObj$getScore <- function( mmMtxLst ,aIdx ){
             rowVal <- rep( 0 ,length(fltObj$mInfo$cName) )
@@ -43,10 +43,10 @@ if( TRUE ){
             rowVal[cName] <- sum( val )
 
             cName <- "aNHpn"
-            val["scoreA"] <- mmMtxLst[["scoreA"]][aIdx,cName]
-            val["scoreB"] <- mmMtxLst[["scoreB"]][aIdx,cName]
-            val["scoreC"] <- mmMtxLst[["scoreC"]][aIdx,cName]
-            val["scoreD"] <- mmMtxLst[["scoreD"]][aIdx,cName]
+            val["scoreA"] <- mmMtxLst[["scoreA"]][aIdx,cName] > 0
+            val["scoreB"] <- mmMtxLst[["scoreB"]][aIdx,cName] > 0
+            val["scoreC"] <- mmMtxLst[["scoreC"]][aIdx,cName] > 0
+            val["scoreD"] <- mmMtxLst[["scoreD"]][aIdx,cName] > 0
             rowVal[cName] <- sum( val )
 
 
@@ -144,45 +144,32 @@ if( TRUE ){
             
         }
 
-        # tgt.scMtx가 fltObj$fltMNames 를 모두 포함하고 있는 지 체크.
-        if( !is.null(tgt.scMtx) ){
-            #   scoreMtxLst는 체크하지 않는다. 차라리 나중에 에러나는 게 인지하기 쉬우므로.            
-            mFlag <- fltObj$fltMNames %in% tgt.scMtx
-            fltObj$available <- ifelse( all(mFlag) ,fltObj$available ,FALSE )
-        }
-
         if( fltObj$available ){
-            mmMtxLst <- lapply(scoreMtxLst[fltObj$fltMNames],function(p){p$scoreMtx})
-            hSize <- nrow(mmMtxLst[[1]])
+            # mmMtxLst <- lapply(scoreMtxLst[fltObj$fltMNames],function(p){p$scoreMtx})
+            # hSize <- nrow(mmMtxLst[[1]])
 
-            scrMtx <- matrix( 0 ,nrow=hSize ,ncol=length(fltObj$mInfo$cName) 
-                        ,dimnames=list( rownames(mmMtxLst[[1]]) ,fltObj$mInfo$cName )
-            )
-            for( aIdx in seq_len(hSize) ){
-                scrMtx[aIdx,] <- fltObj$getScore( mmMtxLst ,aIdx )
-            }
-
+            # scrMtx <- matrix( 0 ,nrow=hSize ,ncol=length(fltObj$mInfo$cName) 
+            #             ,dimnames=list( rownames(mmMtxLst[[1]]) ,fltObj$mInfo$cName )
+            # )
+            # for( aIdx in seq_len(hSize) ){
+            #     scrMtx[aIdx,] <- fltObj$getScore( mmMtxLst ,aIdx )
+            # }
         }
 
         fltObj$getScoreMtx <- function( scoreMtxLst ){
-            # fltObj$available 는 이미 bFCust.getFCustGrp() 에서 cutter 구성 시 확인됨.
-
             # scoreMtx.grp <- getScoreMtx.grp( gEnv$allZoidMtx[allIdxF,,drop=F] ,filter.grp )
             # scoreMtxLst <- scoreMtx.grp$basic[[pName]]
 
-            mmMtxLst <- lapply( scoreMtx.grp$basic ,function( mtxObj ){
-                rLst <- lapply( mtxObj[fltObj$fltMNames] ,function(p){ p$scoreMtx })
-                return( rLst )
-            })
+            mmMtxLst <- lapply( scoreMtxLst ,function(mtxObj){mtxObj$scoreMtx} )
 
             rMtx <- matrix( 0 ,nrow=nrow(mmMtxLst[[1]]) ,ncol=length(fltObj$mInfo$cName) )
             colnames(rMtx) <- fltObj$mInfo$cName
+            if( !fltObj$available ) return( rMtx )
 
-            # for( rIdx in seq_len(nrow(rMtx)) ){
-            #     lapply( scrMtxLst ,)
-            #     # rMtx[rIdx,] <- fltObj$getScore( scoreMtx[rIdx,] )
-            # }
-            # # rownames(rMtx) <- rownames(scoreMtx)
+            for( aIdx in seq_len(nrow(rMtx)) ){
+                rMtx[aIdx,] <- fltObj$getScore( mmMtxLst ,aIdx )
+            }
+            rownames(rMtx) <- rownames(mmMtxLst[[1]])
 
             return( rMtx )
         }

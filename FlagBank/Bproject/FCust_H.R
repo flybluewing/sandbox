@@ -1390,21 +1390,22 @@ bFCust.getFCustGrp <- function( hMtxLst ,tgt.scMtx=NULL ){
         cutterLst[[hName]] <- mLst
         cutterExtLst[[hName]] <- mExtLst
 
-        # QQE working : bFMtxMFltLst ¿¡ available Àû¿ë.
         pLst <- list()
         for( pName in rObj$phaseName ){     # pName <- rObj$phaseName[1]
-            mExtMLst <- list()
-            for( nIdx in names(bFMtxMFltLst) ){
-                scoreMtxLst <- hMtxLst$scoreMtxLst[[hName]][[pName]]
-                mExtMLst[[nIdx]] <- bFMtxMFltLst[[nIdx]]( scoreMtxLst ,tgt.scMtx )
-            }
-            available <- sapply(mExtMLst,function(p){p$available})
+            curPCutLst <- list()            # cur Phase Cutter List
+            for( nIdx in names(bFMtxMFltLst) ){ # nIdx <- names(bFMtxMFltLst)[1]
+                mtxMaker <- bFMtxMFltLst[[nIdx]]( tgt.scMtx )
+                if( !mtxMaker$available )   next
 
-            if( any(available) ){   pLst[[pName]] <- mExtMLst[available]
-            } else {    pLst[[pName]] <- list( )
+                scoreMtxLst <- hMtxLst$scoreMtxLst[[hName]][[pName]]
+                mScoreMtx <- mtxMaker$getScoreMtx( scoreMtxLst )
+                curPCutLst[[nIdx]] <- FCust_stdCut.rawRow( hName ,mName=nIdx ,pName ,mScoreMtx )
             }
+
+            pLst[[pName]] <- curPCutLst
         }
-        cutterExtMLst <- pLst
+        hIdxCut <- NULL # QQE working
+        cutterExtMLst <- list( stdCut=pLst ,hIdxCut=hIdxCut )
 
 
 		mLst <- list()  ;mExtLst <- list()  #   cutterLst.bScr
