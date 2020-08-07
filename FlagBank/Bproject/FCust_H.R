@@ -1435,7 +1435,7 @@ bFCust.getFCustGrp <- function( hMtxLst ,tgt.scMtx=NULL ){
                 }
 
             }
-            cutterExtMLst <- list( stdCut=pLst ,hIdxCut=hIdxCut )
+            cutterExtMLst[[hName]] <- list( stdCut=pLst ,hIdxCut=hIdxCut )
         }
 
         # cutterLst.bScr, cutterExtLst.bScr -------------------------------------------

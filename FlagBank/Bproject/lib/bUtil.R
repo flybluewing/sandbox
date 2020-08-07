@@ -100,19 +100,57 @@ bUtil.cut1 <- function( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=NULL ,anaOnly=F
 
         }
 
-		# bFMtxMulti 작업중.
-		# for( pName in cut.grp$phaseName ){
-		# 	scoreMtxLst <- scoreMtx.grp$basic[[pName]]
-		# 	mFltLst <- list()
-		# 	for( mfName in names(bFMtxMFltLst) ){
-		# 		mFltLst[[mfName]] <- bFMtxMFltLst[[mfName]](scoreMtxLst,tgt.scMtx)
-		# 	}
+		# bFMtxMulti ----------------------------------------------------------------
+		availMFName <- names(cut.grp$cutterExtMLst[[hName]]$stdCut[[1]])
+		for( mfName in availMFName ){
+			mtxMaker <- bFMtxMFltLst[[mfName]]( tgt.scMtx )
+			if( !mtxMaker$available )   next
 
-		# 	# tgt.scMtx 이외의 mName 사용하는 필터는 제외
-		# 	availFlag <- sapply( mFltLst ,function(p){p$available}) 
-		# 	mFltLst <- mFltLst[availFlag]
+			mtxLst <- list()
+			for( pName in cut.grp$phaseName ){
+				scoreMtxLst <- scoreMtx.grp$basic[[pName]]
+				mtxLst[[pName]] <- mtxMaker$getScoreMtx( scoreMtxLst )
 
-		# }
+                cutObj <- cut.grp$cutterExtMLst[[hName]]$stdCut[[pName]][[mfName]]
+                cRst <- cutObj$cut( mtxLst[[pName]] ,alreadyDead=!surFlag ,anaMode=anaOnly )
+				if( !anaOnly ){	surFlag <- surFlag & cRst$surFlag
+				} else {
+					if( 0<length(cRst$cutLst) ){
+						cutInfoLst <- append( cutInfoLst 
+											,lapply( cRst$cutLst[[1]]$cLst ,function(p){ c(p$idObjDesc ,info=p$info) } ) 
+										)
+					}
+				}
+			}
+
+			#   "hIdxLst" ------------------------------------------
+			# mtxGrp$score1[[1]]
+			mtx <- matrix( 0 ,nrow=length(mtxMaker$mInfo$cName) ,ncol=length(cut.grp$phaseName) 
+						,dimnames=list( mtxMaker$mInfo$cName ,cut.grp$phaseName )
+			)
+			for( aIdx in seq_len(datLen) ){
+				if( !anaOnly && !surFlag[aIdx] )	next
+
+				for( pName in cut.grp$phaseName ){
+					mtx[,pName] <- mtxLst[[pName]][aIdx,]
+				}
+
+				hIdxCut <- cut.grp$cutterExtMLst[[hName]]$hIdxCut[[mfName]]
+				cutInfo <- hIdxCut$cut( mtx ,anaMode=anaOnly )
+				if( 0<length(cutInfo$cLst) ){
+					if( !anaOnly ){	surFlag[aIdx] <- FALSE
+					} else {
+						for( idx in seq_len(length(cutInfo$cLst)) ){
+							idxName <- sprintf("hIdxCut_%dth",1+length(cutInfoLst))
+							cutInfoLst[[idxName]] <- c( typ=names(cutInfo$cLst)[idx] ,hIdxCut$defId ,pName="ALL" ,info=cutInfo$cLst[[idx]] )
+						}
+					}
+				}
+
+			}
+
+		}
+
 
 		# QQE : auxInfoLst$mf 추가( auxInfoLst: cut2()의 실행시간이 너무 오래걸려서 cut1()에서 처리시도하기 위한 정보.)
 		for( mName in bScrMtxName ){
