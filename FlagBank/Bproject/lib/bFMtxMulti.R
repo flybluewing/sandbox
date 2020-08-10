@@ -110,24 +110,24 @@ if( TRUE ){
 
 
             cName <- "pbbaA"
-            val["scoreA"] <- mmMtxLst[["scoreA"]][aIdx,cName] > 0
-            val["scoreB"] <- mmMtxLst[["scoreB"]][aIdx,cName] > 0 
-            val["scoreC"] <- mmMtxLst[["scoreC"]][aIdx,cName] > 0 
-            val["scoreD"] <- mmMtxLst[["scoreD"]][aIdx,cName] > 0 
+            val["scoreA"] <- mmMtxLst[["scoreA"]][aIdx,cName] > 2
+            val["scoreB"] <- mmMtxLst[["scoreB"]][aIdx,cName] > 3 
+            val["scoreC"] <- mmMtxLst[["scoreC"]][aIdx,cName] > 3 
+            val["scoreD"] <- mmMtxLst[["scoreD"]][aIdx,cName] > 3 
             rowVal[cName] <- sum( val )
 
             cName <- "pbabA"
-            val["scoreA"] <- mmMtxLst[["scoreA"]][aIdx,cName] > 0
-            val["scoreB"] <- mmMtxLst[["scoreB"]][aIdx,cName] > 0 
-            val["scoreC"] <- mmMtxLst[["scoreC"]][aIdx,cName] > 0 
-            val["scoreD"] <- mmMtxLst[["scoreD"]][aIdx,cName] > 0 
+            val["scoreA"] <- mmMtxLst[["scoreA"]][aIdx,cName] > 2
+            val["scoreB"] <- mmMtxLst[["scoreB"]][aIdx,cName] > 3 
+            val["scoreC"] <- mmMtxLst[["scoreC"]][aIdx,cName] > 3 
+            val["scoreD"] <- mmMtxLst[["scoreD"]][aIdx,cName] > 3 
             rowVal[cName] <- sum( val )
 
             cName <- "pabxbA"
-            val["scoreA"] <- mmMtxLst[["scoreA"]][aIdx,cName] > 0
-            val["scoreB"] <- mmMtxLst[["scoreB"]][aIdx,cName] > 0 
-            val["scoreC"] <- mmMtxLst[["scoreC"]][aIdx,cName] > 0 
-            val["scoreD"] <- mmMtxLst[["scoreD"]][aIdx,cName] > 0 
+            val["scoreA"] <- mmMtxLst[["scoreA"]][aIdx,cName] > 2
+            val["scoreB"] <- mmMtxLst[["scoreB"]][aIdx,cName] > 3 
+            val["scoreC"] <- mmMtxLst[["scoreC"]][aIdx,cName] > 3 
+            val["scoreD"] <- mmMtxLst[["scoreD"]][aIdx,cName] > 3 
             rowVal[cName] <- sum( val )
 
             

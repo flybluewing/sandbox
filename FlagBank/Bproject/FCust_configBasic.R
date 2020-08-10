@@ -1613,7 +1613,13 @@ scoreMtxCfg[[mfName]] <- list(
     ,evtMaxFColTot = NULL
     ,evtMax     = NULL      ,rowReb = NULL          ,rowRebDup = NULL
     ,summMtx    = NULL      ,summMtx.reb = NULL     ,summMtx.sum = NULL
-    ,scMtx.sz   = NULL
+    ,scMtx.sz = matrix( c(  2 ,1 ,1 ,1 ,1 ,1   ,1 ,1 ,1 ,1 ,1 ,1 ) ,byrow=T
+                    ,ncol=length(scMtx.szName$cName) ,nrow=length(scMtx.szName$rName) 
+                    ,dimnames=list(scMtx.szName$rName,scMtx.szName$cName)
+                    #     $scMtx.sz      r.ph r.fCol r.dblHpnFlg e.ph e.fCol e.dblHpnFlg
+                    #             rebCnt    0      0           0    0      0           0
+                    #             rebDup    0      0           0    0      0           0
+    )
     ,scMtx.sz.sum = NULL
     ,isHard=NULL  # use default
 )

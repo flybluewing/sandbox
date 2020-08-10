@@ -19,13 +19,19 @@ bC.cut <- function( crMName ,scoreMtx.grp ,cut.grp ,anaOnly=F ,logger=NULL ){
 		logger$fLogStr( rptStr )
 	}
 
-
-    mtxMaker <- bCMtxLst[[crMName]]( )
-    crScrMtx <- mtxMaker$fMtxObj( scoreMtx.grp ,cut.grp )
-
-    datLen <- nrow(crScrMtx)
+    datLen <- nrow(scoreMtx.grp$basic$basic[[1]]$scoreMtx)
     surFlag <- rep( T ,datLen )
 	cutInfoLst <- list()
+
+    mtxMaker <- bCMtxLst[[crMName]]( )
+    
+    curFltNames <- names(scoreMtx.grp$basic$basic)
+    if( !all(mtxMaker$mName %in% curFltNames) ){
+        return( list( surFlag=surFlag ,cutInfoLst=cutInfoLst ) )
+    }
+
+    crScrMtx <- mtxMaker$fMtxObj( scoreMtx.grp ,cut.grp )
+
 
     cutObj <- FCust_stdCut.CMtxRow( crMName )
     cRst <- cutObj$cut( crScrMtx )
