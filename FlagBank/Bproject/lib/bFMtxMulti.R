@@ -7,7 +7,7 @@ bFMtxMFltLst <- list()
 mfName <- "mfABCD"
 if( TRUE ){
     
-    bFMtxMFltLst[[mfName]] <- function( tgt.scMtx ){
+    bFMtxMFltLst[[mfName]] <- function( tgt.scMtx=NULL ){
         # scoreMtxLst <- scoreMtx.grp$basic[[pName]]
 
         fltObj <- list( mInfo=list() )
@@ -171,7 +171,7 @@ if( TRUE ){
 mfName <- "mf4567"
 if( TRUE ){
 
-    bFMtxMFltLst[[mfName]] <- function( tgt.scMtx ){
+    bFMtxMFltLst[[mfName]] <- function( tgt.scMtx=NULL ){
 
         fltObj <- list( mInfo=list() )
         fltObj$mInfo$mName <- mfName

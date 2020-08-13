@@ -109,9 +109,41 @@ for( sfcIdx in 0 ){ # 0:2
     rptStr <- sprintf( "allIdxF size : %dk" ,length(allIdxF) %/% 1000 )
     prllLog$fLogStr( rptStr, pTime=T)   ;rptStr
 
-    # bUtil.cut1() ----------------------------------------------------------------------
+    # bUtil.cut1( mfName ) ----------------------------------------------------------------------
     for( mfName in names(bFMtxMFltLst) ){
-        # QQE working
+        surFlag <- rep( T ,length(allIdxF) )
+        bLst <- k.blockLst( length(allIdxF) ,100*ifelse(testMode,5,40) )
+        prllLog$fLogStr( sprintf("start bUtil.cut1(%s) for group%d. bLst size %d",mfName,sfcIdx,length(bLst)), pTime=T)
+
+        sfExport("mfName") ;sfExport("allIdxF")    #    ;sfExport("cutH.bC.Cut")
+        resultLst <- sfLapply( bLst ,function( blk ){
+            tStmp <- Sys.time()
+            mfObj <- bFMtxMFltLst[[mfName]]()
+
+            blkSpan <- blk["start"]:blk["end"]
+            scoreMtx.grp <- getScoreMtx.grp( gEnv$allZoidMtx[allIdxF[blkSpan],,drop=F] ,filter.grp ,tgt.scMtx=mfObj$fltMNames )
+
+            cutRst <- bUtil.cut1( scoreMtx.grp ,cut.grp ,hName ,tgt.scMtx=mfObj$fltMNames ,anaOnly=F )
+
+            tDiff <- Sys.time() - tStmp
+            logStr <- sprintf("  block finished for bUtil.cut1(%s). %d/%d  %5.1f%s for %d~%d "
+                                ,mfName    ,sum(!cutRst$surFlag)   ,length(cutRst$surFlag)
+                                ,tDiff      ,units(tDiff)           ,blk["start"] ,blk["end"]
+            )
+            prllLog$fLogStr( logStr )
+
+            return( list( surFlag=cutRst$surFlag ,blk=blk ) )
+        })
+
+        for( idx in seq_len(length(resultLst)) ){
+            blk <- resultLst[[idx]]$blk
+            surFlag[ blk["start"]:blk["end"] ] <- resultLst[[idx]]$surFlag
+        }
+        allIdxF <- allIdxF[surFlag]
+        logger$fLogStr(sprintf("   - bUtil.cut1(%s)   survival size :%7d",mfName,length(allIdxF)),pTime=T)
+        save( allIdxF ,file=sprintf("Obj_allIdxF%d_cut0_%s_%d.save",sfcIdx,mfName,lastH) )
+        rptStr <- sprintf( "allIdxF size : %dk" ,length(allIdxF) %/% 1000 )
+        prllLog$fLogStr( rptStr, pTime=T)   ;rptStr
     }
     
 
@@ -120,14 +152,17 @@ for( sfcIdx in 0 ){ # 0:2
     # bC.cut() ----------------------------------------------------------------------
     for( crMName in names(bCMtxCfg) ){  # bUtil.cut2() ´ëÃ¼
         surFlag <- rep( T ,length(allIdxF) )
-        bLst <- k.blockLst( length(allIdxF) ,100*ifelse(testMode,5,400) )
+        bLst <- k.blockLst( length(allIdxF) ,100*ifelse(testMode,5,40) )
         prllLog$fLogStr( sprintf("start bC.cut(%s) for group%d. bLst size %d",crMName,sfcIdx,length(bLst)), pTime=T)
 
         sfExport("crMName") ;sfExport("allIdxF")    #    ;sfExport("cutH.bC.Cut")
         resultLst <- sfLapply( bLst ,function( blk ){
             tStmp <- Sys.time()
 
-            cutRst <- cutH.bC.Cut( gEnv ,allIdxF ,blk ,filter.grp ,tgt.scMtx=bCMtxLst[[crMName]]()$mName )
+            blkSpan <- blk["start"]:blk["end"]
+            scoreMtx.grp <- getScoreMtx.grp( gEnv$allZoidMtx[allIdxF[blkSpan],,drop=F] ,filter.grp ,tgt.scMtx=tgt.scMtx )
+
+            crCutRst <- bC.cut( crMName ,scoreMtx.grp ,cut.grp ,anaOnly=F )
 
             tDiff <- Sys.time() - tStmp
             logStr <- sprintf("  block finished for bC.cut(%s). %d/%d  %5.1f%s for %d~%d "
