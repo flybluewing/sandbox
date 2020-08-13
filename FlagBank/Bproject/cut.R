@@ -112,7 +112,7 @@ for( sfcIdx in 0 ){ # 0:2
     # bUtil.cut1( mfName ) ----------------------------------------------------------------------
     for( mfName in names(bFMtxMFltLst) ){
         surFlag <- rep( T ,length(allIdxF) )
-        bLst <- k.blockLst( length(allIdxF) ,100*ifelse(testMode,5,40) )
+        bLst <- k.blockLst( length(allIdxF) ,100*ifelse(testMode,5,10) )
         prllLog$fLogStr( sprintf("start bUtil.cut1(%s) for group%d. bLst size %d",mfName,sfcIdx,length(bLst)), pTime=T)
 
         sfExport("mfName") ;sfExport("allIdxF")    #    ;sfExport("cutH.bC.Cut")
@@ -152,7 +152,7 @@ for( sfcIdx in 0 ){ # 0:2
     # bC.cut() ----------------------------------------------------------------------
     for( crMName in names(bCMtxCfg) ){  # bUtil.cut2() ´ëÃ¼
         surFlag <- rep( T ,length(allIdxF) )
-        bLst <- k.blockLst( length(allIdxF) ,100*ifelse(testMode,5,40) )
+        bLst <- k.blockLst( length(allIdxF) ,100*ifelse(testMode,5,10) )
         prllLog$fLogStr( sprintf("start bC.cut(%s) for group%d. bLst size %d",crMName,sfcIdx,length(bLst)), pTime=T)
 
         sfExport("crMName") ;sfExport("allIdxF")    #    ;sfExport("cutH.bC.Cut")
