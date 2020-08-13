@@ -166,12 +166,12 @@ for( sfcIdx in 0 ){ # 0:2
 
             tDiff <- Sys.time() - tStmp
             logStr <- sprintf("  block finished for bC.cut(%s). %d/%d  %5.1f%s for %d~%d "
-                                ,crMName    ,sum(!cutRst$surFlag)   ,length(cutRst$surFlag)
+                                ,crMName    ,sum(!crCutRst$surFlag)   ,length(crCutRst$surFlag)
                                 ,tDiff      ,units(tDiff)           ,blk["start"] ,blk["end"]
             )
             prllLog$fLogStr( logStr )
 
-            return( list( surFlag=cutRst$surFlag ,blk=blk ) )
+            return( list( surFlag=crCutRst$surFlag ,blk=blk ) )
         })
         for( idx in seq_len(length(resultLst)) ){
             blk <- resultLst[[idx]]$blk
