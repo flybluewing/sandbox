@@ -1,5 +1,5 @@
 
-cutH.InitialCut <- function( gEnv ,allIdxF ,blk ,filter.grp ,fHName=NULL ,exeCfg=NULL ,logger=NULL ){
+cutH.InitialCut <- function( gEnv ,allIdxF ,blk ,filter.grp ,cut.grp ,fHName=NULL ,exeCfg=NULL ,logger=NULL ){
     #   logger <- k.getFlogObj( "./log/commonLog.txt" )
 
     logMsg <- function( msgStr ,tStmp=NULL ){
@@ -88,6 +88,28 @@ cutH.InitialCut <- function( gEnv ,allIdxF ,blk ,filter.grp ,fHName=NULL ,exeCfg
 
 }
 
+
+#   Working
+cutH.MultiMtxCut <- function( gEnv ,allIdxF ,blk ,filter.grp ,cut.grp ,fHName ,tgt.scMtx ,logger=NULL ){
+    logMsg <- function( msgStr ,tStmp=NULL ){
+        if( is.null(logger) )   return()
+        
+        if( !is.null(tStmp) ){
+            tDiff <- Sys.time() - tStmp
+            msgStr <- sprintf("%s   cost:%5.1f%s",msgStr,tDiff,units(tDiff))
+        }
+        logger$fLogStr( msgStr )
+    }
+
+    blkSpan <- blk["start"]:blk["end"]
+    scoreMtx.grp <- getScoreMtx.grp( gEnv$allZoidMtx[allIdxF[blkSpan],,drop=F] ,filter.grp ,tgt.scMtx=tgt.scMtx )
+
+    cutRst <- bUtil.cut1( scoreMtx.grp ,cut.grp ,hName ,tgt.scMtx=tgt.scMtx ,anaOnly=F )
+
+    return( list( surFlag=cutRst$surFlag ) )
+}
+
+#   need cut test
 cutH.bC.Cut <- function( gEnv ,allIdxF ,blk ,filter.grp ,tgt.scMtx ,logger=NULL ){
 
     logMsg <- function( msgStr ,tStmp=NULL ){
@@ -100,15 +122,51 @@ cutH.bC.Cut <- function( gEnv ,allIdxF ,blk ,filter.grp ,tgt.scMtx ,logger=NULL 
         logger$fLogStr( msgStr )
     }
 
-    flagName <- blk["start"]:blk["end"]
-    surFlag <- rep( T ,length(flagName) )   ;names(surFlag) <- flagName
-
     blkSpan <- blk["start"]:blk["end"]
-    scoreMtx.grp <- getScoreMtx.grp( gEnv$allZoidMtx[allIdxF[blkSpan],,drop=F] ,filter.grp ,tgt.scMtx=mName )
+    scoreMtx.grp <- getScoreMtx.grp( gEnv$allZoidMtx[allIdxF[blkSpan],,drop=F] ,filter.grp ,tgt.scMtx=tgt.scMtx )
 
     crCutRst <- bC.cut( crMName ,scoreMtx.grp ,cut.grp ,anaOnly=F )
 
     return( list( surFlag=crCutRst$surFlag ) )
 
 }
+
+
+
+
+
+
+# Code BackUp
+if( FALSE ){    # cutH.InitialCut() 사용 이후로 필요 없어진 듯 하다.
+    # surFlag <- rep( T ,length(allIdxF) )
+    # bLst <- k.blockLst( length(allIdxF) ,100*ifelse(testMode,2,1000) )
+
+    # sfExport("fHName")  ;sfExport("allIdxF")
+    # resultLst <- sfLapply( bLst ,function( blk ){
+    #     tStmp <- Sys.time()
+    #     span1nd <- blk["start"]:blk["end"]
+    #     scoreMtx.grp <- getScoreMtx.grp( gEnv$allZoidMtx[allIdxF[span1nd],,drop=F] ,filter.grp )
+
+    #     cutRst <- bUtil.cut1( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx ,anaOnly=F )
+
+    #     tDiff <- Sys.time() - tStmp
+    #     logStr <- sprintf("  block finished for cut1. %d/%d  %5.1f%s for %d~%d "
+    #                         ,sum(!cutRst$surFlag),length(cutRst$surFlag)
+    #                         ,tDiff  ,units(tDiff)
+    #                         ,blk["start"] ,blk["end"]
+    #                 )
+    #     prllLog$fLogStr( logStr )
+        
+    #     return( list( surFlag=cutRst$surFlag ,blk=blk ) )
+    # })
+    # for( idx in seq_len(length(resultLst)) ){
+    #     blk <- resultLst[[idx]]$blk
+    #     surFlag[ blk["start"]:blk["end"] ] <- resultLst[[idx]]$surFlag
+    # }
+    # allIdxF <- allIdxF[surFlag]
+    # logger$fLogStr(sprintf("   - bUtil.cut1()   final size :%7d",length(allIdxF)),pTime=T)
+    # save( allIdxF ,file=sprintf("Obj_allIdxF%d_cut1.save",sfcIdx) )
+}
+
+
 
