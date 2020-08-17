@@ -9,7 +9,7 @@ if( FALSE ){    # template
     # )
 }
 
-crMName <- "crScrN01"
+crMName <- "crScrN01R"
 if( TRUE ){
     bCMtxCfg[[crMName]] <- list(  mName = crMName
         ,fCol = list(
