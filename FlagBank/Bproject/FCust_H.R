@@ -976,16 +976,22 @@ FCust_stdCut.hIdx <- function( hName ,mName ,mtxLst ){
 
         r4Ass <- list()
 
+        # phaseHpnCnt는 현재 aZoid가 아닌, 이전 lastZoid에 관한 값임
         phaseHpnCnt <- rbind( rObj$stdEvt.H1$hpnInfo$phase ,rObj$stdEvt.H1$evtInfo$phase )
         rownames( phaseHpnCnt ) <- c("raw","evt")
 
+        # phaseHpnCnt는 현재 aZoid가 아닌, 이전 lastZoid에 관한 값임
         phaseRebCnt <- rbind( rObj$stdEvt.H1$hpnInfo$phaseReb["reb",] ,rObj$stdEvt.H1$evtInfo$phaseReb["reb",] )
         rownames( phaseRebCnt ) <- c("raw","evt")
 
-        r4Ass$phaseHpnCnt <- phaseHpnCnt
-        r4Ass$phaseRebCnt <- phaseRebCnt
+        r4Ass$H1.phHpnCnt <- phaseHpnCnt    # 혼동가능성 때문에 이름 변경.
+        r4Ass$H1.phRebCnt <- phaseRebCnt    #       초기 이름은 phaseHpnCnt, phaseRebCnt 이었음.
 
         r4Ass$rebMtx.ph <- rawObj$curEvt$rebInfo$rebMtx.ph
+
+        phaseReb.raw <- rawObj$curEvt$hpnInfo$phaseReb[c("reb","hpn"),] ;rownames(phaseReb.raw) <- c("rebFlag.raw","hpn.raw")
+        phaseReb.evt <- rawObj$curEvt$evtInfo$phaseReb[c("reb","hpn"),] ;rownames(phaseReb.evt) <- c("rebFlag.evt","hpn.evt")
+        r4Ass$phaseReb  <- rbind( phaseReb.raw ,phaseReb.evt )
 
         return( r4Ass )
 

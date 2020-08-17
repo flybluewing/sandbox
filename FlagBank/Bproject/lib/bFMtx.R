@@ -86,12 +86,18 @@ getScoreMtx.grp_byFCol <- function( scoreMtx.grp ){
 
 #	byHIdx이긴 하지만, 사실은 각 scoreMtxN 에 대한 [col,phase] 테이블이다.
 #	즉 allIdx 단위별로 List가 만들어짐.
-getScoreMtx.grp_byHIdx <- function( scoreMtx.grp ){
+getScoreMtx.grp_byHIdx <- function( scoreMtx.grp ,tgt.scMtx=NULL ){
 	#	scoreMtx.grp <- getScoreMtx.grp( gEnv$allZoidMtx[allIdxF,] ,filter.grp )
 	#	aZoid, scoreMtx별로 [fCol,phName] 구조.
 	#		(Column이 phase 이므로 기본 phase만 가능하다.)
 	phaseName <- names(scoreMtx.grp$basic)
-	mtxInfoLst <- lapply(scoreMtx.grp$basic$basic ,function( scoreObj ){ colnames(scoreObj$scoreMtx) })
+	mtxInfoLst <- list()
+	if( is.null(tgt.scMtx) ){
+		mtxInfoLst <- lapply(scoreMtx.grp$basic$basic ,function( scoreObj ){ colnames(scoreObj$scoreMtx) })
+	} else {
+		mtxInfoLst <- lapply(scoreMtx.grp$basic$basic[tgt.scMtx] ,function( scoreObj ){ colnames(scoreObj$scoreMtx) })
+	}
+
 	rowSize <- nrow(scoreMtx.grp$basic[["basic"]][[1]]$scoreMtx)
 
 	# hMtx_byHIdx[["sfcLate"]][["score2"]][["820"]]

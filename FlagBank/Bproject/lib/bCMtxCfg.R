@@ -13,13 +13,27 @@ crMName <- "crScrN01"
 if( TRUE ){
     bCMtxCfg[[crMName]] <- list(  mName = crMName
         ,fCol = list(
-             "rHpnE0Cnt" = list( rng=c(min=0,max=1) )
-            ,"eHpnl1Cnt" = list( rng=c(min=0,max=2) )
-            ,"phRebCntR" = list( rng=c(min=0,max=1) )
-            ,"phRebCntE" = list( rng=c(min=0,max=1) )
+              "hpn"  = list( rng=c(min=0,max=1) )
+             ,"ph"   = list( rng=c(min=0,max=1) )
+             ,"fCol" = list( rng=c(min=0,max=1) )
+             ,"phReb"    = list( rng=c(min=0,max=1) )
+             ,"xyCnt.fCol"   = list( rng=c(min=0,max=1) )
+             ,"xyCnt.phase"  = list( rng=c(min=0,max=1) )
+             ,"ph_Reb"       = list( rng=c(min=0,max=1) )
+             ,"fCol_Reb"     = list( rng=c(min=0,max=1) )
+             ,"phReb_Reb"    = list( rng=c(min=0,max=1) )
+             ,"xyCnt.fCol_Reb"   = list( rng=c(min=0,max=1) )
+             ,"xyCnt.phase_Reb"  = list( rng=c(min=0,max=1) )
+             ,"ph_sz"        = list( rng=c(min=0,max=1) )
+             ,"fCol_sz"      = list( rng=c(min=0,max=1) )
+             ,"dblHpnFlg_sz" = list( rng=c(min=0,max=1) )
+             ,"ph_szDup"     = list( rng=c(min=0,max=1) )
+             ,"fCol_szDup"   = list( rng=c(min=0,max=1) )
+             ,"dblHpnFlg_szDup"  = list( rng=c(min=0,max=1) )
         )
     )
 }
+
 
 
 

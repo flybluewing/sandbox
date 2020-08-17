@@ -37,6 +37,7 @@ bUtil.cut1 <- function( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=NULL ,anaOnly=F
 
     surFlag <- rep( T ,datLen )
 	auxInfoLst <- list( basic=list() ,mf=list() )
+	mtxGrp <- getScoreMtx.grp_byHIdx( scoreMtx.grp )
     for( hName in fHName ){ # hName <- fHName[1]
         for( mName in scMtxName ){ # mName <- scMtxName[1]
             #   "stdCut" -------------------------------------------
@@ -72,7 +73,6 @@ bUtil.cut1 <- function( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=NULL ,anaOnly=F
 			reportStatus( tStmp ,sprintf("[%s,%s] stdLst",hName,mName) ,surFlag ,logger )
 
 			#   "hIdxLst" ------------------------------------------
-			mtxGrp <- getScoreMtx.grp_byHIdx( scoreMtx.grp )	# 루프 밖으로 빼도 될 듯.
 			hIdxCut <- cut.grp$cutterLst[[hName]][[mName]]$hIdxCut
 			for( aIdx in seq_len(datLen) ){
 				if( !anaOnly && !surFlag[aIdx] )	next
@@ -217,6 +217,7 @@ bUtil.getCut1Score <- function(  scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=NULL ,
 	tStmp <- Sys.time()
 	if( !is.null(logger) ) logger$fLogStr("Start", pTime=T ,pAppend=F )
 
+	mtxGrp <- getScoreMtx.grp_byHIdx( scoreMtx.grp ,tgt.scMtx=scMtxName )	# QQE : tgt.scMtx 적용필요.
 	aLst <- list()
 	for( aIdx in seq_len(datLen) ){
 		hLst <- list()
@@ -224,7 +225,6 @@ bUtil.getCut1Score <- function(  scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=NULL ,
 			basicLst <- list()
 			for( mName in scMtxName ){ # mName <- scMtxName[1]
 				#   "hIdxLst" ------------------------------------------
-				mtxGrp <- getScoreMtx.grp_byHIdx( scoreMtx.grp )
 				hIdxCut <- cut.grp$cutterLst[[hName]][[mName]]$hIdxCut
 				rawObj <- hIdxCut$getRawScore( mtxGrp[[mName]][[aIdx]] )
 				raw4Ass <- hIdxCut$getRaw4Ass( rawObj )
@@ -281,11 +281,17 @@ bUtil.cutRst1_scoreMtx <- function( cutRst1 ){
 			# raw value ------------------------------------------------------------------------
 			rawGrp <- cutRst1[[hName]]$basic[[1]]$raw	# 메타정보 가져오기.
 
-			hpnMtxRaw <- matrix( 0 ,nrow=length(basicMName) ,ncol=ncol(rawGrp$phaseHpnCnt) 
-								,dimnames=list( basicMName ,colnames(rawGrp$phaseHpnCnt) )
+			# hpnMtxRaw <- matrix( 0 ,nrow=length(basicMName) ,ncol=ncol(rawGrp$phaseHpnCnt) 
+			# 					,dimnames=list( basicMName ,colnames(rawGrp$phaseHpnCnt) )
+			# 				)
+			# phRebMtxRaw <- matrix( 0 ,nrow=length(basicMName) ,ncol=ncol(rawGrp$phaseRebCnt) 
+			# 					,dimnames=list( basicMName ,colnames(rawGrp$phaseRebCnt) )
+			# 				)
+			hpnMtxRaw <- matrix( 0 ,nrow=length(basicMName) ,ncol=ncol(rawGrp$rebMtx.ph)
+								,dimnames=list( basicMName ,colnames(rawGrp$rebMtx.ph) )
 							)
-			phRebMtxRaw <- matrix( 0 ,nrow=length(basicMName) ,ncol=ncol(rawGrp$phaseRebCnt) 
-								,dimnames=list( basicMName ,colnames(rawGrp$phaseRebCnt) )
+			phRebMtxRaw <- matrix( 0 ,nrow=length(basicMName) ,ncol=ncol(rawGrp$phaseReb) 
+								,dimnames=list( basicMName ,colnames(rawGrp$phaseReb) )
 							)
 			rebMtxRaw <- matrix( 0 ,nrow=length(basicMName) ,ncol=ncol(rawGrp$rebMtx.ph)
 								,dimnames=list( basicMName ,colnames(rawGrp$rebMtx.ph) )
@@ -295,10 +301,10 @@ bUtil.cutRst1_scoreMtx <- function( cutRst1 ){
 			rebMtxEvt <- rebMtxRaw
 
 			for( mName in basicMName ){
-				hpnMtxRaw[mName,]	<- cutRst1[[hName]]$basic[[mName]]$raw$phaseHpnCnt["raw",]
-				hpnMtxEvt[mName,]	<- cutRst1[[hName]]$basic[[mName]]$raw$phaseHpnCnt["evt",]
-				phRebMtxRaw[mName,]	<- cutRst1[[hName]]$basic[[mName]]$raw$phaseRebCnt["raw",]
-				phRebMtxEvt[mName,]	<- cutRst1[[hName]]$basic[[mName]]$raw$phaseRebCnt["evt",]
+				phRebMtxRaw[mName,]	<- cutRst1[[hName]]$basic[[mName]]$raw$phaseReb["rebFlag.raw",]
+				phRebMtxEvt[mName,]	<- cutRst1[[hName]]$basic[[mName]]$raw$phaseReb["rebFlag.evt",]
+				hpnMtxRaw[mName,]	<- cutRst1[[hName]]$basic[[mName]]$raw$rebMtx.ph["hpn.raw",]
+				hpnMtxEvt[mName,]	<- cutRst1[[hName]]$basic[[mName]]$raw$rebMtx.ph["hpn.evt",]				
 				rebMtxRaw[mName,]	<- cutRst1[[hName]]$basic[[mName]]$raw$rebMtx.ph["rebFlag.raw",]
 				rebMtxEvt[mName,]	<- cutRst1[[hName]]$basic[[mName]]$raw$rebMtx.ph["rebFlag.evt",]
 			}

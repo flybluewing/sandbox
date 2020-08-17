@@ -149,7 +149,7 @@ if( TRUE ){
             # scoreMtx.grp <- getScoreMtx.grp( gEnv$allZoidMtx[allIdxF,,drop=F] ,filter.grp )
             # scoreMtxLst <- scoreMtx.grp$basic[[pName]]
 
-            mmMtxLst <- lapply( scoreMtxLst ,function(mtxObj){mtxObj$scoreMtx} )
+            mmMtxLst <- lapply( scoreMtxLst[fltObj$fltMNames] ,function(mtxObj){mtxObj$scoreMtx} )
 
             rMtx <- matrix( 0 ,nrow=nrow(mmMtxLst[[1]]) ,ncol=length(fltObj$mInfo$cName) )
             colnames(rMtx) <- fltObj$mInfo$cName
@@ -390,7 +390,7 @@ if( TRUE ){
             # scoreMtx.grp <- getScoreMtx.grp( gEnv$allZoidMtx[allIdxF,,drop=F] ,filter.grp )
             # scoreMtxLst <- scoreMtx.grp$basic[[pName]]
 
-            mmMtxLst <- lapply( scoreMtxLst ,function(mtxObj){mtxObj$scoreMtx} )
+            mmMtxLst <- lapply( scoreMtxLst[fltObj$fltMNames] ,function(mtxObj){mtxObj$scoreMtx} )
 
             rMtx <- matrix( 0 ,nrow=nrow(mmMtxLst[[1]]) ,ncol=length(fltObj$mInfo$cName) )
             colnames(rMtx) <- fltObj$mInfo$cName
