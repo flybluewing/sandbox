@@ -37,7 +37,10 @@ bUtil.cut1 <- function( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=NULL ,anaOnly=F
 
     surFlag <- rep( T ,datLen )
 	auxInfoLst <- list( basic=list() ,mf=list() )
-	mtxGrp <- getScoreMtx.grp_byHIdx( scoreMtx.grp )
+	mtxGrp <- NULL
+	if( 0<length(scMtxName) ){
+		mtxGrp <- getScoreMtx.grp_byHIdx( scoreMtx.grp )
+	}
     for( hName in fHName ){ # hName <- fHName[1]
         for( mName in scMtxName ){ # mName <- scMtxName[1]
             #   "stdCut" -------------------------------------------
