@@ -97,7 +97,7 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
             #   anaOnly=TRUE 에서, cutRst$surFlag는 항상 TRUE임을 유의.
 
         cutRst1Score <- bUtil.getCut1Score( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx )    # 폐지예정
-        cut2Rst <- bUtil.cut2( cutRst1Score ,fHName ,tgt.scMtx=tgt.scMtx ,anaOnly=T )               # 폐지예정
+        # cut2Rst <- bUtil.cut2( cutRst1Score ,fHName ,tgt.scMtx=tgt.scMtx ,anaOnly=T )               # 폐지예정
         # cutRst$cutInfoLst <- append( cutRst$cutInfoLst ,cut2Rst$cutInfoLst )                        # 폐지예정
 
         for( crMName in names(bCMtxCfg) ){  # bUtil.cut2() 대체
