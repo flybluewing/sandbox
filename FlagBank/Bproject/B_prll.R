@@ -105,6 +105,8 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
             cutRst$cutInfoLst <- append( cutRst$cutInfoLst ,crCutRst$cutInfoLst )
         }
 
+        Fin.customCut( lastH=curHIdx ,gEnv=gEnv.w ,allIdxF=stdIdx ,anaOnly=F )
+
 
         if( TRUE ){ # aux cut : stdFiltedCnt
             fRst <- fRstLst[[as.character(curHIdx)]]
