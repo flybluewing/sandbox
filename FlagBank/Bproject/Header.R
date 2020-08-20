@@ -22,4 +22,4 @@ source("./lib/FinalCut_H.R")
 source("FCust_H.R")
 source("FCust_configBasic.R")       ;source("FCust_configExt.R")
 
-source("/toFinal/Fin_H.R")
+source("./toFinal/Fin_H.R")
