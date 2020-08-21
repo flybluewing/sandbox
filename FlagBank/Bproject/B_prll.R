@@ -92,7 +92,10 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
         scoreMtx.grp <- getScoreMtx.grp( matrix(stdZoid,nrow=1) ,filter.grp ,makeInfoStr=T )
             #   평가용이므로 getScoreMtx.grp.4H() 가 사용됨.   .4H !
 
-        cutRst <- Fin.customCut( lastH=curHIdx ,gEnv=gEnv.w ,allIdxF=stdIdx ,stdMI.grp=stdMI.grp ,anaOnly=T )
+        cutRst <- list( surFlag=T ,cutInfoLst=list() ) # 여기서 cutRst$surFlag는 의미없다. anaOnly=T 이므로
+
+        customCutRst <- Fin.customCut( lastH=curHIdx ,gEnv=gEnv.w ,allIdxF=stdIdx ,stdMI.grp=stdMI.grp ,anaOnly=T )
+        cutRst$cutInfoLst <- append( cutRst$cutInfoLst ,customCutRst$cutInfoLst[[1]] )
 
         cutRst1 <- bUtil.cut1( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx ,anaOnly=T ) 
             #   anaOnly=TRUE 에서, cutRst$surFlag는 항상 TRUE임을 유의.

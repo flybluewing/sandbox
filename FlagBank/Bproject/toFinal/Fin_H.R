@@ -28,15 +28,20 @@ Fin.customCut <- function( lastH ,gEnv ,allIdxF ,stdMI.grp ,anaOnly=F ){
     for( pName in names(Fin.custCutLst) ){
         # B.rptStdMI.grp( stdMI.grp )
         cCutRst <- Fin.custCutLst[[pName]]( aZoidMtx ,surFlag ,stdMI=stdMI.grp$basic[[pName]]$stdMI ,anaOnly=anaOnly )
+        surFlag <- surFlag & cCutRst$surFlag
+        if( anaOnly ){
+            for( idx in 1:length(allIdxF) ){
+                cutInfoLst[[idx]] <- append( cutInfoLst[[idx]] ,cCutRst$cutInfoLst[[idx]])
+            }
+        }
     }
 
-    
     cutRst <- list( surFlag=surFlag )
     if( anaOnly ){
         cutRst$cutInfoLst <- cutInfoLst
     }
 
-    return( cutRst )
+    return( cutRst )    # cutRst$cutInfoLst[[1]]
 }
 
 Fin.staticCut <- function( aZoidMtx ,lastZoid ,surFlag=NULL ,anaOnly=F ){
