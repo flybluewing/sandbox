@@ -3,10 +3,10 @@
 
 
 
-Fin.customCut <- function( lastH ,gEnv ,allIdxF ,anaOnly=F ){
+Fin.customCut <- function( lastH ,gEnv ,allIdxF ,stdMI.grp ,anaOnly=F ){
     #   allIdxF <- c( stdIdx ,sort(stdIdx + sample(-100:100,9 )*3000) )
     #       anaOnly=T 인 경우, allIdxF[1] 은 stdIdx로 고정하자.
-    cutInfoLst <- vector( "list" ,length(allIdxF) )
+    cutInfoLst <- lapply( seq_len(length(allIdxF)) ,function(p){return(list())} )
 
     customCutHeader <- sprintf("./toFinal/Fin_z%d.R",lastH)
     cat(sprintf(" loading... %s\n",customCutHeader))
@@ -17,7 +17,18 @@ Fin.customCut <- function( lastH ,gEnv ,allIdxF ,anaOnly=F ){
     rownames(aZoidMtx) <- sprintf("a%07d",allIdxF)
     lastZoid <- gEnv$zhF[lastH-1,]
 
-    Fin.staticCut( aZoidMtx ,lastZoid ,surFlag ,anaOnly=anaOnly )
+    sCutRst <- Fin.staticCut( aZoidMtx ,lastZoid ,surFlag ,anaOnly=anaOnly )
+    surFlag <- surFlag & sCutRst$surFlag
+    if( anaOnly ){
+        for( idx in 1:length(allIdxF) ){
+            cutInfoLst[[idx]] <- append( cutInfoLst[[idx]] ,sCutRst$cutInfoLst[[idx]])
+        }
+    }
+
+    for( pName in names(Fin.custCutLst) ){
+        # B.rptStdMI.grp( stdMI.grp )
+        cCutRst <- Fin.custCutLst[[pName]]( aZoidMtx ,surFlag ,stdMI=stdMI.grp$basic[[pName]]$stdMI ,anaOnly=anaOnly )
+    }
 
     
     cutRst <- list( surFlag=surFlag )
@@ -65,7 +76,7 @@ Fin.staticCut <- function( aZoidMtx ,lastZoid ,surFlag=NULL ,anaOnly=F ){
             }
 
             cutId <- "zw<20"
-            if( 20 > (aZoid[,6]-aZoid[,1]) ){
+            if( 20 > (aZoid[6]-aZoid[1]) ){
                 surFlag[aIdx] <- F
                 if( !anaOnly ){ next
                 } else {    cutInfo=c(typ="Fin" ,hName="N/A" ,mName="staticCut" ,pName="N/A" ,info=cutId )
@@ -94,9 +105,9 @@ Fin.staticCut <- function( aZoidMtx ,lastZoid ,surFlag=NULL ,anaOnly=F ){
         }
 
         if( TRUE ){ # aCStep
-            cutId <- "aCStep tbl>=2"
+            cutId <- "aCStep tbl>=4"
             tbl <- table(aCStep)
-            if( any(tbl>=2) ){
+            if( any(tbl>=4) ){
                 surFlag[aIdx] <- F
                 if( !anaOnly ){ next
                 } else {    cutInfo=c(typ="Fin" ,hName="N/A" ,mName="staticCut" ,pName="N/A" ,info=cutId )
@@ -106,9 +117,9 @@ Fin.staticCut <- function( aZoidMtx ,lastZoid ,surFlag=NULL ,anaOnly=F ){
         }
 
         if( TRUE ){ # aFStep
-            cutId <- "aFStep tbl>=2"
+            cutId <- "aFStep tbl>=4"
             tbl <- table(aFStep)
-            if( any(tbl>=2) ){
+            if( any(tbl>=4) ){
                 surFlag[aIdx] <- F
                 if( !anaOnly ){ next
                 } else {    cutInfo=c(typ="Fin" ,hName="N/A" ,mName="staticCut" ,pName="N/A" ,info=cutId )
@@ -121,7 +132,7 @@ Fin.staticCut <- function( aZoidMtx ,lastZoid ,surFlag=NULL ,anaOnly=F ){
 
     cutRst <- list(surFlag=surFlag)
     if( anaOnly ){
-        cutRst$cutInfoLst = cutInfoLst[[1]]
+        cutRst$cutInfoLst = cutInfoLst
     }
     return( cutRst )
 }

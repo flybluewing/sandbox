@@ -1,9 +1,8 @@
+# B.rptStdMI.grp( stdMI.grp )
 
 Fin.custCutLst <- list()
 
-
-Fin.custCutLst[["basic"]] <- function( aZoidMtx ,surFlag ,anaOnly=F ){
-
+Fin.custCutLst[["basic"]] <- function( aZoidMtx ,surFlag ,stdMI ,anaOnly=F ){
 }
 
 

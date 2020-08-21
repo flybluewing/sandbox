@@ -92,9 +92,11 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
         scoreMtx.grp <- getScoreMtx.grp( matrix(stdZoid,nrow=1) ,filter.grp ,makeInfoStr=T )
             #   평가용이므로 getScoreMtx.grp.4H() 가 사용됨.   .4H !
 
+        cutRst <- Fin.customCut( lastH=curHIdx ,gEnv=gEnv.w ,allIdxF=stdIdx ,stdMI.grp=stdMI.grp ,anaOnly=T )
 
-        cutRst <- bUtil.cut1( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx ,anaOnly=T ) 
+        cutRst1 <- bUtil.cut1( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx ,anaOnly=T ) 
             #   anaOnly=TRUE 에서, cutRst$surFlag는 항상 TRUE임을 유의.
+        cutRst$cutInfoLst <- append( cutRst$cutInfoLst ,cutRst1$cutInfoLst )
 
         cutRst1Score <- bUtil.getCut1Score( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx )    # 폐지예정
         # cut2Rst <- bUtil.cut2( cutRst1Score ,fHName ,tgt.scMtx=tgt.scMtx ,anaOnly=T )               # 폐지예정
@@ -104,8 +106,6 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
             crCutRst <- bC.cut( crMName ,scoreMtx.grp ,cut.grp ,anaOnly=T )
             cutRst$cutInfoLst <- append( cutRst$cutInfoLst ,crCutRst$cutInfoLst )
         }
-
-        Fin.customCut( lastH=curHIdx ,gEnv=gEnv.w ,allIdxF=stdIdx ,anaOnly=T )
 
 
         if( TRUE ){ # aux cut : stdFiltedCnt
