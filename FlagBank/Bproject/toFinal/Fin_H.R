@@ -4,8 +4,17 @@
 
 
 Fin.customCut <- function( lastH ,gEnv ,allIdxF ,stdMI.grp ,anaOnly=F ){
-    #   allIdxF <- c( stdIdx ,sort(stdIdx + sample(-100:100,9 )*3000) )
-    #       anaOnly=T 인 경우, allIdxF[1] 은 stdIdx로 고정하자.
+
+    if( FALSE ){   # comment
+        #   allIdxF <- c( stdIdx ,sort(stdIdx + sample(-100:100,9 )*3000) )
+        #       anaOnly=T 인 경우, allIdxF[1] 은 stdIdx로 고정하자.
+
+        # anaOnly=T ;aIdx <- 1
+        # k <- sample( 1:length(allIdxF) ,20 )    ;k <- sort(k)
+        # allIdxF <- allIdxF[k]
+        # aZoidMtx <- gEnv$allZoidMtx[allIdxF,]
+    }
+
     cutInfoLst <- lapply( seq_len(length(allIdxF)) ,function(p){return(list())} )
 
     customCutHeader <- sprintf("./toFinal/Fin_z%d.R",lastH)
