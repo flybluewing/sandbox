@@ -21,13 +21,13 @@ Fin.custCutLst[[pName]] <- function( aZoidMtx ,surFlag=NULL ,stdMI ,anaOnly=F ){
     for( aIdx in seq_len(aLen) ){
         if( !anaOnly && !surFlag[aIdx] ) next
 
-        aZoid <- aZoidMtx[aIdx,]
+        aZoid <- aZoidMtx[aIdx,]    ;aZw<-aZoid[6]-aZoid[1] # ;aQuo<-fCutU.getQuoObj(aZoid,valSet=T)
         aRem <- aZoid%%10   ;aCStep <- aZoid[2:6]-aZoid[1:5]    ;aFStep <- aZoid - stdMI$lastZoid
 
         if( TRUE ){ # aZoid/aRem
 
             cutId <- "aZoid test"
-            if( TRUE ){
+            if( FALSE ){
                 # surFlag[aIdx] <- F
                 # if( !anaOnly ){ next
                 # } else {    cutInfo=c(typ="Fin" ,hName="N/A" ,mName="custCut" ,pName=pName ,info=cutId )
@@ -37,7 +37,7 @@ Fin.custCutLst[[pName]] <- function( aZoidMtx ,surFlag=NULL ,stdMI ,anaOnly=F ){
         }
         if( TRUE ){ # aCStep
             cutId <- "aCStep test"
-            if( TRUE ){
+            if( FALSE ){
                 # surFlag[aIdx] <- F
                 # if( !anaOnly ){ next
                 # } else {    cutInfo=c(typ="Fin" ,hName="N/A" ,mName="custCut" ,pName=pName ,info=cutId )
@@ -47,7 +47,7 @@ Fin.custCutLst[[pName]] <- function( aZoidMtx ,surFlag=NULL ,stdMI ,anaOnly=F ){
         }
         if( TRUE ){ # aFStep
             cutId <- "aFStep test"
-            if( TRUE ){
+            if( FALSE ){
                 # surFlag[aIdx] <- F
                 # if( !anaOnly ){ next
                 # } else {    cutInfo=c(typ="Fin" ,hName="N/A" ,mName="custCut" ,pName=pName ,info=cutId )
@@ -87,13 +87,13 @@ Fin.custCutLst[[pName]] <- function( aZoidMtx ,surFlag=NULL ,stdMI ,anaOnly=F ){
     for( aIdx in seq_len(aLen) ){
         if( !anaOnly && !surFlag[aIdx] ) next
 
-        aZoid <- aZoidMtx[aIdx,]
+        aZoid <- aZoidMtx[aIdx,]    ;aZw<-aZoid[6]-aZoid[1] # ;aQuo<-fCutU.getQuoObj(aZoid,valSet=T)
         aRem <- aZoid%%10   ;aCStep <- aZoid[2:6]-aZoid[1:5]    ;aFStep <- aZoid - stdMI$lastZoid
 
         if( TRUE ){ # aZoid/aRem
 
             cutId <- "aZoid test"
-            if( TRUE ){
+            if( FALSE ){
                 # surFlag[aIdx] <- F
                 # if( !anaOnly ){ next
                 # } else {    cutInfo=c(typ="Fin" ,hName="N/A" ,mName="custCut" ,pName=pName ,info=cutId )
@@ -103,7 +103,7 @@ Fin.custCutLst[[pName]] <- function( aZoidMtx ,surFlag=NULL ,stdMI ,anaOnly=F ){
         }
         if( TRUE ){ # aCStep
             cutId <- "aCStep test"
-            if( TRUE ){
+            if( FALSE ){
                 # surFlag[aIdx] <- F
                 # if( !anaOnly ){ next
                 # } else {    cutInfo=c(typ="Fin" ,hName="N/A" ,mName="custCut" ,pName=pName ,info=cutId )
@@ -113,7 +113,7 @@ Fin.custCutLst[[pName]] <- function( aZoidMtx ,surFlag=NULL ,stdMI ,anaOnly=F ){
         }
         if( TRUE ){ # aFStep
             cutId <- "aFStep test"
-            if( TRUE ){
+            if( FALSE ){
                 # surFlag[aIdx] <- F
                 # if( !anaOnly ){ next
                 # } else {    cutInfo=c(typ="Fin" ,hName="N/A" ,mName="custCut" ,pName=pName ,info=cutId )
@@ -153,13 +153,13 @@ Fin.custCutLst[[pName]] <- function( aZoidMtx ,surFlag=NULL ,stdMI ,anaOnly=F ){
     for( aIdx in seq_len(aLen) ){
         if( !anaOnly && !surFlag[aIdx] ) next
 
-        aZoid <- aZoidMtx[aIdx,]
+        aZoid <- aZoidMtx[aIdx,]    ;aZw<-aZoid[6]-aZoid[1] # ;aQuo<-fCutU.getQuoObj(aZoid,valSet=T)
         aRem <- aZoid%%10   ;aCStep <- aZoid[2:6]-aZoid[1:5]    ;aFStep <- aZoid - stdMI$lastZoid
 
         if( TRUE ){ # aZoid/aRem
 
             cutId <- "aZoid test"
-            if( TRUE ){
+            if( FALSE ){
                 # surFlag[aIdx] <- F
                 # if( !anaOnly ){ next
                 # } else {    cutInfo=c(typ="Fin" ,hName="N/A" ,mName="custCut" ,pName=pName ,info=cutId )
@@ -169,7 +169,7 @@ Fin.custCutLst[[pName]] <- function( aZoidMtx ,surFlag=NULL ,stdMI ,anaOnly=F ){
         }
         if( TRUE ){ # aCStep
             cutId <- "aCStep test"
-            if( TRUE ){
+            if( FALSE ){
                 # surFlag[aIdx] <- F
                 # if( !anaOnly ){ next
                 # } else {    cutInfo=c(typ="Fin" ,hName="N/A" ,mName="custCut" ,pName=pName ,info=cutId )
@@ -179,7 +179,7 @@ Fin.custCutLst[[pName]] <- function( aZoidMtx ,surFlag=NULL ,stdMI ,anaOnly=F ){
         }
         if( TRUE ){ # aFStep
             cutId <- "aFStep test"
-            if( TRUE ){
+            if( FALSE ){
                 # surFlag[aIdx] <- F
                 # if( !anaOnly ){ next
                 # } else {    cutInfo=c(typ="Fin" ,hName="N/A" ,mName="custCut" ,pName=pName ,info=cutId )
@@ -219,13 +219,13 @@ Fin.custCutLst[[pName]] <- function( aZoidMtx ,surFlag=NULL ,stdMI ,anaOnly=F ){
     for( aIdx in seq_len(aLen) ){
         if( !anaOnly && !surFlag[aIdx] ) next
 
-        aZoid <- aZoidMtx[aIdx,]
+        aZoid <- aZoidMtx[aIdx,]    ;aZw<-aZoid[6]-aZoid[1] # ;aQuo<-fCutU.getQuoObj(aZoid,valSet=T)
         aRem <- aZoid%%10   ;aCStep <- aZoid[2:6]-aZoid[1:5]    ;aFStep <- aZoid - stdMI$lastZoid
 
         if( TRUE ){ # aZoid/aRem
 
             cutId <- "aZoid test"
-            if( TRUE ){
+            if( FALSE ){
                 # surFlag[aIdx] <- F
                 # if( !anaOnly ){ next
                 # } else {    cutInfo=c(typ="Fin" ,hName="N/A" ,mName="custCut" ,pName=pName ,info=cutId )
@@ -235,7 +235,7 @@ Fin.custCutLst[[pName]] <- function( aZoidMtx ,surFlag=NULL ,stdMI ,anaOnly=F ){
         }
         if( TRUE ){ # aCStep
             cutId <- "aCStep test"
-            if( TRUE ){
+            if( FALSE ){
                 # surFlag[aIdx] <- F
                 # if( !anaOnly ){ next
                 # } else {    cutInfo=c(typ="Fin" ,hName="N/A" ,mName="custCut" ,pName=pName ,info=cutId )
@@ -245,7 +245,7 @@ Fin.custCutLst[[pName]] <- function( aZoidMtx ,surFlag=NULL ,stdMI ,anaOnly=F ){
         }
         if( TRUE ){ # aFStep
             cutId <- "aFStep test"
-            if( TRUE ){
+            if( FALSE ){
                 # surFlag[aIdx] <- F
                 # if( !anaOnly ){ next
                 # } else {    cutInfo=c(typ="Fin" ,hName="N/A" ,mName="custCut" ,pName=pName ,info=cutId )
@@ -285,13 +285,13 @@ Fin.custCutLst[[pName]] <- function( aZoidMtx ,surFlag=NULL ,stdMI ,anaOnly=F ){
     for( aIdx in seq_len(aLen) ){
         if( !anaOnly && !surFlag[aIdx] ) next
 
-        aZoid <- aZoidMtx[aIdx,]
+        aZoid <- aZoidMtx[aIdx,]    ;aZw<-aZoid[6]-aZoid[1] # ;aQuo<-fCutU.getQuoObj(aZoid,valSet=T)
         aRem <- aZoid%%10   ;aCStep <- aZoid[2:6]-aZoid[1:5]    ;aFStep <- aZoid - stdMI$lastZoid
 
         if( TRUE ){ # aZoid/aRem
 
             cutId <- "aZoid test"
-            if( TRUE ){
+            if( FALSE ){
                 # surFlag[aIdx] <- F
                 # if( !anaOnly ){ next
                 # } else {    cutInfo=c(typ="Fin" ,hName="N/A" ,mName="custCut" ,pName=pName ,info=cutId )
@@ -301,7 +301,7 @@ Fin.custCutLst[[pName]] <- function( aZoidMtx ,surFlag=NULL ,stdMI ,anaOnly=F ){
         }
         if( TRUE ){ # aCStep
             cutId <- "aCStep test"
-            if( TRUE ){
+            if( FALSE ){
                 # surFlag[aIdx] <- F
                 # if( !anaOnly ){ next
                 # } else {    cutInfo=c(typ="Fin" ,hName="N/A" ,mName="custCut" ,pName=pName ,info=cutId )
@@ -311,7 +311,7 @@ Fin.custCutLst[[pName]] <- function( aZoidMtx ,surFlag=NULL ,stdMI ,anaOnly=F ){
         }
         if( TRUE ){ # aFStep
             cutId <- "aFStep test"
-            if( TRUE ){
+            if( FALSE ){
                 # surFlag[aIdx] <- F
                 # if( !anaOnly ){ next
                 # } else {    cutInfo=c(typ="Fin" ,hName="N/A" ,mName="custCut" ,pName=pName ,info=cutId )
@@ -351,13 +351,13 @@ Fin.custCutLst[[pName]] <- function( aZoidMtx ,surFlag=NULL ,stdMI ,anaOnly=F ){
     for( aIdx in seq_len(aLen) ){
         if( !anaOnly && !surFlag[aIdx] ) next
 
-        aZoid <- aZoidMtx[aIdx,]
+        aZoid <- aZoidMtx[aIdx,]    ;aZw<-aZoid[6]-aZoid[1] # ;aQuo<-fCutU.getQuoObj(aZoid,valSet=T)
         aRem <- aZoid%%10   ;aCStep <- aZoid[2:6]-aZoid[1:5]    ;aFStep <- aZoid - stdMI$lastZoid
 
         if( TRUE ){ # aZoid/aRem
 
             cutId <- "aZoid test"
-            if( TRUE ){
+            if( FALSE ){
                 # surFlag[aIdx] <- F
                 # if( !anaOnly ){ next
                 # } else {    cutInfo=c(typ="Fin" ,hName="N/A" ,mName="custCut" ,pName=pName ,info=cutId )
@@ -367,7 +367,7 @@ Fin.custCutLst[[pName]] <- function( aZoidMtx ,surFlag=NULL ,stdMI ,anaOnly=F ){
         }
         if( TRUE ){ # aCStep
             cutId <- "aCStep test"
-            if( TRUE ){
+            if( FALSE ){
                 # surFlag[aIdx] <- F
                 # if( !anaOnly ){ next
                 # } else {    cutInfo=c(typ="Fin" ,hName="N/A" ,mName="custCut" ,pName=pName ,info=cutId )
@@ -377,7 +377,7 @@ Fin.custCutLst[[pName]] <- function( aZoidMtx ,surFlag=NULL ,stdMI ,anaOnly=F ){
         }
         if( TRUE ){ # aFStep
             cutId <- "aFStep test"
-            if( TRUE ){
+            if( FALSE ){
                 # surFlag[aIdx] <- F
                 # if( !anaOnly ){ next
                 # } else {    cutInfo=c(typ="Fin" ,hName="N/A" ,mName="custCut" ,pName=pName ,info=cutId )
@@ -417,13 +417,13 @@ Fin.custCutLst[[pName]] <- function( aZoidMtx ,surFlag=NULL ,stdMI ,anaOnly=F ){
     for( aIdx in seq_len(aLen) ){
         if( !anaOnly && !surFlag[aIdx] ) next
 
-        aZoid <- aZoidMtx[aIdx,]
+        aZoid <- aZoidMtx[aIdx,]    ;aZw<-aZoid[6]-aZoid[1] # ;aQuo<-fCutU.getQuoObj(aZoid,valSet=T)
         aRem <- aZoid%%10   ;aCStep <- aZoid[2:6]-aZoid[1:5]    ;aFStep <- aZoid - stdMI$lastZoid
 
         if( TRUE ){ # aZoid/aRem
 
             cutId <- "aZoid test"
-            if( TRUE ){
+            if( FALSE ){
                 # surFlag[aIdx] <- F
                 # if( !anaOnly ){ next
                 # } else {    cutInfo=c(typ="Fin" ,hName="N/A" ,mName="custCut" ,pName=pName ,info=cutId )
@@ -433,7 +433,7 @@ Fin.custCutLst[[pName]] <- function( aZoidMtx ,surFlag=NULL ,stdMI ,anaOnly=F ){
         }
         if( TRUE ){ # aCStep
             cutId <- "aCStep test"
-            if( TRUE ){
+            if( FALSE ){
                 # surFlag[aIdx] <- F
                 # if( !anaOnly ){ next
                 # } else {    cutInfo=c(typ="Fin" ,hName="N/A" ,mName="custCut" ,pName=pName ,info=cutId )
@@ -443,7 +443,7 @@ Fin.custCutLst[[pName]] <- function( aZoidMtx ,surFlag=NULL ,stdMI ,anaOnly=F ){
         }
         if( TRUE ){ # aFStep
             cutId <- "aFStep test"
-            if( TRUE ){
+            if( FALSE ){
                 # surFlag[aIdx] <- F
                 # if( !anaOnly ){ next
                 # } else {    cutInfo=c(typ="Fin" ,hName="N/A" ,mName="custCut" ,pName=pName ,info=cutId )
@@ -483,13 +483,13 @@ Fin.custCutLst[[pName]] <- function( aZoidMtx ,surFlag=NULL ,stdMI ,anaOnly=F ){
     for( aIdx in seq_len(aLen) ){
         if( !anaOnly && !surFlag[aIdx] ) next
 
-        aZoid <- aZoidMtx[aIdx,]
+        aZoid <- aZoidMtx[aIdx,]    ;aZw<-aZoid[6]-aZoid[1] # ;aQuo<-fCutU.getQuoObj(aZoid,valSet=T)
         aRem <- aZoid%%10   ;aCStep <- aZoid[2:6]-aZoid[1:5]    ;aFStep <- aZoid - stdMI$lastZoid
 
         if( TRUE ){ # aZoid/aRem
 
             cutId <- "aZoid test"
-            if( TRUE ){
+            if( FALSE ){
                 # surFlag[aIdx] <- F
                 # if( !anaOnly ){ next
                 # } else {    cutInfo=c(typ="Fin" ,hName="N/A" ,mName="custCut" ,pName=pName ,info=cutId )
@@ -499,7 +499,7 @@ Fin.custCutLst[[pName]] <- function( aZoidMtx ,surFlag=NULL ,stdMI ,anaOnly=F ){
         }
         if( TRUE ){ # aCStep
             cutId <- "aCStep test"
-            if( TRUE ){
+            if( FALSE ){
                 # surFlag[aIdx] <- F
                 # if( !anaOnly ){ next
                 # } else {    cutInfo=c(typ="Fin" ,hName="N/A" ,mName="custCut" ,pName=pName ,info=cutId )
@@ -509,7 +509,7 @@ Fin.custCutLst[[pName]] <- function( aZoidMtx ,surFlag=NULL ,stdMI ,anaOnly=F ){
         }
         if( TRUE ){ # aFStep
             cutId <- "aFStep test"
-            if( TRUE ){
+            if( FALSE ){
                 # surFlag[aIdx] <- F
                 # if( !anaOnly ){ next
                 # } else {    cutInfo=c(typ="Fin" ,hName="N/A" ,mName="custCut" ,pName=pName ,info=cutId )
@@ -549,13 +549,13 @@ Fin.custCutLst[[pName]] <- function( aZoidMtx ,surFlag=NULL ,stdMI ,anaOnly=F ){
     for( aIdx in seq_len(aLen) ){
         if( !anaOnly && !surFlag[aIdx] ) next
 
-        aZoid <- aZoidMtx[aIdx,]
+        aZoid <- aZoidMtx[aIdx,]    ;aZw<-aZoid[6]-aZoid[1] # ;aQuo<-fCutU.getQuoObj(aZoid,valSet=T)
         aRem <- aZoid%%10   ;aCStep <- aZoid[2:6]-aZoid[1:5]    ;aFStep <- aZoid - stdMI$lastZoid
 
         if( TRUE ){ # aZoid/aRem
 
             cutId <- "aZoid test"
-            if( TRUE ){
+            if( FALSE ){
                 # surFlag[aIdx] <- F
                 # if( !anaOnly ){ next
                 # } else {    cutInfo=c(typ="Fin" ,hName="N/A" ,mName="custCut" ,pName=pName ,info=cutId )
@@ -565,7 +565,7 @@ Fin.custCutLst[[pName]] <- function( aZoidMtx ,surFlag=NULL ,stdMI ,anaOnly=F ){
         }
         if( TRUE ){ # aCStep
             cutId <- "aCStep test"
-            if( TRUE ){
+            if( FALSE ){
                 # surFlag[aIdx] <- F
                 # if( !anaOnly ){ next
                 # } else {    cutInfo=c(typ="Fin" ,hName="N/A" ,mName="custCut" ,pName=pName ,info=cutId )
@@ -575,7 +575,7 @@ Fin.custCutLst[[pName]] <- function( aZoidMtx ,surFlag=NULL ,stdMI ,anaOnly=F ){
         }
         if( TRUE ){ # aFStep
             cutId <- "aFStep test"
-            if( TRUE ){
+            if( FALSE ){
                 # surFlag[aIdx] <- F
                 # if( !anaOnly ){ next
                 # } else {    cutInfo=c(typ="Fin" ,hName="N/A" ,mName="custCut" ,pName=pName ,info=cutId )
@@ -615,13 +615,13 @@ Fin.custCutLst[[pName]] <- function( aZoidMtx ,surFlag=NULL ,stdMI ,anaOnly=F ){
     for( aIdx in seq_len(aLen) ){
         if( !anaOnly && !surFlag[aIdx] ) next
 
-        aZoid <- aZoidMtx[aIdx,]
+        aZoid <- aZoidMtx[aIdx,]    ;aZw<-aZoid[6]-aZoid[1] # ;aQuo<-fCutU.getQuoObj(aZoid,valSet=T)
         aRem <- aZoid%%10   ;aCStep <- aZoid[2:6]-aZoid[1:5]    ;aFStep <- aZoid - stdMI$lastZoid
 
         if( TRUE ){ # aZoid/aRem
 
             cutId <- "aZoid test"
-            if( TRUE ){
+            if( FALSE ){
                 # surFlag[aIdx] <- F
                 # if( !anaOnly ){ next
                 # } else {    cutInfo=c(typ="Fin" ,hName="N/A" ,mName="custCut" ,pName=pName ,info=cutId )
@@ -631,7 +631,7 @@ Fin.custCutLst[[pName]] <- function( aZoidMtx ,surFlag=NULL ,stdMI ,anaOnly=F ){
         }
         if( TRUE ){ # aCStep
             cutId <- "aCStep test"
-            if( TRUE ){
+            if( FALSE ){
                 # surFlag[aIdx] <- F
                 # if( !anaOnly ){ next
                 # } else {    cutInfo=c(typ="Fin" ,hName="N/A" ,mName="custCut" ,pName=pName ,info=cutId )
@@ -641,7 +641,7 @@ Fin.custCutLst[[pName]] <- function( aZoidMtx ,surFlag=NULL ,stdMI ,anaOnly=F ){
         }
         if( TRUE ){ # aFStep
             cutId <- "aFStep test"
-            if( TRUE ){
+            if( FALSE ){
                 # surFlag[aIdx] <- F
                 # if( !anaOnly ){ next
                 # } else {    cutInfo=c(typ="Fin" ,hName="N/A" ,mName="custCut" ,pName=pName ,info=cutId )
@@ -681,13 +681,13 @@ Fin.custCutLst[[pName]] <- function( aZoidMtx ,surFlag=NULL ,stdMI ,anaOnly=F ){
     for( aIdx in seq_len(aLen) ){
         if( !anaOnly && !surFlag[aIdx] ) next
 
-        aZoid <- aZoidMtx[aIdx,]
+        aZoid <- aZoidMtx[aIdx,]    ;aZw<-aZoid[6]-aZoid[1] # ;aQuo<-fCutU.getQuoObj(aZoid,valSet=T)
         aRem <- aZoid%%10   ;aCStep <- aZoid[2:6]-aZoid[1:5]    ;aFStep <- aZoid - stdMI$lastZoid
 
         if( TRUE ){ # aZoid/aRem
 
             cutId <- "aZoid test"
-            if( TRUE ){
+            if( FALSE ){
                 # surFlag[aIdx] <- F
                 # if( !anaOnly ){ next
                 # } else {    cutInfo=c(typ="Fin" ,hName="N/A" ,mName="custCut" ,pName=pName ,info=cutId )
@@ -697,7 +697,7 @@ Fin.custCutLst[[pName]] <- function( aZoidMtx ,surFlag=NULL ,stdMI ,anaOnly=F ){
         }
         if( TRUE ){ # aCStep
             cutId <- "aCStep test"
-            if( TRUE ){
+            if( FALSE ){
                 # surFlag[aIdx] <- F
                 # if( !anaOnly ){ next
                 # } else {    cutInfo=c(typ="Fin" ,hName="N/A" ,mName="custCut" ,pName=pName ,info=cutId )
@@ -707,7 +707,7 @@ Fin.custCutLst[[pName]] <- function( aZoidMtx ,surFlag=NULL ,stdMI ,anaOnly=F ){
         }
         if( TRUE ){ # aFStep
             cutId <- "aFStep test"
-            if( TRUE ){
+            if( FALSE ){
                 # surFlag[aIdx] <- F
                 # if( !anaOnly ){ next
                 # } else {    cutInfo=c(typ="Fin" ,hName="N/A" ,mName="custCut" ,pName=pName ,info=cutId )
@@ -747,13 +747,13 @@ Fin.custCutLst[[pName]] <- function( aZoidMtx ,surFlag=NULL ,stdMI ,anaOnly=F ){
     for( aIdx in seq_len(aLen) ){
         if( !anaOnly && !surFlag[aIdx] ) next
 
-        aZoid <- aZoidMtx[aIdx,]
+        aZoid <- aZoidMtx[aIdx,]    ;aZw<-aZoid[6]-aZoid[1] # ;aQuo<-fCutU.getQuoObj(aZoid,valSet=T)
         aRem <- aZoid%%10   ;aCStep <- aZoid[2:6]-aZoid[1:5]    ;aFStep <- aZoid - stdMI$lastZoid
 
         if( TRUE ){ # aZoid/aRem
 
             cutId <- "aZoid test"
-            if( TRUE ){
+            if( FALSE ){
                 # surFlag[aIdx] <- F
                 # if( !anaOnly ){ next
                 # } else {    cutInfo=c(typ="Fin" ,hName="N/A" ,mName="custCut" ,pName=pName ,info=cutId )
@@ -763,7 +763,7 @@ Fin.custCutLst[[pName]] <- function( aZoidMtx ,surFlag=NULL ,stdMI ,anaOnly=F ){
         }
         if( TRUE ){ # aCStep
             cutId <- "aCStep test"
-            if( TRUE ){
+            if( FALSE ){
                 # surFlag[aIdx] <- F
                 # if( !anaOnly ){ next
                 # } else {    cutInfo=c(typ="Fin" ,hName="N/A" ,mName="custCut" ,pName=pName ,info=cutId )
@@ -773,7 +773,7 @@ Fin.custCutLst[[pName]] <- function( aZoidMtx ,surFlag=NULL ,stdMI ,anaOnly=F ){
         }
         if( TRUE ){ # aFStep
             cutId <- "aFStep test"
-            if( TRUE ){
+            if( FALSE ){
                 # surFlag[aIdx] <- F
                 # if( !anaOnly ){ next
                 # } else {    cutInfo=c(typ="Fin" ,hName="N/A" ,mName="custCut" ,pName=pName ,info=cutId )
@@ -813,13 +813,13 @@ Fin.custCutLst[[pName]] <- function( aZoidMtx ,surFlag=NULL ,stdMI ,anaOnly=F ){
     for( aIdx in seq_len(aLen) ){
         if( !anaOnly && !surFlag[aIdx] ) next
 
-        aZoid <- aZoidMtx[aIdx,]
+        aZoid <- aZoidMtx[aIdx,]    ;aZw<-aZoid[6]-aZoid[1] # ;aQuo<-fCutU.getQuoObj(aZoid,valSet=T)
         aRem <- aZoid%%10   ;aCStep <- aZoid[2:6]-aZoid[1:5]    ;aFStep <- aZoid - stdMI$lastZoid
 
         if( TRUE ){ # aZoid/aRem
 
             cutId <- "aZoid test"
-            if( TRUE ){
+            if( FALSE ){
                 # surFlag[aIdx] <- F
                 # if( !anaOnly ){ next
                 # } else {    cutInfo=c(typ="Fin" ,hName="N/A" ,mName="custCut" ,pName=pName ,info=cutId )
@@ -829,7 +829,7 @@ Fin.custCutLst[[pName]] <- function( aZoidMtx ,surFlag=NULL ,stdMI ,anaOnly=F ){
         }
         if( TRUE ){ # aCStep
             cutId <- "aCStep test"
-            if( TRUE ){
+            if( FALSE ){
                 # surFlag[aIdx] <- F
                 # if( !anaOnly ){ next
                 # } else {    cutInfo=c(typ="Fin" ,hName="N/A" ,mName="custCut" ,pName=pName ,info=cutId )
@@ -839,7 +839,7 @@ Fin.custCutLst[[pName]] <- function( aZoidMtx ,surFlag=NULL ,stdMI ,anaOnly=F ){
         }
         if( TRUE ){ # aFStep
             cutId <- "aFStep test"
-            if( TRUE ){
+            if( FALSE ){
                 # surFlag[aIdx] <- F
                 # if( !anaOnly ){ next
                 # } else {    cutInfo=c(typ="Fin" ,hName="N/A" ,mName="custCut" ,pName=pName ,info=cutId )
