@@ -1330,33 +1330,33 @@ Fin.custCutLst[[pName]] <- function( aZoidMtx ,surFlag=NULL ,stdMI ,anaOnly=F ){
         #   zoid width  ... 32   31   31   44   26   37 and ?
         if( TRUE ){ # aZoid/aRem
 
-            cutId <- "aZoid test"
-            if( FALSE ){
-                # surFlag[aIdx] <- F
-                # if( !anaOnly ){ next
-                # } else {    cutInfo=c(typ="Fin" ,hName="N/A" ,mName="custCut" ,pName=pName ,info=cutId )
-                #     cutInfoLst[[aIdx]] <- append( cutInfoLst[[aIdx]] ,list(cutInfo) )
-                # }
+            cutId <- "all(aZoid[c(1,6)]==c(1,45)) && aRem[5]==8"
+            if( all(aZoid[c(1,6)]==c(1,45)) && aRem[5]==8 ){
+                surFlag[aIdx] <- F
+                if( !anaOnly ){ next
+                } else {    cutInfo=c(typ="Fin" ,hName="N/A" ,mName="custCut" ,pName=pName ,info=cutId )
+                    cutInfoLst[[aIdx]] <- append( cutInfoLst[[aIdx]] ,list(cutInfo) )
+                }
             }
         }
         if( TRUE ){ # aCStep
-            cutId <- "aCStep test"
-            if( FALSE ){
-                # surFlag[aIdx] <- F
-                # if( !anaOnly ){ next
-                # } else {    cutInfo=c(typ="Fin" ,hName="N/A" ,mName="custCut" ,pName=pName ,info=cutId )
-                #     cutInfoLst[[aIdx]] <- append( cutInfoLst[[aIdx]] ,list(cutInfo) )
-                # }
+            cutId <- "aCStep[5]==16 && all(aCStep[1:2]==aCStep[3:4]) && aZw==26"
+            if( aCStep[5]==16 && all(aCStep[1:2]==aCStep[3:4]) && aZw==26 ){
+                surFlag[aIdx] <- F
+                if( !anaOnly ){ next
+                } else {    cutInfo=c(typ="Fin" ,hName="N/A" ,mName="custCut" ,pName=pName ,info=cutId )
+                    cutInfoLst[[aIdx]] <- append( cutInfoLst[[aIdx]] ,list(cutInfo) )
+                }
             }
         }
         if( TRUE ){ # aFStep
-            cutId <- "aFStep test"
-            if( FALSE ){
-                # surFlag[aIdx] <- F
-                # if( !anaOnly ){ next
-                # } else {    cutInfo=c(typ="Fin" ,hName="N/A" ,mName="custCut" ,pName=pName ,info=cutId )
-                #     cutInfoLst[[aIdx]] <- append( cutInfoLst[[aIdx]] ,list(cutInfo) )
-                # }
+            cutId <- "all(aFStep[3:5]==(c(1,2,5)*aFStep[6])) && aZw==45"
+            if( all(aFStep[3:5]==(c(1,2,5)*aFStep[6])) && aZw==45 ){
+                surFlag[aIdx] <- F
+                if( !anaOnly ){ next
+                } else {    cutInfo=c(typ="Fin" ,hName="N/A" ,mName="custCut" ,pName=pName ,info=cutId )
+                    cutInfoLst[[aIdx]] <- append( cutInfoLst[[aIdx]] ,list(cutInfo) )
+                }
             }
         }
 
@@ -1416,23 +1416,33 @@ Fin.custCutLst[[pName]] <- function( aZoidMtx ,surFlag=NULL ,stdMI ,anaOnly=F ){
             }
         }
         if( TRUE ){ # aCStep
-            cutId <- "aCStep test"
-            if( FALSE ){
-                # surFlag[aIdx] <- F
-                # if( !anaOnly ){ next
-                # } else {    cutInfo=c(typ="Fin" ,hName="N/A" ,mName="custCut" ,pName=pName ,info=cutId )
-                #     cutInfoLst[[aIdx]] <- append( cutInfoLst[[aIdx]] ,list(cutInfo) )
-                # }
+            cutId <- "all( aCStep[c(2,4)]==c(13,12) )"
+            if( all( aCStep[c(2,4)]==c(13,12) ) ){
+                surFlag[aIdx] <- F
+                if( !anaOnly ){ next
+                } else {    cutInfo=c(typ="Fin" ,hName="N/A" ,mName="custCut" ,pName=pName ,info=cutId )
+                    cutInfoLst[[aIdx]] <- append( cutInfoLst[[aIdx]] ,list(cutInfo) )
+                }
             }
+
+            cutId <- "aCStep[3]==1 && aCStep[1]==aCStep[5] && aZw=40"
+            if( aCStep[3]==1 && aCStep[1]==aCStep[5] && aZw=40 ){
+                surFlag[aIdx] <- F
+                if( !anaOnly ){ next
+                } else {    cutInfo=c(typ="Fin" ,hName="N/A" ,mName="custCut" ,pName=pName ,info=cutId )
+                    cutInfoLst[[aIdx]] <- append( cutInfoLst[[aIdx]] ,list(cutInfo) )
+                }
+            }
+
         }
         if( TRUE ){ # aFStep
-            cutId <- "aFStep test"
-            if( FALSE ){
-                # surFlag[aIdx] <- F
-                # if( !anaOnly ){ next
-                # } else {    cutInfo=c(typ="Fin" ,hName="N/A" ,mName="custCut" ,pName=pName ,info=cutId )
-                #     cutInfoLst[[aIdx]] <- append( cutInfoLst[[aIdx]] ,list(cutInfo) )
-                # }
+            cutId <- "all(aFStep[c(2,3)]==aFStep[c(6,4)]) && aZw==40"
+            if( all(aFStep[c(2,3)]==aFStep[c(6,4)]) && aZw==40 ){
+                surFlag[aIdx] <- F
+                if( !anaOnly ){ next
+                } else {    cutInfo=c(typ="Fin" ,hName="N/A" ,mName="custCut" ,pName=pName ,info=cutId )
+                    cutInfoLst[[aIdx]] <- append( cutInfoLst[[aIdx]] ,list(cutInfo) )
+                }
             }
         }
 
@@ -1482,17 +1492,45 @@ Fin.custCutLst[[pName]] <- function( aZoidMtx ,surFlag=NULL ,stdMI ,anaOnly=F ){
         #   zoid width  ... 25   38   36   40   31   33 and ?
         if( TRUE ){ # aZoid/aRem
 
-            cutId <- "aZoid test"
-            if( FALSE ){
-                # surFlag[aIdx] <- F
-                # if( !anaOnly ){ next
-                # } else {    cutInfo=c(typ="Fin" ,hName="N/A" ,mName="custCut" ,pName=pName ,info=cutId )
-                #     cutInfoLst[[aIdx]] <- append( cutInfoLst[[aIdx]] ,list(cutInfo) )
-                # }
+            cutId <- "aZw==33 && all(aZoid[3:4]==c( 8,21))"
+            if( aZw==33 && all(aZoid[3:4]==c( 8,21)) ){
+                surFlag[aIdx] <- F
+                if( !anaOnly ){ next
+                } else {    cutInfo=c(typ="Fin" ,hName="N/A" ,mName="custCut" ,pName=pName ,info=cutId )
+                    cutInfoLst[[aIdx]] <- append( cutInfoLst[[aIdx]] ,list(cutInfo) )
+                }
             }
+
+            cutId <- "aZw==33 && aZoid[4]==21 && (0==aZoid[5]%%11)"
+            if( aZw==33 && aZoid[4]==21 && (0==aZoid[5]%%11) ){
+                surFlag[aIdx] <- F
+                if( !anaOnly ){ next
+                } else {    cutInfo=c(typ="Fin" ,hName="N/A" ,mName="custCut" ,pName=pName ,info=cutId )
+                    cutInfoLst[[aIdx]] <- append( cutInfoLst[[aIdx]] ,list(cutInfo) )
+                }
+            }
+
         }
         if( TRUE ){ # aCStep
-            cutId <- "aCStep test"
+            cutId <- "aZw==33 && aCStep[1]==aCStep[3] && any(aCStep[c(2,5)]==c(10,16))"
+            if( aZw==33 && aCStep[1]==aCStep[3] && any(aCStep[c(2,5)]==c(10,16)) ){
+                surFlag[aIdx] <- F
+                if( !anaOnly ){ next
+                } else {    cutInfo=c(typ="Fin" ,hName="N/A" ,mName="custCut" ,pName=pName ,info=cutId )
+                    cutInfoLst[[aIdx]] <- append( cutInfoLst[[aIdx]] ,list(cutInfo) )
+                }
+            }
+
+            cutId <- "aZw==33 && all(aCStep[c(2,5)]==c(10,16))"
+            if( aZw==33 && all(aCStep[c(2,5)]==c(10,16)) ){
+                surFlag[aIdx] <- F
+                if( !anaOnly ){ next
+                } else {    cutInfo=c(typ="Fin" ,hName="N/A" ,mName="custCut" ,pName=pName ,info=cutId )
+                    cutInfoLst[[aIdx]] <- append( cutInfoLst[[aIdx]] ,list(cutInfo) )
+                }
+            }
+
+            cutId <- "aZw==33 && aCStep test"
             if( FALSE ){
                 # surFlag[aIdx] <- F
                 # if( !anaOnly ){ next
@@ -1500,6 +1538,7 @@ Fin.custCutLst[[pName]] <- function( aZoidMtx ,surFlag=NULL ,stdMI ,anaOnly=F ){
                 #     cutInfoLst[[aIdx]] <- append( cutInfoLst[[aIdx]] ,list(cutInfo) )
                 # }
             }
+
         }
         if( TRUE ){ # aFStep
             cutId <- "aFStep test"
