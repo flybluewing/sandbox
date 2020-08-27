@@ -489,6 +489,104 @@ fCutU.getQuoObj <- function( zoid ,valSet=F ){
 	return( rObj )
 } # fCutU.getQuoObj()
 
+fCutU.getRatioObj <- function( zCode ,minBase=NULL ){
+	#	zCode <- c( 1, 2, 3, 4, 1, 6, 7, 0, -3, -9, -1, 0, 9 ,-1 ,-1)
+
+	rObj <- list()
+	baseCode <- sort(zCode)
+	baseCode <- baseCode[ !(baseCode %in% -1:1) ]
+	if( !is.null(minBase) ){
+		baseCode <- baseCode[ baseCode>=minBase ]
+	}
+
+	ratLst <- list()
+	leftFlag <- rep( T ,length(zCode) )
+	leftFlag[ zCode%in%(-1:1) ] <- F
+	for( bVal in baseCode ){
+		remF <- (zCode%%bVal)==0
+		phsF <- (zCode*bVal) > 0	# bVal이 음수이면 음수 배수만, 양수이면 양수 배수만
+
+		fndF <- remF & phsF & leftFlag	# dbg : rbind( zCode, remF ,phsF ,leftFlag ,fndF )
+		if( 2>sum(fndF) ){
+			next
+		}
+
+		leftFlag[fndF] <- F
+		baseIdx <- which(zCode==bVal)[1]
+
+		fndF[baseIdx] <- F
+		ratioIdx <- which(fndF)
+		ratioVal <- zCode[ratioIdx] %/% bVal
+		baseInfo <- c( bVal ,baseIdx )	;names(baseInfo)<-c("val","idx")
+
+		ratLst[[as.character(bVal)]] <- list( baseInfo=baseInfo ,ratioIdx=ratioIdx ,ratioVal=ratioVal )
+	}
+
+	ratLstEq <- list()	# -1, 0, 1 은 비율이 아닌 동일값 여부로 처리필요.
+	for( bVal in -1:1 ){	
+		if( !is.null(minBase) && bVal<minBase )	next
+
+		fndF <- zCode==bVal	# dbg : rbind( zCode, fndF )
+		if( 2>sum(fndF) ){
+			next
+		}
+
+		baseIdx <- which(zCode==bVal)[1]
+
+		fndF[baseIdx] <- F
+		ratioIdx <- which(fndF)
+		baseInfo <- c( bVal ,baseIdx )	;names(baseInfo)<-c("val","idx")
+
+		ratLstEq[[as.character(bVal)]] <- list( baseInfo=baseInfo ,ratioIdx=ratioIdx )
+	}
+
+	rObj$ratLst <- ratLst
+	rObj$ratLstEq <- ratLstEq
+
+	rObj$scanRatio <- function( aCode ){
+		# aCode <- zCode * 2
+		# aCode[c(2,4,6)] <- zCode[c(2,4,6)]
+
+		rLst <- list()	# c("len","valMatF")
+		for( nIdx in names(rObj$ratLst) ){
+			ratObj <- rObj$ratLst[[nIdx]]
+
+			aBVal <- aCode[ratObj$baseInfo["idx"]]
+			if( 0==aBVal ){
+				next
+			}
+
+			ratMatCnt <- sum(aCode[ratObj$ratioIdx] == aBVal*ratObj$ratioVal)
+			if( 0==ratMatCnt ){
+				next
+			}
+
+			fndName <- sprintf("%d_%s",ratObj$baseInfo["idx"],nIdx)
+			matInfo <- c( ratMatCnt ,(aBVal==ratObj$baseInfo["val"]) )	;names(matInfo) <- c("len","valMatF")
+			rLst[[fndName]] <- matInfo
+		}
+
+		for( nIdx in names(rObj$ratLstEq) ){
+			ratObj <- rObj$ratLstEq[[nIdx]]
+
+			aBVal <- aCode[ratObj$baseInfo["idx"]]
+			ratMatCnt <- sum(aCode[ratObj$ratioIdx]==aBVal)
+			if( 0==ratMatCnt ){
+				next
+			}
+
+			fndName <- sprintf("%d_%s",ratObj$baseInfo["idx"],nIdx)
+			matInfo <- c( ratMatCnt ,(aBVal==ratObj$baseInfo["val"]) )	;names(matInfo) <- c("len","valMatF")
+			rLst[[fndName]] <- matInfo
+		}
+
+		return( rLst )
+	}
+
+	return( rObj )
+}
+
+
 fCutU.getMtxInfo <- function( zMtx ){
 
 	rObj <- list( mtxLen=nrow(zMtx) )

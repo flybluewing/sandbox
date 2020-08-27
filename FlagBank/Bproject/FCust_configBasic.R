@@ -1404,6 +1404,156 @@ scoreMtxCfg[[mName]] <- list(
     ,isHard=NULL  # use default
 )
 
+mName <- "scoreE"
+scoreMtxCfg[[mName]] <- list(
+    mName = mName   ,style=c( freqZero=TRUE )
+    ,fCol = list(
+        "rH0MLen"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                        ,evt=matrix( c(c(2,3,3,3,3,3),c(2,3,4,5,6,7)) ,ncol=2)
+                        ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                    )
+        ,"rH0Cnt"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                        ,evt=matrix( c(c(2,3,3,3,3,3),c(2,3,4,5,6,7)) ,ncol=2)
+                        ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                    )
+        ,"rH0VCnt"=list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                        ,evt=matrix( c(c(2,3,3,3,3,3),c(2,3,4,5,6,7)) ,ncol=2)
+                        ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                    )
+        ,"cH0MLen"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                        ,evt=matrix( c(c(2,3,3,3,3,3),c(2,3,4,5,6,7)) ,ncol=2)
+                        ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                    )
+        ,"cH0Cnt"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                        ,evt=matrix( c(c(2,3,3,3,3,3),c(2,3,4,5,6,7)) ,ncol=2)
+                        ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                    )
+        ,"cH0VCnt"=list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                        ,evt=matrix( c(c(2,3,3,3,3,3),c(2,3,4,5,6,7)) ,ncol=2)
+                        ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                    )
+        ,"fH0MLen"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                        ,evt=matrix( c(c(2,3,3,3,3,3),c(2,3,4,5,6,7)) ,ncol=2)
+                        ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                    )
+        ,"fH0Cnt"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                        ,evt=matrix( c(c(2,3,3,3,3,3),c(2,3,4,5,6,7)) ,ncol=2)
+                        ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                    )
+        ,"fH0VCnt"=list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                        ,evt=matrix( c(c(2,3,3,3,3,3),c(2,3,4,5,6,7)) ,ncol=2)
+                        ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                    )
+
+        ,"rH1MLen"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                        ,evt=matrix( c(c(2,3,3,3,3,3),c(2,3,4,5,6,7)) ,ncol=2)
+                        ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                    )
+        ,"rH1Cnt"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                        ,evt=matrix( c(c(2,3,3,3,3,3),c(2,3,4,5,6,7)) ,ncol=2)
+                        ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                    )
+        ,"rH1VCnt"=list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                        ,evt=matrix( c(c(2,3,3,3,3,3),c(2,3,4,5,6,7)) ,ncol=2)
+                        ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                    )
+        ,"cH1MLen"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                        ,evt=matrix( c(c(2,3,3,3,3,3),c(2,3,4,5,6,7)) ,ncol=2)
+                        ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                    )
+        ,"cH1Cnt"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                        ,evt=matrix( c(c(2,3,3,3,3,3),c(2,3,4,5,6,7)) ,ncol=2)
+                        ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                    )
+        ,"cH1VCnt"=list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                        ,evt=matrix( c(c(2,3,3,3,3,3),c(2,3,4,5,6,7)) ,ncol=2)
+                        ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                    )
+        ,"fH1MLen"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                        ,evt=matrix( c(c(2,3,3,3,3,3),c(2,3,4,5,6,7)) ,ncol=2)
+                        ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                    )
+        ,"fH1Cnt"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                        ,evt=matrix( c(c(2,3,3,3,3,3),c(2,3,4,5,6,7)) ,ncol=2)
+                        ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                    )
+        ,"fH1VCnt"=list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                        ,evt=matrix( c(c(2,3,3,3,3,3),c(2,3,4,5,6,7)) ,ncol=2)
+                        ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                    )
+
+        ,"rH2MLen"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                        ,evt=matrix( c(c(2,3,3,3,3,3),c(2,3,4,5,6,7)) ,ncol=2)
+                        ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                    )
+        ,"rH2Cnt"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                        ,evt=matrix( c(c(2,3,3,3,3,3),c(2,3,4,5,6,7)) ,ncol=2)
+                        ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                    )
+        ,"rH2VCnt"=list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                        ,evt=matrix( c(c(2,3,3,3,3,3),c(2,3,4,5,6,7)) ,ncol=2)
+                        ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                    )
+        ,"cH2MLen"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                        ,evt=matrix( c(c(2,3,3,3,3,3),c(2,3,4,5,6,7)) ,ncol=2)
+                        ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                    )
+        ,"cH2Cnt"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                        ,evt=matrix( c(c(2,3,3,3,3,3),c(2,3,4,5,6,7)) ,ncol=2)
+                        ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                    )
+        ,"cH2VCnt"=list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                        ,evt=matrix( c(c(2,3,3,3,3,3),c(2,3,4,5,6,7)) ,ncol=2)
+                        ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                    )
+        ,"fH2MLen"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                        ,evt=matrix( c(c(2,3,3,3,3,3),c(2,3,4,5,6,7)) ,ncol=2)
+                        ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                    )
+        ,"fH2Cnt"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                        ,evt=matrix( c(c(2,3,3,3,3,3),c(2,3,4,5,6,7)) ,ncol=2)
+                        ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                    )
+        ,"fH2VCnt"=list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                        ,evt=matrix( c(c(2,3,3,3,3,3),c(2,3,4,5,6,7)) ,ncol=2)
+                        ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                    )
+
+    )
+    ,evtMax = NULL
+    ,evtMaxFColTot = NULL
+    ,rowReb = NULL      ,rowRebDup=NULL
+    ,summMtx = NULL     ,summMtx.reb = NULL     ,summMtx.sum = NULL
+    ,scMtx.sz = NULL    ,scMtx.sz.sum = NULL
+    ,isHard=NULL  # use default
+)
+
+
+mName <- "scoreF"
+if( FALSE ){
+    
+    scoreMtxCfg[[mName]] <- list(
+        mName = mName   ,style=c( freqZero=TRUE )
+        ,fCol = list(
+            "xxx"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3,3,3),c(2,3,4,5,6,7)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                        ) 
+            ,"xxx"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3,3,3),c(2,3,4,5,6,7)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                        )
+        )
+        ,evtMax = NULL
+        ,evtMaxFColTot = NULL
+        ,rowReb = NULL      ,rowRebDup=NULL
+        ,summMtx = NULL     ,summMtx.reb = NULL     ,summMtx.sum = NULL
+        ,scMtx.sz = NULL    ,scMtx.sz.sum = NULL
+        ,isHard=NULL  # use default
+    )
+}
+
+
 
 
 

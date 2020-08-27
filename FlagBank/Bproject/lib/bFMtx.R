@@ -164,6 +164,10 @@ getFilter.grp <- function( stdMI.grp ,tgt.scMtx=NULL ){
 		if( is.null(tgt.scMtx) || ("scoreD" %in%tgt.scMtx ) ){
 			mtxObjLst[[1+length(mtxObjLst)]] <- bFMtx.scoreD( stdMIObj )
 		}
+		if( is.null(tgt.scMtx) || ("scoreE" %in%tgt.scMtx ) ){
+			mtxObjLst[[1+length(mtxObjLst)]] <- bFMtx.scoreD( stdMIObj )
+		}
+
 		names(mtxObjLst) <- sapply(mtxObjLst,function(p){p$idStr})
 		return( mtxObjLst )
 	}
@@ -2961,3 +2965,263 @@ bFMtx.scoreD <- function( stdMIObj ){
 
 }
 
+
+bFMtx.scoreE <- function( stdMIObj ){
+
+	stdMI <- stdMIObj$stdMI
+	zMtx <- stdMIObj$zMtx
+	rObj <- list( 	idStr="scoreE"	,zMtx.size=nrow(zMtx)	,lastZoid=stdMI$lastZoid	)
+
+	rObj$hSize <- nrow(stdMI$rawTail)
+	if( TRUE ){
+
+		rObj$h0 <- NULL
+		if( rObj$hSize>0 ){
+			zIdx <- rObj$hSize
+			zoid <- stdMI$rawTail[zIdx,]
+			ratObjR <- fCutU.getRatioObj( zoid ,minBase=7 )
+			ratObjC <- fCutU.getRatioObj( stdMI$cStepTail[zIdx,] )
+			ratObjF <- NULL
+			if( !is.na(stdMI$fStepTail[zIdx,1]) ){
+				ratObjF <- fCutU.getRatioObj( stdMI$fStepTail[zIdx,] )
+			}
+
+			quo <- fCutU.getQuoObj( zoid ,valSet=T )
+			
+			rObj$h0 <- list( zoid=zoid ,ratObjR=ratObjR ,ratObjC=ratObjC ,ratObjF=ratObjF ,quo=quo )
+		}
+
+		rObj$h1 <- NULL
+		if( rObj$hSize>1 ){
+			zIdx <- rObj$hSize-1
+			zoid <- stdMI$rawTail[zIdx,]
+			ratObjR <- fCutU.getRatioObj( zoid ,minBase=7 )
+			ratObjC <- fCutU.getRatioObj( stdMI$cStepTail[zIdx,] )
+			ratObjF <- NULL
+			if( !is.na(stdMI$fStepTail[zIdx,1]) ){
+				ratObjF <- fCutU.getRatioObj( stdMI$fStepTail[zIdx,] )
+			}
+
+			quo <- fCutU.getQuoObj( zoid ,valSet=T )
+			
+			rObj$h1 <- list( zoid=zoid ,ratObjR=ratObjR ,ratObjC=ratObjC ,ratObjF=ratObjF ,quo=quo )
+		}
+
+		rObj$h2 <- NULL
+		if( rObj$hSize>2 ){
+			zIdx <- rObj$hSize-1
+			zoid <- stdMI$rawTail[zIdx,]
+			ratObjR <- fCutU.getRatioObj( zoid ,minBase=7 )
+			ratObjC <- fCutU.getRatioObj( stdMI$cStepTail[zIdx,] )
+			ratObjF <- NULL
+			if( !is.na(stdMI$fStepTail[zIdx,1]) ){
+				ratObjF <- fCutU.getRatioObj( stdMI$fStepTail[zIdx,] )
+			}
+
+			quo <- fCutU.getQuoObj( zoid ,valSet=T )
+			
+			rObj$h2 <- list( zoid=zoid ,ratObjR=ratObjR ,ratObjC=ratObjC ,ratObjF=ratObjF ,quo=quo )
+		}
+
+	}
+
+	rObj$check <- function( hObj ,aZoid, aCStep, aFStep ,aQuo ){
+		#	hObj <- rObj$h0
+
+		chkRst <- c( rMLen=0,rCnt=0,rVCnt=0 ,cMLen=0,cCnt=0,cVCnt=0 ,fMLen=0,fCnt=0,fVCnt=0 )
+
+		mfLst <- hObj$ratObjR$scanRatio( aZoid )
+		if( 0 < length(mfLst) ){
+			fMtx <- do.call( rbind, mfLst )
+			chkRst["rMLen"] <- max(fMtx[,"len"])
+			chkRst["rCnt"]	<- nrow( fMtx )
+			chkRst["rVCnt"] <- sum(fMtx[,"valMatF"])
+		}
+
+		mfLst <- hObj$ratObjC$scanRatio( aCStep )
+		if( 0 < length(mfLst) ){
+			fMtx <- do.call( rbind, mfLst )
+			chkRst["cMLen"] <- max(fMtx[,"len"])
+			chkRst["cCnt"]	<- nrow( fMtx )
+			chkRst["cVCnt"] <- sum(fMtx[,"valMatF"])
+		}
+
+		mfLst <- hObj$ratObjF$scanRatio( aFStep )
+		if( 0 < length(mfLst) ){
+			fMtx <- do.call( rbind, mfLst )
+			chkRst["fMLen"] <- max(fMtx[,"len"])
+			chkRst["fCnt"]	<- nrow( fMtx )
+			chkRst["fVCnt"] <- sum(fMtx[,"valMatF"])
+		}
+
+		if( any(chkRst>0) ){
+
+			bonusPoint <- 0
+			zw <- hObj$zoid[6]-hObj$zoid[1]
+			if( zw==(aZoid[6]-aZoid[1]) ){
+				bonusPoint <- bonusPoint+1
+				if( hObj$zoid[1]==aZoid[1] ){
+					bonusPoint <- bonusPoint+1
+				}
+			}
+			if( hObj$quo$sameTbl(aQuo$tbl,fullMatch=T) ){
+				bonusPoint <- bonusPoint + 1
+				for( idx in 1:length(hObj$quo$qValLst) ){
+					if( 0==length(hObj$quo$qValLst[[idx]]) ){
+						next
+					}
+
+					if( all(hObj$quo$qValLst[[idx]]==aQuo$qValLst[[idx]]) ){
+						bonusPoint <- bonusPoint + length(aQuo$qValLst[[idx]])
+					}
+				}
+			}
+
+			cName <- c("rMLen","rVCnt","cMLen","cVCnt","fMLen","fVCnt")
+			chkRst[cName] <- ifelse( chkRst[cName]==0, 0, chkRst[cName]+bonusPoint )
+
+			chkRst["rCnt"] <- ifelse(chkRst["rCnt"]<=1 ,0 ,chkRst["rCnt"]+bonusPoint )
+			chkRst["cCnt"] <- ifelse(chkRst["cCnt"]<=1 ,0 ,chkRst["cCnt"]+bonusPoint )
+			chkRst["fCnt"] <- ifelse(chkRst["fCnt"]<=1 ,0 ,chkRst["fCnt"]+bonusPoint )
+
+			chkRst[ chkRst>7 ] <- 7	# 최대값을 제한..
+		}
+
+		return( chkRst )
+
+	}
+
+	rObj$fMtxObj <- function( aZoidMtx ,makeInfoStr=F ){
+		aLen <- nrow(aZoidMtx)
+		cName <- c(	"rH0MLen","rH0Cnt","rH0VCnt"	# raw 대상으로, 최대매치 길이, 발생갯수(2이상만 표시), 값까지 일치한 발생갯수
+													#	zw,quo 일치 시, 값에 + 가중치를 준다.
+				   ,"cH0MLen","cH0Cnt","cH0VCnt"	,"fH0MLen","fH0Cnt","fH0VCnt"
+				   ,"rH1MLen","rH1Cnt","rH1VCnt"
+				   ,"cH1MLen","cH1Cnt","cH1VCnt"	,"fH1MLen","fH1Cnt","fH1VCnt"
+				   ,"rH2MLen","rH2Cnt","rH2VCnt"
+				   ,"cH2MLen","cH2Cnt","cH2VCnt"	,"fH2MLen","fH2Cnt","fH2VCnt"
+				)
+		scoreMtx <- matrix( 0, nrow=aLen, ncol=length(cName) )	;colnames(scoreMtx) <- cName
+
+		infoMtx <- NULL
+		if( makeInfoStr ){
+			cName <- c( "zMtx.size" )
+			infoMtx <- matrix( "" ,nrow=aLen ,ncol=length(cName) )	;colnames(infoMtx) <- cName
+			infoMtx[,"zMtx.size"] <- rObj$zMtx.size
+		}
+		if( 0==rObj$zMtx.size ){
+			return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
+		}
+
+		for( aIdx in 1:aLen ){
+			aZoid <- aZoidMtx[aIdx,]
+			aCStep <- aZoid[2:6] - aZoid[1:5]	;aFStep <- aZoid - rObj$lastZoid
+			aQuo <- fCutU.getQuoObj( aZoid ,valSet=T )
+
+			# scoreMtx 에서의 최대값은 7
+
+			if( !is.null(rObj$h0) ){
+				mFnd <- rObj$check( rObj$h0 ,aZoid ,aCStep, aFStep ,aQuo )
+				scName <- c("rH0MLen","rH0Cnt","rH0VCnt","cH0MLen","cH0Cnt","cH0VCnt","fH0MLen","fH0Cnt","fH0VCnt")
+				fName <- c("rMLen","rCnt","rVCnt","cMLen","cCnt","cVCnt","fMLen","fCnt","fVCnt")
+				scoreMtx[aIdx,scName] <- mFnd[fName]
+			}
+
+			if( !is.null(rObj$h1) ){
+				mFnd <- rObj$check( rObj$h1 ,aZoid ,aCStep, aFStep ,aQuo )
+				scName <- c("rH1MLen","rH1Cnt","rH1VCnt","cH1MLen","cH1Cnt","cH1VCnt","fH1MLen","fH1Cnt","fH1VCnt")
+				fName <- c("rMLen","rCnt","rVCnt","cMLen","cCnt","cVCnt","fMLen","fCnt","fVCnt")
+				scoreMtx[aIdx,scName] <- mFnd[fName]
+			}
+
+			if( !is.null(rObj$h2) ){
+				mFnd <- rObj$check( rObj$h2 ,aZoid ,aCStep, aFStep ,aQuo )
+				scName <- c("rH2MLen","rH2Cnt","rH2VCnt","cH2MLen","cH2Cnt","cH2VCnt","fH2MLen","fH2Cnt","fH2VCnt")
+				fName <- c("rMLen","rCnt","rVCnt","cMLen","cCnt","cVCnt","fMLen","fCnt","fVCnt")
+				scoreMtx[aIdx,scName] <- mFnd[fName]
+			}
+
+		}
+
+		return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
+
+	}
+
+	return( rObj )
+
+}
+
+
+bFMtx.scoreF <- function( stdMIObj ){
+	# 발생하기 흔치 않은 값의 재발생 확인. 예를 들어 cStep은 10이상의 재발생이 흔치않다.
+	stdMI <- stdMIObj$stdMI
+	zMtx <- stdMIObj$zMtx
+	rObj <- list( 	idStr="scoreF"	,zMtx.size=nrow(zMtx)	,lastZoid=stdMI$lastZoid	)
+
+	rObj$fMtxObj <- function( aZoidMtx ,makeInfoStr=F ){
+		aLen <- nrow(aZoidMtx)
+		cName <- c(	"xaAVLen","axAVLen"
+				)
+		scoreMtx <- matrix( 0, nrow=aLen, ncol=length(cName) )	;colnames(scoreMtx) <- cName
+
+		infoMtx <- NULL
+		if( makeInfoStr ){
+			cName <- c( "zMtx.size" )
+			infoMtx <- matrix( "" ,nrow=aLen ,ncol=length(cName) )	;colnames(infoMtx) <- cName
+			infoMtx[,"zMtx.size"] <- rObj$zMtx.size
+		}
+		if( 0==rObj$zMtx.size ){
+			return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
+		}
+
+		for( aIdx in 1:aLen ){
+			aZoid <- aZoidMtx[aIdx,]
+			aCStep <- aZoid[2:6] - aZoid[1:5]	
+			aFStep <- aZoid - rObj$lastZoid
+		}
+
+		return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
+
+	}
+
+	return( rObj )
+
+}
+
+
+
+bFMtx.scoreZ <- function( stdMIObj ){
+
+	stdMI <- stdMIObj$stdMI
+	zMtx <- stdMIObj$zMtx
+	rObj <- list( 	idStr="scoreZ"	,zMtx.size=nrow(zMtx)	,lastZoid=stdMI$lastZoid	)
+
+	rObj$fMtxObj <- function( aZoidMtx ,makeInfoStr=F ){
+		aLen <- nrow(aZoidMtx)
+		cName <- c(	"xxxxx","xxxxx"
+				)
+		scoreMtx <- matrix( 0, nrow=aLen, ncol=length(cName) )	;colnames(scoreMtx) <- cName
+
+		infoMtx <- NULL
+		if( makeInfoStr ){
+			cName <- c( "zMtx.size" )
+			infoMtx <- matrix( "" ,nrow=aLen ,ncol=length(cName) )	;colnames(infoMtx) <- cName
+			infoMtx[,"zMtx.size"] <- rObj$zMtx.size
+		}
+		if( 0==rObj$zMtx.size ){
+			return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
+		}
+
+		for( aIdx in 1:aLen ){
+			aZoid <- aZoidMtx[aIdx,]
+			aCStep <- aZoid[2:6] - aZoid[1:5]	
+			aFStep <- aZoid - rObj$lastZoid
+		}
+
+		return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
+
+	}
+
+	return( rObj )
+
+}
