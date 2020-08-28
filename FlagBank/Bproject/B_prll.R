@@ -38,7 +38,7 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
     # tgt.scMtx <- NULL
     tgt.scMtx <- c( "score1","score2","score3","score4","score5","score6","score7","score8","score9" )
     tgt.scMtx <- c( tgt.scMtx  ,c("bScr01","bScr02") )
-    tgt.scMtx <- c( tgt.scMtx  ,c("scoreA","scoreB","scoreC","scoreD") )
+    tgt.scMtx <- c( tgt.scMtx  ,c("scoreA","scoreB","scoreC","scoreD","scoreE","scoreF") )
 
 
     configH <- lastH-20    # configH는 기본 cutting값을 얻기 위하는 시점에 따라 조절.

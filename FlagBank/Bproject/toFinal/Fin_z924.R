@@ -18,7 +18,7 @@ Fin.custCutLst[[pName]] <- function( aZoidMtx ,surFlag=NULL ,stdMI ,anaOnly=F ){
     aLen <- nrow(aZoidMtx)
     if( is.null(surFlag) ){ surFlag <- rep( T ,aLen )   }
 
-    cutInfoLst <- lapply( seq_len(length(allIdxF)) ,function(p){return(list())} )
+    cutInfoLst <- lapply( seq_len(aLen) ,function(p){return(list())} )
     if( 0==stdMI$mtxLen ){
         cutRst <- list( surFlag=surFlag )
         if( anaOnly ){
@@ -161,7 +161,7 @@ Fin.custCutLst[[pName]] <- function( aZoidMtx ,surFlag=NULL ,stdMI ,anaOnly=F ){
     aLen <- nrow(aZoidMtx)
     if( is.null(surFlag) ){ surFlag <- rep( T ,aLen )   }
 
-    cutInfoLst <- lapply( seq_len(length(allIdxF)) ,function(p){return(list())} )
+    cutInfoLst <- lapply( seq_len(aLen) ,function(p){return(list())} )
     if( 0==stdMI$mtxLen ){
         cutRst <- list( surFlag=surFlag )
         if( anaOnly ){
@@ -273,7 +273,7 @@ Fin.custCutLst[[pName]] <- function( aZoidMtx ,surFlag=NULL ,stdMI ,anaOnly=F ){
     aLen <- nrow(aZoidMtx)
     if( is.null(surFlag) ){ surFlag <- rep( T ,aLen )   }
 
-    cutInfoLst <- lapply( seq_len(length(allIdxF)) ,function(p){return(list())} )
+    cutInfoLst <- lapply( seq_len(aLen) ,function(p){return(list())} )
     if( 0==stdMI$mtxLen ){
         cutRst <- list( surFlag=surFlag )
         if( anaOnly ){
@@ -377,7 +377,7 @@ Fin.custCutLst[[pName]] <- function( aZoidMtx ,surFlag=NULL ,stdMI ,anaOnly=F ){
     aLen <- nrow(aZoidMtx)
     if( is.null(surFlag) ){ surFlag <- rep( T ,aLen )   }
 
-    cutInfoLst <- lapply( seq_len(length(allIdxF)) ,function(p){return(list())} )
+    cutInfoLst <- lapply( seq_len(aLen) ,function(p){return(list())} )
     if( 0==stdMI$mtxLen ){
         cutRst <- list( surFlag=surFlag )
         if( anaOnly ){
@@ -465,7 +465,7 @@ Fin.custCutLst[[pName]] <- function( aZoidMtx ,surFlag=NULL ,stdMI ,anaOnly=F ){
     aLen <- nrow(aZoidMtx)
     if( is.null(surFlag) ){ surFlag <- rep( T ,aLen )   }
 
-    cutInfoLst <- lapply( seq_len(length(allIdxF)) ,function(p){return(list())} )
+    cutInfoLst <- lapply( seq_len(aLen) ,function(p){return(list())} )
     if( 0==stdMI$mtxLen ){
         cutRst <- list( surFlag=surFlag )
         if( anaOnly ){
@@ -577,7 +577,7 @@ Fin.custCutLst[[pName]] <- function( aZoidMtx ,surFlag=NULL ,stdMI ,anaOnly=F ){
     aLen <- nrow(aZoidMtx)
     if( is.null(surFlag) ){ surFlag <- rep( T ,aLen )   }
 
-    cutInfoLst <- lapply( seq_len(length(allIdxF)) ,function(p){return(list())} )
+    cutInfoLst <- lapply( seq_len(aLen) ,function(p){return(list())} )
     if( 0==stdMI$mtxLen ){
         cutRst <- list( surFlag=surFlag )
         if( anaOnly ){
@@ -653,7 +653,7 @@ Fin.custCutLst[[pName]] <- function( aZoidMtx ,surFlag=NULL ,stdMI ,anaOnly=F ){
     aLen <- nrow(aZoidMtx)
     if( is.null(surFlag) ){ surFlag <- rep( T ,aLen )   }
 
-    cutInfoLst <- lapply( seq_len(length(allIdxF)) ,function(p){return(list())} )
+    cutInfoLst <- lapply( seq_len(aLen) ,function(p){return(list())} )
     if( 0==stdMI$mtxLen ){
         cutRst <- list( surFlag=surFlag )
         if( anaOnly ){
@@ -739,7 +739,7 @@ Fin.custCutLst[[pName]] <- function( aZoidMtx ,surFlag=NULL ,stdMI ,anaOnly=F ){
     aLen <- nrow(aZoidMtx)
     if( is.null(surFlag) ){ surFlag <- rep( T ,aLen )   }
 
-    cutInfoLst <- lapply( seq_len(length(allIdxF)) ,function(p){return(list())} )
+    cutInfoLst <- lapply( seq_len(aLen) ,function(p){return(list())} )
     if( 0==stdMI$mtxLen ){
         cutRst <- list( surFlag=surFlag )
         if( anaOnly ){
@@ -836,7 +836,7 @@ Fin.custCutLst[[pName]] <- function( aZoidMtx ,surFlag=NULL ,stdMI ,anaOnly=F ){
     aLen <- nrow(aZoidMtx)
     if( is.null(surFlag) ){ surFlag <- rep( T ,aLen )   }
 
-    cutInfoLst <- lapply( seq_len(length(allIdxF)) ,function(p){return(list())} )
+    cutInfoLst <- lapply( seq_len(aLen) ,function(p){return(list())} )
     if( 0==stdMI$mtxLen ){
         cutRst <- list( surFlag=surFlag )
         if( anaOnly ){
@@ -923,7 +923,7 @@ Fin.custCutLst[[pName]] <- function( aZoidMtx ,surFlag=NULL ,stdMI ,anaOnly=F ){
     aLen <- nrow(aZoidMtx)
     if( is.null(surFlag) ){ surFlag <- rep( T ,aLen )   }
 
-    cutInfoLst <- lapply( seq_len(length(allIdxF)) ,function(p){return(list())} )
+    cutInfoLst <- lapply( seq_len(aLen) ,function(p){return(list())} )
     if( 0==stdMI$mtxLen ){
         cutRst <- list( surFlag=surFlag )
         if( anaOnly ){
@@ -996,7 +996,7 @@ Fin.custCutLst[[pName]] <- function( aZoidMtx ,surFlag=NULL ,stdMI ,anaOnly=F ){
     aLen <- nrow(aZoidMtx)
     if( is.null(surFlag) ){ surFlag <- rep( T ,aLen )   }
 
-    cutInfoLst <- lapply( seq_len(length(allIdxF)) ,function(p){return(list())} )
+    cutInfoLst <- lapply( seq_len(aLen) ,function(p){return(list())} )
     if( 0==stdMI$mtxLen ){
         cutRst <- list( surFlag=surFlag )
         if( anaOnly ){
@@ -1072,7 +1072,7 @@ Fin.custCutLst[[pName]] <- function( aZoidMtx ,surFlag=NULL ,stdMI ,anaOnly=F ){
     aLen <- nrow(aZoidMtx)
     if( is.null(surFlag) ){ surFlag <- rep( T ,aLen )   }
 
-    cutInfoLst <- lapply( seq_len(length(allIdxF)) ,function(p){return(list())} )
+    cutInfoLst <- lapply( seq_len(aLen) ,function(p){return(list())} )
     if( 0==stdMI$mtxLen ){
         cutRst <- list( surFlag=surFlag )
         if( anaOnly ){
@@ -1207,7 +1207,7 @@ Fin.custCutLst[[pName]] <- function( aZoidMtx ,surFlag=NULL ,stdMI ,anaOnly=F ){
     aLen <- nrow(aZoidMtx)
     if( is.null(surFlag) ){ surFlag <- rep( T ,aLen )   }
 
-    cutInfoLst <- lapply( seq_len(length(allIdxF)) ,function(p){return(list())} )
+    cutInfoLst <- lapply( seq_len(aLen) ,function(p){return(list())} )
     if( 0==stdMI$mtxLen ){
         cutRst <- list( surFlag=surFlag )
         if( anaOnly ){

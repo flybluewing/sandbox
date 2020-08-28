@@ -508,7 +508,7 @@ if( TRUE ){
 }
 
 mName <- "score9"
-if( FALSE ){
+if( TRUE ){
 
     bFMtxExtFltLst[[mName]] <- list()
         # rCnt rD2 rDn rLr rRl 
@@ -564,3 +564,5 @@ if( FALSE ){
 
 }
 
+
+mName

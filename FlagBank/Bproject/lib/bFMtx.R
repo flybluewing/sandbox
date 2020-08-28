@@ -165,7 +165,7 @@ getFilter.grp <- function( stdMI.grp ,tgt.scMtx=NULL ){
 			mtxObjLst[[1+length(mtxObjLst)]] <- bFMtx.scoreD( stdMIObj )
 		}
 		if( is.null(tgt.scMtx) || ("scoreE" %in%tgt.scMtx ) ){
-			mtxObjLst[[1+length(mtxObjLst)]] <- bFMtx.scoreD( stdMIObj )
+			mtxObjLst[[1+length(mtxObjLst)]] <- bFMtx.scoreE( stdMIObj )
 		}
 
 		names(mtxObjLst) <- sapply(mtxObjLst,function(p){p$idStr})
@@ -3157,11 +3157,14 @@ bFMtx.scoreF <- function( stdMIObj ){
 	stdMI <- stdMIObj$stdMI
 	zMtx <- stdMIObj$zMtx
 	rObj <- list( 	idStr="scoreF"	,zMtx.size=nrow(zMtx)	,lastZoid=stdMI$lastZoid	)
+	if( 0<rObj$zMtx.size ){
+		rObj$cStep <- stdMI$cStep
+		rObj$fStep <- stdMI$fStep
+	}
 
 	rObj$fMtxObj <- function( aZoidMtx ,makeInfoStr=F ){
 		aLen <- nrow(aZoidMtx)
-		cName <- c(	"xaAVLen","axAVLen"
-				)
+		cName <- c(	"raw16","cStep","fStep" )
 		scoreMtx <- matrix( 0, nrow=aLen, ncol=length(cName) )	;colnames(scoreMtx) <- cName
 
 		infoMtx <- NULL
@@ -3178,6 +3181,24 @@ bFMtx.scoreF <- function( stdMIObj ){
 			aZoid <- aZoidMtx[aIdx,]
 			aCStep <- aZoid[2:6] - aZoid[1:5]	
 			aFStep <- aZoid - rObj$lastZoid
+
+			if( (aZoid[1]==rObj$lastZoid[1]) && (rObj$lastZoid[1]>10) ){
+				scoreMtx[aIdx,"raw16"] <- scoreMtx[aIdx,"raw16"]+1
+			}
+			if( (aZoid[6]==rObj$lastZoid[6]) && (rObj$lastZoid[6]<35) ){
+				scoreMtx[aIdx,"raw16"] <- scoreMtx[aIdx,"raw16"]+1
+			}
+
+			matFlag <- aCStep==rObj$cStep
+			if( any(matFlag) ){
+				scoreMtx[aIdx,"cStep"] <- sum( matFlag & (aCStep>10) )
+			}
+
+			matFlag <- aFStep==rObj$cFtep
+			if( any(matFlag) ){
+				scoreMtx[aIdx,"cStep"] <- sum( matFlag & (abs(aFStep)>8) )
+			}
+
 		}
 
 		return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
