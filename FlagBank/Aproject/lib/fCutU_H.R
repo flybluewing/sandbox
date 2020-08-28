@@ -479,7 +479,8 @@ fCutU.getQuoObj <- function( zoid ,valSet=F ){
 
 		if( all(rObj$tbl==tbl) ){
 			if( fullMatch ){
-				if( all(names(rObj$tbl)==names(tbl)) ) return(FALSE)
+				return( all(names(rObj$tbl)==names(tbl)) )
+				# if( all(names(rObj$tbl)==names(tbl)) ) return(FALSE)
 			}
 			return( TRUE )
 		}

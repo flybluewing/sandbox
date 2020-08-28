@@ -565,4 +565,109 @@ if( TRUE ){
 }
 
 
-mName
+mName <- "scoreE"
+if( TRUE ){
+    bFMtxExtFltLst[[mName]] <- list()
+        # rH0MLen rH0Cnt rH0VCnt
+        # cH0MLen cH0Cnt cH0VCnt fH0MLen fH0Cnt fH0VCnt
+        # rH1MLen rH1Cnt rH1VCnt
+        # cH1MLen cH1Cnt cH1VCnt fH1MLen fH1Cnt fH1VCnt
+        # rH2MLen rH2Cnt rH2VCnt
+        # cH2MLen cH2Cnt cH2VCnt fH2MLen fH2Cnt fH2VCnt
+
+    fltCreater <- function( mName ){    # for xH0MLen, xH0Cnt, xH0VCnt
+        fltObj <- list( mInfo=list() )
+        fltObj$mInfo$mName = mName
+        fltObj$mInfo$cName <- c(
+             "xH0MLen", "xH0Cnt", "xH0VCnt"
+            ,"xH1MLen", "xH1Cnt", "xH1VCnt"
+            ,"xH2MLen", "xH2Cnt", "xH2VCnt"
+        )
+
+        fltObj$getScore <- function( score ){
+            #   score <- scoreMtx.grp$basic$basic[[mName]]$scoreMtx[1,]
+            rVal <- rep(0,length(fltObj$mInfo$cName))  ;names(rVal) <- fltObj$mInfo$cName
+
+            scrEvt <- bFCust.getEvt( score ,scoreMtxCfg[[fltObj$mInfo$mName]]$fCol )["lev",]
+
+            rVal["xH0MLen"] <- sum(rVal[c("rH0MLen","cH0MLen","fH0MLen")] ,na.rm=T)
+            rVal["xH0Cnt"]  <- sum(rVal[c("rH0Cnt" ,"cH0Cnt" ,"fH0Cnt")] ,na.rm=T)
+            rVal["xH0VCnt"] <- sum(rVal[c("rH0VCnt","cH0VCnt","fH0VCnt")] ,na.rm=T)
+            rVal["xH1MLen"] <- sum(rVal[c("rH1MLen","cH1MLen","fH1MLen")] ,na.rm=T)
+            rVal["xH1Cnt"]  <- sum(rVal[c("rH1Cnt" ,"cH1Cnt" ,"fH1Cnt")] ,na.rm=T)
+            rVal["xH1VCnt"] <- sum(rVal[c("rH1VCnt","cH1VCnt","fH1VCnt")] ,na.rm=T)
+            rVal["xH2MLen"] <- sum(rVal[c("rH2MLen","cH2MLen","fH2MLen")] ,na.rm=T)
+            rVal["xH2Cnt"]  <- sum(rVal[c("rH2Cnt" ,"cH2Cnt" ,"fH2Cnt")] ,na.rm=T)
+            rVal["xH2VCnt"] <- sum(rVal[c("rH2VCnt","cH2VCnt","fH2VCnt")] ,na.rm=T)
+
+            # rVal["xxx"]  <- sum(score[c("xxx","xxx","xxx")] ,na.rm=T)
+            # rVal["xxx"]  <- sum(scrEvt[c("xxx","xxx")] ,na.rm=T)
+
+            return( rVal )
+        }
+        fltObj$getScoreMtx <- function( scoreMtx ){
+            rMtx <- matrix( 0 ,nrow=nrow(scoreMtx) ,ncol=length(fltObj$mInfo$cName) )
+            colnames(rMtx) <- fltObj$mInfo$cName
+
+            for( rIdx in seq_len(nrow(rMtx)) ){
+                rMtx[rIdx,] <- fltObj$getScore( scoreMtx[rIdx,] )
+            }
+            rownames(rMtx) <- rownames(scoreMtx)
+
+            return( rMtx )
+        }
+
+        return(fltObj)
+    }
+    bFMtxExtFltLst[[mName]]$filter01 <- fltCreater(mName)
+
+    fltCreater <- function( mName ){    #   for rHxMLen ,cHxMLen ,fHxMLen
+        fltObj <- list( mInfo=list() )
+        fltObj$mInfo$mName = mName
+        fltObj$mInfo$cName <- c(
+             "rHxMLen" ,"cHxMLen" ,"fHxMLen"
+            ,"rHxCnt"  ,"cHxCnt"  ,"fHxCnt"
+            ,"rHxVCnt" ,"cHxVCnt" ,"fHxVCnt"
+        )
+
+        fltObj$getScore <- function( score ){
+            #   score <- scoreMtx.grp$basic$basic[[mName]]$scoreMtx[1,]
+            rVal <- rep(0,length(fltObj$mInfo$cName))  ;names(rVal) <- fltObj$mInfo$cName
+
+            scrEvt <- bFCust.getEvt( score ,scoreMtxCfg[[fltObj$mInfo$mName]]$fCol )["lev",]
+
+            rVal["rHxMLen"]  <- sum(score[c("rH0MLen","rH1MLen","rH2MLen")] ,na.rm=T)
+            rVal["cHxMLen"]  <- sum(score[c("cH0MLen","cH1MLen","cH2MLen")] ,na.rm=T)
+            rVal["fHxMLen"]  <- sum(score[c("fH0MLen","fH1MLen","fH2MLen")] ,na.rm=T)
+
+            rVal["rHxCnt"]  <- sum(score[c("rH0Cnt","rH1Cnt","rH2Cnt")] ,na.rm=T)
+            rVal["cHxCnt"]  <- sum(score[c("cH0Cnt","cH1Cnt","cH2Cnt")] ,na.rm=T)
+            rVal["fHxCnt"]  <- sum(score[c("fH0Cnt","fH1Cnt","fH2Cnt")] ,na.rm=T)
+
+            rVal["rHxVCnt"]  <- sum(score[c("rH0VCnt","rH1VCnt","rH2VCnt")] ,na.rm=T)
+            rVal["cHxVCnt"]  <- sum(score[c("cH0VCnt","cH1VCnt","cH2VCnt")] ,na.rm=T)
+            rVal["fHxVCnt"]  <- sum(score[c("fH0VCnt","fH1VCnt","fH2VCnt")] ,na.rm=T)
+
+            # rVal["xxx"]  <- sum(score[c("xxx","xxx","xxx")] ,na.rm=T)
+            # rVal["xxx"]  <- sum(scrEvt[c("xxx","xxx")] ,na.rm=T)
+
+            return( rVal )
+        }
+        fltObj$getScoreMtx <- function( scoreMtx ){
+            rMtx <- matrix( 0 ,nrow=nrow(scoreMtx) ,ncol=length(fltObj$mInfo$cName) )
+            colnames(rMtx) <- fltObj$mInfo$cName
+
+            for( rIdx in seq_len(nrow(rMtx)) ){
+                rMtx[rIdx,] <- fltObj$getScore( scoreMtx[rIdx,] )
+            }
+            rownames(rMtx) <- rownames(scoreMtx)
+
+            return( rMtx )
+        }
+
+        return(fltObj)
+    }
+    bFMtxExtFltLst[[mName]]$filter02 <- fltCreater(mName)
+
+}
+

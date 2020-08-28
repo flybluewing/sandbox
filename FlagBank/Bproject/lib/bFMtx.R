@@ -2982,7 +2982,7 @@ bFMtx.scoreE <- function( stdMIObj ){
 			ratObjR <- fCutU.getRatioObj( zoid ,minBase=7 )
 			ratObjC <- fCutU.getRatioObj( stdMI$cStepTail[zIdx,] )
 			ratObjF <- NULL
-			if( !is.na(stdMI$fStepTail[zIdx,1]) ){
+			if( rObj$hSize>1 ){
 				ratObjF <- fCutU.getRatioObj( stdMI$fStepTail[zIdx,] )
 			}
 
@@ -2998,7 +2998,7 @@ bFMtx.scoreE <- function( stdMIObj ){
 			ratObjR <- fCutU.getRatioObj( zoid ,minBase=7 )
 			ratObjC <- fCutU.getRatioObj( stdMI$cStepTail[zIdx,] )
 			ratObjF <- NULL
-			if( !is.na(stdMI$fStepTail[zIdx,1]) ){
+			if(  rObj$hSize>2 ){
 				ratObjF <- fCutU.getRatioObj( stdMI$fStepTail[zIdx,] )
 			}
 
@@ -3009,12 +3009,12 @@ bFMtx.scoreE <- function( stdMIObj ){
 
 		rObj$h2 <- NULL
 		if( rObj$hSize>2 ){
-			zIdx <- rObj$hSize-1
+			zIdx <- rObj$hSize-2
 			zoid <- stdMI$rawTail[zIdx,]
 			ratObjR <- fCutU.getRatioObj( zoid ,minBase=7 )
 			ratObjC <- fCutU.getRatioObj( stdMI$cStepTail[zIdx,] )
 			ratObjF <- NULL
-			if( !is.na(stdMI$fStepTail[zIdx,1]) ){
+			if(  rObj$hSize>3 ){
 				ratObjF <- fCutU.getRatioObj( stdMI$fStepTail[zIdx,] )
 			}
 
@@ -3046,12 +3046,14 @@ bFMtx.scoreE <- function( stdMIObj ){
 			chkRst["cVCnt"] <- sum(fMtx[,"valMatF"])
 		}
 
-		mfLst <- hObj$ratObjF$scanRatio( aFStep )
-		if( 0 < length(mfLst) ){
-			fMtx <- do.call( rbind, mfLst )
-			chkRst["fMLen"] <- max(fMtx[,"len"])
-			chkRst["fCnt"]	<- nrow( fMtx )
-			chkRst["fVCnt"] <- sum(fMtx[,"valMatF"])
+		if( !is.null(hObj$ratObjF) ){
+			mfLst <- hObj$ratObjF$scanRatio( aFStep )
+			if( 0 < length(mfLst) ){
+				fMtx <- do.call( rbind, mfLst )
+				chkRst["fMLen"] <- max(fMtx[,"len"])
+				chkRst["fCnt"]	<- nrow( fMtx )
+				chkRst["fVCnt"] <- sum(fMtx[,"valMatF"])
+			}
 		}
 
 		if( any(chkRst>0) ){
