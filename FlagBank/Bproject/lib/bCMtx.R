@@ -97,7 +97,7 @@ if( TRUE ){
 		)
 
         rObj$fMtxObj <- function( scoreMtx.grp ,cut.grp ,fHName="sfcLate" ){
-            
+
             tgt.scMtx <- rObj$mName
             cutRst1Score <- bUtil.getCut1Score( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx )
 
@@ -171,6 +171,45 @@ if( TRUE ){
 
 }
 
+crMName <- "crScrN01PhEvt3"  # Cut-Result, Score N, Raw val only
+if( FALSE ){
+    bCMtxLst[[crMName]] <- function( hCRScr=NULL ){
+        # hCRScr : cutRst1Score 히스토리. Rebound 체크 기능은 나중에 구현한다.
+        rObj <- list( 	idStr=crMName  ,mName=c("score1","score3","score8")
+		)
+
+        rObj$fMtxObj <- function( scoreMtx.grp ,cut.grp ,fHName="sfcLate" ){
+
+            tgt.scMtx <- rObj$mName
+            cutRst1Score <- bUtil.getCut1Score( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx )
+
+            aLen <- length(cutRst1Score$aLst)
+            cName <- c( "e23Max" ,"evt1Max"
+            )
+            crScrMtx <- matrix( 0, nrow=aLen, ncol=length(cName) )	;colnames(crScrMtx) <- cName
+
+            hName <- "sfcLate"  # 일단 rebound 없이 체크하는 부분.
+            for( aIdx in 1:aLen ){
+                curCR <- cutRst1Score$aLst[[aIdx]][[hName]]$basic   # "rebMtx.ph"    "evtHpnLevMtx" "phaseReb"
+
+                phNameA <- colnames(curCR$score1$raw$evtHpnLevMtx)
+                # for( nIdx in colnames(crScrMtx) ){  # nIdx == pName
+
+                # }
+
+                
+
+
+                # hpnCnt <- sapply( curCR ,function(crObj){ sum(crObj$raw$rebMtx.ph["hpn.evt",]>0) })
+                # crScrMtx[aIdx,"hpn"] <- sum(hpnCnt==0)
+            }
+
+            return( crScrMtx )
+        }
+        return( rObj )
+    }
+
+}
 
 crMName <- "crScrN02R"  # Cut-Result, Score N, Raw val only
 if( TRUE ){

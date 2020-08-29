@@ -984,10 +984,19 @@ FCust_stdCut.hIdx <- function( hName ,mName ,mtxLst ){
         phaseRebCnt <- rbind( rObj$stdEvt.H1$hpnInfo$phaseReb["reb",] ,rObj$stdEvt.H1$evtInfo$phaseReb["reb",] )
         rownames( phaseRebCnt ) <- c("raw","evt")
 
-        r4Ass$H1.phHpnCnt <- phaseHpnCnt    # 혼동가능성 때문에 이름 변경.
-        r4Ass$H1.phRebCnt <- phaseRebCnt    #       초기 이름은 phaseHpnCnt, phaseRebCnt 이었음.
+        # r4Ass$H1.phHpnCnt <- phaseHpnCnt    # 혼동가능성 때문에 이름 변경.
+        # r4Ass$H1.phRebCnt <- phaseRebCnt    #       초기 이름은 phaseHpnCnt, phaseRebCnt 이었음.(검토 후 폐기.)
 
         r4Ass$rebMtx.ph <- rawObj$curEvt$rebInfo$rebMtx.ph
+
+        evtHpnLevMtx <- NULL
+        cName <- c("lev1","lev2","lev3")
+        eValMtx <- rawObj$curEvt$evtInfo$eValMtx
+        evtHpnLevMtx <- matrix( 0 ,nrow=length(cName) ,ncol=ncol(eValMtx) ,dimnames=list(cName,colnames(eValMtx)) )
+        evtHpnLevMtx["lev1" ,] <- apply( eValMtx ,2 ,function(cDat){sum(cDat==1,na.rm=T)} )
+        evtHpnLevMtx["lev2" ,] <- apply( eValMtx ,2 ,function(cDat){sum(cDat==2,na.rm=T)} )
+        evtHpnLevMtx["lev3" ,] <- apply( eValMtx ,2 ,function(cDat){sum(cDat>=3,na.rm=T)} )
+        r4Ass$evtHpnLevMtx <- evtHpnLevMtx
 
         phaseReb.raw <- rawObj$curEvt$hpnInfo$phaseReb[c("reb","hpn"),] ;rownames(phaseReb.raw) <- c("rebFlag.raw","hpn.raw")
         phaseReb.evt <- rawObj$curEvt$evtInfo$phaseReb[c("reb","hpn"),] ;rownames(phaseReb.evt) <- c("rebFlag.evt","hpn.evt")
