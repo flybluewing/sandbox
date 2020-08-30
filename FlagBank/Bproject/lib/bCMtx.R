@@ -171,7 +171,7 @@ if( TRUE ){
 
 }
 
-crMName <- "crScrN01PhEvt3"  # Cut-Result, Score N, Raw val only
+crMName <- "crScrN01PhEvt3"  # phase 별로 evt 갯수 제한.(phase에서 다수 mName을 대상으로..)
 if( FALSE ){
     bCMtxLst[[crMName]] <- function( hCRScr=NULL ){
         # hCRScr : cutRst1Score 히스토리. Rebound 체크 기능은 나중에 구현한다.
@@ -179,29 +179,54 @@ if( FALSE ){
 		)
 
         rObj$fMtxObj <- function( scoreMtx.grp ,cut.grp ,fHName="sfcLate" ){
+            if( FALSE ){    # comment
+                # sample code for debug
+                #       mIdx <- "score1"
+                #       rawMtx <- sapply( scoreMtx.grp$basic ,function(p){ p[[mIdx]]$scoreMtx[1,] })
+                #       cfg <- scoreMtxCfg[[ mIdx ]]
+                #       evtObj <- bFCust.getEvtMtx( rawMtx ,cfg )
+                #       
+            }
 
             tgt.scMtx <- rObj$mName
             cutRst1Score <- bUtil.getCut1Score( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx )
 
             aLen <- length(cutRst1Score$aLst)
-            cName <- c( "e23Max" ,"evt1Max"
+            cName <- c(  "e3Max" ,"e3MCnt" ,"e2Max" ,"e2MCnt" ,"e1Max" ,"e1MCnt"   # Cnt는 evt가 2번 이상 발생한 pName 수
             )
             crScrMtx <- matrix( 0, nrow=aLen, ncol=length(cName) )	;colnames(crScrMtx) <- cName
+
+            phNameAll <- names(scoreMtx.grp$basic)
+            #   중간 계산 및 디버깅용 데이터 매트릭스
+            eCntMtx <- matrix( 0 ,nrow=3 ,ncol=length(phNameAll) ,dimnames=list(c("e1","e2","e3"),phNameAll) )
+            
 
             hName <- "sfcLate"  # 일단 rebound 없이 체크하는 부분.
             for( aIdx in 1:aLen ){
                 curCR <- cutRst1Score$aLst[[aIdx]][[hName]]$basic   # "rebMtx.ph"    "evtHpnLevMtx" "phaseReb"
 
-                phNameA <- colnames(curCR$score1$raw$evtHpnLevMtx)
-                # for( nIdx in colnames(crScrMtx) ){  # nIdx == pName
+                eCntMtx[,] <- 0
+                for( pIdx in phNameAll ){  # nIdx == pName
+                    for( mIdx in rObj$mName ){
+                        evtHpnLevMtx <- curCR[[mIdx]]$raw$evtHpnLevMtx
 
-                # }
+                        eCntMtx["e1",pIdx] <- eCntMtx["e1",pIdx] + evtHpnLevMtx["lev1",pIdx]
+                        eCntMtx["e2",pIdx] <- eCntMtx["e2",pIdx] + evtHpnLevMtx["lev2",pIdx]
+                        eCntMtx["e3",pIdx] <- eCntMtx["e3",pIdx] + evtHpnLevMtx["lev3",pIdx]
+                    }
+                }
 
-                
+                crScrMtx[aIdx,"e1Max"]  <- max(eCntMtx["e1",])
+                crScrMtx[aIdx,"e1MCnt"] <- sum(eCntMtx["e1",]>1)
+                crScrMtx[aIdx,"e2Max"]  <- max(eCntMtx["e2",])
+                crScrMtx[aIdx,"e2MCnt"] <- sum(eCntMtx["e2",]>1)
+                crScrMtx[aIdx,"e3Max"]  <- max(eCntMtx["e3",])
+                crScrMtx[aIdx,"e3MCnt"] <- sum(eCntMtx["e3",]>1)
 
+                # MCnt가 1이면 Max 컬럼값과 중복의미가 되므로 0으로 없앤다.
+                cName <- c("e1MCnt","e2MCnt","e3MCnt")
+                crScrMtx[aIdx,cName] <- ifelse( 2>crScrMtx[aIdx,cName] ,0 ,crScrMtx[aIdx,cName] )
 
-                # hpnCnt <- sapply( curCR ,function(crObj){ sum(crObj$raw$rebMtx.ph["hpn.evt",]>0) })
-                # crScrMtx[aIdx,"hpn"] <- sum(hpnCnt==0)
             }
 
             return( crScrMtx )

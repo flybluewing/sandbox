@@ -991,11 +991,11 @@ FCust_stdCut.hIdx <- function( hName ,mName ,mtxLst ){
 
         evtHpnLevMtx <- NULL
         cName <- c("lev1","lev2","lev3")
-        eValMtx <- rawObj$curEvt$evtInfo$eValMtx
-        evtHpnLevMtx <- matrix( 0 ,nrow=length(cName) ,ncol=ncol(eValMtx) ,dimnames=list(cName,colnames(eValMtx)) )
-        evtHpnLevMtx["lev1" ,] <- apply( eValMtx ,2 ,function(cDat){sum(cDat==1,na.rm=T)} )
-        evtHpnLevMtx["lev2" ,] <- apply( eValMtx ,2 ,function(cDat){sum(cDat==2,na.rm=T)} )
-        evtHpnLevMtx["lev3" ,] <- apply( eValMtx ,2 ,function(cDat){sum(cDat>=3,na.rm=T)} )
+        eLevMtx <- rawObj$evtObj$eLevMtx
+        evtHpnLevMtx <- matrix( 0 ,nrow=length(cName) ,ncol=ncol(eLevMtx) ,dimnames=list(cName,colnames(eLevMtx)) )
+        evtHpnLevMtx["lev1" ,] <- apply( eLevMtx ,2 ,function(cDat){sum(cDat==1,na.rm=T)} )
+        evtHpnLevMtx["lev2" ,] <- apply( eLevMtx ,2 ,function(cDat){sum(cDat==2,na.rm=T)} )
+        evtHpnLevMtx["lev3" ,] <- apply( eLevMtx ,2 ,function(cDat){sum(cDat>=3,na.rm=T)} )
         r4Ass$evtHpnLevMtx <- evtHpnLevMtx
 
         phaseReb.raw <- rawObj$curEvt$hpnInfo$phaseReb[c("reb","hpn"),] ;rownames(phaseReb.raw) <- c("rebFlag.raw","hpn.raw")
