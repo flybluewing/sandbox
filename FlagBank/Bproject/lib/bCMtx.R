@@ -193,13 +193,14 @@ if( FALSE ){
 
             aLen <- length(cutRst1Score$aLst)
             cName <- c(  "e3Max" ,"e3MCnt" ,"e2Max" ,"e2MCnt" ,"e1Max" ,"e1MCnt"   # Cnt는 evt가 2번 이상 발생한 pName 수
+                        ,"rebRawMax" ,"rebRawMCnt" ,"rebEvtMax" ,"rebEvtMCnt"
             )
             crScrMtx <- matrix( 0, nrow=aLen, ncol=length(cName) )	;colnames(crScrMtx) <- cName
 
             phNameAll <- names(scoreMtx.grp$basic)
             #   중간 계산 및 디버깅용 데이터 매트릭스
             eCntMtx <- matrix( 0 ,nrow=3 ,ncol=length(phNameAll) ,dimnames=list(c("e1","e2","e3"),phNameAll) )
-            
+
 
             hName <- "sfcLate"  # 일단 rebound 없이 체크하는 부분.
             for( aIdx in 1:aLen ){
