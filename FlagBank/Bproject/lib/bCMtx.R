@@ -171,8 +171,8 @@ if( TRUE ){
 
 }
 
-crMName <- "crScrN01PhEvt3"  # phase 별로 evt 갯수 제한.(phase에서 다수 mName을 대상으로..)
-if( FALSE ){
+crMName <- "crScrN01PhEvt"  # phase 별로 evt 갯수 제한.(phase에서 다수 mName을 대상으로..)
+if( TRUE ){
     bCMtxLst[[crMName]] <- function( hCRScr=NULL ){
         # hCRScr : cutRst1Score 히스토리. Rebound 체크 기능은 나중에 구현한다.
         rObj <- list( 	idStr=crMName  ,mName=c("score1","score3","score8")
@@ -199,33 +199,41 @@ if( FALSE ){
 
             phNameAll <- names(scoreMtx.grp$basic)
             #   중간 계산 및 디버깅용 데이터 매트릭스
-            eCntMtx <- matrix( 0 ,nrow=3 ,ncol=length(phNameAll) ,dimnames=list(c("e1","e2","e3"),phNameAll) )
-
+            tempCName <- c("e1","e2","e3" ,"rebRCnt" ,"rebECnt" )
+            tempMtx <- matrix( 0 ,nrow=length(tempCName) ,ncol=length(phNameAll) ,dimnames=list(tempCName,phNameAll) )
 
             hName <- "sfcLate"  # 일단 rebound 없이 체크하는 부분.
             for( aIdx in 1:aLen ){
                 curCR <- cutRst1Score$aLst[[aIdx]][[hName]]$basic   # "rebMtx.ph"    "evtHpnLevMtx" "phaseReb"
 
-                eCntMtx[,] <- 0
+                tempMtx[,] <- 0
                 for( pIdx in phNameAll ){  # nIdx == pName
                     for( mIdx in rObj$mName ){
                         evtHpnLevMtx <- curCR[[mIdx]]$raw$evtHpnLevMtx
+                        tempMtx["e1",pIdx] <- tempMtx["e1",pIdx] + evtHpnLevMtx["lev1",pIdx]
+                        tempMtx["e2",pIdx] <- tempMtx["e2",pIdx] + evtHpnLevMtx["lev2",pIdx]
+                        tempMtx["e3",pIdx] <- tempMtx["e3",pIdx] + evtHpnLevMtx["lev3",pIdx]
 
-                        eCntMtx["e1",pIdx] <- eCntMtx["e1",pIdx] + evtHpnLevMtx["lev1",pIdx]
-                        eCntMtx["e2",pIdx] <- eCntMtx["e2",pIdx] + evtHpnLevMtx["lev2",pIdx]
-                        eCntMtx["e3",pIdx] <- eCntMtx["e3",pIdx] + evtHpnLevMtx["lev3",pIdx]
+                        rebMtx.ph <- curCR[[mIdx]]$raw$rebMtx.ph
+                        tempMtx["rebRCnt",pIdx] <- tempMtx["rebRCnt",pIdx] + rebMtx.ph["rebFlag.raw",pIdx]
+                        tempMtx["rebECnt",pIdx] <- tempMtx["rebECnt",pIdx] + rebMtx.ph["rebFlag.evt",pIdx]
                     }
                 }
 
-                crScrMtx[aIdx,"e1Max"]  <- max(eCntMtx["e1",])
-                crScrMtx[aIdx,"e1MCnt"] <- sum(eCntMtx["e1",]>1)
-                crScrMtx[aIdx,"e2Max"]  <- max(eCntMtx["e2",])
-                crScrMtx[aIdx,"e2MCnt"] <- sum(eCntMtx["e2",]>1)
-                crScrMtx[aIdx,"e3Max"]  <- max(eCntMtx["e3",])
-                crScrMtx[aIdx,"e3MCnt"] <- sum(eCntMtx["e3",]>1)
+                crScrMtx[aIdx,"e1Max"]  <- max(tempMtx["e1",])
+                crScrMtx[aIdx,"e1MCnt"] <- sum(tempMtx["e1",]>1)
+                crScrMtx[aIdx,"e2Max"]  <- max(tempMtx["e2",])
+                crScrMtx[aIdx,"e2MCnt"] <- sum(tempMtx["e2",]>1)
+                crScrMtx[aIdx,"e3Max"]  <- max(tempMtx["e3",])
+                crScrMtx[aIdx,"e3MCnt"] <- sum(tempMtx["e3",]>1)
+
+                crScrMtx[aIdx,"rebRawMax"]  <- max(tempMtx["rebRCnt",])
+                crScrMtx[aIdx,"rebRawMCnt"] <- sum(tempMtx["rebRCnt",]>1)
+                crScrMtx[aIdx,"rebEvtMax"]  <- max(tempMtx["rebECnt",])
+                crScrMtx[aIdx,"rebEvtMCnt"] <- sum(tempMtx["rebECnt",]>1)
 
                 # MCnt가 1이면 Max 컬럼값과 중복의미가 되므로 0으로 없앤다.
-                cName <- c("e1MCnt","e2MCnt","e3MCnt")
+                cName <- c("e1MCnt","e2MCnt","e3MCnt","rebRawMCnt","rebEvtMCnt")
                 crScrMtx[aIdx,cName] <- ifelse( 2>crScrMtx[aIdx,cName] ,0 ,crScrMtx[aIdx,cName] )
 
             }
@@ -389,4 +397,80 @@ if( TRUE ){
     }
 
 }
+
+
+crMName <- "crScrN02PhEvt"  # phase 별로 evt 갯수 제한.(phase에서 다수 mName을 대상으로..)
+if( TRUE ){
+    bCMtxLst[[crMName]] <- function( hCRScr=NULL ){
+        # hCRScr : cutRst1Score 히스토리. Rebound 체크 기능은 나중에 구현한다.
+        rObj <- list( 	idStr=crMName  ,mName=c("score1","score2","score3","score4","score5","score6","score7","score8","score9")
+		)
+
+        rObj$fMtxObj <- function( scoreMtx.grp ,cut.grp ,fHName="sfcLate" ){
+            if( FALSE ){    # comment
+                # sample code for debug
+                #       mIdx <- "score1"
+                #       rawMtx <- sapply( scoreMtx.grp$basic ,function(p){ p[[mIdx]]$scoreMtx[1,] })
+                #       cfg <- scoreMtxCfg[[ mIdx ]]
+                #       evtObj <- bFCust.getEvtMtx( rawMtx ,cfg )
+                #       
+            }
+
+            tgt.scMtx <- rObj$mName
+            cutRst1Score <- bUtil.getCut1Score( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx )
+
+            aLen <- length(cutRst1Score$aLst)
+            cName <- c(  "e3Max" ,"e3MCnt" ,"e2Max" ,"e2MCnt" ,"e1Max" ,"e1MCnt"   # Cnt는 evt가 2번 이상 발생한 pName 수
+                        ,"rebRawMax" ,"rebRawMCnt" ,"rebEvtMax" ,"rebEvtMCnt"
+            )
+            crScrMtx <- matrix( 0, nrow=aLen, ncol=length(cName) )	;colnames(crScrMtx) <- cName
+
+            phNameAll <- names(scoreMtx.grp$basic)
+            #   중간 계산 및 디버깅용 데이터 매트릭스
+            tempCName <- c("e1","e2","e3" ,"rebRCnt" ,"rebECnt" )
+            tempMtx <- matrix( 0 ,nrow=length(tempCName) ,ncol=length(phNameAll) ,dimnames=list(tempCName,phNameAll) )
+
+            hName <- "sfcLate"  # 일단 rebound 없이 체크하는 부분.
+            for( aIdx in 1:aLen ){
+                curCR <- cutRst1Score$aLst[[aIdx]][[hName]]$basic   # "rebMtx.ph"    "evtHpnLevMtx" "phaseReb"
+
+                tempMtx[,] <- 0
+                for( pIdx in phNameAll ){  # nIdx == pName
+                    for( mIdx in rObj$mName ){
+                        evtHpnLevMtx <- curCR[[mIdx]]$raw$evtHpnLevMtx
+                        tempMtx["e1",pIdx] <- tempMtx["e1",pIdx] + evtHpnLevMtx["lev1",pIdx]
+                        tempMtx["e2",pIdx] <- tempMtx["e2",pIdx] + evtHpnLevMtx["lev2",pIdx]
+                        tempMtx["e3",pIdx] <- tempMtx["e3",pIdx] + evtHpnLevMtx["lev3",pIdx]
+
+                        rebMtx.ph <- curCR[[mIdx]]$raw$rebMtx.ph
+                        tempMtx["rebRCnt",pIdx] <- tempMtx["rebRCnt",pIdx] + rebMtx.ph["rebFlag.raw",pIdx]
+                        tempMtx["rebECnt",pIdx] <- tempMtx["rebECnt",pIdx] + rebMtx.ph["rebFlag.evt",pIdx]
+                    }
+                }
+
+                crScrMtx[aIdx,"e1Max"]  <- max(tempMtx["e1",])
+                crScrMtx[aIdx,"e1MCnt"] <- sum(tempMtx["e1",]>1)
+                crScrMtx[aIdx,"e2Max"]  <- max(tempMtx["e2",])
+                crScrMtx[aIdx,"e2MCnt"] <- sum(tempMtx["e2",]>1)
+                crScrMtx[aIdx,"e3Max"]  <- max(tempMtx["e3",])
+                crScrMtx[aIdx,"e3MCnt"] <- sum(tempMtx["e3",]>1)
+
+                crScrMtx[aIdx,"rebRawMax"]  <- max(tempMtx["rebRCnt",])
+                crScrMtx[aIdx,"rebRawMCnt"] <- sum(tempMtx["rebRCnt",]>1)
+                crScrMtx[aIdx,"rebEvtMax"]  <- max(tempMtx["rebECnt",])
+                crScrMtx[aIdx,"rebEvtMCnt"] <- sum(tempMtx["rebECnt",]>1)
+
+                # MCnt가 1이면 Max 컬럼값과 중복의미가 되므로 0으로 없앤다.
+                cName <- c("e1MCnt","e2MCnt","e3MCnt","rebRawMCnt","rebEvtMCnt")
+                crScrMtx[aIdx,cName] <- ifelse( 2>crScrMtx[aIdx,cName] ,0 ,crScrMtx[aIdx,cName] )
+
+            }
+
+            return( crScrMtx )
+        }
+        return( rObj )
+    }
+
+}
+
 
