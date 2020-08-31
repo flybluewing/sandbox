@@ -632,51 +632,54 @@ bUtil.filtByCtrlCfg <- function( val ,ctrlCfg ){
 	return( flagMtx )
 } # bUtil.filtByCtrlCfg()
 
-bUtil.getStdMILst <- function( gEnv ,fRstLst ){
-
+bUtil.getStdMILst <- function( gEnv ,fRstLst=NULL ){
     # stdMI.basic <- fCutU.getStdMI( gEnv )
+	if( FALSE ){	# comment
+		# fRstLst : stdMI.bDup, stdMI.mf 생성을 위해 추가해놓긴 했는데...
+	}
 
 	stdMILst.basic <- list()
+	if( TRUE ){
+		zMtx <- gEnv$zhF
+		stdMILst.basic[["basic"]] <- list( stdMI=fCutU.getMtxInfo(zMtx) ,zMtx=zMtx )
 
-	zMtx <- gEnv$zhF
-	stdMILst.basic[["basic"]] <- list( stdMI=fCutU.getMtxInfo(zMtx) ,zMtx=zMtx )
+		zMtx <- fCutU.getNextZW( gEnv )$zMtx
+		stdMILst.basic[["nextZW"]] <- list( stdMI=fCutU.getMtxInfo(zMtx) ,zMtx=zMtx )
+		
+		zMtx <- fCutU.getNextQuo10( gEnv )$zMtx	# rptObj<-anaQuoTbl( zMtx )
+		stdMILst.basic[["nextQuo10"]] <- list( stdMI=fCutU.getMtxInfo(zMtx) ,zMtx=zMtx )
 
-	zMtx <- fCutU.getNextZW( gEnv )$zMtx
-	stdMILst.basic[["nextZW"]] <- list( stdMI=fCutU.getMtxInfo(zMtx) ,zMtx=zMtx )
-	
-	zMtx <- fCutU.getNextQuo10( gEnv )$zMtx	# rptObj<-anaQuoTbl( zMtx )
-	stdMILst.basic[["nextQuo10"]] <- list( stdMI=fCutU.getMtxInfo(zMtx) ,zMtx=zMtx )
+		zMtx <- fCutU.getNextBin( gEnv )$zMtx	# rptObj<-anaQuoTbl( zMtx )
+		stdMILst.basic[["nextBin"]] <- list( stdMI=fCutU.getMtxInfo(zMtx) ,zMtx=zMtx )
 
-	zMtx <- fCutU.getNextBin( gEnv )$zMtx	# rptObj<-anaQuoTbl( zMtx )
-	stdMILst.basic[["nextBin"]] <- list( stdMI=fCutU.getMtxInfo(zMtx) ,zMtx=zMtx )
+		rebObj <- fCutU.getNextRebNumPtn( gEnv ,numPtn=NULL )
+		zMtx <- rebObj$zMtx	# rptObj<-anaQuoTbl( zMtx )
+		stdMILst.basic[["nextRebNum"]] <- list( stdMI=fCutU.getMtxInfo(zMtx) ,zMtx=zMtx )
 
-	rebObj <- fCutU.getNextRebNumPtn( gEnv ,numPtn=NULL )
-	zMtx <- rebObj$zMtx	# rptObj<-anaQuoTbl( zMtx )
-	stdMILst.basic[["nextRebNum"]] <- list( stdMI=fCutU.getMtxInfo(zMtx) ,zMtx=zMtx )
+		zMtx <- fCutU.getNextCStepBin( gEnv )$zMtx	# rptObj<-anaQuoTbl( zMtx )
+		stdMILst.basic[["nextCStepBin"]] <- list( stdMI=fCutU.getMtxInfo(zMtx) ,zMtx=zMtx )
 
-	zMtx <- fCutU.getNextCStepBin( gEnv )$zMtx	# rptObj<-anaQuoTbl( zMtx )
-	stdMILst.basic[["nextCStepBin"]] <- list( stdMI=fCutU.getMtxInfo(zMtx) ,zMtx=zMtx )
+		zMtx <- fCutU.getNextFStepBin( gEnv )$zMtx	# rptObj<-anaQuoTbl( zMtx )
+		stdMILst.basic[["nextFStepBin"]] <- list( stdMI=fCutU.getMtxInfo(zMtx) ,zMtx=zMtx )
 
-	zMtx <- fCutU.getNextFStepBin( gEnv )$zMtx	# rptObj<-anaQuoTbl( zMtx )
-	stdMILst.basic[["nextFStepBin"]] <- list( stdMI=fCutU.getMtxInfo(zMtx) ,zMtx=zMtx )
+		zMtx <- fCutU.getNextColVal( gEnv ,1 )$zMtx	# rptObj<-anaQuoTbl( zMtx )
+		stdMILst.basic[["nextColVal_1"]] <- list( stdMI=fCutU.getMtxInfo(zMtx) ,zMtx=zMtx )
 
-	zMtx <- fCutU.getNextColVal( gEnv ,1 )$zMtx	# rptObj<-anaQuoTbl( zMtx )
-	stdMILst.basic[["nextColVal_1"]] <- list( stdMI=fCutU.getMtxInfo(zMtx) ,zMtx=zMtx )
+		zMtx <- fCutU.getNextColVal( gEnv ,2 )$zMtx	# rptObj<-anaQuoTbl( zMtx )
+		stdMILst.basic[["nextColVal_2"]] <- list( stdMI=fCutU.getMtxInfo(zMtx) ,zMtx=zMtx )
 
-	zMtx <- fCutU.getNextColVal( gEnv ,2 )$zMtx	# rptObj<-anaQuoTbl( zMtx )
-	stdMILst.basic[["nextColVal_2"]] <- list( stdMI=fCutU.getMtxInfo(zMtx) ,zMtx=zMtx )
+		zMtx <- fCutU.getNextColVal( gEnv ,3 )$zMtx	# rptObj<-anaQuoTbl( zMtx )
+		stdMILst.basic[["nextColVal_3"]] <- list( stdMI=fCutU.getMtxInfo(zMtx) ,zMtx=zMtx )
 
-	zMtx <- fCutU.getNextColVal( gEnv ,3 )$zMtx	# rptObj<-anaQuoTbl( zMtx )
-	stdMILst.basic[["nextColVal_3"]] <- list( stdMI=fCutU.getMtxInfo(zMtx) ,zMtx=zMtx )
+		zMtx <- fCutU.getNextColVal( gEnv ,4 )$zMtx	# rptObj<-anaQuoTbl( zMtx )
+		stdMILst.basic[["nextColVal_4"]] <- list( stdMI=fCutU.getMtxInfo(zMtx) ,zMtx=zMtx )
 
-	zMtx <- fCutU.getNextColVal( gEnv ,4 )$zMtx	# rptObj<-anaQuoTbl( zMtx )
-	stdMILst.basic[["nextColVal_4"]] <- list( stdMI=fCutU.getMtxInfo(zMtx) ,zMtx=zMtx )
+		zMtx <- fCutU.getNextColVal( gEnv ,5 )$zMtx	# rptObj<-anaQuoTbl( zMtx )
+		stdMILst.basic[["nextColVal_5"]] <- list( stdMI=fCutU.getMtxInfo(zMtx) ,zMtx=zMtx )
 
-	zMtx <- fCutU.getNextColVal( gEnv ,5 )$zMtx	# rptObj<-anaQuoTbl( zMtx )
-	stdMILst.basic[["nextColVal_5"]] <- list( stdMI=fCutU.getMtxInfo(zMtx) ,zMtx=zMtx )
-
-	zMtx <- fCutU.getNextColVal( gEnv ,6 )$zMtx	# rptObj<-anaQuoTbl( zMtx )
-	stdMILst.basic[["nextColVal_6"]] <- list( stdMI=fCutU.getMtxInfo(zMtx) ,zMtx=zMtx )
+		zMtx <- fCutU.getNextColVal( gEnv ,6 )$zMtx	# rptObj<-anaQuoTbl( zMtx )
+		stdMILst.basic[["nextColVal_6"]] <- list( stdMI=fCutU.getMtxInfo(zMtx) ,zMtx=zMtx )
+	}
 
     # todo stdFiltedCnt
 	#   stdMILst.basic[["stdFCnt"]]
@@ -1366,3 +1369,88 @@ bUtil.getShortPhaseName <- function( phaseName ){
     phaseName <- gsub("StepBin","Bin",phaseName)
     return( phaseName )
 } # bUtil.getShortPhaseName()
+
+
+bUtil.chkStdMIPair <- function( gEnv ,aZoidMtx ){
+
+	stdMI.grp <- bUtil.getStdMILst( gEnv )
+
+	fndPairCol <- function( mtx ){	# mtx내에는 NA 값 존재.
+		# mtx <- lastZoidMtx
+
+		fndLst <- list()
+		fndFlag <- rep( F ,ncol(mtx) )
+		gFndFlag <- fndFlag
+		for( oIdx in 1:(ncol(mtx)-1) ){
+			if( gFndFlag[oIdx] ) next
+
+			fndFlag[] <- F	# 아직은 oIdx가 포함되지 않은 상태.
+			for( iIdx in (oIdx+1):ncol(mtx) ){
+				matFlag <- mtx[,oIdx]==mtx[,iIdx]
+				if( any(is.na(matFlag)) )	next
+
+				if( all(matFlag) ){
+					fndFlag[iIdx] <- T
+				}
+			}
+
+			if( any(fndFlag) ){
+				fndFlag[oIdx] <- T
+				gFndFlag <- gFndFlag | fndFlag
+				fndLst[[sprintf("col%d",oIdx)]] <- which(fndFlag)
+			}
+		}
+
+		return( fndLst )
+	}
+
+	lastZoidMtx <- sapply( stdMI.grp$basic ,function(stdMIObj){ 
+		zLen <- nrow(stdMIObj$zMtx)
+		if( 0==zLen ){  return( rep(NA,ncol(stdMIObj$zMtx)) )
+		} else {    return(stdMIObj$zMtx[zLen,]) }
+	})
+
+	lastPair <- fndPairCol( lastZoidMtx )
+	if( 0==length(lastPair) ){
+		return( list() )
+	}
+
+	rebLst <- list()
+	for( aIdx in seq_len(nrow(aZoidMtx)) ){
+		gEnv.n <- gEnv
+		gEnv.n$zhF <- rbind( gEnv.n$zhF,aZoidMtx[aIdx,] )
+		zhName <- rownames(gEnv.n$zhF)
+		zhName[nrow(gEnv.n$zhF)] <- "aZd"
+		rownames(gEnv.n$zhF) <- zhName
+
+		stdMI.grpN <- bUtil.getStdMILst( gEnv.n )
+		mtx <- sapply( stdMI.grpN$basic ,function(stdMIObj){ 
+			zLen <- nrow(stdMIObj$zMtx)
+			if( 0==zLen ){  return( rep(NA,ncol(stdMIObj$zMtx)) )
+			} else {    return(stdMIObj$zMtx[zLen,]) }
+		})
+		
+		curPair <- fndPairCol( mtx )
+		if( 0==length(curPair) )	next
+
+		fndPairLst <- list()
+		for( lIdx in 1:length(lastPair) ){
+			for( curIdx in 1:length(curPair) ){
+				fndPair <- intersect(lastPair[[lIdx]],curPair[[curIdx]])
+				if( 1<length(fndPair) ){
+					dbgStr <- sprintf("lastPair:%s curPair:%s"
+								,paste(lastPair[[lIdx]],collapse=",")
+								,paste(curPair[[curIdx]],collapse=",")
+					)
+					fndPairLst[[sprintf("l%dc%d",lIdx,curIdx)]] <- list( fndPair=fndPair ,dbgStr=dbgStr )
+				}
+			}
+		}
+
+		rebLst[[sprintf("a%d",aIdx)]] <- fndPairLst
+	}
+
+	return( rebLst )
+}
+
+

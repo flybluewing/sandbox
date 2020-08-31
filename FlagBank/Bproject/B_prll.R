@@ -111,6 +111,37 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
         }
 
 
+        #   bUtil.chkStdMIPair() 적용.
+        pairRebLst <- bUtil.chkStdMIPair( gEnv.w ,aZoidMtx=matrix(stdZoid,nrow=1) )
+        if( 0<length(pairRebLst[[1]]) ){
+            fndPairLen <- sapply( pairRebLst[[1]] ,function(p){ length(p$fndPair) })
+
+            cutInfoLst <- list()
+            if( 0<length(fndPairLen) ){
+                infoStr <- paste(names(fndPairLen),fndPairLen,sep=":")
+                infoStr <- paste( infoStr ,collapse="," )
+                cutInfo <- c( typ="lastRawPair",hName="N/A",mName="bUtil.chkStdMIPair(cnt)",pName="N/A",info=infoStr )
+                cutInfoLst[[1+length(cutInfoLst)]] <- cutInfo
+            }
+            if( 1<max(fndPairLen) ){
+                infoStr <- paste(names(fndPairLen),fndPairLen,sep=":")
+                infoStr <- paste( infoStr ,collapse="," )
+                cutInfo <- c( typ="lastRawPair",hName="N/A",mName="bUtil.chkStdMIPair(max)",pName="N/A",info=infoStr )
+                cutInfoLst[[1+length(cutInfoLst)]] <- cutInfo
+            }
+
+            cutRst$cutInfoLst <- append( cutRst$cutInfoLst ,cutInfoLst )
+        }
+
+        # End of Cut Test
+        # report example =================================================
+            # B.rptHMtxLst( curHMtxLst )
+            # B.rptStdMI.grp( stdMI.grp )
+            # B.rptScoreMtx.grp( scoreMtx.grp )
+            # B.rptCut.grp( cut.grp )
+            # B.rptCutRst( cutRst )
+
+
         if( TRUE ){ # aux cut : stdFiltedCnt
             fRst <- fRstLst[[as.character(curHIdx)]]
 
@@ -127,14 +158,6 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
                 }
             }
         }
-
-        # report example =================================================
-            # B.rptHMtxLst( curHMtxLst )
-            # B.rptStdMI.grp( stdMI.grp )
-            # B.rptScoreMtx.grp( scoreMtx.grp )
-            # B.rptCut.grp( cut.grp )
-            # B.rptCutRst( cutRst )
-
 
         prllLog$fLogStr(sprintf("    curHIdx:%d done.",curHIdx),pTime=T)
         if( FALSE ){ # debug info
