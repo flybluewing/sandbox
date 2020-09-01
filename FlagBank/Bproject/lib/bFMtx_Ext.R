@@ -530,11 +530,11 @@ if( TRUE ){
 
             scrEvt <- bFCust.getEvt( score ,scoreMtxCfg[[fltObj$mInfo$mName]]$fCol )["lev",]
 
-            rVal["xCntECnt"]<- sum( score[c("rCnt","eCnt","cCnt","fCnt")>=c(2,3,2,2)] )
-            rVal["xD2ECnt"] <- sum( score[c("rD2","eD2","cD2","fD2")>=c(2,2,2,2)] )
-            rVal["xDnECnt"] <- sum( score[c("rDn","eDn","cDn","fDn")>=c(2,2,2,2)] )
-            rVal["xLrECnt"] <- sum( score[c("rLr","eLr","cLr","fLr")>=c(2,2,2,2)] )
-            rVal["xRlECnt"] <- sum( score[c("rRl","eRl","cRl","fRl")>=c(2,2,2,2)] )
+            rVal["xCntECnt"]<- sum( score[c("rCnt","eCnt","cCnt","fCnt")]>=c(2,3,2,2) )
+            rVal["xD2ECnt"] <- sum( score[c("rD2","eD2","cD2","fD2")]>=c(2,2,2,2) )
+            rVal["xDnECnt"] <- sum( score[c("rDn","eDn","cDn","fDn")]>=c(2,2,2,2) )
+            rVal["xLrECnt"] <- sum( score[c("rLr","eLr","cLr","fLr")]>=c(2,2,2,2) )
+            rVal["xRlECnt"] <- sum( score[c("rRl","eRl","cRl","fRl")]>=c(2,2,2,2) )
 
             rVal["r2EvtCnt"]<- sum( score[c("rD2","rDn","rLr","rRl")] >= c(2,2,2,2) )
             rVal["e2EvtCnt"]<- sum( score[c("eD2","eDn","eLr","eRl")] >= c(2,2,2,2) )
@@ -590,15 +590,15 @@ if( TRUE ){
 
             scrEvt <- bFCust.getEvt( score ,scoreMtxCfg[[fltObj$mInfo$mName]]$fCol )["lev",]
 
-            rVal["xH0MLen"] <- sum(rVal[c("rH0MLen","cH0MLen","fH0MLen")] ,na.rm=T)
-            rVal["xH0Cnt"]  <- sum(rVal[c("rH0Cnt" ,"cH0Cnt" ,"fH0Cnt")] ,na.rm=T)
-            rVal["xH0VCnt"] <- sum(rVal[c("rH0VCnt","cH0VCnt","fH0VCnt")] ,na.rm=T)
-            rVal["xH1MLen"] <- sum(rVal[c("rH1MLen","cH1MLen","fH1MLen")] ,na.rm=T)
-            rVal["xH1Cnt"]  <- sum(rVal[c("rH1Cnt" ,"cH1Cnt" ,"fH1Cnt")] ,na.rm=T)
-            rVal["xH1VCnt"] <- sum(rVal[c("rH1VCnt","cH1VCnt","fH1VCnt")] ,na.rm=T)
-            rVal["xH2MLen"] <- sum(rVal[c("rH2MLen","cH2MLen","fH2MLen")] ,na.rm=T)
-            rVal["xH2Cnt"]  <- sum(rVal[c("rH2Cnt" ,"cH2Cnt" ,"fH2Cnt")] ,na.rm=T)
-            rVal["xH2VCnt"] <- sum(rVal[c("rH2VCnt","cH2VCnt","fH2VCnt")] ,na.rm=T)
+            rVal["xH0MLen"] <- sum(score[c("rH0MLen","cH0MLen","fH0MLen")] ,na.rm=T)
+            rVal["xH0Cnt"]  <- sum(score[c("rH0Cnt" ,"cH0Cnt" ,"fH0Cnt")] ,na.rm=T)
+            rVal["xH0VCnt"] <- sum(score[c("rH0VCnt","cH0VCnt","fH0VCnt")] ,na.rm=T)
+            rVal["xH1MLen"] <- sum(score[c("rH1MLen","cH1MLen","fH1MLen")] ,na.rm=T)
+            rVal["xH1Cnt"]  <- sum(score[c("rH1Cnt" ,"cH1Cnt" ,"fH1Cnt")] ,na.rm=T)
+            rVal["xH1VCnt"] <- sum(score[c("rH1VCnt","cH1VCnt","fH1VCnt")] ,na.rm=T)
+            rVal["xH2MLen"] <- sum(score[c("rH2MLen","cH2MLen","fH2MLen")] ,na.rm=T)
+            rVal["xH2Cnt"]  <- sum(score[c("rH2Cnt" ,"cH2Cnt" ,"fH2Cnt")] ,na.rm=T)
+            rVal["xH2VCnt"] <- sum(score[c("rH2VCnt","cH2VCnt","fH2VCnt")] ,na.rm=T)
 
             # rVal["xxx"]  <- sum(score[c("xxx","xxx","xxx")] ,na.rm=T)
             # rVal["xxx"]  <- sum(scrEvt[c("xxx","xxx")] ,na.rm=T)

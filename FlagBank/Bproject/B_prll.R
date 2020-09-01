@@ -40,7 +40,6 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
     tgt.scMtx <- c( tgt.scMtx  ,c("bScr01","bScr02") )
     tgt.scMtx <- c( tgt.scMtx  ,c("scoreA","scoreB","scoreC","scoreD","scoreE","scoreF") )
 
-
     configH <- lastH-20    # configH는 기본 cutting값을 얻기 위하는 시점에 따라 조절.
     testSpan <- (lastH - 19:0)   # configH 보다는 큰 시점에서 시작해야 함을 유의.
     if( TRUE ){ # stdFiltedCnt 0~2내에서만 테스트

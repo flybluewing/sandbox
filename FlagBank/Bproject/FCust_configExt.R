@@ -406,8 +406,8 @@ if( TRUE ){    # sample
                             ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
                         )
         )
-        ,evtMax = NULL        ,rowReb = NULL        ,rowRebDup=NULL
-        ,summMtx = NULL       ,summMtx.reb = NULL   ,summMtx.sum = NULL
+        ,evtMax = NULL        ,rowReb = c(rawMin=2,lowE=2,rareE=1)  ,rowRebDup=NULL
+        ,summMtx = NULL       ,summMtx.reb = NULL                   ,summMtx.sum = NULL
         ,scMtx.sz = NULL      ,scMtx.sz.sum = NULL
         ,isHard=NULL  # use default
     )

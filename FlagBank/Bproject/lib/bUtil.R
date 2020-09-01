@@ -1412,7 +1412,8 @@ bUtil.chkStdMIPair <- function( gEnv ,aZoidMtx ){
 
 	lastPair <- fndPairCol( lastZoidMtx )
 	if( 0==length(lastPair) ){
-		return( list() )
+		rebLst <- lapply( seq_len(nrow(aZoidMtx)) ,function(p){ list() })
+		return(  )
 	}
 
 	rebLst <- list()
@@ -1431,7 +1432,10 @@ bUtil.chkStdMIPair <- function( gEnv ,aZoidMtx ){
 		})
 		
 		curPair <- fndPairCol( mtx )
-		if( 0==length(curPair) )	next
+		if( 0==length(curPair) ){
+			rebLst[[sprintf("a%d",aIdx)]] <- list()
+			next
+		}
 
 		fndPairLst <- list()
 		for( lIdx in 1:length(lastPair) ){

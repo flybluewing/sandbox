@@ -400,7 +400,7 @@ if( TRUE ){
 
 
 crMName <- "crScrN02PhEvt"  # phase 별로 evt 갯수 제한.(phase에서 다수 mName을 대상으로..)
-if( TRUE ){
+if( FALSE ){
     bCMtxLst[[crMName]] <- function( hCRScr=NULL ){
         # hCRScr : cutRst1Score 히스토리. Rebound 체크 기능은 나중에 구현한다.
         rObj <- list( 	idStr=crMName  ,mName=c("score1","score2","score3","score4","score5","score6","score7","score8","score9")

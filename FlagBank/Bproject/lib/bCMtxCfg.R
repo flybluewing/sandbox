@@ -65,10 +65,10 @@ if( TRUE ){
         ,fCol = list(
               "e3Max"   = list( rng=c(min=0,max=1) )
              ,"e3MCnt"  = list( rng=c(min=0,max=1) )
-             ,"e2Max"   = list( rng=c(min=0,max=1) )
+             ,"e2Max"   = list( rng=c(min=0,max=3) )
              ,"e2MCnt"  = list( rng=c(min=0,max=1) )
-             ,"e1Max"   = list( rng=c(min=0,max=1) )
-             ,"e1MCnt"  = list( rng=c(min=0,max=1) )
+             ,"e1Max"   = list( rng=c(min=0,max=4) )
+             ,"e1MCnt"  = list( rng=c(min=0,max=6) )
              ,"rebRawMax"   = list( rng=c(min=0,max=1) )
              ,"rebRawMCnt"  = list( rng=c(min=0,max=1) )
              ,"rebEvtMax"   = list( rng=c(min=0,max=1) )
@@ -128,7 +128,7 @@ if( TRUE ){
 }
 
 crMName <- "crScrN02PhEvt"
-if( TRUE ){
+if( FALSE ){
     bCMtxCfg[[crMName]] <- list(  mName = crMName
         ,fCol = list(
               "e3Max"   = list( rng=c(min=0,max=1) )
