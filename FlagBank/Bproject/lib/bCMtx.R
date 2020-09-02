@@ -207,9 +207,18 @@ if( TRUE ){
                 curCR <- cutRst1Score$aLst[[aIdx]][[hName]]$basic   # "rebMtx.ph"    "evtHpnLevMtx" "phaseReb"
 
                 tempMtx[,] <- 0
-                for( pIdx in phNameAll ){  # nIdx == pName
-                    for( mIdx in rObj$mName ){
-                        evtHpnLevMtx <- curCR[[mIdx]]$raw$evtHpnLevMtx
+                for( mIdx in rObj$mName ){
+                    evtHpnLevMtx <- curCR[[mIdx]]$raw$evtHpnLevMtx
+                    
+                    # evt lev1은 너무 흔해서, 하나의 phase 내에서 lev1 2개 이하는 자르자.
+                    lev1 <- evtHpnLevMtx["lev1",]
+                    evtHpnLevMtx["lev1",] <- ifelse(lev1>2,lev1-2,0)
+
+                    # evt lev2도 1개 이하는 자르자.                    
+                    lev2 <- evtHpnLevMtx["lev2",]
+                    evtHpnLevMtx["lev2",] <- ifelse(lev2>1,lev2-1,0)
+
+                    for( pIdx in phNameAll ){  # nIdx == pName
                         tempMtx["e1",pIdx] <- tempMtx["e1",pIdx] + evtHpnLevMtx["lev1",pIdx]
                         tempMtx["e2",pIdx] <- tempMtx["e2",pIdx] + evtHpnLevMtx["lev2",pIdx]
                         tempMtx["e3",pIdx] <- tempMtx["e3",pIdx] + evtHpnLevMtx["lev3",pIdx]
@@ -400,7 +409,7 @@ if( TRUE ){
 
 
 crMName <- "crScrN02PhEvt"  # phase 별로 evt 갯수 제한.(phase에서 다수 mName을 대상으로..)
-if( FALSE ){
+if( TRUE ){
     bCMtxLst[[crMName]] <- function( hCRScr=NULL ){
         # hCRScr : cutRst1Score 히스토리. Rebound 체크 기능은 나중에 구현한다.
         rObj <- list( 	idStr=crMName  ,mName=c("score1","score2","score3","score4","score5","score6","score7","score8","score9")
@@ -435,9 +444,18 @@ if( FALSE ){
                 curCR <- cutRst1Score$aLst[[aIdx]][[hName]]$basic   # "rebMtx.ph"    "evtHpnLevMtx" "phaseReb"
 
                 tempMtx[,] <- 0
-                for( pIdx in phNameAll ){  # nIdx == pName
-                    for( mIdx in rObj$mName ){
-                        evtHpnLevMtx <- curCR[[mIdx]]$raw$evtHpnLevMtx
+                for( mIdx in rObj$mName ){
+                    evtHpnLevMtx <- curCR[[mIdx]]$raw$evtHpnLevMtx
+                    
+                    # evt lev1은 너무 흔해서, 하나의 phase 내에서 lev1 2개 이하는 자르자.
+                    lev1 <- evtHpnLevMtx["lev1",]
+                    evtHpnLevMtx["lev1",] <- ifelse(lev1>2,lev1-2,0)
+
+                    # evt lev2도 1개 이하는 자르자.                    
+                    lev2 <- evtHpnLevMtx["lev2",]
+                    evtHpnLevMtx["lev2",] <- ifelse(lev2>1,lev2-1,0)
+
+                    for( pIdx in phNameAll ){  # nIdx == pName
                         tempMtx["e1",pIdx] <- tempMtx["e1",pIdx] + evtHpnLevMtx["lev1",pIdx]
                         tempMtx["e2",pIdx] <- tempMtx["e2",pIdx] + evtHpnLevMtx["lev2",pIdx]
                         tempMtx["e3",pIdx] <- tempMtx["e3",pIdx] + evtHpnLevMtx["lev3",pIdx]
@@ -472,5 +490,4 @@ if( FALSE ){
     }
 
 }
-
 
