@@ -167,6 +167,9 @@ getFilter.grp <- function( stdMI.grp ,tgt.scMtx=NULL ){
 		if( is.null(tgt.scMtx) || ("scoreE" %in%tgt.scMtx ) ){
 			mtxObjLst[[1+length(mtxObjLst)]] <- bFMtx.scoreE( stdMIObj )
 		}
+		# if( is.null(tgt.scMtx) || ("scoreF" %in%tgt.scMtx ) ){
+		# 	mtxObjLst[[1+length(mtxObjLst)]] <- bFMtx.scoreF( stdMIObj )
+		# }
 
 		names(mtxObjLst) <- sapply(mtxObjLst,function(p){p$idStr})
 		return( mtxObjLst )
@@ -3153,63 +3156,63 @@ bFMtx.scoreE <- function( stdMIObj ){
 
 }
 
+# 보류.... fStep 부분 연구필요.
+# bFMtx.scoreF <- function( stdMIObj ){
+# 	# 발생하기 흔치 않은 값의 재발생 확인. 예를 들어 cStep은 10이상의 재발생이 흔치않다.
+# 	stdMI <- stdMIObj$stdMI
+# 	zMtx <- stdMIObj$zMtx
+# 	rObj <- list( 	idStr="scoreF"	,zMtx.size=nrow(zMtx)	,lastZoid=stdMI$lastZoid	)
+# 	if( 0<rObj$zMtx.size ){
+# 		rObj$cStep <- stdMI$cStep
+# 		rObj$fStep <- stdMI$fStep
+# 	}
 
-bFMtx.scoreF <- function( stdMIObj ){
-	# 발생하기 흔치 않은 값의 재발생 확인. 예를 들어 cStep은 10이상의 재발생이 흔치않다.
-	stdMI <- stdMIObj$stdMI
-	zMtx <- stdMIObj$zMtx
-	rObj <- list( 	idStr="scoreF"	,zMtx.size=nrow(zMtx)	,lastZoid=stdMI$lastZoid	)
-	if( 0<rObj$zMtx.size ){
-		rObj$cStep <- stdMI$cStep
-		rObj$fStep <- stdMI$fStep
-	}
+# 	rObj$fMtxObj <- function( aZoidMtx ,makeInfoStr=F ){
+# 		aLen <- nrow(aZoidMtx)
+# 		cName <- c(	"raw16","cStep","fStep" )
+# 		scoreMtx <- matrix( 0, nrow=aLen, ncol=length(cName) )	;colnames(scoreMtx) <- cName
 
-	rObj$fMtxObj <- function( aZoidMtx ,makeInfoStr=F ){
-		aLen <- nrow(aZoidMtx)
-		cName <- c(	"raw16","cStep","fStep" )
-		scoreMtx <- matrix( 0, nrow=aLen, ncol=length(cName) )	;colnames(scoreMtx) <- cName
+# 		infoMtx <- NULL
+# 		if( makeInfoStr ){
+# 			cName <- c( "zMtx.size" )
+# 			infoMtx <- matrix( "" ,nrow=aLen ,ncol=length(cName) )	;colnames(infoMtx) <- cName
+# 			infoMtx[,"zMtx.size"] <- rObj$zMtx.size
+# 		}
+# 		if( 0==rObj$zMtx.size ){
+# 			return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
+# 		}
 
-		infoMtx <- NULL
-		if( makeInfoStr ){
-			cName <- c( "zMtx.size" )
-			infoMtx <- matrix( "" ,nrow=aLen ,ncol=length(cName) )	;colnames(infoMtx) <- cName
-			infoMtx[,"zMtx.size"] <- rObj$zMtx.size
-		}
-		if( 0==rObj$zMtx.size ){
-			return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
-		}
+# 		for( aIdx in 1:aLen ){
+# 			aZoid <- aZoidMtx[aIdx,]
+# 			aCStep <- aZoid[2:6] - aZoid[1:5]	
+# 			aFStep <- aZoid - rObj$lastZoid
 
-		for( aIdx in 1:aLen ){
-			aZoid <- aZoidMtx[aIdx,]
-			aCStep <- aZoid[2:6] - aZoid[1:5]	
-			aFStep <- aZoid - rObj$lastZoid
+# 			if( (aZoid[1]==rObj$lastZoid[1]) && (rObj$lastZoid[1]>10) ){
+# 				scoreMtx[aIdx,"raw16"] <- scoreMtx[aIdx,"raw16"]+1
+# 			}
+# 			if( (aZoid[6]==rObj$lastZoid[6]) && (rObj$lastZoid[6]<35) ){
+# 				scoreMtx[aIdx,"raw16"] <- scoreMtx[aIdx,"raw16"]+1
+# 			}
 
-			if( (aZoid[1]==rObj$lastZoid[1]) && (rObj$lastZoid[1]>10) ){
-				scoreMtx[aIdx,"raw16"] <- scoreMtx[aIdx,"raw16"]+1
-			}
-			if( (aZoid[6]==rObj$lastZoid[6]) && (rObj$lastZoid[6]<35) ){
-				scoreMtx[aIdx,"raw16"] <- scoreMtx[aIdx,"raw16"]+1
-			}
+# 			matFlag <- aCStep==rObj$cStep
+# 			if( any(matFlag) ){
+# 				scoreMtx[aIdx,"cStep"] <- sum( matFlag & (aCStep>10) )
+# 			}
 
-			matFlag <- aCStep==rObj$cStep
-			if( any(matFlag) ){
-				scoreMtx[aIdx,"cStep"] <- sum( matFlag & (aCStep>10) )
-			}
+# 			matFlag <- aFStep==rObj$fStep
+# 			if( any(matFlag) ){
+# 				scoreMtx[aIdx,"fStep"] <- sum( matFlag & (abs(aFStep)>8) )
+# 			}
 
-			matFlag <- aFStep==rObj$cFtep
-			if( any(matFlag) ){
-				scoreMtx[aIdx,"cStep"] <- sum( matFlag & (abs(aFStep)>8) )
-			}
+# 		}
 
-		}
+# 		return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
 
-		return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
+# 	}
 
-	}
+# 	return( rObj )
 
-	return( rObj )
-
-}
+# }
 
 
 

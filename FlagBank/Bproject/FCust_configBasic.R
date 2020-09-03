@@ -1440,7 +1440,7 @@ scoreMtxCfg[[mName]] <- list(
                         ,evt=matrix( c(c(2,3,3,3,3,3),c(2,3,4,5,6,7)) ,ncol=2)
                         ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
                     )
-        ,"fH0VCnt"=list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+        ,"fH0VCnt"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
                         ,evt=matrix( c(c(2,3,3,3,3,3),c(2,3,4,5,6,7)) ,ncol=2)
                         ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
                     )
@@ -1453,7 +1453,7 @@ scoreMtxCfg[[mName]] <- list(
                         ,evt=matrix( c(c(2,3,3,3,3,3),c(2,3,4,5,6,7)) ,ncol=2)
                         ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
                     )
-        ,"rH1VCnt"=list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+        ,"rH1VCnt"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
                         ,evt=matrix( c(c(2,3,3,3,3,3),c(2,3,4,5,6,7)) ,ncol=2)
                         ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
                     )
@@ -1477,7 +1477,7 @@ scoreMtxCfg[[mName]] <- list(
                         ,evt=matrix( c(c(2,3,3,3,3,3),c(2,3,4,5,6,7)) ,ncol=2)
                         ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
                     )
-        ,"fH1VCnt"=list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+        ,"fH1VCnt"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
                         ,evt=matrix( c(c(2,3,3,3,3,3),c(2,3,4,5,6,7)) ,ncol=2)
                         ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
                     )
@@ -1514,7 +1514,7 @@ scoreMtxCfg[[mName]] <- list(
                         ,evt=matrix( c(c(2,3,3,3,3,3),c(2,3,4,5,6,7)) ,ncol=2)
                         ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
                     )
-        ,"fH2VCnt"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+        ,"fH2VCnt"=list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )
                         ,evt=matrix( c(c(2,3,3,3,3,3),c(2,3,4,5,6,7)) ,ncol=2)
                         ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
                     )
@@ -1542,19 +1542,19 @@ scoreMtxCfg[[mName]] <- list(
 
 
 mName <- "scoreF"
-if( TRUE ){
+if( FALSE ){
     scoreMtxCfg[[mName]] <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
-            "raw16"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+            "raw16"=list( rng=matrix( c(10,20 ,0,0) ,ncol=2 )
                             ,evt=matrix( c(c(2,3,3,3,3,3),c(2,3,4,5,6,7)) ,ncol=2)
                             ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
                         )
-            ,"cStep"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+            ,"cStep"=list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
                             ,evt=matrix( c(c(2,3,3,3,3,3),c(2,3,4,5,6,7)) ,ncol=2)
                             ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
                         )
-            ,"fStep"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+            ,"fStep"=list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
                             ,evt=matrix( c(c(2,3,3,3,3,3),c(2,3,4,5,6,7)) ,ncol=2)
                             ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
                         )

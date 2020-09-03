@@ -566,7 +566,7 @@ if( TRUE ){
 
 
 mName <- "scoreE"
-if( FALSE ){
+if( TRUE ){
     bFMtxExtFltLst[[mName]] <- list()
         # rH0MLen rH0Cnt rH0VCnt
         # cH0MLen cH0Cnt cH0VCnt fH0MLen fH0Cnt fH0VCnt
