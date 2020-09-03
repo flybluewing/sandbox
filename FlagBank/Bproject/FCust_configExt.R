@@ -418,7 +418,7 @@ if( TRUE ){    # sample
 
 
 mName <- "scoreE"
-if( TRUE ){    # sample
+if( FALSE ){    # sample
     scrExtMtxCfg[[mName]] <- list()
 
     scrExtMtxCfg[[mName]]$filter01 <- list(
