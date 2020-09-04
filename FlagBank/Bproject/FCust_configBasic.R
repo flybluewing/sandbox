@@ -1542,7 +1542,7 @@ scoreMtxCfg[[mName]] <- list(
 
 
 mName <- "scoreF"
-if( FALSE ){
+if( TRUE ){
     scoreMtxCfg[[mName]] <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
