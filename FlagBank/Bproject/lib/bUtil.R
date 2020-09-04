@@ -645,7 +645,7 @@ bUtil.getStdMILst <- function( gEnv ,fRstLst=NULL ){
 
 		zMtx <- fCutU.getNextZW( gEnv )$zMtx
 		stdMILst.basic[["nextZW"]] <- list( stdMI=fCutU.getMtxInfo(zMtx) ,zMtx=zMtx )
-		
+
 		zMtx <- fCutU.getNextQuo10( gEnv )$zMtx	# rptObj<-anaQuoTbl( zMtx )
 		stdMILst.basic[["nextQuo10"]] <- list( stdMI=fCutU.getMtxInfo(zMtx) ,zMtx=zMtx )
 

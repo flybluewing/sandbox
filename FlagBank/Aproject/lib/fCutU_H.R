@@ -238,7 +238,7 @@ fCutU.getNextZW <- function( gEnv ){ # < official >
 	hZW <- gEnv$zhF[,6] - gEnv$zhF[,1]
 	nextZW.idx <- which( hZW[1:(hLen-1)]==hZW[hLen] )+1
 	
-	rObj <- list( zMtx=gEnv$zhF[nextZW.idx,] ,hZW=hZW )
+	rObj <- list( zMtx=gEnv$zhF[nextZW.idx,,drop=F] ,hZW=hZW )
 	return( rObj )
 
 } # fCutU.getNextZW()

@@ -147,8 +147,6 @@ for( sfcIdx in 0 ){ # 0:2
     }
     
 
-
-
     # bC.cut() ----------------------------------------------------------------------
     for( crMName in names(bCMtxCfg) ){  # bUtil.cut2() ¥Î√º
         surFlag <- rep( T ,length(allIdxF) )
@@ -183,9 +181,67 @@ for( sfcIdx in 0 ){ # 0:2
         rptStr <- sprintf( "allIdxF size : %dk" ,length(allIdxF) %/% 1000 )
         prllLog$fLogStr( rptStr, pTime=T)   ;rptStr
 
+    }   # sprintf("Obj_allIdxF%d_bCCut_%s_%d.save",sfcIdx,crMName,lastH)
+
+
+    # bUtil.chkStdMIPair() ------------------------------------------------------------------
+    if( TRUE ){
+        surFlag <- rep( T ,length(allIdxF) )
+        bLst <- k.blockLst( length(allIdxF) ,100*ifelse(testMode,5,10) )
+        prllLog$fLogStr( sprintf("start bUtil.chkStdMIPair(%s) for group%d. bLst size %d",crMName,sfcIdx,length(bLst)), pTime=T)
+
+        sfExport("gEnv")    ;sfExport("allIdxF")
+        resultLst <- sfLapply( bLst ,function( blk ){
+            tStmp <- Sys.time()
+
+            blkSpan <- blk["start"]:blk["end"]
+            pairRebLst <- bUtil.chkStdMIPair( gEnv ,aZoidMtx=gEnv$allZoidMtx[allIdxF[blkSpan],,drop=F] )
+
+            cName <- c("max","cnt")
+            cutMtx <- matrix( 0, nrow=length(pairRebLst) ,ncol=length(cName) 
+                        ,dimnames=list( sprintf("a%d",allIdxF[blkSpan]) ,cName )
+            )
+            for( idx in seq_len(length(pairRebLst)) ){
+                pairReb <- pairRebLst[[idx]]
+                if( 0== length(pairReb) ) next
+
+
+                fndPairLen <- sapply( pairReb ,function(p){ length(p$fndPair) })
+                if( 0<length(fndPairLen) ){
+                    cutMtx[idx,"cnt"] <- length(fndPairLen) 
+                }
+                if( 1<max(fndPairLen) ){
+                    cutMtx[idx,"max"] <- max(fndPairLen)
+                }
+            }
+
+            surFlag <- apply( cutMtx ,1 ,function(p){all(p==0)})
+            tDiff <- Sys.time() - tStmp
+            logStr <- sprintf("  block finished for bUtil.chkStdMIPair(). %d/%d  %5.1f%s for %d~%d "
+                                ,sum(!surFlag)   ,length(surFlag)
+                                ,tDiff      ,units(tDiff)           ,blk["start"] ,blk["end"]
+            )
+            prllLog$fLogStr( logStr )
+
+            return( list( surFlag=surFlag ,blk=blk ) )
+        })
+        for( idx in seq_len(length(resultLst)) ){
+            blk <- resultLst[[idx]]$blk
+            surFlag[ blk["start"]:blk["end"] ] <- resultLst[[idx]]$surFlag
+        }
+        allIdxF <- allIdxF[surFlag]
+        logger$fLogStr(sprintf("   - bUtil.chkStdMIPair()   survival size :%7d",length(allIdxF)),pTime=T)
+        save( allIdxF ,file=sprintf("Obj_allIdxF%d_chkStdMIPair_%d.save",sfcIdx,lastH) )
+        rptStr <- sprintf( "chkStdMIPair - allIdxF size : %dk" ,length(allIdxF) %/% 1000 )
+        prllLog$fLogStr( rptStr, pTime=T)   ;rptStr
     }
 
 
+
+
+
+    # ===================================================================================
+    # -- End of Cut ---------------------------------------------------------------------
 
     # bUtil.cut2() ----------------------------------------------------------------------
     surFlag <- rep( T ,length(allIdxF) )
