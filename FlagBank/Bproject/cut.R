@@ -1,22 +1,17 @@
 source("header.r")  ;source("B_H.R")    ;source("cut_H.R")
 
-lastH <- 926
+lastH <- 927
 tgt.scMtx <- NULL
 testMode <- F            #check
 prllNum <- 5
 
 QQE:Trouble      # 실수 방지를 위해 의도된 오류코드
 
-# lastH <- 914
-# tgt.scMtx <- NULL
-# testMode <-         # check
-
 load(sprintf("../Aproject/Obj_allIdxLstZ%d.save",lastH) )
 load(sprintf("../Aproject/save/Obj_fRstLstZ%d.save",lastH) )    ;names(fRstLst) <- names(allIdxLst$stdFiltedCnt)
 load(sprintf("../Aproject/save/Obj_gEnvZ%d.save",lastH))
 
 #-[Parallel init work]-------------------------------------------------------------
-# prllNum <- 4     # 실수가 잦아서 그냥 오류 코드로 놔둔다.
 prllLog <- k.getFlogObj( "./log/parallel_log_Cut.txt" )
 prll.initHeader <- function( ){
     k <- sfLapply(1:prllNum,function(prllId){
