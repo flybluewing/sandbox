@@ -1546,15 +1546,19 @@ if( TRUE ){
     scoreMtxCfg[[mName]] <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
-            "raw16"=list( rng=matrix( c(10,20 ,0,0) ,ncol=2 )
+            "r16VReb"=list( rng=matrix( c(10,20 ,0,0) ,ncol=2 )
                             ,evt=matrix( c(c(2,3,3,3,3,3),c(2,3,4,5,6,7)) ,ncol=2)
                             ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
                         )
-            ,"cStep"=list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+            ,"cVReb"=list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
                             ,evt=matrix( c(c(2,3,3,3,3,3),c(2,3,4,5,6,7)) ,ncol=2)
                             ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
                         )
-            ,"fStep"=list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+            ,"cSeqCnt"=list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3,3,3),c(2,3,4,5,6,7)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                        )
+            ,"cSeqMax"=list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
                             ,evt=matrix( c(c(2,3,3,3,3,3),c(2,3,4,5,6,7)) ,ncol=2)
                             ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
                         )
@@ -1567,8 +1571,6 @@ if( TRUE ){
         ,isHard=NULL  # use default
     )
 }
-
-
 
 
 

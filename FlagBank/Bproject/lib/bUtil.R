@@ -1413,7 +1413,7 @@ bUtil.chkStdMIPair <- function( gEnv ,aZoidMtx ){
 	lastPair <- fndPairCol( lastZoidMtx )
 	if( 0==length(lastPair) ){
 		rebLst <- lapply( seq_len(nrow(aZoidMtx)) ,function(p){ list() })
-		return(  )
+		return( rebLst )
 	}
 
 	rebLst <- list()

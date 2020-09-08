@@ -3161,15 +3161,28 @@ bFMtx.scoreF <- function( stdMIObj ){
 	# 발생하기 흔치 않은 값의 재발생 확인. 예를 들어 cStep은 10이상의 재발생이 흔치않다.
 	stdMI <- stdMIObj$stdMI
 	zMtx <- stdMIObj$zMtx
-	rObj <- list( 	idStr="scoreF"	,zMtx.size=nrow(zMtx)	,lastZoid=stdMI$lastZoid	)
+	rObj <- list( 	idStr="scoreF"	,zMtx.size=nrow(zMtx)	,lastZoid=stdMI$lastZoid )
+
 	if( 0<rObj$zMtx.size ){
 		rObj$cStep <- stdMI$cStep
 		rObj$fStep <- stdMI$fStep
+
+		rObj$evtSeqCStep <- rep(0,5)	;names(rObj$evtSeqCStep) <- paste("col",1:5,sep="")
+		if( TRUE ){
+			dLen <- nrow(stdMI$rawTail)
+
+			for( cIdx in 1:5 ){
+				fIdx <- which( !(stdMI$cStepTail[dLen:1,cIdx]>10) )
+				if( 0<length(fIdx) ){
+					rObj$evtSeqCStep[cIdx] <- fIdx[1]-1
+				}
+			}
+		}
 	}
 
 	rObj$fMtxObj <- function( aZoidMtx ,makeInfoStr=F ){
 		aLen <- nrow(aZoidMtx)
-		cName <- c(	"raw16","cStep","fStep" )
+		cName <- c(	"r16VReb","cVReb","cSeqCnt","cSeqMax" )
 		scoreMtx <- matrix( 0, nrow=aLen, ncol=length(cName) )	;colnames(scoreMtx) <- cName
 
 		infoMtx <- NULL
@@ -3188,20 +3201,23 @@ bFMtx.scoreF <- function( stdMIObj ){
 			aFStep <- aZoid - rObj$lastZoid
 
 			if( (aZoid[1]==rObj$lastZoid[1]) && (rObj$lastZoid[1]>10) ){
-				scoreMtx[aIdx,"raw16"] <- scoreMtx[aIdx,"raw16"]+1
+				scoreMtx[aIdx,"r16VReb"] <- scoreMtx[aIdx,"r16VReb"]+1
 			}
 			if( (aZoid[6]==rObj$lastZoid[6]) && (rObj$lastZoid[6]<35) ){
-				scoreMtx[aIdx,"raw16"] <- scoreMtx[aIdx,"raw16"]+1
+				scoreMtx[aIdx,"r16VReb"] <- scoreMtx[aIdx,"r16VReb"]+1
 			}
 
 			matFlag <- aCStep==rObj$cStep
 			if( any(matFlag) ){
-				scoreMtx[aIdx,"cStep"] <- sum( matFlag & (aCStep>10) )
+				scoreMtx[aIdx,"cVReb"] <- sum( matFlag & (aCStep>10) )
 			}
 
-			matFlag <- aFStep==rObj$fStep
-			if( any(matFlag) ){
-				scoreMtx[aIdx,"fStep"] <- sum( matFlag & (abs(aFStep)>8) )
+			seqFlag <- rObj$evtSeqCStep>0 & aCStep>10
+			if( 1<sum(seqFlag) ){
+				scoreMtx[aIdx,"cSeqCnt"] <- sum(seqFlag)
+				if( 1<max(rObj$evtSeqCStep[seqFlag]) ){
+					scoreMtx[aIdx,"cSeqMax"] <- max(rObj$evtSeqCStep[seqFlag])
+				}
 			}
 
 		}
