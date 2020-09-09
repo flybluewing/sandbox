@@ -1546,19 +1546,19 @@ if( TRUE ){
     scoreMtxCfg[[mName]] <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
-            "r16VReb"=list( rng=matrix( c(10,20 ,0,0) ,ncol=2 )
+            "r16VReb"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
                             ,evt=matrix( c(c(2,3,3,3,3,3),c(2,3,4,5,6,7)) ,ncol=2)
                             ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
                         )
-            ,"cVReb"=list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+            ,"cVReb"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                            ,evt=matrix( c(c(3,3,3,3,3,3),c(2,3,4,5,6,7)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                        )
+            ,"cSeqCnt"=list( rng=matrix( c(0,2 ,0,2) ,ncol=2 )
                             ,evt=matrix( c(c(2,3,3,3,3,3),c(2,3,4,5,6,7)) ,ncol=2)
                             ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
                         )
-            ,"cSeqCnt"=list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
-                            ,evt=matrix( c(c(2,3,3,3,3,3),c(2,3,4,5,6,7)) ,ncol=2)
-                            ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
-                        )
-            ,"cSeqMax"=list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+            ,"cSeqMax"=list( rng=matrix( c(0,2 ,0,2) ,ncol=2 )
                             ,evt=matrix( c(c(2,3,3,3,3,3),c(2,3,4,5,6,7)) ,ncol=2)
                             ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
                         )
@@ -1567,7 +1567,14 @@ if( TRUE ){
         ,evtMaxFColTot = NULL
         ,rowReb = NULL      ,rowRebDup=NULL
         ,summMtx = NULL     ,summMtx.reb = NULL     ,summMtx.sum = NULL
-        ,scMtx.sz = NULL    ,scMtx.sz.sum = NULL
+        ,scMtx.sz = matrix( c(   2 ,1 ,1 ,1 ,1 ,1   ,1 ,1 ,1 ,1 ,1 ,1 ) ,byrow=T
+                        ,ncol=length(scMtx.szName$cName) ,nrow=length(scMtx.szName$rName) 
+                        ,dimnames=list(scMtx.szName$rName,scMtx.szName$cName)
+                        #     $scMtx.sz      r.ph r.fCol r.dblHpnFlg e.ph e.fCol e.dblHpnFlg
+                        #             rebCnt    0      0           0    0      0           0
+                        #             rebDup    0      0           0    0      0           0
+        )
+        ,scMtx.sz.sum = NULL
         ,isHard=NULL  # use default
     )
 }

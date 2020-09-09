@@ -189,7 +189,7 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
             auxTest$cutRstScrSet <- cutRstScrSet
         }
 
-        return( list(hIdx=curHIdx ,cutRst=cutRst ,auxTest=auxTest ) )
+        return( list(hIdx=curHIdx ,cutRst=cutRst ,auxTest=auxTest ,cutRst1Score=cutRst1Score ) )
     })
     names( resultLst ) <- sapply( resultLst ,function(p){p$hIdx})
     cutRstLst <- lapply( resultLst ,function(p){p$cutRst})
@@ -215,6 +215,7 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
     rptBanTyp <- NULL
     B.rptCutRstLst( cutRstLst ,file=rptFile ,rptBanTyp=rptBanTyp )
 
+    B.rptCutRst1Score( resultLst ,sprintf("CutRst1Score_%d",lastH) )
 }
 
 

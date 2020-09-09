@@ -589,6 +589,68 @@ B.rptCutRstLst <- function( cutRstLst ,file="cutRstLst" ,rptBanTyp=NULL ){
 
 } # B.rptCutRstLst()
 
+B.rptCutRst1Score <- function( resultLst ,file="CutRst1Score" ){
+
+    getShortPhaseName <- function( phaseName ){
+        phaseName <- gsub("^next","",phaseName)
+        phaseName <- gsub("^ColVal_","cv",phaseName)
+        phaseName <- gsub("StepBin","Bin",phaseName)
+        return( phaseName )
+    }
+
+    rpt <- function( logger ,hIdx ,hName ,rebMtx.ph ,phaseReb ,summMtx ,summMtx.reb ,scMtx.sz ){
+        logger$fLogStr( sprintf("\n[hIdx:%s - %s] ------------------------------------------------",hIdx,hName) )
+        
+        logger$fLogStr( "  <rebMtx.ph>" ) ;mtx <- rebMtx.ph[c("rebFlag.raw","rebFlag.evt") ,]
+        colnames(mtx) <- getShortPhaseName(colnames(mtx))
+        logger$fLogMtx( mtx ,pIndent="    ")
+
+        logger$fLogStr( "  <phaseReb>" )  ;mtx <- phaseReb[c("rebFlag.raw","rebFlag.evt") ,]
+        colnames(mtx) <- getShortPhaseName(colnames(mtx))
+        logger$fLogMtx( mtx ,pIndent="    ")
+
+        logger$fLogStr( "  <summMtx>" ) ;mtx <- summMtx
+        colnames(mtx) <- getShortPhaseName(colnames(mtx))
+        logger$fLogMtx( mtx ,pIndent="    ")
+        logger$fLogStr( "  <summMtx.reb>" ) ;mtx <- summMtx.reb
+        colnames(mtx) <- getShortPhaseName(colnames(mtx))
+        logger$fLogMtx( mtx ,pIndent="    ")
+
+        logger$fLogStr( "  <scMtx.sz>" ) ;mtx <- scMtx.sz
+        colnames(mtx) <- getShortPhaseName(colnames(mtx))
+        logger$fLogMtx( mtx ,pIndent="    ")
+    }
+
+    logger <- k.getFlogObj( sprintf("./report/workRpt/%s.txt",file) )
+    logger$fLogStr("Start",pTime=T,pAppend=F)
+
+    for( hIdx in names(resultLst) ){
+        cutRst1Score <- resultLst[[hIdx]]$cutRst1Score$aLst[[1]]
+        for( hName in names(cutRst1Score) ){
+            rebMtx.ph <- NULL   ;phaseReb <- NULL
+            summMtx <- NULL     ;summMtx.reb <- NULL    ;scMtx.sz <- NULL
+            for( mName in names(cutRst1Score[[hName]]$basic) ){
+                rawObj <- cutRst1Score[[hName]]$basic[[mName]]$raw      # "rebMtx.ph"    "evtHpnLevMtx" "phaseReb"    
+                summObj <- cutRst1Score[[hName]]$basic[[mName]]$summ    # "fColEvt"     "summMtx"     "summMtx.reb" "scMtx.sz"  
+
+                if( is.null(rebMtx.ph) ){   rebMtx.ph <- rawObj$rebMtx.ph
+                } else {    rebMtx.ph <- rebMtx.ph + rawObj$rebMtx.phase        }
+                if( is.null(phaseReb) ){    phaseReb <- rawObj$phaseReb
+                } else {    phaseReb <- phaseReb + rawObj$phaseReb              }
+
+                if( is.null(summMtx) ){     summMtx <- summObj$summMtx
+                } else {    summMtx <- summMtx + summObj$summMtx                }
+                if( is.null(summMtx.reb) ){ summMtx.reb <- summObj$summMtx.reb
+                } else {    summMtx.reb <- summMtx.reb + summObj$summMtx.reb    }
+                if( is.null(scMtx.sz) ){    scMtx.sz <- summObj$scMtx.sz
+                } else {    scMtx.sz <- scMtx.sz + summObj$scMtx.sz             }
+            }
+
+            rpt( logger ,hIdx ,hName ,rebMtx.ph ,phaseReb ,summMtx ,summMtx.reb ,scMtx.sz )
+        }
+    }
+
+}
 
 B.get_testData.grp.old <- function( testSpan ,gEnv ,allIdxLst ,fRstLst ,tgt.scMtx=NULL ,get.scoreMtx.grp=FALSE ){
 
@@ -745,3 +807,6 @@ B.get_cutRst1.grp <- function( testData.grp ,gEnv ,allIdxLst ,fRstLst ){
     return( cutRst1Lst.grp )
 
 }   # B.get_cutRst1.grp
+
+
+
