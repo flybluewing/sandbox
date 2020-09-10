@@ -137,6 +137,42 @@ cutH.bC.Cut <- function( gEnv ,allIdxF ,blk ,filter.grp ,tgt.scMtx ,logger=NULL 
 
 
 
+CRpt.cutRst1Score <- function( aZoidMtx ,filter.grp ,cut.grp ,fHName ,logFile="CRpt_CutRst1Score" ){
+    #   aZoidMtx <- gEnv$allZoidMtx[sort(allIdxF),,drop=F]
+
+    logger <- k.getFlogObj( sprintf("./report/workRpt/%s.txt",logFile) )
+    logger$fLogStr("Start",pTime=T,pAppend=F)
+
+    tgt.scMtx <- c( "score1","score2","score3","score4","score5","score6","score7","score8","score9" )
+
+    scoreMtx.grp <- getScoreMtx.grp( aZoidMtx ,filter.grp )
+    cutRst1Score <- bUtil.getCut1Score( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx )
+
+    aLen <- length(cutRst1Score$aLst)
+    cName <- c("r.ph" ,"r.fCol" ,"r.dblHpnFlg" ,"e.ph" ,"e.fCol" ,"e.dblHpnFlg")
+    scMtx_rebCnt <- matrix( 0 ,nrow=aLen ,ncol=length(cName) 
+                    ,dimnames=list(names(cutRst1Score$aLst),cName)
+    )
+    for( idx in seq_len(aLen) ){
+        for( hName in "sfcLate" ){    # names(cutRst1Score$aLst[[idx]])
+            scMtx.sz <- NULL
+            for( mName in names(cutRst1Score$aLst[[idx]][[hName]]$basic) ){
+                rawObj <- cutRst1Score$aLst[[idx]][[hName]]$basic[[mName]]$raw
+                summObj <- cutRst1Score$aLst[[idx]][[hName]]$basic[[mName]]$summ
+
+                if( is.null(scMtx.sz) ){    scMtx.sz <- summObj$scMtx.sz
+                } else {    scMtx.sz <- scMtx.sz + summObj$scMtx.sz    }
+            }
+            scMtx_rebCnt[idx,] <- scMtx.sz["rebCnt",]   #  일단 sfcLate에 대해서만 관찰하자.
+        }
+    }
+    
+    
+
+}
+
+
+
 # Code BackUp
 if( FALSE ){    # cutH.InitialCut() 사용 이후로 필요 없어진 듯 하다.
     # surFlag <- rep( T ,length(allIdxF) )
