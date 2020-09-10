@@ -1031,7 +1031,7 @@ FCust_stdCut.hIdx <- function( hName ,mName ,mtxLst ){
         evtObj  <- rawObj$evtObj
         curEvt  <- rawObj$curEvt
         fColEvt <- rawObj$fColEvt
-        rebInfo <- rawObj$rebInfo
+        rebInfo <- rawObj$rebInfo   # bFCust.getSkipZero_byHIdx.ass() 값임을 유의
 
         # fColEvt 평가 적용.
         #   cfg의 evtMax.fCol이 이미 적용되었음(close max 값이므로)

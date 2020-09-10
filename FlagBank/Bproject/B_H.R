@@ -634,7 +634,7 @@ B.rptCutRst1Score <- function( resultLst ,file="CutRst1Score" ){
                 summObj <- cutRst1Score[[hName]]$basic[[mName]]$summ    # "fColEvt"     "summMtx"     "summMtx.reb" "scMtx.sz"  
 
                 if( is.null(rebMtx.ph) ){   rebMtx.ph <- rawObj$rebMtx.ph
-                } else {    rebMtx.ph <- rebMtx.ph + rawObj$rebMtx.phase        }
+                } else {    rebMtx.ph <- rebMtx.ph + rawObj$rebMtx.ph           }
                 if( is.null(phaseReb) ){    phaseReb <- rawObj$phaseReb
                 } else {    phaseReb <- phaseReb + rawObj$phaseReb              }
 

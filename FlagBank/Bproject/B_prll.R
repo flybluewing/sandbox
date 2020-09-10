@@ -1,7 +1,6 @@
 source("header.r")
 source("B_H.R") ;source("B_prll_H.R")
-lastH <- 880    # 최종 데이터의 로딩 기준일 뿐, 작업시점(workH)은 다를 수 있다.
-#source(sprintf("./toFinal/toZ%d_H.R",workH))	# working
+lastH <- 880
 
 load(sprintf("../Aproject/Obj_allIdxLstZ%d.save",lastH) )
 load(sprintf("../Aproject/save/Obj_fRstLstZ%d.save",lastH) )
@@ -215,7 +214,8 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
     rptBanTyp <- NULL
     B.rptCutRstLst( cutRstLst ,file=rptFile ,rptBanTyp=rptBanTyp )
 
-    B.rptCutRst1Score( resultLst ,sprintf("CutRst1Score_%d",lastH) )
+    B.rptCutRst1Score( resultLst ,file=sprintf("CutRst1Score_%d",lastH) )
+
 }
 
 
