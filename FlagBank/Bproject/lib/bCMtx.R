@@ -254,6 +254,7 @@ if( TRUE ){
 
 }
 
+
 crMName <- "crScrN02R"  # Cut-Result, Score N, Raw val only
 if( TRUE ){
 
@@ -486,6 +487,65 @@ if( TRUE ){
 
             return( crScrMtx )
         }
+        return( rObj )
+    }
+
+}
+
+
+crMName <- "crScrN02Sum"  # Cut-Result, Score N, Raw val only
+if( TRUE ){
+
+    bCMtxLst[[crMName]] <- function( hCRScr=NULL ){
+        # hCRScr : cutRst1Score 히스토리. Rebound 체크 기능은 나중에 구현한다.
+
+        rObj <- list( 	idStr=crMName  ,mName=c("score1","score2","score3","score4","score5","score6","score7","score8","score9")
+		)
+
+        rObj$fMtxObj <- function( scoreMtx.grp ,cut.grp ,fHName="sfcLate" ){
+            tgt.scMtx <- rObj$mName
+            cutRst1Score <- bUtil.getCut1Score( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx )
+
+            aLen <- length(cutRst1Score$aLst)
+            cName <- c(	 "summSumRaw"   ,"summSumEvt"       ,"summSumOthRaw"    ,"summSumOthEvt"
+                        ,"summSumRebRaw","summSumRebEvt"    ,"summSumRebOthRaw" ,"summSumRebOthEvt"
+                        ,"szSumRebCnt"  ,"szSumRebDup"
+            )
+            crScrMtx <- matrix( 0, nrow=aLen, ncol=length(cName) )	;colnames(crScrMtx) <- cName
+
+            hName <- "sfcLate"  # 일단 rebound 없이 체크하는 부분.
+            for( aIdx in 1:aLen ){
+
+                summMtx <- NULL ;summMtx.reb <- NULL    ;scMtx.sz <- NULL
+                for( mName in names(cutRst1Score$aLst[[aIdx]][[hName]]$basic) ){
+                    rawObj <- cutRst1Score$aLst[[idx]][[hName]]$basic[[mName]]$raw
+                    summObj <- cutRst1Score$aLst[[idx]][[hName]]$basic[[mName]]$summ
+
+                    if( is.null(summMtx) ){    summMtx <- summObj$summMtx
+                    } else {    summMtx <- summMtx + summObj$summMtx                }
+                    if( is.null(summMtx.reb) ){    summMtx.reb <- summObj$summMtx.reb
+                    } else {    summMtx.reb <- summMtx.reb + summObj$summMtx.reb    }
+
+                    if( is.null(scMtx.sz) ){    scMtx.sz <- summObj$scMtx.sz
+                    } else {    scMtx.sz <- scMtx.sz + summObj$scMtx.sz    }
+                }
+
+                crScrMtx[aIdx,"summSumRaw"]     <- sum( summMtx["raw",c("ph","fCol")] )
+                crScrMtx[aIdx,"summSumEvt"]     <- sum( summMtx["evt",c("ph","fCol")] )
+                crScrMtx[aIdx,"summSumOthRaw"]  <- sum( summMtx["raw",c("phReb","xyCnt.fCol","xyCnt.phase")] )
+                crScrMtx[aIdx,"summSumOthEvt"]  <- sum( summMtx["evt",c("phReb","xyCnt.fCol","xyCnt.phase")] )
+
+                crScrMtx[aIdx,"summSumRebRaw"]      <- sum( summMtx.reb["raw",c("ph","fCol")] )
+                crScrMtx[aIdx,"summSumRebEvt"]      <- sum( summMtx.reb["evt",c("ph","fCol")] )
+                crScrMtx[aIdx,"summSumRebOthRaw"]   <- sum( summMtx.reb["raw",c("phReb","xyCnt.fCol","xyCnt.phase")] )
+                crScrMtx[aIdx,"summSumRebOthEvt"]   <- sum( summMtx.reb["evt",c("phReb","xyCnt.fCol","xyCnt.phase")] )
+
+                crScrMtx[aIdx,"szSumRebCnt"]    <- sum( scMtx.sz["rebCnt",c("r.ph","r.fCol","e.ph","e.fCol")] )
+                crScrMtx[aIdx,"szSumRebDup"]    <- sum( scMtx.sz["rebDup",c("r.ph","r.fCol","e.ph","e.fCol")] )
+            }
+
+        }
+
         return( rObj )
     }
 

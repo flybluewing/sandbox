@@ -145,8 +145,10 @@ CRpt.cutRst1Score <- function( aZoidMtx ,filter.grp ,cut.grp ,fHName ,logFile="C
 
     tgt.scMtx <- c( "score1","score2","score3","score4","score5","score6","score7","score8","score9" )
 
+    tStmp <- Sys.time()
     scoreMtx.grp <- getScoreMtx.grp( aZoidMtx ,filter.grp )
     cutRst1Score <- bUtil.getCut1Score( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx )
+    tDiff <- Sys.time() - tStmp
 
     aLen <- length(cutRst1Score$aLst)
     cName <- c("r.ph" ,"r.fCol" ,"r.dblHpnFlg" ,"e.ph" ,"e.fCol" ,"e.dblHpnFlg")

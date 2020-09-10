@@ -145,6 +145,23 @@ if( TRUE ){
     )
 }
 
+crMName <- "crScrN02Sum"
+if( TRUE ){
+    bCMtxCfg[[crMName]] <- list(  mName = crMName
+        ,fCol = list(
+              "summSumRaw"      = list( rng=c(min=1,max=1) )
+             ,"summSumEvt"      = list( rng=c(min=1,max=1) )
+             ,"summSumOthRaw"   = list( rng=c(min=1,max=1) )
+             ,"summSumOthEvt"   = list( rng=c(min=1,max=1) )
+             ,"summSumRebRaw"   = list( rng=c(min=1,max=1) )
+             ,"summSumRebEvt"   = list( rng=c(min=1,max=1) )
+             ,"summSumRebOthRaw"= list( rng=c(min=1,max=1) )
+             ,"summSumRebOthEvt"= list( rng=c(min=1,max=1) )
+             ,"szSumRebCnt"     = list( rng=c(min=1,max=1) )
+             ,"szSumRebDup"     = list( rng=c(min=1,max=1) )
+        )
+    )
+}
 
 
 for( idx in seq_len(length(bCMtxCfg)) ){
