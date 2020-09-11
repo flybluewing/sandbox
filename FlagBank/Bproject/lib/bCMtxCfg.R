@@ -149,16 +149,16 @@ crMName <- "crScrN02Sum"
 if( TRUE ){
     bCMtxCfg[[crMName]] <- list(  mName = crMName
         ,fCol = list(
-              "summSumRaw"      = list( rng=c(min=1,max=1) )
-             ,"summSumEvt"      = list( rng=c(min=1,max=1) )
-             ,"summSumOthRaw"   = list( rng=c(min=1,max=1) )
-             ,"summSumOthEvt"   = list( rng=c(min=1,max=1) )
-             ,"summSumRebRaw"   = list( rng=c(min=1,max=1) )
-             ,"summSumRebEvt"   = list( rng=c(min=1,max=1) )
-             ,"summSumRebOthRaw"= list( rng=c(min=1,max=1) )
-             ,"summSumRebOthEvt"= list( rng=c(min=1,max=1) )
-             ,"szSumRebCnt"     = list( rng=c(min=1,max=1) )
-             ,"szSumRebDup"     = list( rng=c(min=1,max=1) )
+              "summSumRaw"      = list( rng=c(min=0,max= 5) )
+             ,"summSumEvt"      = list( rng=c(min=0,max= 5) )
+             ,"summSumOthRaw"   = list( rng=c(min=0,max= 3) )
+             ,"summSumOthEvt"   = list( rng=c(min=0,max= 3) )
+             ,"summSumRebRaw"   = list( rng=c(min=0,max= 1) )
+             ,"summSumRebEvt"   = list( rng=c(min=0,max= 1) )
+             ,"summSumRebOthRaw"= list( rng=c(min=0,max= 1) )
+             ,"summSumRebOthEvt"= list( rng=c(min=0,max= 1) )
+             ,"szSumRebCnt"     = list( rng=c(min=2,max=12) )   # min=1 796, 825, 826(0), 830(0), 854, 869, 898
+             ,"szSumRebDup"     = list( rng=c(min=0,max= 2) )
         )
     )
 }

@@ -518,8 +518,8 @@ if( TRUE ){
 
                 summMtx <- NULL ;summMtx.reb <- NULL    ;scMtx.sz <- NULL
                 for( mName in names(cutRst1Score$aLst[[aIdx]][[hName]]$basic) ){
-                    rawObj <- cutRst1Score$aLst[[idx]][[hName]]$basic[[mName]]$raw
-                    summObj <- cutRst1Score$aLst[[idx]][[hName]]$basic[[mName]]$summ
+                    rawObj <- cutRst1Score$aLst[[aIdx]][[hName]]$basic[[mName]]$raw
+                    summObj <- cutRst1Score$aLst[[aIdx]][[hName]]$basic[[mName]]$summ
 
                     if( is.null(summMtx) ){    summMtx <- summObj$summMtx
                     } else {    summMtx <- summMtx + summObj$summMtx                }
@@ -543,7 +543,7 @@ if( TRUE ){
                 crScrMtx[aIdx,"szSumRebCnt"]    <- sum( scMtx.sz["rebCnt",c("r.ph","r.fCol","e.ph","e.fCol")] )
                 crScrMtx[aIdx,"szSumRebDup"]    <- sum( scMtx.sz["rebDup",c("r.ph","r.fCol","e.ph","e.fCol")] )
             }
-
+            return( crScrMtx )
         }
 
         return( rObj )

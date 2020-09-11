@@ -9,7 +9,7 @@ load(sprintf("../Aproject/save/Obj_gEnvZ%d.save",lastH))
 
 
 #-[Parallel init work]-------------------------------------------------------------
-prllNum <- 5     # 실수가 잦아서 그냥 오류 코드로 놔둔다.
+prllNum <- 7     # 실수가 잦아서 그냥 오류 코드로 놔둔다.
 prllLog <- k.getFlogObj( "./log/parallel_log_Hist.txt" )
 prll.initHeader <- function( ){
     k <- sfLapply(1:prllNum,function(prllId){
@@ -208,10 +208,11 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
         rptFile <- ifelse(1==length(tgt.scMtx),sprintf("cutRstLst_%s",tgt.scMtx),"cutRstLst")
         rptFile
     }
-    # rptBanTyp <- c(   "rawFCol" ,"rowE" ,"rawReb"
-    #                   ,"scMtx.sz.cut rebCnt" ,"scMtx.sz.cut rebCnt.e.sum"
-    #               )
-    rptBanTyp <- NULL
+    rptBanTyp <- c(   "rawFCol" ,"rowE" ,"rawReb"   ,"fCol"
+                      ,"scMtx.sz.cut rebCnt" ,"scMtx.sz.cut rebCnt.e.sum"
+                      ,"summMtx.cut"
+                  )
+    # rptBanTyp <- NULL
     B.rptCutRstLst( cutRstLst ,file=rptFile ,rptBanTyp=rptBanTyp )
 
     B.rptCutRst1Score( resultLst ,file=sprintf("CutRst1Score_%d",lastH) )

@@ -550,7 +550,7 @@ B.rptCutRstLst <- function( cutRstLst ,file="cutRstLst" ,rptBanTyp=NULL ){
     if( !is.null(porObj) ){
         log.meta$fLogStr( sprintf("    %s",porObj$rptStr) )
     }
- 
+
     cutCnt <- sapply( cutRstLst ,function(p){length(p$cutInfoLst)})
     cntTbl <- table( cutCnt )
     log.meta$fLogStr(sprintf("[cutCnt(total %d)]============================================",sum(cntTbl)))
@@ -573,10 +573,20 @@ B.rptCutRstLst <- function( cutRstLst ,file="cutRstLst" ,rptBanTyp=NULL ){
         reportSkipCount <- 0
         for( idx in 1:cutLen ){
             cutInfo <- cutRst$cutInfoLst[[idx]]
-            if( cutInfo["typ"] %in% rptBanTyp ){
+            grep( "v", c("nv","vv","3v","n4v","nn") )
+
+            banFlag <- F
+            for( banIdx in rptBanTyp ){
+                if( grepl(banIdx,cutInfo["typ"]) ){
+                    banFlag <- T
+                    break
+                }
+            }
+            if( banFlag ){
                 reportSkipCount <- reportSkipCount + 1
                 next    # report skip
             }
+
             log.meta$fLogStr( sprintf("  %4d %s",idx,paste(names(cutInfo),collapse="\t") ) )
             log.meta$fLogStr( sprintf("       %s",    paste(cutInfo,collapse="\t") ) )
         }
