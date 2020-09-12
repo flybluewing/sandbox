@@ -13,7 +13,7 @@ headerFiles <- c( "../breedingPlace/20171116_A_H.R"
 )
 for( idx in 1:length(headerFiles) ) source(headerFiles[idx])
 
-prllNum <- 4     # ½Ç¼ö°¡ Àæ¾Æ¼­ ±×³É ¿À·ù ÄÚµå·Î ³öµĞ´Ù.
+prllNum <- 2     # ½Ç¼ö°¡ Àæ¾Æ¼­ ±×³É ¿À·ù ÄÚµå·Î ³öµĞ´Ù.
 prllLog <- k.getFlogObj( "./log/parallel_log.txt" )
 prll.initHeader <- function( ){
     k <- sfLapply(1:prllNum,function(prllId){
@@ -43,7 +43,7 @@ FB.f <- getFlagBank("./zoidHistory/ZH_Final.csv")
 setwd(curWd)
 zhF	<- as.matrix( FB.f$zh )	;rownames(zhF) <- 1:nrow(zhF)
 lastZoid <- zhF[nrow(zhF),]
-saveId <- sprintf( "Z%d" ,nrow(zhF) )
+saveId <- sprintf( "Z%d" ,nrow(zhF) )           ;saveId
 
 
 testSpan <- 300:nrow(zhF)
