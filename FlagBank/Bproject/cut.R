@@ -229,7 +229,7 @@ for( sfcIdx in 0 ){ # 0:2
         save( allIdxF ,file=sprintf("Obj_allIdxF%d_chkStdMIPair_%d.save",sfcIdx,lastH) )
         rptStr <- sprintf( "chkStdMIPair - allIdxF size : %dk" ,length(allIdxF) %/% 1000 )
         prllLog$fLogStr( rptStr, pTime=T)   ;rptStr
-    }
+    }   # sprintf("Obj_allIdxF%d_chkStdMIPair_%d.save",sfcIdx,lastH)
 
 
 
