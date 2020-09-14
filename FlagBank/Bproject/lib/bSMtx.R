@@ -28,48 +28,70 @@ if( TRUE ){
 
 bS.stdMIMakerLst <- list()
 
-pName <- "colVal1"
-if( TRUE ){
-
-    bS.stdMIMakerLst[[pName]] <- function( aZoidMtx ,zhF ){
+if( TRUE ){ # "colVal1"
+    bS.stdMIMakerLst[["colVal1"]] <- function( aZoidMtx ,zhF ){
         #   aZoidMtx <- gEnv$allZoidMtx[allIdxF,,drop=F]
         #   zhF <- gEnv$zhF
-        stdMIObjLst <- list()
-        mInfo <- list( idStr=pName )
+
+        mInfo <- list( idStr="colVal1" )
 
         stdMILst <- list()
         for( pIdx in sort(unique(aZoidMtx[,1])) ){
             zMtx <- zhF[zhF[,1]==pIdx ,,drop=F]
 
             stdMI <- fCutU.getMtxInfo(zMtx)
-
-            
-
+            stdMI$mInfo <- c(idStr=sprintf("colVal1(%d)",pIdx))
             stdMILst[[as.character(pIdx)]] <- stdMI
         }
 
-        return( list(stdMIObjLst=stdMIObjLst ,mInfo=mInfo) )
+        return( list(stdMILst=stdMILst ,mInfo=mInfo) )
     }
-
 }
 
-pName <- "colVal3"
-if( TRUE ){
+if( TRUE ){ # "colVal3"
+    bS.stdMIMakerLst[["colVal3"]] <- function( aZoidMtx ,zhF ){
+        #   aZoidMtx <- gEnv$allZoidMtx[allIdxF,,drop=F]
+        #   zhF <- gEnv$zhF
 
-    bS.stdMIMakerLst[[pName]] <- function( aZoidMtx ,zhF ){
+        mInfo <- list( idStr="colVal3" )
 
+        stdMILst <- list()
+        for( pIdx in sort(unique(aZoidMtx[,1])) ){
+            zMtx <- zhF[zhF[,3]==pIdx ,,drop=F]
+
+            stdMI <- fCutU.getMtxInfo(zMtx)
+            stdMI$mInfo <- c(idStr=sprintf("colVal3(%d)",pIdx))
+            stdMILst[[as.character(pIdx)]] <- stdMI
+        }
+
+        return( list(stdMILst=stdMILst ,mInfo=mInfo) )
     }
-
 }
 
-pName <- "colVal6"
-if( TRUE ){
+if( TRUE ){ # "colVal6"
+    bS.stdMIMakerLst[["colVal6"]] <- function( aZoidMtx ,zhF ){
+        #   aZoidMtx <- gEnv$allZoidMtx[allIdxF,,drop=F]
+        #   zhF <- gEnv$zhF
 
-    bS.stdMIMakerLst[[pName]] <- function( aZoidMtx ,zhF ){
+        mInfo <- list( idStr="colVal6" )
 
+        stdMILst <- list()
+        for( pIdx in sort(unique(aZoidMtx[,1])) ){
+            zMtx <- zhF[zhF[,6]==pIdx ,,drop=F]
+
+            stdMI <- fCutU.getMtxInfo(zMtx)
+            stdMI$mInfo <- c(idStr=sprintf("colVal6(%d)",pIdx))
+            stdMILst[[as.character(pIdx)]] <- stdMI
+        }
+
+        return( list(stdMILst=stdMILst ,mInfo=mInfo) )
     }
-
 }
+
+
+
+
+# kLst <- lapply( bS.stdMIMakerLst ,function( pFunc ){ pFunc( aZoidMtx, zhF ) })
 
 
 

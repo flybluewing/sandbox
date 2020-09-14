@@ -64,8 +64,8 @@ for( sfcIdx in 0 ){ # 0:2
     if( testMode ){
         allIdxF <- allIdxF[sample(1:length(allIdxF),1000)]
     }
-    save( allIdxF ,file=sprintf("Obj_allIdxF%d_cutInit.save",sfcIdx) )
-    logger$fLogStr(sprintf("Initial size :%7d",length(allIdxF)),pTime=T)
+    # save( allIdxF ,file=sprintf("Obj_allIdxF%d_cutInit.save",sfcIdx) )
+    # logger$fLogStr(sprintf("Initial size :%7d",length(allIdxF)),pTime=T)
 
     #   primary cut --------------------------------------------------------------------
     # allIdxF <- FC.primaryCut.static( allIdxF ,gEnv )
@@ -107,7 +107,7 @@ for( sfcIdx in 0 ){ # 0:2
     # bUtil.cut1( mfName ) ----------------------------------------------------------------------
     for( mfName in names(bFMtxMFltLst) ){
         surFlag <- rep( T ,length(allIdxF) )
-        bLst <- k.blockLst( length(allIdxF) ,100*ifelse(testMode,5,100) )
+        bLst <- k.blockLst( length(allIdxF) ,100*ifelse(testMode,5,20) )
         prllLog$fLogStr( sprintf("start bUtil.cut1(%s) for group%d. bLst size %d",mfName,sfcIdx,length(bLst)), pTime=T)
 
         sfExport("mfName") ;sfExport("allIdxF")    #    ;sfExport("cutH.bC.Cut")
@@ -145,7 +145,7 @@ for( sfcIdx in 0 ){ # 0:2
     # bC.cut() ----------------------------------------------------------------------
     for( crMName in names(bCMtxCfg) ){  # bUtil.cut2() ´ëÃ¼
         surFlag <- rep( T ,length(allIdxF) )
-        bLst <- k.blockLst( length(allIdxF) ,100*ifelse(testMode,5,100) )
+        bLst <- k.blockLst( length(allIdxF) ,100*ifelse(testMode,5,20) )
         prllLog$fLogStr( sprintf("start bC.cut(%s) for group%d. bLst size %d",crMName,sfcIdx,length(bLst)), pTime=T)
 
         sfExport("crMName") ;sfExport("allIdxF")    #    ;sfExport("cutH.bC.Cut")
@@ -182,7 +182,7 @@ for( sfcIdx in 0 ){ # 0:2
     # bUtil.chkStdMIPair() ------------------------------------------------------------------
     if( TRUE ){
         surFlag <- rep( T ,length(allIdxF) )
-        bLst <- k.blockLst( length(allIdxF) ,100*ifelse(testMode,5,100) )
+        bLst <- k.blockLst( length(allIdxF) ,100*ifelse(testMode,5,20) )
         prllLog$fLogStr( sprintf("start bUtil.chkStdMIPair(%s) for group%d. bLst size %d",crMName,sfcIdx,length(bLst)), pTime=T)
 
         sfExport("gEnv")    ;sfExport("allIdxF")
