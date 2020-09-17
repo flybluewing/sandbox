@@ -17,6 +17,8 @@ source("./lib/bUtil.R")
 source("./lib/bFMtx.R")             ;source("./lib/bFMtx_Ext.R")        ;source("./lib/bFMtxMulti.R")
 source("./lib/bFBMtx.R")
 source("./lib/bCMtx.R")             ;source("./lib/bCMtxCfg.R")         ;source("./lib/bCCutUtil.R")
+# source("./lib/bSMtx.R")             ;source("./lib/bSMtx_VP.R")         ;source("./lib/bSMtx_Util.R")
+
 source("./lib/FinalCut_H.R")
 
 source("FCust_H.R")
