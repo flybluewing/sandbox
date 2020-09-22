@@ -189,8 +189,8 @@ if( TRUE ){ # "sScore01"
 
 if( TRUE ){ # "sScore02"
 
-	bS.sScore2.cName <- c(	 "rebC.r","rebC.c","rebC.f","rebC2.r","rebC2.c","rebC2.f"                       # 컬럼 값 유지
-                            ,"inc.r","inc.c","inc.f","inc.r2","inc.c2","inc.f2","inc.r3","inc.c3","inc.f3"  # 증가량 유지.
+	bS.sScore2.cName <- c(	 "rebC.r","rebC.c","rebC.f","rebC2.r","rebC2.c","rebC2.f"   # 컬럼 값 유지
+                            ,"inc.r","inc.c","inc.f","inc.r2","inc.c2","inc.f2"         # 증가량 유지.
 	)
 
     bSMtx.sScore2 <- function( stdMI ,workArea ,wMI ,aObj ,aZoidMtx ){
@@ -202,12 +202,64 @@ if( TRUE ){ # "sScore02"
             return( scrMtx )
         }
 
+        inc.raw <- NULL     ;inc.cStep <-NULL   ;inc.fStep <-NULL
+        inc.raw2<-NULL      ;inc.cStep2<-NULL   ;inc.fStep2<-NULL
+        if( 2<stdMILen ){
+            inc.raw     <- wMI$rawTail[stdMILen,] + (wMI$rawTail[stdMILen,]-wMI$rawTail[stdMILen-1,])
+            inc.cStep   <- wMI$cStep[stdMILen,]   + (wMI$cStep[stdMILen,] - wMI$cStep[stdMILen-1,])
+        }
+        if( 3<stdMILen){
+            inc.fStep   <- wMI$fStep[stdMILen,] + (wMI$fStep[stdMILen,] - wMI$fStep[stdMILen-1,])
+        }
+
+        if( 4<stdMILen){
+            inc.raw2    <- wMI$rawTail[stdMILen-1,] + (wMI$rawTail[stdMILen-1,] - wMI$rawTail[stdMILen-3,])
+            inc.cStep2  <- wMI$cStep[stdMILen-1,] + (wMI$cStep[stdMILen-1,] - wMI$cStep[stdMILen-3,])
+        }
+        if( 5<stdMILen){
+            inc.fStep2  <- wMI$fStep[stdMILen-1,] + (wMI$fStep[stdMILen-1,] - wMI$fStep[stdMILen-3,])
+        }
+
+
         for( wIdx in seq_len(length(workArea)) ){
             aIdx <- workArea[wIdx]
             aCode <- aObj$aZoidMtx[aIdx,]       ;aRem <- aCode%%10
             aCStep <- aObj$cStepMtx[aIdx,]      ;aFStep <- aObj$fStepMtx[aIdx,]
 
-            # scrMtx[wIdx,"rem0"]     <- 
+            scrMtx[wIdx,"rebC.r"] <- sum(aCode==wMI$rawTail[stdMILen,])
+            scrMtx[wIdx,"rebC.c"] <- sum(aCStep==wMI$cStepTail[stdMILen,])
+            if( 1<stdMILen ){
+                scrMtx[wIdx,"rebC.f"] <- sum(aCStep==wMI$fStepTail[stdMILen,])
+
+                scrMtx[wIdx,"rebC2.r"] <- sum(aCode==wMI$rawTail[stdMILen-1,])
+                scrMtx[wIdx,"rebC2.c"] <- sum(aCStep==wMI$cStepTail[stdMILen-1,])
+            }
+            if( 2<stdMILen ){
+                scrMtx[wIdx,"rebC2.f"] <- sum(aCStep==wMI$fStepTail[stdMILen-1,])
+
+            }
+
+            scrMtx[wIdx,"inc.r"] <- sum(inc.raw==aCode)
+            scrMtx[wIdx,"inc.c"] <- sum(inc.cStep==aCStep)
+            if( !is.null(inc.fStep) ){
+                scrMtx[wIdx,"inc.f"] <- sum(inc.fStep==aFStep)
+            }
+            if( !is.null(inc.raw2) ){
+                scrMtx[wIdx,"inc.r2"] <- sum(inc.raw2==aCode)
+                scrMtx[wIdx,"inc.c2"] <- sum(inc.cStep2==aCStep)
+            }
+            if( !is.null(inc.fStep2) ){
+                scrMtx[wIdx,"inc.f2"] <- sum(inc.fStep2==aFStep)
+            }
+
+            if( any(scrMtx[wIdx,]>=2) ){
+                aQuo <- fCutU.getQuoObj( aZoidMtx[aIdx,] ,valSet=T )
+                if( all(aQuo$size==stdMI$quoTail[stdMILen,]) ){
+                    evtFlag <- scrMtx[wIdx,]>=2
+                    scrMtx[wIdx,evtFlag] <- 1 + scrMtx[wIdx,evtFlag]
+                }
+            }
+
         }
 
         return( scrMtx )
@@ -218,7 +270,7 @@ if( TRUE ){ # "sScore02"
 		aLen <- nrow(aZoidMtx)
         aObj <- phVP$getCodeW( aZoidMtx )
 
-		scoreMtx <- matrix( 0, nrow=aLen, ncol=length(bS.sScore1.cName) )	;colnames(scoreMtx) <- bS.sScore1.cName
+		scoreMtx <- matrix( 0, nrow=aLen, ncol=length(bS.sScore2.cName) )	;colnames(scoreMtx) <- bS.sScore2.cName
         rownames(scoreMtx) <- aObj$miIdStr
 		infoMtx <- NULL
 		if( makeInfoStr ){
@@ -237,9 +289,8 @@ if( TRUE ){ # "sScore02"
             workArea <- which(aObj$miIdStr==pvName)
             stdMI<-phVP$stdMILst[[pvName]]
             wMI <- phVP$getCodeH( stdMI )
-            # scrMtx <- bSMtx.sScore2( stdMI=stdMI ,workArea ,wMI=wMI ,aObj ,aZoidMtx )
-
-            # scoreMtx[workArea,] <- scrMtx
+            scrMtx <- bSMtx.sScore2( stdMI=stdMI ,workArea ,wMI=wMI ,aObj ,aZoidMtx )
+            scoreMtx[workArea,] <- scrMtx
         }
 
         return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
