@@ -36,10 +36,12 @@ bS.vp_ColVal <- function( gEnv, aZoidMtx, fixCol ){
 
         miIdStr <- rep("N/A",nrow(aZoidMtx))
 
-        cStepMtx <- aZoidMtx[,2:6]-aZoidMtx[,1:5]
+        cStepMtx <- aZoidMtx[,2:6,drop=F]-aZoidMtx[,1:5,drop=F]
         fStepMtx <- matrix( 0 ,ncol=ncol(aZoidMtx) ,nrow=nrow(aZoidMtx) )
         for( nIdx in names(vpObj$stdMILst) ){
             stdMI <- vpObj$stdMILst[[nIdx]]
+            if(0==nrow(stdMI$rawTail))  next
+
             curWorkArea <- which(aZoidMtx[,stdMI$mInfo["fixCol"]]==stdMI$mInfo["vIdx"])
             miIdStr[curWorkArea] <- nIdx
 

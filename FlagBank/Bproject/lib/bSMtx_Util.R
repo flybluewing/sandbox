@@ -10,7 +10,17 @@ bS.getPhVPGrp <- function( gEnv ,aZoidMtx ){    # bUtil.getStdMILst( ) 와 비슷
 
     phVPGrp <- list( phVPLst=phVPLst )
     phVPGrp$anyWarn <- function(){
-        # TODO
+        warnMsg <- character(0)
+        for( pName in names(phVPGrp$phVPLst) ){
+            phVP <- phVPGrp$phVPLst[[pName]]
+            for( subPName in names(phVP$stdMILst) ){
+                stdMI <- phVP$stdMILst[[subPName]]
+                if( 6>nrow(stdMI$rawTail) ){
+                    warnMsg <- c( warnMsg ,sprintf("    %s(%s) rawTail %d\n",pName,subPName,nrow(stdMI$rawTail)) )
+                }
+            }
+        }
+        return(warnMsg)
     }
 
     return( phVPGrp )
@@ -20,6 +30,13 @@ bS.makeHMtxLst <- function( gEnv, allIdxLst, fRstLst ,tgt.scMtx=NULL ,lastH=NULL
 
     hStr <- names(allIdxLst$stdFiltedCnt)
     names(fRstLst) <- hStr
+
+    if( is.null(tgt.scMtx) ){
+        tgt.scMtx <- names(bSMtxLst)
+    } else {
+        tgt.scMtx <- intersect( tgt.scMtx ,names(bSMtxLst) )
+    }
+
 
     tStmp <- Sys.time()
     # ----------------------------------------------------
@@ -70,41 +87,49 @@ bS.makeHMtxLst <- function( gEnv, allIdxLst, fRstLst ,tgt.scMtx=NULL ,lastH=NULL
 
             aZoidMtx <- matrix(stdZoid ,nrow=1)
             phVP.grp <- bS.getPhVPGrp( wEnv ,aZoidMtx )
-            # stdMI.grp <- bUtil.getStdMILst( wEnv ,fRstLst.w )
-            # filter.grp <- getFilter.grp( stdMI.grp ,tgt.scMtx )
+            warnMsg <- phVP.grp$anyWarn()
+            if( 0<length(warnMsg) ){
+                warnMsg <- paste("    ",warnMsg,sep="")
+                warnMsg <- paste(warnMsg,collapse="")
+                cat(sprintf("sfcIdx:%s  hIdx:%s \n%s",sfcIdx,hIdx,warnMsg))
+            }
 
-            # scoreMtx.grp <- getScoreMtx.grp.4H( stdZoid ,filter.grp )
-            # scoreMtx.grp.lst[[sprintf("hIdx:%d",hIdx)]] <- scoreMtx.grp
+            scoreMtx.grp <- bS.getScoreMtx.grp( phVP.grp ,aZoidMtx ,tgt.scMtx )
+            scoreMtx.grp.lst[[sprintf("hIdx:%d",hIdx)]] <- scoreMtx.grp
         }
 
         basicHMtxLst <- list()
-        scoreMtxNames <- names(scoreMtx.grp.lst[[1]]$basic[[1]]) # 필터링이 아닌 H를 보려하는 것이므로 basic만 다룬다.
-        for( nIdx in names(scoreMtx.grp.lst[[1]]$basic) ){ # nIdx<-names(scoreMtx.grp.lst[[1]]$basic)[1]
-            # mtxLst <- list()
-            # for( smnIdx in scoreMtxNames ){ # smnIdx <-scoreMtxNames[1]
-            #     scoreMtx <- NULL    ;infoMtx<-NULL
-            #     for( rIdx in seq_len(length(scoreMtx.grp.lst)) ){
-            #         scoreObj <- scoreMtx.grp.lst[[rIdx]]$basic[[nIdx]][[smnIdx]]
-            #         scoreMtx <- rbind( scoreMtx ,scoreObj$scoreMtx[1,] )
-            #         if( any(is.na(scoreObj$scoreMtx[1,])) ){
-            #             hStr <- sfcHLst[[sfcIdx]][rIdx]
-            #             colStr <- paste( names(scoreObj$scoreMtx[1,])[which(is.na(scoreObj$scoreMtx[1,]))],collapse=",")
-            #             k.FLogStr(sprintf("WARN : NA - %s, %s, %s(%s), %s",sfcIdx,nIdx,smnIdx,colStr,hStr)
-            #                         ,pConsole=T
-            #                     )
-            #         }
-            #         if( !is.null(scoreObj$infoMtx) ){
-            #             infoMtx <- rbind( infoMtx ,scoreObj$infoMtx[1,] )
-            #         }
-            #     }
+        # scoreMtxNames <- names(scoreMtx.grp.lst[[1]]$basic[[1]]) # 필터링이 아닌 H를 보려하는 것이므로 basic만 다룬다.
+        # scoreMtxNames <- tgt.scMtx
+        for( pName in names(scoreMtx.grp.lst[[1]]$basic) ){ # nIdx<-names(scoreMtx.grp.lst[[1]]$basic)[1]
+           # for( nIdx in names(scoreMtx.grp.lst[[1]]$basic) ){ # nIdx<-names(scoreMtx.grp.lst[[1]]$basic)[1]
+            mtxLst <- list()
+            for( mName in tgt.scMtx ){ # smnIdx <-scoreMtxNames[1]
+                # for( smnIdx in scoreMtxNames ){ # smnIdx <-scoreMtxNames[1]
+                scoreMtx <- NULL    ;infoMtx<-NULL
+                for( rIdx in seq_len(length(scoreMtx.grp.lst)) ){
+                    scoreObj <- scoreMtx.grp.lst[[rIdx]]$basic[[pName]][[mName]]
+                    scoreMtx <- rbind( scoreMtx ,scoreObj$scoreMtx[1,] )
+                    if( any(is.na(scoreObj$scoreMtx[1,])) ){
+                        hStr <- sfcHLst[[sfcIdx]][rIdx]
+                        colStr <- paste( names(scoreObj$scoreMtx[1,])[which(is.na(scoreObj$scoreMtx[1,]))],collapse=",")
+                        k.FLogStr(sprintf("WARN : NA - %s, %s, %s(%s), %s",sfcIdx,pName,mName,colStr,hStr)
+                                    ,pConsole=T
+                                )
+                    }
+                    if( !is.null(scoreObj$infoMtx) ){
+                        infoMtx <- rbind( infoMtx ,scoreObj$infoMtx[1,] )
+                    }
+                }
 
-            #     if( !is.null(scoreMtx) )    rownames(scoreMtx) <- sfcHLst[[sfcIdx]]
+                if( !is.null(scoreMtx) )    rownames(scoreMtx) <- sfcHLst[[sfcIdx]]
 
-            #     if( !is.null(infoMtx) ) rownames(infoMtx) <- sfcHLst[[sfcIdx]]
+                if( !is.null(infoMtx) ) rownames(infoMtx) <- sfcHLst[[sfcIdx]]
 
-            #     mtxLst[[smnIdx]] <- list( scoreMtx=scoreMtx ,infoMtx=infoMtx )
-            # }
-            # basicHMtxLst[[nIdx]] <- mtxLst
+                mtxLst[[mName]] <- list( scoreMtx=scoreMtx ,infoMtx=infoMtx )
+            }
+
+            basicHMtxLst[[pName]] <- mtxLst
         }
 
         scoreMtxLst[[sfcIdx]] <- basicHMtxLst
@@ -136,8 +161,26 @@ bS.makeHMtxLst <- function( gEnv, allIdxLst, fRstLst ,tgt.scMtx=NULL ,lastH=NULL
 }
 
 
-bS.getFilter.grp <- function( phVP.grp ,tgt.scMtx=NULL ){
-    # phVP.grp <- bS.getPhVPGrp( wEnv ,aZoidMtx )
+bS.getScoreMtx.grp <- function( phVP.grp ,aZoidMtx ,tgt.scMtx=NULL ){
 
-    #   bFMtx.R 의 getFilter.grp() 참고
+    rObj <- list( basic=list() ,bDup=list() ,mf=list() )    # 호환성을 위해, getScoreMtx.grp()와 유사한 구조로 맞춘다.
+
+    if( is.null(tgt.scMtx) ){
+        tgt.scMtx <- names(bSMtxLst)
+    } else {
+        tgt.scMtx <- intersect( tgt.scMtx ,names(bSMtxLst) )
+    }
+
+    # working
+    for( pName in names(phVP.grp$phVPLst) ){
+        phVP <- phVP.grp$phVPLst[[pName]]
+        scoreMtxLst <- list()
+        for( mName in tgt.scMtx ){
+            scoreMtxLst[[mName]] <- bSMtxLst[[mName]](phVP ,aZoidMtx)
+        }
+        rObj$basic[[pName]] <- scoreMtxLst
+    }
+
+    return( rObj )
 }
+

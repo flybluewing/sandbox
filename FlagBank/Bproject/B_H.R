@@ -726,6 +726,7 @@ B.get_testData.grp <- function( testSpan ,gEnv ,allIdxLst ,fRstLst ,tgt.scMtx=NU
         fRstLst.w <- fRstLst[wLastSpan]
 
         curHMtxLst <- B.makeHMtxLst( gEnv.w, allIdxLst.w, fRstLst.w, tgt.scMtx )
+        curHMtxLst_bS <- bS.makeHMtxLst( gEnv.w, allIdxLst.w, fRstLst.w ,tgt.scMtx )
 
         # ------------------------------------------------------------------------
         # stdIdx.grp
@@ -735,7 +736,7 @@ B.get_testData.grp <- function( testSpan ,gEnv ,allIdxLst ,fRstLst ,tgt.scMtx=NU
         tDiff <- Sys.time() - tStmp.prll
         prllLog$fLogStr(sprintf("    B.get_testData.grp - hIdx:%d finished %.1f%s",curHIdx,tDiff,units(tDiff)))
 
-        rObj <- list( hIdx=curHIdx ,stdIdx=stdIdx ,hMtxLst=curHMtxLst ) 
+        rObj <- list( hIdx=curHIdx ,stdIdx=stdIdx ,hMtxLst=curHMtxLst ,hMtxLst_bS=curHMtxLst_bS ) 
 
         if( get.scoreMtx.grp ){
             stdMI.grp <- bUtil.getStdMILst( gEnv.w ,fRstLst.w )
@@ -748,12 +749,13 @@ B.get_testData.grp <- function( testSpan ,gEnv ,allIdxLst ,fRstLst ,tgt.scMtx=NU
     names(resultLst) <- sapply(resultLst,function(p){ p$hIdx })
 
     curHMtxLst.grp <- lapply(resultLst,function(p){ p$hMtxLst })
+    curHMtxLst_bS.grp <- lapply(resultLst,function(p){ p$hMtxLst_bS })
     stdIdx.grp <- lapply(resultLst,function(p){ p$stdIdx })
 
     tDiff <- Sys.time() - tStmp
     cat(sprintf("time : %.1f,%s   \n",tDiff,units(tDiff)))
 
-    rLst <- list(curHMtxLst.grp=curHMtxLst.grp ,stdIdx.grp=stdIdx.grp)
+    rLst <- list(curHMtxLst.grp=curHMtxLst.grp ,stdIdx.grp=stdIdx.grp ,curHMtxLst_bS.grp=curHMtxLst_bS.grp )
     if( get.scoreMtx.grp ){
         rLst$scoreMtxLst.grp <- lapply(resultLst,function(p){p$scoreMtx.grp})
     }

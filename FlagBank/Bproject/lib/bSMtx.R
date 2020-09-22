@@ -237,9 +237,9 @@ if( TRUE ){ # "sScore02"
             workArea <- which(aObj$miIdStr==pvName)
             stdMI<-phVP$stdMILst[[pvName]]
             wMI <- phVP$getCodeH( stdMI )
-            scrMtx <- bSMtx.sScore2( stdMI=stdMI ,workArea ,wMI=wMI ,aObj ,aZoidMtx )
+            # scrMtx <- bSMtx.sScore2( stdMI=stdMI ,workArea ,wMI=wMI ,aObj ,aZoidMtx )
 
-            scoreMtx[workArea,] <- scrMtx
+            # scoreMtx[workArea,] <- scrMtx
         }
 
         return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )

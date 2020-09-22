@@ -1,4 +1,9 @@
+Bprll.bSCut <- function(){
+        # stdIdx  ;stdZoid
+        # aZoidMtx <- matrix(stdZoid ,nrow=1)
+        # phVP.grp <- bS.getPhVPGrp( wEnv ,aZoidMtx )
 
+}
 
 
 
