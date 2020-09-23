@@ -183,3 +183,117 @@ bS.getScoreMtx.grp <- function( phVP.grp ,aZoidMtx ,tgt.scMtx=NULL ){
     return( rObj )
 }
 
+
+bS.getCutGrp <- function( hMtxLst_bS ,tgt.scMtx=NULL ){
+    #   bFCust.getFCustGrp( hMtxLst_bS ,tgt.scMtx )  참고
+
+    rObj <- list(   sfcHLst = hMtxLst_bS$sfcHLst
+                    ,mtxInfoLst = hMtxLst_bS$mtxInfoLst
+                    ,phaseName = hMtxLst_bS$phaseName
+    )
+
+    if( !is.null(tgt.scMtx) ){
+        availMtx <- intersect( tgt.scMtx ,names(rObj$mtxInfoLst) )
+        rObj$mtxInfoLst <- rObj$mtxInfoLst[availMtx]
+    }
+
+	cutterLst <- list()         ;cutterExtLst <- list()         ;cutterExtMLst <- list()
+	for( hName in names(rObj$sfcHLst) ){	    # hName <- names(rObj$sfcHLst)[1]
+
+        mLst <- list()  ;mExtLst <- list()  #   cutterLst
+        for( mName in names(rObj$mtxInfoLst) ){	# mName <- names(rObj$mtxInfoLst)[1]
+
+            # <stdCut>
+            stdCut <- list()    ;stdCutExt <- list()
+            for( pName in rObj$phaseName ){     # pName <- rObj$phaseName[1]
+                scoreMtxObj <- bS.HMtxLst_getMtxLst( hMtxLst_bS , hName ,mName ,pName )
+                stdCut[[pName]] <- bS_stdCut.rawRow( hName ,mName ,pName ,scoreMtxObj$scoreMtx )
+
+                # if( is.null(bFMtxExtFltLst[[mName]]) ){   stdCutExt[[mName]] <- list()
+                # } else {
+                #     fltLst <- list()
+                #     for( nIdx in names(bFMtxExtFltLst[[mName]]) ){
+                #         # bFMtxExtFltLst[[mName]][[nIdx]] 는 FCust_stdCutExt.rawRow() 내부에서 이용됨.
+                #         #     fltLst[[nIdx]] <- FCust_stdCutExt.rawRow( hName ,mName ,pName ,scoreMtxObj$scoreMtx ,fltName=nIdx )
+                #         fltLst[[nIdx]] <- bS_stdCutExt.rawRow( hName ,mName ,pName ,scoreMtxObj$scoreMtx ,fltName=nIdx )
+                #     }
+                #     stdCutExt[[pName]] <- fltLst
+                # }
+
+            }
+
+            # <fColCut>
+            fColCut <- list()   # preserve
+
+            # <hIdxCut>
+			hIdxObj <- bS.getHMtxLst_byHIdx( hMtxLst_bS )
+            hIdxCut <- bS_stdCut.hIdx( hName ,mName ,mtxLst=hIdxObj[[hName]][[mName]] )
+
+            mLst[[mName]] <- list( stdCut=stdCut ,fColCut=fColCut ,hIdxCut=hIdxCut )
+            mExtLst[[mName]] <- list( stdCut=stdCutExt )
+        }
+        cutterLst[[hName]] <- mLst
+        cutterExtLst[[hName]] <- mExtLst
+
+        # cutterExtMLst ---------------------------------------------------------------
+        if( TRUE ){        }
+
+    }
+
+    rObj$cutterLst          <- cutterLst
+    rObj$cutterExtLst       <- cutterExtLst
+    rObj$cutterExtMLst      <- cutterExtMLst
+
+    return( rObj )
+
+}
+
+
+bS.HMtxLst_getMtxLst <- function( hMtxLst_bS ,hName ,mName ,pName ,tgt="scoreMtxLst" ){
+
+    mtxLst <- NULL
+    if( tgt=="scoreMtxLst" ){
+        mtxLst <- hMtxLst_bS[[tgt]][[hName]][[pName]][[mName]]
+    } else if( tgt=="mfMtxLst" ){
+        mtxLst <- hMtxLst_bS[[tgt]][[hName]][[mName]]
+    }
+
+    return( mtxLst )
+
+}
+
+
+bS.getHMtxLst_byHIdx <- function( hMtxLst_bS ){
+    #   phase * FCol for each HIdx
+    #       B.getHMtxLst_byHIdx() 참고
+    rLst <- list()
+
+    scoreMtxLst <- hMtxLst_bS$scoreMtxLst
+    sfcHLst <- hMtxLst_bS$sfcHLst
+    mtxInfoLst <- hMtxLst_bS$mtxInfoLst
+    phaseName <- hMtxLst_bS$phaseName
+
+    for( hName in names(scoreMtxLst) ){ # hName <- names(scoreMtxLst)[1]
+        scmLst <- list()
+        for( mName in names(mtxInfoLst) ){ # mName <- names(mtxInfoLst)[1]
+            mtx <- matrix( 0, ncol=length(phaseName) ,nrow=length(mtxInfoLst[[mName]]) )
+            rownames(mtx) <- mtxInfoLst[[mName]]
+            colnames(mtx) <- phaseName
+            byHLst <- list()
+            for( hIdx in as.character(sfcHLst[[hName]]) ){ # hIdx <- as.character(sfcHLst[[hName]])[1]
+                mtx[,] <- 0
+                for( pnIdx in phaseName ){ # pnIdx <- phaseName[1]
+                    scoreMtx <- scoreMtxLst[[hName]][[pnIdx]][[mName]]$scoreMtx
+                    mtx[,pnIdx] <- scoreMtx[hIdx,]
+                }
+                byHLst[[hIdx]] <- mtx
+            }
+            scmLst[[mName]] <- byHLst
+        }
+        rLst[[hName]] <- scmLst
+    }
+
+    return( rLst )
+
+}
+

@@ -1,7 +1,11 @@
-Bprll.bSCut <- function(){
+Bprll.bSCut <- function( gEnv.w ,stdZoid ,hMtxLst_bS ,tgt.scMtx ){
         # stdIdx  ;stdZoid
-        # aZoidMtx <- matrix(stdZoid ,nrow=1)
-        # phVP.grp <- bS.getPhVPGrp( wEnv ,aZoidMtx )
+    aZoidMtx <- matrix(stdZoid ,nrow=1)
+    phVP.grp <- bS.getPhVPGrp( gEnv.w ,aZoidMtx )
+
+    # cut.grp <- bFCust.getFCustGrp( hMtxLst_bS ,tgt.scMtx )  # curHMtxLst 적용 추가 필요.
+    cut.grp <- bS.getCutGrp( hMtxLst_bS ,tgt.scMtx )  # curHMtxLst 적용 추가 필요.
+
 
 }
 
