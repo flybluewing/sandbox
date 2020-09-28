@@ -25,6 +25,17 @@ if( FALSE ){    # Document
 
 }
 
+summMtxName <- list( cName=c( "all" ,"ph" ,"fCol" ,"phReb" ,"xyCnt.fCol" ,"xyCnt.phase" ) 
+                    ,rName=c( "raw" ,"evt" )
+)
+summMtx.rebName <- list( cName=c( "all" ,"ph" ,"fCol" ,"phReb" ,"xyCnt.fCol" ,"xyCnt.phase" )
+                    ,rName=c( "raw" ,"evt" )
+)
+scMtx.szName <- list(   cName=c( "r.ph" ,"r.fCol" ,"r.dblHpnFlg" ,"e.ph" ,"e.fCol" ,"e.dblHpnFlg" )
+                        ,rName=c( "rebCnt" ,"rebDup" )
+)
+
+
 mName <- "sScore01"
 bsScoreMtxCfg[[mName]] <- list(
     mName = mName   ,style=c( freqZero=TRUE )

@@ -1458,3 +1458,34 @@ bUtil.chkStdMIPair <- function( gEnv ,aZoidMtx ){
 }
 
 
+bUtil.findSeg <- function( aCode ,pairMaxLen=NULL ,useValName=TRUE ){
+
+	segLst <- list()
+
+	tbl <- table(aCode)
+	if( all(tbl<2) ){
+		return( segLst )
+	} else {
+		tbl <- tbl[tbl>=2]
+		if( !is.null(pairMaxLen) ){
+			tbl <- tbl[ tbl<=pairMaxLen ]
+		}
+	}
+
+	for( val in as.integer(names(tbl)) ){
+		segObj <- list( val=val ,idx=which(aCode==val) )
+		segLst[[1+length(segLst)]] <- segObj
+	}
+
+	if( useValName ){
+		names(segLst) <- paste("val",names(tbl),sep="")
+	} else {	
+		names(segLst) <- sapply(segLst,function(p){ paste(p$idx,collapse="_") })
+	}
+	
+	return( segLst )
+}
+
+
+
+
