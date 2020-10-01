@@ -5,6 +5,7 @@ bS.getPhVPGrp <- function( gEnv ,aZoidMtx ){    # bUtil.getStdMILst( ) ¿Í ºñ½Á
     phVPLst[[1+length(phVPLst)]] <- bS.vp_ColVal( gEnv, aZoidMtx, fixCol=1 )
     phVPLst[[1+length(phVPLst)]] <- bS.vp_ColVal( gEnv, aZoidMtx, fixCol=3 )
     phVPLst[[1+length(phVPLst)]] <- bS.vp_ColVal( gEnv, aZoidMtx, fixCol=6 )
+    phVPLst[[1+length(phVPLst)]] <- bS.vp_remPair( gEnv, aZoidMtx )
 
     names(phVPLst) <- sapply( phVPLst ,function(p){p$idStr})
 

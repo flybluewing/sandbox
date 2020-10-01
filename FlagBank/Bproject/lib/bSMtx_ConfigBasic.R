@@ -35,16 +35,79 @@ scMtx.szName <- list(   cName=c( "r.ph" ,"r.fCol" ,"r.dblHpnFlg" ,"e.ph" ,"e.fCo
                         ,rName=c( "rebCnt" ,"rebDup" )
 )
 
-
 mName <- "sScore01"
 bsScoreMtxCfg[[mName]] <- list(
     mName = mName   ,style=c( freqZero=TRUE )
     ,fCol = list(
-        "xxx"=list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )
+        "rem0.num"=list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )
                         ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
                         ,evtMax.fCol=NULL
-                    ) 
-        ,"xxx"=list( rng=matrix( c(0,1 ,0,2) ,ncol=2 )
+                    )
+        ,"rem0.len.tot"=list( rng=matrix( c(0,1 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+        ,"rem0.len.val"=list( rng=matrix( c(0,1 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+        ,"rem1.num"=list( rng=matrix( c(0,1 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+        ,"rem1.len.tot"=list( rng=matrix( c(0,1 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+        ,"rem1.len.val"=list( rng=matrix( c(0,1 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+        ,"c0.num"=list( rng=matrix( c(0,1 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+        ,"c0.len.tot"=list( rng=matrix( c(0,1 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+        ,"c0.len.val"=list( rng=matrix( c(0,1 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+        ,"c1.num"=list( rng=matrix( c(0,1 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+        ,"c1.len.tot"=list( rng=matrix( c(0,1 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+        ,"c1.len.val"=list( rng=matrix( c(0,1 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+        ,"f0.num"=list( rng=matrix( c(0,1 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+        ,"f0.len.tot"=list( rng=matrix( c(0,1 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+        ,"f0.len.val"=list( rng=matrix( c(0,1 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+        ,"f1.num"=list( rng=matrix( c(0,1 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+        ,"f1.len.tot"=list( rng=matrix( c(0,1 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+        ,"f1.len.val"=list( rng=matrix( c(0,1 ,0,2) ,ncol=2 )
                         ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
                         ,evtMax.fCol=NULL
                     )
@@ -61,11 +124,51 @@ mName <- "sScore02"
 bsScoreMtxCfg[[mName]] <- list(
     mName = mName   ,style=c( freqZero=TRUE )
     ,fCol = list(
-        "xxx"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+        "rebC.r"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
                         ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
                         ,evtMax.fCol=NULL
                     ) 
-        ,"xxx"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+        ,"rebC.c"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                        ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+        ,"rebC.f"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                        ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+        ,"rebC2.r"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                        ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+        ,"rebC2.c"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                        ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+        ,"rebC2.f"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                        ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+        ,"inc.r"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                        ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+        ,"inc.c"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                        ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+        ,"inc.f"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                        ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+        ,"inc.r2"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                        ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+        ,"inc.c2"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                        ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+        ,"inc.f2"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
                         ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
                         ,evtMax.fCol=NULL
                     )
