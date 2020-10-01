@@ -64,9 +64,19 @@ bS.vp_ColVal <- function( gEnv, aZoidMtx, fixCol ){
 }
 
 bS.vp_remPair <- function( gEnv, aZoidMtx ){
+
     vpObj <- list( idStr=sprintf("remPair")
                     ,mInfo = c()
     )
+    vpObj$checkPair <- function( remRow ,pairIdx ){
+
+        val <- remRow[pairIdx]
+        if( val[1]!=val[2] )    return( FALSE )
+
+        if( any(val[1]==remRow[-pairIdx] ) ) return( FALSE )
+        
+        return( TRUE )
+    }
 
     # aZoidMtx 내 pair group 검색
     #   하나의 aZoid에서 2개 이상 pair 발생 가능함을 고려해야 함.
@@ -95,21 +105,6 @@ bS.vp_remPair <- function( gEnv, aZoidMtx ){
     idStr <- do.call( c ,pairIdStrLst )
     idStrTbl <- sort( table(idStr) ,decreasing=T )
 
-    # leftFlag <- sapply( pairInfoLst ,function(p){
-    #     if( length(p)==0 )   return( FALSE )   # pair 자체가 없으면 손봐줄 필요조차 없으니.
-
-    #     minLen <- 3
-    #     for( lIdx in 1:length(p) ){
-    #         if( minLen>length(p[[lIdx]]$idx) ){
-    #             minLen <- length(p[[lIdx]]$idx)
-    #             break
-    #         }
-    #     }
-    #     if( 3<=minLen ) return( FALSE )
-
-    #     return( TRUE )
-    # })
-
     leftFlag <- rep( T ,nrow(aZoidMtx) )
     workSpanLst <- list()
     for( grpIdx in names(idStrTbl) ){   # 실행효율보다, 로직이 보이는 쪽으로 코딩한다. ^^;
@@ -121,11 +116,80 @@ bS.vp_remPair <- function( gEnv, aZoidMtx ){
     }
 
     # 발견된 pair group 별로 stdMILst 생성.
-    # QQE working
-    # stdMILst <- list
+    stdMILst <- list()
+    remH <- gEnv$zhF %% 10
+    for( nIdx in names(workSpanLst) ){
+        if( 0==length(workSpanLst[[nIdx]]) ) next
+
+        pairInfo <- pairInfoLst[[ workSpanLst[[nIdx]][1] ]][[nIdx]]
+        
+        fndFlag <- apply( remH ,1 ,function( remRow ){ 
+            return( vpObj$checkPair( remRow ,pairInfo$idx ) )
+        })
+
+        zMtx <- gEnv$zhF[ fndFlag ,,drop=F]
+        stdMI <- fCutU.getMtxInfo(zMtx)
+        stdMI$pairIdx <- pairInfo$idx
+        stdMILst[[nIdx]] <- stdMI
+    }
 
     vpObj$stdMILst <- stdMILst
 
+    vpObj$getCodeH <- function( stdMI ){
+        wLst <- list()
+        pairIdx <- stdMI$pairIdx
+
+        wLst$rawTail <- stdMI$rawTail[,-pairIdx[1],drop=F]
+        wLst$lastRaw <- NULL
+        if( 0<nrow(wLst$rawTail) ){
+            wLst$lastRaw <- wLst$rawTail[nrow(wLst$rawTail),]
+        }
+
+        wLst$cStepTail <- stdMI$cStepTail[,-pairIdx[1] ,drop=F]
+        wLst$fStepTail <- stdMI$fStepTail[,-pairIdx[1] ,drop=F]
+        return( wLst )
+    }
+
+    vpObj$getCodeW <- function( aZoidMtx ){
+        aObj <- list( miNames=names(vpObj$stdMILst) )
+
+        miIdStr <- rep("N/A",nrow(aZoidMtx))    ;names(miIdStr) <- rownames(aZoidMtx)
+            #   aZoid 자체는 다수의 pair 패턴에 속할 수 있다.
+            #   따라서 가장 많은 pair 패턴에 우선 배당하기로 한다.(즉 stdMILst 순서를 따름.)
+
+        aLen <- nrow(aZoidMtx)
+        aCodeMtx <- aZoidMtx %% 10
+        leftFlag <- rep( TRUE ,aLen )   ;names(leftFlag) <- names(miIdStr)
+        for( nIdx in names(vpObj$stdMILst) ){
+            stdMI <- vpObj$stdMILst[[nIdx]]
+            for( aIdx in seq_len(aLen) ){
+                if( !leftFlag[aIdx] )   next
+
+                if( !vpObj$checkPair( aCodeMtx[aIdx,] ,stdMI$pairIdx ) )    next
+
+                leftFlag[aIdx] <- FALSE
+                miIdStr[aIdx] <- nIdx
+            }
+        }
+
+        cStepMtx <- aZoidMtx[,2:6 ,drop=F] - aZoidMtx[,1:5 ,drop=F]
+        fStepMtx <- apply( aZoidMtx ,1 ,function( aZoid ){ aZoid-stdMI$lastZoid })
+        fStepMtx <- t( fStepMtx )
+
+        aObj$miIdStr <- miIdStr
+        aObj$aZoidMtx <- matrix( 0 ,nrow=aLen ,ncol=(6-1) )  ;rownames(aObj$aZoidMtx) <- miIdStr
+        aObj$cStepMtx <- matrix( 0 ,nrow=aLen ,ncol=(5-1) )  ;rownames(aObj$cStepMtx) <- miIdStr
+        aObj$fStepMtx <- matrix( 0 ,nrow=aLen ,ncol=(6-1) )  ;rownames(aObj$fStepMtx) <- miIdStr
+        for( nIdx in names(vpObj$stdMILst) ){
+            startIdx <- vpObj$stdMILst[[nIdx]]$pairIdx[1]
+            curWorkArea <- which(miIdStr==nIdx)
+            aObj$aZoidMtx[curWorkArea,] <- aZoidMtx[curWorkArea,-startIdx ,drop=F]
+            aObj$cStepMtx[curWorkArea,] <- cStepMtx[curWorkArea,-startIdx ,drop=F]
+            aObj$fStepMtx[curWorkArea,] <- fStepMtx[curWorkArea,-startIdx ,drop=F]
+        }
+
+        return( aObj )
+    }
 
 
     return(vpObj)
