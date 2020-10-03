@@ -6,6 +6,8 @@ bS.getPhVPGrp <- function( gEnv ,aZoidMtx ){    # bUtil.getStdMILst( ) 와 비슷
     phVPLst[[1+length(phVPLst)]] <- bS.vp_ColVal( gEnv, aZoidMtx, fixCol=3 )
     phVPLst[[1+length(phVPLst)]] <- bS.vp_ColVal( gEnv, aZoidMtx, fixCol=6 )
     phVPLst[[1+length(phVPLst)]] <- bS.vp_remPair( gEnv, aZoidMtx )
+    phVPLst[[1+length(phVPLst)]] <- bS.vp_zw( gEnv, aZoidMtx )
+    #   차후 bS.vp_fStepBin() 도 추가.
 
     names(phVPLst) <- sapply( phVPLst ,function(p){p$idStr})
 
@@ -210,16 +212,16 @@ bS.getCutGrp <- function( hMtxLst_bS ,tgt.scMtx=NULL ){
                 scoreMtxObj <- bS.HMtxLst_getMtxLst( hMtxLst_bS , hName ,mName ,pName )
                 stdCut[[pName]] <- bS_stdCut.rawRow( hName ,mName ,pName ,scoreMtxObj$scoreMtx )
 
-                # if( is.null(bFMtxExtFltLst[[mName]]) ){   stdCutExt[[mName]] <- list()
-                # } else {
-                #     fltLst <- list()
-                #     for( nIdx in names(bFMtxExtFltLst[[mName]]) ){
-                #         # bFMtxExtFltLst[[mName]][[nIdx]] 는 FCust_stdCutExt.rawRow() 내부에서 이용됨.
-                #         #     fltLst[[nIdx]] <- FCust_stdCutExt.rawRow( hName ,mName ,pName ,scoreMtxObj$scoreMtx ,fltName=nIdx )
-                #         fltLst[[nIdx]] <- bS_stdCutExt.rawRow( hName ,mName ,pName ,scoreMtxObj$scoreMtx ,fltName=nIdx )
-                #     }
-                #     stdCutExt[[pName]] <- fltLst
-                # }
+                if( is.null(bSMtxExtFltLst[[mName]]) ){   stdCutExt[[mName]] <- list()
+                } else {
+                    fltLst <- list()
+                    for( nIdx in names(bSMtxExtFltLst[[mName]]) ){
+                        # bSMtxExtFltLst[[mName]][[nIdx]] 는 FCust_stdCutExt.rawRow() 내부에서 이용됨.
+                        #     fltLst[[nIdx]] <- FCust_stdCutExt.rawRow( hName ,mName ,pName ,scoreMtxObj$scoreMtx ,fltName=nIdx )
+                        fltLst[[nIdx]] <- bS_stdCutExt.rawRow( hName ,mName ,pName ,scoreMtxObj$scoreMtx ,fltName=nIdx )
+                    }
+                    stdCutExt[[pName]] <- fltLst
+                }
 
             }
 
@@ -298,3 +300,203 @@ bS.getHMtxLst_byHIdx <- function( hMtxLst_bS ){
 
 }
 
+
+#	byHIdx이긴 하지만, 사실은 각 scoreMtxN 에 대한 [col,phase] 테이블이다.
+#	즉 allIdx 단위별로 List가 만들어짐.
+bS.getScoreMtx.grp_byHIdx <- function( scoreMtx.grp ,tgt.scMtx=NULL ){
+	#	scoreMtx.grp <- getScoreMtx.grp( gEnv$allZoidMtx[allIdxF,] ,filter.grp )
+	#	aZoid, scoreMtx별로 [fCol,phName] 구조.
+	#		(Column이 phase 이므로 기본 phase만 가능하다.)
+	phaseName <- names(scoreMtx.grp$basic)
+	mtxInfoLst <- list()
+	if( is.null(tgt.scMtx) ){
+		mtxInfoLst <- lapply(scoreMtx.grp$basic[[1]] ,function( scoreObj ){ colnames(scoreObj$scoreMtx) })
+	} else {
+		mtxInfoLst <- lapply(scoreMtx.grp$basic[[1]][tgt.scMtx] ,function( scoreObj ){ colnames(scoreObj$scoreMtx) })
+	}
+
+	rowSize <- nrow(scoreMtx.grp$basic[[1]][[1]]$scoreMtx)
+
+	# hMtx_byHIdx[["sfcLate"]][["score2"]][["820"]]
+	mLst <- list()
+	for( mName in names(mtxInfoLst) ){	# mName <- names(mtxInfoLst)[1]
+		aZoidLst <- list()
+		for( aIdx in seq_len(rowSize) ){ # aIdx <- 1
+			mtx <- matrix( 0, nrow=length(mtxInfoLst[[mName]]), ncol=length(phaseName) )
+			colnames(mtx) <- phaseName	;rownames(mtx) <- mtxInfoLst[[mName]]
+			for( pName in phaseName ){	# pName <- phaseName[1]
+				mtx[,pName] <- scoreMtx.grp$basic[[pName]][[mName]]$scoreMtx[aIdx,]
+			}
+			aZoidLst[[aIdx]] <- mtx
+		}
+		mLst[[mName]] <- aZoidLst
+	}
+
+	return( mLst )
+
+}
+
+
+bS.cut <- function( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=NULL ,anaOnly=T ,logger=NULL ){
+    # bUtil.R - bUtil.cut1() 참고
+
+	reportStatus <- function( tStmp ,strWhere ,surFlag ,logger ){
+		#	strWhere <- sprintf("[%s,%s] stdLst",hName,mName)
+		if( is.null(logger) )	return( NULL )
+		tDiff <- Sys.time() - tStmp
+		rptStr <- sprintf("    %s  %d/%d  %.1f%s ",strWhere,sum(surFlag),length(surFlag),tDiff,units(tDiff) )
+		logger$fLogStr( rptStr )
+	}
+
+
+    # scoreMtx.grp <- wScoreMtx.grp ;anaOnly=T
+    scMtxName <- names(cut.grp$mtxInfoLst)
+	if( !is.null(tgt.scMtx) )	scMtxName <- intersect( scMtxName ,tgt.scMtx )
+
+	# bScrMtxName
+	bScrMtxName <- names(cut.grp$mtxInfoLst.bScr)
+	if( !is.null(tgt.scMtx) )	bScrMtxName <- intersect( bScrMtxName ,tgt.scMtx )
+
+    datLen <- 1
+	cutInfoLst <- list()
+	if( !anaOnly ){
+		cutInfoLst <- NULL
+
+		if( 0<length(scMtxName) ){
+			datLen <- nrow(scoreMtx.grp$basic[[1]][[ scMtxName[1] ]]$scoreMtx)
+		} else if( 0<length(bScrMtxName) ){
+			datLen <- nrow(scoreMtx.grp$mf[[ bScrMtxName[1] ]]$scoreMtx)
+		}
+	}
+
+	tStmp <- Sys.time()
+	if( !is.null(logger) ) logger$fLogStr("Start", pTime=T ,pAppend=F )
+
+    surFlag <- rep( T ,datLen )
+	auxInfoLst <- list( basic=list() ,mf=list() )
+	mtxGrp <- NULL
+	if( 0<length(scMtxName) ){
+		mtxGrp <- bS.getScoreMtx.grp_byHIdx( scoreMtx.grp )    # getScoreMtx.grp_byHIdx() 대체
+	}
+
+    for( hName in fHName ){ # hName <- fHName[1]
+
+        for( mName in scMtxName ){ # mName <- scMtxName[1]
+            #   "stdCut" -------------------------------------------
+            for( pName in cut.grp$phaseName ){   # pName <- cut.grp$phaseName[1]
+				scoreMtx <- scoreMtx.grp$basic[[pName]][[mName]]$scoreMtx
+
+                cutObj <- cut.grp$cutterLst[[hName]][[mName]]$stdCut[[pName]]
+                cRst <- cutObj$cut( scoreMtx ,alreadyDead=!surFlag ,anaMode=anaOnly )
+				if( !anaOnly ){	surFlag <- surFlag & cRst$surFlag
+				} else {
+					if( 0<length(cRst$cutLst) ){
+						cutInfoLst <- append( cutInfoLst 
+											,lapply( cRst$cutLst[[1]]$cLst ,function(p){ c(p$idObjDesc ,info=p$info) } ) 
+										)
+					}
+				}
+
+				for( extFltName in names(cut.grp$cutterExtLst[[hName]][[mName]]$stdCut[[pName]]) ){
+					cutExtObj <- cut.grp$cutterExtLst[[hName]][[mName]]$stdCut[[pName]][[extFltName]]
+					cRst <- cutExtObj$cut( scoreMtx ,alreadyDead=!surFlag ,anaMode=anaOnly )
+					if( !anaOnly ){	surFlag <- surFlag & cRst$surFlag
+					} else {
+						if( 0<length(cRst$cutLst) ){
+							cutInfoLst <- append( cutInfoLst 
+												,lapply( cRst$cutLst[[1]]$cLst ,function(p){ c(p$idObjDesc ,info=p$info) } ) 
+											)
+						}
+					}
+				}
+
+				reportStatus( tStmp ,sprintf("     %s",pName) ,surFlag ,logger )
+            }
+			reportStatus( tStmp ,sprintf("[%s,%s] stdLst",hName,mName) ,surFlag ,logger )
+
+			#   "hIdxLst" ------------------------------------------
+			hIdxCut <- cut.grp$cutterLst[[hName]][[mName]]$hIdxCut
+			for( aIdx in seq_len(datLen) ){
+				if( !anaOnly && !surFlag[aIdx] )	next
+
+				cutInfo <- hIdxCut$cut( mtxGrp[[mName]][[aIdx]] ,anaMode=anaOnly )
+				if( 0<length(cutInfo$cLst) ){
+					if( !anaOnly ){	surFlag[aIdx] <- FALSE
+					} else {
+						for( idx in seq_len(length(cutInfo$cLst)) ){
+							idxName <- sprintf("hIdxCut_%dth",1+length(cutInfoLst))
+							cutInfoLst[[idxName]] <- c( typ=names(cutInfo$cLst)[idx] ,hIdxCut$defId ,pName="ALL" ,info=cutInfo$cLst[[idx]] )
+						}
+					}
+				}
+
+				if( anaOnly && ("sfcLate"==hName) ){	# anaOnly상태이면 aIdx는 항상 1이라는 가정.
+					auxInfoLst$basic[[mName]] <- cutInfo$scObj
+				}
+				# if( 1<length(cRst$cutLst) ){
+				# 	cutInfoLst[[1+length(cutInfoLst)]] <- cRst
+				# }
+			}
+
+			reportStatus( tStmp ,sprintf("[%s,%s] hIdxLst",hName,mName) ,surFlag ,logger )
+
+        }
+
+		# bSMtxMulti ----------------------------------------------------------------
+		availMFName <- names(cut.grp$cutterExtMLst[[hName]]$stdCut[[1]])
+		for( mfName in availMFName ){
+			mtxMaker <- bSMtxMFltLst[[mfName]]( tgt.scMtx )
+			if( !mtxMaker$available )   next
+
+			mtxLst <- list()
+			for( pName in cut.grp$phaseName ){
+				scoreMtxLst <- scoreMtx.grp$basic[[pName]]
+				mtxLst[[pName]] <- mtxMaker$getScoreMtx( scoreMtxLst )
+
+                cutObj <- cut.grp$cutterExtMLst[[hName]]$stdCut[[pName]][[mfName]]
+                cRst <- cutObj$cut( mtxLst[[pName]] ,alreadyDead=!surFlag ,anaMode=anaOnly )
+				if( !anaOnly ){	surFlag <- surFlag & cRst$surFlag
+				} else {
+					if( 0<length(cRst$cutLst) ){
+						cutInfoLst <- append( cutInfoLst 
+											,lapply( cRst$cutLst[[1]]$cLst ,function(p){ c(p$idObjDesc ,info=p$info) } ) 
+										)
+					}
+				}
+			}
+
+			#   "hIdxLst" ------------------------------------------
+			# mtxGrp$score1[[1]]
+			mtx <- matrix( 0 ,nrow=length(mtxMaker$mInfo$cName) ,ncol=length(cut.grp$phaseName) 
+						,dimnames=list( mtxMaker$mInfo$cName ,cut.grp$phaseName )
+			)
+			for( aIdx in seq_len(datLen) ){
+				if( !anaOnly && !surFlag[aIdx] )	next
+
+				for( pName in cut.grp$phaseName ){
+					mtx[,pName] <- mtxLst[[pName]][aIdx,]
+				}
+
+				hIdxCut <- cut.grp$cutterExtMLst[[hName]]$hIdxCut[[mfName]]
+				cutInfo <- hIdxCut$cut( mtx ,anaMode=anaOnly )
+				if( 0<length(cutInfo$cLst) ){
+					if( !anaOnly ){	surFlag[aIdx] <- FALSE
+					} else {
+						for( idx in seq_len(length(cutInfo$cLst)) ){
+							idxName <- sprintf("hIdxCut_%dth",1+length(cutInfoLst))
+							cutInfoLst[[idxName]] <- c( typ=names(cutInfo$cLst)[idx] ,hIdxCut$defId ,pName="ALL" ,info=cutInfo$cLst[[idx]] )
+						}
+					}
+				}
+
+			}
+
+		}
+
+
+
+    }
+
+    return( list( surFlag=surFlag ,cutInfoLst=cutInfoLst ,auxInfoLst=auxInfoLst ) )
+
+}

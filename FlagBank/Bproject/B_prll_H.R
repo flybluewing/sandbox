@@ -1,4 +1,4 @@
-Bprll.bSCut <- function( gEnv.w ,stdZoid ,hMtxLst_bS ,tgt.scMtx ){
+Bprll.bSCut <- function( gEnv.w ,stdZoid ,hMtxLst_bS ,fHName ,tgt.scMtx ){
         # stdIdx  ;stdZoid
     aZoidMtx <- matrix(stdZoid ,nrow=1)
     phVP.grp <- bS.getPhVPGrp( gEnv.w ,aZoidMtx )
@@ -6,7 +6,12 @@ Bprll.bSCut <- function( gEnv.w ,stdZoid ,hMtxLst_bS ,tgt.scMtx ){
     # cut.grp <- bFCust.getFCustGrp( hMtxLst_bS ,tgt.scMtx )  # curHMtxLst 적용 추가 필요.
     cut.grp <- bS.getCutGrp( hMtxLst_bS ,tgt.scMtx )  # curHMtxLst 적용 추가 필요.
 
+    scoreMtx.grp <- bS.getScoreMtx.grp( phVP.grp ,aZoidMtx ,tgt.scMtx=tgt.scMtx )
 
+    cutRst.bS <- bS.cut( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx ,anaOnly=T ) 
+        #   anaOnly=TRUE 에서, cutRst$surFlag는 항상 TRUE임을 유의.
+
+    return( cutRst.bS )
 }
 
 

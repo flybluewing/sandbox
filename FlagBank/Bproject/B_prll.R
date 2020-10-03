@@ -20,6 +20,7 @@ prll.initHeader <- function( ){
         setwd( curWd )
         source("header.r")
         source("B_H.R")
+        source("B_prll_H.R")
     })
 }
 
@@ -134,11 +135,11 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
         }
 
         # bS cutting.
-        bSCutRst <- Bprll.bSCut( gEnv.w=gEnv.w
+        cutRst.bS <- Bprll.bSCut( gEnv.w=gEnv.w
                             ,stdZoid ,hMtxLst_bS=testData.grp$curHMtxLst_bS.grp[[as.character(curHIdx)]] 
-                            ,tgt.scMtx
+                            ,fHName=fHName  ,tgt.scMtx
         )
-        # cutRst$cutInfoLst <- append( cutRst$cutInfoLst ,bSCutRst$cutInfoLst )
+        cutRst$cutInfoLst <- append( cutRst$cutInfoLst ,cutRst.bS$cutInfoLst )
 
         # End of Cut Test
         # report example =================================================
@@ -216,11 +217,11 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
         rptFile <- ifelse(1==length(tgt.scMtx),sprintf("cutRstLst_%s",tgt.scMtx),"cutRstLst")
         rptFile
     }
-    rptBanTyp <- c(   "rawFCol" ,"rowE" ,"rawReb"   ,"fCol"
-                      ,"scMtx.sz.cut rebCnt" ,"scMtx.sz.cut rebCnt.e.sum"
-                      ,"summMtx.cut"
-                  )
-    # rptBanTyp <- NULL
+    # rptBanTyp <- c(   "rawFCol" ,"rowE" ,"rawReb"   ,"fCol"
+    #                   ,"scMtx.sz.cut rebCnt" ,"scMtx.sz.cut rebCnt.e.sum"
+    #                   ,"summMtx.cut"
+    #               )
+    rptBanTyp <- NULL
     B.rptCutRstLst( cutRstLst ,file=rptFile ,rptBanTyp=rptBanTyp )
 
     B.rptCutRst1Score( resultLst ,file=sprintf("CutRst1Score_%d",lastH) )

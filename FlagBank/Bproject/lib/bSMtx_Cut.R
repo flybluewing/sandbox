@@ -466,11 +466,152 @@ bS_stdCut.hIdx <- function( hName ,mName ,mtxLst ){
     }
 
 
-    rObj$getRawScore <- function( rawMtx ){ }
+    rObj$getRawScore <- function( rawMtx ){ 
 
-    rObj$getRaw4Ass <- function( rawObj ){  }
+        if( !rObj$available ) return( NULL )
 
-    rObj$getSummScore <- function( rawObj ){}
+        cfg <- bsScoreMtxCfg[[ rObj$defId["mName"] ]]
+        evtObj <- bFCust.getEvtMtx( rawMtx ,cfg )
+
+        curEvt <- bFCust.getEvt_byHIdx( rawMtx ,cfg ,lastEvt=rObj$stdEvt.H1 )
+        fColEvt <- bFCust.getEvt_byFCol( evtObj ,cfg )
+        rebInfo <- bFCust.getSkipZero_byHIdx.ass( rObj$szObj ,rawMtx ,evtObj$eValMtx )
+
+        return( list( cfg=cfg ,evtObj=evtObj ,curEvt=curEvt ,fColEvt=fColEvt ,rebInfo=rebInfo ) )
+
+    }
+
+    rObj$getRaw4Ass <- function( rawObj ){
+        #   mName 단위가 아닌, 전체 mName 범위로 평가하기 위한 데이터 추출.
+        #   bUtil.getCut1Score( ) 함수 참고.
+
+        r4Ass <- list()
+
+        # phaseHpnCnt는 현재 aZoid가 아닌, 이전 lastZoid에 관한 값임
+        phaseHpnCnt <- rbind( rObj$stdEvt.H1$hpnInfo$phase ,rObj$stdEvt.H1$evtInfo$phase )
+        rownames( phaseHpnCnt ) <- c("raw","evt")
+
+        # phaseHpnCnt는 현재 aZoid가 아닌, 이전 lastZoid에 관한 값임
+        phaseRebCnt <- rbind( rObj$stdEvt.H1$hpnInfo$phaseReb["reb",] ,rObj$stdEvt.H1$evtInfo$phaseReb["reb",] )
+        rownames( phaseRebCnt ) <- c("raw","evt")
+
+        # r4Ass$H1.phHpnCnt <- phaseHpnCnt    # 혼동가능성 때문에 이름 변경.
+        # r4Ass$H1.phRebCnt <- phaseRebCnt    #       초기 이름은 phaseHpnCnt, phaseRebCnt 이었음.(검토 후 폐기.)
+
+        r4Ass$rebMtx.ph <- rawObj$curEvt$rebInfo$rebMtx.ph
+
+        evtHpnLevMtx <- NULL
+        cName <- c("lev1","lev2","lev3")
+        eLevMtx <- rawObj$evtObj$eLevMtx
+        evtHpnLevMtx <- matrix( 0 ,nrow=length(cName) ,ncol=ncol(eLevMtx) ,dimnames=list(cName,colnames(eLevMtx)) )
+        evtHpnLevMtx["lev1" ,] <- apply( eLevMtx ,2 ,function(cDat){sum(cDat==1,na.rm=T)} )
+        evtHpnLevMtx["lev2" ,] <- apply( eLevMtx ,2 ,function(cDat){sum(cDat==2,na.rm=T)} )
+        evtHpnLevMtx["lev3" ,] <- apply( eLevMtx ,2 ,function(cDat){sum(cDat>=3,na.rm=T)} )
+        r4Ass$evtHpnLevMtx <- evtHpnLevMtx
+
+        phaseReb.raw <- rawObj$curEvt$hpnInfo$phaseReb[c("reb","hpn"),] ;rownames(phaseReb.raw) <- c("rebFlag.raw","hpn.raw")
+        phaseReb.evt <- rawObj$curEvt$evtInfo$phaseReb[c("reb","hpn"),] ;rownames(phaseReb.evt) <- c("rebFlag.evt","hpn.evt")
+        r4Ass$phaseReb  <- rbind( phaseReb.raw ,phaseReb.evt )
+
+        return( r4Ass )
+
+    }
+
+    rObj$getSummScore <- function( rawObj ){
+        scoreObj <- list( )
+
+        # cfg <- scoreMtxCfg[[ rObj$defId["mName"] ]]
+        # evtObj <- bFCust.getEvtMtx( rawMtx ,cfg )
+        # rawObj <- rObj$getRawScore( rawMtx )
+        if( is.null(rawObj) ){
+            rName <- c("raw","evt")
+			cName <- c("all","ph","fCol","phReb","xyCnt.fCol","xyCnt.phase")
+			summMtx <- matrix( 0 ,nrow=length(rName) ,ncol=length(cName) )
+			rownames(summMtx) <- rName	;colnames(summMtx) <- cName
+
+            scoreObj$summMtx        <- summMtx
+            scoreObj$summMtx.reb    <- summMtx # 내부 구조는 같다.
+
+            cName <- c("r.ph","r.fCol","r.dblHpnFlg" ,"e.ph","e.fCol","e.dblHpnFlg")
+            rName <- c("rebCnt","rebDup")   # 반복 수, H1에서의 재현이 반복되었는지? ,발생 수
+            scMtx.sz <- matrix( 0 ,ncol=length(cName) ,nrow=length(rName) ,dimnames=list(rName,cName) )
+            scoreObj$scMtx.sz
+            return( scoreObj )
+        }
+        cfg     <- rawObj$cfg
+        evtObj  <- rawObj$evtObj
+        curEvt  <- rawObj$curEvt
+        fColEvt <- rawObj$fColEvt
+        rebInfo <- rawObj$rebInfo   # bFCust.getSkipZero_byHIdx.ass() 값임을 유의
+
+        # fColEvt 평가 적용.
+        #   cfg의 evtMax.fCol이 이미 적용되었음(close max 값이므로)
+        scoreObj$fColEvt <- fColEvt
+
+        #   summMtx,summMtx.reb / stdEvt.H1 --------------------------------------------------------
+        # curEvt <- bFCust.getEvt_byHIdx( rawMtx ,cfg ,lastEvt=rObj$stdEvt.H1 )
+        scoreObj$summMtx <- curEvt$rebInfo$summMtx
+        scoreObj$summMtx.reb <- NULL
+        if( !is.null(rObj$stdEvt.H1$rebInfo) ){
+            summMtx.reb <- scoreObj$summMtx
+            summMtx.reb[,] <- 0     # 하나라도 0 이 아니면 Cut...
+
+            rebInfo.H1 <- rObj$stdEvt.H1$rebInfo
+
+            summMtx.reb["raw","all"] <- scoreObj$summMtx["raw","all"]>0 && curEvt$rebInfo$summMtx["raw","all"]>0
+            summMtx.reb["evt","all"] <- scoreObj$summMtx["evt","all"]>0 && curEvt$rebInfo$summMtx["evt","all"]>0
+
+            summMtx.reb["raw","ph"] <- sum( rebInfo.H1$rebMtx.ph["rebFlag.raw",]>0 & curEvt$rebInfo$rebMtx.ph["rebFlag.raw",]>0 )
+            summMtx.reb["evt","ph"] <- sum( rebInfo.H1$rebMtx.ph["rebFlag.evt",]>0 & curEvt$rebInfo$rebMtx.ph["rebFlag.evt",]>0 )
+
+            summMtx.reb["raw","fCol"] <- sum( rebInfo.H1$rebMtx.fCol["rebFlag.raw",]>0 & curEvt$rebInfo$rebMtx.fCol["rebFlag.raw",]>0 )
+            summMtx.reb["evt","fCol"] <- sum( rebInfo.H1$rebMtx.fCol["rebFlag.evt",]>0 & curEvt$rebInfo$rebMtx.fCol["rebFlag.evt",]>0 )
+
+            summMtx.reb["raw","phReb"] <- sum( rebInfo.H1$rebMtx.phReb["raw",]>0 & curEvt$rebInfo$rebMtx.phReb["raw",]>0 )
+            summMtx.reb["evt","phReb"] <- sum( rebInfo.H1$rebMtx.phReb["evt",]>0 & curEvt$rebInfo$rebMtx.phReb["evt",]>0 )
+
+            summMtx.reb["raw","xyCnt.fCol"] <- rebInfo.H1$rebMtx.xyCnt["raw","fCol.allMat"]>0 && curEvt$rebInfo$rebMtx.xyCnt["raw","fCol.allMat"]
+            summMtx.reb["evt","xyCnt.fCol"] <- rebInfo.H1$rebMtx.xyCnt["evt","fCol.allMat"]>0 && curEvt$rebInfo$rebMtx.xyCnt["evt","fCol.allMat"]
+
+            summMtx.reb["raw","xyCnt.phase"] <- rebInfo.H1$rebMtx.xyCnt["raw","phase.allMat"]>0 && curEvt$rebInfo$rebMtx.xyCnt["raw","phase.allMat"]
+            summMtx.reb["evt","xyCnt.phase"] <- rebInfo.H1$rebMtx.xyCnt["evt","phase.allMat"]>0 && curEvt$rebInfo$rebMtx.xyCnt["evt","phase.allMat"]
+
+
+            scoreObj$summMtx.reb <- summMtx.reb
+        }
+
+        #   scMtx.sz / szObj ------------------------------------------------------------
+        # rebInfo <- bFCust.getSkipZero_byHIdx.ass( rObj$szObj ,rawMtx ,evtObj$eValMtx )
+        cName <- c("r.ph","r.fCol","r.dblHpnFlg" ,"e.ph","e.fCol","e.dblHpnFlg")
+        rName <- c("rebCnt","rebDup")   # 반복 수, H1에서의 재현이 반복되었는지? ,발생 수
+        scMtx.sz <- matrix( 0 ,ncol=length(cName) ,nrow=length(rName) ,dimnames=list(rName,cName) )
+        if( TRUE ){
+            scMtx.sz["rebCnt","r.ph"] <- sum(rebInfo$matRaw$ph["mat",])
+            scMtx.sz["rebCnt","r.fCol"] <- sum(rebInfo$matRaw$fCol["mat",])
+            scMtx.sz["rebCnt","r.dblHpnFlg"] <- rebInfo$matRaw$dblHpn["mat"]
+            scMtx.sz["rebCnt","e.ph"] <- sum(rebInfo$matEvt$ph["mat",])
+            scMtx.sz["rebCnt","e.fCol"] <- sum(rebInfo$matEvt$fCol["mat",])
+            scMtx.sz["rebCnt","e.dblHpnFlg"] <- rebInfo$matEvt$dblHpn["mat"]
+
+            if( !is.null(rObj$szObj$rebInfo) ){
+                matFlag <- (rObj$szObj$rebInfo$matRaw$ph["mat",]>0) & (rebInfo$matRaw$ph["mat",]>0)
+                scMtx.sz["rebDup","r.ph"] <- sum( matFlag )
+                matFlag <- (rObj$szObj$rebInfo$matRaw$fCol["mat",]>0) & (rebInfo$matRaw$fCol["mat",]>0)
+                scMtx.sz["rebDup","r.fCol"] <- sum( matFlag )
+                scMtx.sz["rebDup","r.dblHpnFlg"] <- (rObj$szObj$rebInfo$matRaw$dblHpn["mat"]>0) && (rebInfo$matRaw$dblHpn["mat"]>0)
+
+                matFlag <- (rObj$szObj$rebInfo$matEvt$ph["mat",]>0) & (rebInfo$matEvt$ph["mat",]>0)
+                scMtx.sz["rebDup","e.ph"] <- sum( matFlag )
+                matFlag <- (rObj$szObj$rebInfo$matEvt$fCol["mat",]>0) & (rebInfo$matEvt$fCol["mat",]>0)
+                scMtx.sz["rebDup","e.fCol"] <- sum( matFlag )
+                scMtx.sz["rebDup","e.dblHpnFlg"] <- (rObj$szObj$rebInfo$matEvt$dblHpn["mat"]>0) && (rebInfo$matEvt$dblHpn["mat"]>0)
+            }            
+        }
+        scoreObj$scMtx.sz <- scMtx.sz
+
+        return( scoreObj )
+
+    }
 
     rObj$cut <- function( scoreMtx ,anaMode=TRUE ){   # 하나씩 오므로, alreadyDead 처리.
 

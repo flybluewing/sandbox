@@ -1,6 +1,11 @@
 # ================================================================================
 # = VP : Value Pack (aZoidMtx + stdMI)
 # ================================================================================
+if( FALSE ){    # document
+    # 주의사항
+    #   - vpObj$getCodeW() 에서 fStep 생성 시, aZoid마다 해당되는 stdMI가 다르다!
+}
+
 
 bS.vp_ColVal <- function( gEnv, aZoidMtx, fixCol ){
     vpObj <- list( idStr=sprintf("colVal%d",fixCol)
@@ -173,8 +178,6 @@ bS.vp_remPair <- function( gEnv, aZoidMtx ){
         }
 
         cStepMtx <- aZoidMtx[,2:6 ,drop=F] - aZoidMtx[,1:5 ,drop=F]
-        fStepMtx <- apply( aZoidMtx ,1 ,function( aZoid ){ aZoid-stdMI$lastZoid })
-        fStepMtx <- t( fStepMtx )
 
         aObj$miIdStr <- miIdStr
         aObj$aZoidMtx <- matrix( 0 ,nrow=aLen ,ncol=(6-1) )  ;rownames(aObj$aZoidMtx) <- miIdStr
@@ -185,7 +188,13 @@ bS.vp_remPair <- function( gEnv, aZoidMtx ){
             curWorkArea <- which(miIdStr==nIdx)
             aObj$aZoidMtx[curWorkArea,] <- aZoidMtx[curWorkArea,-startIdx ,drop=F]
             aObj$cStepMtx[curWorkArea,] <- cStepMtx[curWorkArea,-startIdx ,drop=F]
-            aObj$fStepMtx[curWorkArea,] <- fStepMtx[curWorkArea,-startIdx ,drop=F]
+
+            tMtx <- apply( aZoidMtx[curWorkArea,,drop=F] ,1 ,function( aZoid ){
+                                aZoid - vpObj$stdMILst[[nIdx]]$lastZoid
+            })
+            fStepMtx <- t(tMtx)
+
+            aObj$fStepMtx[curWorkArea,] <- fStepMtx[,-startIdx ,drop=F]
         }
 
         return( aObj )
@@ -195,3 +204,72 @@ bS.vp_remPair <- function( gEnv, aZoidMtx ){
     return(vpObj)
 }
 
+
+bS.vp_zw <- function( gEnv, aZoidMtx ){
+
+    vpObj <- list( idStr=sprintf("zw")
+                    ,mInfo = c()
+    )
+
+    zwGrp <- apply( aZoidMtx ,1 ,function(aZoid){ aZoid[6]-aZoid[1] })
+    zwGrp <- sort(unique(zwGrp))
+
+    stdMILst <- list()
+    zwH <- apply( gEnv$zhF ,1 ,function(zh){ zh[6]-zh[1] })
+    for( zwIdx in zwGrp ){
+        zMtx <- gEnv$zhF[zwH==zwIdx, ,drop=F]
+        if( 0==nrow(zMtx) ) next
+
+        stdMI <- fCutU.getMtxInfo(zMtx)
+        stdMI$zw <- zwIdx
+        stdMILst[[sprintf("%d",zwIdx)]] <- stdMI
+    }
+    vpObj$stdMILst <- stdMILst
+
+
+    vpObj$getCodeH <- function( stdMI ){
+        wLst <- list()
+        wLst$rawTail <- stdMI$rawTail
+        wLst$lastRaw <- wLst$rawTail[nrow(wLst$rawTail),]
+
+        wLst$cStepTail <- stdMI$cStepTail
+        wLst$fStepTail <- stdMI$fStepTail
+
+        return( wLst )
+    }
+
+    vpObj$getCodeW <- function( aZoidMtx ){
+        aObj <- list( miNames=names(vpObj$stdMILst) )
+
+        miIdStr <- rep("N/A",nrow(aZoidMtx))
+
+        aZw <- apply( aZoidMtx ,1 ,function(aZoid){ aZoid[6]-aZoid[1] })
+
+        fStepMtx <- matrix( 0 ,nrow=nrow(aZoidMtx) ,ncol=6 )
+        for( nIdx in names(vpObj$stdMILst) ){
+            stdMI <- vpObj$stdMILst[[nIdx]]
+            curWorkSpan <- aZw==stdMI$zw
+            
+            mtx <- apply( aZoidMtx[curWorkSpan ,,drop=F] ,1 ,function(aZoid){ aZoid-stdMI$lastZoid })
+            fStepMtx[curWorkSpan ,] <- t(mtx)
+
+            miIdStr[curWorkSpan] <- nIdx
+        }
+
+        aObj$aZoidMtx <- aZoidMtx
+        aObj$cStepMtx <- aZoidMtx[,2:6,drop=F] - aZoidMtx[,1:5,drop=F]
+        aObj$fStepMtx <- fStepMtx
+
+        rownames(aObj$aZoidMtx) <- miIdStr
+        rownames(aObj$cStepMtx) <- miIdStr
+        rownames(aObj$fStepMtx) <- miIdStr
+
+        return( aObj )
+    }
+
+    return(vpObj)
+
+}
+
+
+bS.vp_fStepBin <- function( gEnv, aZoidMtx ){   cat("폐기. stdMI가 만들기도전에, stdMI$lastZoid으로부터 fStep이 나와야 하는 모순 발생") }

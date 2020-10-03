@@ -229,13 +229,13 @@ if( TRUE ){ # "sScore02"
             scrMtx[wIdx,"rebC.r"] <- sum(aCode==wMI$rawTail[stdMILen,])
             scrMtx[wIdx,"rebC.c"] <- sum(aCStep==wMI$cStepTail[stdMILen,])
             if( 1<stdMILen ){
-                scrMtx[wIdx,"rebC.f"] <- sum(aCStep==wMI$fStepTail[stdMILen,])
+                scrMtx[wIdx,"rebC.f"] <- sum(aFStep==wMI$fStepTail[stdMILen,])
 
                 scrMtx[wIdx,"rebC2.r"] <- sum(aCode==wMI$rawTail[stdMILen-1,])
                 scrMtx[wIdx,"rebC2.c"] <- sum(aCStep==wMI$cStepTail[stdMILen-1,])
             }
             if( 2<stdMILen ){
-                scrMtx[wIdx,"rebC2.f"] <- sum(aCStep==wMI$fStepTail[stdMILen-1,])
+                scrMtx[wIdx,"rebC2.f"] <- sum(aFStep==wMI$fStepTail[stdMILen-1,])
 
             }
 
