@@ -256,6 +256,7 @@ bS.vp_zw <- function( gEnv, aZoidMtx ){
             miIdStr[curWorkSpan] <- nIdx
         }
 
+        aObj$miIdStr <- miIdStr
         aObj$aZoidMtx <- aZoidMtx
         aObj$cStepMtx <- aZoidMtx[,2:6,drop=F] - aZoidMtx[,1:5,drop=F]
         aObj$fStepMtx <- fStepMtx
