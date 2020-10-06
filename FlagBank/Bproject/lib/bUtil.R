@@ -1486,6 +1486,90 @@ bUtil.findSeg <- function( aCode ,pairMaxLen=NULL ,useValName=TRUE ){
 	return( segLst )
 }
 
+bUtil.findLinearPtn <- function( codeMtx ,yIdx ,typ="V" ){
+	#	typ : V A W M		W,M 타입은 일단 보류.
 
+	if( FALSE ){	# working code
+		typ <- "V"	;yIdx<-NULL
+		codeMtx <- matrix( sample(1:100,24) ,nrow=4 ,ncol=6 )
+	}
+
+	getPtnIdx_V <- function( dimVal ,yIdx ){
+		idxLst <- list()
+		for( cIdx in seq_len(dimVal[2]) ){
+			baseIdx <- c(yIdx,cIdx)
+			leftMtx <- matrix(0,nrow=0,ncol=2)	;rightMtx <- matrix(0,nrow=0,ncol=2)
+			
+			# left side
+			minDistance <- min(yIdx-1,cIdx-1)
+			for( idx in seq_len(minDistance) ){
+				leftMtx <- rbind( leftMtx ,c(yIdx-idx,cIdx-idx) )
+			}
+
+			# right side
+			minDistance <- min(yIdx-1,dimVal[2]-cIdx)
+			for( idx in seq_len(minDistance) ){
+				rightMtx <- rbind( rightMtx ,c(yIdx-idx,cIdx+idx) )
+			}
+
+			idxLst[[sprintf("col%d",cIdx)]] <- list( baseIdx=baseIdx ,leftMtx=leftMtx ,rightMtx=rightMtx )
+		}
+
+		return( idxLst )
+	}
+	getPtnIdx_A <- function( dimVal ,yIdx ){
+		idxLst <- list()
+		for( cIdx in seq_len(dimVal[2]) ){
+			baseIdx <- c(yIdx,cIdx)
+			leftMtx <- matrix(0,nrow=0,ncol=2)	;rightMtx <- matrix(0,nrow=0,ncol=2)
+
+			# left side
+			minDistance <- min(dimVal[1]-yIdx,cIdx-1)
+			for( idx in seq_len(minDistance) ){
+				leftMtx <- rbind( leftMtx ,c(yIdx+idx,cIdx-idx) )
+			}
+
+			# right side
+			minDistance <- min(dimVal[1]-yIdx,dimVal[2]-cIdx)
+			for( idx in seq_len(minDistance) ){
+				rightMtx <- rbind( rightMtx ,c(yIdx+idx,cIdx+idx) )
+			}
+
+			idxLst[[sprintf("col%d",cIdx)]] <- list( baseIdx=baseIdx ,leftMtx=leftMtx ,rightMtx=rightMtx )
+		}
+
+		return( idxLst )
+	}
+
+	idxLst <- NULL
+	if( "V"==typ ){
+		idxLst <- getPtnIdx_V( dimVal=dim(codeMtx) ,yIdx )
+	} else if( "A"==typ ){
+		idxLst <- getPtnIdx_A( dimVal=dim(codeMtx) ,yIdx )
+	}
+
+	for( idx in seq_len(length(idxLst)) ){
+		idxLst[[idx]]$baseIdx <- c( idxLst[[idx]]$baseIdx ,codeMtx[idxLst[[idx]]$baseIdx[1],idxLst[[idx]]$baseIdx[2]] )
+		names(idxLst[[idx]]$baseIdx) <- c("row","col","val")
+
+		if( 0<nrow(idxLst[[idx]]$leftMtx) ){
+			leftVal <- apply(idxLst[[idx]]$leftMtx,1,function(idxRow){ codeMtx[idxRow[1],idxRow[2]] })
+			idxLst[[idx]]$leftMtx <- cbind( idxLst[[idx]]$leftMtx ,leftVal )
+		} else {
+			idxLst[[idx]]$leftMtx <- matrix( 0 ,nrow=0 ,ncol=3 )
+		}
+		colnames( idxLst[[idx]]$leftMtx ) <- c("row","col","val")
+
+		if( 0<nrow(idxLst[[idx]]$rightMtx) ){
+			rightVal <- apply(idxLst[[idx]]$rightMtx,1,function(idxRow){ codeMtx[idxRow[1],idxRow[2]] })
+			idxLst[[idx]]$rightMtx <- cbind( idxLst[[idx]]$rightMtx ,rightVal )
+		} else {
+			idxLst[[idx]]$rightMtx <- matrix( 0 ,nrow=0 ,ncol=3 )
+		}
+		colnames( idxLst[[idx]]$rightMtx ) <- c("row","col","val")
+	}
+
+	return( idxLst )
+}
 
 
