@@ -217,12 +217,16 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
         rptFile <- ifelse(1==length(tgt.scMtx),sprintf("cutRstLst_%s",tgt.scMtx),"cutRstLst")
         rptFile
     }
-    # rptBanTyp <- c(   "rawFCol" ,"rowE" ,"rawReb"   ,"fCol"
-    #                   ,"scMtx.sz.cut rebCnt" ,"scMtx.sz.cut rebCnt.e.sum"
-    #                   ,"summMtx.cut"
-    #               )
-    rptBanTyp <- NULL
-    B.rptCutRstLst( cutRstLst ,file=rptFile ,rptBanTyp=rptBanTyp )
+
+    rptBanTyp <- NULL   ;rptBanM <- NULL
+    if( FALSE ){    # 참고 코드
+        rptBanTyp <- c(   "rawFCol" ,"rowE" ,"rawReb"   ,"fCol"
+                          ,"scMtx.sz.cut rebCnt" ,"scMtx.sz.cut rebCnt.e.sum"
+                          ,"summMtx.cut"
+                      )
+        rptBanM <- c("score1")
+    }
+    B.rptCutRstLst( cutRstLst ,file=rptFile ,rptBanTyp=rptBanTyp ,rptBanM=rptBanM )
 
     B.rptCutRst1Score( resultLst ,file=sprintf("CutRst1Score_%d",lastH) )
 

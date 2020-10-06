@@ -470,7 +470,7 @@ B.rptCutRst <- function( cutRst ,file="cutRst" ){
 } # B.rptCutRst()
 
 
-B.rptCutRstLst <- function( cutRstLst ,file="cutRstLst" ,rptBanTyp=NULL ){
+B.rptCutRstLst <- function( cutRstLst ,file="cutRstLst" ,rptBanTyp=NULL ,rptBanM=NULL ){
 
     getPortion <- function( fieldName ,cutRstLst ,headLen=NULL ){
         # fieldName <- "typ"
@@ -562,7 +562,14 @@ B.rptCutRstLst <- function( cutRstLst ,file="cutRstLst" ,rptBanTyp=NULL ){
 
     # ====================================================================
     log.meta$fLogStr("\n\n")
-    rptHidden <- if(0==length(rptBanTyp)) "" else sprintf("skipped type:%s",paste(rptBanTyp,collapse=",") )
+    rptHidden <- ""
+    if( 0 < length(rptBanTyp) ){
+        rptHidden <- c( rptHidden ,sprintf("  skipped type:%s",paste(rptBanTyp,collapse=",")) )
+    }
+    if( 0 < length(rptBanM) ){
+        rptHidden <- c( rptHidden ,sprintf("  skipped mName:%s",paste(rptBanM,collapse=",")) )
+    }
+
     for( nIdx in names(cutRstLst) ){   # nIdx <- names(cutRstLst)[1]
         cutRst <- cutRstLst[[nIdx]]
         log.meta$fLogStr( sprintf("<%s>",nIdx) )
@@ -570,7 +577,7 @@ B.rptCutRstLst <- function( cutRstLst ,file="cutRstLst" ,rptBanTyp=NULL ){
         cutLen <- length(cutRst$cutInfoLst)
         if( 0 == cutLen )    next
 
-        reportSkipCount <- 0
+        reportSkip <- c("typ"=0 ,"mName"=0)
         for( idx in 1:cutLen ){
             cutInfo <- cutRst$cutInfoLst[[idx]]
             grep( "v", c("nv","vv","3v","n4v","nn") )
@@ -579,19 +586,27 @@ B.rptCutRstLst <- function( cutRstLst ,file="cutRstLst" ,rptBanTyp=NULL ){
             for( banIdx in rptBanTyp ){
                 if( grepl(banIdx,cutInfo["typ"]) ){
                     banFlag <- T
+                    reportSkip["typ"] <- 1 + reportSkip["typ"]
+                    break
+                }
+            }
+            for( banIdx in rptBanM ){
+                if( grepl(banIdx,cutInfo["mName"]) ){
+                    banFlag <-T
+                    reportSkip["mName"] <- 1 + reportSkip["mName"]
                     break
                 }
             }
             if( banFlag ){
-                reportSkipCount <- reportSkipCount + 1
                 next    # report skip
             }
 
             log.meta$fLogStr( sprintf("  %4d %s",idx,paste(names(cutInfo),collapse="\t") ) )
             log.meta$fLogStr( sprintf("       %s",    paste(cutInfo,collapse="\t") ) )
         }
-        if( 0<reportSkipCount ){
-            log.meta$fLogStr( sprintf("  ** report skip : %d", reportSkipCount ) )
+        if( any(0<reportSkip) ){
+            skipStr <- paste( names(reportSkip) ,reportSkip ,sep=":" )
+            log.meta$fLogStr( sprintf("  ** report skip - %s", paste(skipStr,collapse=" ") ) )
             log.meta$fLogStr( sprintf("            %s ", rptHidden ) )
         }
 

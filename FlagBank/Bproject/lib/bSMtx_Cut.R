@@ -34,7 +34,7 @@ bS_stdCut.rawRow <- function( hName ,mName ,pName ,scoreMtxH ){
         cutLst <- list()
         if( !rObj$available ) return( list(cutLst=cutLst,surFlag=!alreadyDead) )
 
-        hardFlag <- TRUE    # hardFlag <- rObj$isHard( rObj$defId["pName"] )$flag["p"]  혹시 나중에 필요할지도..
+        hardFlag <- FALSE    # hardFlag <- rObj$isHard( rObj$defId["pName"] )$flag["p"]  혹시 나중에 필요할지도..
         cfg <- bsScoreMtxCfg[[ rObj$defId["mName"] ]]
 
 
@@ -249,7 +249,8 @@ bS_stdCutExt.rawRow <- function( hName ,mName ,pName ,scoreMtxH ,fltName ){
         cutLst <- list()
         if( !rObj$available ) return( list(cutLst=cutLst,surFlag=!alreadyDead) )
 
-        hardFlag <- rObj$isHard( rObj$defId["pName"] )$flag["p"]
+        # hardFlag <- rObj$isHard( rObj$defId["pName"] )$flag["p"]
+        hardFlag <- FALSE
 
         extFilter <- bSMtxExtFltLst[[ rObj$defId["mName"] ]][[ rObj$defId["fltName"] ]]
         scrExtMtx <- extFilter$getScoreMtx( scoreMtx )
