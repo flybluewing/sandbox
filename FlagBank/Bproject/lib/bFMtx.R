@@ -3231,6 +3231,56 @@ bFMtx.scoreF <- function( stdMIObj ){
 }
 
 
+# bFMtx.scoreL series 
+#	bFMtx.scoreLAr12 bFMtx.scoreLAr34 bFMtx.scoreLAc12 bFMtx.scoreLAc34 bFMtx.scoreLAf12 bFMtx.scoreLAf34
+
+bFMtx.scoreLAr12 <- function( stdMIObj ){
+
+	stdMI <- stdMIObj$stdMI
+	zMtx <- stdMIObj$zMtx
+	rObj <- list( 	idStr="bFMtx.scoreLAr12"	,zMtx.size=nrow(zMtx)	,lastZoid=stdMI$lastZoid	)
+
+	rObj$lPtn1 <- NULL
+	rObj$lPtn2 <- NULL
+	if( 0<rObj$zMtx.size ){
+		if( 1<rObj$zMtx.size ){
+			rObj$lPtn1 <- bUtil.findLinearPtn( stdMI$rawTail ,yIdx=1 ,typ="A" )
+		}
+		if( 2<rObj$zMtx.size ){
+			rObj$lPtn2 <- bUtil.findLinearPtn( stdMI$rawTail ,yIdx=2 ,typ="A" )
+		}
+	}
+
+	rObj$fMtxObj <- function( aZoidMtx ,makeInfoStr=F ){
+		aLen <- nrow(aZoidMtx)
+		cName <- c(	"xxxxx","xxxxx"
+				)
+		scoreMtx <- matrix( 0, nrow=aLen, ncol=length(cName) )	;colnames(scoreMtx) <- cName
+
+		infoMtx <- NULL
+		if( makeInfoStr ){
+			cName <- c( "zMtx.size" )
+			infoMtx <- matrix( "" ,nrow=aLen ,ncol=length(cName) )	;colnames(infoMtx) <- cName
+			infoMtx[,"zMtx.size"] <- rObj$zMtx.size
+		}
+		if( 0==rObj$zMtx.size ){
+			return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
+		}
+
+		for( aIdx in 1:aLen ){
+			aZoid <- aZoidMtx[aIdx,]
+			aCStep <- aZoid[2:6] - aZoid[1:5]	
+			aFStep <- aZoid - rObj$lastZoid
+		}
+
+		return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
+
+	}
+
+	return( rObj )
+
+}
+
 
 bFMtx.scoreZ <- function( stdMIObj ){
 
