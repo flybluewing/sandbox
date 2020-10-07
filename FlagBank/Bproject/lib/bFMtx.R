@@ -171,6 +171,55 @@ getFilter.grp <- function( stdMI.grp ,tgt.scMtx=NULL ){
 			mtxObjLst[[1+length(mtxObjLst)]] <- bFMtx.scoreF( stdMIObj )
 		}
 
+		if( is.null(tgt.scMtx) || ("scoreLAr13" %in%tgt.scMtx ) ){
+			mtxObjLst[[1+length(mtxObjLst)]] <- bFMtx.scoreLAr13( stdMIObj )
+		}
+        if( is.null(tgt.scMtx) || ("scoreLAr24" %in%tgt.scMtx ) ){
+			mtxObjLst[[1+length(mtxObjLst)]] <- bFMtx.scoreLAr24( stdMIObj )
+		}
+        if( is.null(tgt.scMtx) || ("scoreLVr13" %in%tgt.scMtx ) ){
+			mtxObjLst[[1+length(mtxObjLst)]] <- bFMtx.scoreLVr13( stdMIObj )
+		}
+        if( is.null(tgt.scMtx) || ("scoreLVr24" %in%tgt.scMtx ) ){
+			mtxObjLst[[1+length(mtxObjLst)]] <- bFMtx.scoreLVr24( stdMIObj )
+		}
+        if( is.null(tgt.scMtx) || ("scoreLAe13" %in%tgt.scMtx ) ){
+			mtxObjLst[[1+length(mtxObjLst)]] <- bFMtx.scoreLAe13( stdMIObj )
+		}
+        if( is.null(tgt.scMtx) || ("scoreLAe24" %in%tgt.scMtx ) ){
+			mtxObjLst[[1+length(mtxObjLst)]] <- bFMtx.scoreLAe24( stdMIObj )
+		}
+        if( is.null(tgt.scMtx) || ("scoreLVe13" %in%tgt.scMtx ) ){
+			mtxObjLst[[1+length(mtxObjLst)]] <- bFMtx.scoreLVe13( stdMIObj )
+		}
+        if( is.null(tgt.scMtx) || ("scoreLVe24" %in%tgt.scMtx ) ){
+			mtxObjLst[[1+length(mtxObjLst)]] <- bFMtx.scoreLVe24( stdMIObj )
+		}
+        if( is.null(tgt.scMtx) || ("scoreLAc13" %in%tgt.scMtx ) ){
+			mtxObjLst[[1+length(mtxObjLst)]] <- bFMtx.scoreLAc13( stdMIObj )
+		}
+        if( is.null(tgt.scMtx) || ("scoreLAc24" %in%tgt.scMtx ) ){
+			mtxObjLst[[1+length(mtxObjLst)]] <- bFMtx.scoreLAc24( stdMIObj )
+		}
+        if( is.null(tgt.scMtx) || ("scoreLVc13" %in%tgt.scMtx ) ){
+			mtxObjLst[[1+length(mtxObjLst)]] <- bFMtx.scoreLVc13( stdMIObj )
+		}
+        if( is.null(tgt.scMtx) || ("scoreLVc24" %in%tgt.scMtx ) ){
+			mtxObjLst[[1+length(mtxObjLst)]] <- bFMtx.scoreLVc24( stdMIObj )
+		}
+        if( is.null(tgt.scMtx) || ("scoreLAf13" %in%tgt.scMtx ) ){
+			mtxObjLst[[1+length(mtxObjLst)]] <- bFMtx.scoreLAf13( stdMIObj )
+		}
+        if( is.null(tgt.scMtx) || ("scoreLAf24" %in%tgt.scMtx ) ){
+			mtxObjLst[[1+length(mtxObjLst)]] <- bFMtx.scoreLAf24( stdMIObj )
+		}
+        if( is.null(tgt.scMtx) || ("scoreLVf13" %in%tgt.scMtx ) ){
+			mtxObjLst[[1+length(mtxObjLst)]] <- bFMtx.scoreLVf13( stdMIObj )
+		}
+        if( is.null(tgt.scMtx) || ("scoreLVf24" %in%tgt.scMtx ) ){
+			mtxObjLst[[1+length(mtxObjLst)]] <- bFMtx.scoreLVf24( stdMIObj )
+		}
+
 		names(mtxObjLst) <- sapply(mtxObjLst,function(p){p$idStr})
 		return( mtxObjLst )
 	}
@@ -3231,17 +3280,12 @@ bFMtx.scoreF <- function( stdMIObj ){
 }
 
 
-# bFMtx.scoreL series 
-#	bFMtx.scoreLAr12 bFMtx.scoreLAr34 bFMtx.scoreLAe12 bFMtx.scoreLAe34 
-#	bFMtx.scoreLAc12 bFMtx.scoreLAc34 bFMtx.scoreLAf12 bFMtx.scoreLAf34
-#	bFMtx.scoreLVr12 bFMtx.scoreLVr34 bFMtx.scoreLVe12 bFMtx.scoreLVe34 
-#	bFMtx.scoreLVc12 bFMtx.scoreLVc34 bFMtx.scoreLVf12 bFMtx.scoreLVf34
 
 bFMtx.scoreLAr13 <- function( stdMIObj ){
 
 	stdMI <- stdMIObj$stdMI
 	zMtx <- stdMIObj$zMtx
-	rObj <- list( 	idStr="bFMtx.scoreLAr13"	,zMtx.size=nrow(zMtx)	,lastZoid=stdMI$lastZoid	)
+	rObj <- list( 	idStr="scoreLAr13"	,zMtx.size=nrow(zMtx)	,lastZoid=stdMI$lastZoid	)
 
 	rObj$lPtn1 <- NULL
 	rObj$lPtn2 <- NULL
@@ -3313,7 +3357,7 @@ bFMtx.scoreLAr24 <- function( stdMIObj ){
 
 	stdMI <- stdMIObj$stdMI
 	zMtx <- stdMIObj$zMtx
-	rObj <- list( 	idStr="bFMtx.scoreLAr24"	,zMtx.size=nrow(zMtx)	,lastZoid=stdMI$lastZoid	)
+	rObj <- list( 	idStr="scoreLAr24"	,zMtx.size=nrow(zMtx)	,lastZoid=stdMI$lastZoid	)
 
 	rObj$lPtn1 <- NULL
 	rObj$lPtn2 <- NULL
@@ -3385,7 +3429,7 @@ bFMtx.scoreLVr13 <- function( stdMIObj ){
 
 	stdMI <- stdMIObj$stdMI
 	zMtx <- stdMIObj$zMtx
-	rObj <- list( 	idStr="bFMtx.scoreLVr13"	,zMtx.size=nrow(zMtx)	,lastZoid=stdMI$lastZoid	)
+	rObj <- list( 	idStr="scoreLVr13"	,zMtx.size=nrow(zMtx)	,lastZoid=stdMI$lastZoid	)
 
 	rObj$lPtn1 <- NULL
 	rObj$lPtn2 <- NULL
@@ -3457,7 +3501,7 @@ bFMtx.scoreLVr24 <- function( stdMIObj ){
 
 	stdMI <- stdMIObj$stdMI
 	zMtx <- stdMIObj$zMtx
-	rObj <- list( 	idStr="bFMtx.scoreLVr24"	,zMtx.size=nrow(zMtx)	,lastZoid=stdMI$lastZoid	)
+	rObj <- list( 	idStr="scoreLVr24"	,zMtx.size=nrow(zMtx)	,lastZoid=stdMI$lastZoid	)
 
 	rObj$lPtn1 <- NULL
 	rObj$lPtn2 <- NULL
@@ -3530,7 +3574,7 @@ bFMtx.scoreLAe13 <- function( stdMIObj ){
 
 	stdMI <- stdMIObj$stdMI
 	zMtx <- stdMIObj$zMtx
-	rObj <- list( 	idStr="bFMtx.scoreLAe13"	,zMtx.size=nrow(zMtx)	,lastZoid=stdMI$lastZoid	)
+	rObj <- list( 	idStr="scoreLAe13"	,zMtx.size=nrow(zMtx)	,lastZoid=stdMI$lastZoid	)
 
 	rObj$lPtn1 <- NULL
 	rObj$lPtn2 <- NULL
@@ -3602,7 +3646,7 @@ bFMtx.scoreLAe24 <- function( stdMIObj ){
 
 	stdMI <- stdMIObj$stdMI
 	zMtx <- stdMIObj$zMtx
-	rObj <- list( 	idStr="bFMtx.scoreLAe24"	,zMtx.size=nrow(zMtx)	,lastZoid=stdMI$lastZoid	)
+	rObj <- list( 	idStr="scoreLAe24"	,zMtx.size=nrow(zMtx)	,lastZoid=stdMI$lastZoid	)
 
 	rObj$lPtn1 <- NULL
 	rObj$lPtn2 <- NULL
@@ -3674,7 +3718,7 @@ bFMtx.scoreLVe13 <- function( stdMIObj ){
 
 	stdMI <- stdMIObj$stdMI
 	zMtx <- stdMIObj$zMtx
-	rObj <- list( 	idStr="bFMtx.scoreLVe13"	,zMtx.size=nrow(zMtx)	,lastZoid=stdMI$lastZoid	)
+	rObj <- list( 	idStr="scoreLVe13"	,zMtx.size=nrow(zMtx)	,lastZoid=stdMI$lastZoid	)
 
 	rObj$lPtn1 <- NULL
 	rObj$lPtn2 <- NULL
@@ -3746,7 +3790,7 @@ bFMtx.scoreLVe24 <- function( stdMIObj ){
 
 	stdMI <- stdMIObj$stdMI
 	zMtx <- stdMIObj$zMtx
-	rObj <- list( 	idStr="bFMtx.scoreLVe24"	,zMtx.size=nrow(zMtx)	,lastZoid=stdMI$lastZoid	)
+	rObj <- list( 	idStr="scoreLVe24"	,zMtx.size=nrow(zMtx)	,lastZoid=stdMI$lastZoid	)
 
 	rObj$lPtn1 <- NULL
 	rObj$lPtn2 <- NULL
@@ -3819,7 +3863,7 @@ bFMtx.scoreLAc13 <- function( stdMIObj ){
 
 	stdMI <- stdMIObj$stdMI
 	zMtx <- stdMIObj$zMtx
-	rObj <- list( 	idStr="bFMtx.scoreLAc13"	,zMtx.size=nrow(zMtx)	,lastZoid=stdMI$lastZoid	)
+	rObj <- list( 	idStr="scoreLAc13"	,zMtx.size=nrow(zMtx)	,lastZoid=stdMI$lastZoid	)
 
 	rObj$lPtn1 <- NULL
 	rObj$lPtn2 <- NULL
@@ -3889,7 +3933,7 @@ bFMtx.scoreLAc24 <- function( stdMIObj ){
 
 	stdMI <- stdMIObj$stdMI
 	zMtx <- stdMIObj$zMtx
-	rObj <- list( 	idStr="bFMtx.scoreLAc24"	,zMtx.size=nrow(zMtx)	,lastZoid=stdMI$lastZoid	)
+	rObj <- list( 	idStr="scoreLAc24"	,zMtx.size=nrow(zMtx)	,lastZoid=stdMI$lastZoid	)
 
 	rObj$lPtn1 <- NULL
 	rObj$lPtn2 <- NULL
@@ -3959,7 +4003,7 @@ bFMtx.scoreLVc13 <- function( stdMIObj ){
 
 	stdMI <- stdMIObj$stdMI
 	zMtx <- stdMIObj$zMtx
-	rObj <- list( 	idStr="bFMtx.scoreLVc13"	,zMtx.size=nrow(zMtx)	,lastZoid=stdMI$lastZoid	)
+	rObj <- list( 	idStr="scoreLVc13"	,zMtx.size=nrow(zMtx)	,lastZoid=stdMI$lastZoid	)
 
 	rObj$lPtn1 <- NULL
 	rObj$lPtn2 <- NULL
@@ -4029,7 +4073,7 @@ bFMtx.scoreLVc24 <- function( stdMIObj ){
 
 	stdMI <- stdMIObj$stdMI
 	zMtx <- stdMIObj$zMtx
-	rObj <- list( 	idStr="bFMtx.scoreLVc24"	,zMtx.size=nrow(zMtx)	,lastZoid=stdMI$lastZoid	)
+	rObj <- list( 	idStr="scoreLVc24"	,zMtx.size=nrow(zMtx)	,lastZoid=stdMI$lastZoid	)
 
 	rObj$lPtn1 <- NULL
 	rObj$lPtn2 <- NULL
@@ -4100,7 +4144,7 @@ bFMtx.scoreLAf13 <- function( stdMIObj ){
 
 	stdMI <- stdMIObj$stdMI
 	zMtx <- stdMIObj$zMtx
-	rObj <- list( 	idStr="bFMtx.scoreLAf13"	,zMtx.size=nrow(zMtx)	,lastZoid=stdMI$lastZoid	)
+	rObj <- list( 	idStr="scoreLAf13"	,zMtx.size=nrow(zMtx)	,lastZoid=stdMI$lastZoid	)
 
 	rObj$lPtn1 <- NULL
 	rObj$lPtn2 <- NULL
@@ -4171,7 +4215,7 @@ bFMtx.scoreLAf24 <- function( stdMIObj ){
 
 	stdMI <- stdMIObj$stdMI
 	zMtx <- stdMIObj$zMtx
-	rObj <- list( 	idStr="bFMtx.scoreLAf24"	,zMtx.size=nrow(zMtx)	,lastZoid=stdMI$lastZoid	)
+	rObj <- list( 	idStr="scoreLAf24"	,zMtx.size=nrow(zMtx)	,lastZoid=stdMI$lastZoid	)
 
 	rObj$lPtn1 <- NULL
 	rObj$lPtn2 <- NULL
@@ -4242,7 +4286,7 @@ bFMtx.scoreLVf13 <- function( stdMIObj ){
 
 	stdMI <- stdMIObj$stdMI
 	zMtx <- stdMIObj$zMtx
-	rObj <- list( 	idStr="bFMtx.scoreLVf13"	,zMtx.size=nrow(zMtx)	,lastZoid=stdMI$lastZoid	)
+	rObj <- list( 	idStr="scoreLVf13"	,zMtx.size=nrow(zMtx)	,lastZoid=stdMI$lastZoid	)
 
 	rObj$lPtn1 <- NULL
 	rObj$lPtn2 <- NULL
@@ -4313,7 +4357,7 @@ bFMtx.scoreLVf24 <- function( stdMIObj ){
 
 	stdMI <- stdMIObj$stdMI
 	zMtx <- stdMIObj$zMtx
-	rObj <- list( 	idStr="bFMtx.scoreLVf24"	,zMtx.size=nrow(zMtx)	,lastZoid=stdMI$lastZoid	)
+	rObj <- list( 	idStr="scoreLVf24"	,zMtx.size=nrow(zMtx)	,lastZoid=stdMI$lastZoid	)
 
 	rObj$lPtn1 <- NULL
 	rObj$lPtn2 <- NULL
