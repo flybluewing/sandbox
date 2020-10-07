@@ -3232,28 +3232,34 @@ bFMtx.scoreF <- function( stdMIObj ){
 
 
 # bFMtx.scoreL series 
-#	bFMtx.scoreLAr12 bFMtx.scoreLAr34 bFMtx.scoreLAc12 bFMtx.scoreLAc34 bFMtx.scoreLAf12 bFMtx.scoreLAf34
+#	bFMtx.scoreLAr12 bFMtx.scoreLAr34 bFMtx.scoreLAe12 bFMtx.scoreLAe34 
+#	bFMtx.scoreLAc12 bFMtx.scoreLAc34 bFMtx.scoreLAf12 bFMtx.scoreLAf34
+#	bFMtx.scoreLVr12 bFMtx.scoreLVr34 bFMtx.scoreLVe12 bFMtx.scoreLVe34 
+#	bFMtx.scoreLVc12 bFMtx.scoreLVc34 bFMtx.scoreLVf12 bFMtx.scoreLVf34
 
-bFMtx.scoreLAr12 <- function( stdMIObj ){
+bFMtx.scoreLAr13 <- function( stdMIObj ){
 
 	stdMI <- stdMIObj$stdMI
 	zMtx <- stdMIObj$zMtx
-	rObj <- list( 	idStr="bFMtx.scoreLAr12"	,zMtx.size=nrow(zMtx)	,lastZoid=stdMI$lastZoid	)
+	rObj <- list( 	idStr="bFMtx.scoreLAr13"	,zMtx.size=nrow(zMtx)	,lastZoid=stdMI$lastZoid	)
 
 	rObj$lPtn1 <- NULL
 	rObj$lPtn2 <- NULL
 	if( 0<rObj$zMtx.size ){
+		#	yIdx 는 그냥 1로 시작하자. rawTail 크기가 정해져있으니 별 차이는 없을 듯.
+		tailMtx <- stdMI$rawTail
 		if( 1<rObj$zMtx.size ){
-			rObj$lPtn1 <- bUtil.findLinearPtn( stdMI$rawTail ,yIdx=1 ,typ="A" )
+			rObj$lPtn1 <- bUtil.findLinearPtn( tailMtx ,yIdx=1 ,typ="A" )
 		}
-		if( 2<rObj$zMtx.size ){
-			rObj$lPtn2 <- bUtil.findLinearPtn( stdMI$rawTail ,yIdx=2 ,typ="A" )
+		if( 3<rObj$zMtx.size ){
+			rObj$lPtn2 <- bUtil.findLinearPtn( tailMtx ,yIdx=3 ,typ="A" )
 		}
 	}
 
 	rObj$fMtxObj <- function( aZoidMtx ,makeInfoStr=F ){
 		aLen <- nrow(aZoidMtx)
-		cName <- c(	"xxxxx","xxxxx"
+		cName <- c(	 "colA1","colA2","colA3","colA4","colA5","colA6"
+					,"colB1","colB2","colB3","colB4","colB5","colB6"
 				)
 		scoreMtx <- matrix( 0, nrow=aLen, ncol=length(cName) )	;colnames(scoreMtx) <- cName
 
@@ -3269,8 +3275,1101 @@ bFMtx.scoreLAr12 <- function( stdMIObj ){
 
 		for( aIdx in 1:aLen ){
 			aZoid <- aZoidMtx[aIdx,]
-			aCStep <- aZoid[2:6] - aZoid[1:5]	
+			# aCStep <- aZoid[2:6] - aZoid[1:5]	
+			# aFStep <- aZoid - rObj$lastZoid
+
+			aCode <- aZoid
+
+			if( !is.null(rObj$lPtn1) ){
+				matCnt <- bUtil.checkMatch_LinearPtn( rObj$lPtn1 ,aCode )
+				scoreMtx[aIdx,"colA1"] <- matCnt[1]
+				scoreMtx[aIdx,"colA2"] <- matCnt[2]
+				scoreMtx[aIdx,"colA3"] <- matCnt[3]
+				scoreMtx[aIdx,"colA4"] <- matCnt[4]
+				scoreMtx[aIdx,"colA5"] <- matCnt[5]
+				scoreMtx[aIdx,"colA6"] <- matCnt[6]
+			}
+			if( !is.null(rObj$lPtn2) ){
+				matCnt <- bUtil.checkMatch_LinearPtn( rObj$lPtn2 ,aCode )
+				scoreMtx[aIdx,"colB1"] <- matCnt[1]
+				scoreMtx[aIdx,"colB2"] <- matCnt[2]
+				scoreMtx[aIdx,"colB3"] <- matCnt[3]
+				scoreMtx[aIdx,"colB4"] <- matCnt[4]
+				scoreMtx[aIdx,"colB5"] <- matCnt[5]
+				scoreMtx[aIdx,"colB6"] <- matCnt[6]
+			}
+
+		}
+
+		return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
+
+	}
+
+	return( rObj )
+
+}
+
+bFMtx.scoreLAr24 <- function( stdMIObj ){
+
+	stdMI <- stdMIObj$stdMI
+	zMtx <- stdMIObj$zMtx
+	rObj <- list( 	idStr="bFMtx.scoreLAr24"	,zMtx.size=nrow(zMtx)	,lastZoid=stdMI$lastZoid	)
+
+	rObj$lPtn1 <- NULL
+	rObj$lPtn2 <- NULL
+	if( 0<rObj$zMtx.size ){
+		#	yIdx 는 그냥 1로 시작하자. rawTail 크기가 정해져있으니 별 차이는 없을 듯.
+		tailMtx <- stdMI$rawTail
+		if( 2<rObj$zMtx.size ){
+			rObj$lPtn1 <- bUtil.findLinearPtn( tailMtx ,yIdx=2 ,typ="A" )
+		}
+		if( 4<rObj$zMtx.size ){
+			rObj$lPtn2 <- bUtil.findLinearPtn( tailMtx ,yIdx=4 ,typ="A" )
+		}
+	}
+
+	rObj$fMtxObj <- function( aZoidMtx ,makeInfoStr=F ){
+		aLen <- nrow(aZoidMtx)
+		cName <- c(	 "colA1","colA2","colA3","colA4","colA5","colA6"
+					,"colB1","colB2","colB3","colB4","colB5","colB6"
+				)
+		scoreMtx <- matrix( 0, nrow=aLen, ncol=length(cName) )	;colnames(scoreMtx) <- cName
+
+		infoMtx <- NULL
+		if( makeInfoStr ){
+			cName <- c( "zMtx.size" )
+			infoMtx <- matrix( "" ,nrow=aLen ,ncol=length(cName) )	;colnames(infoMtx) <- cName
+			infoMtx[,"zMtx.size"] <- rObj$zMtx.size
+		}
+		if( 0==rObj$zMtx.size ){
+			return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
+		}
+
+		for( aIdx in 1:aLen ){
+			aZoid <- aZoidMtx[aIdx,]
+			# aCStep <- aZoid[2:6] - aZoid[1:5]	
+			# aFStep <- aZoid - rObj$lastZoid
+
+			aCode <- aZoid
+
+			if( !is.null(rObj$lPtn1) ){
+				matCnt <- bUtil.checkMatch_LinearPtn( rObj$lPtn1 ,aCode )
+				scoreMtx[aIdx,"colA1"] <- matCnt[1]
+				scoreMtx[aIdx,"colA2"] <- matCnt[2]
+				scoreMtx[aIdx,"colA3"] <- matCnt[3]
+				scoreMtx[aIdx,"colA4"] <- matCnt[4]
+				scoreMtx[aIdx,"colA5"] <- matCnt[5]
+				scoreMtx[aIdx,"colA6"] <- matCnt[6]
+			}
+			if( !is.null(rObj$lPtn2) ){
+				matCnt <- bUtil.checkMatch_LinearPtn( rObj$lPtn2 ,aCode )
+				scoreMtx[aIdx,"colB1"] <- matCnt[1]
+				scoreMtx[aIdx,"colB2"] <- matCnt[2]
+				scoreMtx[aIdx,"colB3"] <- matCnt[3]
+				scoreMtx[aIdx,"colB4"] <- matCnt[4]
+				scoreMtx[aIdx,"colB5"] <- matCnt[5]
+				scoreMtx[aIdx,"colB6"] <- matCnt[6]
+			}
+
+		}
+
+		return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
+
+	}
+
+	return( rObj )
+
+}
+
+bFMtx.scoreLVr13 <- function( stdMIObj ){
+
+	stdMI <- stdMIObj$stdMI
+	zMtx <- stdMIObj$zMtx
+	rObj <- list( 	idStr="bFMtx.scoreLVr13"	,zMtx.size=nrow(zMtx)	,lastZoid=stdMI$lastZoid	)
+
+	rObj$lPtn1 <- NULL
+	rObj$lPtn2 <- NULL
+	if( 0<rObj$zMtx.size ){
+		#	yIdx 는 그냥 1로 시작하자. rawTail 크기가 정해져있으니 별 차이는 없을 듯.
+		tailMtx <- stdMI$rawTail
+		if( 1<rObj$zMtx.size ){
+			rObj$lPtn1 <- bUtil.findLinearPtn( tailMtx ,yIdx=nrow(tailMtx) ,typ="V" )
+		}
+		if( 3<rObj$zMtx.size ){
+			rObj$lPtn2 <- bUtil.findLinearPtn( tailMtx ,yIdx=nrow(tailMtx)-2 ,typ="V" )
+		}
+	}
+
+	rObj$fMtxObj <- function( aZoidMtx ,makeInfoStr=F ){
+		aLen <- nrow(aZoidMtx)
+		cName <- c(	 "colA1","colA2","colA3","colA4","colA5","colA6"
+					,"colB1","colB2","colB3","colB4","colB5","colB6"
+				)
+		scoreMtx <- matrix( 0, nrow=aLen, ncol=length(cName) )	;colnames(scoreMtx) <- cName
+
+		infoMtx <- NULL
+		if( makeInfoStr ){
+			cName <- c( "zMtx.size" )
+			infoMtx <- matrix( "" ,nrow=aLen ,ncol=length(cName) )	;colnames(infoMtx) <- cName
+			infoMtx[,"zMtx.size"] <- rObj$zMtx.size
+		}
+		if( 0==rObj$zMtx.size ){
+			return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
+		}
+
+		for( aIdx in 1:aLen ){
+			aZoid <- aZoidMtx[aIdx,]
+			# aCStep <- aZoid[2:6] - aZoid[1:5]	
+			# aFStep <- aZoid - rObj$lastZoid
+
+			aCode <- aZoid
+
+			if( !is.null(rObj$lPtn1) ){
+				matCnt <- bUtil.checkMatch_LinearPtn( rObj$lPtn1 ,aCode )
+				scoreMtx[aIdx,"colA1"] <- matCnt[1]
+				scoreMtx[aIdx,"colA2"] <- matCnt[2]
+				scoreMtx[aIdx,"colA3"] <- matCnt[3]
+				scoreMtx[aIdx,"colA4"] <- matCnt[4]
+				scoreMtx[aIdx,"colA5"] <- matCnt[5]
+				scoreMtx[aIdx,"colA6"] <- matCnt[6]
+			}
+			if( !is.null(rObj$lPtn2) ){
+				matCnt <- bUtil.checkMatch_LinearPtn( rObj$lPtn2 ,aCode )
+				scoreMtx[aIdx,"colB1"] <- matCnt[1]
+				scoreMtx[aIdx,"colB2"] <- matCnt[2]
+				scoreMtx[aIdx,"colB3"] <- matCnt[3]
+				scoreMtx[aIdx,"colB4"] <- matCnt[4]
+				scoreMtx[aIdx,"colB5"] <- matCnt[5]
+				scoreMtx[aIdx,"colB6"] <- matCnt[6]
+			}
+
+		}
+
+		return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
+
+	}
+
+	return( rObj )
+
+}
+
+bFMtx.scoreLVr24 <- function( stdMIObj ){
+
+	stdMI <- stdMIObj$stdMI
+	zMtx <- stdMIObj$zMtx
+	rObj <- list( 	idStr="bFMtx.scoreLVr24"	,zMtx.size=nrow(zMtx)	,lastZoid=stdMI$lastZoid	)
+
+	rObj$lPtn1 <- NULL
+	rObj$lPtn2 <- NULL
+	if( 0<rObj$zMtx.size ){
+		#	yIdx 는 그냥 1로 시작하자. rawTail 크기가 정해져있으니 별 차이는 없을 듯.
+		tailMtx <- stdMI$rawTail
+		if( 2<rObj$zMtx.size ){
+			rObj$lPtn1 <- bUtil.findLinearPtn( tailMtx ,yIdx=nrow(tailMtx)-1 ,typ="V" )
+		}
+		if( 4<rObj$zMtx.size ){
+			rObj$lPtn2 <- bUtil.findLinearPtn( tailMtx ,yIdx=nrow(tailMtx)-3 ,typ="V" )
+		}
+	}
+
+	rObj$fMtxObj <- function( aZoidMtx ,makeInfoStr=F ){
+		aLen <- nrow(aZoidMtx)
+		cName <- c(	 "colA1","colA2","colA3","colA4","colA5","colA6"
+					,"colB1","colB2","colB3","colB4","colB5","colB6"
+				)
+		scoreMtx <- matrix( 0, nrow=aLen, ncol=length(cName) )	;colnames(scoreMtx) <- cName
+
+		infoMtx <- NULL
+		if( makeInfoStr ){
+			cName <- c( "zMtx.size" )
+			infoMtx <- matrix( "" ,nrow=aLen ,ncol=length(cName) )	;colnames(infoMtx) <- cName
+			infoMtx[,"zMtx.size"] <- rObj$zMtx.size
+		}
+		if( 0==rObj$zMtx.size ){
+			return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
+		}
+
+		for( aIdx in 1:aLen ){
+			aZoid <- aZoidMtx[aIdx,]
+			# aCStep <- aZoid[2:6] - aZoid[1:5]	
+			# aFStep <- aZoid - rObj$lastZoid
+
+			aCode <- aZoid
+
+			if( !is.null(rObj$lPtn1) ){
+				matCnt <- bUtil.checkMatch_LinearPtn( rObj$lPtn1 ,aCode )
+				scoreMtx[aIdx,"colA1"] <- matCnt[1]
+				scoreMtx[aIdx,"colA2"] <- matCnt[2]
+				scoreMtx[aIdx,"colA3"] <- matCnt[3]
+				scoreMtx[aIdx,"colA4"] <- matCnt[4]
+				scoreMtx[aIdx,"colA5"] <- matCnt[5]
+				scoreMtx[aIdx,"colA6"] <- matCnt[6]
+			}
+			if( !is.null(rObj$lPtn2) ){
+				matCnt <- bUtil.checkMatch_LinearPtn( rObj$lPtn2 ,aCode )
+				scoreMtx[aIdx,"colB1"] <- matCnt[1]
+				scoreMtx[aIdx,"colB2"] <- matCnt[2]
+				scoreMtx[aIdx,"colB3"] <- matCnt[3]
+				scoreMtx[aIdx,"colB4"] <- matCnt[4]
+				scoreMtx[aIdx,"colB5"] <- matCnt[5]
+				scoreMtx[aIdx,"colB6"] <- matCnt[6]
+			}
+
+		}
+
+		return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
+
+	}
+
+	return( rObj )
+
+}
+
+
+bFMtx.scoreLAe13 <- function( stdMIObj ){
+
+	stdMI <- stdMIObj$stdMI
+	zMtx <- stdMIObj$zMtx
+	rObj <- list( 	idStr="bFMtx.scoreLAe13"	,zMtx.size=nrow(zMtx)	,lastZoid=stdMI$lastZoid	)
+
+	rObj$lPtn1 <- NULL
+	rObj$lPtn2 <- NULL
+	if( 0<rObj$zMtx.size ){
+		#	yIdx 는 그냥 1로 시작하자. rawTail 크기가 정해져있으니 별 차이는 없을 듯.
+		tailMtx <- stdMI$rawTail %% 10
+		if( 1<rObj$zMtx.size ){
+			rObj$lPtn1 <- bUtil.findLinearPtn( tailMtx ,yIdx=1 ,typ="A" )
+		}
+		if( 3<rObj$zMtx.size ){
+			rObj$lPtn2 <- bUtil.findLinearPtn( tailMtx ,yIdx=3 ,typ="A" )
+		}
+	}
+
+	rObj$fMtxObj <- function( aZoidMtx ,makeInfoStr=F ){
+		aLen <- nrow(aZoidMtx)
+		cName <- c(	 "colA1","colA2","colA3","colA4","colA5","colA6"
+					,"colB1","colB2","colB3","colB4","colB5","colB6"
+				)
+		scoreMtx <- matrix( 0, nrow=aLen, ncol=length(cName) )	;colnames(scoreMtx) <- cName
+
+		infoMtx <- NULL
+		if( makeInfoStr ){
+			cName <- c( "zMtx.size" )
+			infoMtx <- matrix( "" ,nrow=aLen ,ncol=length(cName) )	;colnames(infoMtx) <- cName
+			infoMtx[,"zMtx.size"] <- rObj$zMtx.size
+		}
+		if( 0==rObj$zMtx.size ){
+			return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
+		}
+
+		for( aIdx in 1:aLen ){
+			aZoid <- aZoidMtx[aIdx,]
+			# aCStep <- aZoid[2:6] - aZoid[1:5]	
+			# aFStep <- aZoid - rObj$lastZoid
+
+			aCode <- aZoid %% 10
+
+			if( !is.null(rObj$lPtn1) ){
+				matCnt <- bUtil.checkMatch_LinearPtn( rObj$lPtn1 ,aCode )
+				scoreMtx[aIdx,"colA1"] <- matCnt[1]
+				scoreMtx[aIdx,"colA2"] <- matCnt[2]
+				scoreMtx[aIdx,"colA3"] <- matCnt[3]
+				scoreMtx[aIdx,"colA4"] <- matCnt[4]
+				scoreMtx[aIdx,"colA5"] <- matCnt[5]
+				scoreMtx[aIdx,"colA6"] <- matCnt[6]
+			}
+			if( !is.null(rObj$lPtn2) ){
+				matCnt <- bUtil.checkMatch_LinearPtn( rObj$lPtn2 ,aCode )
+				scoreMtx[aIdx,"colB1"] <- matCnt[1]
+				scoreMtx[aIdx,"colB2"] <- matCnt[2]
+				scoreMtx[aIdx,"colB3"] <- matCnt[3]
+				scoreMtx[aIdx,"colB4"] <- matCnt[4]
+				scoreMtx[aIdx,"colB5"] <- matCnt[5]
+				scoreMtx[aIdx,"colB6"] <- matCnt[6]
+			}
+
+		}
+
+		return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
+
+	}
+
+	return( rObj )
+
+}
+
+bFMtx.scoreLAe24 <- function( stdMIObj ){
+
+	stdMI <- stdMIObj$stdMI
+	zMtx <- stdMIObj$zMtx
+	rObj <- list( 	idStr="bFMtx.scoreLAe24"	,zMtx.size=nrow(zMtx)	,lastZoid=stdMI$lastZoid	)
+
+	rObj$lPtn1 <- NULL
+	rObj$lPtn2 <- NULL
+	if( 0<rObj$zMtx.size ){
+		#	yIdx 는 그냥 1로 시작하자. rawTail 크기가 정해져있으니 별 차이는 없을 듯.
+		tailMtx <- stdMI$rawTail %% 10
+		if( 2<rObj$zMtx.size ){
+			rObj$lPtn1 <- bUtil.findLinearPtn( tailMtx ,yIdx=2 ,typ="A" )
+		}
+		if( 4<rObj$zMtx.size ){
+			rObj$lPtn2 <- bUtil.findLinearPtn( tailMtx ,yIdx=4 ,typ="A" )
+		}
+	}
+
+	rObj$fMtxObj <- function( aZoidMtx ,makeInfoStr=F ){
+		aLen <- nrow(aZoidMtx)
+		cName <- c(	 "colA1","colA2","colA3","colA4","colA5","colA6"
+					,"colB1","colB2","colB3","colB4","colB5","colB6"
+				)
+		scoreMtx <- matrix( 0, nrow=aLen, ncol=length(cName) )	;colnames(scoreMtx) <- cName
+
+		infoMtx <- NULL
+		if( makeInfoStr ){
+			cName <- c( "zMtx.size" )
+			infoMtx <- matrix( "" ,nrow=aLen ,ncol=length(cName) )	;colnames(infoMtx) <- cName
+			infoMtx[,"zMtx.size"] <- rObj$zMtx.size
+		}
+		if( 0==rObj$zMtx.size ){
+			return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
+		}
+
+		for( aIdx in 1:aLen ){
+			aZoid <- aZoidMtx[aIdx,]
+			# aCStep <- aZoid[2:6] - aZoid[1:5]	
+			# aFStep <- aZoid - rObj$lastZoid
+
+			aCode <- aZoid %% 10
+
+			if( !is.null(rObj$lPtn1) ){
+				matCnt <- bUtil.checkMatch_LinearPtn( rObj$lPtn1 ,aCode )
+				scoreMtx[aIdx,"colA1"] <- matCnt[1]
+				scoreMtx[aIdx,"colA2"] <- matCnt[2]
+				scoreMtx[aIdx,"colA3"] <- matCnt[3]
+				scoreMtx[aIdx,"colA4"] <- matCnt[4]
+				scoreMtx[aIdx,"colA5"] <- matCnt[5]
+				scoreMtx[aIdx,"colA6"] <- matCnt[6]
+			}
+			if( !is.null(rObj$lPtn2) ){
+				matCnt <- bUtil.checkMatch_LinearPtn( rObj$lPtn2 ,aCode )
+				scoreMtx[aIdx,"colB1"] <- matCnt[1]
+				scoreMtx[aIdx,"colB2"] <- matCnt[2]
+				scoreMtx[aIdx,"colB3"] <- matCnt[3]
+				scoreMtx[aIdx,"colB4"] <- matCnt[4]
+				scoreMtx[aIdx,"colB5"] <- matCnt[5]
+				scoreMtx[aIdx,"colB6"] <- matCnt[6]
+			}
+
+		}
+
+		return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
+
+	}
+
+	return( rObj )
+
+}
+
+bFMtx.scoreLVe13 <- function( stdMIObj ){
+
+	stdMI <- stdMIObj$stdMI
+	zMtx <- stdMIObj$zMtx
+	rObj <- list( 	idStr="bFMtx.scoreLVe13"	,zMtx.size=nrow(zMtx)	,lastZoid=stdMI$lastZoid	)
+
+	rObj$lPtn1 <- NULL
+	rObj$lPtn2 <- NULL
+	if( 0<rObj$zMtx.size ){
+		#	yIdx 는 그냥 1로 시작하자. rawTail 크기가 정해져있으니 별 차이는 없을 듯.
+		tailMtx <- stdMI$rawTail %% 10
+		if( 1<rObj$zMtx.size ){
+			rObj$lPtn1 <- bUtil.findLinearPtn( tailMtx ,yIdx=nrow(tailMtx) ,typ="V" )
+		}
+		if( 3<rObj$zMtx.size ){
+			rObj$lPtn2 <- bUtil.findLinearPtn( tailMtx ,yIdx=nrow(tailMtx)-2 ,typ="V" )
+		}
+	}
+
+	rObj$fMtxObj <- function( aZoidMtx ,makeInfoStr=F ){
+		aLen <- nrow(aZoidMtx)
+		cName <- c(	 "colA1","colA2","colA3","colA4","colA5","colA6"
+					,"colB1","colB2","colB3","colB4","colB5","colB6"
+				)
+		scoreMtx <- matrix( 0, nrow=aLen, ncol=length(cName) )	;colnames(scoreMtx) <- cName
+
+		infoMtx <- NULL
+		if( makeInfoStr ){
+			cName <- c( "zMtx.size" )
+			infoMtx <- matrix( "" ,nrow=aLen ,ncol=length(cName) )	;colnames(infoMtx) <- cName
+			infoMtx[,"zMtx.size"] <- rObj$zMtx.size
+		}
+		if( 0==rObj$zMtx.size ){
+			return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
+		}
+
+		for( aIdx in 1:aLen ){
+			aZoid <- aZoidMtx[aIdx,]
+			# aCStep <- aZoid[2:6] - aZoid[1:5]	
+			# aFStep <- aZoid - rObj$lastZoid
+
+			aCode <- aZoid %% 10
+
+			if( !is.null(rObj$lPtn1) ){
+				matCnt <- bUtil.checkMatch_LinearPtn( rObj$lPtn1 ,aCode )
+				scoreMtx[aIdx,"colA1"] <- matCnt[1]
+				scoreMtx[aIdx,"colA2"] <- matCnt[2]
+				scoreMtx[aIdx,"colA3"] <- matCnt[3]
+				scoreMtx[aIdx,"colA4"] <- matCnt[4]
+				scoreMtx[aIdx,"colA5"] <- matCnt[5]
+				scoreMtx[aIdx,"colA6"] <- matCnt[6]
+			}
+			if( !is.null(rObj$lPtn2) ){
+				matCnt <- bUtil.checkMatch_LinearPtn( rObj$lPtn2 ,aCode )
+				scoreMtx[aIdx,"colB1"] <- matCnt[1]
+				scoreMtx[aIdx,"colB2"] <- matCnt[2]
+				scoreMtx[aIdx,"colB3"] <- matCnt[3]
+				scoreMtx[aIdx,"colB4"] <- matCnt[4]
+				scoreMtx[aIdx,"colB5"] <- matCnt[5]
+				scoreMtx[aIdx,"colB6"] <- matCnt[6]
+			}
+
+		}
+
+		return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
+
+	}
+
+	return( rObj )
+
+}
+
+bFMtx.scoreLVe24 <- function( stdMIObj ){
+
+	stdMI <- stdMIObj$stdMI
+	zMtx <- stdMIObj$zMtx
+	rObj <- list( 	idStr="bFMtx.scoreLVe24"	,zMtx.size=nrow(zMtx)	,lastZoid=stdMI$lastZoid	)
+
+	rObj$lPtn1 <- NULL
+	rObj$lPtn2 <- NULL
+	if( 0<rObj$zMtx.size ){
+		#	yIdx 는 그냥 1로 시작하자. rawTail 크기가 정해져있으니 별 차이는 없을 듯.
+		tailMtx <- stdMI$rawTail %% 10
+		if( 2<rObj$zMtx.size ){
+			rObj$lPtn1 <- bUtil.findLinearPtn( tailMtx ,yIdx=nrow(tailMtx)-1 ,typ="V" )
+		}
+		if( 4<rObj$zMtx.size ){
+			rObj$lPtn2 <- bUtil.findLinearPtn( tailMtx ,yIdx=nrow(tailMtx)-3 ,typ="V" )
+		}
+	}
+
+	rObj$fMtxObj <- function( aZoidMtx ,makeInfoStr=F ){
+		aLen <- nrow(aZoidMtx)
+		cName <- c(	 "colA1","colA2","colA3","colA4","colA5","colA6"
+					,"colB1","colB2","colB3","colB4","colB5","colB6"
+				)
+		scoreMtx <- matrix( 0, nrow=aLen, ncol=length(cName) )	;colnames(scoreMtx) <- cName
+
+		infoMtx <- NULL
+		if( makeInfoStr ){
+			cName <- c( "zMtx.size" )
+			infoMtx <- matrix( "" ,nrow=aLen ,ncol=length(cName) )	;colnames(infoMtx) <- cName
+			infoMtx[,"zMtx.size"] <- rObj$zMtx.size
+		}
+		if( 0==rObj$zMtx.size ){
+			return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
+		}
+
+		for( aIdx in 1:aLen ){
+			aZoid <- aZoidMtx[aIdx,]
+			# aCStep <- aZoid[2:6] - aZoid[1:5]	
+			# aFStep <- aZoid - rObj$lastZoid
+
+			aCode <- aZoid %% 10
+
+			if( !is.null(rObj$lPtn1) ){
+				matCnt <- bUtil.checkMatch_LinearPtn( rObj$lPtn1 ,aCode )
+				scoreMtx[aIdx,"colA1"] <- matCnt[1]
+				scoreMtx[aIdx,"colA2"] <- matCnt[2]
+				scoreMtx[aIdx,"colA3"] <- matCnt[3]
+				scoreMtx[aIdx,"colA4"] <- matCnt[4]
+				scoreMtx[aIdx,"colA5"] <- matCnt[5]
+				scoreMtx[aIdx,"colA6"] <- matCnt[6]
+			}
+			if( !is.null(rObj$lPtn2) ){
+				matCnt <- bUtil.checkMatch_LinearPtn( rObj$lPtn2 ,aCode )
+				scoreMtx[aIdx,"colB1"] <- matCnt[1]
+				scoreMtx[aIdx,"colB2"] <- matCnt[2]
+				scoreMtx[aIdx,"colB3"] <- matCnt[3]
+				scoreMtx[aIdx,"colB4"] <- matCnt[4]
+				scoreMtx[aIdx,"colB5"] <- matCnt[5]
+				scoreMtx[aIdx,"colB6"] <- matCnt[6]
+			}
+
+		}
+
+		return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
+
+	}
+
+	return( rObj )
+
+}
+
+
+bFMtx.scoreLAc13 <- function( stdMIObj ){
+
+	stdMI <- stdMIObj$stdMI
+	zMtx <- stdMIObj$zMtx
+	rObj <- list( 	idStr="bFMtx.scoreLAc13"	,zMtx.size=nrow(zMtx)	,lastZoid=stdMI$lastZoid	)
+
+	rObj$lPtn1 <- NULL
+	rObj$lPtn2 <- NULL
+	if( 0<rObj$zMtx.size ){
+		#	yIdx 는 그냥 1로 시작하자. rawTail 크기가 정해져있으니 별 차이는 없을 듯.
+		tailMtx <- stdMI$cStepTail
+		if( 1<rObj$zMtx.size ){
+			rObj$lPtn1 <- bUtil.findLinearPtn( tailMtx ,yIdx=1 ,typ="A" )
+		}
+		if( 3<rObj$zMtx.size ){
+			rObj$lPtn2 <- bUtil.findLinearPtn( tailMtx ,yIdx=3 ,typ="A" )
+		}
+	}
+
+	rObj$fMtxObj <- function( aZoidMtx ,makeInfoStr=F ){
+		aLen <- nrow(aZoidMtx)
+		cName <- c(	 "colA1","colA2","colA3","colA4","colA5"
+					,"colB1","colB2","colB3","colB4","colB5"
+				)
+		scoreMtx <- matrix( 0, nrow=aLen, ncol=length(cName) )	;colnames(scoreMtx) <- cName
+
+		infoMtx <- NULL
+		if( makeInfoStr ){
+			cName <- c( "zMtx.size" )
+			infoMtx <- matrix( "" ,nrow=aLen ,ncol=length(cName) )	;colnames(infoMtx) <- cName
+			infoMtx[,"zMtx.size"] <- rObj$zMtx.size
+		}
+		if( 0==rObj$zMtx.size ){
+			return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
+		}
+
+		for( aIdx in 1:aLen ){
+			aZoid <- aZoidMtx[aIdx,]
+			aCStep <- aZoid[2:6] - aZoid[1:5]
+			# aFStep <- aZoid - rObj$lastZoid
+
+			aCode <- aCStep
+
+			if( !is.null(rObj$lPtn1) ){
+				matCnt <- bUtil.checkMatch_LinearPtn( rObj$lPtn1 ,aCode )
+				scoreMtx[aIdx,"colA1"] <- matCnt[1]
+				scoreMtx[aIdx,"colA2"] <- matCnt[2]
+				scoreMtx[aIdx,"colA3"] <- matCnt[3]
+				scoreMtx[aIdx,"colA4"] <- matCnt[4]
+				scoreMtx[aIdx,"colA5"] <- matCnt[5]
+			}
+			if( !is.null(rObj$lPtn2) ){
+				matCnt <- bUtil.checkMatch_LinearPtn( rObj$lPtn2 ,aCode )
+				scoreMtx[aIdx,"colB1"] <- matCnt[1]
+				scoreMtx[aIdx,"colB2"] <- matCnt[2]
+				scoreMtx[aIdx,"colB3"] <- matCnt[3]
+				scoreMtx[aIdx,"colB4"] <- matCnt[4]
+				scoreMtx[aIdx,"colB5"] <- matCnt[5]
+			}
+
+		}
+
+		return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
+
+	}
+
+	return( rObj )
+
+}
+
+bFMtx.scoreLAc24 <- function( stdMIObj ){
+
+	stdMI <- stdMIObj$stdMI
+	zMtx <- stdMIObj$zMtx
+	rObj <- list( 	idStr="bFMtx.scoreLAc24"	,zMtx.size=nrow(zMtx)	,lastZoid=stdMI$lastZoid	)
+
+	rObj$lPtn1 <- NULL
+	rObj$lPtn2 <- NULL
+	if( 0<rObj$zMtx.size ){
+		#	yIdx 는 그냥 1로 시작하자. rawTail 크기가 정해져있으니 별 차이는 없을 듯.
+		tailMtx <- stdMI$cStepTail
+		if( 2<rObj$zMtx.size ){
+			rObj$lPtn1 <- bUtil.findLinearPtn( tailMtx ,yIdx=2 ,typ="A" )
+		}
+		if( 4<rObj$zMtx.size ){
+			rObj$lPtn2 <- bUtil.findLinearPtn( tailMtx ,yIdx=4 ,typ="A" )
+		}
+	}
+
+	rObj$fMtxObj <- function( aZoidMtx ,makeInfoStr=F ){
+		aLen <- nrow(aZoidMtx)
+		cName <- c(	 "colA1","colA2","colA3","colA4","colA5"
+					,"colB1","colB2","colB3","colB4","colB5"
+				)
+		scoreMtx <- matrix( 0, nrow=aLen, ncol=length(cName) )	;colnames(scoreMtx) <- cName
+
+		infoMtx <- NULL
+		if( makeInfoStr ){
+			cName <- c( "zMtx.size" )
+			infoMtx <- matrix( "" ,nrow=aLen ,ncol=length(cName) )	;colnames(infoMtx) <- cName
+			infoMtx[,"zMtx.size"] <- rObj$zMtx.size
+		}
+		if( 0==rObj$zMtx.size ){
+			return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
+		}
+
+		for( aIdx in 1:aLen ){
+			aZoid <- aZoidMtx[aIdx,]
+			aCStep <- aZoid[2:6] - aZoid[1:5]
+			# aFStep <- aZoid - rObj$lastZoid
+
+			aCode <- aCStep
+
+			if( !is.null(rObj$lPtn1) ){
+				matCnt <- bUtil.checkMatch_LinearPtn( rObj$lPtn1 ,aCode )
+				scoreMtx[aIdx,"colA1"] <- matCnt[1]
+				scoreMtx[aIdx,"colA2"] <- matCnt[2]
+				scoreMtx[aIdx,"colA3"] <- matCnt[3]
+				scoreMtx[aIdx,"colA4"] <- matCnt[4]
+				scoreMtx[aIdx,"colA5"] <- matCnt[5]
+			}
+			if( !is.null(rObj$lPtn2) ){
+				matCnt <- bUtil.checkMatch_LinearPtn( rObj$lPtn2 ,aCode )
+				scoreMtx[aIdx,"colB1"] <- matCnt[1]
+				scoreMtx[aIdx,"colB2"] <- matCnt[2]
+				scoreMtx[aIdx,"colB3"] <- matCnt[3]
+				scoreMtx[aIdx,"colB4"] <- matCnt[4]
+				scoreMtx[aIdx,"colB5"] <- matCnt[5]
+			}
+
+		}
+
+		return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
+
+	}
+
+	return( rObj )
+
+}
+
+bFMtx.scoreLVc13 <- function( stdMIObj ){
+
+	stdMI <- stdMIObj$stdMI
+	zMtx <- stdMIObj$zMtx
+	rObj <- list( 	idStr="bFMtx.scoreLVc13"	,zMtx.size=nrow(zMtx)	,lastZoid=stdMI$lastZoid	)
+
+	rObj$lPtn1 <- NULL
+	rObj$lPtn2 <- NULL
+	if( 0<rObj$zMtx.size ){
+		#	yIdx 는 그냥 1로 시작하자. rawTail 크기가 정해져있으니 별 차이는 없을 듯.
+		tailMtx <- stdMI$cStepTail
+		if( 1<rObj$zMtx.size ){
+			rObj$lPtn1 <- bUtil.findLinearPtn( tailMtx ,yIdx=nrow(tailMtx) ,typ="V" )
+		}
+		if( 3<rObj$zMtx.size ){
+			rObj$lPtn2 <- bUtil.findLinearPtn( tailMtx ,yIdx=nrow(tailMtx)-2 ,typ="V" )
+		}
+	}
+
+	rObj$fMtxObj <- function( aZoidMtx ,makeInfoStr=F ){
+		aLen <- nrow(aZoidMtx)
+		cName <- c(	 "colA1","colA2","colA3","colA4","colA5"
+					,"colB1","colB2","colB3","colB4","colB5"
+				)
+		scoreMtx <- matrix( 0, nrow=aLen, ncol=length(cName) )	;colnames(scoreMtx) <- cName
+
+		infoMtx <- NULL
+		if( makeInfoStr ){
+			cName <- c( "zMtx.size" )
+			infoMtx <- matrix( "" ,nrow=aLen ,ncol=length(cName) )	;colnames(infoMtx) <- cName
+			infoMtx[,"zMtx.size"] <- rObj$zMtx.size
+		}
+		if( 0==rObj$zMtx.size ){
+			return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
+		}
+
+		for( aIdx in 1:aLen ){
+			aZoid <- aZoidMtx[aIdx,]
+			aCStep <- aZoid[2:6] - aZoid[1:5]
+			# aFStep <- aZoid - rObj$lastZoid
+
+			aCode <- aCStep
+
+			if( !is.null(rObj$lPtn1) ){
+				matCnt <- bUtil.checkMatch_LinearPtn( rObj$lPtn1 ,aCode )
+				scoreMtx[aIdx,"colA1"] <- matCnt[1]
+				scoreMtx[aIdx,"colA2"] <- matCnt[2]
+				scoreMtx[aIdx,"colA3"] <- matCnt[3]
+				scoreMtx[aIdx,"colA4"] <- matCnt[4]
+				scoreMtx[aIdx,"colA5"] <- matCnt[5]
+			}
+			if( !is.null(rObj$lPtn2) ){
+				matCnt <- bUtil.checkMatch_LinearPtn( rObj$lPtn2 ,aCode )
+				scoreMtx[aIdx,"colB1"] <- matCnt[1]
+				scoreMtx[aIdx,"colB2"] <- matCnt[2]
+				scoreMtx[aIdx,"colB3"] <- matCnt[3]
+				scoreMtx[aIdx,"colB4"] <- matCnt[4]
+				scoreMtx[aIdx,"colB5"] <- matCnt[5]
+			}
+
+		}
+
+		return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
+
+	}
+
+	return( rObj )
+
+}
+
+bFMtx.scoreLVc24 <- function( stdMIObj ){
+
+	stdMI <- stdMIObj$stdMI
+	zMtx <- stdMIObj$zMtx
+	rObj <- list( 	idStr="bFMtx.scoreLVc24"	,zMtx.size=nrow(zMtx)	,lastZoid=stdMI$lastZoid	)
+
+	rObj$lPtn1 <- NULL
+	rObj$lPtn2 <- NULL
+	if( 0<rObj$zMtx.size ){
+		#	yIdx 는 그냥 1로 시작하자. rawTail 크기가 정해져있으니 별 차이는 없을 듯.
+		tailMtx <- stdMI$cStepTail
+		if( 2<rObj$zMtx.size ){
+			rObj$lPtn1 <- bUtil.findLinearPtn( tailMtx ,yIdx=nrow(tailMtx)-1 ,typ="V" )
+		}
+		if( 4<rObj$zMtx.size ){
+			rObj$lPtn2 <- bUtil.findLinearPtn( tailMtx ,yIdx=nrow(tailMtx)-3 ,typ="V" )
+		}
+	}
+
+	rObj$fMtxObj <- function( aZoidMtx ,makeInfoStr=F ){
+		aLen <- nrow(aZoidMtx)
+		cName <- c(	 "colA1","colA2","colA3","colA4","colA5"
+					,"colB1","colB2","colB3","colB4","colB5"
+				)
+		scoreMtx <- matrix( 0, nrow=aLen, ncol=length(cName) )	;colnames(scoreMtx) <- cName
+
+		infoMtx <- NULL
+		if( makeInfoStr ){
+			cName <- c( "zMtx.size" )
+			infoMtx <- matrix( "" ,nrow=aLen ,ncol=length(cName) )	;colnames(infoMtx) <- cName
+			infoMtx[,"zMtx.size"] <- rObj$zMtx.size
+		}
+		if( 0==rObj$zMtx.size ){
+			return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
+		}
+
+		for( aIdx in 1:aLen ){
+			aZoid <- aZoidMtx[aIdx,]
+			aCStep <- aZoid[2:6] - aZoid[1:5]
+			# aFStep <- aZoid - rObj$lastZoid
+
+			aCode <- aCStep
+
+			if( !is.null(rObj$lPtn1) ){
+				matCnt <- bUtil.checkMatch_LinearPtn( rObj$lPtn1 ,aCode )
+				scoreMtx[aIdx,"colA1"] <- matCnt[1]
+				scoreMtx[aIdx,"colA2"] <- matCnt[2]
+				scoreMtx[aIdx,"colA3"] <- matCnt[3]
+				scoreMtx[aIdx,"colA4"] <- matCnt[4]
+				scoreMtx[aIdx,"colA5"] <- matCnt[5]
+			}
+			if( !is.null(rObj$lPtn2) ){
+				matCnt <- bUtil.checkMatch_LinearPtn( rObj$lPtn2 ,aCode )
+				scoreMtx[aIdx,"colB1"] <- matCnt[1]
+				scoreMtx[aIdx,"colB2"] <- matCnt[2]
+				scoreMtx[aIdx,"colB3"] <- matCnt[3]
+				scoreMtx[aIdx,"colB4"] <- matCnt[4]
+				scoreMtx[aIdx,"colB5"] <- matCnt[5]
+			}
+
+		}
+
+		return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
+
+	}
+
+	return( rObj )
+
+}
+
+
+bFMtx.scoreLAf13 <- function( stdMIObj ){
+
+	stdMI <- stdMIObj$stdMI
+	zMtx <- stdMIObj$zMtx
+	rObj <- list( 	idStr="bFMtx.scoreLAf13"	,zMtx.size=nrow(zMtx)	,lastZoid=stdMI$lastZoid	)
+
+	rObj$lPtn1 <- NULL
+	rObj$lPtn2 <- NULL
+	if( 3<rObj$zMtx.size ){
+		#	yIdx 는 그냥 1로 시작하자. rawTail 크기가 정해져있으니 별 차이는 없을 듯.
+		tailMtx <- if( !is.na(stdMI$fStepTail[1,1]) ) stdMI$fStepTail else stdMI$fStepTail[nrow(stdMI$fStepTail)-1, ,drop=F]
+		if( 1<nrow(tailMtx) ){
+			rObj$lPtn1 <- bUtil.findLinearPtn( tailMtx ,yIdx=1 ,typ="A" )
+		}
+		if( 3<nrow(tailMtx) ){
+			rObj$lPtn2 <- bUtil.findLinearPtn( tailMtx ,yIdx=3 ,typ="A" )
+		}
+	}
+
+	rObj$fMtxObj <- function( aZoidMtx ,makeInfoStr=F ){
+		aLen <- nrow(aZoidMtx)
+		cName <- c(	 "colA1","colA2","colA3","colA4","colA5","colA6"
+					,"colB1","colB2","colB3","colB4","colB5","colB6"
+				)
+		scoreMtx <- matrix( 0, nrow=aLen, ncol=length(cName) )	;colnames(scoreMtx) <- cName
+
+		infoMtx <- NULL
+		if( makeInfoStr ){
+			cName <- c( "zMtx.size" )
+			infoMtx <- matrix( "" ,nrow=aLen ,ncol=length(cName) )	;colnames(infoMtx) <- cName
+			infoMtx[,"zMtx.size"] <- rObj$zMtx.size
+		}
+		if( 0==rObj$zMtx.size ){
+			return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
+		}
+
+		for( aIdx in 1:aLen ){
+			aZoid <- aZoidMtx[aIdx,]
 			aFStep <- aZoid - rObj$lastZoid
+
+			aCode <- aFStep
+
+			if( !is.null(rObj$lPtn1) ){
+				matCnt <- bUtil.checkMatch_LinearPtn( rObj$lPtn1 ,aCode )
+				scoreMtx[aIdx,"colA1"] <- matCnt[1]
+				scoreMtx[aIdx,"colA2"] <- matCnt[2]
+				scoreMtx[aIdx,"colA3"] <- matCnt[3]
+				scoreMtx[aIdx,"colA4"] <- matCnt[4]
+				scoreMtx[aIdx,"colA5"] <- matCnt[5]
+				scoreMtx[aIdx,"colA6"] <- matCnt[6]
+			}
+			if( !is.null(rObj$lPtn2) ){
+				matCnt <- bUtil.checkMatch_LinearPtn( rObj$lPtn2 ,aCode )
+				scoreMtx[aIdx,"colB1"] <- matCnt[1]
+				scoreMtx[aIdx,"colB2"] <- matCnt[2]
+				scoreMtx[aIdx,"colB3"] <- matCnt[3]
+				scoreMtx[aIdx,"colB4"] <- matCnt[4]
+				scoreMtx[aIdx,"colB5"] <- matCnt[5]
+				scoreMtx[aIdx,"colB6"] <- matCnt[6]
+			}
+
+		}
+
+		return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
+
+	}
+
+	return( rObj )
+
+}
+
+bFMtx.scoreLAf24 <- function( stdMIObj ){
+
+	stdMI <- stdMIObj$stdMI
+	zMtx <- stdMIObj$zMtx
+	rObj <- list( 	idStr="bFMtx.scoreLAf24"	,zMtx.size=nrow(zMtx)	,lastZoid=stdMI$lastZoid	)
+
+	rObj$lPtn1 <- NULL
+	rObj$lPtn2 <- NULL
+	if( 3<rObj$zMtx.size ){
+		#	yIdx 는 그냥 1로 시작하자. rawTail 크기가 정해져있으니 별 차이는 없을 듯.
+		tailMtx <- if( !is.na(stdMI$fStepTail[1,1]) ) stdMI$fStepTail else stdMI$fStepTail[nrow(stdMI$fStepTail)-1, ,drop=F]
+		if( 2<nrow(tailMtx) ){
+			rObj$lPtn1 <- bUtil.findLinearPtn( tailMtx ,yIdx=2 ,typ="A" )
+		}
+		if( 4<nrow(tailMtx) ){
+			rObj$lPtn2 <- bUtil.findLinearPtn( tailMtx ,yIdx=4 ,typ="A" )
+		}
+	}
+
+	rObj$fMtxObj <- function( aZoidMtx ,makeInfoStr=F ){
+		aLen <- nrow(aZoidMtx)
+		cName <- c(	 "colA1","colA2","colA3","colA4","colA5","colA6"
+					,"colB1","colB2","colB3","colB4","colB5","colB6"
+				)
+		scoreMtx <- matrix( 0, nrow=aLen, ncol=length(cName) )	;colnames(scoreMtx) <- cName
+
+		infoMtx <- NULL
+		if( makeInfoStr ){
+			cName <- c( "zMtx.size" )
+			infoMtx <- matrix( "" ,nrow=aLen ,ncol=length(cName) )	;colnames(infoMtx) <- cName
+			infoMtx[,"zMtx.size"] <- rObj$zMtx.size
+		}
+		if( 0==rObj$zMtx.size ){
+			return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
+		}
+
+		for( aIdx in 1:aLen ){
+			aZoid <- aZoidMtx[aIdx,]
+			aFStep <- aZoid - rObj$lastZoid
+
+			aCode <- aFStep
+
+			if( !is.null(rObj$lPtn1) ){
+				matCnt <- bUtil.checkMatch_LinearPtn( rObj$lPtn1 ,aCode )
+				scoreMtx[aIdx,"colA1"] <- matCnt[1]
+				scoreMtx[aIdx,"colA2"] <- matCnt[2]
+				scoreMtx[aIdx,"colA3"] <- matCnt[3]
+				scoreMtx[aIdx,"colA4"] <- matCnt[4]
+				scoreMtx[aIdx,"colA5"] <- matCnt[5]
+				scoreMtx[aIdx,"colA6"] <- matCnt[6]
+			}
+			if( !is.null(rObj$lPtn2) ){
+				matCnt <- bUtil.checkMatch_LinearPtn( rObj$lPtn2 ,aCode )
+				scoreMtx[aIdx,"colB1"] <- matCnt[1]
+				scoreMtx[aIdx,"colB2"] <- matCnt[2]
+				scoreMtx[aIdx,"colB3"] <- matCnt[3]
+				scoreMtx[aIdx,"colB4"] <- matCnt[4]
+				scoreMtx[aIdx,"colB5"] <- matCnt[5]
+				scoreMtx[aIdx,"colB6"] <- matCnt[6]
+			}
+
+		}
+
+		return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
+
+	}
+
+	return( rObj )
+
+}
+
+bFMtx.scoreLVf13 <- function( stdMIObj ){
+
+	stdMI <- stdMIObj$stdMI
+	zMtx <- stdMIObj$zMtx
+	rObj <- list( 	idStr="bFMtx.scoreLVf13"	,zMtx.size=nrow(zMtx)	,lastZoid=stdMI$lastZoid	)
+
+	rObj$lPtn1 <- NULL
+	rObj$lPtn2 <- NULL
+	if( 3<rObj$zMtx.size ){
+		#	yIdx 는 그냥 1로 시작하자. rawTail 크기가 정해져있으니 별 차이는 없을 듯.
+		tailMtx <- if( !is.na(stdMI$fStepTail[1,1]) ) stdMI$fStepTail else stdMI$fStepTail[nrow(stdMI$fStepTail)-1, ,drop=F]
+		if( 1<nrow(tailMtx) ){
+			rObj$lPtn1 <- bUtil.findLinearPtn( tailMtx ,yIdx=nrow(tailMtx) ,typ="V" )
+		}
+		if( 3<nrow(tailMtx) ){
+			rObj$lPtn2 <- bUtil.findLinearPtn( tailMtx ,yIdx=nrow(tailMtx)-2 ,typ="V" )
+		}
+	}
+
+	rObj$fMtxObj <- function( aZoidMtx ,makeInfoStr=F ){
+		aLen <- nrow(aZoidMtx)
+		cName <- c(	 "colA1","colA2","colA3","colA4","colA5","colA6"
+					,"colB1","colB2","colB3","colB4","colB5","colB6"
+				)
+		scoreMtx <- matrix( 0, nrow=aLen, ncol=length(cName) )	;colnames(scoreMtx) <- cName
+
+		infoMtx <- NULL
+		if( makeInfoStr ){
+			cName <- c( "zMtx.size" )
+			infoMtx <- matrix( "" ,nrow=aLen ,ncol=length(cName) )	;colnames(infoMtx) <- cName
+			infoMtx[,"zMtx.size"] <- rObj$zMtx.size
+		}
+		if( 0==rObj$zMtx.size ){
+			return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
+		}
+
+		for( aIdx in 1:aLen ){
+			aZoid <- aZoidMtx[aIdx,]
+			aFStep <- aZoid - rObj$lastZoid
+
+			aCode <- aFStep
+
+			if( !is.null(rObj$lPtn1) ){
+				matCnt <- bUtil.checkMatch_LinearPtn( rObj$lPtn1 ,aCode )
+				scoreMtx[aIdx,"colA1"] <- matCnt[1]
+				scoreMtx[aIdx,"colA2"] <- matCnt[2]
+				scoreMtx[aIdx,"colA3"] <- matCnt[3]
+				scoreMtx[aIdx,"colA4"] <- matCnt[4]
+				scoreMtx[aIdx,"colA5"] <- matCnt[5]
+				scoreMtx[aIdx,"colA6"] <- matCnt[6]
+			}
+			if( !is.null(rObj$lPtn2) ){
+				matCnt <- bUtil.checkMatch_LinearPtn( rObj$lPtn2 ,aCode )
+				scoreMtx[aIdx,"colB1"] <- matCnt[1]
+				scoreMtx[aIdx,"colB2"] <- matCnt[2]
+				scoreMtx[aIdx,"colB3"] <- matCnt[3]
+				scoreMtx[aIdx,"colB4"] <- matCnt[4]
+				scoreMtx[aIdx,"colB5"] <- matCnt[5]
+				scoreMtx[aIdx,"colB6"] <- matCnt[6]
+			}
+
+		}
+
+		return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
+
+	}
+
+	return( rObj )
+
+}
+
+bFMtx.scoreLVf24 <- function( stdMIObj ){
+
+	stdMI <- stdMIObj$stdMI
+	zMtx <- stdMIObj$zMtx
+	rObj <- list( 	idStr="bFMtx.scoreLVf24"	,zMtx.size=nrow(zMtx)	,lastZoid=stdMI$lastZoid	)
+
+	rObj$lPtn1 <- NULL
+	rObj$lPtn2 <- NULL
+	if( 3<rObj$zMtx.size ){
+		#	yIdx 는 그냥 1로 시작하자. rawTail 크기가 정해져있으니 별 차이는 없을 듯.
+		tailMtx <- if( !is.na(stdMI$fStepTail[1,1]) ) stdMI$fStepTail else stdMI$fStepTail[nrow(stdMI$fStepTail)-1, ,drop=F]
+		if( 2<nrow(tailMtx) ){
+			rObj$lPtn1 <- bUtil.findLinearPtn( tailMtx ,yIdx=nrow(tailMtx)-1 ,typ="V" )
+		}
+		if( 4<nrow(tailMtx) ){
+			rObj$lPtn2 <- bUtil.findLinearPtn( tailMtx ,yIdx=nrow(tailMtx)-3 ,typ="V" )
+		}
+	}
+
+	rObj$fMtxObj <- function( aZoidMtx ,makeInfoStr=F ){
+		aLen <- nrow(aZoidMtx)
+		cName <- c(	 "colA1","colA2","colA3","colA4","colA5","colA6"
+					,"colB1","colB2","colB3","colB4","colB5","colB6"
+				)
+		scoreMtx <- matrix( 0, nrow=aLen, ncol=length(cName) )	;colnames(scoreMtx) <- cName
+
+		infoMtx <- NULL
+		if( makeInfoStr ){
+			cName <- c( "zMtx.size" )
+			infoMtx <- matrix( "" ,nrow=aLen ,ncol=length(cName) )	;colnames(infoMtx) <- cName
+			infoMtx[,"zMtx.size"] <- rObj$zMtx.size
+		}
+		if( 0==rObj$zMtx.size ){
+			return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
+		}
+
+		for( aIdx in 1:aLen ){
+			aZoid <- aZoidMtx[aIdx,]
+			aFStep <- aZoid - rObj$lastZoid
+
+			aCode <- aFStep
+
+			if( !is.null(rObj$lPtn1) ){
+				matCnt <- bUtil.checkMatch_LinearPtn( rObj$lPtn1 ,aCode )
+				scoreMtx[aIdx,"colA1"] <- matCnt[1]
+				scoreMtx[aIdx,"colA2"] <- matCnt[2]
+				scoreMtx[aIdx,"colA3"] <- matCnt[3]
+				scoreMtx[aIdx,"colA4"] <- matCnt[4]
+				scoreMtx[aIdx,"colA5"] <- matCnt[5]
+				scoreMtx[aIdx,"colA6"] <- matCnt[6]
+			}
+			if( !is.null(rObj$lPtn2) ){
+				matCnt <- bUtil.checkMatch_LinearPtn( rObj$lPtn2 ,aCode )
+				scoreMtx[aIdx,"colB1"] <- matCnt[1]
+				scoreMtx[aIdx,"colB2"] <- matCnt[2]
+				scoreMtx[aIdx,"colB3"] <- matCnt[3]
+				scoreMtx[aIdx,"colB4"] <- matCnt[4]
+				scoreMtx[aIdx,"colB5"] <- matCnt[5]
+				scoreMtx[aIdx,"colB6"] <- matCnt[6]
+			}
+
 		}
 
 		return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
@@ -3306,6 +4405,7 @@ bFMtx.scoreZ <- function( stdMIObj ){
 
 		for( aIdx in 1:aLen ){
 			aZoid <- aZoidMtx[aIdx,]
+			aRem <- aZoid %% 10
 			aCStep <- aZoid[2:6] - aZoid[1:5]	
 			aFStep <- aZoid - rObj$lastZoid
 		}

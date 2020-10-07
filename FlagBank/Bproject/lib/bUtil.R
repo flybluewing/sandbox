@@ -1572,4 +1572,32 @@ bUtil.findLinearPtn <- function( codeMtx ,yIdx ,typ="V" ){
 	return( idxLst )
 }
 
+bUtil.checkMatch_LinearPtn <- function( lPtn ,aCode ){
+	#	lPtn <- bUtil.findLinearPtn()
+	pLen <- length(lPtn)
+	matCnt <- rep( 0 ,pLen )
+
+	for( cIdx in seq_len(pLen) ){
+		ptn <- lPtn[[cIdx]]
+		if( aCode[ptn$baseIdx["col"]] != ptn$baseIdx["val"] )	next
+
+		for( rIdx in seq_len(nrow(ptn$leftMtx)) ){
+			flag <- aCode[ptn$leftMtx[rIdx,"col"]] == ptn$leftMtx[rIdx,"val"]
+			
+			if( flag ){	matCnt[cIdx] <- 1 + matCnt[cIdx]
+			} else break
+		}
+		for( rIdx in seq_len(nrow(ptn$rightMtx)) ){
+			flag <- aCode[ptn$rightMtx[rIdx,"col"]] == ptn$rightMtx[rIdx,"val"]
+
+			if( flag ){	matCnt[cIdx] <- 1 + matCnt[cIdx]
+			} else break
+		}
+	}
+
+	return( matCnt )
+}
+
+
+
 
