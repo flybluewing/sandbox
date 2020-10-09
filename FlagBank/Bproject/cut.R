@@ -37,10 +37,13 @@ cat(sprintf("* Parallel ready... see log : %s \n",prllLog$fileName))
 tStmp <- Sys.time()
 
 # ----------------------------------------------------------------------------------
+#       stdIdx <- k.getIdx_AllZoidMtx( gEnv, stdZoid )
 stdMI.grp <- bUtil.getStdMILst( gEnv ,fRstLst )     ;stdMI.grp$anyWarn( )
 hMtxLst <- B.makeHMtxLst( gEnv, allIdxLst, fRstLst, lastH=lastH, tgt.scMtx )
-save( hMtxLst ,file=sprintf("Obj_cut_hMtxLst_%d.save",lastH) )
-    #   load( sprintf("Obj_cut_hMtxLst_%d.save",lastH) )
+hMtxLst_bS <- bS.makeHMtxLst( gEnv, allIdxLst, fRstLst ,tgt.scMtx )
+save( hMtxLst ,file=sprintf("./save/finalCut/Obj_cut_hMtxLst_%d.save",lastH) )
+save( hMtxLst_bS ,file=sprintf("./save/finalCut/Obj_cut_hMtxLst_bS_%d.save",lastH) )
+    #   load( sprintf("./save/finalCut/Obj_cut_hMtxLst_%d.save",lastH) )    ;load( sprintf("./save/finalCut/Obj_cut_hMtxLst_bS_%d.save",lastH) )
 cut.grp <- bFCust.getFCustGrp( hMtxLst ,tgt.scMtx )
 filter.grp <- getFilter.grp( stdMI.grp ,tgt.scMtx=tgt.scMtx )
 sfExport("tgt.scMtx")   ;sfExport("hMtxLst")    ;sfExport("cut.grp")    ;sfExport("filter.grp")
@@ -232,7 +235,26 @@ for( sfcIdx in 0 ){ # 0:2
         prllLog$fLogStr( rptStr, pTime=T)   ;rptStr
     }   # sprintf("Obj_allIdxF%d_chkStdMIPair_%d.save",sfcIdx,lastH)
 
-    save( allIdxF ,file=sprintf("Obj_allIdxF_%d_grp%d.save",lastH,sfcIdx) )
+
+    # bS.cut() ------------------------------------------------------------------
+    if( TRUE ){
+
+        # cutH.bS.Cut() ------------------------------------------------------------------
+        cutRst.bS <- cutH.bS.Cut( gEnv ,allIdxF ,hMtxLst_bS ,fHName ,tgt.scMtx=tgt.scMtx )
+        surFlag <- cutRst.bS$surFlag
+        allIdxF <- allIdxF[surFlag]
+
+        prllLog$fLogStr(    sprintf("   - cutH.bS.Cut( )   survival size :%7d  time:%.1f%s",length(allIdxF),cutRst.bS$tDiff,units(cutRst.bS$tDiff) )
+                            ,pTime=T
+        )
+        if( saveMidResult ) save( allIdxF ,file=sprintf("Obj_allIdxF%d_bScut_%d.save",sfcIdx,lastH) )
+
+        # aux() ------------------------------------------------------------------
+    }
+
+    rptStr <- sprintf( "allIdxF size : %d" ,length(allIdxF) )
+    prllLog$fLogStr( rptStr, pTime=T)   ;rptStr
+    save( allIdxF ,file=sprintf("./save/finalCut/Obj_allIdxF_%d_grp%d.save",lastH,sfcIdx) )
 
 
     # -- End of Cut ---------------------------------------------------------------------

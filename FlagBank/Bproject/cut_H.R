@@ -133,7 +133,24 @@ cutH.bC.Cut <- function( gEnv ,allIdxF ,blk ,filter.grp ,tgt.scMtx ,logger=NULL 
 }
 
 
+cutH.bS.Cut <- function( gEnv ,allIdxF ,hMtxLst_bS ,fHName ,tgt.scMtx=NULL ){
+    #  gEnv ,stdZoid ,hMtxLst_bS ,fHName 
 
+    tStmp <- Sys.time()
+
+    aZoidMtx <- gEnv$allZoidMtx[allIdxF ,,drop=F]
+    phVP.grp <- bS.getPhVPGrp( gEnv ,aZoidMtx )
+
+    cut.grp <- bS.getCutGrp( hMtxLst_bS ,tgt.scMtx=tgt.scMtx )  # curHMtxLst 적용 추가 필요.
+
+    scoreMtx.grp <- bS.getScoreMtx.grp( phVP.grp ,aZoidMtx ,tgt.scMtx=tgt.scMtx )
+
+    cutRst.bS <- bS.cut( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx ,anaOnly=F ) 
+
+    cutRst.bS$tDiff <- Sys.time() - tStmp
+
+    return( cutRst.bS )
+}
 
 
 

@@ -91,11 +91,11 @@ bS.makeHMtxLst <- function( gEnv, allIdxLst, fRstLst ,tgt.scMtx=NULL ,lastH=NULL
             aZoidMtx <- matrix(stdZoid ,nrow=1)
             phVP.grp <- bS.getPhVPGrp( wEnv ,aZoidMtx )
             warnMsg <- phVP.grp$anyWarn()
-            if( 0<length(warnMsg) ){
-                warnMsg <- paste("    ",warnMsg,sep="")
-                warnMsg <- paste(warnMsg,collapse="")
-                cat(sprintf("sfcIdx:%s  hIdx:%s \n%s",sfcIdx,hIdx,warnMsg))
-            }
+            # if( 0<length(warnMsg) ){      # bS에서의 phVP.grp 생성은 과거 데이터가 적은 경우가 너무 많아서...
+            #     warnMsg <- paste("    ",warnMsg,sep="")
+            #     warnMsg <- paste(warnMsg,collapse="")
+            #     cat(sprintf("sfcIdx:%s  hIdx:%s \n%s",sfcIdx,hIdx,warnMsg))
+            # }
 
             scoreMtx.grp <- bS.getScoreMtx.grp( phVP.grp ,aZoidMtx ,tgt.scMtx )
             scoreMtx.grp.lst[[sprintf("hIdx:%d",hIdx)]] <- scoreMtx.grp

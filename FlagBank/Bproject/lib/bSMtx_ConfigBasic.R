@@ -113,10 +113,25 @@ bsScoreMtxCfg[[mName]] <- list(
                     )
     )
     ,evtMax = NULL  ,evtMaxFColTot = NULL
-    ,rowReb = NULL  ,rowRebDup=NULL
-    ,summMtx = NULL 
-    ,summMtx.reb = NULL ,summMtx.sum = NULL
-    ,scMtx.sz = NULL    ,scMtx.sz.sum = NULL
+    ,rowReb = c( rawMin=3 ,lowE=2 ,rareE=1 )  ,rowRebDup=NULL
+    ,summMtx = matrix(  # all ph fCol phReb xyCnt.fCol xyCnt.phase      / raw ,evt
+                        c(  1 ,2 ,3 ,2 ,2 ,1    ,1 ,2 ,2 ,2 ,2 ,1  ) ,byrow=T
+                    ,ncol=length(summMtxName$cName) ,nrow=length(summMtxName$rName)
+                    ,dimnames=list(summMtxName$rName,summMtxName$cName)
+    )
+    ,summMtx.reb = matrix(  # all ph fCol phReb xyCnt.fCol xyCnt.phase      / raw ,evt
+                        c(  1 ,1 ,2 ,1 ,1 ,1    ,1 ,1 ,1 ,1 ,1 ,1  ) ,byrow=T
+                    ,ncol=length(summMtxName$cName) ,nrow=length(summMtxName$rName)
+                    ,dimnames=list(summMtxName$rName,summMtxName$cName)
+    )
+    ,summMtx.sum = c(raw=4 ,evt=3)
+    ,scMtx.sz = matrix( # r.ph r.fCol r.dblHpnFlg e.ph e.fCol e.dblHpnFlg  /  rebCnt ,rebDup
+                        c(  2 ,3 ,1 ,2 ,2 ,1   ,1 ,2 ,1 ,1 ,1 ,1  )
+                    ,byrow=T
+                    ,ncol=length(scMtx.szName$cName) ,nrow=length(scMtx.szName$rName) 
+                    ,dimnames=list(scMtx.szName$rName,scMtx.szName$cName)
+    )
+    ,scMtx.sz.sum = c(rebCnt.r=4 ,rebCnt.e=3)
     ,isHard=NULL  # use default
 )
 
