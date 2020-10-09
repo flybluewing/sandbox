@@ -44,7 +44,7 @@ bsScoreMtxCfg[[mName]] <- list(
                         ,evtMax.fCol=NULL
                     )
         ,"rem0.len.tot"=list( rng=matrix( c(0,1 ,0,2) ,ncol=2 )
-                        ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                        ,evt=matrix( c(c(3,3,3),c(3,4,5)) ,ncol=2)
                         ,evtMax.fCol=NULL
                     )
         ,"rem0.len.val"=list( rng=matrix( c(0,1 ,0,2) ,ncol=2 )
@@ -56,7 +56,7 @@ bsScoreMtxCfg[[mName]] <- list(
                         ,evtMax.fCol=NULL
                     )
         ,"rem1.len.tot"=list( rng=matrix( c(0,1 ,0,2) ,ncol=2 )
-                        ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                        ,evt=matrix( c(c(3,3,3),c(3,4,5)) ,ncol=2)
                         ,evtMax.fCol=NULL
                     )
         ,"rem1.len.val"=list( rng=matrix( c(0,1 ,0,2) ,ncol=2 )
@@ -68,7 +68,7 @@ bsScoreMtxCfg[[mName]] <- list(
                         ,evtMax.fCol=NULL
                     )
         ,"c0.len.tot"=list( rng=matrix( c(0,1 ,0,2) ,ncol=2 )
-                        ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                        ,evt=matrix( c(c(3,3,3),c(3,4,5)) ,ncol=2)
                         ,evtMax.fCol=NULL
                     )
         ,"c0.len.val"=list( rng=matrix( c(0,1 ,0,2) ,ncol=2 )
@@ -80,7 +80,7 @@ bsScoreMtxCfg[[mName]] <- list(
                         ,evtMax.fCol=NULL
                     )
         ,"c1.len.tot"=list( rng=matrix( c(0,1 ,0,2) ,ncol=2 )
-                        ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                        ,evt=matrix( c(c(3,3,3),c(3,4,5)) ,ncol=2)
                         ,evtMax.fCol=NULL
                     )
         ,"c1.len.val"=list( rng=matrix( c(0,1 ,0,2) ,ncol=2 )
@@ -92,7 +92,7 @@ bsScoreMtxCfg[[mName]] <- list(
                         ,evtMax.fCol=NULL
                     )
         ,"f0.len.tot"=list( rng=matrix( c(0,1 ,0,2) ,ncol=2 )
-                        ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                        ,evt=matrix( c(c(3,3,3),c(3,4,5)) ,ncol=2)
                         ,evtMax.fCol=NULL
                     )
         ,"f0.len.val"=list( rng=matrix( c(0,1 ,0,2) ,ncol=2 )
@@ -103,8 +103,8 @@ bsScoreMtxCfg[[mName]] <- list(
                         ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
                         ,evtMax.fCol=NULL
                     )
-        ,"f1.len.tot"=list( rng=matrix( c(0,1 ,0,2) ,ncol=2 )
-                        ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+        ,"f1.len.tot"=list( rng=matrix( c(0,1 ,0,4) ,ncol=2 )
+                        ,evt=matrix( c(c(3,3,3),c(3,4,5)) ,ncol=2)
                         ,evtMax.fCol=NULL
                     )
         ,"f1.len.val"=list( rng=matrix( c(0,1 ,0,2) ,ncol=2 )

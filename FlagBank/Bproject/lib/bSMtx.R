@@ -143,11 +143,18 @@ if( TRUE ){ # "sScore01"
 
         }
 
-        # 의미 중복이 발생한 컬럼 데이터 제거
+        #  의미 없는 부분들에 대한 데이터 삭제.
         if( TRUE ){
+            # 의미 중복이 발생한 컬럼 데이터 제거
             for( cIdx in c("rem0.num","rem1.num","c0.num","c1.num","f0.num","f1.num") ){
                 scrMtx[(1>=scrMtx[,cIdx]) ,cIdx] <- 0
             }
+
+            # f1.len.tot 에서 2는 너무 흔하게 나온다.
+            for( cIdx in c("f0.len.tot","f1.len.tot") ){
+                scrMtx[(2==scrMtx[,cIdx]) ,cIdx] <- 0
+            }
+
         }
 
         return( scrMtx )
