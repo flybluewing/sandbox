@@ -502,6 +502,7 @@ bS.cut <- function( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=NULL ,anaOnly=T ,lo
 }
 
 
+#   return 값 : tgt.scMtx에 해당 mName이 없는 경우, cutRst1Score$aLst[[n]] 은 NULL이다.
 bS.getCut1Score <- function(  scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=NULL ,logger=NULL ){
 
 	reportStatus <- function( tStmp ,strWhere ,surFlag ,logger ){
@@ -520,6 +521,8 @@ bS.getCut1Score <- function(  scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=NULL ,log
 	datLen <- nrow(scoreMtx.grp$basic[[1]][[ scMtxName[1] ]]$scoreMtx)
 	if( is.null(datLen) ){
 		datLen <- nrow(scoreMtx.grp$mf[[ bScrMtxName[1] ]]$scoreMtx)
+        
+        if( is.null(datLen) )   datLen <- 0
 	}
 
 	tStmp <- Sys.time()

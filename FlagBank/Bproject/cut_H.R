@@ -30,7 +30,7 @@ cutH.InitialCut <- function( gEnv ,allIdxF ,blk ,filter.grp ,cut.grp ,fHName=NUL
     timeCost <- c( "score1"=26 ,"score2"=23 ,"score3"=19 ,"score4"=59 ,"score5"=94 ,"score6"=54 ,"score7"=61 ,"score8"=21 ,"score9"=30 )
     timeCost <- c( timeCost ,"bScr01"=1 ,"bScr02"=1 )
     timeCost <- c( timeCost ,"scoreA"=29 ,"scoreB"=24 ,"scoreC"=24 ,"scoreD"=26 )
-    timeCost <- c( timeCost ,"scoreE"=100 )  # 측정필요.
+    timeCost <- c( timeCost ,"scoreE"=100 ,"scoreF"=100 )  # 측정필요.
     if( FALSE ){ # aux info
         # mName 별 소요시간 참고(aIdx 1000개). bScr도 나중에 추가할 것.
         #         score1 is done.(cut  925/10000)   cost:  2.6mins

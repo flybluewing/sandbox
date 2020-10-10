@@ -717,9 +717,10 @@ B.rptCutRst1Score_bS <- function( resultLst ,file="CutRst1Score_bS" ){
     logger$fLogStr("Start",pTime=T,pAppend=F)
 
     for( hIdx in names(resultLst) ){
-        if( is.null(resultLst[[hIdx]]$cutRst1Score_bS) ) next
+        if( 0==length(resultLst[[hIdx]]$cutRst1Score_bS$aLst) ) next
 
         cutRst1Score <- resultLst[[hIdx]]$cutRst1Score_bS$aLst[[1]]
+
         for( hName in names(cutRst1Score) ){
             rebMtx.ph <- NULL   ;phaseReb <- NULL
             summMtx <- NULL     ;summMtx.reb <- NULL    ;scMtx.sz <- NULL
