@@ -185,8 +185,6 @@ CRpt.cutRst1Score <- function( aZoidMtx ,filter.grp ,cut.grp ,fHName ,logFile="C
             scMtx_rebCnt[idx,] <- scMtx.sz["rebCnt",]   #  일단 sfcLate에 대해서만 관찰하자.
         }
     }
-    
-    
 
 }
 

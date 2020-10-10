@@ -500,3 +500,81 @@ bS.cut <- function( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=NULL ,anaOnly=T ,lo
     return( list( surFlag=surFlag ,cutInfoLst=cutInfoLst ,auxInfoLst=auxInfoLst ) )
 
 }
+
+
+bS.getCut1Score <- function(  scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=NULL ,logger=NULL ){
+
+	reportStatus <- function( tStmp ,strWhere ,surFlag ,logger ){
+		#	strWhere <- sprintf("[%s,%s] stdLst",hName,mName)
+		if( is.null(logger) )	return( NULL )
+		tDiff <- Sys.time() - tStmp
+		rptStr <- sprintf("    %s  %d/%d  %.1f%s ",strWhere,sum(surFlag),length(surFlag),tDiff,units(tDiff) )
+		logger$fLogStr( rptStr )
+	}
+
+    scMtxName <- names(cut.grp$mtxInfoLst)
+	if( !is.null(tgt.scMtx) )	scMtxName <- intersect( scMtxName ,tgt.scMtx )
+	bScrMtxName <- names(cut.grp$mtxInfoLst.bScr)
+	if( !is.null(tgt.scMtx) )	bScrMtxName <- intersect( bScrMtxName ,tgt.scMtx )
+
+	datLen <- nrow(scoreMtx.grp$basic[[1]][[ scMtxName[1] ]]$scoreMtx)
+	if( is.null(datLen) ){
+		datLen <- nrow(scoreMtx.grp$mf[[ bScrMtxName[1] ]]$scoreMtx)
+	}
+
+	tStmp <- Sys.time()
+	if( !is.null(logger) ) logger$fLogStr("Start", pTime=T ,pAppend=F )
+
+	mtxGrp <- NULL
+	if( 0<length(scMtxName) ){
+		mtxGrp <- bS.getScoreMtx.grp_byHIdx( scoreMtx.grp )    # getScoreMtx.grp_byHIdx() ´ëÃ¼
+	}
+
+	aLst <- list()
+	for( aIdx in seq_len(datLen) ){
+		hLst <- list()
+		for( hName in fHName ){ # hName <- fHName[1]
+			basicLst <- list()
+			for( mName in scMtxName ){ # mName <- scMtxName[1]
+				#   "hIdxLst" ------------------------------------------
+				hIdxCut <- cut.grp$cutterLst[[hName]][[mName]]$hIdxCut
+				rawObj <- hIdxCut$getRawScore( mtxGrp[[mName]][[aIdx]] )
+				raw4Ass <- hIdxCut$getRaw4Ass( rawObj )
+				summObj <- hIdxCut$getSummScore( rawObj )
+
+				basicLst[[mName]] <- list(raw=raw4Ass ,summ=summObj)
+				reportStatus( tStmp ,sprintf("[%s,%s] hIdxLst",hName,mName) ,surFlag ,logger )
+			}
+
+			bScrLst <- list()	# QQE:hold
+			bScrMtxName <- character(0)
+			# for( mName in bScrMtxName ){
+			# 	cutLst <- cut.grp$cutterLst.bScr[[hName]][[mName]]$stdLst
+			# 	scoreMtx <- scoreMtx.grp$mf[[mName]]$scoreMtx
+			# 	for( cnIdx in names(cutLst) ){  # cnIdx <- names(cutLst)[1]
+			# 		cuttedLst <- cutLst[[cnIdx]]$cut( scoreMtx ,!surFlag )
+			# 		if( 0<length(cuttedLst) ){
+			# 			if( anaOnly ){	cutInfoLst[[1+length(cutInfoLst)]] <- c( cuttedLst[[1]]$idObjDesc ,cuttedLst[[1]]$info )
+			# 			} else {
+			# 				cut_aIdx <- sapply( cuttedLst ,function(p){p$idx} )
+			# 				surFlag[cut_aIdx] <- FALSE
+			# 			}
+			# 		}
+			# 	}
+
+			# 	reportStatus( tStmp ,sprintf("[%s,%s] bScrMtx",hName,mName) ,surFlag ,logger )
+			# }
+
+			hLst[[hName]] <- list( basic=basicLst ,bScr=bScrLst )
+		}
+
+		aLst[[as.character(aIdx)]] <- hLst
+	}	# for(aIdx)
+
+	cut1ScoreObj <- list( aLst=aLst )
+	cut1ScoreObj$metaInfo <- list( datLen=datLen ,scMtxName=scMtxName ,bScrMtxName=bScrMtxName )
+
+	return( cut1ScoreObj )
+} # bS.cut1Score()
+
+

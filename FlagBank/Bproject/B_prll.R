@@ -67,7 +67,7 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
     prll.initHeader( )          ;source("FCust_configBasic.R")  ;source("FCust_configExt.R")
     prllLog$fLogStr("- bUtil.cut() ----------------------------",pTime=T)
     resultLst <- sfLapply( testSpan ,function( curHIdx ){
-        wLastH <-curHIdx-1
+        wLastH <- curHIdx-1
         wLastSpan <- 1:which(names(fRstLst)==wLastH)
 
         # ------------------------------------------------------------------------
@@ -106,10 +106,6 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
             #   anaOnly=TRUE 에서, cutRst$surFlag는 항상 TRUE임을 유의.
         cutRst$cutInfoLst <- append( cutRst$cutInfoLst ,cutRst1$cutInfoLst )
 
-        cutRst1Score <- bUtil.getCut1Score( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx )    # 폐지예정
-        # cut2Rst <- bUtil.cut2( cutRst1Score ,fHName ,tgt.scMtx=tgt.scMtx ,anaOnly=T )             # 폐지예정
-        # cutRst$cutInfoLst <- append( cutRst$cutInfoLst ,cut2Rst$cutInfoLst )                      # 폐지예정
-
         for( crMName in names(bCMtxCfg) ){  # bUtil.cut2() 대체
             crCutRst <- bC.cut( crMName ,scoreMtx.grp ,cut.grp ,anaOnly=T )
             cutRst$cutInfoLst <- append( cutRst$cutInfoLst ,crCutRst$cutInfoLst )
@@ -143,7 +139,7 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
                             ,stdZoid ,hMtxLst_bS=testData.grp$curHMtxLst_bS.grp[[as.character(curHIdx)]] 
                             ,fHName=fHName  ,tgt.scMtx
         )
-        cutRst$cutInfoLst <- append( cutRst$cutInfoLst ,cutRst.bS$cutInfoLst )
+        cutRst$cutInfoLst <- append( cutRst$cutInfoLst ,cutRst.bS$cutRst$cutInfoLst )
 
         # End of Cut Test
         # report example =================================================
@@ -188,20 +184,28 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
         }
 
         auxTest <- list()
+        cutRst1Score <- NULL    ;cutRst1Score_bS <- NULL
         if( TRUE ){ # temp test
-            # cutRst1Score$aLst[[1]]$sfcLate$basic$score1$raw$phaseHpnCnt
-            cutRstScrSet <- bUtil.cutRst1_scoreMtx(cutRst1Score$aLst[[1]])
-            # cutRstScrSet$sfcLate$basic
             #     "hpnMtxRaw"      "hpnMtxEvt"      "phRebMtxRaw"    "phRebMtxEvt"    "rebMtxRaw"      "rebMtxEvt"      
             #     "summMtxRaw"     "summMtxEvt"     "summMtx.RebRaw" "summMtx.RebEvt" "szMtxCnt"       "szMtxDup"       
             #     "sumMtx" 
-            hpnMtxRaw <- cutRstScrSet$sfcLate$basic$hpnMtxRaw
-            hpnCnt <- apply( hpnMtxRaw ,1 ,function(mVal){ sum(mVal>0) })
-            auxTest$zeroM <- names(hpnCnt)[hpnCnt==0]
-            auxTest$cutRstScrSet <- cutRstScrSet
+
+            cutRst1Score <- bUtil.getCut1Score( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx )
+                # cut2Rst <- bUtil.cut2( cutRst1Score ,fHName ,tgt.scMtx=tgt.scMtx ,anaOnly=T )
+
+            cutRst1Score_bS <- cutRst.bS$cutRst1Score
+
+            # cutRst1Score$aLst[[1]]$sfcLate$basic$score1$raw$phaseHpnCnt
+            # cutRstScrSet <- bUtil.cutRst1_scoreMtx(cutRst1Score$aLst[[1]])
+            # cutRstScrSet$sfcLate$basic
+            # hpnMtxRaw <- cutRstScrSet$sfcLate$basic$hpnMtxRaw
+            # hpnCnt <- apply( hpnMtxRaw ,1 ,function(mVal){ sum(mVal>0) })
+            # auxTest$zeroM <- names(hpnCnt)[hpnCnt==0]
+            # auxTest$cutRstScrSet <- cutRstScrSet
         }
 
-        return( list(hIdx=curHIdx ,cutRst=cutRst ,auxTest=auxTest ,cutRst1Score=cutRst1Score ) )
+        return( list(hIdx=curHIdx ,cutRst=cutRst ,cutRst1Score=cutRst1Score ,cutRst1Score_bS=cutRst1Score_bS ) )
+            #   ,auxTest=auxTest
     })
     names( resultLst ) <- sapply( resultLst ,function(p){p$hIdx})
     cutRstLst <- lapply( resultLst ,function(p){p$cutRst})
@@ -230,11 +234,12 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
                       )
         rptBanM <- c("score1")
     }
-    rptBanTyp <- c( "lastRawPair","aux_sfc" )
-    rptBanM <- c("score1")
+    rptBanTyp   <- c( "lastRawPair","aux_sfc" )
+    rptBanM     <- c("score1")
     B.rptCutRstLst( cutRstLst ,file=rptFile ,rptBanTyp=rptBanTyp ,rptBanM=rptBanM )
 
-    B.rptCutRst1Score( resultLst ,file=sprintf("CutRst1Score_%d",lastH) )
+    B.rptCutRst1Score(      resultLst ,file=sprintf("CutRst1Score_%d",lastH)    )
+    B.rptCutRst1Score_bS(   resultLst ,file=sprintf("CutRst1Score_%d_bS",lastH) )
 
 }
 
