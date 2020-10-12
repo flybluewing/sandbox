@@ -3,7 +3,7 @@ source("header.r")  ;source("B_H.R")    ;source("cut_H.R")
 lastH <- 931
 tgt.scMtx <- NULL
 testMode <- F            #check
-prllNum <- 5
+prllNum <- 4
 
 QQE:Trouble      # 실수 방지를 위해 의도된 오류코드
 

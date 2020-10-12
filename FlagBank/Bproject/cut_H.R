@@ -30,24 +30,46 @@ cutH.InitialCut <- function( gEnv ,allIdxF ,blk ,filter.grp ,cut.grp ,fHName=NUL
     timeCost <- c( "score1"=26 ,"score2"=23 ,"score3"=19 ,"score4"=59 ,"score5"=94 ,"score6"=54 ,"score7"=61 ,"score8"=21 ,"score9"=30 )
     timeCost <- c( timeCost ,"bScr01"=1 ,"bScr02"=1 )
     timeCost <- c( timeCost ,"scoreA"=29 ,"scoreB"=24 ,"scoreC"=24 ,"scoreD"=26 )
-    timeCost <- c( timeCost ,"scoreE"=100 ,"scoreF"=100 )  # 측정필요.
+    timeCost <- c( timeCost ,"scoreE"=20 ,"scoreF"=3 )  # 측정필요.
+    timeCost <- c( timeCost ,"scoreLAr13"=7 ,"scoreLAr24"=7 ,"scoreLVr13"=7 ,"scoreLVr24"=7 )
+    timeCost <- c( timeCost ,"scoreLAe13"=7 ,"scoreLAe24"=7 ,"scoreLVe13"=7 ,"scoreLVe24"=7 )
+    timeCost <- c( timeCost ,"scoreLAc13"=7 ,"scoreLAc24"=7 ,"scoreLVc13"=7 ,"scoreLVc24"=7 )
+    timeCost <- c( timeCost ,"scoreLAf13"=7 ,"scoreLAf24"=7 ,"scoreLVf13"=7 ,"scoreLVf24"=7 )
     if( FALSE ){ # aux info
         # mName 별 소요시간 참고(aIdx 1000개). bScr도 나중에 추가할 것.
-        #         score1 is done.(cut  925/10000)   cost:  2.6mins
-        #         score2 is done.(cut 1152/10000)   cost:  2.3mins
-        #         score3 is done.(cut  836/10000)   cost:  1.9mins
-        #         score4 is done.(cut  209/10000)   cost:  5.9mins
-        #         score5 is done.(cut 2608/10000)   cost:  9.4mins
-        #         score6 is done.(cut 1150/10000)   cost:  5.4mins
-        #         score7 is done.(cut   66/10000)   cost:  6.1mins
-        #         score8 is done.(cut 4904/10000)   cost:  2.1mins
-        #         score9 is done.(cut 1827/10000)   cost:  3.0mins
-        #         bScr01 is done.(cut 1296/10000)   cost:  3.3secs
-        #         bScr02 is done.(cut  508/10000)   cost:  6.8secs
-        #         scoreA is done.(cut 2705/10000)   cost:  2.9mins
-        #         scoreB is done.(cut 1397/10000)   cost:  2.4mins
-        #         scoreC is done.(cut 1143/10000)   cost:  2.4mins
-        #         scoreD is done.(cut  474/10000)   cost:  2.6mins
+        # score1 is done.(cut 273/1000)     cost: 24.0secs
+        # score2 is done.(cut 371/1000)     cost: 13.5secs
+        # score3 is done.(cut 210/1000)     cost: 11.1secs
+        # score4 is done.(cut 38/1000)      cost: 34.4secs
+        # score5 is done.(cut 465/1000)     cost: 58.2secs
+        # score6 is done.(cut 92/1000)      cost: 32.2secs
+        # score7 is done.(cut 11/1000)      cost: 34.8secs
+        # score8 is done.(cut 271/1000)     cost: 15.4secs
+        # score9 is done.(cut 165/1000)     cost: 20.8secs
+        # bScr01 is done.(cut 138/1000)     cost:  0.3secs
+        # bScr02 is done.(cut 212/1000)     cost:  0.7secs
+        # scoreA is done.(cut 139/1000)     cost: 18.1secs
+        # scoreB is done.(cut 206/1000)     cost: 14.7secs
+        # scoreC is done.(cut 207/1000)     cost: 14.9secs
+        # scoreD is done.(cut 159/1000)     cost: 15.1secs
+        # scoreE is done.(cut 212/1000)     cost: 20.8secs
+        # scoreF is done.(cut 22/1000)      cost:  3.8secs
+        # scoreLAr13 is done.(cut 4/1000)   cost:  7.6secs
+        # scoreLAr24 is done.(cut 3/1000)   cost:  7.4secs
+        # scoreLVr13 is done.(cut 1/1000)   cost:  7.6secs
+        # scoreLVr24 is done.(cut 4/1000)   cost:  7.5secs
+        # scoreLAe13 is done.(cut 39/1000)  cost:  7.6secs
+        # scoreLAe24 is done.(cut 39/1000)  cost:  7.3secs
+        # scoreLVe13 is done.(cut 45/1000)  cost:  7.5secs
+        # scoreLVe24 is done.(cut 29/1000)  cost:  7.3secs
+        # scoreLAc13 is done.(cut 19/1000)  cost:  6.6secs
+        # scoreLAc24 is done.(cut 10/1000)  cost:  6.6secs
+        # scoreLVc13 is done.(cut 16/1000)  cost:  6.7secs
+        # scoreLVc24 is done.(cut 12/1000)  cost:  6.5secs
+        # scoreLAf13 is done.(cut 32/1000)  cost:  7.6secs
+        # scoreLAf24 is done.(cut 2/1000)   cost:  7.6secs
+        # scoreLVf13 is done.(cut 20/1000)  cost:  7.4secs
+        # scoreLVf24 is done.(cut 2/1000)   cost:  7.7secs
     }
 
     mtxNames <- names(timeCost)[order(timeCost)]    # 가장 소요시작 작은 것 부터 mtxNames 등록
