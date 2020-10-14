@@ -7,7 +7,11 @@ bS.getPhVPGrp <- function( gEnv ,aZoidMtx ){    # bUtil.getStdMILst( ) 와 비슷
     phVPLst[[1+length(phVPLst)]] <- bS.vp_ColVal( gEnv, aZoidMtx, fixCol=6 )
     phVPLst[[1+length(phVPLst)]] <- bS.vp_remPair( gEnv, aZoidMtx )
     phVPLst[[1+length(phVPLst)]] <- bS.vp_zw( gEnv, aZoidMtx )
-    #   차후 bS.vp_fStepBin() 도 추가.
+    phVPLst[[1+length(phVPLst)]] <- bS.vp_cSCVal( gEnv, aZoidMtx, fixCol=1 )
+    phVPLst[[1+length(phVPLst)]] <- bS.vp_cSCVal( gEnv, aZoidMtx, fixCol=2 )
+    phVPLst[[1+length(phVPLst)]] <- bS.vp_cSCVal( gEnv, aZoidMtx, fixCol=3 )
+    phVPLst[[1+length(phVPLst)]] <- bS.vp_cSCVal( gEnv, aZoidMtx, fixCol=4 )
+    phVPLst[[1+length(phVPLst)]] <- bS.vp_cSCVal( gEnv, aZoidMtx, fixCol=5 )
 
     names(phVPLst) <- sapply( phVPLst ,function(p){p$idStr})
 

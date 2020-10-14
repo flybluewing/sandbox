@@ -272,5 +272,66 @@ bS.vp_zw <- function( gEnv, aZoidMtx ){
 
 }
 
+bS.vp_cSCVal <-function( gEnv ,aZoidMtx ,fixCol ){  # ColVal for cStep
+    vpObj <- list( idStr=sprintf("cSCVal%d",fixCol)
+                    ,mInfo = c(fixCol=fixCol)
+    )
+
+    cStepMtx <- aZoidMtx[,2:6,drop=F] - aZoidMtx[,1:5,drop=F]
+    colVal <- sort(unique(cStepMtx[,fixCol]))
+    stdMILst <- list()
+    cStepH <- gEnv$zhF[,2:6]-gEnv$zhF[,1:5]
+    for( vIdx in colVal ){
+        zMtx <- gEnv$zhF[ cStepH[,fixCol]==vIdx ,,drop=F]
+        stdMI <- fCutU.getMtxInfo(zMtx)
+        stdMI$mInfo <- c( fixCol=fixCol  ,vIdx=vIdx )
+        stdMILst[[sprintf("%s_%d",vpObj$idStr,vIdx)]] <- stdMI
+    }
+    vpObj$stdMILst <- stdMILst
+
+    vpObj$getCodeH <- function( stdMI ){
+        wLst <- list()
+        wLst$rawTail <- stdMI$rawTail[,-vpObj$mInfo["fixCol"],drop=F]
+        wLst$lastRaw <- NULL
+        if( 0<nrow(wLst$rawTail) ){
+            wLst$lastRaw <- wLst$rawTail[nrow(wLst$rawTail),]
+        }
+
+        wLst$cStepTail <- stdMI$cStepTail[,-vpObj$mInfo["fixCol"],drop=F]
+        wLst$fStepTail <- stdMI$fStepTail[,-vpObj$mInfo["fixCol"],drop=F]
+        return( wLst )
+    }
+
+    vpObj$getCodeW <- function( aZoidMtx ){
+        aObj <- list( miNames=names(vpObj$stdMILst) )
+
+        miIdStr <- rep("N/A",nrow(aZoidMtx))
+
+        cStepMtx <- aZoidMtx[,2:6,drop=F]-aZoidMtx[,1:5,drop=F]
+        fStepMtx <- matrix( 0 ,ncol=ncol(aZoidMtx) ,nrow=nrow(aZoidMtx) )
+        for( nIdx in names(vpObj$stdMILst) ){
+            stdMI <- vpObj$stdMILst[[nIdx]]
+            if(0==nrow(stdMI$rawTail))  next
+
+            curWorkArea <- which(cStepMtx[,stdMI$mInfo["fixCol"]]==stdMI$mInfo["vIdx"])
+            miIdStr[curWorkArea] <- nIdx
+
+            mtx <- apply(aZoidMtx[curWorkArea,,drop=F],1,function(p){ p-stdMI$lastZoid})
+            fStepMtx[curWorkArea,] <-t(mtx)
+        }
+
+        aObj$miIdStr <- miIdStr
+        aObj$aZoidMtx <- aZoidMtx[,-vpObj$mInfo["fixCol"],drop=F]
+        aObj$cStepMtx <- cStepMtx[,-vpObj$mInfo["fixCol"],drop=F]
+        aObj$fStepMtx <- fStepMtx[,-vpObj$mInfo["fixCol"],drop=F]
+
+        rownames(aObj$aZoidMtx) <- miIdStr
+        rownames(aObj$cStepMtx) <- miIdStr
+        rownames(aObj$fStepMtx) <- miIdStr
+        return( aObj )
+    }
+
+    return(vpObj)
+}
 
 bS.vp_fStepBin <- function( gEnv, aZoidMtx ){   cat("폐기. stdMI가 만들기도전에, stdMI$lastZoid으로부터 fStep이 나와야 하는 모순 발생") }
