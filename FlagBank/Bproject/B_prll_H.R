@@ -10,8 +10,14 @@ Bprll.bSCut <- function( gEnv.w ,stdZoid ,hMtxLst_bS ,fHName ,tgt.scMtx ){
 
     cutRst.bS <- bS.cut( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx ,anaOnly=T ) 
         #   anaOnly=TRUE 에서, cutRst$surFlag는 항상 TRUE임을 유의.
-    cutRst1Score <- bS.getCut1Score( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx )
 
+    for( crMName in names(bSMtxMCfg) ){  # bUtil.cut2() 대체
+        crCutRst <- bS.cut_M( crMName ,scoreMtx.grp ,cut.grp ,anaOnly=T )
+        cutRst.bS$cutInfoLst <- append( cutRst.bS$cutInfoLst ,crCutRst$cutInfoLst )
+    }
+
+
+    cutRst1Score <- bS.getCut1Score( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx )
     return( list( cutRst=cutRst.bS ,cutRst1Score=cutRst1Score ) )
 }
 
