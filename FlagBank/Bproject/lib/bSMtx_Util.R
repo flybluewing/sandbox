@@ -599,11 +599,18 @@ bS.cut_M <- function( crMName ,scoreMtx.grp ,cut.grp ,anaOnly=F ,logger=NULL ){
 		logger$fLogStr( rptStr )
 	}
 
+    if( 0==length(scoreMtx.grp$basic[[1]]) ){
+        return( list( surFlag=logical(0) ,cutInfoLst=list() ) )
+    }
+
     datLen <- nrow(scoreMtx.grp$basic[[1]][[1]]$scoreMtx)
     surFlag <- rep( T ,datLen )
 	cutInfoLst <- list()
+    if( 0==datLen ){
+        return( list( surFlag=logical(0) ,cutInfoLst=list() ) )
+    }
 
-    mtxMaker <- bSMtxMLst[[crMName]]( )
+    mtxMaker <- bSMtxCMLst[[crMName]]( )
     
     curFltNames <- names(scoreMtx.grp$basic[[1]])
     if( !all(mtxMaker$mName %in% curFltNames) ){

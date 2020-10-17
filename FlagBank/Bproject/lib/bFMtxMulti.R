@@ -410,8 +410,123 @@ if( TRUE ){
 
 }
 
+mfName <- "mfLArn"
+if( FALSE ){
+    bFMtxMFltLst[[mfName]] <- function( tgt.scMtx=NULL ){
+        fltObj <- list( mInfo=list() )
+        fltObj$mInfo$mName <- mfName
+        fltObj$available <- TRUE    # bFCust.getFCustGrp() 에서 확인됨.
+
+        fltObj$fltMNames <- c("scoreLAr13","scoreLAr24")
+        fltObj$mInfo$cName <- c( "hpn1","hpnE"
+                                ,"col1Hpn1" ,"col1Hpn2" ,"col1Hpn3" ,"col1Hpn4" ,"col1Hpn5" ,"col1Hpn6"
+                                ,"colEHpn1" ,"colEHpn2" ,"colEHpn3" ,"colEHpn4" ,"colEHpn5" ,"colEHpn6"
+		)
+
+        # tgt.scMtx가 fltObj$fltMNames 를 모두 포함하고 있는 지 체크.
+        if( !is.null(tgt.scMtx) ){
+            #   scoreMtxLst는 체크하지 않는다. 차라리 나중에 에러나는 게 인지하기 쉬우므로.            
+            mFlag <- fltObj$fltMNames %in% tgt.scMtx
+            fltObj$available <- ifelse( all(mFlag) ,fltObj$available ,FALSE )
+        }
+
+        fltObj$getScore <- function( mmMtxLst ,mmEMtxLst ,aIdx ){
+
+            rowVal <- rep( 0 ,length(fltObj$mInfo$cName) )
+            names(rowVal) <- fltObj$mInfo$cName
+
+            val <- rep( 0 ,length(fltObj$fltMNames) )
+            names(val) <- fltObj$fltMNames
+
+            cName <- "hpn1"
+            for( mName in fltObj$fltMNames ){
+                rowVal["hpn1"] <- rowVal["hpn1"] + sum(mmMtxLst[[mName]][aIdx,] == 1)
+                rowVal["hpnE"] <- rowVal["hpnE"] + sum( !is.na(mmEMtxLst[[mName]][aIdx,]) )
+            }
 
 
+            return( rowVal )
+
+            # cName <- "hpn1"   # code template
+            # for( mName in fltObj$fltMNames ){
+            #     val[mName] <- mmMtxLst[[mName]][aIdx,cName] >= 1
+            # }
+            # rowVal[cName] <- sum(val[c("score6","score7")]) + any( 0<val[c("score4","score5")] )
+
+            # for( nIdx in names(mmMtxLst) ){   # 테스트 데이터 생성용.
+            #     for( aIdx in 1:10 ){
+            #         mmMtxLst[[nIdx]][aIdx,] <- sample(1:5,length(mmMtxLst[[nIdx]][aIdx,]),replace=T)
+            #     }
+            # }
+
+        }
+        
+        fltObj$getScoreMtx <- function( scoreMtxLst ){
+            # scoreMtx.grp <- getScoreMtx.grp( gEnv$allZoidMtx[allIdxF,,drop=F] ,filter.grp )
+            # scoreMtxLst <- scoreMtx.grp$basic[[pName]]
+
+            mmMtxLst <- lapply( scoreMtxLst[fltObj$fltMNames] ,function(mtxObj){mtxObj$scoreMtx} )
+            mmEMtxLst <- list()
+            for( mName in fltObj$fltMNames ){
+                eMtx <- scoreMtxLst[[mName]]$scoreMtx
+                eMtx[,] <- NA
+                for( rIdx in seq_len(nrow(eMtx)) ){
+                    eMtx[rIdx,] <- bFCust.getEvt( scoreMtxLst[[mName]]$scoreMtx[rIdx,] ,scoreMtxCfg[[mName]]$fCol )["lev",]
+                }
+                mmEMtxLst[[mName]] <- eMtx
+            }
+
+            rMtx <- matrix( 0 ,nrow=nrow(mmMtxLst[[1]]) ,ncol=length(fltObj$mInfo$cName) )
+            colnames(rMtx) <- fltObj$mInfo$cName
+            if( !fltObj$available ) return( rMtx )
+
+            for( aIdx in seq_len(nrow(rMtx)) ){
+                rMtx[aIdx,] <- fltObj$getScore( mmMtxLst ,mmEMtxLst ,aIdx )
+            }
+            rownames(rMtx) <- rownames(mmMtxLst[[1]])
+
+            return( rMtx )
+
+        }
+
+        return(fltObj)
+
+    }
+}
+
+mfName <- "mfLVrn"
+
+mfName <- "mfLAVrn"
+
+
+mfName <- "mfLAen"
+
+mfName <- "mfLVen"
+
+mfName <- "mfLAVen"
+
+
+mfName <- "mfLAcn"
+
+mfName <- "mfLVcn"
+
+mfName <- "mfLAVcn"
+
+
+mfName <- "mfLAfn"
+
+mfName <- "mfLVfn"
+
+mfName <- "mfLAVfn"
+
+
+mfName <- "mfLAecf13"
+
+mfName <- "mfLAecf24"
+
+mfName <- "mfLVecf13"
+
+mfName <- "mfLVecf24"
 
 
 

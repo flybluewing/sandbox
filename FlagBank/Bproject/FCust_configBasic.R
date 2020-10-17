@@ -3058,6 +3058,146 @@ scoreMtxCfg[[mfName]] <- list(
 )
 
 
+mfName <- "mfLArn"
+scoreMtxCfg[[mfName]] <- list(
+    mName = mName   ,style=c( freqZero=TRUE )
+    ,fCol = list(
+        "aMHpn" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
+                        ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+        ,"aNHpn" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                        ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+    )
+    ,evtMaxFColTot = NULL
+    ,evtMax     = NULL      ,rowReb = NULL          ,rowRebDup = NULL
+    ,summMtx    = NULL      ,summMtx.reb = NULL     ,summMtx.sum = NULL
+    ,scMtx.sz   = NULL      ,scMtx.sz.sum = NULL
+    ,isHard=NULL  # use default
+)
+
+mfName <- "mfXXX"
+scoreMtxCfg[[mfName]] <- list(
+    mName = mName   ,style=c( freqZero=TRUE )
+    ,fCol = list(
+        "xxx" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
+                        ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+        ,"xxx" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                        ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+    )
+    ,evtMaxFColTot = NULL
+    ,evtMax     = NULL      ,rowReb = NULL          ,rowRebDup = NULL
+    ,summMtx    = NULL      ,summMtx.reb = NULL     ,summMtx.sum = NULL
+    ,scMtx.sz   = NULL      ,scMtx.sz.sum = NULL
+    ,isHard=NULL  # use default
+)
+
+mfName <- "mfXXX"
+scoreMtxCfg[[mfName]] <- list(
+    mName = mName   ,style=c( freqZero=TRUE )
+    ,fCol = list(
+        "xxx" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
+                        ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+        ,"xxx" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                        ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+    )
+    ,evtMaxFColTot = NULL
+    ,evtMax     = NULL      ,rowReb = NULL          ,rowRebDup = NULL
+    ,summMtx    = NULL      ,summMtx.reb = NULL     ,summMtx.sum = NULL
+    ,scMtx.sz   = NULL      ,scMtx.sz.sum = NULL
+    ,isHard=NULL  # use default
+)
+
+mfName <- "mfXXX"
+scoreMtxCfg[[mfName]] <- list(
+    mName = mName   ,style=c( freqZero=TRUE )
+    ,fCol = list(
+        "xxx" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
+                        ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+        ,"xxx" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                        ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+    )
+    ,evtMaxFColTot = NULL
+    ,evtMax     = NULL      ,rowReb = NULL          ,rowRebDup = NULL
+    ,summMtx    = NULL      ,summMtx.reb = NULL     ,summMtx.sum = NULL
+    ,scMtx.sz   = NULL      ,scMtx.sz.sum = NULL
+    ,isHard=NULL  # use default
+)
+
+mfName <- "mfXXX"
+scoreMtxCfg[[mfName]] <- list(
+    mName = mName   ,style=c( freqZero=TRUE )
+    ,fCol = list(
+        "xxx" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
+                        ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+        ,"xxx" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                        ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+    )
+    ,evtMaxFColTot = NULL
+    ,evtMax     = NULL      ,rowReb = NULL          ,rowRebDup = NULL
+    ,summMtx    = NULL      ,summMtx.reb = NULL     ,summMtx.sum = NULL
+    ,scMtx.sz   = NULL      ,scMtx.sz.sum = NULL
+    ,isHard=NULL  # use default
+)
+
+mfName <- "mfXXX"
+scoreMtxCfg[[mfName]] <- list(
+    mName = mName   ,style=c( freqZero=TRUE )
+    ,fCol = list(
+        "xxx" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
+                        ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+        ,"xxx" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                        ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+    )
+    ,evtMaxFColTot = NULL
+    ,evtMax     = NULL      ,rowReb = NULL          ,rowRebDup = NULL
+    ,summMtx    = NULL      ,summMtx.reb = NULL     ,summMtx.sum = NULL
+    ,scMtx.sz   = NULL      ,scMtx.sz.sum = NULL
+    ,isHard=NULL  # use default
+)
+
+mfName <- "mfXXX"
+scoreMtxCfg[[mfName]] <- list(
+    mName = mName   ,style=c( freqZero=TRUE )
+    ,fCol = list(
+        "xxx" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
+                        ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+        ,"xxx" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                        ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+    )
+    ,evtMaxFColTot = NULL
+    ,evtMax     = NULL      ,rowReb = NULL          ,rowRebDup = NULL
+    ,summMtx    = NULL      ,summMtx.reb = NULL     ,summMtx.sum = NULL
+    ,scMtx.sz   = NULL      ,scMtx.sz.sum = NULL
+    ,isHard=NULL  # use default
+)
+
 
 
 for( mName in names( scoreMtxCfg ) ){ # naming Ãß°¡.

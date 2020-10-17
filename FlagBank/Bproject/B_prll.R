@@ -61,7 +61,6 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
     #           Obj_testData.grp.900.w100.save : configH <- lastH-100 (4hours)
 
     #   B.get_cutRst1.grp()
-
     sfExport("testData.grp")    ;sfExport("tgt.scMtx")
     prll.initHeader( )          ;source("FCust_configBasic.R")  ;source("FCust_configExt.R")
     prllLog$fLogStr("- bUtil.cut() ----------------------------",pTime=T)
@@ -105,7 +104,10 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
             #   anaOnly=TRUE 에서, cutRst$surFlag는 항상 TRUE임을 유의.
         cutRst$cutInfoLst <- append( cutRst$cutInfoLst ,cutRst1$cutInfoLst )
 
-        for( crMName in names(bCMtxCfg) ){  # bUtil.cut2() 대체
+        for( crMName in names(bCMtxCfg) ){  # 멀티 cutRst1Score 에 대한 필터링.
+            # bUtil.cut2()의 발전형.
+            # 멀티 scoreMtx에 대한 기준이 아님. 멀티 scoreMtx에 대한 기준은 bFMtxMulti.R에서 처리.
+            # bC.cut()에서는 sfcLate에 대해서만 처리. ( bFMtxMulti.R에서는 hName별 처리도 이루어짐. )
             crCutRst <- bC.cut( crMName ,scoreMtx.grp ,cut.grp ,anaOnly=T )
             cutRst$cutInfoLst <- append( cutRst$cutInfoLst ,crCutRst$cutInfoLst )
         }

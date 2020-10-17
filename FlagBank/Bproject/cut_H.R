@@ -2,14 +2,14 @@
 cutH.InitialCut <- function( gEnv ,allIdxF ,blk ,filter.grp ,cut.grp ,fHName=NULL ,exeCfg=NULL ,logger=NULL ){
     #   logger <- k.getFlogObj( "./log/commonLog.txt" )
 
-    logMsg <- function( msgStr ,tStmp=NULL ){
+    logMsg <- function( msgStr ,tStmp=NULL ,pTime=F ){
         if( is.null(logger) )   return()
         
         if( !is.null(tStmp) ){
             tDiff <- Sys.time() - tStmp
             msgStr <- sprintf("%s   cost:%5.1f%s",msgStr,tDiff,units(tDiff))
         }
-        logger$fLogStr( msgStr )
+        logger$fLogStr( msgStr ,pTime=pTime )
     }
 
     if( is.null(exeCfg) ){  
@@ -31,29 +31,29 @@ cutH.InitialCut <- function( gEnv ,allIdxF ,blk ,filter.grp ,cut.grp ,fHName=NUL
     timeCost <- c( timeCost ,"bScr01"=1 ,"bScr02"=1 )
     timeCost <- c( timeCost ,"scoreA"=29 ,"scoreB"=24 ,"scoreC"=24 ,"scoreD"=26 )
     timeCost <- c( timeCost ,"scoreE"=20 ,"scoreF"=3 )  # 측정필요.
-    timeCost <- c( timeCost ,"scoreLAr13"=7 ,"scoreLAr24"=7 ,"scoreLVr13"=7 ,"scoreLVr24"=7 )
-    timeCost <- c( timeCost ,"scoreLAe13"=7 ,"scoreLAe24"=7 ,"scoreLVe13"=7 ,"scoreLVe24"=7 )
-    timeCost <- c( timeCost ,"scoreLAc13"=7 ,"scoreLAc24"=7 ,"scoreLVc13"=7 ,"scoreLVc24"=7 )
-    timeCost <- c( timeCost ,"scoreLAf13"=7 ,"scoreLAf24"=7 ,"scoreLVf13"=7 ,"scoreLVf24"=7 )
+    timeCost <- c( timeCost ,"scoreLAr13"=70 ,"scoreLAr24"=70 ,"scoreLVr13"=70 ,"scoreLVr24"=70 )   # extention을 추가한 후 재측정 요.
+    timeCost <- c( timeCost ,"scoreLAe13"=70 ,"scoreLAe24"=70 ,"scoreLVe13"=70 ,"scoreLVe24"=70 )
+    timeCost <- c( timeCost ,"scoreLAc13"=70 ,"scoreLAc24"=70 ,"scoreLVc13"=70 ,"scoreLVc24"=70 )
+    timeCost <- c( timeCost ,"scoreLAf13"=70 ,"scoreLAf24"=70 ,"scoreLVf13"=70 ,"scoreLVf24"=70 )
     if( FALSE ){ # aux info
-        # mName 별 소요시간 참고(aIdx 1000개). bScr도 나중에 추가할 것.
-        # score1 is done.(cut 273/1000)     cost: 24.0secs
-        # score2 is done.(cut 371/1000)     cost: 13.5secs
-        # score3 is done.(cut 210/1000)     cost: 11.1secs
-        # score4 is done.(cut 38/1000)      cost: 34.4secs
-        # score5 is done.(cut 465/1000)     cost: 58.2secs
-        # score6 is done.(cut 92/1000)      cost: 32.2secs
-        # score7 is done.(cut 11/1000)      cost: 34.8secs
-        # score8 is done.(cut 271/1000)     cost: 15.4secs
-        # score9 is done.(cut 165/1000)     cost: 20.8secs
-        # bScr01 is done.(cut 138/1000)     cost:  0.3secs
-        # bScr02 is done.(cut 212/1000)     cost:  0.7secs
-        # scoreA is done.(cut 139/1000)     cost: 18.1secs
-        # scoreB is done.(cut 206/1000)     cost: 14.7secs
-        # scoreC is done.(cut 207/1000)     cost: 14.9secs
-        # scoreD is done.(cut 159/1000)     cost: 15.1secs
-        # scoreE is done.(cut 212/1000)     cost: 20.8secs
-        # scoreF is done.(cut 22/1000)      cost:  3.8secs
+        # mName 별 소요시간 참고(aIdx 5000개). bScr도 나중에 추가할 것.
+        # score1     is done.(cut 273/1000) cost: 24.0secs
+        # score2     is done.(cut 371/1000) cost: 13.5secs
+        # score3     is done.(cut 210/1000) cost: 11.1secs
+        # score4     is done.(cut  38/1000) cost: 34.4secs
+        # score5     is done.(cut 465/1000) cost: 58.2secs
+        # score6     is done.(cut  92/1000) cost: 32.2secs
+        # score7     is done.(cut  11/1000) cost: 34.8secs
+        # score8     is done.(cut 271/1000) cost: 15.4secs
+        # score9     is done.(cut 165/1000) cost: 20.8secs
+        # bScr01     is done.(cut 138/1000) cost:  0.3secs
+        # bScr02     is done.(cut 212/1000) cost:  0.7secs
+        # scoreA     is done.(cut 139/1000) cost: 18.1secs
+        # scoreB     is done.(cut 206/1000) cost: 14.7secs
+        # scoreC     is done.(cut 207/1000) cost: 14.9secs
+        # scoreD     is done.(cut 159/1000) cost: 15.1secs
+        # scoreE     is done.(cut 212/1000) cost: 20.8secs
+        # scoreF     is done.(cut  22/1000) cost:  3.8secs
         # scoreLAr13 is done.(cut 4/1000)   cost:  7.6secs
         # scoreLAr24 is done.(cut 3/1000)   cost:  7.4secs
         # scoreLVr13 is done.(cut 1/1000)   cost:  7.6secs
