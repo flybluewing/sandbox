@@ -712,7 +712,7 @@ if( TRUE ){
             rVal["hpnEAll"]  <- sum(evtFlag  ,na.rm=T)
 
             # 값이 1인것은 삭제. 별 의미가 없다.
-            cName <- c( "colAn_hpn1" ,"colBn_hpn1" ,"colHpn1" ,"colHpn2" ,"colHpn3" ,"colHpn4" ,"colHpn5" ,"colHpn6" ,"hpn1All" ,"hpnEAll" )
+            cName <- c( "colAn_hpn1" ,"hpnEAll" ,"colBn_hpn1" ,"colHpn1" ,"colHpn2" ,"colHpn3" ,"colHpn4" ,"colHpn5" ,"colHpn6" ,"hpn1All" ,"hpnEAll" )
             rVal[ cName[rVal[cName]==1] ] <- 0
 
             # rVal["xxx"]  <- sum(score[c("xxx","xxx","xxx")] ,na.rm=T)

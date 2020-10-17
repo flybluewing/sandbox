@@ -3062,59 +3062,59 @@ mfName <- "mfLArn"
 scoreMtxCfg[[mfName]] <- list(
     mName = mName   ,style=c( freqZero=TRUE )
     ,fCol = list(
-         "hpn1" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
+         "hpn1" =list( rng=matrix( c(0,2 ,0,2) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
                         ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
                         ,evtMax.fCol=NULL
                     )
-        ,"hpnE" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+        ,"hpnE" =list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )
                         ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
                         ,evtMax.fCol=NULL
                     )
-        ,"col1Hpn1" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+        ,"col1Hpn1" =list( rng=matrix( c(0,2 ,0,2) ,ncol=2 )
                         ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
                         ,evtMax.fCol=NULL
                     )
-        ,"col1Hpn2" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+        ,"col1Hpn2" =list( rng=matrix( c(0,2 ,0,2) ,ncol=2 )
                         ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
                         ,evtMax.fCol=NULL
                     )
-        ,"col1Hpn3" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+        ,"col1Hpn3" =list( rng=matrix( c(0,2 ,0,2) ,ncol=2 )
                         ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
                         ,evtMax.fCol=NULL
                     )
-        ,"col1Hpn4" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+        ,"col1Hpn4" =list( rng=matrix( c(0,2 ,0,2) ,ncol=2 )
                         ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
                         ,evtMax.fCol=NULL
                     )
-        ,"col1Hpn5" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+        ,"col1Hpn5" =list( rng=matrix( c(0,2 ,0,2) ,ncol=2 )
                         ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
                         ,evtMax.fCol=NULL
                     )
-        ,"col1Hpn6" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+        ,"col1Hpn6" =list( rng=matrix( c(0,2 ,0,2) ,ncol=2 )
                         ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
                         ,evtMax.fCol=NULL
                     )
-        ,"colEHpn1" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+        ,"colEHpn1" =list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )
                         ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
                         ,evtMax.fCol=NULL
                     )
-        ,"colEHpn2" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+        ,"colEHpn2" =list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )
                         ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
                         ,evtMax.fCol=NULL
                     )
-        ,"colEHpn3" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+        ,"colEHpn3" =list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )
                         ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
                         ,evtMax.fCol=NULL
                     )
-        ,"colEHpn4" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+        ,"colEHpn4" =list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )
                         ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
                         ,evtMax.fCol=NULL
                     )
-        ,"colEHpn5" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+        ,"colEHpn5" =list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )
                         ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
                         ,evtMax.fCol=NULL
                     )
-        ,"colEHpn6" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+        ,"colEHpn6" =list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )
                         ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
                         ,evtMax.fCol=NULL
                     )
