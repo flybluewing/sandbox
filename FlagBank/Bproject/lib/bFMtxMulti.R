@@ -411,7 +411,7 @@ if( TRUE ){
 }
 
 mfName <- "mfLArn"
-if( FALSE ){
+if( TRUE ){
     bFMtxMFltLst[[mfName]] <- function( tgt.scMtx=NULL ){
         fltObj <- list( mInfo=list() )
         fltObj$mInfo$mName <- mfName
@@ -435,15 +435,31 @@ if( FALSE ){
             rowVal <- rep( 0 ,length(fltObj$mInfo$cName) )
             names(rowVal) <- fltObj$mInfo$cName
 
-            val <- rep( 0 ,length(fltObj$fltMNames) )
-            names(val) <- fltObj$fltMNames
-
-            cName <- "hpn1"
             for( mName in fltObj$fltMNames ){
-                rowVal["hpn1"] <- rowVal["hpn1"] + sum(mmMtxLst[[mName]][aIdx,] == 1)
-                rowVal["hpnE"] <- rowVal["hpnE"] + sum( !is.na(mmEMtxLst[[mName]][aIdx,]) )
+                rVal <- mmMtxLst[[mName]][aIdx,]
+                eVal <- mmEMtxLst[[mName]][aIdx,]
+                rowVal["hpn1"] <- rowVal["hpn1"] + sum( rVal == 1 )
+                rowVal["hpnE"] <- rowVal["hpnE"] + sum( !is.na(eVal) )
+
+                rowVal["col1Hpn1"] <- rowVal["col1Hpn1"] + sum( rVal[c("colA1","colB1")]==1 )
+                rowVal["col1Hpn2"] <- rowVal["col1Hpn2"] + sum( rVal[c("colA2","colB2")]==1 )
+                rowVal["col1Hpn3"] <- rowVal["col1Hpn3"] + sum( rVal[c("colA3","colB3")]==1 )
+                rowVal["col1Hpn4"] <- rowVal["col1Hpn4"] + sum( rVal[c("colA4","colB4")]==1 )
+                rowVal["col1Hpn5"] <- rowVal["col1Hpn5"] + sum( rVal[c("colA5","colB5")]==1 )
+                rowVal["col1Hpn6"] <- rowVal["col1Hpn6"] + sum( rVal[c("colA6","colB6")]==1 )
+
+                rowVal["colEHpn1"] <- rowVal["colEHpn1"] + sum( !is.na(eVal[c("colA1","colB1")]) )
+                rowVal["colEHpn2"] <- rowVal["colEHpn2"] + sum( !is.na(eVal[c("colA2","colB2")]) )
+                rowVal["colEHpn3"] <- rowVal["colEHpn3"] + sum( !is.na(eVal[c("colA3","colB3")]) )
+                rowVal["colEHpn4"] <- rowVal["colEHpn4"] + sum( !is.na(eVal[c("colA4","colB4")]) )
+                rowVal["colEHpn5"] <- rowVal["colEHpn5"] + sum( !is.na(eVal[c("colA5","colB5")]) )
+                rowVal["colEHpn6"] <- rowVal["colEHpn6"] + sum( !is.na(eVal[c("colA6","colB6")]) )
+
             }
 
+            cName <- c( "hpn1" ,"hpnE" ,"col1Hpn1" ,"col1Hpn2" ,"col1Hpn3" ,"col1Hpn4" ,"col1Hpn5" ,"col1Hpn6" )
+            ignoreCol <- cName[ rowVal[cName]==1 ]
+            rowVal[ ignoreCol ] <- 0
 
             return( rowVal )
 
@@ -458,9 +474,8 @@ if( FALSE ){
             #         mmMtxLst[[nIdx]][aIdx,] <- sample(1:5,length(mmMtxLst[[nIdx]][aIdx,]),replace=T)
             #     }
             # }
-
         }
-        
+
         fltObj$getScoreMtx <- function( scoreMtxLst ){
             # scoreMtx.grp <- getScoreMtx.grp( gEnv$allZoidMtx[allIdxF,,drop=F] ,filter.grp )
             # scoreMtxLst <- scoreMtx.grp$basic[[pName]]
@@ -468,10 +483,10 @@ if( FALSE ){
             mmMtxLst <- lapply( scoreMtxLst[fltObj$fltMNames] ,function(mtxObj){mtxObj$scoreMtx} )
             mmEMtxLst <- list()
             for( mName in fltObj$fltMNames ){
-                eMtx <- scoreMtxLst[[mName]]$scoreMtx
+                eMtx <- mmMtxLst[[mName]]
                 eMtx[,] <- NA
                 for( rIdx in seq_len(nrow(eMtx)) ){
-                    eMtx[rIdx,] <- bFCust.getEvt( scoreMtxLst[[mName]]$scoreMtx[rIdx,] ,scoreMtxCfg[[mName]]$fCol )["lev",]
+                    eMtx[rIdx,] <- bFCust.getEvt( mmMtxLst[[mName]][rIdx,] ,scoreMtxCfg[[mName]]$fCol )["lev",]
                 }
                 mmEMtxLst[[mName]] <- eMtx
             }

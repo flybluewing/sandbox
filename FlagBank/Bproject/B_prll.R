@@ -52,13 +52,16 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
         testSpan <- testSpan[sfc.InTest %in% 0:2]
     }
 
-    # hMtxLst <- B.makeHMtxLst( gEnv, allIdxLst, fRstLst, lastH=configH, tgt.scMtx )
-    testData.grp <- B.get_testData.grp( testSpan ,gEnv ,allIdxLst ,fRstLst ,tgt.scMtx=tgt.scMtx)
-    save( testData.grp ,file=sprintf("Obj_testData.grp.%d.%s.save",lastH,ifelse(is.null(tgt.scMtx),"all",tgt.scMtx) ) )
-    #   save( testData.grp ,file="Obj_testData.grp.save" )
-    #   load( sprintf("Obj_testData.grp.%d.%s.save",lastH,ifelse(is.null(tgt.scMtx),"all",tgt.scMtx) ) )
-    #           sprintf("Obj_testData.grp.%d.%s.save",lastH,"all") 
-    #           Obj_testData.grp.900.w100.save : configH <- lastH-100 (4hours)
+    if( TRUE ){     # RM_B_prll.R
+        load( sprintf("Obj_testData.grp.%d.%s.save",lastH,"all") )
+    } else {
+        # hMtxLst <- B.makeHMtxLst( gEnv, allIdxLst, fRstLst, lastH=configH, tgt.scMtx )
+        testData.grp <- B.get_testData.grp( testSpan ,gEnv ,allIdxLst ,fRstLst ,tgt.scMtx=tgt.scMtx)
+        save( testData.grp ,file=sprintf("Obj_testData.grp.%d.%s.save",lastH,ifelse(is.null(tgt.scMtx),"all",tgt.scMtx) ) )
+        #   save( testData.grp ,file="Obj_testData.grp.save" )
+        #   load( sprintf("Obj_testData.grp.%d.%s.save",lastH,ifelse(is.null(tgt.scMtx),"all",tgt.scMtx) ) )
+        #           Obj_testData.grp.900.w100.save : configH <- lastH-100 (4hours)
+    }
 
     #   B.get_cutRst1.grp()
     sfExport("testData.grp")    ;sfExport("tgt.scMtx")
@@ -106,8 +109,8 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
 
         for( crMName in names(bCMtxCfg) ){  # 멀티 cutRst1Score 에 대한 필터링.
             # bUtil.cut2()의 발전형.
-            # 멀티 scoreMtx에 대한 기준이 아님. 멀티 scoreMtx에 대한 기준은 bFMtxMulti.R에서 처리.
-            # bC.cut()에서는 sfcLate에 대해서만 처리. ( bFMtxMulti.R에서는 hName별 처리도 이루어짐. )
+            #   - 멀티 scoreMtx에 대한 기준이 아님. 멀티 scoreMtx에 대한 기준은 bFMtxMulti.R에서 처리.
+            #   - bC.cut()에서는 sfcLate에 대해서만 처리. ( bFMtxMulti.R에서는 hName별 처리도 이루어짐. )
             crCutRst <- bC.cut( crMName ,scoreMtx.grp ,cut.grp ,anaOnly=T )
             cutRst$cutInfoLst <- append( cutRst$cutInfoLst ,crCutRst$cutInfoLst )
         }
@@ -136,10 +139,8 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
         }
 
         # bS cutting.
-        cutRst.bS <- Bprll.bSCut( gEnv.w=gEnv.w
-                            ,stdZoid ,hMtxLst_bS=testData.grp$curHMtxLst_bS.grp[[as.character(curHIdx)]] 
-                            ,fHName=fHName  ,tgt.scMtx
-        )
+        hMtxLst_bS=testData.grp$curHMtxLst_bS.grp[[as.character(curHIdx)]] 
+        cutRst.bS <- Bprll.bSCut( gEnv.w=gEnv.w ,stdZoid ,hMtxLst_bS=hMtxLst_bS ,fHName=fHName ,tgt.scMtx )
         cutRst$cutInfoLst <- append( cutRst$cutInfoLst ,cutRst.bS$cutRst$cutInfoLst )
 
         # End of Cut Test
