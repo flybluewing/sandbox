@@ -243,6 +243,7 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
     B.rptCutRst1Score(      resultLst ,file=sprintf("CutRst1Score_%d",lastH)    )
     B.rptCutRst1Score_bS(   resultLst ,file=sprintf("CutRst1Score_%d_bS",lastH) )
 
+
+
+
 }
-
-
