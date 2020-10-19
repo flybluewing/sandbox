@@ -238,6 +238,8 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
     }
     rptBanTyp   <- c( "lastRawPair","aux_sfc" )
     rptBanM     <- c("score1")
+    rptBanM <- c( rptBanM ,c("scoreLAr13","scoreLAr24","scoreLVr13","scoreLVr24") )
+    rptBanM <- c( rptBanM ,c("scoreLAe13","scoreLAe24","scoreLVe13","scoreLVe24") )
     B.rptCutRstLst( cutRstLst ,file=rptFile ,rptBanTyp=rptBanTyp ,rptBanM=rptBanM )
 
     B.rptCutRst1Score(      resultLst ,file=sprintf("CutRst1Score_%d",lastH)    )

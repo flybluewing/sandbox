@@ -1203,4 +1203,532 @@ if( TRUE ){
 }
 
 
+mName <- "scoreLAc13"
+if( TRUE ){
+    bFMtxExtFltLst[[mName]] <- list()
+        # colA1  colA2  colA3  colA4  colA5  colA6
+        # colB1  colB2  colB3  colB4  colB5  colB6
+
+    fltCreater <- function( mName ){
+        fltObj <- list( mInfo=list() )
+        fltObj$mInfo$mName = mName
+        fltObj$mInfo$cName <- c(
+             "colAn_hpn1", "colBn_hpn1" ,"colAn_hpnE", "colBn_hpnE"
+            ,"colHpn1" ,"colHpn2" ,"colHpn3" ,"colHpn4" ,"colHpn5" ,"colHpn6"
+            ,"hpn1All" ,"hpnEAll"
+        )
+
+        fltObj$getScore <- function( score ){
+            #   score <- scoreMtx.grp$basic$basic[[mName]]$scoreMtx[1,]
+            rVal <- rep(0,length(fltObj$mInfo$cName))  ;names(rVal) <- fltObj$mInfo$cName
+            scrEvt <- bFCust.getEvt( score ,scoreMtxCfg[[fltObj$mInfo$mName]]$fCol )["lev",]
+            evtFlag <- !is.na(scrEvt)
+
+            colAn <- c( "colA1","colA2","colA3","colA4","colA5","colA6" )
+            colBn <- c( "colB1","colB2","colB3","colB4","colB5","colB6" )
+
+            rVal["colAn_hpn1"]  <- sum(score[colAn]==1 ,na.rm=T)
+            rVal["colBn_hpn1"]  <- sum(score[colBn]==1 ,na.rm=T)
+            rVal["colAn_hpnE"]  <- sum(evtFlag[colAn] ,na.rm=T)
+            rVal["colBn_hpnE"]  <- sum(evtFlag[colBn] ,na.rm=T)
+
+            rVal["colHpn1"]  <- sum(score[c("colA1","colB1")]>0 ,na.rm=T)
+            rVal["colHpn2"]  <- sum(score[c("colA2","colB2")]>0 ,na.rm=T)
+            rVal["colHpn3"]  <- sum(score[c("colA3","colB3")]>0 ,na.rm=T)
+            rVal["colHpn4"]  <- sum(score[c("colA4","colB4")]>0 ,na.rm=T)
+            rVal["colHpn5"]  <- sum(score[c("colA5","colB5")]>0 ,na.rm=T)
+            rVal["colHpn6"]  <- sum(score[c("colA6","colB6")]>0 ,na.rm=T)
+
+            rVal["hpn1All"]  <- sum(score==1 ,na.rm=T)
+            rVal["hpnEAll"]  <- sum(evtFlag  ,na.rm=T)
+
+            # 값이 1인것은 삭제. 별 의미가 없다.
+            cName <- c( "colAn_hpn1" ,"colBn_hpn1" ,"colHpn1" ,"colHpn2" ,"colHpn3" ,"colHpn4" ,"colHpn5" ,"colHpn6" ,"hpn1All" ,"hpnEAll" )
+            rVal[ cName[rVal[cName]==1] ] <- 0
+
+            # rVal["xxx"]  <- sum(score[c("xxx","xxx","xxx")] ,na.rm=T)
+            # rVal["xxx"]  <- sum(scrEvt[c("xxx","xxx")] ,na.rm=T)
+
+            return( rVal )
+        }
+        fltObj$getScoreMtx <- function( scoreMtx ){
+            rMtx <- matrix( 0 ,nrow=nrow(scoreMtx) ,ncol=length(fltObj$mInfo$cName) )
+            colnames(rMtx) <- fltObj$mInfo$cName
+
+            for( rIdx in seq_len(nrow(rMtx)) ){
+                rMtx[rIdx,] <- fltObj$getScore( scoreMtx[rIdx,] )
+            }
+            rownames(rMtx) <- rownames(scoreMtx)
+
+            return( rMtx )
+        }
+
+        return(fltObj)
+    }
+    bFMtxExtFltLst[[mName]]$filter01 <- fltCreater(mName)
+    # bFMtxExtFltLst[[mName]]$filter02 <- fltCreater(mName)
+}
+
+mName <- "scoreLAc24"
+if( TRUE ){
+    bFMtxExtFltLst[[mName]] <- list()
+        # colA1  colA2  colA3  colA4  colA5  colA6
+        # colB1  colB2  colB3  colB4  colB5  colB6
+
+    fltCreater <- function( mName ){
+        fltObj <- list( mInfo=list() )
+        fltObj$mInfo$mName = mName
+        fltObj$mInfo$cName <- c(
+             "colAn_hpn1", "colBn_hpn1" ,"colAn_hpnE", "colBn_hpnE"
+            ,"colHpn1" ,"colHpn2" ,"colHpn3" ,"colHpn4" ,"colHpn5" ,"colHpn6"
+            ,"hpn1All" ,"hpnEAll"
+        )
+
+        fltObj$getScore <- function( score ){
+            #   score <- scoreMtx.grp$basic$basic[[mName]]$scoreMtx[1,]
+            rVal <- rep(0,length(fltObj$mInfo$cName))  ;names(rVal) <- fltObj$mInfo$cName
+            scrEvt <- bFCust.getEvt( score ,scoreMtxCfg[[fltObj$mInfo$mName]]$fCol )["lev",]
+            evtFlag <- !is.na(scrEvt)
+
+            colAn <- c( "colA1","colA2","colA3","colA4","colA5","colA6" )
+            colBn <- c( "colB1","colB2","colB3","colB4","colB5","colB6" )
+
+            rVal["colAn_hpn1"]  <- sum(score[colAn]==1 ,na.rm=T)
+            rVal["colBn_hpn1"]  <- sum(score[colBn]==1 ,na.rm=T)
+            rVal["colAn_hpnE"]  <- sum(evtFlag[colAn] ,na.rm=T)
+            rVal["colBn_hpnE"]  <- sum(evtFlag[colBn] ,na.rm=T)
+
+            rVal["colHpn1"]  <- sum(score[c("colA1","colB1")]>0 ,na.rm=T)
+            rVal["colHpn2"]  <- sum(score[c("colA2","colB2")]>0 ,na.rm=T)
+            rVal["colHpn3"]  <- sum(score[c("colA3","colB3")]>0 ,na.rm=T)
+            rVal["colHpn4"]  <- sum(score[c("colA4","colB4")]>0 ,na.rm=T)
+            rVal["colHpn5"]  <- sum(score[c("colA5","colB5")]>0 ,na.rm=T)
+            rVal["colHpn6"]  <- sum(score[c("colA6","colB6")]>0 ,na.rm=T)
+
+            rVal["hpn1All"]  <- sum(score==1 ,na.rm=T)
+            rVal["hpnEAll"]  <- sum(evtFlag  ,na.rm=T)
+
+            # 값이 1인것은 삭제. 별 의미가 없다.
+            cName <- c( "colAn_hpn1" ,"colBn_hpn1" ,"colHpn1" ,"colHpn2" ,"colHpn3" ,"colHpn4" ,"colHpn5" ,"colHpn6" ,"hpn1All" ,"hpnEAll" )
+            rVal[ cName[rVal[cName]==1] ] <- 0
+
+            # rVal["xxx"]  <- sum(score[c("xxx","xxx","xxx")] ,na.rm=T)
+            # rVal["xxx"]  <- sum(scrEvt[c("xxx","xxx")] ,na.rm=T)
+
+            return( rVal )
+        }
+        fltObj$getScoreMtx <- function( scoreMtx ){
+            rMtx <- matrix( 0 ,nrow=nrow(scoreMtx) ,ncol=length(fltObj$mInfo$cName) )
+            colnames(rMtx) <- fltObj$mInfo$cName
+
+            for( rIdx in seq_len(nrow(rMtx)) ){
+                rMtx[rIdx,] <- fltObj$getScore( scoreMtx[rIdx,] )
+            }
+            rownames(rMtx) <- rownames(scoreMtx)
+
+            return( rMtx )
+        }
+
+        return(fltObj)
+    }
+    bFMtxExtFltLst[[mName]]$filter01 <- fltCreater(mName)
+    # bFMtxExtFltLst[[mName]]$filter02 <- fltCreater(mName)
+}
+
+mName <- "scoreLVc13"
+if( TRUE ){
+    bFMtxExtFltLst[[mName]] <- list()
+        # colA1  colA2  colA3  colA4  colA5  colA6
+        # colB1  colB2  colB3  colB4  colB5  colB6
+
+    fltCreater <- function( mName ){
+        fltObj <- list( mInfo=list() )
+        fltObj$mInfo$mName = mName
+        fltObj$mInfo$cName <- c(
+             "colAn_hpn1", "colBn_hpn1" ,"colAn_hpnE", "colBn_hpnE"
+            ,"colHpn1" ,"colHpn2" ,"colHpn3" ,"colHpn4" ,"colHpn5" ,"colHpn6"
+            ,"hpn1All" ,"hpnEAll"
+        )
+
+        fltObj$getScore <- function( score ){
+            #   score <- scoreMtx.grp$basic$basic[[mName]]$scoreMtx[1,]
+            rVal <- rep(0,length(fltObj$mInfo$cName))  ;names(rVal) <- fltObj$mInfo$cName
+            scrEvt <- bFCust.getEvt( score ,scoreMtxCfg[[fltObj$mInfo$mName]]$fCol )["lev",]
+            evtFlag <- !is.na(scrEvt)
+
+            colAn <- c( "colA1","colA2","colA3","colA4","colA5","colA6" )
+            colBn <- c( "colB1","colB2","colB3","colB4","colB5","colB6" )
+
+            rVal["colAn_hpn1"]  <- sum(score[colAn]==1 ,na.rm=T)
+            rVal["colBn_hpn1"]  <- sum(score[colBn]==1 ,na.rm=T)
+            rVal["colAn_hpnE"]  <- sum(evtFlag[colAn] ,na.rm=T)
+            rVal["colBn_hpnE"]  <- sum(evtFlag[colBn] ,na.rm=T)
+
+            rVal["colHpn1"]  <- sum(score[c("colA1","colB1")]>0 ,na.rm=T)
+            rVal["colHpn2"]  <- sum(score[c("colA2","colB2")]>0 ,na.rm=T)
+            rVal["colHpn3"]  <- sum(score[c("colA3","colB3")]>0 ,na.rm=T)
+            rVal["colHpn4"]  <- sum(score[c("colA4","colB4")]>0 ,na.rm=T)
+            rVal["colHpn5"]  <- sum(score[c("colA5","colB5")]>0 ,na.rm=T)
+            rVal["colHpn6"]  <- sum(score[c("colA6","colB6")]>0 ,na.rm=T)
+
+            rVal["hpn1All"]  <- sum(score==1 ,na.rm=T)
+            rVal["hpnEAll"]  <- sum(evtFlag  ,na.rm=T)
+
+            # 값이 1인것은 삭제. 별 의미가 없다.
+            cName <- c( "colAn_hpn1" ,"colBn_hpn1" ,"colHpn1" ,"colHpn2" ,"colHpn3" ,"colHpn4" ,"colHpn5" ,"colHpn6" ,"hpn1All" ,"hpnEAll" )
+            rVal[ cName[rVal[cName]==1] ] <- 0
+
+            # rVal["xxx"]  <- sum(score[c("xxx","xxx","xxx")] ,na.rm=T)
+            # rVal["xxx"]  <- sum(scrEvt[c("xxx","xxx")] ,na.rm=T)
+
+            return( rVal )
+        }
+        fltObj$getScoreMtx <- function( scoreMtx ){
+            rMtx <- matrix( 0 ,nrow=nrow(scoreMtx) ,ncol=length(fltObj$mInfo$cName) )
+            colnames(rMtx) <- fltObj$mInfo$cName
+
+            for( rIdx in seq_len(nrow(rMtx)) ){
+                rMtx[rIdx,] <- fltObj$getScore( scoreMtx[rIdx,] )
+            }
+            rownames(rMtx) <- rownames(scoreMtx)
+
+            return( rMtx )
+        }
+
+        return(fltObj)
+    }
+    bFMtxExtFltLst[[mName]]$filter01 <- fltCreater(mName)
+    # bFMtxExtFltLst[[mName]]$filter02 <- fltCreater(mName)
+}
+
+mName <- "scoreLVc24"
+if( TRUE ){
+    bFMtxExtFltLst[[mName]] <- list()
+        # colA1  colA2  colA3  colA4  colA5  colA6
+        # colB1  colB2  colB3  colB4  colB5  colB6
+
+    fltCreater <- function( mName ){
+        fltObj <- list( mInfo=list() )
+        fltObj$mInfo$mName = mName
+        fltObj$mInfo$cName <- c(
+             "colAn_hpn1", "colBn_hpn1" ,"colAn_hpnE", "colBn_hpnE"
+            ,"colHpn1" ,"colHpn2" ,"colHpn3" ,"colHpn4" ,"colHpn5" ,"colHpn6"
+            ,"hpn1All" ,"hpnEAll"
+        )
+
+        fltObj$getScore <- function( score ){
+            #   score <- scoreMtx.grp$basic$basic[[mName]]$scoreMtx[1,]
+            rVal <- rep(0,length(fltObj$mInfo$cName))  ;names(rVal) <- fltObj$mInfo$cName
+            scrEvt <- bFCust.getEvt( score ,scoreMtxCfg[[fltObj$mInfo$mName]]$fCol )["lev",]
+            evtFlag <- !is.na(scrEvt)
+
+            colAn <- c( "colA1","colA2","colA3","colA4","colA5","colA6" )
+            colBn <- c( "colB1","colB2","colB3","colB4","colB5","colB6" )
+
+            rVal["colAn_hpn1"]  <- sum(score[colAn]==1 ,na.rm=T)
+            rVal["colBn_hpn1"]  <- sum(score[colBn]==1 ,na.rm=T)
+            rVal["colAn_hpnE"]  <- sum(evtFlag[colAn] ,na.rm=T)
+            rVal["colBn_hpnE"]  <- sum(evtFlag[colBn] ,na.rm=T)
+
+            rVal["colHpn1"]  <- sum(score[c("colA1","colB1")]>0 ,na.rm=T)
+            rVal["colHpn2"]  <- sum(score[c("colA2","colB2")]>0 ,na.rm=T)
+            rVal["colHpn3"]  <- sum(score[c("colA3","colB3")]>0 ,na.rm=T)
+            rVal["colHpn4"]  <- sum(score[c("colA4","colB4")]>0 ,na.rm=T)
+            rVal["colHpn5"]  <- sum(score[c("colA5","colB5")]>0 ,na.rm=T)
+            rVal["colHpn6"]  <- sum(score[c("colA6","colB6")]>0 ,na.rm=T)
+
+            rVal["hpn1All"]  <- sum(score==1 ,na.rm=T)
+            rVal["hpnEAll"]  <- sum(evtFlag  ,na.rm=T)
+
+            # 값이 1인것은 삭제. 별 의미가 없다.
+            cName <- c( "colAn_hpn1" ,"colBn_hpn1" ,"colHpn1" ,"colHpn2" ,"colHpn3" ,"colHpn4" ,"colHpn5" ,"colHpn6" ,"hpn1All" ,"hpnEAll" )
+            rVal[ cName[rVal[cName]==1] ] <- 0
+
+            # rVal["xxx"]  <- sum(score[c("xxx","xxx","xxx")] ,na.rm=T)
+            # rVal["xxx"]  <- sum(scrEvt[c("xxx","xxx")] ,na.rm=T)
+
+            return( rVal )
+        }
+        fltObj$getScoreMtx <- function( scoreMtx ){
+            rMtx <- matrix( 0 ,nrow=nrow(scoreMtx) ,ncol=length(fltObj$mInfo$cName) )
+            colnames(rMtx) <- fltObj$mInfo$cName
+
+            for( rIdx in seq_len(nrow(rMtx)) ){
+                rMtx[rIdx,] <- fltObj$getScore( scoreMtx[rIdx,] )
+            }
+            rownames(rMtx) <- rownames(scoreMtx)
+
+            return( rMtx )
+        }
+
+        return(fltObj)
+    }
+    bFMtxExtFltLst[[mName]]$filter01 <- fltCreater(mName)
+    # bFMtxExtFltLst[[mName]]$filter02 <- fltCreater(mName)
+}
+
+
+mName <- "scoreLAf13"
+if( TRUE ){
+    bFMtxExtFltLst[[mName]] <- list()
+        # colA1  colA2  colA3  colA4  colA5  colA6
+        # colB1  colB2  colB3  colB4  colB5  colB6
+
+    fltCreater <- function( mName ){
+        fltObj <- list( mInfo=list() )
+        fltObj$mInfo$mName = mName
+        fltObj$mInfo$cName <- c(
+             "colAn_hpn1", "colBn_hpn1" ,"colAn_hpnE", "colBn_hpnE"
+            ,"colHpn1" ,"colHpn2" ,"colHpn3" ,"colHpn4" ,"colHpn5" ,"colHpn6"
+            ,"hpn1All" ,"hpnEAll"
+        )
+
+        fltObj$getScore <- function( score ){
+            #   score <- scoreMtx.grp$basic$basic[[mName]]$scoreMtx[1,]
+            rVal <- rep(0,length(fltObj$mInfo$cName))  ;names(rVal) <- fltObj$mInfo$cName
+            scrEvt <- bFCust.getEvt( score ,scoreMtxCfg[[fltObj$mInfo$mName]]$fCol )["lev",]
+            evtFlag <- !is.na(scrEvt)
+
+            colAn <- c( "colA1","colA2","colA3","colA4","colA5","colA6" )
+            colBn <- c( "colB1","colB2","colB3","colB4","colB5","colB6" )
+
+            rVal["colAn_hpn1"]  <- sum(score[colAn]==1 ,na.rm=T)
+            rVal["colBn_hpn1"]  <- sum(score[colBn]==1 ,na.rm=T)
+            rVal["colAn_hpnE"]  <- sum(evtFlag[colAn] ,na.rm=T)
+            rVal["colBn_hpnE"]  <- sum(evtFlag[colBn] ,na.rm=T)
+
+            rVal["colHpn1"]  <- sum(score[c("colA1","colB1")]>0 ,na.rm=T)
+            rVal["colHpn2"]  <- sum(score[c("colA2","colB2")]>0 ,na.rm=T)
+            rVal["colHpn3"]  <- sum(score[c("colA3","colB3")]>0 ,na.rm=T)
+            rVal["colHpn4"]  <- sum(score[c("colA4","colB4")]>0 ,na.rm=T)
+            rVal["colHpn5"]  <- sum(score[c("colA5","colB5")]>0 ,na.rm=T)
+            rVal["colHpn6"]  <- sum(score[c("colA6","colB6")]>0 ,na.rm=T)
+
+            rVal["hpn1All"]  <- sum(score==1 ,na.rm=T)
+            rVal["hpnEAll"]  <- sum(evtFlag  ,na.rm=T)
+
+            # 값이 1인것은 삭제. 별 의미가 없다.
+            cName <- c( "colAn_hpn1" ,"colBn_hpn1" ,"colHpn1" ,"colHpn2" ,"colHpn3" ,"colHpn4" ,"colHpn5" ,"colHpn6" ,"hpn1All" ,"hpnEAll" )
+            rVal[ cName[rVal[cName]==1] ] <- 0
+
+            # rVal["xxx"]  <- sum(score[c("xxx","xxx","xxx")] ,na.rm=T)
+            # rVal["xxx"]  <- sum(scrEvt[c("xxx","xxx")] ,na.rm=T)
+
+            return( rVal )
+        }
+        fltObj$getScoreMtx <- function( scoreMtx ){
+            rMtx <- matrix( 0 ,nrow=nrow(scoreMtx) ,ncol=length(fltObj$mInfo$cName) )
+            colnames(rMtx) <- fltObj$mInfo$cName
+
+            for( rIdx in seq_len(nrow(rMtx)) ){
+                rMtx[rIdx,] <- fltObj$getScore( scoreMtx[rIdx,] )
+            }
+            rownames(rMtx) <- rownames(scoreMtx)
+
+            return( rMtx )
+        }
+
+        return(fltObj)
+    }
+    bFMtxExtFltLst[[mName]]$filter01 <- fltCreater(mName)
+    # bFMtxExtFltLst[[mName]]$filter02 <- fltCreater(mName)
+}
+
+mName <- "scoreLAf24"
+if( TRUE ){
+    bFMtxExtFltLst[[mName]] <- list()
+        # colA1  colA2  colA3  colA4  colA5  colA6
+        # colB1  colB2  colB3  colB4  colB5  colB6
+
+    fltCreater <- function( mName ){
+        fltObj <- list( mInfo=list() )
+        fltObj$mInfo$mName = mName
+        fltObj$mInfo$cName <- c(
+             "colAn_hpn1", "colBn_hpn1" ,"colAn_hpnE", "colBn_hpnE"
+            ,"colHpn1" ,"colHpn2" ,"colHpn3" ,"colHpn4" ,"colHpn5" ,"colHpn6"
+            ,"hpn1All" ,"hpnEAll"
+        )
+
+        fltObj$getScore <- function( score ){
+            #   score <- scoreMtx.grp$basic$basic[[mName]]$scoreMtx[1,]
+            rVal <- rep(0,length(fltObj$mInfo$cName))  ;names(rVal) <- fltObj$mInfo$cName
+            scrEvt <- bFCust.getEvt( score ,scoreMtxCfg[[fltObj$mInfo$mName]]$fCol )["lev",]
+            evtFlag <- !is.na(scrEvt)
+
+            colAn <- c( "colA1","colA2","colA3","colA4","colA5","colA6" )
+            colBn <- c( "colB1","colB2","colB3","colB4","colB5","colB6" )
+
+            rVal["colAn_hpn1"]  <- sum(score[colAn]==1 ,na.rm=T)
+            rVal["colBn_hpn1"]  <- sum(score[colBn]==1 ,na.rm=T)
+            rVal["colAn_hpnE"]  <- sum(evtFlag[colAn] ,na.rm=T)
+            rVal["colBn_hpnE"]  <- sum(evtFlag[colBn] ,na.rm=T)
+
+            rVal["colHpn1"]  <- sum(score[c("colA1","colB1")]>0 ,na.rm=T)
+            rVal["colHpn2"]  <- sum(score[c("colA2","colB2")]>0 ,na.rm=T)
+            rVal["colHpn3"]  <- sum(score[c("colA3","colB3")]>0 ,na.rm=T)
+            rVal["colHpn4"]  <- sum(score[c("colA4","colB4")]>0 ,na.rm=T)
+            rVal["colHpn5"]  <- sum(score[c("colA5","colB5")]>0 ,na.rm=T)
+            rVal["colHpn6"]  <- sum(score[c("colA6","colB6")]>0 ,na.rm=T)
+
+            rVal["hpn1All"]  <- sum(score==1 ,na.rm=T)
+            rVal["hpnEAll"]  <- sum(evtFlag  ,na.rm=T)
+
+            # 값이 1인것은 삭제. 별 의미가 없다.
+            cName <- c( "colAn_hpn1" ,"colBn_hpn1" ,"colHpn1" ,"colHpn2" ,"colHpn3" ,"colHpn4" ,"colHpn5" ,"colHpn6" ,"hpn1All" ,"hpnEAll" )
+            rVal[ cName[rVal[cName]==1] ] <- 0
+
+            # rVal["xxx"]  <- sum(score[c("xxx","xxx","xxx")] ,na.rm=T)
+            # rVal["xxx"]  <- sum(scrEvt[c("xxx","xxx")] ,na.rm=T)
+
+            return( rVal )
+        }
+        fltObj$getScoreMtx <- function( scoreMtx ){
+            rMtx <- matrix( 0 ,nrow=nrow(scoreMtx) ,ncol=length(fltObj$mInfo$cName) )
+            colnames(rMtx) <- fltObj$mInfo$cName
+
+            for( rIdx in seq_len(nrow(rMtx)) ){
+                rMtx[rIdx,] <- fltObj$getScore( scoreMtx[rIdx,] )
+            }
+            rownames(rMtx) <- rownames(scoreMtx)
+
+            return( rMtx )
+        }
+
+        return(fltObj)
+    }
+    bFMtxExtFltLst[[mName]]$filter01 <- fltCreater(mName)
+    # bFMtxExtFltLst[[mName]]$filter02 <- fltCreater(mName)
+}
+
+mName <- "scoreLVf13"
+if( TRUE ){
+    bFMtxExtFltLst[[mName]] <- list()
+        # colA1  colA2  colA3  colA4  colA5  colA6
+        # colB1  colB2  colB3  colB4  colB5  colB6
+
+    fltCreater <- function( mName ){
+        fltObj <- list( mInfo=list() )
+        fltObj$mInfo$mName = mName
+        fltObj$mInfo$cName <- c(
+             "colAn_hpn1", "colBn_hpn1" ,"colAn_hpnE", "colBn_hpnE"
+            ,"colHpn1" ,"colHpn2" ,"colHpn3" ,"colHpn4" ,"colHpn5" ,"colHpn6"
+            ,"hpn1All" ,"hpnEAll"
+        )
+
+        fltObj$getScore <- function( score ){
+            #   score <- scoreMtx.grp$basic$basic[[mName]]$scoreMtx[1,]
+            rVal <- rep(0,length(fltObj$mInfo$cName))  ;names(rVal) <- fltObj$mInfo$cName
+            scrEvt <- bFCust.getEvt( score ,scoreMtxCfg[[fltObj$mInfo$mName]]$fCol )["lev",]
+            evtFlag <- !is.na(scrEvt)
+
+            colAn <- c( "colA1","colA2","colA3","colA4","colA5","colA6" )
+            colBn <- c( "colB1","colB2","colB3","colB4","colB5","colB6" )
+
+            rVal["colAn_hpn1"]  <- sum(score[colAn]==1 ,na.rm=T)
+            rVal["colBn_hpn1"]  <- sum(score[colBn]==1 ,na.rm=T)
+            rVal["colAn_hpnE"]  <- sum(evtFlag[colAn] ,na.rm=T)
+            rVal["colBn_hpnE"]  <- sum(evtFlag[colBn] ,na.rm=T)
+
+            rVal["colHpn1"]  <- sum(score[c("colA1","colB1")]>0 ,na.rm=T)
+            rVal["colHpn2"]  <- sum(score[c("colA2","colB2")]>0 ,na.rm=T)
+            rVal["colHpn3"]  <- sum(score[c("colA3","colB3")]>0 ,na.rm=T)
+            rVal["colHpn4"]  <- sum(score[c("colA4","colB4")]>0 ,na.rm=T)
+            rVal["colHpn5"]  <- sum(score[c("colA5","colB5")]>0 ,na.rm=T)
+            rVal["colHpn6"]  <- sum(score[c("colA6","colB6")]>0 ,na.rm=T)
+
+            rVal["hpn1All"]  <- sum(score==1 ,na.rm=T)
+            rVal["hpnEAll"]  <- sum(evtFlag  ,na.rm=T)
+
+            # 값이 1인것은 삭제. 별 의미가 없다.
+            cName <- c( "colAn_hpn1" ,"colBn_hpn1" ,"colHpn1" ,"colHpn2" ,"colHpn3" ,"colHpn4" ,"colHpn5" ,"colHpn6" ,"hpn1All" ,"hpnEAll" )
+            rVal[ cName[rVal[cName]==1] ] <- 0
+
+            # rVal["xxx"]  <- sum(score[c("xxx","xxx","xxx")] ,na.rm=T)
+            # rVal["xxx"]  <- sum(scrEvt[c("xxx","xxx")] ,na.rm=T)
+
+            return( rVal )
+        }
+        fltObj$getScoreMtx <- function( scoreMtx ){
+            rMtx <- matrix( 0 ,nrow=nrow(scoreMtx) ,ncol=length(fltObj$mInfo$cName) )
+            colnames(rMtx) <- fltObj$mInfo$cName
+
+            for( rIdx in seq_len(nrow(rMtx)) ){
+                rMtx[rIdx,] <- fltObj$getScore( scoreMtx[rIdx,] )
+            }
+            rownames(rMtx) <- rownames(scoreMtx)
+
+            return( rMtx )
+        }
+
+        return(fltObj)
+    }
+    bFMtxExtFltLst[[mName]]$filter01 <- fltCreater(mName)
+    # bFMtxExtFltLst[[mName]]$filter02 <- fltCreater(mName)
+}
+
+mName <- "scoreLVf24"
+if( TRUE ){
+    bFMtxExtFltLst[[mName]] <- list()
+        # colA1  colA2  colA3  colA4  colA5  colA6
+        # colB1  colB2  colB3  colB4  colB5  colB6
+
+    fltCreater <- function( mName ){
+        fltObj <- list( mInfo=list() )
+        fltObj$mInfo$mName = mName
+        fltObj$mInfo$cName <- c(
+             "colAn_hpn1", "colBn_hpn1" ,"colAn_hpnE", "colBn_hpnE"
+            ,"colHpn1" ,"colHpn2" ,"colHpn3" ,"colHpn4" ,"colHpn5" ,"colHpn6"
+            ,"hpn1All" ,"hpnEAll"
+        )
+
+        fltObj$getScore <- function( score ){
+            #   score <- scoreMtx.grp$basic$basic[[mName]]$scoreMtx[1,]
+            rVal <- rep(0,length(fltObj$mInfo$cName))  ;names(rVal) <- fltObj$mInfo$cName
+            scrEvt <- bFCust.getEvt( score ,scoreMtxCfg[[fltObj$mInfo$mName]]$fCol )["lev",]
+            evtFlag <- !is.na(scrEvt)
+
+            colAn <- c( "colA1","colA2","colA3","colA4","colA5","colA6" )
+            colBn <- c( "colB1","colB2","colB3","colB4","colB5","colB6" )
+
+            rVal["colAn_hpn1"]  <- sum(score[colAn]==1 ,na.rm=T)
+            rVal["colBn_hpn1"]  <- sum(score[colBn]==1 ,na.rm=T)
+            rVal["colAn_hpnE"]  <- sum(evtFlag[colAn] ,na.rm=T)
+            rVal["colBn_hpnE"]  <- sum(evtFlag[colBn] ,na.rm=T)
+
+            rVal["colHpn1"]  <- sum(score[c("colA1","colB1")]>0 ,na.rm=T)
+            rVal["colHpn2"]  <- sum(score[c("colA2","colB2")]>0 ,na.rm=T)
+            rVal["colHpn3"]  <- sum(score[c("colA3","colB3")]>0 ,na.rm=T)
+            rVal["colHpn4"]  <- sum(score[c("colA4","colB4")]>0 ,na.rm=T)
+            rVal["colHpn5"]  <- sum(score[c("colA5","colB5")]>0 ,na.rm=T)
+            rVal["colHpn6"]  <- sum(score[c("colA6","colB6")]>0 ,na.rm=T)
+
+            rVal["hpn1All"]  <- sum(score==1 ,na.rm=T)
+            rVal["hpnEAll"]  <- sum(evtFlag  ,na.rm=T)
+
+            # 값이 1인것은 삭제. 별 의미가 없다.
+            cName <- c( "colAn_hpn1" ,"colBn_hpn1" ,"colHpn1" ,"colHpn2" ,"colHpn3" ,"colHpn4" ,"colHpn5" ,"colHpn6" ,"hpn1All" ,"hpnEAll" )
+            rVal[ cName[rVal[cName]==1] ] <- 0
+
+            # rVal["xxx"]  <- sum(score[c("xxx","xxx","xxx")] ,na.rm=T)
+            # rVal["xxx"]  <- sum(scrEvt[c("xxx","xxx")] ,na.rm=T)
+
+            return( rVal )
+        }
+        fltObj$getScoreMtx <- function( scoreMtx ){
+            rMtx <- matrix( 0 ,nrow=nrow(scoreMtx) ,ncol=length(fltObj$mInfo$cName) )
+            colnames(rMtx) <- fltObj$mInfo$cName
+
+            for( rIdx in seq_len(nrow(rMtx)) ){
+                rMtx[rIdx,] <- fltObj$getScore( scoreMtx[rIdx,] )
+            }
+            rownames(rMtx) <- rownames(scoreMtx)
+
+            return( rMtx )
+        }
+
+        return(fltObj)
+    }
+    bFMtxExtFltLst[[mName]]$filter01 <- fltCreater(mName)
+    # bFMtxExtFltLst[[mName]]$filter02 <- fltCreater(mName)
+}
 
