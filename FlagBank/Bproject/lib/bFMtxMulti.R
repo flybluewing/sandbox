@@ -510,7 +510,7 @@ if( TRUE ){
 }
 
 mfName <- "mfLVrn"
-if( FALSE ){
+if( TRUE ){
     bFMtxMFltLst[[mfName]] <- function( tgt.scMtx=NULL ){
         fltObj <- list( mInfo=list() )
         fltObj$mInfo$mName <- mfName
@@ -609,7 +609,7 @@ if( FALSE ){
 }
 
 mfName <- "mfLAVrn"
-if( FALSE ){
+if( TRUE ){
     bFMtxMFltLst[[mfName]] <- function( tgt.scMtx=NULL ){
         fltObj <- list( mInfo=list() )
         fltObj$mInfo$mName <- mfName
