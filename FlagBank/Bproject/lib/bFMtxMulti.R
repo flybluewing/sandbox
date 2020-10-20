@@ -807,7 +807,6 @@ if( TRUE ){
     }
 }
 
-
 mfName <- "mfLVen"
 if( TRUE ){
     bFMtxMFltLst[[mfName]] <- function( tgt.scMtx=NULL ){
@@ -908,17 +907,17 @@ if( TRUE ){
 }
 
 
-mfName <- "mfLAVen"
-if( FALSE ){
+mfName <- "mfLAcn"
+if( TRUE ){
     bFMtxMFltLst[[mfName]] <- function( tgt.scMtx=NULL ){
         fltObj <- list( mInfo=list() )
         fltObj$mInfo$mName <- mfName
         fltObj$available <- TRUE    # bFCust.getFCustGrp() 에서 확인됨.
 
-        fltObj$fltMNames <- c("scoreLAe13","scoreLAe24","scoreLVe13","scoreLVe24")
+        fltObj$fltMNames <- c("scoreLAc13","scoreLAc24")
         fltObj$mInfo$cName <- c( "hpn1","hpnE"
-                                ,"col1Hpn1" ,"col1Hpn2" ,"col1Hpn3" ,"col1Hpn4" ,"col1Hpn5" ,"col1Hpn6"
-                                ,"colEHpn1" ,"colEHpn2" ,"colEHpn3" ,"colEHpn4" ,"colEHpn5" ,"colEHpn6"
+                                ,"col1Hpn1" ,"col1Hpn2" ,"col1Hpn3" ,"col1Hpn4" ,"col1Hpn5"
+                                ,"colEHpn1" ,"colEHpn2" ,"colEHpn3" ,"colEHpn4" ,"colEHpn5"
 		)
 
         # tgt.scMtx가 fltObj$fltMNames 를 모두 포함하고 있는 지 체크.
@@ -944,18 +943,16 @@ if( FALSE ){
                 rowVal["col1Hpn3"] <- rowVal["col1Hpn3"] + sum( rVal[c("colA3","colB3")]==1 )
                 rowVal["col1Hpn4"] <- rowVal["col1Hpn4"] + sum( rVal[c("colA4","colB4")]==1 )
                 rowVal["col1Hpn5"] <- rowVal["col1Hpn5"] + sum( rVal[c("colA5","colB5")]==1 )
-                rowVal["col1Hpn6"] <- rowVal["col1Hpn6"] + sum( rVal[c("colA6","colB6")]==1 )
 
                 rowVal["colEHpn1"] <- rowVal["colEHpn1"] + sum( !is.na(eVal[c("colA1","colB1")]) )
                 rowVal["colEHpn2"] <- rowVal["colEHpn2"] + sum( !is.na(eVal[c("colA2","colB2")]) )
                 rowVal["colEHpn3"] <- rowVal["colEHpn3"] + sum( !is.na(eVal[c("colA3","colB3")]) )
                 rowVal["colEHpn4"] <- rowVal["colEHpn4"] + sum( !is.na(eVal[c("colA4","colB4")]) )
                 rowVal["colEHpn5"] <- rowVal["colEHpn5"] + sum( !is.na(eVal[c("colA5","colB5")]) )
-                rowVal["colEHpn6"] <- rowVal["colEHpn6"] + sum( !is.na(eVal[c("colA6","colB6")]) )
 
             }
 
-            cName <- c( "hpn1" ,"hpnE" ,"col1Hpn1" ,"col1Hpn2" ,"col1Hpn3" ,"col1Hpn4" ,"col1Hpn5" ,"col1Hpn6" )
+            cName <- c( "hpn1" ,"hpnE" ,"col1Hpn1" ,"col1Hpn2" ,"col1Hpn3" ,"col1Hpn4" ,"col1Hpn5" )
             ignoreCol <- cName[ rowVal[cName]==1 ]
             rowVal[ ignoreCol ] <- 0
 
@@ -1008,7 +1005,7 @@ if( FALSE ){
 }
 
 
-mfName <- "mfLAcn"
+
 
 mfName <- "mfLVcn"
 
