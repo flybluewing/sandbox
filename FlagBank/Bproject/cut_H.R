@@ -37,39 +37,39 @@ cutH.InitialCut <- function( gEnv ,allIdxF ,blk ,filter.grp ,cut.grp ,fHName=NUL
     timeCost <- c( timeCost ,"scoreLAf13"=70 ,"scoreLAf24"=70 ,"scoreLVf13"=70 ,"scoreLVf24"=70 )
     if( FALSE ){ # aux info
         # mName 별 소요시간 참고(aIdx 5000개). bScr도 나중에 추가할 것.
-        # score1     is done.(cut 273/1000) cost: 24.0secs
-        # score2     is done.(cut 371/1000) cost: 13.5secs
-        # score3     is done.(cut 210/1000) cost: 11.1secs
-        # score4     is done.(cut  38/1000) cost: 34.4secs
-        # score5     is done.(cut 465/1000) cost: 58.2secs
-        # score6     is done.(cut  92/1000) cost: 32.2secs
-        # score7     is done.(cut  11/1000) cost: 34.8secs
-        # score8     is done.(cut 271/1000) cost: 15.4secs
-        # score9     is done.(cut 165/1000) cost: 20.8secs
-        # bScr01     is done.(cut 138/1000) cost:  0.3secs
-        # bScr02     is done.(cut 212/1000) cost:  0.7secs
-        # scoreA     is done.(cut 139/1000) cost: 18.1secs
-        # scoreB     is done.(cut 206/1000) cost: 14.7secs
-        # scoreC     is done.(cut 207/1000) cost: 14.9secs
-        # scoreD     is done.(cut 159/1000) cost: 15.1secs
-        # scoreE     is done.(cut 212/1000) cost: 20.8secs
-        # scoreF     is done.(cut  22/1000) cost:  3.8secs
-        # scoreLAr13 is done.(cut 4/1000)   cost:  7.6secs
-        # scoreLAr24 is done.(cut 3/1000)   cost:  7.4secs
-        # scoreLVr13 is done.(cut 1/1000)   cost:  7.6secs
-        # scoreLVr24 is done.(cut 4/1000)   cost:  7.5secs
-        # scoreLAe13 is done.(cut 39/1000)  cost:  7.6secs
-        # scoreLAe24 is done.(cut 39/1000)  cost:  7.3secs
-        # scoreLVe13 is done.(cut 45/1000)  cost:  7.5secs
-        # scoreLVe24 is done.(cut 29/1000)  cost:  7.3secs
-        # scoreLAc13 is done.(cut 19/1000)  cost:  6.6secs
-        # scoreLAc24 is done.(cut 10/1000)  cost:  6.6secs
-        # scoreLVc13 is done.(cut 16/1000)  cost:  6.7secs
-        # scoreLVc24 is done.(cut 12/1000)  cost:  6.5secs
-        # scoreLAf13 is done.(cut 32/1000)  cost:  7.6secs
-        # scoreLAf24 is done.(cut 2/1000)   cost:  7.6secs
-        # scoreLVf13 is done.(cut 20/1000)  cost:  7.4secs
-        # scoreLVf24 is done.(cut 2/1000)   cost:  7.7secs
+        # score1 is done.(cut 2923/10000)   cost: 11.4mins
+        # score2 is done.(cut 4551/10000)   cost:  8.8mins
+        # score3 is done.(cut 2269/10000)   cost:  6.5mins
+        # score4 is done.(cut 800/10000)   cost: 23.5mins
+        # score5 is done.(cut 5731/10000)   cost: 37.5mins
+        # score6 is done.(cut 2040/10000)   cost: 23.1mins
+        # score7 is done.(cut 344/10000)   cost: 26.7mins
+        # score8 is done.(cut 3174/10000)   cost: 11.4mins
+        # score9 is done.(cut 1321/10000)   cost: 13.9mins
+        # bScr01 is done.(cut 1087/10000)   cost: 14.2secs
+        # bScr02 is done.(cut 555/10000)   cost: 31.1secs
+        # scoreA is done.(cut 1085/10000)   cost: 12.8mins
+        # scoreB is done.(cut 1469/10000)   cost: 10.6mins
+        # scoreC is done.(cut 1617/10000)   cost: 11.0mins
+        # scoreD is done.(cut 729/10000)   cost: 11.2mins
+        # scoreE is done.(cut 2727/10000)   cost: 15.5mins
+        # scoreF is done.(cut  22/10000)   cost:  3.3mins
+        # scoreLAr13 is done.(cut 213/10000)   cost:  8.3mins
+        # scoreLAr24 is done.(cut 156/10000)   cost:  7.8mins
+        # scoreLVr13 is done.(cut 163/10000)   cost:  7.9mins
+        # scoreLVr24 is done.(cut 165/10000)   cost:  7.9mins
+        # scoreLAe13 is done.(cut 320/10000)   cost:  8.0mins
+        # scoreLAe24 is done.(cut 594/10000)   cost:  7.9mins
+        # scoreLVe13 is done.(cut 482/10000)   cost:  7.8mins
+        # scoreLVe24 is done.(cut 535/10000)   cost:  7.9mins
+        # scoreLAc13 is done.(cut  65/10000)   cost:  7.3mins
+        # scoreLAc24 is done.(cut 250/10000)   cost:  7.2mins
+        # scoreLVc13 is done.(cut 268/10000)   cost:  7.2mins
+        # scoreLVc24 is done.(cut 370/10000)   cost:  7.1mins
+        # scoreLAf13 is done.(cut  44/10000)   cost:  7.4mins
+        # scoreLAf24 is done.(cut 217/10000)   cost:  7.8mins
+        # scoreLVf13 is done.(cut  46/10000)   cost:  7.4mins
+        # scoreLVf24 is done.(cut 186/10000)   cost:  7.9mins
     }
 
     mtxNames <- names(timeCost)[order(timeCost)]    # 가장 소요시작 작은 것 부터 mtxNames 등록
