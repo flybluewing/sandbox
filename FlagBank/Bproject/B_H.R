@@ -681,6 +681,80 @@ B.rptCutRst1Score <- function( resultLst ,file="CutRst1Score" ){
 
 }
 
+B.rptCutRst1Score_byMtx <- function( resultLst ,mName ,file="cutRst1Score"){
+
+    removeZeroRow <- function( mtx ){
+        flag <- apply( mtx ,1 ,function(rDat){all(rDat==0)})
+        mtx <- mtx[!flag,]
+        rownames(mtx) <- rownames(mtx)[flag]
+        return( mtx )
+    }
+
+    logSummMtx <- k.getFlogObj( sprintf("./report/workRpt/%s_%s_summMtx.txt",file,mName) )
+    logSummMtxReb <- k.getFlogObj( sprintf("./report/workRpt/%s_%s_summMtxReb.txt",file,mName) )
+    logScMtxSz <- k.getFlogObj( sprintf("./report/workRpt/%s_%s_scMtxSz.txt",file,mName) )
+
+    logSummMtx$fLogStr("Start by B.rptCutRst1Score_byMtx()",pTime=T,pAppend=F)
+    logSummMtxReb$fLogStr("Start by B.rptCutRst1Score_byMtx()",pTime=T,pAppend=F)
+    logScMtxSz$fLogStr("Start by B.rptCutRst1Score_byMtx()",pTime=T,pAppend=F)
+
+    summMtxLst <- list()
+    for( hIdx in names(resultLst) ){
+        if( is.null(resultLst[[hIdx]]$cutRst1Score) ) next
+
+        rptStr <- sprintf("hIdx:%s",hIdx)
+        logSummMtx$fLogStr(     rptStr)
+        logSummMtxReb$fLogStr(  rptStr)
+        logScMtxSz$fLogStr(     rptStr)
+
+
+        cutRst1Score <- resultLst[[hIdx]]$cutRst1Score$aLst[[1]]
+
+        hNameSet <- names(cutRst1Score)
+        mNameSet <- names(cutRst1Score[[ hNameSet[1] ]]$basic)
+        if( !(mName %in% mNameSet) )    next
+
+        # summMtx
+        rawMtx <- NULL  ;evtMtx <- NULL
+        for( hName in hNameSet ){
+            summObj <- cutRst1Score[[ hName ]]$basic[[mName]]$summ
+            rawMtx <- rbind( rawMtx ,summObj$summMtx["raw",] )
+            evtMtx <- rbind( evtMtx ,summObj$summMtx["evt",] )
+        }
+        rownames(rawMtx) <- hNameSet        ;rownames(evtMtx) <- hNameSet
+        logSummMtx$fLogMtx( removeZeroRow(rawMtx) ,pIndent="    ")
+        logSummMtx$fLogMtx( removeZeroRow(evtMtx) ,pIndent="    ")
+
+        # summMtx.reb
+        rawMtx <- NULL  ;evtMtx <- NULL
+        for( hName in hNameSet ){
+            summObj <- cutRst1Score[[ hName ]]$basic[[mName]]$summ
+            rawMtx <- rbind( rawMtx ,summObj$summMtx.reb["raw",] )
+            evtMtx <- rbind( evtMtx ,summObj$summMtx.reb["evt",] )
+        }
+        rownames(rawMtx) <- hNameSet        ;rownames(evtMtx) <- hNameSet
+        logSummMtxReb$fLogMtx( removeZeroRow(rawMtx) ,pIndent="    ")
+        logSummMtxReb$fLogMtx( removeZeroRow(evtMtx) ,pIndent="    ")
+
+        # scMtx.sz
+        rawMtx <- NULL  ;evtMtx <- NULL
+        for( hName in hNameSet ){
+            summObj <- cutRst1Score[[ hName ]]$basic[[mName]]$summ
+            rawMtx <- rbind( rawMtx ,summObj$scMtx.sz["rebCnt",] )
+            evtMtx <- rbind( evtMtx ,summObj$scMtx.sz["rebDup",] )
+        }
+        rownames(rawMtx) <- hNameSet        ;rownames(evtMtx) <- hNameSet
+        logScMtxSz$fLogMtx( removeZeroRow(rawMtx) ,pIndent="    ")
+        logScMtxSz$fLogMtx( removeZeroRow(evtMtx) ,pIndent="    ")
+
+    }
+
+    logSummMtx$fLogStr("End",pTime=T)
+    logSummMtxReb$fLogStr("End",pTime=T)
+    logScMtxSz$fLogStr("End",pTime=T)
+
+}
+
 B.rptCutRst1Score_bS <- function( resultLst ,file="CutRst1Score_bS" ){
 
     getShortPhaseName <- function( phaseName ){

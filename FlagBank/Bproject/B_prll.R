@@ -243,8 +243,16 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
     # rptBanM <- c( rptBanM ,c("scoreLAc13","scoreLAc24","scoreLVc13","scoreLVc24") )
     B.rptCutRstLst( cutRstLst ,file=rptFile ,rptBanTyp=rptBanTyp ,rptBanM=rptBanM )
 
-    B.rptCutRst1Score(      resultLst ,file=sprintf("CutRst1Score_%d",lastH)    )
-    B.rptCutRst1Score_bS(   resultLst ,file=sprintf("CutRst1Score_%d_bS",lastH) )
+    if( FALSE ){
+        B.rptCutRst1Score(      resultLst ,file=sprintf("CutRst1Score_%d",lastH)    )
+        B.rptCutRst1Score_bS(   resultLst ,file=sprintf("CutRst1Score_%d_bS",lastH) )
+
+        mNameSet <- c("scoreLAr13","scoreLAr24","scoreLVr13","scoreLVr24")
+        for( mName in mNameSet ){
+            rptFile <- sprintf("H%d_cutRst1Score",lastH)
+            B.rptCutRst1Score_byMtx( resultLst ,mName ,file=rptFile)
+        }
+    }
 
 
 
