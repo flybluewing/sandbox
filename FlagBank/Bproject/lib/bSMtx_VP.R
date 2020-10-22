@@ -257,9 +257,9 @@ bS.vp_zw <- function( gEnv, aZoidMtx ){
         }
 
         aObj$miIdStr <- miIdStr
-        aObj$aZoidMtx <- aZoidMtx[,1:5]
+        aObj$aZoidMtx <- aZoidMtx[,1:5,drop=F]
         aObj$cStepMtx <- aZoidMtx[,2:6,drop=F] - aZoidMtx[,1:5,drop=F]
-        aObj$fStepMtx <- fStepMtx[,1:5]
+        aObj$fStepMtx <- fStepMtx[,1:5,drop=F]
 
         rownames(aObj$aZoidMtx) <- miIdStr
         rownames(aObj$cStepMtx) <- miIdStr
