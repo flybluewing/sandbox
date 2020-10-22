@@ -1442,13 +1442,426 @@ if( TRUE ){
     }
 }
 
-
-
 mfName <- "mfLAecf24"
+if( TRUE ){
+    bFMtxMFltLst[[mfName]] <- function( tgt.scMtx=NULL ){
+        fltObj <- list( mInfo=list() )
+        fltObj$mInfo$mName <- mfName
+        fltObj$available <- TRUE    # bFCust.getFCustGrp() 에서 확인됨.
+
+        fltObj$fltMNames <- c("scoreLAe24","scoreLAc24","scoreLAf24")
+        fltObj$mInfo$cName <- c( "hpnA1","hpnAE","hpnB1","hpnBE"
+                                ,"aCol1Hpn1" ,"aCol1Hpn2" ,"aCol1Hpn3" ,"aCol1Hpn4" ,"aCol1Hpn5" ,"aCol1Hpn6"
+                                ,"aColEHpn1" ,"aColEHpn2" ,"aColEHpn3" ,"aColEHpn4" ,"aColEHpn5" ,"aColEHpn6"
+                                ,"bCol1Hpn1" ,"bCol1Hpn2" ,"bCol1Hpn3" ,"bCol1Hpn4" ,"bCol1Hpn5" ,"bCol1Hpn6"
+                                ,"bColEHpn1" ,"bColEHpn2" ,"bColEHpn3" ,"bColEHpn4" ,"bColEHpn5" ,"bColEHpn6"
+		)
+
+        # tgt.scMtx가 fltObj$fltMNames 를 모두 포함하고 있는 지 체크.
+        if( !is.null(tgt.scMtx) ){
+            #   scoreMtxLst는 체크하지 않는다. 차라리 나중에 에러나는 게 인지하기 쉬우므로.            
+            mFlag <- fltObj$fltMNames %in% tgt.scMtx
+            fltObj$available <- ifelse( all(mFlag) ,fltObj$available ,FALSE )
+        }
+
+        fltObj$getScore <- function( mmMtxLst ,mmEMtxLst ,aIdx ){
+
+            rowVal <- rep( 0 ,length(fltObj$mInfo$cName) )
+            names(rowVal) <- fltObj$mInfo$cName
+
+            for( mName in fltObj$fltMNames ){
+                rVal <- mmMtxLst[[mName]][aIdx,]
+                eVal <- mmEMtxLst[[mName]][aIdx,]
+
+                cStepFlag <- mName=="scoreLAc24"
+
+                colA <- c( "colA1" ,"colA2" ,"colA3" ,"colA4" ,"colA5" ,"colA6" )
+                colB <- c( "colB1" ,"colB2" ,"colB3" ,"colB4" ,"colB5" ,"colB6" )
+                if( cStepFlag ){
+                    colA <- c( "colA1" ,"colA2" ,"colA3" ,"colA4" ,"colA5" )
+                    colB <- c( "colB1" ,"colB2" ,"colB3" ,"colB4" ,"colB5" )
+                }
+
+                rowVal["hpnA1"] <- rowVal["hpnA1"] + sum( rVal[colA] == 1 )
+                rowVal["hpnAE"] <- rowVal["hpnAE"] + sum( !is.na(eVal[colA]) )
+                rowVal["hpnB1"] <- rowVal["hpnB1"] + sum( rVal[colB] == 1 )
+                rowVal["hpnBE"] <- rowVal["hpnBE"] + sum( !is.na(eVal[colB]) )
+
+                rowVal["aCol1Hpn1"] <- rowVal["aCol1Hpn1"] + sum( rVal["colA1"]==1 )
+                rowVal["aCol1Hpn2"] <- rowVal["aCol1Hpn2"] + sum( rVal["colA2"]==1 )
+                rowVal["aCol1Hpn3"] <- rowVal["aCol1Hpn3"] + sum( rVal["colA3"]==1 )
+                rowVal["aCol1Hpn4"] <- rowVal["aCol1Hpn4"] + sum( rVal["colA4"]==1 )
+                rowVal["aCol1Hpn5"] <- rowVal["aCol1Hpn5"] + sum( rVal["colA5"]==1 )
+                rowVal["bCol1Hpn1"] <- rowVal["bCol1Hpn1"] + sum( rVal["colB1"]==1 )
+                rowVal["bCol1Hpn2"] <- rowVal["bCol1Hpn2"] + sum( rVal["colB2"]==1 )
+                rowVal["bCol1Hpn3"] <- rowVal["bCol1Hpn3"] + sum( rVal["colB3"]==1 )
+                rowVal["bCol1Hpn4"] <- rowVal["bCol1Hpn4"] + sum( rVal["colB4"]==1 )
+                rowVal["bCol1Hpn5"] <- rowVal["bCol1Hpn5"] + sum( rVal["colB5"]==1 )
+
+                rowVal["aColEHpn1"] <- rowVal["aColEHpn1"] + sum( !is.na(eVal["colA1"]) )
+                rowVal["aColEHpn2"] <- rowVal["aColEHpn2"] + sum( !is.na(eVal["colA2"]) )
+                rowVal["aColEHpn3"] <- rowVal["aColEHpn3"] + sum( !is.na(eVal["colA3"]) )
+                rowVal["aColEHpn4"] <- rowVal["aColEHpn4"] + sum( !is.na(eVal["colA4"]) )
+                rowVal["aColEHpn5"] <- rowVal["aColEHpn5"] + sum( !is.na(eVal["colA5"]) )
+                rowVal["bColEHpn1"] <- rowVal["bColEHpn1"] + sum( !is.na(eVal["colB1"]) )
+                rowVal["bColEHpn2"] <- rowVal["bColEHpn2"] + sum( !is.na(eVal["colB2"]) )
+                rowVal["bColEHpn3"] <- rowVal["bColEHpn3"] + sum( !is.na(eVal["colB3"]) )
+                rowVal["bColEHpn4"] <- rowVal["bColEHpn4"] + sum( !is.na(eVal["colB4"]) )
+                rowVal["bColEHpn5"] <- rowVal["bColEHpn5"] + sum( !is.na(eVal["colB5"]) )
+
+                if( !cStepFlag ){
+                    rowVal["aCol1Hpn6"] <- rowVal["aCol1Hpn6"] + sum( rVal["colA6"]==1 )
+                    rowVal["bCol1Hpn6"] <- rowVal["bCol1Hpn6"] + sum( rVal["colB6"]==1 )
+                    rowVal["aColEHpn6"] <- rowVal["aColEHpn6"] + sum( !is.na(eVal["colA6"]) )
+                    rowVal["bColEHpn6"] <- rowVal["bColEHpn6"] + sum( !is.na(eVal["colB6"]) )
+                }
+
+                # rowVal["col1Hpn1"] <- rowVal["col1Hpn1"] + sum( rVal[c("colA1","colB1")]==1 )
+                # rowVal["col1Hpn2"] <- rowVal["col1Hpn2"] + sum( rVal[c("colA2","colB2")]==1 )
+                # rowVal["col1Hpn3"] <- rowVal["col1Hpn3"] + sum( rVal[c("colA3","colB3")]==1 )
+                # rowVal["col1Hpn4"] <- rowVal["col1Hpn4"] + sum( rVal[c("colA4","colB4")]==1 )
+                # rowVal["col1Hpn5"] <- rowVal["col1Hpn5"] + sum( rVal[c("colA5","colB5")]==1 )
+                # rowVal["col1Hpn6"] <- rowVal["col1Hpn6"] + sum( rVal[c("colA6","colB6")]==1 )
+
+                # rowVal["colEHpn1"] <- rowVal["colEHpn1"] + sum( !is.na(eVal[c("colA1","colB1")]) )
+                # rowVal["colEHpn2"] <- rowVal["colEHpn2"] + sum( !is.na(eVal[c("colA2","colB2")]) )
+                # rowVal["colEHpn3"] <- rowVal["colEHpn3"] + sum( !is.na(eVal[c("colA3","colB3")]) )
+                # rowVal["colEHpn4"] <- rowVal["colEHpn4"] + sum( !is.na(eVal[c("colA4","colB4")]) )
+                # rowVal["colEHpn5"] <- rowVal["colEHpn5"] + sum( !is.na(eVal[c("colA5","colB5")]) )
+                # rowVal["colEHpn6"] <- rowVal["colEHpn6"] + sum( !is.na(eVal[c("colA6","colB6")]) )
+
+            }
+
+            cName <- c( "hpnA1" ,"hpnB1" ,"hpnAE" ,"hpnBE" )
+            ignoreCol <- cName[ rowVal[cName]<=3 ]  # 3 이하는 의미 중복 오류만 많아질 듯.
+            rowVal[ ignoreCol ] <- 0
+
+            return( rowVal )
+
+            # cName <- "hpn1"   # code template
+            # for( mName in fltObj$fltMNames ){
+            #     val[mName] <- mmMtxLst[[mName]][aIdx,cName] >= 1
+            # }
+            # rowVal[cName] <- sum(val[c("score6","score7")]) + any( 0<val[c("score4","score5")] )
+
+            # for( nIdx in names(mmMtxLst) ){   # 테스트 데이터 생성용.
+            #     for( aIdx in 1:10 ){
+            #         mmMtxLst[[nIdx]][aIdx,] <- sample(1:5,length(mmMtxLst[[nIdx]][aIdx,]),replace=T)
+            #     }
+            # }
+        }
+
+        fltObj$getScoreMtx <- function( scoreMtxLst ){
+            # scoreMtx.grp <- getScoreMtx.grp( gEnv$allZoidMtx[allIdxF,,drop=F] ,filter.grp )
+            # scoreMtxLst <- scoreMtx.grp$basic[[pName]]
+
+            mmMtxLst <- lapply( scoreMtxLst[fltObj$fltMNames] ,function(mtxObj){mtxObj$scoreMtx} )
+            mmEMtxLst <- list()
+            for( mName in fltObj$fltMNames ){
+                eMtx <- mmMtxLst[[mName]]
+                eMtx[,] <- NA
+                for( rIdx in seq_len(nrow(eMtx)) ){
+                    eMtx[rIdx,] <- bFCust.getEvt( mmMtxLst[[mName]][rIdx,] ,scoreMtxCfg[[mName]]$fCol )["lev",]
+                }
+                mmEMtxLst[[mName]] <- eMtx
+            }
+
+            rMtx <- matrix( 0 ,nrow=nrow(mmMtxLst[[1]]) ,ncol=length(fltObj$mInfo$cName) )
+            colnames(rMtx) <- fltObj$mInfo$cName
+            if( !fltObj$available ) return( rMtx )
+
+            for( aIdx in seq_len(nrow(rMtx)) ){
+                rMtx[aIdx,] <- fltObj$getScore( mmMtxLst ,mmEMtxLst ,aIdx )
+            }
+            rownames(rMtx) <- rownames(mmMtxLst[[1]])
+
+            return( rMtx )
+
+        }
+
+        return(fltObj)
+    }
+}
 
 mfName <- "mfLVecf13"
+if( TRUE ){
+    bFMtxMFltLst[[mfName]] <- function( tgt.scMtx=NULL ){
+        fltObj <- list( mInfo=list() )
+        fltObj$mInfo$mName <- mfName
+        fltObj$available <- TRUE    # bFCust.getFCustGrp() 에서 확인됨.
+
+        fltObj$fltMNames <- c("scoreLVe13","scoreLVc13","scoreLVf13")
+        fltObj$mInfo$cName <- c( "hpnA1","hpnAE","hpnB1","hpnBE"
+                                ,"aCol1Hpn1" ,"aCol1Hpn2" ,"aCol1Hpn3" ,"aCol1Hpn4" ,"aCol1Hpn5" ,"aCol1Hpn6"
+                                ,"aColEHpn1" ,"aColEHpn2" ,"aColEHpn3" ,"aColEHpn4" ,"aColEHpn5" ,"aColEHpn6"
+                                ,"bCol1Hpn1" ,"bCol1Hpn2" ,"bCol1Hpn3" ,"bCol1Hpn4" ,"bCol1Hpn5" ,"bCol1Hpn6"
+                                ,"bColEHpn1" ,"bColEHpn2" ,"bColEHpn3" ,"bColEHpn4" ,"bColEHpn5" ,"bColEHpn6"
+		)
+
+        # tgt.scMtx가 fltObj$fltMNames 를 모두 포함하고 있는 지 체크.
+        if( !is.null(tgt.scMtx) ){
+            #   scoreMtxLst는 체크하지 않는다. 차라리 나중에 에러나는 게 인지하기 쉬우므로.            
+            mFlag <- fltObj$fltMNames %in% tgt.scMtx
+            fltObj$available <- ifelse( all(mFlag) ,fltObj$available ,FALSE )
+        }
+
+        fltObj$getScore <- function( mmMtxLst ,mmEMtxLst ,aIdx ){
+
+            rowVal <- rep( 0 ,length(fltObj$mInfo$cName) )
+            names(rowVal) <- fltObj$mInfo$cName
+
+            for( mName in fltObj$fltMNames ){
+                rVal <- mmMtxLst[[mName]][aIdx,]
+                eVal <- mmEMtxLst[[mName]][aIdx,]
+
+                cStepFlag <- mName=="scoreLVc13"
+
+                colA <- c( "colA1" ,"colA2" ,"colA3" ,"colA4" ,"colA5" ,"colA6" )
+                colB <- c( "colB1" ,"colB2" ,"colB3" ,"colB4" ,"colB5" ,"colB6" )
+                if( cStepFlag ){
+                    colA <- c( "colA1" ,"colA2" ,"colA3" ,"colA4" ,"colA5" )
+                    colB <- c( "colB1" ,"colB2" ,"colB3" ,"colB4" ,"colB5" )
+                }
+
+                rowVal["hpnA1"] <- rowVal["hpnA1"] + sum( rVal[colA] == 1 )
+                rowVal["hpnAE"] <- rowVal["hpnAE"] + sum( !is.na(eVal[colA]) )
+                rowVal["hpnB1"] <- rowVal["hpnB1"] + sum( rVal[colB] == 1 )
+                rowVal["hpnBE"] <- rowVal["hpnBE"] + sum( !is.na(eVal[colB]) )
+
+                rowVal["aCol1Hpn1"] <- rowVal["aCol1Hpn1"] + sum( rVal["colA1"]==1 )
+                rowVal["aCol1Hpn2"] <- rowVal["aCol1Hpn2"] + sum( rVal["colA2"]==1 )
+                rowVal["aCol1Hpn3"] <- rowVal["aCol1Hpn3"] + sum( rVal["colA3"]==1 )
+                rowVal["aCol1Hpn4"] <- rowVal["aCol1Hpn4"] + sum( rVal["colA4"]==1 )
+                rowVal["aCol1Hpn5"] <- rowVal["aCol1Hpn5"] + sum( rVal["colA5"]==1 )
+                rowVal["bCol1Hpn1"] <- rowVal["bCol1Hpn1"] + sum( rVal["colB1"]==1 )
+                rowVal["bCol1Hpn2"] <- rowVal["bCol1Hpn2"] + sum( rVal["colB2"]==1 )
+                rowVal["bCol1Hpn3"] <- rowVal["bCol1Hpn3"] + sum( rVal["colB3"]==1 )
+                rowVal["bCol1Hpn4"] <- rowVal["bCol1Hpn4"] + sum( rVal["colB4"]==1 )
+                rowVal["bCol1Hpn5"] <- rowVal["bCol1Hpn5"] + sum( rVal["colB5"]==1 )
+
+                rowVal["aColEHpn1"] <- rowVal["aColEHpn1"] + sum( !is.na(eVal["colA1"]) )
+                rowVal["aColEHpn2"] <- rowVal["aColEHpn2"] + sum( !is.na(eVal["colA2"]) )
+                rowVal["aColEHpn3"] <- rowVal["aColEHpn3"] + sum( !is.na(eVal["colA3"]) )
+                rowVal["aColEHpn4"] <- rowVal["aColEHpn4"] + sum( !is.na(eVal["colA4"]) )
+                rowVal["aColEHpn5"] <- rowVal["aColEHpn5"] + sum( !is.na(eVal["colA5"]) )
+                rowVal["bColEHpn1"] <- rowVal["bColEHpn1"] + sum( !is.na(eVal["colB1"]) )
+                rowVal["bColEHpn2"] <- rowVal["bColEHpn2"] + sum( !is.na(eVal["colB2"]) )
+                rowVal["bColEHpn3"] <- rowVal["bColEHpn3"] + sum( !is.na(eVal["colB3"]) )
+                rowVal["bColEHpn4"] <- rowVal["bColEHpn4"] + sum( !is.na(eVal["colB4"]) )
+                rowVal["bColEHpn5"] <- rowVal["bColEHpn5"] + sum( !is.na(eVal["colB5"]) )
+
+                if( !cStepFlag ){
+                    rowVal["aCol1Hpn6"] <- rowVal["aCol1Hpn6"] + sum( rVal["colA6"]==1 )
+                    rowVal["bCol1Hpn6"] <- rowVal["bCol1Hpn6"] + sum( rVal["colB6"]==1 )
+                    rowVal["aColEHpn6"] <- rowVal["aColEHpn6"] + sum( !is.na(eVal["colA6"]) )
+                    rowVal["bColEHpn6"] <- rowVal["bColEHpn6"] + sum( !is.na(eVal["colB6"]) )
+                }
+
+                # rowVal["col1Hpn1"] <- rowVal["col1Hpn1"] + sum( rVal[c("colA1","colB1")]==1 )
+                # rowVal["col1Hpn2"] <- rowVal["col1Hpn2"] + sum( rVal[c("colA2","colB2")]==1 )
+                # rowVal["col1Hpn3"] <- rowVal["col1Hpn3"] + sum( rVal[c("colA3","colB3")]==1 )
+                # rowVal["col1Hpn4"] <- rowVal["col1Hpn4"] + sum( rVal[c("colA4","colB4")]==1 )
+                # rowVal["col1Hpn5"] <- rowVal["col1Hpn5"] + sum( rVal[c("colA5","colB5")]==1 )
+                # rowVal["col1Hpn6"] <- rowVal["col1Hpn6"] + sum( rVal[c("colA6","colB6")]==1 )
+
+                # rowVal["colEHpn1"] <- rowVal["colEHpn1"] + sum( !is.na(eVal[c("colA1","colB1")]) )
+                # rowVal["colEHpn2"] <- rowVal["colEHpn2"] + sum( !is.na(eVal[c("colA2","colB2")]) )
+                # rowVal["colEHpn3"] <- rowVal["colEHpn3"] + sum( !is.na(eVal[c("colA3","colB3")]) )
+                # rowVal["colEHpn4"] <- rowVal["colEHpn4"] + sum( !is.na(eVal[c("colA4","colB4")]) )
+                # rowVal["colEHpn5"] <- rowVal["colEHpn5"] + sum( !is.na(eVal[c("colA5","colB5")]) )
+                # rowVal["colEHpn6"] <- rowVal["colEHpn6"] + sum( !is.na(eVal[c("colA6","colB6")]) )
+
+            }
+
+            cName <- c( "hpnA1" ,"hpnB1" ,"hpnAE" ,"hpnBE" )
+            ignoreCol <- cName[ rowVal[cName]<=3 ]  # 3 이하는 의미 중복 오류만 많아질 듯.
+            rowVal[ ignoreCol ] <- 0
+
+            return( rowVal )
+
+            # cName <- "hpn1"   # code template
+            # for( mName in fltObj$fltMNames ){
+            #     val[mName] <- mmMtxLst[[mName]][aIdx,cName] >= 1
+            # }
+            # rowVal[cName] <- sum(val[c("score6","score7")]) + any( 0<val[c("score4","score5")] )
+
+            # for( nIdx in names(mmMtxLst) ){   # 테스트 데이터 생성용.
+            #     for( aIdx in 1:10 ){
+            #         mmMtxLst[[nIdx]][aIdx,] <- sample(1:5,length(mmMtxLst[[nIdx]][aIdx,]),replace=T)
+            #     }
+            # }
+        }
+
+        fltObj$getScoreMtx <- function( scoreMtxLst ){
+            # scoreMtx.grp <- getScoreMtx.grp( gEnv$allZoidMtx[allIdxF,,drop=F] ,filter.grp )
+            # scoreMtxLst <- scoreMtx.grp$basic[[pName]]
+
+            mmMtxLst <- lapply( scoreMtxLst[fltObj$fltMNames] ,function(mtxObj){mtxObj$scoreMtx} )
+            mmEMtxLst <- list()
+            for( mName in fltObj$fltMNames ){
+                eMtx <- mmMtxLst[[mName]]
+                eMtx[,] <- NA
+                for( rIdx in seq_len(nrow(eMtx)) ){
+                    eMtx[rIdx,] <- bFCust.getEvt( mmMtxLst[[mName]][rIdx,] ,scoreMtxCfg[[mName]]$fCol )["lev",]
+                }
+                mmEMtxLst[[mName]] <- eMtx
+            }
+
+            rMtx <- matrix( 0 ,nrow=nrow(mmMtxLst[[1]]) ,ncol=length(fltObj$mInfo$cName) )
+            colnames(rMtx) <- fltObj$mInfo$cName
+            if( !fltObj$available ) return( rMtx )
+
+            for( aIdx in seq_len(nrow(rMtx)) ){
+                rMtx[aIdx,] <- fltObj$getScore( mmMtxLst ,mmEMtxLst ,aIdx )
+            }
+            rownames(rMtx) <- rownames(mmMtxLst[[1]])
+
+            return( rMtx )
+
+        }
+
+        return(fltObj)
+    }
+}
 
 mfName <- "mfLVecf24"
+if( TRUE ){
+    bFMtxMFltLst[[mfName]] <- function( tgt.scMtx=NULL ){
+        fltObj <- list( mInfo=list() )
+        fltObj$mInfo$mName <- mfName
+        fltObj$available <- TRUE    # bFCust.getFCustGrp() 에서 확인됨.
 
+        fltObj$fltMNames <- c("scoreLVe24","scoreLVc24","scoreLVf24")
+        fltObj$mInfo$cName <- c( "hpnA1","hpnAE","hpnB1","hpnBE"
+                                ,"aCol1Hpn1" ,"aCol1Hpn2" ,"aCol1Hpn3" ,"aCol1Hpn4" ,"aCol1Hpn5" ,"aCol1Hpn6"
+                                ,"aColEHpn1" ,"aColEHpn2" ,"aColEHpn3" ,"aColEHpn4" ,"aColEHpn5" ,"aColEHpn6"
+                                ,"bCol1Hpn1" ,"bCol1Hpn2" ,"bCol1Hpn3" ,"bCol1Hpn4" ,"bCol1Hpn5" ,"bCol1Hpn6"
+                                ,"bColEHpn1" ,"bColEHpn2" ,"bColEHpn3" ,"bColEHpn4" ,"bColEHpn5" ,"bColEHpn6"
+		)
 
+        # tgt.scMtx가 fltObj$fltMNames 를 모두 포함하고 있는 지 체크.
+        if( !is.null(tgt.scMtx) ){
+            #   scoreMtxLst는 체크하지 않는다. 차라리 나중에 에러나는 게 인지하기 쉬우므로.            
+            mFlag <- fltObj$fltMNames %in% tgt.scMtx
+            fltObj$available <- ifelse( all(mFlag) ,fltObj$available ,FALSE )
+        }
+
+        fltObj$getScore <- function( mmMtxLst ,mmEMtxLst ,aIdx ){
+
+            rowVal <- rep( 0 ,length(fltObj$mInfo$cName) )
+            names(rowVal) <- fltObj$mInfo$cName
+
+            for( mName in fltObj$fltMNames ){
+                rVal <- mmMtxLst[[mName]][aIdx,]
+                eVal <- mmEMtxLst[[mName]][aIdx,]
+
+                cStepFlag <- mName=="scoreLVc24"
+
+                colA <- c( "colA1" ,"colA2" ,"colA3" ,"colA4" ,"colA5" ,"colA6" )
+                colB <- c( "colB1" ,"colB2" ,"colB3" ,"colB4" ,"colB5" ,"colB6" )
+                if( cStepFlag ){
+                    colA <- c( "colA1" ,"colA2" ,"colA3" ,"colA4" ,"colA5" )
+                    colB <- c( "colB1" ,"colB2" ,"colB3" ,"colB4" ,"colB5" )
+                }
+
+                rowVal["hpnA1"] <- rowVal["hpnA1"] + sum( rVal[colA] == 1 )
+                rowVal["hpnAE"] <- rowVal["hpnAE"] + sum( !is.na(eVal[colA]) )
+                rowVal["hpnB1"] <- rowVal["hpnB1"] + sum( rVal[colB] == 1 )
+                rowVal["hpnBE"] <- rowVal["hpnBE"] + sum( !is.na(eVal[colB]) )
+
+                rowVal["aCol1Hpn1"] <- rowVal["aCol1Hpn1"] + sum( rVal["colA1"]==1 )
+                rowVal["aCol1Hpn2"] <- rowVal["aCol1Hpn2"] + sum( rVal["colA2"]==1 )
+                rowVal["aCol1Hpn3"] <- rowVal["aCol1Hpn3"] + sum( rVal["colA3"]==1 )
+                rowVal["aCol1Hpn4"] <- rowVal["aCol1Hpn4"] + sum( rVal["colA4"]==1 )
+                rowVal["aCol1Hpn5"] <- rowVal["aCol1Hpn5"] + sum( rVal["colA5"]==1 )
+                rowVal["bCol1Hpn1"] <- rowVal["bCol1Hpn1"] + sum( rVal["colB1"]==1 )
+                rowVal["bCol1Hpn2"] <- rowVal["bCol1Hpn2"] + sum( rVal["colB2"]==1 )
+                rowVal["bCol1Hpn3"] <- rowVal["bCol1Hpn3"] + sum( rVal["colB3"]==1 )
+                rowVal["bCol1Hpn4"] <- rowVal["bCol1Hpn4"] + sum( rVal["colB4"]==1 )
+                rowVal["bCol1Hpn5"] <- rowVal["bCol1Hpn5"] + sum( rVal["colB5"]==1 )
+
+                rowVal["aColEHpn1"] <- rowVal["aColEHpn1"] + sum( !is.na(eVal["colA1"]) )
+                rowVal["aColEHpn2"] <- rowVal["aColEHpn2"] + sum( !is.na(eVal["colA2"]) )
+                rowVal["aColEHpn3"] <- rowVal["aColEHpn3"] + sum( !is.na(eVal["colA3"]) )
+                rowVal["aColEHpn4"] <- rowVal["aColEHpn4"] + sum( !is.na(eVal["colA4"]) )
+                rowVal["aColEHpn5"] <- rowVal["aColEHpn5"] + sum( !is.na(eVal["colA5"]) )
+                rowVal["bColEHpn1"] <- rowVal["bColEHpn1"] + sum( !is.na(eVal["colB1"]) )
+                rowVal["bColEHpn2"] <- rowVal["bColEHpn2"] + sum( !is.na(eVal["colB2"]) )
+                rowVal["bColEHpn3"] <- rowVal["bColEHpn3"] + sum( !is.na(eVal["colB3"]) )
+                rowVal["bColEHpn4"] <- rowVal["bColEHpn4"] + sum( !is.na(eVal["colB4"]) )
+                rowVal["bColEHpn5"] <- rowVal["bColEHpn5"] + sum( !is.na(eVal["colB5"]) )
+
+                if( !cStepFlag ){
+                    rowVal["aCol1Hpn6"] <- rowVal["aCol1Hpn6"] + sum( rVal["colA6"]==1 )
+                    rowVal["bCol1Hpn6"] <- rowVal["bCol1Hpn6"] + sum( rVal["colB6"]==1 )
+                    rowVal["aColEHpn6"] <- rowVal["aColEHpn6"] + sum( !is.na(eVal["colA6"]) )
+                    rowVal["bColEHpn6"] <- rowVal["bColEHpn6"] + sum( !is.na(eVal["colB6"]) )
+                }
+
+                # rowVal["col1Hpn1"] <- rowVal["col1Hpn1"] + sum( rVal[c("colA1","colB1")]==1 )
+                # rowVal["col1Hpn2"] <- rowVal["col1Hpn2"] + sum( rVal[c("colA2","colB2")]==1 )
+                # rowVal["col1Hpn3"] <- rowVal["col1Hpn3"] + sum( rVal[c("colA3","colB3")]==1 )
+                # rowVal["col1Hpn4"] <- rowVal["col1Hpn4"] + sum( rVal[c("colA4","colB4")]==1 )
+                # rowVal["col1Hpn5"] <- rowVal["col1Hpn5"] + sum( rVal[c("colA5","colB5")]==1 )
+                # rowVal["col1Hpn6"] <- rowVal["col1Hpn6"] + sum( rVal[c("colA6","colB6")]==1 )
+
+                # rowVal["colEHpn1"] <- rowVal["colEHpn1"] + sum( !is.na(eVal[c("colA1","colB1")]) )
+                # rowVal["colEHpn2"] <- rowVal["colEHpn2"] + sum( !is.na(eVal[c("colA2","colB2")]) )
+                # rowVal["colEHpn3"] <- rowVal["colEHpn3"] + sum( !is.na(eVal[c("colA3","colB3")]) )
+                # rowVal["colEHpn4"] <- rowVal["colEHpn4"] + sum( !is.na(eVal[c("colA4","colB4")]) )
+                # rowVal["colEHpn5"] <- rowVal["colEHpn5"] + sum( !is.na(eVal[c("colA5","colB5")]) )
+                # rowVal["colEHpn6"] <- rowVal["colEHpn6"] + sum( !is.na(eVal[c("colA6","colB6")]) )
+
+            }
+
+            cName <- c( "hpnA1" ,"hpnB1" ,"hpnAE" ,"hpnBE" )
+            ignoreCol <- cName[ rowVal[cName]<=3 ]  # 3 이하는 의미 중복 오류만 많아질 듯.
+            rowVal[ ignoreCol ] <- 0
+
+            return( rowVal )
+
+            # cName <- "hpn1"   # code template
+            # for( mName in fltObj$fltMNames ){
+            #     val[mName] <- mmMtxLst[[mName]][aIdx,cName] >= 1
+            # }
+            # rowVal[cName] <- sum(val[c("score6","score7")]) + any( 0<val[c("score4","score5")] )
+
+            # for( nIdx in names(mmMtxLst) ){   # 테스트 데이터 생성용.
+            #     for( aIdx in 1:10 ){
+            #         mmMtxLst[[nIdx]][aIdx,] <- sample(1:5,length(mmMtxLst[[nIdx]][aIdx,]),replace=T)
+            #     }
+            # }
+        }
+
+        fltObj$getScoreMtx <- function( scoreMtxLst ){
+            # scoreMtx.grp <- getScoreMtx.grp( gEnv$allZoidMtx[allIdxF,,drop=F] ,filter.grp )
+            # scoreMtxLst <- scoreMtx.grp$basic[[pName]]
+
+            mmMtxLst <- lapply( scoreMtxLst[fltObj$fltMNames] ,function(mtxObj){mtxObj$scoreMtx} )
+            mmEMtxLst <- list()
+            for( mName in fltObj$fltMNames ){
+                eMtx <- mmMtxLst[[mName]]
+                eMtx[,] <- NA
+                for( rIdx in seq_len(nrow(eMtx)) ){
+                    eMtx[rIdx,] <- bFCust.getEvt( mmMtxLst[[mName]][rIdx,] ,scoreMtxCfg[[mName]]$fCol )["lev",]
+                }
+                mmEMtxLst[[mName]] <- eMtx
+            }
+
+            rMtx <- matrix( 0 ,nrow=nrow(mmMtxLst[[1]]) ,ncol=length(fltObj$mInfo$cName) )
+            colnames(rMtx) <- fltObj$mInfo$cName
+            if( !fltObj$available ) return( rMtx )
+
+            for( aIdx in seq_len(nrow(rMtx)) ){
+                rMtx[aIdx,] <- fltObj$getScore( mmMtxLst ,mmEMtxLst ,aIdx )
+            }
+            rownames(rMtx) <- rownames(mmMtxLst[[1]])
+
+            return( rMtx )
+
+        }
+
+        return(fltObj)
+    }
+}
 

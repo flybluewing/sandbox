@@ -66,7 +66,7 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
     #   B.get_cutRst1.grp()
     sfExport("testData.grp")    ;sfExport("tgt.scMtx")
     prll.initHeader( )          ;source("FCust_configBasic.R")  ;source("FCust_configExt.R")
-    prllLog$fLogStr("- bUtil.cut() ----------------------------",pTime=T)
+    prllLog$fLogStr("- bUtil.cut() ----------------------------",pTime=T)   ;tStmp1 <- Sys.time()
     resultLst <- sfLapply( testSpan ,function( curHIdx ){
         wLastH <- curHIdx-1
         wLastSpan <- 1:which(names(fRstLst)==wLastH)
@@ -208,7 +208,7 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
 
         return( list(hIdx=curHIdx ,cutRst=cutRst ,cutRst1Score=cutRst1Score ,cutRst1Score_bS=cutRst1Score_bS ) )
             #   ,auxTest=auxTest
-    })
+    })  ;tDiff1 <- Sys.time() - tStmp1  ;tDiff1     # 2.1min / 7prllNum
     names( resultLst ) <- sapply( resultLst ,function(p){p$hIdx})
     cutRstLst <- lapply( resultLst ,function(p){p$cutRst})
     names(cutRstLst) <- paste("H",testSpan,sep="")
