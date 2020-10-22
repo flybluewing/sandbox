@@ -229,11 +229,11 @@ bS.vp_zw <- function( gEnv, aZoidMtx ){
 
     vpObj$getCodeH <- function( stdMI ){
         wLst <- list()
-        wLst$rawTail <- stdMI$rawTail
+        wLst$rawTail <- stdMI$rawTail[,1:5]
         wLst$lastRaw <- wLst$rawTail[nrow(wLst$rawTail),]
 
         wLst$cStepTail <- stdMI$cStepTail
-        wLst$fStepTail <- stdMI$fStepTail
+        wLst$fStepTail <- stdMI$fStepTail[,1:5]
 
         return( wLst )
     }
@@ -257,9 +257,9 @@ bS.vp_zw <- function( gEnv, aZoidMtx ){
         }
 
         aObj$miIdStr <- miIdStr
-        aObj$aZoidMtx <- aZoidMtx
+        aObj$aZoidMtx <- aZoidMtx[,1:5]
         aObj$cStepMtx <- aZoidMtx[,2:6,drop=F] - aZoidMtx[,1:5,drop=F]
-        aObj$fStepMtx <- fStepMtx
+        aObj$fStepMtx <- fStepMtx[,1:5]
 
         rownames(aObj$aZoidMtx) <- miIdStr
         rownames(aObj$cStepMtx) <- miIdStr
