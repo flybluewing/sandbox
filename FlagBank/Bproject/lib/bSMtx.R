@@ -259,6 +259,10 @@ if( TRUE ){ # "sScore02"
                 scrMtx[wIdx,"inc.f2"] <- sum(inc.fStep2==aFStep)
             }
 
+            # 1은 너무 흔해서 지워버리기로 한다.
+            remFlag <- scrMtx[wIdx,]==1
+            scrMtx[wIdx,remFlag] <- 0
+
             if( any(scrMtx[wIdx,]>=2) ){
                 aQuo <- fCutU.getQuoObj( aZoidMtx[aIdx,] ,valSet=T )
                 if( all(aQuo$size==stdMI$quoTail[stdMILen,]) ){

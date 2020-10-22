@@ -5,7 +5,7 @@ if( FALSE ){    # document
 bSMtxMCfg <- list()
 
 crMName <- "bSMScr01R"
-if( TRUE ){
+if( FALSE ){
     bSMtxMCfg[[crMName]] <- list(  mName = crMName
         ,fCol = list(
               "hpn0"    =  list( rng=c(min=10,max=10) )
