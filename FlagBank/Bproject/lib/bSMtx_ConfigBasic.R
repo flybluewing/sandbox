@@ -143,7 +143,7 @@ bsScoreMtxCfg[[mName]] <- list(
                         ,evt=matrix( c(c(3,3,3),c(3,4,5)) ,ncol=2)
                         ,evtMax.fCol=NULL
                     )
-        ,"rebC.f"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+        ,"rebC.f"=list( rng=matrix( c(0,0 ,0,3) ,ncol=2 )
                         ,evt=matrix( c(c(3,3,3),c(3,4,5)) ,ncol=2)
                         ,evtMax.fCol=NULL
                     )
@@ -159,11 +159,11 @@ bsScoreMtxCfg[[mName]] <- list(
                         ,evt=matrix( c(c(3,3,3),c(3,4,5)) ,ncol=2)
                         ,evtMax.fCol=NULL
                     )
-        ,"inc.r"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+        ,"inc.r"=list( rng=matrix( c(0,0 ,0,3) ,ncol=2 )
                         ,evt=matrix( c(c(3,3,3),c(3,4,5)) ,ncol=2)
                         ,evtMax.fCol=NULL
                     )
-        ,"inc.c"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+        ,"inc.c"=list( rng=matrix( c(0,0 ,0,3) ,ncol=2 )
                         ,evt=matrix( c(c(3,3,3),c(3,4,5)) ,ncol=2)
                         ,evtMax.fCol=NULL
                     )
@@ -184,42 +184,31 @@ bsScoreMtxCfg[[mName]] <- list(
                         ,evtMax.fCol=NULL
                     )
     )
-    ,evtMax = NULL  ,evtMaxFColTot = NULL
-    ,rowReb = NULL  ,rowRebDup=NULL
-    ,summMtx = NULL
-    ,summMtx.reb = NULL 
-    ,summMtx.sum = NULL
-    ,scMtx.sz = NULL
-    ,scMtx.sz.sum = NULL
+    ,evtMax = matrix( c(2,2,3,1 ,2,3,3,4)   ,byrow=T ,ncol=4
+                ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
+    )
+    ,evtMaxFColTot = NULL
+    ,rowReb = c( rawMin=2 ,lowE=2 ,rareE=1 )    ,rowRebDup=NULL
+    ,summMtx = matrix(  # all ph fCol phReb xyCnt.fCol xyCnt.phase      / raw ,evt
+                        c(  1 ,3 ,2 ,2 ,2 ,1    ,1 ,1 ,1 ,1 ,1 ,1  ) ,byrow=T
+                    ,ncol=length(summMtxName$cName) ,nrow=length(summMtxName$rName)
+                    ,dimnames=list(summMtxName$rName,summMtxName$cName)
+    )
+    ,summMtx.reb = matrix(  # all ph fCol phReb xyCnt.fCol xyCnt.phase      / raw ,evt
+                        c(  1 ,2 ,2 ,1 ,1 ,1    ,1 ,1 ,1 ,1 ,1 ,1  ) ,byrow=T
+                    ,ncol=length(summMtxName$cName) ,nrow=length(summMtxName$rName)
+                    ,dimnames=list(summMtxName$rName,summMtxName$cName)
+    )
+    ,summMtx.sum = c(raw=4 ,evt=2)
+    ,scMtx.sz = matrix( # r.ph r.fCol r.dblHpnFlg e.ph e.fCol e.dblHpnFlg  /  rebCnt ,rebDup
+                        c(  3 ,3 ,1 ,1 ,2 ,1   ,2 ,2 ,1 ,1 ,1 ,1  )
+                    ,byrow=T
+                    ,ncol=length(scMtx.szName$cName) ,nrow=length(scMtx.szName$rName) 
+                    ,dimnames=list(scMtx.szName$rName,scMtx.szName$cName)
+    )
+    ,scMtx.sz.sum = c(rebCnt.r=5 ,rebCnt.e=2)
     ,isHard=NULL  # use default
 )
-if( FALSE ){    # document
-    # summMtx : evt에서 x,y 일치는 자주 나옴. 때문에 multi filter count 로 제약 필요.
-
-    # ,evtMax = NULL  ,evtMaxFColTot = NULL
-    # ,rowReb = c( rawMin=2 ,lowE=2 ,rareE=1 )  ,rowRebDup=NULL
-    # ,summMtx = matrix(  # all ph fCol phReb xyCnt.fCol xyCnt.phase      / raw ,evt
-    #                     c(  1 ,2 ,4 ,2 ,2 ,1    ,1 ,1 ,1 ,1 ,1 ,2  ) ,byrow=T
-    #                 ,ncol=length(summMtxName$cName) ,nrow=length(summMtxName$rName)
-    #                 ,dimnames=list(summMtxName$rName,summMtxName$cName)
-    # )
-    # ,summMtx.reb = matrix(  # all ph fCol phReb xyCnt.fCol xyCnt.phase      / raw ,evt
-    #                     c(  1 ,1 ,2 ,1 ,1 ,1    ,1 ,1 ,1 ,1 ,1 ,1  ) ,byrow=T
-    #                 ,ncol=length(summMtxName$cName) ,nrow=length(summMtxName$rName)
-    #                 ,dimnames=list(summMtxName$rName,summMtxName$cName)
-    # )
-    # ,summMtx.sum = c(raw=4 ,evt=2)
-    # ,scMtx.sz = matrix( # r.ph r.fCol r.dblHpnFlg e.ph e.fCol e.dblHpnFlg  /  rebCnt ,rebDup
-    #                     c(  2 ,5 ,1 ,2 ,2 ,1   ,1 ,2 ,1 ,1 ,1 ,1  )
-    #                 ,byrow=T
-    #                 ,ncol=length(scMtx.szName$cName) ,nrow=length(scMtx.szName$rName) 
-    #                 ,dimnames=list(scMtx.szName$rName,scMtx.szName$cName)
-    # )
-    # ,scMtx.sz.sum = c(rebCnt.r=5 ,rebCnt.e=3)
-    # ,isHard=NULL  # use default
-
-}
-
 
 for( mName in names( bsScoreMtxCfg ) ){ # naming 추가.
 
