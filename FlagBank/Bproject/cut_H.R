@@ -1,5 +1,5 @@
 
-cutH.InitialCut <- function( gEnv ,allIdxF ,blk ,filter.grp ,cut.grp ,fHName=NULL ,exeCfg=NULL ,logger=NULL ){
+cutH.InitialCut <- function( gEnv ,allIdxF ,blk ,filter.grp ,cut.grp ,timeCost=NULL ,fHName=NULL ,exeCfg=NULL ,logger=NULL ){
     #   logger <- k.getFlogObj( "./log/commonLog.txt" )
 
     logMsg <- function( msgStr ,tStmp=NULL ,pTime=F ){
@@ -27,14 +27,16 @@ cutH.InitialCut <- function( gEnv ,allIdxF ,blk ,filter.grp ,cut.grp ,fHName=NUL
 
     blkSpan <- blk["start"]:blk["end"]
 
-    timeCost <- c( "score1"=26 ,"score2"=23 ,"score3"=19 ,"score4"=59 ,"score5"=94 ,"score6"=54 ,"score7"=61 ,"score8"=21 ,"score9"=30 )
-    timeCost <- c( timeCost ,"bScr01"=1 ,"bScr02"=1 )
-    timeCost <- c( timeCost ,"scoreA"=29 ,"scoreB"=24 ,"scoreC"=24 ,"scoreD"=26 )
-    timeCost <- c( timeCost ,"scoreE"=20 ,"scoreF"=3 )  # 측정필요.
-    timeCost <- c( timeCost ,"scoreLAr13"=70 ,"scoreLAr24"=70 ,"scoreLVr13"=70 ,"scoreLVr24"=70 )   # extention을 추가한 후 재측정 요.
-    timeCost <- c( timeCost ,"scoreLAe13"=70 ,"scoreLAe24"=70 ,"scoreLVe13"=70 ,"scoreLVe24"=70 )
-    timeCost <- c( timeCost ,"scoreLAc13"=70 ,"scoreLAc24"=70 ,"scoreLVc13"=70 ,"scoreLVc24"=70 )
-    timeCost <- c( timeCost ,"scoreLAf13"=70 ,"scoreLAf24"=70 ,"scoreLVf13"=70 ,"scoreLVf24"=70 )
+    if( is.null(timeCost) ){
+        timeCost <- c( "score1"=26 ,"score2"=23 ,"score3"=19 ,"score4"=59 ,"score5"=94 ,"score6"=54 ,"score7"=61 ,"score8"=21 ,"score9"=30 )
+        timeCost <- c( timeCost ,"bScr01"=1 ,"bScr02"=1 )
+        timeCost <- c( timeCost ,"scoreA"=29 ,"scoreB"=24 ,"scoreC"=24 ,"scoreD"=26 )
+        timeCost <- c( timeCost ,"scoreE"=20 ,"scoreF"=3 )  # 측정필요.
+        timeCost <- c( timeCost ,"scoreLAr13"=70 ,"scoreLAr24"=70 ,"scoreLVr13"=70 ,"scoreLVr24"=70 )   # extention을 추가한 후 재측정 요.
+        timeCost <- c( timeCost ,"scoreLAe13"=70 ,"scoreLAe24"=70 ,"scoreLVe13"=70 ,"scoreLVe24"=70 )
+        timeCost <- c( timeCost ,"scoreLAc13"=70 ,"scoreLAc24"=70 ,"scoreLVc13"=70 ,"scoreLVc24"=70 )
+        timeCost <- c( timeCost ,"scoreLAf13"=70 ,"scoreLAf24"=70 ,"scoreLVf13"=70 ,"scoreLVf24"=70 )
+    }
     if( FALSE ){ # aux info
         # mName 별 소요시간 참고(aIdx 5000개). bScr도 나중에 추가할 것.
         # score1 is done.(cut 2923/10000)   cost: 11.4mins
