@@ -122,7 +122,7 @@ for( sfcIdx in 0 ){ # 0:2
     # bUtil.cut1( byMethod 2st ) --------------------------------------------------------
     #   
     surFlag <- rep( T ,length(allIdxF) )
-    bLst <- k.blockLst( length(allIdxF) ,100*ifelse(testMode,5,400) )
+    bLst <- k.blockLst( length(allIdxF) ,100*ifelse(testMode,5,50) )
     prllLog$fLogStr( sprintf("start cut0 for group%d. bLst size %d",sfcIdx,length(bLst)), pTime=T)
 
     sfExport("fHName")  ;sfExport("allIdxF")    ;sfExport("cutH.InitialCut")
