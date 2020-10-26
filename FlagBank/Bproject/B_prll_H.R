@@ -1,5 +1,5 @@
 Bprll.bSCut <- function( gEnv.w ,stdZoid ,hMtxLst_bS ,fHName ,tgt.scMtx ){
-        # stdIdx  ;stdZoid
+    # stdIdx  ;stdZoid
     aZoidMtx <- matrix(stdZoid ,nrow=1)
     phVP.grp <- bS.getPhVPGrp( gEnv.w ,aZoidMtx )
 

@@ -212,7 +212,55 @@ CRpt.cutRst1Score <- function( aZoidMtx ,filter.grp ,cut.grp ,fHName ,logFile="C
 
 }
 
+CRpt.cutRst1Score_bS <- function( gEnv ,allIdxF ,hMtxLst_bS ,fHName ,tgt.scMtx=NULL ,logFile="CRpt_CutRst1Score" ){
 
+    tStmp <- Sys.time()
+
+    aZoidMtx <- gEnv$allZoidMtx[allIdxF ,,drop=F]
+    phVP.grp <- bS.getPhVPGrp( gEnv ,aZoidMtx )
+
+    cut.grp <- bS.getCutGrp( hMtxLst_bS ,tgt.scMtx=tgt.scMtx )  # curHMtxLst 적용 추가 필요.
+
+    scoreMtx.grp <- bS.getScoreMtx.grp( phVP.grp ,aZoidMtx ,tgt.scMtx=tgt.scMtx )
+
+    csLst <- bS.getCut1Score( scoreMtx.grp ,cut.grp ,fHName )
+    # cutRst.bS <- bS.cut( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx ,anaOnly=F ) 
+
+    csLst$tDiff <- Sys.time() - tStmp
+
+}
+
+
+cutH.logAllIdxF <- function( allIdxF ,gEnv ,logFileName="allIdxF.txt" ){
+
+    logFileName <- sprintf("./report/allIdxF/%s",logFileName)
+
+    fLog <- k.getFlogObj( logFileName )
+
+    allZoidMtx <- gEnv$allZoidMtx[allIdxF,,drop=F]
+    allZoidMtx <- cbind( allIdxF ,allZoidMtx )
+
+    for( rIdx in 1:length(allIdxF) ){
+        aIdx <- allIdxF[rIdx]
+        aZoid <- gEnv$allZoidMtx[aIdx ,]
+        logStr <- sprintf("%3d",aZoid)
+        logStr <- c( sprintf("%9d",aIdx) ,logStr )
+        fLog$fLogStr( paste(logStr,collapse=",") ,pAppend=(rIdx>1) )
+    }
+
+    cat( sprintf("  Saved in %s \n",logFileName) )
+
+}
+
+cutH.getAllIdxF <- function( logFile="allIdxF.txt" ){
+
+    logFileName <- sprintf("./report/allIdxF/%s",logFileName)
+    cat( sprintf("  load from %s \n",logFileName) )
+
+    k <- read.delim( logFileName ,sep="," ,stringsAsFactor=F ,na.string="" )
+
+    return( k[,1] )
+}
 
 # Code BackUp
 if( FALSE ){    # cutH.InitialCut() 사용 이후로 필요 없어진 듯 하다.

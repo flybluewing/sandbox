@@ -283,7 +283,7 @@ for( sfcIdx in 0 ){ # 0:2
         allIdxF <- allIdxF[surFlag]
         logger$fLogStr(sprintf("   - bUtil.chkStdMIPair()   survival size :%7d",length(allIdxF)),pTime=T)
         if( saveMidResult ) save( allIdxF ,file=sprintf("Obj_allIdxF%d_chkStdMIPair_%d.save",sfcIdx,lastH) )
-        rptStr <- sprintf( "chkStdMIPair - allIdxF size : %dk" ,length(allIdxF) %/% 1000 )
+        rptStr <- sprintf( "chkStdMIPair - allIdxF size : %d" ,length(allIdxF) )
         prllLog$fLogStr( rptStr, pTime=T)   ;rptStr
     }   # sprintf("Obj_allIdxF%d_chkStdMIPair_%d.save",sfcIdx,lastH)
 
@@ -308,6 +308,8 @@ for( sfcIdx in 0 ){ # 0:2
     prllLog$fLogStr( rptStr, pTime=T)   ;rptStr
     save( allIdxF ,file=sprintf("./save/finalCut/Obj_allIdxF_%d_grp%d.save",lastH,sfcIdx) )
 
+    logFileName <- sprintf("allIdxF_%d_grp%d.txt",lastH,sfcIdx)
+    cutH.logAllIdxF( allIdxF ,gEnv ,logFileName=logFileName )
 
     # -- End of Cut ---------------------------------------------------------------------
     # ===================================================================================
