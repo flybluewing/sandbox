@@ -1,6 +1,6 @@
 source("header.r")  ;source("B_H.R")    ;source("cut_H.R")
 
-lastH <- 934
+lastH <- 934            # lastH <- 862      # °³¹ß»ùÇÃ
 tgt.scMtx <- NULL
 testMode <- F            #check
 prllNum <- 5
@@ -73,7 +73,7 @@ for( sfcIdx in 0 ){ # 0:2
     if( testMode ){
         allIdxF <- allIdxF[sample(1:length(allIdxF),1000)]
     }
-    # save( allIdxF ,file=sprintf("Obj_allIdxF%d_cutInit.save",sfcIdx) )
+    # save( allIdxF ,file=sprintf("./save/cutResult/Obj_allIdxF%d_cutInit.save",sfcIdx) )
     # logger$fLogStr(sprintf("Initial size :%7d",length(allIdxF)),pTime=T)
 
     #   primary cut --------------------------------------------------------------------
@@ -115,7 +115,7 @@ for( sfcIdx in 0 ){ # 0:2
     }
     allIdxF <- allIdxF[surFlag]
     logger$fLogStr(sprintf("   - bUtil.cut1( byMethod 1st )   final size :%7d",length(allIdxF)),pTime=T)
-    if( saveMidResult ) save( allIdxF ,file=sprintf("Obj_allIdxF%d_cut0_byM1st_%d.save",sfcIdx,lastH) )
+    if( saveMidResult ) save( allIdxF ,file=sprintf("./save/cutResult/Obj_allIdxF%d_cut0_byM1st_%d.save",sfcIdx,lastH) )
     rptStr <- sprintf( "allIdxF size : %dk" ,length(allIdxF) %/% 1000 )
     prllLog$fLogStr( rptStr, pTime=T)   ;rptStr
 
@@ -155,7 +155,7 @@ for( sfcIdx in 0 ){ # 0:2
     }
     allIdxF <- allIdxF[surFlag]
     logger$fLogStr(sprintf("   - bUtil.cut1( byMethod 1st )   final size :%7d",length(allIdxF)),pTime=T)
-    if( saveMidResult ) save( allIdxF ,file=sprintf("Obj_allIdxF%d_cut0_byM2nd_%d.save",sfcIdx,lastH) )
+    if( saveMidResult ) save( allIdxF ,file=sprintf("./save/cutResult/Obj_allIdxF%d_cut0_byM2nd_%d.save",sfcIdx,lastH) )
     rptStr <- sprintf( "allIdxF size : %dk" ,length(allIdxF) %/% 1000 )
     prllLog$fLogStr( rptStr, pTime=T)   ;rptStr
 
@@ -192,7 +192,7 @@ for( sfcIdx in 0 ){ # 0:2
         }
         allIdxF <- allIdxF[surFlag]
         logger$fLogStr(sprintf("   - bUtil.cut1(%s)   survival size :%7d",mfName,length(allIdxF)),pTime=T)
-        if( saveMidResult ) save( allIdxF ,file=sprintf("Obj_allIdxF%d_cut0_%s_%d.save",sfcIdx,mfName,lastH) )
+        if( saveMidResult ) save( allIdxF ,file=sprintf("./save/cutResult/Obj_allIdxF%d_cut0_%s_%d.save",sfcIdx,mfName,lastH) )
         rptStr <- sprintf( "allIdxF size : %dk" ,length(allIdxF) %/% 1000 )
         prllLog$fLogStr( rptStr, pTime=T)   ;rptStr
     }
@@ -228,11 +228,11 @@ for( sfcIdx in 0 ){ # 0:2
         }
         allIdxF <- allIdxF[surFlag]
         logger$fLogStr(sprintf("   - bC.cut(%s)   survival size :%7d",crMName,length(allIdxF)),pTime=T)
-        if( saveMidResult ) save( allIdxF ,file=sprintf("Obj_allIdxF%d_bCCut_%s_%d.save",sfcIdx,crMName,lastH) )
+        if( saveMidResult ) save( allIdxF ,file=sprintf("./save/cutResult/Obj_allIdxF%d_bCCut_%s_%d.save",sfcIdx,crMName,lastH) )
         rptStr <- sprintf( "allIdxF size : %dk" ,length(allIdxF) %/% 1000 )
         prllLog$fLogStr( rptStr, pTime=T)   ;rptStr
 
-    }   # sprintf("Obj_allIdxF%d_bCCut_%s_%d.save",sfcIdx,crMName,lastH)
+    }   # sprintf("./save/cutResult/Obj_allIdxF%d_bCCut_%s_%d.save",sfcIdx,crMName,lastH)
 
 
     # bUtil.chkStdMIPair() ------------------------------------------------------------------
@@ -282,10 +282,10 @@ for( sfcIdx in 0 ){ # 0:2
         }
         allIdxF <- allIdxF[surFlag]
         logger$fLogStr(sprintf("   - bUtil.chkStdMIPair()   survival size :%7d",length(allIdxF)),pTime=T)
-        if( saveMidResult ) save( allIdxF ,file=sprintf("Obj_allIdxF%d_chkStdMIPair_%d.save",sfcIdx,lastH) )
+        if( saveMidResult ) save( allIdxF ,file=sprintf("./save/cutResult/Obj_allIdxF%d_chkStdMIPair_%d.save",sfcIdx,lastH) )
         rptStr <- sprintf( "chkStdMIPair - allIdxF size : %d" ,length(allIdxF) )
         prllLog$fLogStr( rptStr, pTime=T)   ;rptStr
-    }   # sprintf("Obj_allIdxF%d_chkStdMIPair_%d.save",sfcIdx,lastH)
+    }   # sprintf("./save/cutResult/Obj_allIdxF%d_chkStdMIPair_%d.save",sfcIdx,lastH)
 
 
     # bS.cut() ------------------------------------------------------------------
@@ -299,7 +299,7 @@ for( sfcIdx in 0 ){ # 0:2
         prllLog$fLogStr(    sprintf("   - cutH.bS.Cut( )   survival size :%7d  time:%.1f%s",length(allIdxF),cutRst.bS$tDiff,units(cutRst.bS$tDiff) )
                             ,pTime=T
         )
-        if( saveMidResult ) save( allIdxF ,file=sprintf("Obj_allIdxF%d_bScut_%d.save",sfcIdx,lastH) )
+        if( saveMidResult ) save( allIdxF ,file=sprintf("./save/cutResult/Obj_allIdxF%d_bScut_%d.save",sfcIdx,lastH) )
 
         # aux() ------------------------------------------------------------------
     }
@@ -349,7 +349,7 @@ for( sfcIdx in 0 ){ # 0:2
     }
     allIdxF <- allIdxF[surFlag]
     logger$fLogStr(sprintf("   - bUtil.cut2()   final size :%7d",length(allIdxF)),pTime=T)
-    save( allIdxF ,file=sprintf("Obj_allIdxF%d_cut2_%d.save",sfcIdx,lastH) )
+    save( allIdxF ,file=sprintf("./save/cutResult/Obj_allIdxF%d_cut2_%d.save",sfcIdx,lastH) )
 
 
 
