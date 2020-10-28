@@ -1599,5 +1599,68 @@ bUtil.checkMatch_LinearPtn <- function( lPtn ,aCode ){
 }
 
 
+bUtil.getClM_cutRst1Score <- function( cutRst1 ,cfgLst ,mNameGrp ,fHName ){
+	#	cutRst1 <- cutRst1Score$aLst[[1]]
+	#	cfgLst <- scoreMtxCfg	# scoreMtxCfg 호환 객체 리스트
+	#	mNameGrp <- tgt.scMtx
+	summMtxMin <- NULL	;summMtx.rebMin <- NULL	;scMtx.szMin <- NULL
+	sumTotMtxMin <- NULL
 
+	summMtxLst <- NULL		;summMtx.rebLst <- NULL		;scMtx.szLst <- NULL
+	sumTotMtxLst <- NULL
+	for( hName in fHName ){
+		for( mName in mNameGrp ){
+			summ <- cutRst1[[hName]]$basic[[mName]]$summ
+			cfg <- cfgLst[[mName]]
+			
+			# summMtx
+			if( is.null(summMtxMin) ){
+				summMtxMin <- cfg$summMtx
+				summMtxMin[,] <- 0
+			}
+			summMtxClM <- bUtil.closeMax_Mtx( scoreMtx=summ$summMtx ,windMtxMin=summMtxMin ,windMtxMax=cfg$summMtx )
+			summMtxLst[[sprintf("%s_%s",hName,mName)]] <- summMtxClM
+			
+			# summMtx.reb
+			# scMtx.sz
+			# sumTotMtxMin
+		}
+	}
+
+	summMtxClM		<- bUtil.getMtxMaxVal_fromLst( summMtxLst )
+	summMtx.rebClM	<- bUtil.getMtxMaxVal_fromLst( summMtx.rebLst )
+	scMtx.szClM		<- bUtil.getMtxMaxVal_fromLst( scMtx.szLst )
+	sumTotMtxClM	<- bUtil.getMtxMaxVal_fromLst( sumTotMtxLst )
+
+	return( list(summMtx=summMtxClM,summMtx.reb=summMtx.rebClM,scMtx.sz=scMtx.szClM,sumTotMtx=sumTotMtxClM) )
+}
+
+bUtil.getMtxMaxVal_fromLst <- function( mtxLst ){
+	# mtxLst <- summMtxLst
+	rMtx <- NULL
+	for( idx in seq_len(length(mtxLst)) ){
+		if( idx==1 ){
+			rMtx <- mtxLst[[1]]
+			next
+		}
+
+		mtxFlag <- rMtx<mtxLst[[idx]]
+		rMtx[mtxFlag] <- mtxLst[[idx]][mtxFlag]
+	}
+	return( rMtx )
+}
+
+bUtil.getMtxMinVal_fromLst <- function( mtxLst ){
+	rMtx <- NULL
+	for( idx in seq_len(length(mtxLst)) ){
+		if( idx==1 ){
+			rMtx <- mtxLst[[1]]
+			next
+		}
+
+		mtxFlag <- rMtx>mtxLst[[idx]]
+		rMtx[mtxFlag] <- mtxLst[[idx]][mtxFlag]
+	}
+	return( rMtx )
+}
 

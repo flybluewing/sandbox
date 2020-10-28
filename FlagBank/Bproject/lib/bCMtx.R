@@ -254,6 +254,52 @@ if( TRUE ){
 
 }
 
+crMName <- "crScrN01ClM"    # close max (for all hName)
+if( FALSE ){
+
+    bCMtxLst[[crMName]] <- function( hCRScr=NULL ){
+
+        rObj <- list( 	idStr=crMName  ,mName=c("score1","score3","score8")
+		)
+
+        rObj$fMtxObj <- function( scoreMtx.grp ,cut.grp ,fHName=NULL ){
+            # fHName은 cutRst에서 얻어낸다.
+            if( FALSE ){    # comment
+                # sample code for debug
+                #       mIdx <- "score1"
+                #       rawMtx <- sapply( scoreMtx.grp$basic ,function(p){ p[[mIdx]]$scoreMtx[1,] })
+                #       cfg <- scoreMtxCfg[[ mIdx ]]
+                #       evtObj <- bFCust.getEvtMtx( rawMtx ,cfg )
+                #       
+            }
+
+            tgt.scMtx <- rObj$mName
+            cutRst1Score <- bUtil.getCut1Score( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx )
+
+            if( is.null(fHName) ){
+                fHName <- names(cutRst1Score$aLst[[1]])
+            }
+
+            aLen <- length(cutRst1Score$aLst)
+            cName <- c(  "xxx" ,"xxx2"
+            )
+            crScrMtx <- matrix( 0, nrow=aLen, ncol=length(cName) )	;colnames(crScrMtx) <- cName
+
+            phNameAll <- names(scoreMtx.grp$basic)
+
+            for( aIdx in 1:aLen ){
+                # working
+                bUtil.getClM_cutRst1Score( cutRst1=cutRst1Score$aLst[[aIdx]] ,cfgLst=scoreMtxCfg ,mNameGrp=rObj$mName ,fHName )
+
+            }
+
+            return( crScrMtx )
+        }
+        return( rObj )
+    }
+
+}
+
 
 crMName <- "crScrN02R"  # Cut-Result, Score N, Raw val only
 if( TRUE ){
