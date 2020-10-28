@@ -73,6 +73,9 @@ for( sfcIdx in 0 ){ # 0:2
     if( testMode ){
         allIdxF <- allIdxF[sample(1:length(allIdxF),1000)]
     }
+    rptStr <- sprintf( "Initial allIdxF size : %dk" ,length(allIdxF) %/% 1000 )
+    prllLog$fLogStr( rptStr, pTime=T)   ;rptStr
+
     # save( allIdxF ,file=sprintf("./save/cutResult/Obj_allIdxF%d_cutInit.save",sfcIdx) )
     # logger$fLogStr(sprintf("Initial size :%7d",length(allIdxF)),pTime=T)
 
