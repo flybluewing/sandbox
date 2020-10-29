@@ -1604,10 +1604,10 @@ bUtil.getClM_cutRst1Score <- function( cutRst1 ,cfgLst ,mNameGrp ,fHName ){
 	#	cfgLst <- scoreMtxCfg	# scoreMtxCfg 호환 객체 리스트
 	#	mNameGrp <- tgt.scMtx
 	summMtxMin <- NULL	;summMtx.rebMin <- NULL	;scMtx.szMin <- NULL
-	sumTotMtxMin <- NULL
+	wind <- c("min"=0 ,"max"=0)
 
 	summMtxLst <- NULL		;summMtx.rebLst <- NULL		;scMtx.szLst <- NULL
-	sumTotMtxLst <- NULL
+	sumTotLst <- NULL
 	for( hName in fHName ){
 		for( mName in mNameGrp ){
 			summ <- cutRst1[[hName]]$basic[[mName]]$summ
@@ -1618,21 +1618,72 @@ bUtil.getClM_cutRst1Score <- function( cutRst1 ,cfgLst ,mNameGrp ,fHName ){
 				summMtxMin <- cfg$summMtx
 				summMtxMin[,] <- 0
 			}
-			summMtxClM <- bUtil.closeMax_Mtx( scoreMtx=summ$summMtx ,windMtxMin=summMtxMin ,windMtxMax=cfg$summMtx )
-			summMtxLst[[sprintf("%s_%s",hName,mName)]] <- summMtxClM
+			clMtx <- bUtil.closeMax_Mtx( scoreMtx=summ$summMtx ,windMtxMin=summMtxMin ,windMtxMax=cfg$summMtx )
+			summMtxLst[[sprintf("%s_%s",hName,mName)]] <- clMtx
 			
 			# summMtx.reb
+			if( is.null(summMtx.rebMin) ){
+				summMtx.rebMin <- cfg$summMtx
+				summMtx.rebMin[,] <- 0
+			}
+			clMtx <- bUtil.closeMax_Mtx( scoreMtx=summ$summMtx.reb ,windMtxMin=summMtx.rebMin ,windMtxMax=cfg$summMtx.reb )
+			summMtx.rebLst[[sprintf("%s_%s",hName,mName)]] <- clMtx
+
 			# scMtx.sz
-			# sumTotMtxMin
+			if( is.null(scMtx.szMin) ){
+				scMtx.szMin <- cfg$summMtx
+				scMtx.szMin[,] <- 0
+			}
+			clMtx <- bUtil.closeMax_Mtx( scoreMtx=summ$scMtx.sz ,windMtxMin=scMtx.szMin ,windMtxMax=cfg$scMtx.sz )
+			scMtx.szLst[[sprintf("%s_%s",hName,mName)]] <- clMtx
+
+			# sumTot ----------------------------------------------------------------------
+			#	FCust_H.R의 FCust_stdCut.hIdx() 함수 참고.
+			sumTot <- c("lev2ClM"=0 ,"lev3ClM"=0 ,"summMtxRaw"=0 ,"summMtxEvt"=0 ,"scMtxSzRaw"=0 ,"scMtxSzEvt"=0 )
+			if( TRUE ){
+				botThld		<- summ$fColEvt$closeMaxDistVal - 2
+				eSumLev2	<- sum(summ$fColEvt$fClMMtx[,"lev2ClM"] > botThld )
+				wind["max"] <- cfg$evtMaxFColTot["lev2Max"]
+				sumTot["lev2ClM"] <- bUtil.closeMax( eSumLev2 ,wind=wind )
+				botThld <- summ$fColEvt$closeMaxDistVal - 2
+				eSumLev3 <- sum(summ$fColEvt$fClMMtx[,"lev3ClM"] > botThld )
+				wind["max"] <- cfg$evtMaxFColTot["lev3Max"]
+				sumTot["lev3ClM"] <- bUtil.closeMax( eSumLev3 ,wind=wind )
+
+				wind["max"] <- cfg$summMtx.sum["raw"]
+				sumTot["summMtxRaw"] <- bUtil.closeMax( sum(summ$summMtx["raw",]) ,wind=wind )
+				wind["max"] <- cfg$summMtx.sum["evt"]
+				sumTot["summMtxEvt"] <- bUtil.closeMax( sum(summ$summMtx["evt",]) ,wind=wind )
+
+				wind["max"] <- cfg$scMtx.sz.sum["rebCnt.r"]
+				sumCol <- c("r.ph","r.fCol","r.dblHpnFlg")
+				sumTot["scMtxSzRaw"] <- bUtil.closeMax( sum(summ$scMtx.sz["rebCnt",sumCol]) ,wind=wind )
+
+				wind["max"] <- cfg$scMtx.sz.sum["rebCnt.e"]
+				sumCol <- c("e.ph","e.fCol","e.dblHpnFlg")
+				sumTot["scMtxSzEvt"] <- bUtil.closeMax( sum(summ$scMtx.sz["rebCnt",sumCol]) ,wind=wind )
+			}
+			sumTotLst[[sprintf("%s_%s",hName,mName)]] <- sumTot
+
 		}
 	}
 
 	summMtxClM		<- bUtil.getMtxMaxVal_fromLst( summMtxLst )
 	summMtx.rebClM	<- bUtil.getMtxMaxVal_fromLst( summMtx.rebLst )
 	scMtx.szClM		<- bUtil.getMtxMaxVal_fromLst( scMtx.szLst )
-	sumTotMtxClM	<- bUtil.getMtxMaxVal_fromLst( sumTotMtxLst )
+	
+	sumTotClM		<- NULL
+	for( idx in seq_len(length(sumTotLst)) ){
+		if( idx==1 ){
+			sumTotClM <- sumTotLst[[idx]]
+			next
+		}
 
-	return( list(summMtx=summMtxClM,summMtx.reb=summMtx.rebClM,scMtx.sz=scMtx.szClM,sumTotMtx=sumTotMtxClM) )
+		updateFlag <- sumTotClM < sumTotLst[[idx]]
+		sumTotClM[updateFlag] <- sumTotLst[[idx]][updateFlag]
+	}
+
+	return( list(summMtx=summMtxClM,summMtx.reb=summMtx.rebClM,scMtx.sz=scMtx.szClM,sumTot=sumTotClM) )
 }
 
 bUtil.getMtxMaxVal_fromLst <- function( mtxLst ){

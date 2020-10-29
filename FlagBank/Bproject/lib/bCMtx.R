@@ -289,7 +289,7 @@ if( FALSE ){
 
             for( aIdx in 1:aLen ){
                 # working
-                bUtil.getClM_cutRst1Score( cutRst1=cutRst1Score$aLst[[aIdx]] ,cfgLst=scoreMtxCfg ,mNameGrp=rObj$mName ,fHName )
+                clM <- bUtil.getClM_cutRst1Score( cutRst1=cutRst1Score$aLst[[aIdx]] ,cfgLst=scoreMtxCfg ,mNameGrp=rObj$mName ,fHName )
 
             }
 

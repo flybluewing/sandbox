@@ -249,6 +249,8 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
             rptFile <- sprintf("H%d_cutRst1Score",lastH)
             B.rptCutRst1Score_byMtx( resultLst ,mName ,file=rptFile)
         }
+
+        B.rpt_CutRstClM( resultLst ,tgt.scMtx ,file=sprintf("CutRstCLM_%d",lastH) )
     }
 
 

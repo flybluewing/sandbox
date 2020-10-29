@@ -823,6 +823,9 @@ B.rptCutRst1Score_bS <- function( resultLst ,file="CutRst1Score_bS" ){
 
 }
 
+B.rpt_CutRstClM <- function( resultLst ,tgt.scMtx ,file="CutRstCLM" ){
+
+}
 
 B.get_testData.grp.old <- function( testSpan ,gEnv ,allIdxLst ,fRstLst ,tgt.scMtx=NULL ,get.scoreMtx.grp=FALSE ){
 
