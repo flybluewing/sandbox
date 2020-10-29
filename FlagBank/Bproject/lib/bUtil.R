@@ -1599,7 +1599,7 @@ bUtil.checkMatch_LinearPtn <- function( lPtn ,aCode ){
 }
 
 
-bUtil.getClM_cutRst1Score <- function( cutRst1 ,cfgLst ,mNameGrp ,fHName ){
+bUtil.getClM_cutRst1Score <- function( cutRst1 ,cfgLst ,mNameGrp ,fHName=NULL ){
 	#	cutRst1 <- cutRst1Score$aLst[[1]]
 	#	cfgLst <- scoreMtxCfg	# scoreMtxCfg 호환 객체 리스트
 	#	mNameGrp <- tgt.scMtx
@@ -1608,6 +1608,10 @@ bUtil.getClM_cutRst1Score <- function( cutRst1 ,cfgLst ,mNameGrp ,fHName ){
 
 	summMtxLst <- NULL		;summMtx.rebLst <- NULL		;scMtx.szLst <- NULL
 	sumTotLst <- NULL
+
+	if( is.null(fHName) ){
+		fHName <- names(cutRst1)
+	}
 	for( hName in fHName ){
 		for( mName in mNameGrp ){
 			summ <- cutRst1[[hName]]$basic[[mName]]$summ

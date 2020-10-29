@@ -5,7 +5,7 @@
     # cutRst$cutInfoLst <- append( cutRst$cutInfoLst ,cut2Rst$cutInfoLst )
 
 
-bC.cut <- function( crMName ,scoreMtx.grp ,cut.grp ,anaOnly=F ,logger=NULL ){
+bC.cut <- function( crMName ,scoreMtx.grp ,cut.grp ,fHName ,anaOnly=F ,logger=NULL ){
     # 참고사항
     #   - 일단은 crMName 하나씩 처리하는 것으로 하자. 나중에 상태를 봐 가며 다수 cutter 추가 적용.
     #     bCMtxLst 내에서 bUtil.getCut1Score() 실행되는 횟수를 최소화 하기 위함.
@@ -30,7 +30,7 @@ bC.cut <- function( crMName ,scoreMtx.grp ,cut.grp ,anaOnly=F ,logger=NULL ){
         return( list( surFlag=surFlag ,cutInfoLst=cutInfoLst ) )
     }
 
-    crScrMtx <- mtxMaker$fMtxObj( scoreMtx.grp ,cut.grp )
+    crScrMtx <- mtxMaker$fMtxObj( scoreMtx.grp ,cut.grp ,fHName )
 
 
     cutObj <- FCust_stdCut.CMtxRow( crMName )

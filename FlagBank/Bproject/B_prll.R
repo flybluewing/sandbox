@@ -110,8 +110,8 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
         for( crMName in names(bCMtxCfg) ){  # 멀티 cutRst1Score 에 대한 필터링.
             # bUtil.cut2()의 발전형.
             #   - 멀티 scoreMtx에 대한 기준이 아님. 멀티 scoreMtx에 대한 기준은 bFMtxMulti.R에서 처리.
-            #   - bC.cut()에서는 sfcLate에 대해서만 처리. ( bFMtxMulti.R에서는 hName별 처리도 이루어짐. )
-            crCutRst <- bC.cut( crMName ,scoreMtx.grp ,cut.grp ,anaOnly=T )
+            #   - bC.cut()에서는 sfcLate에 대해서만 처리. ( bFMtxMulti.R에서는 hName별 처리도 이루어짐. ) <- 수정.
+            crCutRst <- bC.cut( crMName ,scoreMtx.grp ,cut.grp ,fHName ,anaOnly=T )
             cutRst$cutInfoLst <- append( cutRst$cutInfoLst ,crCutRst$cutInfoLst )
         }
 
@@ -236,11 +236,19 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
                       )
         rptBanM <- c("score1")
     }
-    rptBanTyp   <- c( "lastRawPair","aux_sfc" )
-    rptBanM     <- c("score1")
+    rptBanTyp   <- c( "lastRawPair","aux_sfc" ,"scMtx.sz.cut" )
+    rptBanM     <- c( "score1","score2","score3","score4","score5","score6","score7","score8","score9" )
+    rptBanM     <- c( rptBanM ,c("mf4567") )
+    rptBanM     <- c( rptBanM ,c("crScrN01PhEvt","crScrN02PhEvt") )
     B.rptCutRstLst( cutRstLst ,file=rptFile ,rptBanTyp=rptBanTyp ,rptBanM=rptBanM )
 
-    if( FALSE ){
+
+
+
+
+
+
+    if( FALSE ){    # inspection --------------------------------------------------------------------
         B.rptCutRst1Score(      resultLst ,file=sprintf("CutRst1Score_%d",lastH)    )
         B.rptCutRst1Score_bS(   resultLst ,file=sprintf("CutRst1Score_%d_bS",lastH) )
 
@@ -250,7 +258,7 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
             B.rptCutRst1Score_byMtx( resultLst ,mName ,file=rptFile)
         }
 
-        B.rpt_CutRstClM( resultLst ,tgt.scMtx ,file=sprintf("CutRstCLM_%d",lastH) )
+        B.rpt_CutRstClM( resultLst ,tgt.scMtx ,rptfile=sprintf("CutRstCLM_%d",lastH) )
     }
 
 

@@ -254,51 +254,6 @@ if( TRUE ){
 
 }
 
-crMName <- "crScrN01ClM"    # close max (for all hName)
-if( FALSE ){
-
-    bCMtxLst[[crMName]] <- function( hCRScr=NULL ){
-
-        rObj <- list( 	idStr=crMName  ,mName=c("score1","score3","score8")
-		)
-
-        rObj$fMtxObj <- function( scoreMtx.grp ,cut.grp ,fHName=NULL ){
-            # fHName은 cutRst에서 얻어낸다.
-            if( FALSE ){    # comment
-                # sample code for debug
-                #       mIdx <- "score1"
-                #       rawMtx <- sapply( scoreMtx.grp$basic ,function(p){ p[[mIdx]]$scoreMtx[1,] })
-                #       cfg <- scoreMtxCfg[[ mIdx ]]
-                #       evtObj <- bFCust.getEvtMtx( rawMtx ,cfg )
-                #       
-            }
-
-            tgt.scMtx <- rObj$mName
-            cutRst1Score <- bUtil.getCut1Score( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx )
-
-            if( is.null(fHName) ){
-                fHName <- names(cutRst1Score$aLst[[1]])
-            }
-
-            aLen <- length(cutRst1Score$aLst)
-            cName <- c(  "xxx" ,"xxx2"
-            )
-            crScrMtx <- matrix( 0, nrow=aLen, ncol=length(cName) )	;colnames(crScrMtx) <- cName
-
-            phNameAll <- names(scoreMtx.grp$basic)
-
-            for( aIdx in 1:aLen ){
-                # working
-                clM <- bUtil.getClM_cutRst1Score( cutRst1=cutRst1Score$aLst[[aIdx]] ,cfgLst=scoreMtxCfg ,mNameGrp=rObj$mName ,fHName )
-
-            }
-
-            return( crScrMtx )
-        }
-        return( rObj )
-    }
-
-}
 
 
 crMName <- "crScrN02R"  # Cut-Result, Score N, Raw val only
@@ -539,7 +494,7 @@ if( TRUE ){
 }
 
 
-crMName <- "crScrN02Sum"  # Cut-Result, Score N, Raw val only
+crMName <- "crScrN02Sum"  # Cut-Result, Score N, Raw val only.   "sfcLate" only
 if( TRUE ){
 
     bCMtxLst[[crMName]] <- function( hCRScr=NULL ){
@@ -596,4 +551,52 @@ if( TRUE ){
     }
 
 }
+
+crMName <- "crScrN02SumClM"    # close max (for all hName)
+if( TRUE ){
+
+    bCMtxLst[[crMName]] <- function( hCRScr=NULL ){
+
+        rObj <- list( 	idStr=crMName  ,mName=c("score1","score2","score3","score4","score5","score6","score7","score8","score9")
+		)
+
+        rObj$fMtxObj <- function( scoreMtx.grp ,cut.grp ,fHName ){
+            # fHName은 cutRst에서 얻어낸다.
+            if( FALSE ){    # comment
+                # sample code for debug
+                #       mIdx <- "score1"
+                #       rawMtx <- sapply( scoreMtx.grp$basic ,function(p){ p[[mIdx]]$scoreMtx[1,] })
+                #       cfg <- scoreMtxCfg[[ mIdx ]]
+                #       evtObj <- bFCust.getEvtMtx( rawMtx ,cfg )
+                #       
+            }
+
+            tgt.scMtx <- rObj$mName
+            cutRst1Score <- bUtil.getCut1Score( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx )
+
+            aLen <- length(cutRst1Score$aLst)
+            cName <- c(  "sumTotHpn" ,"sumTot1" ,"sumTot2" ,"sumTot3"
+            )
+            crScrMtx <- matrix( 0, nrow=aLen, ncol=length(cName) )	;colnames(crScrMtx) <- cName
+
+            phNameAll <- names(scoreMtx.grp$basic)
+
+            for( aIdx in 1:aLen ){
+                clM <- bUtil.getClM_cutRst1Score( cutRst1=cutRst1Score$aLst[[aIdx]] ,cfgLst=scoreMtxCfg ,mNameGrp=rObj$mName ,fHName )
+                crScrMtx[aIdx,"sumTotHpn"]  <- sum(clM$sumTot>0)
+                crScrMtx[aIdx,"sumTot1"]  <- sum(clM$sumTot==1)
+                crScrMtx[aIdx,"sumTot2"]  <- sum(clM$sumTot==2)
+                crScrMtx[aIdx,"sumTot3"]  <- sum(clM$sumTot==3)
+
+                # clM$summMtx ,clM$summMtx.reb에 대해서는... 차후에 검토하자.
+            }
+
+            return( crScrMtx )
+        }
+        return( rObj )
+    }
+
+}
+
+
 

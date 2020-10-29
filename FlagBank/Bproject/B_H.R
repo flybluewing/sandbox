@@ -823,8 +823,28 @@ B.rptCutRst1Score_bS <- function( resultLst ,file="CutRst1Score_bS" ){
 
 }
 
-B.rpt_CutRstClM <- function( resultLst ,tgt.scMtx ,file="CutRstCLM" ){
+B.rpt_CutRstClM <- function( resultLst ,tgt.scMtx ,rptfile="CutRstCLM" ){
+    #  일단 sumTot만 살펴보자.
 
+    # logger <- k.getFlogObj( sprintf("./report/workRpt/%s.txt",rptfile) )
+    # logger$fLogStr("Start",pTime=T,pAppend=F)
+
+    logSumTot <- k.getFlogObj( sprintf("./report/workRpt/%s_sumTot.txt",rptfile) )
+    logSumTot$fLogStr("Start",pTime=T,pAppend=F)
+    logSumTot$fLogStr( sprintf("mName:%s",paste( tgt.scMtx ,collapse=",")) )
+
+    for( hIdx in names(resultLst) ){
+        if( is.null(resultLst[[hIdx]]$cutRst1Score) ) next
+
+        aIdx <- 1
+        cutRst1 <- resultLst[[hIdx]]$cutRst1Score$aLst[[aIdx]]
+        clM <- bUtil.getClM_cutRst1Score( cutRst1=cutRst1 ,cfgLst=scoreMtxCfg ,mNameGrp=tgt.scMtx )
+
+        rptStr <- paste( paste(names(clM$sumTot),clM$sumTot,sep=" ") ,collapse="   " )
+        logSumTot$fLogStr( sprintf("  H%s(hpn:%d) - %s",hIdx,sum(clM$sumTot>0),rptStr) )
+    }
+
+    cat(sprintf("   reported in %s \n",logSumTot$fileName))
 }
 
 B.get_testData.grp.old <- function( testSpan ,gEnv ,allIdxLst ,fRstLst ,tgt.scMtx=NULL ,get.scoreMtx.grp=FALSE ){

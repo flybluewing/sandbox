@@ -163,6 +163,18 @@ if( TRUE ){
     )
 }
 
+crMName <- "crScrN02SumClM"
+if( TRUE ){
+    bCMtxCfg[[crMName]] <- list(  mName = crMName
+        ,fCol = list(
+              "sumTotHpn" = list( rng=c(min=3,max= 6) ) # 3~
+             ,"sumTot1"   = list( rng=c(min=1,max= 6) ) # 1~
+             ,"sumTot2"   = list( rng=c(min=0,max= 6) ) # 0~
+             ,"sumTot3"   = list( rng=c(min=0,max= 0) ) # 0~0
+        )
+    )
+}
+
 
 for( idx in seq_len(length(bCMtxCfg)) ){
 
