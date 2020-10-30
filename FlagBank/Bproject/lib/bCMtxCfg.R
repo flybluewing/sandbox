@@ -175,6 +175,32 @@ if( TRUE ){
     )
 }
 
+crMName <- "crScrN03SumClM"
+if( TRUE ){
+    bCMtxCfg[[crMName]] <- list(  mName = crMName
+        #   .reportworkRpt/CutRstCLM_sumTotA.txt 참고
+        ,fCol = list(
+              "sumTotHpn" = list( rng=c(min=0,max= 4) ) #   ~4  예외 : 826
+             ,"sumTot1"   = list( rng=c(min=0,max= 6) ) # 
+             ,"sumTot2"   = list( rng=c(min=0,max= 6) ) # 
+             ,"sumTot3"   = list( rng=c(min=0,max= 0) ) #   ~0  예외 : 884 
+        )
+    )
+}
+
+crMName <- "crScrN04SumClM"
+if( TRUE ){
+    bCMtxCfg[[crMName]] <- list(  mName = crMName
+        #   .reportworkRpt/CutRstCLM_sumTotL.txt 참고
+        ,fCol = list(
+              "sumTotHpn" = list( rng=c(min=1,max= 3) ) # 1~    예외 : 797
+             ,"sumTot1"   = list( rng=c(min=0,max= 6) ) # 
+             ,"sumTot2"   = list( rng=c(min=0,max= 6) ) # 
+             ,"sumTot3"   = list( rng=c(min=0,max= 0) ) # ~0    예외 : 786
+        )
+    )
+}
+
 
 for( idx in seq_len(length(bCMtxCfg)) ){
 
