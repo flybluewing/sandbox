@@ -207,14 +207,14 @@ for( sfcIdx in 0 ){ # 0:2
         bLst <- k.blockLst( length(allIdxF) ,100*ifelse(testMode,5,20) )
         prllLog$fLogStr( sprintf("start bC.cut(%s) for group%d. bLst size %d",crMName,sfcIdx,length(bLst)), pTime=T)
 
-        sfExport("crMName") ;sfExport("allIdxF")    #    ;sfExport("cutH.bC.Cut")
+        sfExport("crMName") ;sfExport("allIdxF")    ;sfExport("fHName")    #    ;sfExport("cutH.bC.Cut")
         resultLst <- sfLapply( bLst ,function( blk ){
             tStmp <- Sys.time()
 
             blkSpan <- blk["start"]:blk["end"]
             scoreMtx.grp <- getScoreMtx.grp( gEnv$allZoidMtx[allIdxF[blkSpan],,drop=F] ,filter.grp ,tgt.scMtx=tgt.scMtx )
 
-            crCutRst <- bC.cut( crMName ,scoreMtx.grp ,cut.grp ,anaOnly=F )
+            crCutRst <- bC.cut( crMName ,scoreMtx.grp ,cut.grp ,fHName ,anaOnly=F )
 
             tDiff <- Sys.time() - tStmp
             logStr <- sprintf("  block finished for bC.cut(%s). %d/%d  %5.1f%s for %d~%d "
