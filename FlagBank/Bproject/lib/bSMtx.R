@@ -931,14 +931,565 @@ if( FALSE ){ # "sScore07"
 
 }
 
+if( FALSE ){ # "sScore08"
+
+	bS.sScore08.cName <- c(
+					 "max3","min3","max2MatCnt","min2MatCnt","minMax2MatCnt"
+					,"cTbl","fTbl"
+    )
+
+    bSMtx.sScore08 <- function( stdMI ,workArea ,wMI ,aObj ,aZoidMtx ){
+		scrMtx <- matrix( 0, nrow=length(workArea), ncol=length(bS.sScore08.cName) )	;colnames(scrMtx) <- bS.sScore08.cName
+        rownames(scrMtx) <- workArea
+        stdMILen <- nrow(wMI$rawTail)
+        if( 0==stdMILen ){
+            return( scrMtx )
+        }
+
+        rObj <- list( cInfo=NULL ,fTbl=NULL )
+        if( TRUE ){
+            cInfo <- list()
+            wMI$cStep <- wMI$cStepTail[stdMILen,]
+            cStep.srt <- sort(unique(wMI$cStep))
+            cLen <- length(cStep.srt)
+            if( 3<=cLen ){
+                cInfo$max3 <- cStep.srt[cLen-0:2]	;cInfo$min3 <- cStep.srt[1:3]
+            }
+            if( 2<=cLen ){
+                max2 <- cStep.srt[cLen-0:1]
+                min2 <- cStep.srt[1:2]
+                cInfo$max2MatFlag <- (wMI$cStep %in% max2)
+                cInfo$min2MatFlag <- (wMI$cStep %in% min2)
+                cInfo$cStep <- wMI$cStep
+            }
+
+            # 일단 보류. bSMtx는 phase에 따라 rawTail, cStepTail 컬럼 수가 다르다.
+            # cInfo$mat3Lst <- list()
+            # for( idx in 1:4 ){	# c3.x
+            # 	logId <- sprintf("c3%d",idx)
+            # 	cInfo$mat3Lst[[logId]] <- fCutU.getChkCStepValReb( zMtx[,0:2+idx,drop=F] )
+            # }
+            # cInfo$mat2Lst <- list()
+            # for( idx in 1:5 ){	# c2.x
+            # 	logId <- sprintf("c2%d",idx)
+            # 	cInfo$mat2Lst[[logId]] <- fCutU.getChkCStepValReb( zMtx[,0:1+idx,drop=F] )
+            # }
+
+            cInfo$cTbl <- table(wMI$cStep)
+            rObj$cInfo <- cInfo
+
+            if( 1<nrow(wMI$rawTail) ){
+                wMI$fStep <- wMI$fStepTail[nrow(wMI$fStepTail),]
+                rObj$fTbl <- table(wMI$fStep)
+            }
+        }
+
+
+        for( wIdx in seq_len(length(workArea)) ){
+            aIdx <- workArea[wIdx]
+            aCode <- aObj$aZoidMtx[aIdx,]       ;aRem <- aCode%%10
+            aCStep <- aObj$cStepMtx[aIdx,]      ;aFStep <- aObj$fStepMtx[aIdx,]
+
+			# minN, maxN
+			aCStep.srt <- sort(unique(aCStep))
+			cLen <- length(aCStep.srt)
+			if( 3<=cLen ){
+				scrMtx[aIdx ,"max3"] <- all( aCStep.srt[cLen-0:2]==rObj$cInfo$max3 )
+				scrMtx[aIdx ,"min3"] <- all( aCStep.srt[1:3]==rObj$cInfo$min3 )
+			}
+			if( 2<=cLen ){
+				matFlag <- ( aCStep==rObj$cInfo$cStep )
+				scrMtx[aIdx ,"max2MatCnt"] <- sum(matFlag[rObj$cInfo$max2MatFlag])
+				scrMtx[aIdx ,"min2MatCnt"] <- sum(matFlag[rObj$cInfo$min2MatFlag])
+				scrMtx[aIdx ,"minMax2MatCnt"] <- scrMtx[aIdx ,"min2MatCnt"] + scrMtx[aIdx ,"max2MatCnt"]
+
+				if( 2>scrMtx[aIdx ,"max2MatCnt"] ){	scrMtx[aIdx ,"max2MatCnt"] <- 0	}
+
+				if( 2>scrMtx[aIdx ,"min2MatCnt"] ){	scrMtx[aIdx ,"min2MatCnt"] <- 0	}
+
+				if( 3>scrMtx[aIdx ,"minMax2MatCnt"] ){	scrMtx[aIdx ,"minMax2MatCnt"] <- 0	}
+
+			}
+
+			cTbl <- table(aCStep)
+			if( length(rObj$cInfo$cTbl)==length(cTbl) ){
+				scrMtx[aIdx ,"cTbl"] <- all(names(cTbl)==names(rObj$cInfo$cTbl)) && all(cTbl==rObj$cInfo$cTbl)
+			}
+
+			if( !is.null(rObj$fTbl) ){
+				fTbl <- table(aFStep)
+				if( length(rObj$fTbl)==length(fTbl) ){
+					scrMtx[aIdx ,"fTbl"] <- all(names(fTbl)==names(rObj$fTbl)) && all(fTbl==rObj$fTbl)
+				}
+			}
+
+            # scrMtx[wIdx,"rebC.r"] <- sum(aCode==wMI$rawTail[stdMILen,])
+            # scrMtx[wIdx,"rebC.c"] <- sum(aCStep==wMI$cStepTail[stdMILen,])
+        }
+
+        return( scrMtx )
+
+    }
+
+    bSMtxLst[["sScore08"]] <- function( phVP ,aZoidMtx ,makeInfoStr=F ){
+        # phVP <- phVP.grp$phVPLst[[1]]
+		aLen <- nrow(aZoidMtx)
+        aObj <- phVP$getCodeW( aZoidMtx )
+
+		scoreMtx <- matrix( 0, nrow=aLen, ncol=length(bS.sScore08.cName) )	;colnames(scoreMtx) <- bS.sScore08.cName
+        rownames(scoreMtx) <- aObj$miIdStr
+		infoMtx <- NULL
+		if( makeInfoStr ){
+			cName <- c( "pvSubHLen" ,"pvSubName" )
+			infoMtx <- matrix( "" ,nrow=aLen ,ncol=length(cName) )	;colnames(infoMtx) <- cName
+			infoMtx[,"pvSubName"] <- aObj$miIdStr
+            for( pvName in names(phVP$stdMILst) ){
+                infoMtx[infoMtx[,"pvSubName"]==pvName ,"pvSubHLen"] <- phVP$stdMILst[[pvName]]$mtxLen
+            }
+		}
+		if( 0==length(aObj$miIdStr) ){
+			return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
+		}
+
+        for( pvName in aObj$miNames ){  # pvName <- aObj$miNames[2]
+            workArea <- which(aObj$miIdStr==pvName)
+            stdMI<-phVP$stdMILst[[pvName]]
+            wMI <- phVP$getCodeH( stdMI )
+            scrMtx <- bSMtx.sScore08( stdMI=stdMI ,workArea ,wMI=wMI ,aObj ,aZoidMtx )
+            scoreMtx[workArea,] <- scrMtx
+        }
+
+        return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
+    }
+
+}
+
+if( FALSE ){ # "sScore09" <- 보류. rawTail, cStepTail의 폭이 하드코딩 되어있다.
+    #   필요시, 다음 함수들을 가변폭에 적응할 수 있도록 커스터마이징 할 것.
+    #       u0.zoidMtx_ana()
+    #       u0.zoidCMtx_ana()
+    #       u0.zoidFMtx_ana()
+}
 
 
 
 
 
+if( FALSE ){ # "sScore0LAr13"
 
+    # 주의사항 : bSMtx는 tailMtx 폭이 가면적이므로 
+    #           "colA5","colB5" ,"colA6","colB6" 값은 없을 수도 있다.
+	bS.sScore0LAr13.cName <- c(  "colA1","colA2","colA3","colA4","colA5","colA6"
+					            ,"colB1","colB2","colB3","colB4","colB5","colB6"
+    )
 
+    bSMtx.sScore0LAr13 <- function( stdMI ,workArea ,wMI ,aObj ,aZoidMtx ){
+		scrMtx <- matrix( 0, nrow=length(workArea), ncol=length(bS.sScore0LAr13.cName) )	;colnames(scrMtx) <- bS.sScore0LAr13.cName
+        rownames(scrMtx) <- workArea
+        stdMILen <- nrow(wMI$rawTail)
+        if( 0==stdMILen ){
+            return( scrMtx )
+        }
 
+        rObj <- list( lPtn1=NULL ,lPtn2=NULL ,colLen=ncol(wMI$rawTail) )
+        if( TRUE ){
+            tailMtx <- wMI$rawTail
+            if( 1<stdMILen ){
+                rObj$lPtn1 <- bUtil.findLinearPtn( tailMtx ,yIdx=1 ,typ="A" )
+            }
+            if( 3<stdMILen ){
+                rObj$lPtn2 <- bUtil.findLinearPtn( tailMtx ,yIdx=3 ,typ="A" )
+            }
+        }
+
+        matCntA <- rep( 0 ,rObj$colLen )
+        matCntB <- rep( 0 ,rObj$colLen )
+        for( wIdx in seq_len(length(workArea)) ){
+            aIdx <- workArea[wIdx]
+            aCode <- aObj$aZoidMtx[aIdx,]       ;aRem <- aCode%%10
+            aCStep <- aObj$cStepMtx[aIdx,]      ;aFStep <- aObj$fStepMtx[aIdx,]
+
+            matCntA[] <- 0      ;matCntB[] <- 0
+            if( !is.null(rObj$lPtn1) ){
+                matCntA <- bUtil.checkMatch_LinearPtn( rObj$lPtn1 ,aCode )
+            }
+            if( !is.null(rObj$lPtn2) ){
+                matCntB <- bUtil.checkMatch_LinearPtn( rObj$lPtn2 ,aCode )
+            }
+
+            scrMtx[aIdx,"colA1"] <- matCntA[1]
+            scrMtx[aIdx,"colB1"] <- matCntB[1]
+            scrMtx[aIdx,"colA2"] <- matCntA[2]
+            scrMtx[aIdx,"colB2"] <- matCntB[2]
+            if( 3<=rObj$colLen ){
+                scrMtx[aIdx,"colA3"] <- matCntA[3]
+                scrMtx[aIdx,"colB3"] <- matCntB[3]
+            }
+            if( 4<=rObj$colLen ){
+                scrMtx[aIdx,"colA4"] <- matCntA[4]
+                scrMtx[aIdx,"colB4"] <- matCntB[4]
+            }
+            if( 5<=rObj$colLen ){
+                scrMtx[aIdx,"colA5"] <- matCntA[5]
+                scrMtx[aIdx,"colB5"] <- matCntB[5]
+            }
+            if( 6<=rObj$colLen ){
+                scrMtx[aIdx,"colA6"] <- matCntA[6]
+                scrMtx[aIdx,"colB6"] <- matCntB[6]
+            }
+
+            # scrMtx[wIdx,"rebC.r"] <- sum(aCode==wMI$rawTail[stdMILen,])
+            # scrMtx[wIdx,"rebC.c"] <- sum(aCStep==wMI$cStepTail[stdMILen,])
+        }
+
+        return( scrMtx )
+
+    }
+
+    bSMtxLst[["sScore0LAr13"]] <- function( phVP ,aZoidMtx ,makeInfoStr=F ){
+        # phVP <- phVP.grp$phVPLst[[1]]
+		aLen <- nrow(aZoidMtx)
+        aObj <- phVP$getCodeW( aZoidMtx )
+
+		scoreMtx <- matrix( 0, nrow=aLen, ncol=length(bS.sScore0LAr13.cName) )	;colnames(scoreMtx) <- bS.sScore0LAr13.cName
+        rownames(scoreMtx) <- aObj$miIdStr
+		infoMtx <- NULL
+		if( makeInfoStr ){
+			cName <- c( "pvSubHLen" ,"pvSubName" )
+			infoMtx <- matrix( "" ,nrow=aLen ,ncol=length(cName) )	;colnames(infoMtx) <- cName
+			infoMtx[,"pvSubName"] <- aObj$miIdStr
+            for( pvName in names(phVP$stdMILst) ){
+                infoMtx[infoMtx[,"pvSubName"]==pvName ,"pvSubHLen"] <- phVP$stdMILst[[pvName]]$mtxLen
+            }
+		}
+		if( 0==length(aObj$miIdStr) ){
+			return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
+		}
+
+        for( pvName in aObj$miNames ){  # pvName <- aObj$miNames[2]
+            workArea <- which(aObj$miIdStr==pvName)
+            stdMI<-phVP$stdMILst[[pvName]]
+            wMI <- phVP$getCodeH( stdMI )
+            scrMtx <- bSMtx.sScore0LAr13( stdMI=stdMI ,workArea ,wMI=wMI ,aObj ,aZoidMtx )
+            scoreMtx[workArea,] <- scrMtx
+        }
+
+        return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
+    }
+
+}
+
+if( FALSE ){ # "sScore0LAe13"
+
+    # 주의사항 : bSMtx는 tailMtx 폭이 가면적이므로 
+    #           "colA5","colB5" ,"colA6","colB6" 값은 없을 수도 있다.
+	bS.sScore0LAe13.cName <- c(  "colA1","colA2","colA3","colA4","colA5","colA6"
+					            ,"colB1","colB2","colB3","colB4","colB5","colB6"
+    )
+
+    bSMtx.sScore0LAe13 <- function( stdMI ,workArea ,wMI ,aObj ,aZoidMtx ){
+		scrMtx <- matrix( 0, nrow=length(workArea), ncol=length(bS.sScore0LAe13.cName) )	;colnames(scrMtx) <- bS.sScore0LAe13.cName
+        rownames(scrMtx) <- workArea
+        stdMILen <- nrow(wMI$rawTail)
+        if( 0==stdMILen ){
+            return( scrMtx )
+        }
+
+        rObj <- list( lPtn1=NULL ,lPtn2=NULL ,colLen=ncol(wMI$rawTail) )
+        if( TRUE ){
+            tailMtx <- wMI$rawTail%%10
+            if( 1<stdMILen ){
+                rObj$lPtn1 <- bUtil.findLinearPtn( tailMtx ,yIdx=1 ,typ="A" )
+            }
+            if( 3<stdMILen ){
+                rObj$lPtn2 <- bUtil.findLinearPtn( tailMtx ,yIdx=3 ,typ="A" )
+            }
+        }
+
+        matCntA <- rep( 0 ,rObj$colLen )
+        matCntB <- rep( 0 ,rObj$colLen )
+        for( wIdx in seq_len(length(workArea)) ){
+            aIdx <- workArea[wIdx]
+            aCode <- aObj$aZoidMtx[aIdx,]       ;aRem <- aCode%%10
+            aCStep <- aObj$cStepMtx[aIdx,]      ;aFStep <- aObj$fStepMtx[aIdx,]
+
+            matCntA[] <- 0      ;matCntB[] <- 0
+            if( !is.null(rObj$lPtn1) ){
+                matCntA <- bUtil.checkMatch_LinearPtn( rObj$lPtn1 ,aRem )
+            }
+            if( !is.null(rObj$lPtn2) ){
+                matCntB <- bUtil.checkMatch_LinearPtn( rObj$lPtn2 ,aRem )
+            }
+
+            scrMtx[aIdx,"colA1"] <- matCntA[1]
+            scrMtx[aIdx,"colB1"] <- matCntB[1]
+            scrMtx[aIdx,"colA2"] <- matCntA[2]
+            scrMtx[aIdx,"colB2"] <- matCntB[2]
+            if( 3<=rObj$colLen ){
+                scrMtx[aIdx,"colA3"] <- matCntA[3]
+                scrMtx[aIdx,"colB3"] <- matCntB[3]
+            }
+            if( 4<=rObj$colLen ){
+                scrMtx[aIdx,"colA4"] <- matCntA[4]
+                scrMtx[aIdx,"colB4"] <- matCntB[4]
+            }
+            if( 5<=rObj$colLen ){
+                scrMtx[aIdx,"colA5"] <- matCntA[5]
+                scrMtx[aIdx,"colB5"] <- matCntB[5]
+            }
+            if( 6<=rObj$colLen ){
+                scrMtx[aIdx,"colA6"] <- matCntA[6]
+                scrMtx[aIdx,"colB6"] <- matCntB[6]
+            }
+
+            # scrMtx[wIdx,"rebC.r"] <- sum(aCode==wMI$rawTail[stdMILen,])
+            # scrMtx[wIdx,"rebC.c"] <- sum(aCStep==wMI$cStepTail[stdMILen,])
+        }
+
+        return( scrMtx )
+
+    }
+
+    bSMtxLst[["sScore0LAe13"]] <- function( phVP ,aZoidMtx ,makeInfoStr=F ){
+        # phVP <- phVP.grp$phVPLst[[1]]
+		aLen <- nrow(aZoidMtx)
+        aObj <- phVP$getCodeW( aZoidMtx )
+
+		scoreMtx <- matrix( 0, nrow=aLen, ncol=length(bS.sScore0LAe13.cName) )	;colnames(scoreMtx) <- bS.sScore0LAe13.cName
+        rownames(scoreMtx) <- aObj$miIdStr
+		infoMtx <- NULL
+		if( makeInfoStr ){
+			cName <- c( "pvSubHLen" ,"pvSubName" )
+			infoMtx <- matrix( "" ,nrow=aLen ,ncol=length(cName) )	;colnames(infoMtx) <- cName
+			infoMtx[,"pvSubName"] <- aObj$miIdStr
+            for( pvName in names(phVP$stdMILst) ){
+                infoMtx[infoMtx[,"pvSubName"]==pvName ,"pvSubHLen"] <- phVP$stdMILst[[pvName]]$mtxLen
+            }
+		}
+		if( 0==length(aObj$miIdStr) ){
+			return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
+		}
+
+        for( pvName in aObj$miNames ){  # pvName <- aObj$miNames[2]
+            workArea <- which(aObj$miIdStr==pvName)
+            stdMI<-phVP$stdMILst[[pvName]]
+            wMI <- phVP$getCodeH( stdMI )
+            scrMtx <- bSMtx.sScore0LAe13( stdMI=stdMI ,workArea ,wMI=wMI ,aObj ,aZoidMtx )
+            scoreMtx[workArea,] <- scrMtx
+        }
+
+        return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
+    }
+
+}
+
+if( FALSE ){ # "sScore0LAc13"
+
+    # 주의사항 : bSMtx는 tailMtx 폭이 가면적이므로 
+    #           "colA5","colB5" ,"colA6","colB6" 값은 없을 수도 있다.
+	bS.sScore0LAc13.cName <- c(  "colA1","colA2","colA3","colA4","colA5","colA6"
+					            ,"colB1","colB2","colB3","colB4","colB5","colB6"
+    )
+
+    bSMtx.sScore0LAc13 <- function( stdMI ,workArea ,wMI ,aObj ,aZoidMtx ){
+		scrMtx <- matrix( 0, nrow=length(workArea), ncol=length(bS.sScore0LAc13.cName) )	;colnames(scrMtx) <- bS.sScore0LAc13.cName
+        rownames(scrMtx) <- workArea
+        stdMILen <- nrow(wMI$rawTail)
+        if( 0==stdMILen ){
+            return( scrMtx )
+        }
+
+        rObj <- list( lPtn1=NULL ,lPtn2=NULL ,colLen=ncol(wMI$cStepTail) )
+        if( TRUE ){
+            tailMtx <- wMI$cStepTail
+            if( 1<stdMILen ){
+                rObj$lPtn1 <- bUtil.findLinearPtn( tailMtx ,yIdx=1 ,typ="A" )
+            }
+            if( 3<stdMILen ){
+                rObj$lPtn2 <- bUtil.findLinearPtn( tailMtx ,yIdx=3 ,typ="A" )
+            }
+        }
+
+        matCntA <- rep( 0 ,rObj$colLen )
+        matCntB <- rep( 0 ,rObj$colLen )
+        for( wIdx in seq_len(length(workArea)) ){
+            aIdx <- workArea[wIdx]
+            aCode <- aObj$aZoidMtx[aIdx,]       ;aRem <- aCode%%10
+            aCStep <- aObj$cStepMtx[aIdx,]      ;aFStep <- aObj$fStepMtx[aIdx,]
+
+            matCntA[] <- 0      ;matCntB[] <- 0
+            if( !is.null(rObj$lPtn1) ){
+                matCntA <- bUtil.checkMatch_LinearPtn( rObj$lPtn1 ,aCStep )
+            }
+            if( !is.null(rObj$lPtn2) ){
+                matCntB <- bUtil.checkMatch_LinearPtn( rObj$lPtn2 ,aCStep )
+            }
+
+            scrMtx[aIdx,"colA1"] <- matCntA[1]
+            scrMtx[aIdx,"colB1"] <- matCntB[1]
+            scrMtx[aIdx,"colA2"] <- matCntA[2]
+            scrMtx[aIdx,"colB2"] <- matCntB[2]
+            if( 3<=rObj$colLen ){
+                scrMtx[aIdx,"colA3"] <- matCntA[3]
+                scrMtx[aIdx,"colB3"] <- matCntB[3]
+            }
+            if( 4<=rObj$colLen ){
+                scrMtx[aIdx,"colA4"] <- matCntA[4]
+                scrMtx[aIdx,"colB4"] <- matCntB[4]
+            }
+            if( 5<=rObj$colLen ){
+                scrMtx[aIdx,"colA5"] <- matCntA[5]
+                scrMtx[aIdx,"colB5"] <- matCntB[5]
+            }
+            if( 6<=rObj$colLen ){
+                scrMtx[aIdx,"colA6"] <- matCntA[6]
+                scrMtx[aIdx,"colB6"] <- matCntB[6]
+            }
+
+            # scrMtx[wIdx,"rebC.r"] <- sum(aCode==wMI$rawTail[stdMILen,])
+            # scrMtx[wIdx,"rebC.c"] <- sum(aCStep==wMI$cStepTail[stdMILen,])
+        }
+
+        return( scrMtx )
+
+    }
+
+    bSMtxLst[["sScore0LAc13"]] <- function( phVP ,aZoidMtx ,makeInfoStr=F ){
+        # phVP <- phVP.grp$phVPLst[[1]]
+		aLen <- nrow(aZoidMtx)
+        aObj <- phVP$getCodeW( aZoidMtx )
+
+		scoreMtx <- matrix( 0, nrow=aLen, ncol=length(bS.sScore0LAc13.cName) )	;colnames(scoreMtx) <- bS.sScore0LAc13.cName
+        rownames(scoreMtx) <- aObj$miIdStr
+		infoMtx <- NULL
+		if( makeInfoStr ){
+			cName <- c( "pvSubHLen" ,"pvSubName" )
+			infoMtx <- matrix( "" ,nrow=aLen ,ncol=length(cName) )	;colnames(infoMtx) <- cName
+			infoMtx[,"pvSubName"] <- aObj$miIdStr
+            for( pvName in names(phVP$stdMILst) ){
+                infoMtx[infoMtx[,"pvSubName"]==pvName ,"pvSubHLen"] <- phVP$stdMILst[[pvName]]$mtxLen
+            }
+		}
+		if( 0==length(aObj$miIdStr) ){
+			return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
+		}
+
+        for( pvName in aObj$miNames ){  # pvName <- aObj$miNames[2]
+            workArea <- which(aObj$miIdStr==pvName)
+            stdMI<-phVP$stdMILst[[pvName]]
+            wMI <- phVP$getCodeH( stdMI )
+            scrMtx <- bSMtx.sScore0LAc13( stdMI=stdMI ,workArea ,wMI=wMI ,aObj ,aZoidMtx )
+            scoreMtx[workArea,] <- scrMtx
+        }
+
+        return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
+    }
+
+}
+
+if( FALSE ){ # "sScore0LAf13"
+
+    # 주의사항 : bSMtx는 tailMtx 폭이 가면적이므로 
+    #           "colA5","colB5" ,"colA6","colB6" 값은 없을 수도 있다.
+	bS.sScore0LAf13.cName <- c(  "colA1","colA2","colA3","colA4","colA5","colA6"
+					            ,"colB1","colB2","colB3","colB4","colB5","colB6"
+    )
+
+    bSMtx.sScore0LAf13 <- function( stdMI ,workArea ,wMI ,aObj ,aZoidMtx ){
+		scrMtx <- matrix( 0, nrow=length(workArea), ncol=length(bS.sScore0LAf13.cName) )	;colnames(scrMtx) <- bS.sScore0LAf13.cName
+        rownames(scrMtx) <- workArea
+        stdMILen <- nrow(wMI$rawTail)
+        if( 0==stdMILen ){
+            return( scrMtx )
+        }
+
+        rObj <- list( lPtn1=NULL ,lPtn2=NULL ,colLen=ncol(wMI$fStepTail) )
+        if( TRUE ){
+            tailMtx <- wMI$fStepTail
+            if( 1<stdMILen ){
+                rObj$lPtn1 <- bUtil.findLinearPtn( tailMtx ,yIdx=1 ,typ="A" )
+            }
+            if( 3<stdMILen ){
+                rObj$lPtn2 <- bUtil.findLinearPtn( tailMtx ,yIdx=3 ,typ="A" )
+            }
+        }
+
+        matCntA <- rep( 0 ,rObj$colLen )
+        matCntB <- rep( 0 ,rObj$colLen )
+        for( wIdx in seq_len(length(workArea)) ){
+            aIdx <- workArea[wIdx]
+            aCode <- aObj$aZoidMtx[aIdx,]       ;aRem <- aCode%%10
+            aCStep <- aObj$cStepMtx[aIdx,]      ;aFStep <- aObj$fStepMtx[aIdx,]
+
+            matCntA[] <- 0      ;matCntB[] <- 0
+            if( !is.null(rObj$lPtn1) ){
+                matCntA <- bUtil.checkMatch_LinearPtn( rObj$lPtn1 ,aFStep )
+            }
+            if( !is.null(rObj$lPtn2) ){
+                matCntB <- bUtil.checkMatch_LinearPtn( rObj$lPtn2 ,aFStep )
+            }
+
+            scrMtx[aIdx,"colA1"] <- matCntA[1]
+            scrMtx[aIdx,"colB1"] <- matCntB[1]
+            scrMtx[aIdx,"colA2"] <- matCntA[2]
+            scrMtx[aIdx,"colB2"] <- matCntB[2]
+            if( 3<=rObj$colLen ){
+                scrMtx[aIdx,"colA3"] <- matCntA[3]
+                scrMtx[aIdx,"colB3"] <- matCntB[3]
+            }
+            if( 4<=rObj$colLen ){
+                scrMtx[aIdx,"colA4"] <- matCntA[4]
+                scrMtx[aIdx,"colB4"] <- matCntB[4]
+            }
+            if( 5<=rObj$colLen ){
+                scrMtx[aIdx,"colA5"] <- matCntA[5]
+                scrMtx[aIdx,"colB5"] <- matCntB[5]
+            }
+            if( 6<=rObj$colLen ){
+                scrMtx[aIdx,"colA6"] <- matCntA[6]
+                scrMtx[aIdx,"colB6"] <- matCntB[6]
+            }
+
+            # scrMtx[wIdx,"rebC.r"] <- sum(aCode==wMI$rawTail[stdMILen,])
+            # scrMtx[wIdx,"rebC.c"] <- sum(aCStep==wMI$cStepTail[stdMILen,])
+        }
+
+        return( scrMtx )
+
+    }
+
+    bSMtxLst[["sScore0LAf13"]] <- function( phVP ,aZoidMtx ,makeInfoStr=F ){
+        # phVP <- phVP.grp$phVPLst[[1]]
+		aLen <- nrow(aZoidMtx)
+        aObj <- phVP$getCodeW( aZoidMtx )
+
+		scoreMtx <- matrix( 0, nrow=aLen, ncol=length(bS.sScore0LAf13.cName) )	;colnames(scoreMtx) <- bS.sScore0LAf13.cName
+        rownames(scoreMtx) <- aObj$miIdStr
+		infoMtx <- NULL
+		if( makeInfoStr ){
+			cName <- c( "pvSubHLen" ,"pvSubName" )
+			infoMtx <- matrix( "" ,nrow=aLen ,ncol=length(cName) )	;colnames(infoMtx) <- cName
+			infoMtx[,"pvSubName"] <- aObj$miIdStr
+            for( pvName in names(phVP$stdMILst) ){
+                infoMtx[infoMtx[,"pvSubName"]==pvName ,"pvSubHLen"] <- phVP$stdMILst[[pvName]]$mtxLen
+            }
+		}
+		if( 0==length(aObj$miIdStr) ){
+			return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
+		}
+
+        for( pvName in aObj$miNames ){  # pvName <- aObj$miNames[2]
+            workArea <- which(aObj$miIdStr==pvName)
+            stdMI<-phVP$stdMILst[[pvName]]
+            wMI <- phVP$getCodeH( stdMI )
+            scrMtx <- bSMtx.sScore0LAf13( stdMI=stdMI ,workArea ,wMI=wMI ,aObj ,aZoidMtx )
+            scoreMtx[workArea,] <- scrMtx
+        }
+
+        return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
+    }
+
+}
 
 
 
