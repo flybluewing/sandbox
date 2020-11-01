@@ -847,6 +847,32 @@ B.rpt_CutRstClM <- function( resultLst ,tgt.scMtx ,rptfile="CutRstCLM" ){
     cat(sprintf("   reported in %s \n",logSumTot$fileName))
 }
 
+B.rptcrScr <- function( resultLst ,crMName ,tgt.scMtx ,rptFile ){
+
+    fLog <- k.getFlogObj( sprintf("./report/workRpt/%s.txt",rptFile) )
+    fLog$fLogStr( sprintf("Start %s",rptFile) ,pTime=T,pAppend=F)
+    fLog$fLogStr( sprintf("crMName : %s",paste( crMName ,collapse=",")) )
+    fLog$fLogStr( sprintf("tgt.scMtx : %s",paste( tgt.scMtx ,collapse=",")) )
+
+    crMtx <- NULL
+    for( hIdx in names(resultLst) ){
+        # cutRst1 <- resultLst[[hIdx]]$cutRst1Score$aLst[[aIdx]]
+        aIdx <- 1
+        mtxMaker <- bCMtxLst[[crMName]]()
+        crMtx <- rbind( crMtx
+                ,mtxMaker$fMtxObj( resultLst[[hIdx]]$scoreMtx.grp ,resultLst[[hIdx]]$cut.grp ,fHName=resultLst[[hIdx]]$fHName )
+        )
+    }
+    rownames(crMtx) <- B.tgtHIdxStr( as.integer(names(resultLst)) )
+    fLog$fLogMtx( crMtx )
+
+    fLog$fLogStr( "Finish -----" ,pTime=T)
+
+    cat(sprintf("   reported in %s \n",logSumTot$fileName))
+}
+
+
+
 B.get_testData.grp.old <- function( testSpan ,gEnv ,allIdxLst ,fRstLst ,tgt.scMtx=NULL ,get.scoreMtx.grp=FALSE ){
 
     curHMtxLst.grp <- list( )
@@ -1006,4 +1032,54 @@ B.get_cutRst1.grp <- function( testData.grp ,gEnv ,allIdxLst ,fRstLst ){
 }   # B.get_cutRst1.grp
 
 
+B.getTgtHIdx <- function(){
+    mainTgt <- NULL     ;subTgt <- NULL
+
+    mainTgt <- c(mainTgt ,c(784,791) )
+    subTgt  <- c(subTgt  ,c(786,790,797) )
+
+    mainTgt <- c(mainTgt ,c(801,809,818) )
+    subTgt  <- c(subTgt  ,c(808) )
+
+    mainTgt <- c(mainTgt ,c(823,840) )
+    subTgt  <- c(subTgt  ,c(826) )
+
+    mainTgt <- c(mainTgt ,c(848,860) )
+    subTgt  <- c(subTgt  ,c(854) )
+
+    mainTgt <- c(mainTgt ,c(862,870) )
+    subTgt  <- c(subTgt  ,c(864,867) )
+
+    mainTgt <- c(mainTgt ,c(894,899) )
+    subTgt  <- c(subTgt  ,c(884,892) )
+
+    tgtObj <- list( mainTgt=mainTgt ,subTgt=subTgt )
+    tgtObj$isTgt <- function( hIdx ){
+        rVal <- c("main"=F,"sub"=F)
+        rVal["main"]<- (hIdx %in% mainTgt)
+        rVal["sub"] <- (hIdx %in% subTgt ) 
+        return( rVal )
+    }
+
+    return( tgtObj )
+}
+
+B.tgtHIdxStr <- function( hIdx ){
+
+    tgtObj <- B.getTgtHIdx()
+
+    hIdxStr <- as.character(hIdx)
+    for( idx in seq_len(length(hIdx)) ){
+        tgtFlag <- tgtObj$isTgt(hIdx[idx])
+        if( tgtFlag["main"] ){
+            hIdxStr[idx] <- sprintf("*%4d",hIdx[idx])
+        } else if( tgtFlag["sub"] ){
+            hIdxStr[idx] <- sprintf("-%4d",hIdx[idx])
+        } else {
+            hIdxStr[idx] <- sprintf(" %4d",hIdx[idx])
+        }
+    }
+
+    return( hIdxStr )
+}
 

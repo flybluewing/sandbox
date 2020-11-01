@@ -35,15 +35,7 @@ cat(sprintf("* Parallel ready... see log : %s \n",prllLog$fileName))
 if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
 
     tgt.scMtx <- NULL
-    tgt.scMtx <- c( tgt.scMtx  ,c( "score1","score2","score3","score4","score5","score6","score7","score8","score9" ) )
-    tgt.scMtx <- c( tgt.scMtx  ,c("bScr01","bScr02") )
-    tgt.scMtx <- c( tgt.scMtx  ,c("scoreA","scoreB","scoreC","scoreD") )
-    tgt.scMtx <- c( tgt.scMtx  ,c("scoreE","scoreF") )
-    tgt.scMtx <- c( tgt.scMtx  ,c("scoreLAr13","scoreLAr24","scoreLVr13","scoreLVr24") )
-    tgt.scMtx <- c( tgt.scMtx  ,c("scoreLAe13","scoreLAe24","scoreLVe13","scoreLVe24") )
-    tgt.scMtx <- c( tgt.scMtx  ,c("scoreLAc13","scoreLAc24","scoreLVc13","scoreLVc24") )
-    tgt.scMtx <- c( tgt.scMtx  ,c("scoreLAf13","scoreLAf24","scoreLVf13","scoreLVf24") )
-    tgt.scMtx <- c( tgt.scMtx  ,c("sScore01","sScore02") )
+    tgt.scMtx <- c( tgt.scMtx  ,Bprll.getTgtScMtx( ) )
 
     configH <- lastH-20    # configH는 기본 cutting값을 얻기 위하는 시점에 따라 조절.
     testSpan <- (lastH - 19:0)   # configH 보다는 큰 시점에서 시작해야 함을 유의.
@@ -138,20 +130,6 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
             cutRst$cutInfoLst <- append( cutRst$cutInfoLst ,cutInfoLst )
         }
 
-        # bS cutting.
-        hMtxLst_bS=testData.grp$curHMtxLst_bS.grp[[as.character(curHIdx)]] 
-        cutRst.bS <- Bprll.bSCut( gEnv.w=gEnv.w ,stdZoid ,hMtxLst_bS=hMtxLst_bS ,fHName=fHName ,tgt.scMtx )
-        cutRst$cutInfoLst <- append( cutRst$cutInfoLst ,cutRst.bS$cutRst$cutInfoLst )
-
-        # End of Cut Test
-        # report example =================================================
-            # B.rptHMtxLst( curHMtxLst )
-            # B.rptStdMI.grp( stdMI.grp )
-            # B.rptScoreMtx.grp( scoreMtx.grp )
-            # B.rptCut.grp( cut.grp )
-            # B.rptCutRst( cutRst )
-
-
         if( TRUE ){ # aux cut : stdFiltedCnt
             fRst <- fRstLst[[as.character(curHIdx)]]
 
@@ -168,6 +146,19 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
                 }
             }
         }
+
+        # bS cutting.
+        hMtxLst_bS=testData.grp$curHMtxLst_bS.grp[[as.character(curHIdx)]] 
+        cutRst.bS <- Bprll.bSCut( gEnv.w=gEnv.w ,stdZoid ,hMtxLst_bS=hMtxLst_bS ,fHName=fHName ,tgt.scMtx )
+        cutRst$cutInfoLst <- append( cutRst$cutInfoLst ,cutRst.bS$cutRst$cutInfoLst )
+
+        # End of Cut Test
+        # report example =================================================
+            # B.rptHMtxLst( curHMtxLst )
+            # B.rptStdMI.grp( stdMI.grp )
+            # B.rptScoreMtx.grp( scoreMtx.grp )
+            # B.rptCut.grp( cut.grp )
+            # B.rptCutRst( cutRst )
 
         prllLog$fLogStr(sprintf("    curHIdx:%d done.",curHIdx),pTime=T)
         if( FALSE ){ # debug info
@@ -186,27 +177,21 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
         }
 
         auxTest <- list()
-        cutRst1Score <- NULL    ;cutRst1Score_bS <- NULL
-        if( TRUE ){ # temp test
+        resultObj <- list( hIdx=curHIdx ,cutRst=cutRst)
+        if( TRUE ){ # for inspection, later...
             #     "hpnMtxRaw"      "hpnMtxEvt"      "phRebMtxRaw"    "phRebMtxEvt"    "rebMtxRaw"      "rebMtxEvt"      
             #     "summMtxRaw"     "summMtxEvt"     "summMtx.RebRaw" "summMtx.RebEvt" "szMtxCnt"       "szMtxDup"       
             #     "sumMtx" 
 
-            cutRst1Score <- bUtil.getCut1Score( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx )
-                # cut2Rst <- bUtil.cut2( cutRst1Score ,fHName ,tgt.scMtx=tgt.scMtx ,anaOnly=T )
+            # resultObj$cutRst1Score <- bUtil.getCut1Score( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx )
+            # resultObj$cutRst1Score_bS <- cutRst.bS$cutRst1Score
 
-            cutRst1Score_bS <- cutRst.bS$cutRst1Score
-
-            # cutRst1Score$aLst[[1]]$sfcLate$basic$score1$raw$phaseHpnCnt
-            # cutRstScrSet <- bUtil.cutRst1_scoreMtx(cutRst1Score$aLst[[1]])
-            # cutRstScrSet$sfcLate$basic
-            # hpnMtxRaw <- cutRstScrSet$sfcLate$basic$hpnMtxRaw
-            # hpnCnt <- apply( hpnMtxRaw ,1 ,function(mVal){ sum(mVal>0) })
-            # auxTest$zeroM <- names(hpnCnt)[hpnCnt==0]
-            # auxTest$cutRstScrSet <- cutRstScrSet
+            resultObj$fHName <- fHName
+            resultObj$cut.grp <- cut.grp
+            resultObj$scoreMtx.grp <- scoreMtx.grp
         }
 
-        return( list(hIdx=curHIdx ,cutRst=cutRst ,cutRst1Score=cutRst1Score ,cutRst1Score_bS=cutRst1Score_bS ) )
+        return( resultObj )
             #   ,auxTest=auxTest
     })  ;tDiff1 <- Sys.time() - tStmp1  ;tDiff1     # 2.1min / 7prllNum
     names( resultLst ) <- sapply( resultLst ,function(p){p$hIdx})
@@ -263,6 +248,12 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
         }
 
         B.rpt_CutRstClM( resultLst ,tgt.scMtx ,rptfile=sprintf("CutRstCLM_%d",lastH) )
+
+        mNameSet <- c( "crScrN03R" ,"crScrN03E" ,"crScrN03PhEvt" ,"crScrN03Sum" ,"crScrN04R" ,"crScrN04E" ,"crScrN04PhEvt" ,"crScrN04Sum" )
+        for( crMName in mNameSet ){
+            rptFile <- sprintf("%s_H%d",crMName,lastH)
+            B.rptCrScr( resultLst ,crMName ,rptFile )
+        }
     }
 
 

@@ -1,3 +1,24 @@
+Bprll.getTgtScMtx <- function( ){
+
+    tgt.scMtx <- NULL
+    tgt.scMtx <- c( tgt.scMtx  ,c( "score1","score2","score3","score4","score5","score6","score7","score8","score9" ) )
+    tgt.scMtx <- c( tgt.scMtx  ,c("bScr01","bScr02") )
+    tgt.scMtx <- c( tgt.scMtx  ,c("scoreA","scoreB","scoreC","scoreD") )
+    tgt.scMtx <- c( tgt.scMtx  ,c("scoreE","scoreF") )
+    tgt.scMtx <- c( tgt.scMtx  ,c("scoreLAr13","scoreLAr24","scoreLVr13","scoreLVr24") )
+    tgt.scMtx <- c( tgt.scMtx  ,c("scoreLAe13","scoreLAe24","scoreLVe13","scoreLVe24") )
+    tgt.scMtx <- c( tgt.scMtx  ,c("scoreLAc13","scoreLAc24","scoreLVc13","scoreLVc24") )
+    tgt.scMtx <- c( tgt.scMtx  ,c("scoreLAf13","scoreLAf24","scoreLVf13","scoreLVf24") )
+
+
+
+    #   tgt.scMtx <- c("score1")    ;tgt.scMtx <- c( tgt.scMtx  ,c("sScoreNew") )
+    tgt.scMtx <- c( tgt.scMtx  ,c("sScore01","sScore02") )
+
+    return( tgt.scMtx )
+}
+
+
 Bprll.bSCut <- function( gEnv.w ,stdZoid ,hMtxLst_bS ,fHName ,tgt.scMtx ){
     # stdIdx  ;stdZoid
     aZoidMtx <- matrix(stdZoid ,nrow=1)
@@ -20,7 +41,6 @@ Bprll.bSCut <- function( gEnv.w ,stdZoid ,hMtxLst_bS ,fHName ,tgt.scMtx ){
     cutRst1Score <- bS.getCut1Score( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx )
     return( list( cutRst=cutRst.bS ,cutRst1Score=cutRst1Score ) )
 }
-
 
 
 Bprll.resultLst <- function( resultLst ,tgt.scMtx ){

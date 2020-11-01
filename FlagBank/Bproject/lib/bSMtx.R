@@ -309,6 +309,698 @@ if( TRUE ){ # "sScore02"
 
 }
 
+if( FALSE ){ # "sScore03"
+
+	bS.sScore3.cName <- c( "rebPtn.1","rebPtn.n","snR3" ,"snMax.r","snFCnt.r" ,"snMax.c","snFCnt.c" ,"snMax.f","snFCnt.f" )
+
+    bSMtx.sScore3 <- function( stdMI ,workArea ,wMI ,aObj ,aZoidMtx ){
+		scrMtx <- matrix( 0, nrow=length(workArea), ncol=length(bS.sScore3.cName) )	;colnames(scrMtx) <- bS.sScore3.cName
+        rownames(scrMtx) <- workArea
+        stdMILen <- nrow(wMI$rawTail)
+        if( 0==stdMILen ){
+            return( scrMtx )
+        }
+
+        # preWork -----------------------------------------------------------------
+        getRebPtn.1 <- function( stdMI ){
+            rObj <- list( matInfo=matrix(0,nrow=0,ncol=4) )
+            rowLen <- nrow( stdMI$rawTail )
+            if( 2>rowLen ) return( rObj )
+
+            matLst <- list()
+            for( rIdx in rowLen:2 ){
+                cVal <- intersect(stdMI$rawTail[rIdx,] ,stdMI$rawTail[rIdx-1,])
+                if( 1!=length(cVal) ) next
+
+                matLst[[1+length(matLst)]] <- c( rIdx, cVal
+                                                    , which(stdMI$rawTail[rIdx-1,]==cVal) 
+                                                    , which(stdMI$rawTail[rIdx  ,]==cVal)
+                                                )
+            }
+
+            if( 0<length(matLst) ){
+                matInfo <- do.call( rbind ,matLst )
+                colnames( matInfo ) <- c("row","val","fromC","toC")
+                rObj$matInfo <- matInfo
+            }
+            return( rObj )
+        } # getRebPtn.1()
+        getRebPtn.n <- function( stdMI ){
+            rObj <- list( )
+            rowLen <- nrow( stdMI$rawTail )
+            if( 2>rowLen ) return( rObj )
+
+            matLst <- list()	;matInfo <- NULL
+            for( rIdx in rowLen:2 ){
+                cVal <- intersect(stdMI$rawTail[rIdx,] ,stdMI$rawTail[rIdx-1,])
+                if( 2>length(cVal) ) next
+
+                matMtx <- matrix( NA, nrow=2, ncol=length(cVal) )
+                rownames(matMtx) <- c("from","to")	;colnames(matMtx) <- paste("val",cVal)
+                for( idx in seq_len(length(cVal)) ){
+                    val <- cVal[idx]
+                    matMtx["from",idx] <- which(stdMI$rawTail[rIdx-1,]==val)
+                    matMtx["to"  ,idx] <- which(stdMI$rawTail[rIdx  ,]==val)
+                }
+                matInfo <- c( matInfo ,sprintf("%d:%s",rIdx,paste(cVal,collapse=",")) )
+                matLst[[1+length(matLst)]] <- matMtx
+            }
+            names(matLst) <- matInfo
+
+            return( matLst )
+        } # getRebPtn.n()
+        getSeqPtn <- function( mtx ){
+            rObj <- list( )
+            rowLen <- ifelse( is.null(mtx) ,0 ,nrow( mtx ) )
+            colLen <- ifelse( is.null(mtx) ,0 ,ncol( mtx ) )
+            if( 2>rowLen ){
+                rObj$filt <- function( aCode ){ return( list( matCnt=0 ) ) }
+                return( rObj )
+            }
+
+            banLst <- list()
+            for( cIdx in 1:colLen ){	# lastCode
+                lc <- mtx[rowLen,cIdx]
+                fColIdx <- integer(0)
+                fRowIdx <- integer(0)
+                dbgStr <- ""
+                for( rIdx in (rowLen-1):1 ){
+                    fColIdx <- which(mtx[rIdx,]==lc)
+                    if( 0<length(fColIdx) ){
+                        fRowIdx <- rIdx
+                        # dbgStr <- sprintf("col:%d(val:%d)  found in row:%d col:%s",cIdx,lc,fRowIdx,paste(fColIdx,collapse=","))
+                        break
+                    }
+                }
+
+                dbgStr <- ""
+                for( fcIdx in fColIdx ){
+                    olSpan <- fCutU.overlapSpan( colLen ,colIdx.pre=fcIdx ,colIdx.post=cIdx )
+                    if( 1>sum(olSpan$info[c("lMargin","rMargin")]) )	next
+
+                    # valInc <- mtx[fRowIdx+1,olSpan$span.pre]-mtx[fRowIdx,olSpan$span.pre] <- bug?
+                    valInc <- mtx[rowLen,olSpan$span.post]-mtx[fRowIdx,olSpan$span.pre]
+                    banVal <- mtx[rowLen,olSpan$span.post]+valInc
+                    fixPoint <- banVal	;fixPoint[-(olSpan$info["lMargin"]+1)] <- NA
+                    dbgStr <- sprintf("colIdx:%d(val:%d) from (%d,%d)  %s/%s --> %s/%s..?",cIdx,lc,fRowIdx,fcIdx
+                                        ,paste(mtx[fRowIdx  ,olSpan$span.pre],collapse=",")
+                                        ,paste(mtx[rowLen	,olSpan$span.post],collapse=",")
+                                        ,paste(mtx[rowLen	,olSpan$span.post],collapse=",")
+                                        ,paste(banVal,collapse=",")
+                                    )
+                    banObj <- list( banVal=banVal ,banSpan=olSpan$span.post ,fixPoint=fixPoint ,dbgStr=dbgStr )
+
+                    fixIdx <- which( !is.na(fixPoint) )
+                    banObj$info <- c( length(banVal) ,fixIdx )
+                    names(banObj$info) <- c("len","fixIdx")
+
+                    banLst[[1+length(banLst)]] <- banObj
+                }
+                
+            }
+
+            rObj$banLst <- banLst
+
+            rObj$filt <- function( aCode ){
+                rstObj <- list( matCnt=0 )
+                if( 0==length(rObj$banLst) ) return( rstObj )
+
+                matCnt <- sapply( rObj$banLst ,function( banInfo ){
+                    cnt <- sum( aCode[banInfo$banSpan] == banInfo$banVal )
+                    flagFixPoint <- all(aCode[banInfo$banSpan]==banInfo$fixPoint,na.rm=T)
+                    if( flagFixPoint ){
+                        return( cnt )
+                    } else {
+                        return( 0 )
+                    }
+                })
+
+                rstObj$matCnt = matCnt
+                return( rstObj )
+            }
+
+            return( rObj )
+        } # getSeqPtn()
+
+        rObj <- list( 	 lastZoid=wMI$lastRaw    # bFMtx.score3() 과 최대한 유사 코드 생성하기 위함.
+                        ,rebPtn.1=getRebPtn.1(wMI)	,rebPtn.n=getRebPtn.n( wMI )
+                        ,seqNextPtn.raw=getSeqPtn( wMI$rawTail )
+                        ,seqNextPtn.cStep=getSeqPtn( wMI$cStepTail )
+                        ,seqNextPtn.fStep=getSeqPtn( wMI$fStepTail )
+        )
+
+        for( wIdx in seq_len(length(workArea)) ){
+            aIdx <- workArea[wIdx]
+            aCode <- aObj$aZoidMtx[aIdx,]       ;aRem <- aCode%%10
+            aCStep <- aObj$cStepMtx[aIdx,]      ;aFStep <- aObj$fStepMtx[aIdx,]
+
+			# rebPtn.1
+			infoStr.rebPtn.1 <- ""
+			if( 0<nrow(rObj$rebPtn.1$matInfo) ){
+				reb.lastZoid <- rObj$lastZoid[rObj$rebPtn.1$matInfo[,"fromC"]]
+				reb.aZoid <- aCode[rObj$rebPtn.1$matInfo[,"toC"]]
+				scrMtx[aIdx,"rebPtn.1"] <- sum( reb.aZoid==reb.lastZoid )
+				if( 0<scrMtx[aIdx,"rebPtn.1"] ){
+					fromCol <- rObj$rebPtn.1$matInfo[,"fromC"][reb.aZoid==reb.lastZoid]
+					toCol <- rObj$rebPtn.1$matInfo[,"toC"][reb.aZoid==reb.lastZoid]
+					infoStr.rebPtn.1 <- sprintf("reb col: (%s)->(%s)",paste(fromCol,collapse=","),paste(toCol,collapse=","))
+				}
+			}
+
+			# rebPtn.n
+			infoStr.rebPtn.n <- ""
+			if( length(rObj$rebPtn.n)>0 ){
+				flag <- sapply( rObj$rebPtn.n ,function( matMtx ){
+								fromVal <- rObj$lastZoid[matMtx["from",]]
+								toVal <- aCode[matMtx["to",]]
+								return( all(fromVal==toVal) )
+							})
+				scrMtx[aIdx,"rebPtn.n"] <- sum( flag )
+				if( 0<scrMtx[aIdx,"rebPtn.n"] ){
+					infoStr.rebPtn.n <- sprintf("%s",paste(names(flag)[flag],collapse=" "))
+				}
+			}
+
+			#	"snR3"	- 재발값을 기준으로 증감이 동일하게 반복되는 것이 3개 이상.
+			banLst <- rObj$seqNextPtn.raw$banLst
+			for( idx in seq_len(length(banLst)) ){
+				if( 3>banLst[[idx]]$info["len"] ) next
+
+				flag <- fCutU.hasPtn( banLst[[idx]]$banVal, aCode ,thld=3 ,fixIdx=banLst[[idx]]$info["fixIdx"] )
+				if( flag ){
+					scrMtx[aIdx,"snR3"] <- 1 + scrMtx[aIdx,"snR3"]
+					# break             # bSMtx에서는 이미 갯수가 적으니까 속도 문제 걱정은 필요 없겠지.
+				}
+			}
+
+			#	"sncMax.raw" ,"sncFCnt.raw" 
+			snMatCnt.raw <- rObj$seqNextPtn.raw$filt( aCode )$matCnt
+			scrMtx[aIdx,"snMax.r"] <- max( snMatCnt.raw )
+			if( 1==scrMtx[aIdx,"snMax.r"] ) scrMtx[aIdx,"snMax.r"] <- 0
+			scrMtx[aIdx,"snFCnt.r"] <- sum( snMatCnt.raw>=2 )
+
+			#	"sncMax.cStep" ,"sncFCnt.cStep"
+			snMatCnt.cStep <- rObj$seqNextPtn.cStep$filt( aCStep )$matCnt
+			scrMtx[aIdx,"snMax.c"] <- max( snMatCnt.cStep )
+			if( 1==scrMtx[aIdx,"snMax.c"] ) scrMtx[aIdx,"snMax.c"] <- 0
+			scrMtx[aIdx,"snFCnt.c"] <- sum( snMatCnt.cStep>=2 )
+
+			#	"sncMax.fStep" ,"sncFCnt.fStep"
+			snMatCnt.fStep <- rObj$seqNextPtn.fStep$filt( aFStep )$matCnt
+			scrMtx[aIdx,"snMax.f"] <- max( snMatCnt.fStep )
+			if( 1==scrMtx[aIdx,"snMax.f"] ) scrMtx[aIdx,"snMax.f"] <- 0
+			scrMtx[aIdx,"snFCnt.f"] <- sum( snMatCnt.fStep>=2 )
+
+            # scrMtx[wIdx,"rebC.r"] <- sum(aCode==wMI$rawTail[stdMILen,])
+            # scrMtx[wIdx,"rebC.c"] <- sum(aCStep==wMI$cStepTail[stdMILen,])
+        }
+
+        return( scrMtx )
+    }
+
+    bSMtxLst[["sScore03"]] <- function( phVP ,aZoidMtx ,makeInfoStr=F ){
+        # phVP <- phVP.grp$phVPLst[[1]]
+		aLen <- nrow(aZoidMtx)
+        aObj <- phVP$getCodeW( aZoidMtx )
+
+		scoreMtx <- matrix( 0, nrow=aLen, ncol=length(bS.sScore3.cName) )	;colnames(scoreMtx) <- bS.sScore3.cName
+        rownames(scoreMtx) <- aObj$miIdStr
+		infoMtx <- NULL
+		if( makeInfoStr ){
+			cName <- c( "pvSubHLen" ,"pvSubName" )
+			infoMtx <- matrix( "" ,nrow=aLen ,ncol=length(cName) )	;colnames(infoMtx) <- cName
+			infoMtx[,"pvSubName"] <- aObj$miIdStr
+            for( pvName in names(phVP$stdMILst) ){
+                infoMtx[infoMtx[,"pvSubName"]==pvName ,"pvSubHLen"] <- phVP$stdMILst[[pvName]]$mtxLen
+            }
+		}
+		if( 0==length(aObj$miIdStr) ){
+			return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
+		}
+
+        for( pvName in aObj$miNames ){  # pvName <- aObj$miNames[2]
+            workArea <- which(aObj$miIdStr==pvName)
+            stdMI<-phVP$stdMILst[[pvName]]
+            wMI <- phVP$getCodeH( stdMI )
+            scrMtx <- bSMtx.sScore3( stdMI=stdMI ,workArea ,wMI=wMI ,aObj ,aZoidMtx )
+            scoreMtx[workArea,] <- scrMtx
+        }
+
+        return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
+    }
+
+}
+
+if( FALSE ){ # "sScore04"
+
+	bS.sScore04.cName <- c( "pBanN.r","pBanN.n"	    # found num of rebound ptn ( ptn itself, next ptn in right column )
+                            ,"pLCol" ,"pE3" ,"pE4"	,"pMH" ,"pfNum"
+                            ,"iBanN"				# found num of inc.ptn
+                            ,"iLCol" ,"iE3" ,"iE4"	,"iMH" ,"ifNum"	#  rebLastCol     extMat3     extMat4 multiHpn.TF    foundNum 
+                            ,"FVa.m","FVa.c"	    # FVa.max FVa.hpnCnt
+                            ,"m4"								# match4
+    )
+
+    bSMtx.sScore04 <- function( stdMI ,workArea ,wMI ,aObj ,aZoidMtx ){
+		scrMtx <- matrix( 0, nrow=length(workArea), ncol=length(bS.sScore04.cName) )	;colnames(scrMtx) <- bS.sScore04.cName
+        rownames(scrMtx) <- workArea
+        stdMILen <- nrow(wMI$rawTail)
+        if( 2>stdMILen ){
+            return( scrMtx )
+        }
+
+        rObj$fInfo <- fCutU.getFiltObjPair( wMI$rawTail )	# rObj$fInfo$explain( )
+
+
+        for( wIdx in seq_len(length(workArea)) ){
+            aIdx <- workArea[wIdx]
+            aCode <- aObj$aZoidMtx[aIdx,]       ;aRem <- aCode%%10
+            aCStep <- aObj$cStepMtx[aIdx,]      ;aFStep <- aObj$fStepMtx[aIdx,]
+
+            rstObj <- bFMtx.util.fMtxObj.score4567( aCode ,rObj$fInfo ,makeInfoStr=F )
+
+			# pairBanLst
+			pBan.cutInfo <- rstObj$F_pBanLst( makeInfoStr=F )
+			scrMtx[aIdx ,"pBanN.r"] <- pBan.cutInfo$cutHpn["rebPtn"]
+			scrMtx[aIdx ,"pBanN.n"] <- pBan.cutInfo$cutHpn["nextPtn"]
+			workCol <- c("pLCol" ,"pE3" ,"pE4"	,"pMH" ,"pfNum")
+			scrMtx[aIdx ,workCol] <- pBan.cutInfo$cutHpn[c("rebLastCol","extMat3","extMat4","multiHpn","foundNum")]
+
+			# iBanLst
+			iBan.cutInfo <- rstObj$F_iBanLst( makeInfoStr=F )
+			scrMtx[aIdx ,"iBanN"] <- length(rstObj$iBanLst)
+			workCol <- c("iLCol" ,"iE3" ,"iE4"	,"iMH" ,"ifNum")
+			scrMtx[aIdx ,workCol] <- iBan.cutInfo$cutHpn[c("rebLastCol","extMat3","extMat4","multiHpn","foundNum")]
+
+			# pairHpn
+			if( 0<length(rstObj$pairHpn) ){
+				workCol <- c("FVa.m","FVa.c")
+				scrMtx[aIdx ,workCol ] <- rstObj$pairHpn$foundInfo[c("FVa.max","FVa.hpnCnt")]
+
+				if( 1==scrMtx[aIdx ,"FVa.m" ] )	scrMtx[aIdx ,"FVa.m" ] <- 0   # "FVa.m","aFV.m" 에서 1은 너무 흔한 듯.
+			}
+
+			# match4
+			if( 0<length(rstObj$match4) ){
+				scrMtx[aIdx, "m4"] <- rstObj$match4$foundInfo["matCnt"]
+			}
+
+            # scrMtx[wIdx,"rebC.r"] <- sum(aCode==wMI$rawTail[stdMILen,])
+            # scrMtx[wIdx,"rebC.c"] <- sum(aCStep==wMI$cStepTail[stdMILen,])
+        }
+
+        return( scrMtx )
+
+    }
+
+    bSMtxLst[["sScore04"]] <- function( phVP ,aZoidMtx ,makeInfoStr=F ){
+        # phVP <- phVP.grp$phVPLst[[1]]
+		aLen <- nrow(aZoidMtx)
+        aObj <- phVP$getCodeW( aZoidMtx )
+
+		scoreMtx <- matrix( 0, nrow=aLen, ncol=length(bS.sScore04.cName) )	;colnames(scoreMtx) <- bS.sScore04.cName
+        rownames(scoreMtx) <- aObj$miIdStr
+		infoMtx <- NULL
+		if( makeInfoStr ){
+			cName <- c( "pvSubHLen" ,"pvSubName" )
+			infoMtx <- matrix( "" ,nrow=aLen ,ncol=length(cName) )	;colnames(infoMtx) <- cName
+			infoMtx[,"pvSubName"] <- aObj$miIdStr
+            for( pvName in names(phVP$stdMILst) ){
+                infoMtx[infoMtx[,"pvSubName"]==pvName ,"pvSubHLen"] <- phVP$stdMILst[[pvName]]$mtxLen
+            }
+		}
+		if( 0==length(aObj$miIdStr) ){
+			return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
+		}
+
+        for( pvName in aObj$miNames ){  # pvName <- aObj$miNames[2]
+            workArea <- which(aObj$miIdStr==pvName)
+            stdMI<-phVP$stdMILst[[pvName]]
+            wMI <- phVP$getCodeH( stdMI )
+            scrMtx <- bSMtx.sScore04( stdMI=stdMI ,workArea ,wMI=wMI ,aObj ,aZoidMtx )
+            scoreMtx[workArea,] <- scrMtx
+        }
+
+        return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
+    }
+
+}
+
+if( FALSE ){ # "sScore05"
+
+	bS.sScore05.cName <- c( "pBanN.r","pBanN.n"	    # found num of rebound ptn ( ptn itself, next ptn in right column )
+                            ,"pLCol" ,"pE3" ,"pE4"	,"pMH" ,"pfNum"
+                            ,"iBanN"				# found num of inc.ptn
+                            ,"iLCol" ,"iE3" ,"iE4"	,"iMH" ,"ifNum"	#  rebLastCol     extMat3     extMat4 multiHpn.TF    foundNum 
+                            ,"FVa.m","FVa.c"	    # FVa.max FVa.hpnCnt
+                            ,"m4"								# match4
+    )
+
+    bSMtx.sScore05 <- function( stdMI ,workArea ,wMI ,aObj ,aZoidMtx ){
+		scrMtx <- matrix( 0, nrow=length(workArea), ncol=length(bS.sScore05.cName) )	;colnames(scrMtx) <- bS.sScore05.cName
+        rownames(scrMtx) <- workArea
+        stdMILen <- nrow(wMI$rawTail)
+        if( 2>stdMILen ){
+            return( scrMtx )
+        }
+
+        rObj$fInfo <- fCutU.getFiltObjPair( wMI$rawTail %% 10 )	# rObj$fInfo$explain( )
+
+
+        for( wIdx in seq_len(length(workArea)) ){
+            aIdx <- workArea[wIdx]
+            aCode <- aObj$aZoidMtx[aIdx,]       ;aRem <- aCode%%10
+            aCStep <- aObj$cStepMtx[aIdx,]      ;aFStep <- aObj$fStepMtx[aIdx,]
+
+            rstObj <- bFMtx.util.fMtxObj.score4567( aRem ,rObj$fInfo ,makeInfoStr=F )
+
+			# pairBanLst
+			pBan.cutInfo <- rstObj$F_pBanLst( makeInfoStr=F )
+			scrMtx[aIdx ,"pBanN.r"] <- pBan.cutInfo$cutHpn["rebPtn"]
+			scrMtx[aIdx ,"pBanN.n"] <- pBan.cutInfo$cutHpn["nextPtn"]
+			workCol <- c("pLCol" ,"pE3" ,"pE4"	,"pMH" ,"pfNum")
+			scrMtx[aIdx ,workCol] <- pBan.cutInfo$cutHpn[c("rebLastCol","extMat3","extMat4","multiHpn","foundNum")]
+
+			# iBanLst
+			iBan.cutInfo <- rstObj$F_iBanLst( makeInfoStr=F )
+			scrMtx[aIdx ,"iBanN"] <- length(rstObj$iBanLst)
+			workCol <- c("iLCol" ,"iE3" ,"iE4"	,"iMH" ,"ifNum")
+			scrMtx[aIdx ,workCol] <- iBan.cutInfo$cutHpn[c("rebLastCol","extMat3","extMat4","multiHpn","foundNum")]
+
+			# pairHpn
+			if( 0<length(rstObj$pairHpn) ){
+				workCol <- c("FVa.m","FVa.c")
+				scrMtx[aIdx ,workCol ] <- rstObj$pairHpn$foundInfo[c("FVa.max","FVa.hpnCnt")]
+
+				if( 1==scrMtx[aIdx ,"FVa.m" ] )	scrMtx[aIdx ,"FVa.m" ] <- 0   # "FVa.m","aFV.m" 에서 1은 너무 흔한 듯.
+			}
+
+			# match4
+			if( 0<length(rstObj$match4) ){
+				scrMtx[aIdx, "m4"] <- rstObj$match4$foundInfo["matCnt"]
+			}
+
+            # scrMtx[wIdx,"rebC.r"] <- sum(aCode==wMI$rawTail[stdMILen,])
+            # scrMtx[wIdx,"rebC.c"] <- sum(aCStep==wMI$cStepTail[stdMILen,])
+        }
+
+        return( scrMtx )
+
+    }
+
+    bSMtxLst[["sScore05"]] <- function( phVP ,aZoidMtx ,makeInfoStr=F ){
+        # phVP <- phVP.grp$phVPLst[[1]]
+		aLen <- nrow(aZoidMtx)
+        aObj <- phVP$getCodeW( aZoidMtx )
+
+		scoreMtx <- matrix( 0, nrow=aLen, ncol=length(bS.sScore05.cName) )	;colnames(scoreMtx) <- bS.sScore05.cName
+        rownames(scoreMtx) <- aObj$miIdStr
+		infoMtx <- NULL
+		if( makeInfoStr ){
+			cName <- c( "pvSubHLen" ,"pvSubName" )
+			infoMtx <- matrix( "" ,nrow=aLen ,ncol=length(cName) )	;colnames(infoMtx) <- cName
+			infoMtx[,"pvSubName"] <- aObj$miIdStr
+            for( pvName in names(phVP$stdMILst) ){
+                infoMtx[infoMtx[,"pvSubName"]==pvName ,"pvSubHLen"] <- phVP$stdMILst[[pvName]]$mtxLen
+            }
+		}
+		if( 0==length(aObj$miIdStr) ){
+			return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
+		}
+
+        for( pvName in aObj$miNames ){  # pvName <- aObj$miNames[2]
+            workArea <- which(aObj$miIdStr==pvName)
+            stdMI<-phVP$stdMILst[[pvName]]
+            wMI <- phVP$getCodeH( stdMI )
+            scrMtx <- bSMtx.sScore05( stdMI=stdMI ,workArea ,wMI=wMI ,aObj ,aZoidMtx )
+            scoreMtx[workArea,] <- scrMtx
+        }
+
+        return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
+    }
+
+}
+
+if( FALSE ){ # "sScore06"
+
+	bS.sScore06.cName <- c( "pBanN.r","pBanN.n"	    # found num of rebound ptn ( ptn itself, next ptn in right column )
+                            ,"pLCol" ,"pE3" ,"pE4"	,"pMH" ,"pfNum"
+                            ,"iBanN"				# found num of inc.ptn
+                            ,"iLCol" ,"iE3" ,"iE4"	,"iMH" ,"ifNum"	#  rebLastCol     extMat3     extMat4 multiHpn.TF    foundNum 
+                            ,"FVa.m","FVa.c"	    # FVa.max FVa.hpnCnt
+                            ,"m4"								# match4
+    )
+
+    bSMtx.sScore06 <- function( stdMI ,workArea ,wMI ,aObj ,aZoidMtx ){
+		scrMtx <- matrix( 0, nrow=length(workArea), ncol=length(bS.sScore06.cName) )	;colnames(scrMtx) <- bS.sScore06.cName
+        rownames(scrMtx) <- workArea
+        stdMILen <- nrow(wMI$rawTail)
+        if( 2>stdMILen ){
+            return( scrMtx )
+        }
+
+        rObj$fInfo <- fCutU.getFiltObjPair( wMI$cStepTail )	# rObj$fInfo$explain( )
+
+
+        for( wIdx in seq_len(length(workArea)) ){
+            aIdx <- workArea[wIdx]
+            aCode <- aObj$aZoidMtx[aIdx,]       ;aRem <- aCode%%10
+            aCStep <- aObj$cStepMtx[aIdx,]      ;aFStep <- aObj$fStepMtx[aIdx,]
+
+            rstObj <- bFMtx.util.fMtxObj.score4567( aCStep ,rObj$fInfo ,makeInfoStr=F )
+
+			# pairBanLst
+			pBan.cutInfo <- rstObj$F_pBanLst( makeInfoStr=F )
+			scrMtx[aIdx ,"pBanN.r"] <- pBan.cutInfo$cutHpn["rebPtn"]
+			scrMtx[aIdx ,"pBanN.n"] <- pBan.cutInfo$cutHpn["nextPtn"]
+			workCol <- c("pLCol" ,"pE3" ,"pE4"	,"pMH" ,"pfNum")
+			scrMtx[aIdx ,workCol] <- pBan.cutInfo$cutHpn[c("rebLastCol","extMat3","extMat4","multiHpn","foundNum")]
+
+			# iBanLst
+			iBan.cutInfo <- rstObj$F_iBanLst( makeInfoStr=F )
+			scrMtx[aIdx ,"iBanN"] <- length(rstObj$iBanLst)
+			workCol <- c("iLCol" ,"iE3" ,"iE4"	,"iMH" ,"ifNum")
+			scrMtx[aIdx ,workCol] <- iBan.cutInfo$cutHpn[c("rebLastCol","extMat3","extMat4","multiHpn","foundNum")]
+
+			# pairHpn
+			if( 0<length(rstObj$pairHpn) ){
+				workCol <- c("FVa.m","FVa.c")
+				scrMtx[aIdx ,workCol ] <- rstObj$pairHpn$foundInfo[c("FVa.max","FVa.hpnCnt")]
+
+				if( 1==scrMtx[aIdx ,"FVa.m" ] )	scrMtx[aIdx ,"FVa.m" ] <- 0   # "FVa.m","aFV.m" 에서 1은 너무 흔한 듯.
+			}
+
+			# match4
+			if( 0<length(rstObj$match4) ){
+				scrMtx[aIdx, "m4"] <- rstObj$match4$foundInfo["matCnt"]
+			}
+
+            # scrMtx[wIdx,"rebC.r"] <- sum(aCode==wMI$rawTail[stdMILen,])
+            # scrMtx[wIdx,"rebC.c"] <- sum(aCStep==wMI$cStepTail[stdMILen,])
+        }
+
+        return( scrMtx )
+
+    }
+
+    bSMtxLst[["sScore06"]] <- function( phVP ,aZoidMtx ,makeInfoStr=F ){
+        # phVP <- phVP.grp$phVPLst[[1]]
+		aLen <- nrow(aZoidMtx)
+        aObj <- phVP$getCodeW( aZoidMtx )
+
+		scoreMtx <- matrix( 0, nrow=aLen, ncol=length(bS.sScore06.cName) )	;colnames(scoreMtx) <- bS.sScore06.cName
+        rownames(scoreMtx) <- aObj$miIdStr
+		infoMtx <- NULL
+		if( makeInfoStr ){
+			cName <- c( "pvSubHLen" ,"pvSubName" )
+			infoMtx <- matrix( "" ,nrow=aLen ,ncol=length(cName) )	;colnames(infoMtx) <- cName
+			infoMtx[,"pvSubName"] <- aObj$miIdStr
+            for( pvName in names(phVP$stdMILst) ){
+                infoMtx[infoMtx[,"pvSubName"]==pvName ,"pvSubHLen"] <- phVP$stdMILst[[pvName]]$mtxLen
+            }
+		}
+		if( 0==length(aObj$miIdStr) ){
+			return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
+		}
+
+        for( pvName in aObj$miNames ){  # pvName <- aObj$miNames[2]
+            workArea <- which(aObj$miIdStr==pvName)
+            stdMI<-phVP$stdMILst[[pvName]]
+            wMI <- phVP$getCodeH( stdMI )
+            scrMtx <- bSMtx.sScore06( stdMI=stdMI ,workArea ,wMI=wMI ,aObj ,aZoidMtx )
+            scoreMtx[workArea,] <- scrMtx
+        }
+
+        return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
+    }
+
+}
+
+if( FALSE ){ # "sScore07"
+
+	bS.sScore07.cName <- c( "pBanN.r","pBanN.n"	    # found num of rebound ptn ( ptn itself, next ptn in right column )
+                            ,"pLCol" ,"pE3" ,"pE4"	,"pMH" ,"pfNum"
+                            ,"iBanN"				# found num of inc.ptn
+                            ,"iLCol" ,"iE3" ,"iE4"	,"iMH" ,"ifNum"	#  rebLastCol     extMat3     extMat4 multiHpn.TF    foundNum 
+                            ,"FVa.m","FVa.c"	    # FVa.max FVa.hpnCnt
+                            ,"m4"								# match4
+    )
+
+    bSMtx.sScore07 <- function( stdMI ,workArea ,wMI ,aObj ,aZoidMtx ){
+		scrMtx <- matrix( 0, nrow=length(workArea), ncol=length(bS.sScore07.cName) )	;colnames(scrMtx) <- bS.sScore07.cName
+        rownames(scrMtx) <- workArea
+        stdMILen <- nrow(wMI$rawTail)
+        if( 3>stdMILen ){
+            return( scrMtx )
+        }
+
+        rObj$fInfo <- fCutU.getFiltObjPair( wMI$fStepTail )	# rObj$fInfo$explain( )
+
+
+        for( wIdx in seq_len(length(workArea)) ){
+            aIdx <- workArea[wIdx]
+            aCode <- aObj$aZoidMtx[aIdx,]       ;aRem <- aCode%%10
+            aCStep <- aObj$cStepMtx[aIdx,]      ;aFStep <- aObj$fStepMtx[aIdx,]
+
+            rstObj <- bFMtx.util.fMtxObj.score4567( aFStep ,rObj$fInfo ,makeInfoStr=F )
+
+			# pairBanLst
+			pBan.cutInfo <- rstObj$F_pBanLst( makeInfoStr=F )
+			scrMtx[aIdx ,"pBanN.r"] <- pBan.cutInfo$cutHpn["rebPtn"]
+			scrMtx[aIdx ,"pBanN.n"] <- pBan.cutInfo$cutHpn["nextPtn"]
+			workCol <- c("pLCol" ,"pE3" ,"pE4"	,"pMH" ,"pfNum")
+			scrMtx[aIdx ,workCol] <- pBan.cutInfo$cutHpn[c("rebLastCol","extMat3","extMat4","multiHpn","foundNum")]
+
+			# iBanLst
+			iBan.cutInfo <- rstObj$F_iBanLst( makeInfoStr=F )
+			scrMtx[aIdx ,"iBanN"] <- length(rstObj$iBanLst)
+			workCol <- c("iLCol" ,"iE3" ,"iE4"	,"iMH" ,"ifNum")
+			scrMtx[aIdx ,workCol] <- iBan.cutInfo$cutHpn[c("rebLastCol","extMat3","extMat4","multiHpn","foundNum")]
+
+			# pairHpn
+			if( 0<length(rstObj$pairHpn) ){
+				workCol <- c("FVa.m","FVa.c")
+				scrMtx[aIdx ,workCol ] <- rstObj$pairHpn$foundInfo[c("FVa.max","FVa.hpnCnt")]
+
+				if( 1==scrMtx[aIdx ,"FVa.m" ] )	scrMtx[aIdx ,"FVa.m" ] <- 0   # "FVa.m","aFV.m" 에서 1은 너무 흔한 듯.
+			}
+
+			# match4
+			if( 0<length(rstObj$match4) ){
+				scrMtx[aIdx, "m4"] <- rstObj$match4$foundInfo["matCnt"]
+			}
+
+            # scrMtx[wIdx,"rebC.r"] <- sum(aCode==wMI$rawTail[stdMILen,])
+            # scrMtx[wIdx,"rebC.c"] <- sum(aCStep==wMI$cStepTail[stdMILen,])
+        }
+
+        return( scrMtx )
+
+    }
+
+    bSMtxLst[["sScore07"]] <- function( phVP ,aZoidMtx ,makeInfoStr=F ){
+        # phVP <- phVP.grp$phVPLst[[1]]
+		aLen <- nrow(aZoidMtx)
+        aObj <- phVP$getCodeW( aZoidMtx )
+
+		scoreMtx <- matrix( 0, nrow=aLen, ncol=length(bS.sScore07.cName) )	;colnames(scoreMtx) <- bS.sScore07.cName
+        rownames(scoreMtx) <- aObj$miIdStr
+		infoMtx <- NULL
+		if( makeInfoStr ){
+			cName <- c( "pvSubHLen" ,"pvSubName" )
+			infoMtx <- matrix( "" ,nrow=aLen ,ncol=length(cName) )	;colnames(infoMtx) <- cName
+			infoMtx[,"pvSubName"] <- aObj$miIdStr
+            for( pvName in names(phVP$stdMILst) ){
+                infoMtx[infoMtx[,"pvSubName"]==pvName ,"pvSubHLen"] <- phVP$stdMILst[[pvName]]$mtxLen
+            }
+		}
+		if( 0==length(aObj$miIdStr) ){
+			return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
+		}
+
+        for( pvName in aObj$miNames ){  # pvName <- aObj$miNames[2]
+            workArea <- which(aObj$miIdStr==pvName)
+            stdMI<-phVP$stdMILst[[pvName]]
+            wMI <- phVP$getCodeH( stdMI )
+            scrMtx <- bSMtx.sScore07( stdMI=stdMI ,workArea ,wMI=wMI ,aObj ,aZoidMtx )
+            scoreMtx[workArea,] <- scrMtx
+        }
+
+        return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
+    }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+if( FALSE ){ # "sScore0X"
+
+	bS.sScore0X.cName <- c( "xxx","xxx" )
+
+    bSMtx.sScore0X <- function( stdMI ,workArea ,wMI ,aObj ,aZoidMtx ){
+		scrMtx <- matrix( 0, nrow=length(workArea), ncol=length(bS.sScore0X.cName) )	;colnames(scrMtx) <- bS.sScore0X.cName
+        rownames(scrMtx) <- workArea
+        stdMILen <- nrow(wMI$rawTail)
+        if( 0==stdMILen ){
+            return( scrMtx )
+        }
+
+        for( wIdx in seq_len(length(workArea)) ){
+            aIdx <- workArea[wIdx]
+            aCode <- aObj$aZoidMtx[aIdx,]       ;aRem <- aCode%%10
+            aCStep <- aObj$cStepMtx[aIdx,]      ;aFStep <- aObj$fStepMtx[aIdx,]
+
+            # scrMtx[wIdx,"rebC.r"] <- sum(aCode==wMI$rawTail[stdMILen,])
+            # scrMtx[wIdx,"rebC.c"] <- sum(aCStep==wMI$cStepTail[stdMILen,])
+        }
+
+        return( scrMtx )
+
+    }
+
+    bSMtxLst[["sScore0X"]] <- function( phVP ,aZoidMtx ,makeInfoStr=F ){
+        # phVP <- phVP.grp$phVPLst[[1]]
+		aLen <- nrow(aZoidMtx)
+        aObj <- phVP$getCodeW( aZoidMtx )
+
+		scoreMtx <- matrix( 0, nrow=aLen, ncol=length(bS.sScore0X.cName) )	;colnames(scoreMtx) <- bS.sScore0X.cName
+        rownames(scoreMtx) <- aObj$miIdStr
+		infoMtx <- NULL
+		if( makeInfoStr ){
+			cName <- c( "pvSubHLen" ,"pvSubName" )
+			infoMtx <- matrix( "" ,nrow=aLen ,ncol=length(cName) )	;colnames(infoMtx) <- cName
+			infoMtx[,"pvSubName"] <- aObj$miIdStr
+            for( pvName in names(phVP$stdMILst) ){
+                infoMtx[infoMtx[,"pvSubName"]==pvName ,"pvSubHLen"] <- phVP$stdMILst[[pvName]]$mtxLen
+            }
+		}
+		if( 0==length(aObj$miIdStr) ){
+			return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
+		}
+
+        for( pvName in aObj$miNames ){  # pvName <- aObj$miNames[2]
+            workArea <- which(aObj$miIdStr==pvName)
+            stdMI<-phVP$stdMILst[[pvName]]
+            wMI <- phVP$getCodeH( stdMI )
+            scrMtx <- bSMtx.sScore0X( stdMI=stdMI ,workArea ,wMI=wMI ,aObj ,aZoidMtx )
+            scoreMtx[workArea,] <- scrMtx
+        }
+
+        return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
+    }
+
+}
+
 
 #============================================================================================================
 #   bS 그룹을 개발하는 동안의 임시 코드.
