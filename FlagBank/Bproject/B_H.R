@@ -868,10 +868,67 @@ B.rptcrScr <- function( resultLst ,crMName ,tgt.scMtx ,rptFile ){
 
     fLog$fLogStr( "Finish -----" ,pTime=T)
 
-    cat(sprintf("   reported in %s \n",logSumTot$fileName))
+    cat(sprintf("   reported in %s \n",fLog$fileName))
 }
 
+B.rpt_bSMtx <- function( resultLst ,mName ,rptFile ){
+    fLog <- k.getFlogObj( sprintf("./report/workRpt/%s.txt",rptFile) )
+    fLog$fLogStr( sprintf("Start %s",rptFile) ,pTime=T,pAppend=F)
 
+    scoreMtxLst <- list()
+    for( hIdx in names(resultLst) ){
+        aIdx <- 1
+
+        scoreMtx.grp <- resultLst[[hIdx]]$scoreMtx.grp
+        for( pName in names(scoreMtx.grp$basic) ){
+            if( is.null(scoreMtxLst[[pName]]) ){
+                scoreMtxLst[[pName]] <- scoreMtx.grp$basic[[pName]][[mName]]$scoreMtx
+            } else {
+                scoreMtxLst[[pName]] <- rbind( scoreMtxLst[[pName]] ,scoreMtx.grp$basic[[pName]][[mName]]$scoreMtx )
+            }
+            
+        }
+    }
+
+    rName <- B.tgtHIdxStr( as.integer(names(resultLst)) )
+    for( pName in names(scoreMtxLst) ){
+        scoreMtx <- scoreMtxLst[[pName]]
+        rownames(scoreMtx) <- rName
+
+        fLog$fLogStr(sprintf("\npName : %s",pName))
+        fLog$fLogMtx( t(scoreMtx) ,pIndent="  ")
+    }
+
+    fLog$fLogStr( "Finish -----" ,pTime=T)
+
+    cat(sprintf("   reported in %s \n",fLog$fileName))
+}
+
+B.rpt_bSMtx_crScr <- function( resultLst ,mName ,rptFile ){
+    fLog <- k.getFlogObj( sprintf("./report/workRpt/%s.txt",rptFile) )
+    fLog$fLogStr( sprintf("Start %s",rptFile) ,pTime=T,pAppend=F)
+
+    rptMtx <- NULL
+    for( hIdx in names(resultLst) ){
+        aIdx <- 1
+        fHName <- resultLst[[hIdx]]$fHName
+        scoreMtx.grp <- resultLst[[hIdx]]$scoreMtx.grp
+        cut.grp <- resultLst[[hIdx]]$cut.grp
+
+        # rObj$fMtxObj <- function( scoreMtx.grp ,cut.grp ,fHName="sfcLate" )
+
+        mtxMaker <- bSMtxCMLst[[crMName]]()
+        crScrMtx <- mtxMaker$fMtxObj( scoreMtx.grp ,cut.grp ,fHName )
+        rptMtx <- rbind( rptMtx ,crScrMtx[aIdx,] )
+    }
+    rownames(rptMtx) <- B.tgtHIdxStr( as.integer(names(resultLst)) )
+    fLog$fLogMtx( t(rptMtx) )
+
+
+    fLog$fLogStr( "Finish -----" ,pTime=T)
+
+    cat(sprintf("   reported in %s \n",fLog$fileName))
+}
 
 B.get_testData.grp.old <- function( testSpan ,gEnv ,allIdxLst ,fRstLst ,tgt.scMtx=NULL ,get.scoreMtx.grp=FALSE ){
 

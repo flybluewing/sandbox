@@ -1,17 +1,10 @@
 if( FALSE ){    # document
-    # bSMtxRMLst
-    #   다수 scoreMtx 관점에서의 커팅시도. 즉 raw 값.
-    #       참고코드 : bFMtxMulti.R (bFMtxMFltLst)
-
     # bSMtxCMLst
     #   다수 cutRst1Score 관점에서의 커팅시도.
     #       참고 코드 : bCMtx.R
     #       네이밍
     #           crMName : cutRst1-multi. 여러 개 mName의 cutRst1 결과들에 대한 평가라는 점에서..
 }
-
-
-bSMtxRMLst <- list()
 
 bSMtxCMLst <- list()
 if( TRUE ){
@@ -312,6 +305,43 @@ if( TRUE ){
 
                     crScrMtx[aIdx,"szSumRebCnt"]    <- sum( scMtx.sz["rebCnt",c("r.ph","r.fCol","e.ph","e.fCol")] )
                     crScrMtx[aIdx,"szSumRebDup"]    <- sum( scMtx.sz["rebDup",c("r.ph","r.fCol","e.ph","e.fCol")] )
+                }
+
+                return( crScrMtx )
+            }
+
+            return( rObj )
+        }
+    }
+
+
+    crMName <- "bSMScr01SumClM"
+    if( TRUE ){
+        bCMtxLst[[crMName]] <- function( hCRScr=NULL ){
+
+            rObj <- list( 	idStr=crMName  ,mName=c("sScore01","sScore02")
+            )
+
+            rObj$fMtxObj <- function( scoreMtx.grp ,cut.grp ,fHName="sfcLate" ){
+
+                tgt.scMtx <- rObj$mName
+                cutRst1Score <- bS.getCut1Score( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx )
+
+                aLen <- length(cutRst1Score$aLst)
+                cName <- c(  "sumTotHpn" ,"sumTot1" ,"sumTot2" ,"sumTot3"
+                )
+                crScrMtx <- matrix( 0, nrow=aLen, ncol=length(cName) )	;colnames(crScrMtx) <- cName
+
+                phNameAll <- names(scoreMtx.grp$basic)
+
+                for( aIdx in 1:aLen ){
+                    clM <- bUtil.getClM_cutRst1Score( cutRst1=cutRst1Score$aLst[[aIdx]] ,cfgLst=bsScoreMtxCfg ,mNameGrp=rObj$mName ,fHName )
+                    crScrMtx[aIdx,"sumTotHpn"]  <- sum(clM$sumTot>0)
+                    crScrMtx[aIdx,"sumTot1"]  <- sum(clM$sumTot==1)
+                    crScrMtx[aIdx,"sumTot2"]  <- sum(clM$sumTot==2)
+                    crScrMtx[aIdx,"sumTot3"]  <- sum(clM$sumTot==3)
+
+                    # clM$summMtx ,clM$summMtx.reb에 대해서는... 차후에 검토하자. (bSMScr01Sum을 보며 가늠할 것.)
                 }
 
                 return( crScrMtx )
