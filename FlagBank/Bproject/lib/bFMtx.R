@@ -3292,11 +3292,14 @@ bFMtx.scoreLAr13 <- function( stdMIObj ){
 	if( 0<rObj$zMtx.size ){
 		#	yIdx 는 그냥 1로 시작하자. rawTail 크기가 정해져있으니 별 차이는 없을 듯.
 		tailMtx <- stdMI$rawTail
-		if( 1<rObj$zMtx.size ){
-			rObj$lPtn1 <- bUtil.findLinearPtn( tailMtx ,yIdx=1 ,typ="A" )
+
+		yIdxA <- nrow(tailMtx) -6 +1	# 바닥으로부터 자신 포함한 높이 6
+		yIdxB <- nrow(tailMtx) -6 +3	# 바닥으로부터 자신 포함한 높이 4
+		if( 0<yIdxA ){
+			rObj$lPtn1 <- bUtil.findLinearPtn( tailMtx ,yIdx=yIdxA ,typ="A" )
 		}
-		if( 3<rObj$zMtx.size ){
-			rObj$lPtn2 <- bUtil.findLinearPtn( tailMtx ,yIdx=3 ,typ="A" )
+		if( 0<yIdxB ){
+			rObj$lPtn2 <- bUtil.findLinearPtn( tailMtx ,yIdx=yIdxB ,typ="A" )
 		}
 	}
 
@@ -3364,11 +3367,14 @@ bFMtx.scoreLAr24 <- function( stdMIObj ){
 	if( 0<rObj$zMtx.size ){
 		#	yIdx 는 그냥 1로 시작하자. rawTail 크기가 정해져있으니 별 차이는 없을 듯.
 		tailMtx <- stdMI$rawTail
-		if( 2<rObj$zMtx.size ){
-			rObj$lPtn1 <- bUtil.findLinearPtn( tailMtx ,yIdx=2 ,typ="A" )
+
+		yIdxA <- nrow(tailMtx) -6 +2	# 바닥으로부터 자신 포함한 높이 6
+		yIdxB <- nrow(tailMtx) -6 +4	# 바닥으로부터 자신 포함한 높이 4
+		if( 0<yIdxA ){
+			rObj$lPtn1 <- bUtil.findLinearPtn( tailMtx ,yIdx=yIdxA ,typ="A" )
 		}
-		if( 4<rObj$zMtx.size ){
-			rObj$lPtn2 <- bUtil.findLinearPtn( tailMtx ,yIdx=4 ,typ="A" )
+		if( 0<yIdxB ){
+			rObj$lPtn2 <- bUtil.findLinearPtn( tailMtx ,yIdx=yIdxB ,typ="A" )
 		}
 	}
 
@@ -3581,11 +3587,13 @@ bFMtx.scoreLAe13 <- function( stdMIObj ){
 	if( 0<rObj$zMtx.size ){
 		#	yIdx 는 그냥 1로 시작하자. rawTail 크기가 정해져있으니 별 차이는 없을 듯.
 		tailMtx <- stdMI$rawTail %% 10
-		if( 1<rObj$zMtx.size ){
-			rObj$lPtn1 <- bUtil.findLinearPtn( tailMtx ,yIdx=1 ,typ="A" )
+		yIdxA <- nrow(tailMtx) -6 +1	# 바닥으로부터 자신 포함한 높이 6
+		yIdxB <- nrow(tailMtx) -6 +3	# 바닥으로부터 자신 포함한 높이 4
+		if( 0<yIdxA ){
+			rObj$lPtn1 <- bUtil.findLinearPtn( tailMtx ,yIdx=yIdxA ,typ="A" )
 		}
-		if( 3<rObj$zMtx.size ){
-			rObj$lPtn2 <- bUtil.findLinearPtn( tailMtx ,yIdx=3 ,typ="A" )
+		if( 0<yIdxB ){
+			rObj$lPtn2 <- bUtil.findLinearPtn( tailMtx ,yIdx=yIdxB ,typ="A" )
 		}
 	}
 
@@ -3653,11 +3661,13 @@ bFMtx.scoreLAe24 <- function( stdMIObj ){
 	if( 0<rObj$zMtx.size ){
 		#	yIdx 는 그냥 1로 시작하자. rawTail 크기가 정해져있으니 별 차이는 없을 듯.
 		tailMtx <- stdMI$rawTail %% 10
-		if( 2<rObj$zMtx.size ){
-			rObj$lPtn1 <- bUtil.findLinearPtn( tailMtx ,yIdx=2 ,typ="A" )
+		yIdxA <- nrow(tailMtx) -6 +2	# 바닥으로부터 자신 포함한 높이 6
+		yIdxB <- nrow(tailMtx) -6 +4	# 바닥으로부터 자신 포함한 높이 4
+		if( 0<yIdxA ){
+			rObj$lPtn1 <- bUtil.findLinearPtn( tailMtx ,yIdx=yIdxA ,typ="A" )
 		}
-		if( 4<rObj$zMtx.size ){
-			rObj$lPtn2 <- bUtil.findLinearPtn( tailMtx ,yIdx=4 ,typ="A" )
+		if( 0<yIdxB ){
+			rObj$lPtn2 <- bUtil.findLinearPtn( tailMtx ,yIdx=yIdxB ,typ="A" )
 		}
 	}
 
@@ -3870,11 +3880,13 @@ bFMtx.scoreLAc13 <- function( stdMIObj ){
 	if( 0<rObj$zMtx.size ){
 		#	yIdx 는 그냥 1로 시작하자. rawTail 크기가 정해져있으니 별 차이는 없을 듯.
 		tailMtx <- stdMI$cStepTail
-		if( 1<rObj$zMtx.size ){
-			rObj$lPtn1 <- bUtil.findLinearPtn( tailMtx ,yIdx=1 ,typ="A" )
+		yIdxA <- nrow(tailMtx) -6 +1	# 바닥으로부터 자신 포함한 높이 6
+		yIdxB <- nrow(tailMtx) -6 +3	# 바닥으로부터 자신 포함한 높이 4
+		if( 0<yIdxA ){
+			rObj$lPtn1 <- bUtil.findLinearPtn( tailMtx ,yIdx=yIdxA ,typ="A" )
 		}
-		if( 3<rObj$zMtx.size ){
-			rObj$lPtn2 <- bUtil.findLinearPtn( tailMtx ,yIdx=3 ,typ="A" )
+		if( 0<yIdxB ){
+			rObj$lPtn2 <- bUtil.findLinearPtn( tailMtx ,yIdx=yIdxB ,typ="A" )
 		}
 	}
 
@@ -3940,11 +3952,13 @@ bFMtx.scoreLAc24 <- function( stdMIObj ){
 	if( 0<rObj$zMtx.size ){
 		#	yIdx 는 그냥 1로 시작하자. rawTail 크기가 정해져있으니 별 차이는 없을 듯.
 		tailMtx <- stdMI$cStepTail
-		if( 2<rObj$zMtx.size ){
-			rObj$lPtn1 <- bUtil.findLinearPtn( tailMtx ,yIdx=2 ,typ="A" )
+		yIdxA <- nrow(tailMtx) -6 +2	# 바닥으로부터 자신 포함한 높이 6
+		yIdxB <- nrow(tailMtx) -6 +4	# 바닥으로부터 자신 포함한 높이 4
+		if( 0<yIdxA ){
+			rObj$lPtn1 <- bUtil.findLinearPtn( tailMtx ,yIdx=yIdxA ,typ="A" )
 		}
-		if( 4<rObj$zMtx.size ){
-			rObj$lPtn2 <- bUtil.findLinearPtn( tailMtx ,yIdx=4 ,typ="A" )
+		if( 0<yIdxB ){
+			rObj$lPtn2 <- bUtil.findLinearPtn( tailMtx ,yIdx=yIdxB ,typ="A" )
 		}
 	}
 
@@ -4150,12 +4164,17 @@ bFMtx.scoreLAf13 <- function( stdMIObj ){
 	rObj$lPtn2 <- NULL
 	if( 3<rObj$zMtx.size ){
 		#	yIdx 는 그냥 1로 시작하자. rawTail 크기가 정해져있으니 별 차이는 없을 듯.
-		tailMtx <- if( !is.na(stdMI$fStepTail[1,1]) ) stdMI$fStepTail else stdMI$fStepTail[nrow(stdMI$fStepTail)-1, ,drop=F]
-		if( 1<nrow(tailMtx) ){
-			rObj$lPtn1 <- bUtil.findLinearPtn( tailMtx ,yIdx=1 ,typ="A" )
+		tailMtx <- stdMI$fStepTail
+		if( is.na(tailMtx[1,1]) ){
+			tailMtx <- tailMtx[2:nrow(tailMtx),,drop=F]
 		}
-		if( 3<nrow(tailMtx) ){
-			rObj$lPtn2 <- bUtil.findLinearPtn( tailMtx ,yIdx=3 ,typ="A" )
+		yIdxA <- nrow(tailMtx) -6 +1	# 바닥으로부터 자신 포함한 높이 6
+		yIdxB <- nrow(tailMtx) -6 +3	# 바닥으로부터 자신 포함한 높이 4
+		if( 0<yIdxA ){
+			rObj$lPtn1 <- bUtil.findLinearPtn( tailMtx ,yIdx=yIdxA ,typ="A" )
+		}
+		if( 0<yIdxB ){
+			rObj$lPtn2 <- bUtil.findLinearPtn( tailMtx ,yIdx=yIdxB ,typ="A" )
 		}
 	}
 
@@ -4221,12 +4240,17 @@ bFMtx.scoreLAf24 <- function( stdMIObj ){
 	rObj$lPtn2 <- NULL
 	if( 3<rObj$zMtx.size ){
 		#	yIdx 는 그냥 1로 시작하자. rawTail 크기가 정해져있으니 별 차이는 없을 듯.
-		tailMtx <- if( !is.na(stdMI$fStepTail[1,1]) ) stdMI$fStepTail else stdMI$fStepTail[nrow(stdMI$fStepTail)-1, ,drop=F]
-		if( 2<nrow(tailMtx) ){
-			rObj$lPtn1 <- bUtil.findLinearPtn( tailMtx ,yIdx=2 ,typ="A" )
+		tailMtx <- stdMI$fStepTail
+		if( is.na(tailMtx[1,1]) ){
+			tailMtx <- tailMtx[2:nrow(tailMtx),,drop=F]
 		}
-		if( 4<nrow(tailMtx) ){
-			rObj$lPtn2 <- bUtil.findLinearPtn( tailMtx ,yIdx=4 ,typ="A" )
+		yIdxA <- nrow(tailMtx) -6 +2	# 바닥으로부터 자신 포함한 높이 6
+		yIdxB <- nrow(tailMtx) -6 +4	# 바닥으로부터 자신 포함한 높이 4
+		if( 0<yIdxA ){
+			rObj$lPtn1 <- bUtil.findLinearPtn( tailMtx ,yIdx=yIdxA ,typ="A" )
+		}
+		if( 0<yIdxB ){
+			rObj$lPtn2 <- bUtil.findLinearPtn( tailMtx ,yIdx=yIdxB ,typ="A" )
 		}
 	}
 

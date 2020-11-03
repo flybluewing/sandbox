@@ -1096,11 +1096,13 @@ if( TRUE ){ # "sScore0LAr13"
         rObj <- list( lPtn1=NULL ,lPtn2=NULL ,colLen=ncol(wMI$rawTail) )
         if( TRUE ){
             tailMtx <- wMI$rawTail
-            if( 1<stdMILen ){
-                rObj$lPtn1 <- bUtil.findLinearPtn( tailMtx ,yIdx=1 ,typ="A" )
+            yIdxA <- nrow(tailMtx) -6 +1	# 바닥으로부터 자신 포함한 높이 6
+            yIdxB <- nrow(tailMtx) -6 +3	# 바닥으로부터 자신 포함한 높이 4
+            if( 0<yIdxA ){
+                rObj$lPtn1 <- bUtil.findLinearPtn( tailMtx ,yIdx=yIdxA ,typ="A" )
             }
-            if( 3<stdMILen ){
-                rObj$lPtn2 <- bUtil.findLinearPtn( tailMtx ,yIdx=3 ,typ="A" )
+            if( 0<yIdxB ){
+                rObj$lPtn2 <- bUtil.findLinearPtn( tailMtx ,yIdx=yIdxB ,typ="A" )
             }
         }
 
@@ -1201,11 +1203,13 @@ if( TRUE ){ # "sScore0LAr24"
         rObj <- list( lPtn1=NULL ,lPtn2=NULL ,colLen=ncol(wMI$rawTail) )
         if( TRUE ){
             tailMtx <- wMI$rawTail
-            if( 2<stdMILen ){
-                rObj$lPtn1 <- bUtil.findLinearPtn( tailMtx ,yIdx=2 ,typ="A" )
+            yIdxA <- nrow(tailMtx) -6 +2	# 바닥으로부터 자신 포함한 높이 6
+            yIdxB <- nrow(tailMtx) -6 +4	# 바닥으로부터 자신 포함한 높이 4
+            if( 0<yIdxA ){
+                rObj$lPtn1 <- bUtil.findLinearPtn( tailMtx ,yIdx=yIdxA ,typ="A" )
             }
-            if( 4<stdMILen ){
-                rObj$lPtn2 <- bUtil.findLinearPtn( tailMtx ,yIdx=4 ,typ="A" )
+            if( 0<yIdxB ){
+                rObj$lPtn2 <- bUtil.findLinearPtn( tailMtx ,yIdx=yIdxB ,typ="A" )
             }
         }
 
@@ -1518,11 +1522,13 @@ if( TRUE ){ # "sScore0LAe13"
         rObj <- list( lPtn1=NULL ,lPtn2=NULL ,colLen=ncol(wMI$rawTail) )
         if( TRUE ){
             tailMtx <- wMI$rawTail%%10
-            if( 1<stdMILen ){
-                rObj$lPtn1 <- bUtil.findLinearPtn( tailMtx ,yIdx=1 ,typ="A" )
+            yIdxA <- nrow(tailMtx) -6 +1	# 바닥으로부터 자신 포함한 높이 6
+            yIdxB <- nrow(tailMtx) -6 +3	# 바닥으로부터 자신 포함한 높이 4
+            if( 0<yIdxA ){
+                rObj$lPtn1 <- bUtil.findLinearPtn( tailMtx ,yIdx=yIdxA ,typ="A" )
             }
-            if( 3<stdMILen ){
-                rObj$lPtn2 <- bUtil.findLinearPtn( tailMtx ,yIdx=3 ,typ="A" )
+            if( 0<yIdxB ){
+                rObj$lPtn2 <- bUtil.findLinearPtn( tailMtx ,yIdx=yIdxB ,typ="A" )
             }
         }
 
@@ -1623,11 +1629,13 @@ if( TRUE ){ # "sScore0LAe24"
         rObj <- list( lPtn1=NULL ,lPtn2=NULL ,colLen=ncol(wMI$rawTail) )
         if( TRUE ){
             tailMtx <- wMI$rawTail%%10
-            if( 2<stdMILen ){
-                rObj$lPtn1 <- bUtil.findLinearPtn( tailMtx ,yIdx=2 ,typ="A" )
+            yIdxA <- nrow(tailMtx) -6 +2	# 바닥으로부터 자신 포함한 높이 6
+            yIdxB <- nrow(tailMtx) -6 +4	# 바닥으로부터 자신 포함한 높이 4
+            if( 0<yIdxA ){
+                rObj$lPtn1 <- bUtil.findLinearPtn( tailMtx ,yIdx=yIdxA ,typ="A" )
             }
-            if( 4<stdMILen ){
-                rObj$lPtn2 <- bUtil.findLinearPtn( tailMtx ,yIdx=4 ,typ="A" )
+            if( 0<yIdxB ){
+                rObj$lPtn2 <- bUtil.findLinearPtn( tailMtx ,yIdx=yIdxB ,typ="A" )
             }
         }
 
@@ -1940,11 +1948,13 @@ if( TRUE ){ # "sScore0LAc13"
         rObj <- list( lPtn1=NULL ,lPtn2=NULL ,colLen=ncol(wMI$cStepTail) )
         if( TRUE ){
             tailMtx <- wMI$cStepTail
-            if( 1<stdMILen ){
-                rObj$lPtn1 <- bUtil.findLinearPtn( tailMtx ,yIdx=1 ,typ="A" )
+            yIdxA <- nrow(tailMtx) -6 +1	# 바닥으로부터 자신 포함한 높이 6
+            yIdxB <- nrow(tailMtx) -6 +3	# 바닥으로부터 자신 포함한 높이 4
+            if( 0<yIdxA ){
+                rObj$lPtn1 <- bUtil.findLinearPtn( tailMtx ,yIdx=yIdxA ,typ="A" )
             }
-            if( 3<stdMILen ){
-                rObj$lPtn2 <- bUtil.findLinearPtn( tailMtx ,yIdx=3 ,typ="A" )
+            if( 0<yIdxB ){
+                rObj$lPtn2 <- bUtil.findLinearPtn( tailMtx ,yIdx=yIdxB ,typ="A" )
             }
         }
 
@@ -2045,11 +2055,13 @@ if( TRUE ){ # "sScore0LAc24"
         rObj <- list( lPtn1=NULL ,lPtn2=NULL ,colLen=ncol(wMI$cStepTail) )
         if( TRUE ){
             tailMtx <- wMI$cStepTail
-            if( 2<stdMILen ){
-                rObj$lPtn1 <- bUtil.findLinearPtn( tailMtx ,yIdx=2 ,typ="A" )
+            yIdxA <- nrow(tailMtx) -6 +2	# 바닥으로부터 자신 포함한 높이 6
+            yIdxB <- nrow(tailMtx) -6 +4	# 바닥으로부터 자신 포함한 높이 4
+            if( 0<yIdxA ){
+                rObj$lPtn1 <- bUtil.findLinearPtn( tailMtx ,yIdx=yIdxA ,typ="A" )
             }
-            if( 4<stdMILen ){
-                rObj$lPtn2 <- bUtil.findLinearPtn( tailMtx ,yIdx=4 ,typ="A" )
+            if( 0<yIdxB ){
+                rObj$lPtn2 <- bUtil.findLinearPtn( tailMtx ,yIdx=yIdxB ,typ="A" )
             }
         }
 
@@ -2361,11 +2373,16 @@ if( TRUE ){ # "sScore0LAf13"
         rObj <- list( lPtn1=NULL ,lPtn2=NULL ,colLen=ncol(wMI$fStepTail) )
         if( TRUE ){
             tailMtx <- wMI$fStepTail
-            if( 1<stdMILen ){
-                rObj$lPtn1 <- bUtil.findLinearPtn( tailMtx ,yIdx=1 ,typ="A" )
+            if( is.na(tailMtx[1,1]) ){
+                tailMtx <- tailMtx[2:nrow(tailMtx),,drop=F]
             }
-            if( 3<stdMILen ){
-                rObj$lPtn2 <- bUtil.findLinearPtn( tailMtx ,yIdx=3 ,typ="A" )
+            yIdxA <- nrow(tailMtx) -6 +1	# 바닥으로부터 자신 포함한 높이 6
+            yIdxB <- nrow(tailMtx) -6 +3	# 바닥으로부터 자신 포함한 높이 4
+            if( 0<yIdxA ){
+                rObj$lPtn1 <- bUtil.findLinearPtn( tailMtx ,yIdx=yIdxA ,typ="A" )
+            }
+            if( 0<yIdxB ){
+                rObj$lPtn2 <- bUtil.findLinearPtn( tailMtx ,yIdx=yIdxB ,typ="A" )
             }
         }
 
@@ -2466,11 +2483,16 @@ if( TRUE ){ # "sScore0LAf24"
         rObj <- list( lPtn1=NULL ,lPtn2=NULL ,colLen=ncol(wMI$fStepTail) )
         if( TRUE ){
             tailMtx <- wMI$fStepTail
-            if( 2<stdMILen ){
-                rObj$lPtn1 <- bUtil.findLinearPtn( tailMtx ,yIdx=2 ,typ="A" )
+            if( is.na(tailMtx[1,1]) ){
+                tailMtx <- tailMtx[2:nrow(tailMtx),,drop=F]
             }
-            if( 4<stdMILen ){
-                rObj$lPtn2 <- bUtil.findLinearPtn( tailMtx ,yIdx=4 ,typ="A" )
+            yIdxA <- nrow(tailMtx) -6 +2	# 바닥으로부터 자신 포함한 높이 6
+            yIdxB <- nrow(tailMtx) -6 +4	# 바닥으로부터 자신 포함한 높이 4
+            if( 0<yIdxA ){
+                rObj$lPtn1 <- bUtil.findLinearPtn( tailMtx ,yIdx=yIdxA ,typ="A" )
+            }
+            if( 0<yIdxB ){
+                rObj$lPtn2 <- bUtil.findLinearPtn( tailMtx ,yIdx=yIdxB ,typ="A" )
             }
         }
 
