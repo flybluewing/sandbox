@@ -187,16 +187,16 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
             # resultObj$cutRst1Score_bS <- cutRst.bS$cutRst1Score
 
             resultObj$fHName <- fHName            # bFMtx
-            # resultObj$cut.grp <- cut.grp
-            # resultObj$scoreMtx.grp <- scoreMtx.grp
-
-            aZoidMtx <- matrix(stdZoid ,nrow=1)     # bSMTX
-            phVP.grp <- bS.getPhVPGrp( gEnv.w ,aZoidMtx )
-            scoreMtx.grp <- bS.getScoreMtx.grp( phVP.grp ,aZoidMtx ,tgt.scMtx=tgt.scMtx )
-            cut.grp <- bS.getCutGrp( hMtxLst_bS ,tgt.scMtx )
-
-            resultObj$scoreMtx.grp <- scoreMtx.grp
             resultObj$cut.grp <- cut.grp
+            resultObj$scoreMtx.grp <- scoreMtx.grp
+
+            # aZoidMtx <- matrix(stdZoid ,nrow=1)     # bSMTX
+            # phVP.grp <- bS.getPhVPGrp( gEnv.w ,aZoidMtx )
+            # scoreMtx.grp <- bS.getScoreMtx.grp( phVP.grp ,aZoidMtx ,tgt.scMtx=tgt.scMtx )
+            # cut.grp <- bS.getCutGrp( hMtxLst_bS ,tgt.scMtx )
+
+            # resultObj$scoreMtx.grp <- scoreMtx.grp
+            # resultObj$cut.grp <- cut.grp
 
         }
 
@@ -212,9 +212,8 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
     # score1 score3 score4 score6 score7 score8 <-- score2, score5, score9
     #      3     10     37     32     57      4 
 
-    save( resultLst ,file=sprintf("./save/HMtxLst/Obj_resultLst%d.save",configH) )
-    save( cutRstLst ,file=sprintf("./save/HMtxLst/Obj_cutRstLst%d.save",configH) )
-        # load("./save/HMtxLst/Obj_cutRstLst840.save")
+    # save( resultLst ,file=sprintf("./save/HMtxLst/Obj_resultLst%d.save",configH) )
+    # save( cutRstLst ,file=sprintf("./save/HMtxLst/Obj_cutRstLst%d.save",configH) )
 
     rptFile <- ifelse(1==length(tgt.scMtx),sprintf("cutRstLst_%d",length(tgt.scMtx)),"cutRstLst")
     if( 1==length(tgt.scMtx) ){
@@ -239,6 +238,9 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
     rptBanM     <- c( rptBanM ,c("scoreLAf13","scoreLAf24","scoreLVf13","scoreLVf24") )
     rptBanM     <- c( rptBanM ,c("mf4567") )
     rptBanM     <- c( rptBanM ,c("crScrN01PhEvt","crScrN02PhEvt") )
+
+    # rptBanM     <- c( rptBanM ,c("crScrN03R","crScrN03E","crScrN03PhEvt","crScrN03Sum") )
+    rptBanM     <- c( rptBanM ,c("crScrN04R","crScrN04E","crScrN04PhEvt","crScrN04Sum") )
     B.rptCutRstLst( cutRstLst ,file=rptFile ,rptBanTyp=rptBanTyp ,rptBanM=rptBanM )
 
 
@@ -258,10 +260,11 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
 
         B.rpt_CutRstClM( resultLst ,tgt.scMtx ,rptfile=sprintf("Inspec_CutRstCLM_%d",lastH) )
 
-        mNameSet <- c( "crScrN03R" ,"crScrN03E" ,"crScrN03PhEvt" ,"crScrN03Sum" ,"crScrN04R" ,"crScrN04E" ,"crScrN04PhEvt" ,"crScrN04Sum" )
+        # mNameSet <- c( "crScrN03R" ,"crScrN03E" ,"crScrN03PhEvt" ,"crScrN03Sum" ,"crScrN04R" ,"crScrN04E" ,"crScrN04PhEvt" ,"crScrN04Sum" )
+        mNameSet <- c( "crScrN03R" ,"crScrN03E" ,"crScrN03PhEvt" ,"crScrN03Sum" )
         for( crMName in mNameSet ){
             rptFile <- sprintf("Inspec_%s_H%d",crMName,lastH)
-            B.rptCrScr( resultLst ,crMName ,rptFile )
+            B.rptCrScr( resultLst ,crMName ,tgt.scMtx ,rptFile )
         }
 
         mNameSet <- c( "sScore01" ,"sScore02" )

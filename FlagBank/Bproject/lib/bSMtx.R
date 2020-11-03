@@ -309,7 +309,7 @@ if( TRUE ){ # "sScore02"
 
 }
 
-if( FALSE ){ # "sScore03"
+if( TRUE ){ # "sScore03"
 
 	bS.sScore3.cName <- c( "rebPtn.1","rebPtn.n","snR3" ,"snMax.r","snFCnt.r" ,"snMax.c","snFCnt.c" ,"snMax.f","snFCnt.f" )
 
@@ -551,7 +551,7 @@ if( FALSE ){ # "sScore03"
 
 }
 
-if( FALSE ){ # "sScore04"
+if( TRUE ){ # "sScore04"
 
 	bS.sScore04.cName <- c( "pBanN.r","pBanN.n"	    # found num of rebound ptn ( ptn itself, next ptn in right column )
                             ,"pLCol" ,"pE3" ,"pE4"	,"pMH" ,"pfNum"
@@ -569,7 +569,7 @@ if( FALSE ){ # "sScore04"
             return( scrMtx )
         }
 
-        rObj$fInfo <- fCutU.getFiltObjPair( wMI$rawTail )	# rObj$fInfo$explain( )
+        rObj <- list( fInfo=fCutU.getFiltObjPair(wMI$rawTail) )   # rObj$fInfo$explain( )
 
 
         for( wIdx in seq_len(length(workArea)) ){
@@ -646,7 +646,7 @@ if( FALSE ){ # "sScore04"
 
 }
 
-if( FALSE ){ # "sScore05"
+if( TRUE ){ # "sScore05"
 
 	bS.sScore05.cName <- c( "pBanN.r","pBanN.n"	    # found num of rebound ptn ( ptn itself, next ptn in right column )
                             ,"pLCol" ,"pE3" ,"pE4"	,"pMH" ,"pfNum"
@@ -664,8 +664,8 @@ if( FALSE ){ # "sScore05"
             return( scrMtx )
         }
 
-        rObj$fInfo <- fCutU.getFiltObjPair( wMI$rawTail %% 10 )	# rObj$fInfo$explain( )
-
+        # rObj$fInfo <- fCutU.getFiltObjPair( wMI$rawTail %% 10 )	# rObj$fInfo$explain( )
+        rObj <- list( fInfo=fCutU.getFiltObjPair( wMI$rawTail%%10 ) )   # rObj$fInfo$explain( )
 
         for( wIdx in seq_len(length(workArea)) ){
             aIdx <- workArea[wIdx]
@@ -741,7 +741,7 @@ if( FALSE ){ # "sScore05"
 
 }
 
-if( FALSE ){ # "sScore06"
+if( TRUE ){ # "sScore06"
 
 	bS.sScore06.cName <- c( "pBanN.r","pBanN.n"	    # found num of rebound ptn ( ptn itself, next ptn in right column )
                             ,"pLCol" ,"pE3" ,"pE4"	,"pMH" ,"pfNum"
@@ -759,7 +759,8 @@ if( FALSE ){ # "sScore06"
             return( scrMtx )
         }
 
-        rObj$fInfo <- fCutU.getFiltObjPair( wMI$cStepTail )	# rObj$fInfo$explain( )
+        # rObj$fInfo <- fCutU.getFiltObjPair( wMI$cStepTail )	# rObj$fInfo$explain( )
+        rObj <- list( fInfo=fCutU.getFiltObjPair( wMI$cStepTail ) )   # rObj$fInfo$explain( )
 
 
         for( wIdx in seq_len(length(workArea)) ){
@@ -836,7 +837,7 @@ if( FALSE ){ # "sScore06"
 
 }
 
-if( FALSE ){ # "sScore07"
+if( TRUE ){ # "sScore07"
 
 	bS.sScore07.cName <- c( "pBanN.r","pBanN.n"	    # found num of rebound ptn ( ptn itself, next ptn in right column )
                             ,"pLCol" ,"pE3" ,"pE4"	,"pMH" ,"pfNum"
@@ -854,7 +855,8 @@ if( FALSE ){ # "sScore07"
             return( scrMtx )
         }
 
-        rObj$fInfo <- fCutU.getFiltObjPair( wMI$fStepTail )	# rObj$fInfo$explain( )
+        # rObj$fInfo <- fCutU.getFiltObjPair( wMI$fStepTail )	# rObj$fInfo$explain( )
+        rObj <- list( fInfo=fCutU.getFiltObjPair( wMI$fStepTail ) )   # rObj$fInfo$explain( )
 
 
         for( wIdx in seq_len(length(workArea)) ){
@@ -931,7 +933,7 @@ if( FALSE ){ # "sScore07"
 
 }
 
-if( FALSE ){ # "sScore08"
+if( TRUE ){ # "sScore08"
 
 	bS.sScore08.cName <- c(
 					 "max3","min3","max2MatCnt","min2MatCnt","minMax2MatCnt"
@@ -1075,7 +1077,7 @@ if( FALSE ){ # "sScore09" <- 보류. rawTail, cStepTail의 폭이 하드코딩 되어있다.
 
 
 
-if( FALSE ){ # "sScore0LAr13"
+if( TRUE ){ # "sScore0LAr13"
 
     # 주의사항 : bSMtx는 tailMtx 폭이 가면적이므로 
     #           "colA5","colB5" ,"colA6","colB6" 값은 없을 수도 있다.
@@ -1180,7 +1182,7 @@ if( FALSE ){ # "sScore0LAr13"
 
 }
 
-if( FALSE ){ # "sScore0LAr24"
+if( TRUE ){ # "sScore0LAr24"
 
     # 주의사항 : bSMtx는 tailMtx 폭이 가면적이므로 
     #           "colA5","colB5" ,"colA6","colB6" 값은 없을 수도 있다.
@@ -1285,7 +1287,7 @@ if( FALSE ){ # "sScore0LAr24"
 
 }
 
-if( FALSE ){ # "sScore0LVr13"
+if( TRUE ){ # "sScore0LVr13"
 
     # 주의사항 : bSMtx는 tailMtx 폭이 가면적이므로 
     #           "colA5","colB5" ,"colA6","colB6" 값은 없을 수도 있다.
@@ -1390,7 +1392,7 @@ if( FALSE ){ # "sScore0LVr13"
 
 }
 
-if( FALSE ){ # "sScore0LVr24"
+if( TRUE ){ # "sScore0LVr24"
 
     # 주의사항 : bSMtx는 tailMtx 폭이 가면적이므로 
     #           "colA5","colB5" ,"colA6","colB6" 값은 없을 수도 있다.
@@ -1497,7 +1499,7 @@ if( FALSE ){ # "sScore0LVr24"
 
 
 
-if( FALSE ){ # "sScore0LAe13"
+if( TRUE ){ # "sScore0LAe13"
 
     # 주의사항 : bSMtx는 tailMtx 폭이 가면적이므로 
     #           "colA5","colB5" ,"colA6","colB6" 값은 없을 수도 있다.
@@ -1602,7 +1604,7 @@ if( FALSE ){ # "sScore0LAe13"
 
 }
 
-if( FALSE ){ # "sScore0LAe24"
+if( TRUE ){ # "sScore0LAe24"
 
     # 주의사항 : bSMtx는 tailMtx 폭이 가면적이므로 
     #           "colA5","colB5" ,"colA6","colB6" 값은 없을 수도 있다.
@@ -1707,7 +1709,7 @@ if( FALSE ){ # "sScore0LAe24"
 
 }
 
-if( FALSE ){ # "sScore0LVe13"
+if( TRUE ){ # "sScore0LVe13"
 
     # 주의사항 : bSMtx는 tailMtx 폭이 가변적이므로 
     #           "colA5","colB5" ,"colA6","colB6" 값은 없을 수도 있다.
@@ -1812,7 +1814,7 @@ if( FALSE ){ # "sScore0LVe13"
 
 }
 
-if( FALSE ){ # "sScore0LVe24"
+if( TRUE ){ # "sScore0LVe24"
 
     # 주의사항 : bSMtx는 tailMtx 폭이 가변적이므로 
     #           "colA5","colB5" ,"colA6","colB6" 값은 없을 수도 있다.
@@ -1919,7 +1921,7 @@ if( FALSE ){ # "sScore0LVe24"
 
 
 
-if( FALSE ){ # "sScore0LAc13"
+if( TRUE ){ # "sScore0LAc13"
 
     # 주의사항 : bSMtx는 tailMtx 폭이 가면적이므로 
     #           "colA5","colB5" ,"colA6","colB6" 값은 없을 수도 있다.
@@ -2024,7 +2026,7 @@ if( FALSE ){ # "sScore0LAc13"
 
 }
 
-if( FALSE ){ # "sScore0LAc24"
+if( TRUE ){ # "sScore0LAc24"
 
     # 주의사항 : bSMtx는 tailMtx 폭이 가면적이므로 
     #           "colA5","colB5" ,"colA6","colB6" 값은 없을 수도 있다.
@@ -2129,7 +2131,7 @@ if( FALSE ){ # "sScore0LAc24"
 
 }
 
-if( FALSE ){ # "sScore0LVc13"
+if( TRUE ){ # "sScore0LVc13"
 
     # 주의사항 : bSMtx는 tailMtx 폭이 가면적이므로 
     #           "colA5","colB5" ,"colA6","colB6" 값은 없을 수도 있다.
@@ -2234,7 +2236,7 @@ if( FALSE ){ # "sScore0LVc13"
 
 }
 
-if( FALSE ){ # "sScore0LVc24"
+if( TRUE ){ # "sScore0LVc24"
 
     # 주의사항 : bSMtx는 tailMtx 폭이 가면적이므로 
     #           "colA5","colB5" ,"colA6","colB6" 값은 없을 수도 있다.
@@ -2340,7 +2342,7 @@ if( FALSE ){ # "sScore0LVc24"
 }
 
 
-if( FALSE ){ # "sScore0LAf13"
+if( TRUE ){ # "sScore0LAf13"
 
     # 주의사항 : bSMtx는 tailMtx 폭이 가면적이므로 
     #           "colA5","colB5" ,"colA6","colB6" 값은 없을 수도 있다.
@@ -2445,7 +2447,7 @@ if( FALSE ){ # "sScore0LAf13"
 
 }
 
-if( FALSE ){ # "sScore0LAf24"
+if( TRUE ){ # "sScore0LAf24"
 
     # 주의사항 : bSMtx는 tailMtx 폭이 가면적이므로 
     #           "colA5","colB5" ,"colA6","colB6" 값은 없을 수도 있다.
@@ -2550,7 +2552,7 @@ if( FALSE ){ # "sScore0LAf24"
 
 }
 
-if( FALSE ){ # "sScore0LVf13"
+if( TRUE ){ # "sScore0LVf13"
 
     # 주의사항 : bSMtx는 tailMtx 폭이 가면적이므로 
     #           "colA5","colB5" ,"colA6","colB6" 값은 없을 수도 있다.
@@ -2655,7 +2657,7 @@ if( FALSE ){ # "sScore0LVf13"
 
 }
 
-if( FALSE ){ # "sScore0LVf24"
+if( TRUE ){ # "sScore0LVf24"
 
     # 주의사항 : bSMtx는 tailMtx 폭이 가면적이므로 
     #           "colA5","colB5" ,"colA6","colB6" 값은 없을 수도 있다.

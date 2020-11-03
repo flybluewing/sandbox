@@ -847,7 +847,7 @@ B.rpt_CutRstClM <- function( resultLst ,tgt.scMtx ,rptfile="CutRstCLM" ){
     cat(sprintf("   reported in %s \n",logSumTot$fileName))
 }
 
-B.rptcrScr <- function( resultLst ,crMName ,tgt.scMtx ,rptFile ){
+B.rptCrScr <- function( resultLst ,crMName ,tgt.scMtx ,rptFile ){
 
     fLog <- k.getFlogObj( sprintf("./report/workRpt/%s.txt",rptFile) )
     fLog$fLogStr( sprintf("Start %s",rptFile) ,pTime=T,pAppend=F)
