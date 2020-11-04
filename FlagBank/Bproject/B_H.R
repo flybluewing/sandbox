@@ -994,6 +994,8 @@ B.get_testData.grp <- function( testSpan ,gEnv ,allIdxLst ,fRstLst ,tgt.scMtx=NU
         fRstLst.w <- fRstLst[wLastSpan]
 
         curHMtxLst <- B.makeHMtxLst( gEnv.w, allIdxLst.w, fRstLst.w, tgt.scMtx )
+            # curHMtxLst <- NULL
+            # cat("Warn. curHMtxLst() is commented for debug test.\n")
         curHMtxLst_bS <- bS.makeHMtxLst( gEnv.w, allIdxLst.w, fRstLst.w ,tgt.scMtx )
 
         # ------------------------------------------------------------------------

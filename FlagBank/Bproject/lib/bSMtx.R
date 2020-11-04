@@ -2366,7 +2366,7 @@ if( TRUE ){ # "sScore0LAf13"
 		scrMtx <- matrix( 0, nrow=length(workArea), ncol=length(bS.sScore0LAf13.cName) )	;colnames(scrMtx) <- bS.sScore0LAf13.cName
         rownames(scrMtx) <- workArea
         stdMILen <- nrow(wMI$rawTail)
-        if( 0==stdMILen ){
+        if( 3>stdMILen ){
             return( scrMtx )
         }
 
@@ -2476,7 +2476,7 @@ if( TRUE ){ # "sScore0LAf24"
 		scrMtx <- matrix( 0, nrow=length(workArea), ncol=length(bS.sScore0LAf24.cName) )	;colnames(scrMtx) <- bS.sScore0LAf24.cName
         rownames(scrMtx) <- workArea
         stdMILen <- nrow(wMI$rawTail)
-        if( 0==stdMILen ){
+        if( 3>stdMILen ){
             return( scrMtx )
         }
 
@@ -2586,13 +2586,17 @@ if( TRUE ){ # "sScore0LVf13"
 		scrMtx <- matrix( 0, nrow=length(workArea), ncol=length(bS.sScore0LVf13.cName) )	;colnames(scrMtx) <- bS.sScore0LVf13.cName
         rownames(scrMtx) <- workArea
         stdMILen <- nrow(wMI$rawTail)
-        if( 0==stdMILen ){
+        if( 3>stdMILen ){
             return( scrMtx )
         }
 
         rObj <- list( lPtn1=NULL ,lPtn2=NULL ,colLen=ncol(wMI$fStepTail) )
         if( TRUE ){
             tailMtx <- wMI$fStepTail
+            if( is.na(tailMtx[1,1]) ){
+                tailMtx <- tailMtx[2:nrow(tailMtx),,drop=F]
+            }
+
             if( 1<stdMILen ){
                 rObj$lPtn1 <- bUtil.findLinearPtn( tailMtx ,yIdx=nrow(tailMtx) ,typ="V" )
             }
@@ -2691,13 +2695,16 @@ if( TRUE ){ # "sScore0LVf24"
 		scrMtx <- matrix( 0, nrow=length(workArea), ncol=length(bS.sScore0LVf24.cName) )	;colnames(scrMtx) <- bS.sScore0LVf24.cName
         rownames(scrMtx) <- workArea
         stdMILen <- nrow(wMI$rawTail)
-        if( 0==stdMILen ){
+        if( 3>stdMILen ){
             return( scrMtx )
         }
 
         rObj <- list( lPtn1=NULL ,lPtn2=NULL ,colLen=ncol(wMI$fStepTail) )
         if( TRUE ){
             tailMtx <- wMI$fStepTail
+            if( is.na(tailMtx[1,1]) ){
+                tailMtx <- tailMtx[2:nrow(tailMtx),,drop=F]
+            }
             if( 2<stdMILen ){
                 rObj$lPtn1 <- bUtil.findLinearPtn( tailMtx ,yIdx=nrow(tailMtx)-1 ,typ="V" )
             }
