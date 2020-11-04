@@ -183,7 +183,7 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
             #     "summMtxRaw"     "summMtxEvt"     "summMtx.RebRaw" "summMtx.RebEvt" "szMtxCnt"       "szMtxDup"       
             #     "sumMtx" 
 
-            # resultObj$cutRst1Score <- bUtil.getCut1Score( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx )
+            resultObj$cutRst1Score <- bUtil.getCut1Score( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx )
             # resultObj$cutRst1Score_bS <- cutRst.bS$cutRst1Score
 
             resultObj$fHName <- fHName            # bFMtx
@@ -255,17 +255,29 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
         mNameSet <- c("scoreLAr13","scoreLAr24","scoreLVr13","scoreLVr24")
         for( mName in mNameSet ){
             rptFile <- sprintf("Inspec_H%d_cutRst1Score",lastH)
-            B.rptCutRst1Score_byMtx( resultLst ,mName ,file=rptFile)
+            B.rptCutRst1Score_byMtx( resultLst ,mName ,rptFile)
         }
-
-        B.rpt_CutRstClM( resultLst ,tgt.scMtx ,rptfile=sprintf("Inspec_CutRstCLM_%d",lastH) )
-
+        mNameSet <- c("score1","score2","scoreLAr13")      # names(bFMtxExtFltLst)
+        for( mName in mNameSet ){
+            for( extFltName in names(bFMtxExtFltLst[[mName]]) ){
+                rptFile <- sprintf("Inspec_H%d_fMtxExt_%s_%s",lastH,mName,extFltName)
+                B.rptFMtx_ext( resultLst ,mName ,extFltName ,rptFile)
+            }
+        }
+        mNameSet <- c("mfLAVrn")
+        for( mName in mNameSet ){
+            rptFile <- sprintf("Inspec_H%d_fMtxMultiR_%s",lastH,mName)
+            B.rptFMtx_multiR( resultLst ,mName ,tgt.scMtx ,rptFile)
+        }
         # mNameSet <- c( "crScrN03R" ,"crScrN03E" ,"crScrN03PhEvt" ,"crScrN03Sum" ,"crScrN04R" ,"crScrN04E" ,"crScrN04PhEvt" ,"crScrN04Sum" )
         mNameSet <- c( "crScrN03R" ,"crScrN03E" ,"crScrN03PhEvt" ,"crScrN03Sum" )
         for( crMName in mNameSet ){
             rptFile <- sprintf("Inspec_%s_H%d",crMName,lastH)
             B.rptCrScr( resultLst ,crMName ,tgt.scMtx ,rptFile )
         }
+        B.rpt_CutRstClM( resultLst ,tgt.scMtx ,rptfile=sprintf("Inspec_CutRstCLM_%d",lastH) )
+
+
 
         mNameSet <- c( "sScore01" ,"sScore02" )
         for( mName in mNameSet ){

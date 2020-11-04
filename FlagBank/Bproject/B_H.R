@@ -614,6 +614,62 @@ B.rptCutRstLst <- function( cutRstLst ,file="cutRstLst" ,rptBanTyp=NULL ,rptBanM
 
 } # B.rptCutRstLst()
 
+B.rptFMtx_ext <- function( resultLst ,mName ,extFltName="filter01" ,rptFile ){
+    fLog <- k.getFlogObj( sprintf("./report/workRpt/%s.txt",rptFile) )
+    fLog$fLogStr( sprintf("Start %s",rptFile) ,pTime=T,pAppend=F)
+
+    rptMtxLst <- NULL
+    for( hIdx in names(resultLst) ){
+        aIdx <- 1
+
+        scoreMtx.grp <- resultLst[[hIdx]]$scoreMtx.grp
+        for( pName in names(cut.grp$cutterExtLst[[hName]][[mName]]$stdCut) ){
+            mtxMaker <- bFMtxExtFltLst[[mName]][[extFltName]]
+            extScore <- mtxMaker$getScore( scoreMtx.grp$basic[[pName]][[mName]]$scoreMtx[1,] )
+            rptMtxLst[[pName]] <- rbind( rptMtxLst[[pName]] ,extScore )
+        }
+    }
+    for( pName in names(rptMtxLst) ){
+        rptMtx <- rptMtxLst[[pName]]
+        rownames(rptMtx) <- B.tgtHIdxStr( as.integer(names(resultLst)) )
+        fLog$fLogStr(sprintf("<%s>",pName))
+        fLog$fLogMtx( rptMtx ,pIndent="  ")
+    }
+
+    fLog$fLogStr( "Finish -----" ,pTime=T)
+    cat(sprintf("   reported in %s \n",fLog$fileName))
+}
+
+B.rptFMtx_multiR <- function( resultLst ,mName ,tgt.scMtx ,rptFile ){
+    fLog <- k.getFlogObj( sprintf("./report/workRpt/%s.txt",rptFile) )
+    fLog$fLogStr( sprintf("Start %s",rptFile) ,pTime=T,pAppend=F)
+
+    rptMtxLst <- NULL
+    for( hIdx in names(resultLst) ){
+        aIdx <- 1
+
+        mtxMaker <- bFMtxMFltLst[[mName]]( tgt.scMtx )
+        if( !mtxMaker$available )   next
+
+        scoreMtx.grp <- resultLst[[hIdx]]$scoreMtx.grp
+        for( pName in names(scoreMtx.grp$basic) ){
+            scoreMtxLst <- scoreMtx.grp$basic[[pName]]
+            rptMtxLst[[pName]] <- rbind( rptMtxLst[[pName]] ,mtxMaker$getScoreMtx( scoreMtxLst )[1,] )
+        }
+    }
+    for( pName in names(rptMtxLst) ){
+        rptMtx <- rptMtxLst[[pName]]
+        rownames(rptMtx) <- B.tgtHIdxStr( as.integer(names(resultLst)) )
+        fLog$fLogStr(sprintf("<%s>",pName))
+        fLog$fLogMtx( rptMtx ,pIndent="  ")
+    }
+
+    fLog$fLogStr( "Finish -----" ,pTime=T)
+
+    cat(sprintf("   reported in %s \n",fLog$fileName))
+
+}
+
 B.rptCutRst1Score <- function( resultLst ,file="CutRst1Score" ){
 
     getShortPhaseName <- function( phaseName ){
@@ -681,7 +737,7 @@ B.rptCutRst1Score <- function( resultLst ,file="CutRst1Score" ){
 
 }
 
-B.rptCutRst1Score_byMtx <- function( resultLst ,mName ,file="cutRst1Score"){
+B.rptCutRst1Score_byMtx <- function( resultLst ,mName ,rptFile="cutRst1Score"){
 
     removeZeroRow <- function( mtx ){
         flag <- apply( mtx ,1 ,function(rDat){all(rDat==0)})
@@ -690,18 +746,30 @@ B.rptCutRst1Score_byMtx <- function( resultLst ,mName ,file="cutRst1Score"){
         return( mtx )
     }
 
-    logSummMtx <- k.getFlogObj( sprintf("./report/workRpt/%s_%s_summMtx.txt",file,mName) )
-    logSummMtxReb <- k.getFlogObj( sprintf("./report/workRpt/%s_%s_summMtxReb.txt",file,mName) )
-    logScMtxSz <- k.getFlogObj( sprintf("./report/workRpt/%s_%s_scMtxSz.txt",file,mName) )
+    logScoreMtx <- k.getFlogObj( sprintf("./report/workRpt/%s_%s_ScoreMtx.txt",rptFile,mName) )
+    logSummMtx <- k.getFlogObj( sprintf("./report/workRpt/%s_%s_summMtx.txt",rptFile,mName) )
+    logSummMtxReb <- k.getFlogObj( sprintf("./report/workRpt/%s_%s_summMtxReb.txt",rptFile,mName) )
+    logScMtxSz <- k.getFlogObj( sprintf("./report/workRpt/%s_%s_scMtxSz.txt",rptFile,mName) )
 
+    logScoreMtx$fLogStr("Start by B.rptCutRst1Score_byMtx()",pTime=T,pAppend=F)
     logSummMtx$fLogStr("Start by B.rptCutRst1Score_byMtx()",pTime=T,pAppend=F)
     logSummMtxReb$fLogStr("Start by B.rptCutRst1Score_byMtx()",pTime=T,pAppend=F)
     logScMtxSz$fLogStr("Start by B.rptCutRst1Score_byMtx()",pTime=T,pAppend=F)
 
-    summMtxLst <- list()
+    # summMtxLst <- list()
+    rptMtxLst <- NULL
     for( hIdx in names(resultLst) ){
-        if( is.null(resultLst[[hIdx]]$cutRst1Score) ) next
 
+        if( !is.null(resultLst[[hIdx]]$scoreMtx.grp$basic) ){
+            for( pName in names(resultLst[[hIdx]]$scoreMtx.grp$basic) ){
+                scoreMtx <- resultLst[[hIdx]]$scoreMtx.grp$basic[["basic"]][[mName]]$scoreMtx
+                rptMtxLst[[pName]] <- rbind( rptMtxLst[[pName]] ,scoreMtx[1,] )
+            }
+        }
+
+
+
+        if( is.null(resultLst[[hIdx]]$cutRst1Score) ) next
         rptStr <- sprintf("hIdx:%s",hIdx)
         logSummMtx$fLogStr(     rptStr)
         logSummMtxReb$fLogStr(  rptStr)
@@ -752,7 +820,14 @@ B.rptCutRst1Score_byMtx <- function( resultLst ,mName ,file="cutRst1Score"){
     logSummMtx$fLogStr("End",pTime=T)
     logSummMtxReb$fLogStr("End",pTime=T)
     logScMtxSz$fLogStr("End",pTime=T)
-
+    for( pName in names(rptMtxLst) ){
+        rptMtx <- rptMtxLst[[pName]]
+        rownames(rptMtx) <- B.tgtHIdxStr( as.integer(names(resultLst)) )
+        
+        logScoreMtx$fLogStr(sprintf("<%s>",pName))
+        logScoreMtx$fLogMtx( rptMtx ,pIndent="  ")
+    }
+    logScoreMtx$fLogStr("End",pTime=T)
 }
 
 B.rptCutRst1Score_bS <- function( resultLst ,file="CutRst1Score_bS" ){

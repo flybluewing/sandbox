@@ -3346,6 +3346,7 @@ bFMtx.scoreLAr13 <- function( stdMIObj ){
 				scoreMtx[aIdx,"colB6"] <- matCnt[6]
 			}
 
+			scoreMtx[aIdx ,scoreMtx[aIdx,]==1] <- 0
 		}
 
 		return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
@@ -3420,7 +3421,7 @@ bFMtx.scoreLAr24 <- function( stdMIObj ){
 				scoreMtx[aIdx,"colB5"] <- matCnt[5]
 				scoreMtx[aIdx,"colB6"] <- matCnt[6]
 			}
-
+			scoreMtx[aIdx ,scoreMtx[aIdx,]==1] <- 0
 		}
 
 		return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
@@ -3492,7 +3493,7 @@ bFMtx.scoreLVr13 <- function( stdMIObj ){
 				scoreMtx[aIdx,"colB5"] <- matCnt[5]
 				scoreMtx[aIdx,"colB6"] <- matCnt[6]
 			}
-
+			scoreMtx[aIdx ,scoreMtx[aIdx,]==1] <- 0
 		}
 
 		return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
@@ -3564,7 +3565,7 @@ bFMtx.scoreLVr24 <- function( stdMIObj ){
 				scoreMtx[aIdx,"colB5"] <- matCnt[5]
 				scoreMtx[aIdx,"colB6"] <- matCnt[6]
 			}
-
+			scoreMtx[aIdx ,scoreMtx[aIdx,]==1] <- 0
 		}
 
 		return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
@@ -3639,7 +3640,7 @@ bFMtx.scoreLAe13 <- function( stdMIObj ){
 				scoreMtx[aIdx,"colB5"] <- matCnt[5]
 				scoreMtx[aIdx,"colB6"] <- matCnt[6]
 			}
-
+			scoreMtx[aIdx ,scoreMtx[aIdx,]==1] <- 0
 		}
 
 		return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
@@ -3713,7 +3714,7 @@ bFMtx.scoreLAe24 <- function( stdMIObj ){
 				scoreMtx[aIdx,"colB5"] <- matCnt[5]
 				scoreMtx[aIdx,"colB6"] <- matCnt[6]
 			}
-
+			scoreMtx[aIdx ,scoreMtx[aIdx,]==1] <- 0
 		}
 
 		return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
@@ -3785,7 +3786,7 @@ bFMtx.scoreLVe13 <- function( stdMIObj ){
 				scoreMtx[aIdx,"colB5"] <- matCnt[5]
 				scoreMtx[aIdx,"colB6"] <- matCnt[6]
 			}
-
+			scoreMtx[aIdx ,scoreMtx[aIdx,]==1] <- 0
 		}
 
 		return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
@@ -3857,7 +3858,7 @@ bFMtx.scoreLVe24 <- function( stdMIObj ){
 				scoreMtx[aIdx,"colB5"] <- matCnt[5]
 				scoreMtx[aIdx,"colB6"] <- matCnt[6]
 			}
-
+			scoreMtx[aIdx ,scoreMtx[aIdx,]==1] <- 0
 		}
 
 		return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
@@ -3930,7 +3931,7 @@ bFMtx.scoreLAc13 <- function( stdMIObj ){
 				scoreMtx[aIdx,"colB4"] <- matCnt[4]
 				scoreMtx[aIdx,"colB5"] <- matCnt[5]
 			}
-
+			scoreMtx[aIdx ,scoreMtx[aIdx,]==1] <- 0
 		}
 
 		return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
@@ -4002,7 +4003,7 @@ bFMtx.scoreLAc24 <- function( stdMIObj ){
 				scoreMtx[aIdx,"colB4"] <- matCnt[4]
 				scoreMtx[aIdx,"colB5"] <- matCnt[5]
 			}
-
+			scoreMtx[aIdx ,scoreMtx[aIdx,]==1] <- 0
 		}
 
 		return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
@@ -4072,7 +4073,7 @@ bFMtx.scoreLVc13 <- function( stdMIObj ){
 				scoreMtx[aIdx,"colB4"] <- matCnt[4]
 				scoreMtx[aIdx,"colB5"] <- matCnt[5]
 			}
-
+			scoreMtx[aIdx ,scoreMtx[aIdx,]==1] <- 0
 		}
 
 		return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
@@ -4142,7 +4143,7 @@ bFMtx.scoreLVc24 <- function( stdMIObj ){
 				scoreMtx[aIdx,"colB4"] <- matCnt[4]
 				scoreMtx[aIdx,"colB5"] <- matCnt[5]
 			}
-
+			scoreMtx[aIdx ,scoreMtx[aIdx,]==1] <- 0
 		}
 
 		return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
@@ -4219,7 +4220,7 @@ bFMtx.scoreLAf13 <- function( stdMIObj ){
 				scoreMtx[aIdx,"colB5"] <- matCnt[5]
 				scoreMtx[aIdx,"colB6"] <- matCnt[6]
 			}
-
+			scoreMtx[aIdx ,scoreMtx[aIdx,]==1] <- 0
 		}
 
 		return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
@@ -4295,7 +4296,7 @@ bFMtx.scoreLAf24 <- function( stdMIObj ){
 				scoreMtx[aIdx,"colB5"] <- matCnt[5]
 				scoreMtx[aIdx,"colB6"] <- matCnt[6]
 			}
-
+			scoreMtx[aIdx ,scoreMtx[aIdx,]==1] <- 0
 		}
 
 		return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
@@ -4366,7 +4367,7 @@ bFMtx.scoreLVf13 <- function( stdMIObj ){
 				scoreMtx[aIdx,"colB5"] <- matCnt[5]
 				scoreMtx[aIdx,"colB6"] <- matCnt[6]
 			}
-
+			scoreMtx[aIdx ,scoreMtx[aIdx,]==1] <- 0
 		}
 
 		return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
@@ -4437,7 +4438,7 @@ bFMtx.scoreLVf24 <- function( stdMIObj ){
 				scoreMtx[aIdx,"colB5"] <- matCnt[5]
 				scoreMtx[aIdx,"colB6"] <- matCnt[6]
 			}
-
+			scoreMtx[aIdx ,scoreMtx[aIdx,]==1] <- 0
 		}
 
 		return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
