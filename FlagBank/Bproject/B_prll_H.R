@@ -13,7 +13,11 @@ Bprll.getTgtScMtx <- function( ){
 
 
     #   tgt.scMtx <- c("score1")    ;tgt.scMtx <- c( tgt.scMtx  ,c("sScoreNew") )
-    tgt.scMtx <- c( tgt.scMtx  ,c("sScore01","sScore02") )
+    tgt.scMtx <- c( tgt.scMtx  ,c("sScore01","sScore02","sScore03","sScore04","sScore05","sScore06","sScore07","sScore08") )
+    tgt.scMtx <- c( tgt.scMtx  ,c("sScoreLAr13","sScoreLAr24","sScoreLVr13","sScoreLVr24") )
+    tgt.scMtx <- c( tgt.scMtx  ,c("sScoreLAe13","sScoreLAe24","sScoreLVe13","sScoreLVe24") )
+    tgt.scMtx <- c( tgt.scMtx  ,c("sScoreLAc13","sScoreLAc24","sScoreLVc13","sScoreLVc24") )
+    tgt.scMtx <- c( tgt.scMtx  ,c("sScoreLAf13","sScoreLAf24","sScoreLVf13","sScoreLVf24") )
 
     return( tgt.scMtx )
 }
