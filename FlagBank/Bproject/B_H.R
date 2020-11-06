@@ -570,9 +570,14 @@ B.rptCutRstLst <- function( cutRstLst ,file="cutRstLst" ,rptBanTyp=NULL ,rptBanM
         rptHidden <- c( rptHidden ,sprintf("  skipped mName:%s",paste(rptBanM,collapse=",")) )
     }
 
+    tgtHIdx <- B.getTgtHIdx( )
     for( nIdx in names(cutRstLst) ){   # nIdx <- names(cutRstLst)[1]
         cutRst <- cutRstLst[[nIdx]]
-        log.meta$fLogStr( sprintf("<%s>",nIdx) )
+        
+        hIdx <- as.integer(gsub("H([[:digit:]]*)_[[:digit:]]","\\1",nIdx))
+        tgtFlag <- tgtHIdx$isTgt(hIdx)
+        tgtStr <- if( tgtFlag["main"] ) "*" else if( tgtFlag["sub"] ) "-" else " "
+        log.meta$fLogStr( sprintf("<%s%s >",tgtStr,nIdx) )
 
         cutLen <- length(cutRst$cutInfoLst)
         if( 0 == cutLen )    next
@@ -742,7 +747,7 @@ B.rptCutRst1Score_byMtx <- function( resultLst ,mName ,rptFile="cutRst1Score"){
     removeZeroRow <- function( mtx ){
         flag <- apply( mtx ,1 ,function(rDat){all(rDat==0)})
         mtx <- mtx[!flag,]
-        rownames(mtx) <- rownames(mtx)[flag]
+        # rownames(mtx) <- rownames(mtx)[flag]
         return( mtx )
     }
 
@@ -762,12 +767,11 @@ B.rptCutRst1Score_byMtx <- function( resultLst ,mName ,rptFile="cutRst1Score"){
 
         if( !is.null(resultLst[[hIdx]]$scoreMtx.grp$basic) ){
             for( pName in names(resultLst[[hIdx]]$scoreMtx.grp$basic) ){
-                scoreMtx <- resultLst[[hIdx]]$scoreMtx.grp$basic[["basic"]][[mName]]$scoreMtx
+                scoreMtx <- resultLst[[hIdx]]$scoreMtx.grp$basic[[pName]][[mName]]$scoreMtx
                 rptMtxLst[[pName]] <- rbind( rptMtxLst[[pName]] ,scoreMtx[1,] )
             }
         }
-
-
+        next
 
         if( is.null(resultLst[[hIdx]]$cutRst1Score) ) next
         rptStr <- sprintf("hIdx:%s",hIdx)
