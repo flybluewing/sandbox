@@ -4449,6 +4449,28 @@ bFMtx.scoreLVf24 <- function( stdMIObj ){
 
 }
 
+#	bFMtx.scoreNLrAV bFMtx.scoreNLeAV bFMtx.scoreNLcAV bFMtx.scoreNLfAV 
+bFMtx.scoreLnAV <- function( stdMIObj ){
+
+	stdMI <- stdMIObj$stdMI
+	zMtx <- stdMIObj$zMtx
+	rObj <- list( 	idStr="scoreLnAV"	,zMtx.size=nrow(zMtx)	,lastZoid=stdMI$lastZoid	)
+
+	rObj$lPtnA <- NULL
+	rObj$lPtnV <- NULL
+	# lastZoid 컬럼값의 사선검색(A,V 각각)
+	#	ex ) lastZoid[1] 이 1이므로, rawTail[1,1]을 기준으로 ( 1,22,21,22,25,35 ) 배열 검색.
+		#     E1 E2 E3 E4 E5 E6
+		# 874  1 15 19 23 28 42
+		# 875 19 22 30 34 39 44
+		# 876  5 16 21 26 34 42
+		# 877  5 17 18 22 23 43
+		# 878  2  6 11 16 25 31
+		# 879  1  4 10 14 15 35
+
+	# 
+}
+
 
 bFMtx.scoreZ <- function( stdMIObj ){
 
