@@ -254,26 +254,26 @@ if( TRUE ){
 
 
 crMName <- "crScrN04R"
-if( TRUE ){
+if( FALSE ){    # LA,LV에서 1 이하값은 모두 제거하고 있기 때문에 Raw 체크는 의미 없다.
     bCMtxCfg[[crMName]] <- list(  mName = crMName
         ,fCol = list(
-              "hpn"  = list( rng=c(min=-2,max=-1) )
-             ,"ph"   = list( rng=c(min=0,max=2) )
-             ,"fCol" = list( rng=c(min=0,max=2) )
-             ,"phReb"    = list( rng=c(min=0,max=2) )
-             ,"xyCnt.fCol"   = list( rng=c(min=0,max=2) )
-             ,"xyCnt.phase"  = list( rng=c(min=0,max=2) )
-             ,"ph_Reb"       = list( rng=c(min=0,max=2) )
-             ,"fCol_Reb"     = list( rng=c(min=0,max=2) )
-             ,"phReb_Reb"    = list( rng=c(min=0,max=2) )
-             ,"xyCnt.fCol_Reb"   = list( rng=c(min=0,max=2) )
-             ,"xyCnt.phase_Reb"  = list( rng=c(min=0,max=2) )
-             ,"ph_sz"        = list( rng=c(min=0,max=3) )
-             ,"fCol_sz"      = list( rng=c(min=0,max=3) )
-             ,"dblHpnFlg_sz" = list( rng=c(min=0,max=3) )
-             ,"ph_szDup"     = list( rng=c(min=0,max=1) )
-             ,"fCol_szDup"   = list( rng=c(min=0,max=1) )
-             ,"dblHpnFlg_szDup"  = list( rng=c(min=0,max=1) )
+              "hpn"  = list( rng=c(min=10,max=16) ) # c(min=10,max=16)
+             ,"ph"   = list( rng=c(min=0,max=0) )
+             ,"fCol" = list( rng=c(min=0,max=0) )
+             ,"phReb"    = list( rng=c(min=0,max=0) )
+             ,"xyCnt.fCol"   = list( rng=c(min=0,max=0) )
+             ,"xyCnt.phase"  = list( rng=c(min=0,max=0) )
+             ,"ph_Reb"       = list( rng=c(min=0,max=0) )
+             ,"fCol_Reb"     = list( rng=c(min=0,max=0) )
+             ,"phReb_Reb"    = list( rng=c(min=0,max=0) )
+             ,"xyCnt.fCol_Reb"   = list( rng=c(min=0,max=0) )
+             ,"xyCnt.phase_Reb"  = list( rng=c(min=0,max=0) )
+             ,"ph_sz"        = list( rng=c(min=0,max=0) )
+             ,"fCol_sz"      = list( rng=c(min=0,max=0) )
+             ,"dblHpnFlg_sz" = list( rng=c(min=0,max=0) )
+             ,"ph_szDup"     = list( rng=c(min=0,max=0) )
+             ,"fCol_szDup"   = list( rng=c(min=0,max=0) )
+             ,"dblHpnFlg_szDup"  = list( rng=c(min=0,max=0) )
         )
     )
 }
@@ -282,23 +282,23 @@ crMName <- "crScrN04E"
 if( TRUE ){
     bCMtxCfg[[crMName]] <- list(  mName = crMName
         ,fCol = list(
-              "hpn"  = list( rng=c(min=-2,max=-1) )
-             ,"ph"   = list( rng=c(min=0,max=2) )
-             ,"fCol" = list( rng=c(min=0,max=2) )
-             ,"phReb"    = list( rng=c(min=0,max=2) )
-             ,"xyCnt.fCol"   = list( rng=c(min=0,max=2) )
-             ,"xyCnt.phase"  = list( rng=c(min=0,max=2) )
-             ,"ph_Reb"       = list( rng=c(min=0,max=2) )
-             ,"fCol_Reb"     = list( rng=c(min=0,max=2) )
-             ,"phReb_Reb"    = list( rng=c(min=0,max=2) )
-             ,"xyCnt.fCol_Reb"   = list( rng=c(min=0,max=2) )
-             ,"xyCnt.phase_Reb"  = list( rng=c(min=0,max=2) )
-             ,"ph_sz"        = list( rng=c(min=0,max=4) )
-             ,"fCol_sz"      = list( rng=c(min=0,max=3) )
-             ,"dblHpnFlg_sz" = list( rng=c(min=0,max=3) )
-             ,"ph_szDup"     = list( rng=c(min=0,max=1) )
-             ,"fCol_szDup"   = list( rng=c(min=0,max=1) )
-             ,"dblHpnFlg_szDup"  = list( rng=c(min=0,max=1) )
+              "hpn"  = list( rng=c(min=10,max=16) ) # c(min=10,max=16)
+             ,"ph"   = list( rng=c(min=0,max=0) )
+             ,"fCol" = list( rng=c(min=0,max=0) )
+             ,"phReb"    = list( rng=c(min=0,max=0) )
+             ,"xyCnt.fCol"   = list( rng=c(min=0,max=0) )
+             ,"xyCnt.phase"  = list( rng=c(min=0,max=0) )
+             ,"ph_Reb"       = list( rng=c(min=0,max=0) )
+             ,"fCol_Reb"     = list( rng=c(min=0,max=0) )
+             ,"phReb_Reb"    = list( rng=c(min=0,max=0) )
+             ,"xyCnt.fCol_Reb"   = list( rng=c(min=0,max=0) )
+             ,"xyCnt.phase_Reb"  = list( rng=c(min=0,max=0) )
+             ,"ph_sz"        = list( rng=c(min=0,max=0) )
+             ,"fCol_sz"      = list( rng=c(min=0,max=0) )
+             ,"dblHpnFlg_sz" = list( rng=c(min=0,max=0) )
+             ,"ph_szDup"     = list( rng=c(min=0,max=0) )
+             ,"fCol_szDup"   = list( rng=c(min=0,max=0) )
+             ,"dblHpnFlg_szDup"  = list( rng=c(min=0,max=0) )
         )
     )
 }
@@ -307,16 +307,16 @@ crMName <- "crScrN04PhEvt"
 if( TRUE ){
     bCMtxCfg[[crMName]] <- list(  mName = crMName
         ,fCol = list(
-              "e3Max"   = list( rng=c(min=-2,max=-1) )
-             ,"e3MCnt"  = list( rng=c(min=0,max=1) )
-             ,"e2Max"   = list( rng=c(min=0,max=2) )
-             ,"e2MCnt"  = list( rng=c(min=0,max=2) )
-             ,"e1Max"   = list( rng=c(min=0,max=2) )
-             ,"e1MCnt"  = list( rng=c(min=0,max=3) )
-             ,"rebRawMax"   = list( rng=c(min=0,max=1) )
-             ,"rebRawMCnt"  = list( rng=c(min=0,max=1) )
-             ,"rebEvtMax"   = list( rng=c(min=0,max=1) )
-             ,"rebEvtMCnt"  = list( rng=c(min=0,max=1) )
+              "e3Max"   = list( rng=c(min=0,max=6) )
+             ,"e3MCnt"  = list( rng=c(min=0,max=2) )
+             ,"e2Max"   = list( rng=c(min=0,max=0) )
+             ,"e2MCnt"  = list( rng=c(min=0,max=0) )
+             ,"e1Max"   = list( rng=c(min=0,max=0) )
+             ,"e1MCnt"  = list( rng=c(min=0,max=0) )
+             ,"rebRawMax"   = list( rng=c(min=0,max=0) )
+             ,"rebRawMCnt"  = list( rng=c(min=0,max=0) )
+             ,"rebEvtMax"   = list( rng=c(min=0,max=0) )
+             ,"rebEvtMCnt"  = list( rng=c(min=0,max=0) )
         )
     )
 }
@@ -325,16 +325,16 @@ crMName <- "crScrN04Sum"
 if( TRUE ){
     bCMtxCfg[[crMName]] <- list(  mName = crMName
         ,fCol = list(
-              "summSumRaw"      = list( rng=c(min=-2,max=-1) )
-             ,"summSumEvt"      = list( rng=c(min=0,max= 5) )
-             ,"summSumOthRaw"   = list( rng=c(min=0,max= 3) )
-             ,"summSumOthEvt"   = list( rng=c(min=0,max= 3) )
-             ,"summSumRebRaw"   = list( rng=c(min=0,max= 1) )
-             ,"summSumRebEvt"   = list( rng=c(min=0,max= 1) )
-             ,"summSumRebOthRaw"= list( rng=c(min=0,max= 1) )
-             ,"summSumRebOthEvt"= list( rng=c(min=0,max= 1) )
-             ,"szSumRebCnt"     = list( rng=c(min=2,max=12) )
-             ,"szSumRebDup"     = list( rng=c(min=0,max= 2) )
+              "summSumRaw"      = list( rng=c(min=0,max= 0) )
+             ,"summSumEvt"      = list( rng=c(min=0,max= 0) )
+             ,"summSumOthRaw"   = list( rng=c(min=0,max= 0) )
+             ,"summSumOthEvt"   = list( rng=c(min=0,max= 0) )
+             ,"summSumRebRaw"   = list( rng=c(min=0,max= 0) )
+             ,"summSumRebEvt"   = list( rng=c(min=0,max= 0) )
+             ,"summSumRebOthRaw"= list( rng=c(min=0,max= 0) )
+             ,"summSumRebOthEvt"= list( rng=c(min=0,max= 0) )
+             ,"szSumRebCnt"     = list( rng=c(min=0,max= 0) )
+             ,"szSumRebDup"     = list( rng=c(min=0,max= 0) )
         )
     )
 }
@@ -374,10 +374,10 @@ if( TRUE ){
     bCMtxCfg[[crMName]] <- list(  mName = crMName
         #   .reportworkRpt/CutRstCLM_sumTotL.txt 참고
         ,fCol = list(
-              "sumTotHpn" = list( rng=c(min=1,max= 3) ) # 1~    예외 : 797
-             ,"sumTot1"   = list( rng=c(min=0,max= 6) ) # 
-             ,"sumTot2"   = list( rng=c(min=0,max= 6) ) # 
-             ,"sumTot3"   = list( rng=c(min=0,max= 0) ) # ~0    예외 : 786
+              "sumTotHpn" = list( rng=c(min=0,max= 1) ) #
+             ,"sumTot1"   = list( rng=c(min=0,max= 1) ) # 
+             ,"sumTot2"   = list( rng=c(min=0,max= 0) ) # 
+             ,"sumTot3"   = list( rng=c(min=0,max= 0) ) #
         )
     )
 }

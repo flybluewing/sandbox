@@ -183,12 +183,12 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
             #     "summMtxRaw"     "summMtxEvt"     "summMtx.RebRaw" "summMtx.RebEvt" "szMtxCnt"       "szMtxDup"       
             #     "sumMtx" 
 
-            resultObj$cutRst1Score <- bUtil.getCut1Score( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx )
+            # resultObj$cutRst1Score <- bUtil.getCut1Score( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx )
             # resultObj$cutRst1Score_bS <- cutRst.bS$cutRst1Score
 
-            resultObj$fHName <- fHName            # bFMtx
-            resultObj$cut.grp <- cut.grp
-            resultObj$scoreMtx.grp <- scoreMtx.grp
+            # resultObj$fHName <- fHName            # bFMtx
+            # resultObj$cut.grp <- cut.grp
+            # resultObj$scoreMtx.grp <- scoreMtx.grp
 
             # aZoidMtx <- matrix(stdZoid ,nrow=1)     # bSMTX
             # phVP.grp <- bS.getPhVPGrp( gEnv.w ,aZoidMtx )
@@ -230,7 +230,7 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
         rptBanM <- c("score1")
     }
     rptBanTyp <- ("lastRawPair")
-    rptBanM <- c( "crScrN04R","crScrN04E","crScrN04PhEvt","crScrN04Sum" )
+    rptBanM <- c( tgt.scMtx ,"  " )
     B.rptCutRstLst( cutRstLst ,file=rptFile ,rptBanTyp=rptBanTyp ,rptBanM=rptBanM )
     lastH   ;tgt.scMtx
 
