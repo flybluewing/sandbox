@@ -602,6 +602,9 @@ if( TRUE ){ # "sScore04"
 				workCol <- c("FVa.m","FVa.c")
 				scrMtx[aIdx ,workCol ] <- rstObj$pairHpn$foundInfo[c("FVa.max","FVa.hpnCnt")]
 
+                if( 0<scrMtx[aIdx ,"FVa.m"] && 1==scrMtx[aIdx ,"FVa.c"] ){
+                    scrMtx[aIdx ,"FVa.c"] <- 0
+                }
 				if( 1==scrMtx[aIdx ,"FVa.m" ] )	scrMtx[aIdx ,"FVa.m" ] <- 0   # "FVa.m","aFV.m" 에서 1은 너무 흔한 듯.
 			}
 
@@ -697,6 +700,9 @@ if( TRUE ){ # "sScore05"
 				workCol <- c("FVa.m","FVa.c")
 				scrMtx[aIdx ,workCol ] <- rstObj$pairHpn$foundInfo[c("FVa.max","FVa.hpnCnt")]
 
+                if( 0<scrMtx[aIdx ,"FVa.m"] && 1==scrMtx[aIdx ,"FVa.c"] ){
+                    scrMtx[aIdx ,"FVa.c"] <- 0
+                }
 				if( 1==scrMtx[aIdx ,"FVa.m" ] )	scrMtx[aIdx ,"FVa.m" ] <- 0   # "FVa.m","aFV.m" 에서 1은 너무 흔한 듯.
 			}
 
@@ -793,6 +799,9 @@ if( TRUE ){ # "sScore06"
 				workCol <- c("FVa.m","FVa.c")
 				scrMtx[aIdx ,workCol ] <- rstObj$pairHpn$foundInfo[c("FVa.max","FVa.hpnCnt")]
 
+                if( 0<scrMtx[aIdx ,"FVa.m"] && 1==scrMtx[aIdx ,"FVa.c"] ){
+                    scrMtx[aIdx ,"FVa.c"] <- 0
+                }
 				if( 1==scrMtx[aIdx ,"FVa.m" ] )	scrMtx[aIdx ,"FVa.m" ] <- 0   # "FVa.m","aFV.m" 에서 1은 너무 흔한 듯.
 			}
 
@@ -889,6 +898,9 @@ if( TRUE ){ # "sScore07"
 				workCol <- c("FVa.m","FVa.c")
 				scrMtx[aIdx ,workCol ] <- rstObj$pairHpn$foundInfo[c("FVa.max","FVa.hpnCnt")]
 
+                if( 0<scrMtx[aIdx ,"FVa.m"] && 1==scrMtx[aIdx ,"FVa.c"] ){
+                    scrMtx[aIdx ,"FVa.c"] <- 0
+                }
 				if( 1==scrMtx[aIdx ,"FVa.m" ] )	scrMtx[aIdx ,"FVa.m" ] <- 0   # "FVa.m","aFV.m" 에서 1은 너무 흔한 듯.
 			}
 
