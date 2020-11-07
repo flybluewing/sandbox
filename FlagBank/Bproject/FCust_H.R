@@ -1119,6 +1119,7 @@ FCust_stdCut.hIdx <- function( hName ,mName ,mtxLst ){
             fClMMtx <- scObj$fColEvt$fClMMtx
 
             # fCol 별로 전체 ph에서의 evt 발생 수 한계 제약.
+            #   cfg$fCol[[n]]$evtMaxFColTot
             if( any(fClMMtx[,"lev1ClM"]>=closeMaxDistVal) ){
                 survive <- F
                 cLst[["fCol EvtCnt4AllPh(lev1ClM)"]] <- "fCol EvtCnt4AllPh(lev1ClM)"

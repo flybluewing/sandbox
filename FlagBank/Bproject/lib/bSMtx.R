@@ -460,6 +460,8 @@ if( TRUE ){ # "sScore03"
 				reb.lastZoid <- rObj$lastZoid[rObj$rebPtn.1$matInfo[,"fromC"]]
 				reb.aZoid <- aCode[rObj$rebPtn.1$matInfo[,"toC"]]
 				scrMtx[aIdx,"rebPtn.1"] <- sum( reb.aZoid==reb.lastZoid )
+                if( 1==scrMtx[aIdx,"rebPtn.1"] ) scrMtx[aIdx,"rebPtn.1"] <- 0
+
 				if( 0<scrMtx[aIdx,"rebPtn.1"] ){
 					fromCol <- rObj$rebPtn.1$matInfo[,"fromC"][reb.aZoid==reb.lastZoid]
 					toCol <- rObj$rebPtn.1$matInfo[,"toC"][reb.aZoid==reb.lastZoid]
@@ -498,18 +500,21 @@ if( TRUE ){ # "sScore03"
 			scrMtx[aIdx,"snMax.r"] <- max( snMatCnt.raw )
 			if( 1==scrMtx[aIdx,"snMax.r"] ) scrMtx[aIdx,"snMax.r"] <- 0
 			scrMtx[aIdx,"snFCnt.r"] <- sum( snMatCnt.raw>=2 )
+            if( 1==scrMtx[aIdx,"snFCnt.r"] ) scrMtx[aIdx,"snFCnt.r"] <- 0
 
 			#	"sncMax.cStep" ,"sncFCnt.cStep"
 			snMatCnt.cStep <- rObj$seqNextPtn.cStep$filt( aCStep )$matCnt
 			scrMtx[aIdx,"snMax.c"] <- max( snMatCnt.cStep )
 			if( 1==scrMtx[aIdx,"snMax.c"] ) scrMtx[aIdx,"snMax.c"] <- 0
 			scrMtx[aIdx,"snFCnt.c"] <- sum( snMatCnt.cStep>=2 )
+            if( 1==scrMtx[aIdx,"snFCnt.c"] ) scrMtx[aIdx,"snFCnt.c"] <- 0
 
 			#	"sncMax.fStep" ,"sncFCnt.fStep"
 			snMatCnt.fStep <- rObj$seqNextPtn.fStep$filt( aFStep )$matCnt
 			scrMtx[aIdx,"snMax.f"] <- max( snMatCnt.fStep )
 			if( 1==scrMtx[aIdx,"snMax.f"] ) scrMtx[aIdx,"snMax.f"] <- 0
 			scrMtx[aIdx,"snFCnt.f"] <- sum( snMatCnt.fStep>=2 )
+            if( 1==scrMtx[aIdx,"snFCnt.f"] ) scrMtx[aIdx,"snFCnt.f"] <- 0
 
             # scrMtx[wIdx,"rebC.r"] <- sum(aCode==wMI$rawTail[stdMILen,])
             # scrMtx[wIdx,"rebC.c"] <- sum(aCStep==wMI$cStepTail[stdMILen,])

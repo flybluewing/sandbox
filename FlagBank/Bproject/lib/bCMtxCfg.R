@@ -361,8 +361,8 @@ if( TRUE ){
     bCMtxCfg[[crMName]] <- list(  mName = crMName
         #   .reportworkRpt/CutRstCLM_sumTotA.txt 참고
         ,fCol = list(
-              "sumTotHpn" = list( rng=c(min=0,max= 4) ) #   ~4  예외 : 826
-             ,"sumTot1"   = list( rng=c(min=0,max= 2) ) # 
+              "sumTotHpn" = list( rng=c(min=0,max= 5) ) #   ~4  예외 : 826
+             ,"sumTot1"   = list( rng=c(min=0,max= 3) ) # 
              ,"sumTot2"   = list( rng=c(min=0,max= 2) ) # 
              ,"sumTot3"   = list( rng=c(min=0,max= 1) ) #   ~0  예외 : 884 
         )
