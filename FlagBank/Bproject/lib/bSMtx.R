@@ -1013,13 +1013,21 @@ if( TRUE ){ # "sScore08"
 			aCStep.srt <- sort(unique(aCStep))
 			cLen <- length(aCStep.srt)
 			if( 3<=cLen ){
-				scrMtx[aIdx ,"max3"] <- all( aCStep.srt[cLen-0:2]==rObj$cInfo$max3 )
-				scrMtx[aIdx ,"min3"] <- all( aCStep.srt[1:3]==rObj$cInfo$min3 )
+                if( !is.null(rObj$cInfo$max3) ){
+                    scrMtx[aIdx ,"max3"] <- all( aCStep.srt[cLen-0:2]==rObj$cInfo$max3 )
+                }
+                if( !is.null(rObj$cInfo$min3) ){
+                    scrMtx[aIdx ,"min3"] <- all( aCStep.srt[1:3]==rObj$cInfo$min3 )
+                }
 			}
 			if( 2<=cLen ){
 				matFlag <- ( aCStep==rObj$cInfo$cStep )
-				scrMtx[aIdx ,"max2MatCnt"] <- sum(matFlag[rObj$cInfo$max2MatFlag])
-				scrMtx[aIdx ,"min2MatCnt"] <- sum(matFlag[rObj$cInfo$min2MatFlag])
+                if( !is.null(rObj$cInfo$max2MatFlag) ){
+				    scrMtx[aIdx ,"max2MatCnt"] <- sum(matFlag[rObj$cInfo$max2MatFlag])
+                }
+                if( !is.null(rObj$cInfo$min2MatFlag) ){
+				    scrMtx[aIdx ,"min2MatCnt"] <- sum(matFlag[rObj$cInfo$min2MatFlag])
+                }
 				scrMtx[aIdx ,"minMax2MatCnt"] <- scrMtx[aIdx ,"min2MatCnt"] + scrMtx[aIdx ,"max2MatCnt"]
 
 				if( 2>scrMtx[aIdx ,"max2MatCnt"] ){	scrMtx[aIdx ,"max2MatCnt"] <- 0	}

@@ -1750,15 +1750,23 @@ bFMtx.score8 <- function( stdMIObj ){
 			aCStep.srt <- sort(unique(aCStep))
 			cLen <- length(aCStep.srt)
 			if( 3<=cLen ){
-				scoreMtx[aIdx ,"max3"] <- all( aCStep.srt[cLen-0:2]==rObj$cInfo$max3 )
+				if( !is.null(rObj$cInfo$max3) ){
+					scoreMtx[aIdx ,"max3"] <- all( aCStep.srt[cLen-0:2]==rObj$cInfo$max3 )	
+				}
+				if( !is.null(rObj$cInfo$min3) ){
 				scoreMtx[aIdx ,"min3"] <- all( aCStep.srt[1:3]==rObj$cInfo$min3 )
+				}
 			}
 			if( 2<=cLen ){
 				# rObj$cInfo$max2MatFlag
 				# rObj$cInfo$min2MatFlag
 				matFlag <- ( aCStep==rObj$cInfo$cStep )
-				scoreMtx[aIdx ,"max2MatCnt"] <- sum(matFlag[rObj$cInfo$max2MatFlag])
-				scoreMtx[aIdx ,"min2MatCnt"] <- sum(matFlag[rObj$cInfo$min2MatFlag])
+				if( !is.null(rObj$cInfo$max2MatFlag) ){
+					scoreMtx[aIdx ,"max2MatCnt"] <- sum(matFlag[rObj$cInfo$max2MatFlag])
+				}
+				if( !is.null(rObj$cInfo$min2MatFlag) ){
+					scoreMtx[aIdx ,"min2MatCnt"] <- sum(matFlag[rObj$cInfo$min2MatFlag])
+				}
 				scoreMtx[aIdx ,"minMax2MatCnt"] <- scoreMtx[aIdx ,"min2MatCnt"] + scoreMtx[aIdx ,"max2MatCnt"]
 
 				if( 2>scoreMtx[aIdx ,"max2MatCnt"] ){	scoreMtx[aIdx ,"max2MatCnt"] <- 0	}
