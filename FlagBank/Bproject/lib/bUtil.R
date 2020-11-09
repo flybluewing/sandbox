@@ -1719,3 +1719,189 @@ bUtil.getMtxMinVal_fromLst <- function( mtxLst ){
 	return( rMtx )
 }
 
+
+bUtil.zoidFMtx_ana <- function( pMtx ,banCfg=NULL ){
+	# Aproject/lib/u0_H.R u0.zoidMtx_ana() ,u0.zoidCMtx_ana() ,u0.zoidFMtx_ana() 참고
+	#	banCfg : {NULL,"raw","rem","cStep","fStep"}
+	#		banLst에 대한 후처리 작업.
+	#			NULL : 후처리 안함.
+	#			raw  : 1 ~ zoid gen max
+	#			rem  : 0 ~ 9, 10 이상에 대한 재처리
+	#			cStep : 1 이상
+	#			fStep : abs() 범위.
+
+	getSpanLeft <- function( rNum ,cNum ){	# "/"
+		rLst <- list()
+		if( 2>=cNum || 2>=rNum )	return( rLst )
+
+		for( cIdx in 1:(cNum-2) ){
+			spanLen <- min( rNum ,(cNum-cIdx) )
+			spanMtx <- matrix( c( rNum-0:(spanLen-1) ,cIdx+1:(spanLen) )
+				,byrow=T ,nrow=2
+			)
+			rownames(spanMtx) <- c("rSpan","cSpan")
+
+			rLst[[as.character(cIdx)]] <- list( cIdx=cIdx ,spanMtx=spanMtx )
+		}
+
+		return( rLst )
+	}
+	getSpanRight <- function( rNum ,cNum ){	# "\"
+		rLst <- list()
+		if( 2>=cNum || 2>=rNum )	return( rLst )
+
+		for( cIdx in 3:cNum ){
+			spanLen <- min( rNum ,(cIdx-1) )
+			spanMtx <- matrix( c( rNum-0:(spanLen-1) ,cIdx-1:(spanLen) )
+				,byrow=T ,nrow=2
+			)
+			rownames(spanMtx) <- c("rSpan","cSpan")
+
+			rLst[[as.character(cIdx)]] <- list( cIdx=cIdx ,spanMtx=spanMtx)
+		}
+		return( rLst )
+	}
+	getVal <- function( sInfo ,pMtx ){
+		# sInfo : span info.
+		rVal <- rep(NA,ncol(sInfo$spanMtx))
+		for( idx in 1:length(rVal) ){
+			rVal[idx] <- pMtx[ sInfo$spanMtx["rSpan",idx] ,sInfo$spanMtx["cSpan",idx] ]
+		}
+		return( rVal )
+	}
+
+	banLst <- list()
+	pMtxLen	<- nrow( pMtx )
+	cWidth	<- ncol( pMtx )
+
+	for( cIdx in 1:cWidth ){
+		lst <- u0.srchStep_std( pMtx[pMtxLen:1,cIdx] )
+		for( lIdx in seq_len(length(lst)) ){
+			lst[[lIdx]]$tgt.col <- cIdx
+			lst[[lIdx]]$tgt.dir <- "col"
+		}
+		banLst <- c( banLst ,lst )
+
+		lst <- u0.srchStep_seqReb( pMtx[pMtxLen:1,cIdx] )
+		for( lIdx in seq_len(length(lst)) ){
+			lst[[lIdx]]$tgt.col <- cIdx
+			lst[[lIdx]]$tgt.dir <- "col"
+		}
+		banLst <- c( banLst ,lst )
+
+		lst <- u0.srchStep_symm( pMtx[pMtxLen:1,cIdx] )
+		for( lIdx in seq_len(length(lst)) ){
+			lst[[lIdx]]$tgt.col <- cIdx
+			lst[[lIdx]]$tgt.dir <- "col"
+		}
+		banLst <- c( banLst ,lst )
+
+		lst <- u0.srchStep_ptnReb( pMtx[pMtxLen:1,cIdx] )
+		for( lIdx in seq_len(length(lst)) ){
+			lst[[lIdx]]$tgt.col <- cIdx
+			lst[[lIdx]]$tgt.dir <- "col"
+		}
+		banLst <- c( banLst ,lst )
+	}
+
+	# ana left slide /
+	spanLst <- getSpanLeft( rNum=pMtxLen ,cNum=cWidth )
+	for( idx in seq_len(length(spanLst)) ){
+		val <- getVal( spanLst[[idx]] ,pMtx )
+
+		lst <- u0.srchStep_std( val )
+		for( lIdx in seq_len(length(lst)) ){
+			lst[[lIdx]]$tgt.col <- spanLst[[idx]]$cIdx
+			lst[[lIdx]]$tgt.dir <- "Slide/"
+		}
+		banLst <- c( banLst ,lst )
+
+		lst <- u0.srchStep_seqReb( val )
+		for( lIdx in seq_len(length(lst)) ){
+			lst[[lIdx]]$tgt.col <- spanLst[[idx]]$cIdx
+			lst[[lIdx]]$tgt.dir <- "Slide/"
+		}
+		banLst <- c( banLst ,lst )
+
+		lst <- u0.srchStep_symm( val )
+		for( lIdx in seq_len(length(lst)) ){
+			lst[[lIdx]]$tgt.col <- spanLst[[idx]]$cIdx
+			lst[[lIdx]]$tgt.dir <- "Slide/"
+		}
+		banLst <- c( banLst ,lst )
+
+		lst <- u0.srchStep_ptnReb( val )
+		for( lIdx in seq_len(length(lst)) ){
+			lst[[lIdx]]$tgt.col <- spanLst[[idx]]$cIdx
+			lst[[lIdx]]$tgt.dir <- "Slide/"
+		}
+		banLst <- c( banLst ,lst )
+	}
+
+	# ana right slide \
+	spanLst <- getSpanRight( rNum=pMtxLen ,cNum=cWidth )
+	for( idx in seq_len(length(spanLst)) ){
+		val <- getVal( spanLst[[idx]] ,pMtx )
+
+		lst <- u0.srchStep_std( val )
+		for( lIdx in seq_len(length(lst)) ){
+			lst[[lIdx]]$tgt.col <- spanLst[[idx]]$cIdx
+			lst[[lIdx]]$tgt.dir <- "Slide\\"
+		}
+		banLst <- c( banLst ,lst )
+
+		lst <- u0.srchStep_seqReb( val )
+		for( lIdx in seq_len(length(lst)) ){
+			lst[[lIdx]]$tgt.col <- spanLst[[idx]]$cIdx
+			lst[[lIdx]]$tgt.dir <- "Slide\\"
+		}
+		banLst <- c( banLst ,lst )
+
+		lst <- u0.srchStep_symm( val )
+		for( lIdx in seq_len(length(lst)) ){
+			lst[[lIdx]]$tgt.col <- spanLst[[idx]]$cIdx
+			lst[[lIdx]]$tgt.dir <- "Slide\\"
+		}
+		banLst <- c( banLst ,lst )
+
+		lst <- u0.srchStep_ptnReb( val )
+		for( lIdx in seq_len(length(lst)) ){
+			lst[[lIdx]]$tgt.col <- spanLst[[idx]]$cIdx
+			lst[[lIdx]]$tgt.dir <- "Slide\\"
+		}
+		banLst <- c( banLst ,lst )
+	}
+
+	# for debug -------------------------------------------------------------------------
+	# sapply( banLst ,function(bInfo){ sprintf("%d %s(%s)",bInfo$tgt.col,bInfo$descript,bInfo$tgt.dir) })
+
+	banDF <- NULL
+	if( 0==length(banLst) ){
+		banDF <- data.frame( tgt.col=integer(0) ,banVal=integer(0)
+						,descript=character(0)	,tgt.dir=character(0)
+		)
+	} else {
+		banDF <- do.call( rbind ,lapply(banLst,function(ban){
+			data.frame( tgt.col=ban$tgt.col ,banVal=ban$banVal 
+					,descript=ban$descript	,tgt.dir=ban$tgt.dir
+			)
+		}))
+
+		# 종류별 데이터 후처리
+		if( is.null(banCfg) ){	# 전체 banDF 보존
+		} else if( "raw"==banCfg ){
+			banDF <- banDF[ banDF$banVal>0 ,]
+			banDF <- banDF[ banDF$banVal<46 ,]
+		} else if( "rem"==banCfg ){
+			banDF <- banDF[ banDF$banVal>= 0 ,]
+			banDF <- banDF[ banDF$banVal<=10 ,]
+			banDF[ banDF$banVal==10 ,"banVal"] <- 0
+		} else if( "cStep"==banCfg ){
+			banDF <- banDF[ banDF$banVal>0 ,]
+		} else if( "fStep"==banCfg ){
+			# abs() 범위를 설정할 필요가 있으려나..
+		}
+	}
+
+}
+

@@ -1091,11 +1091,69 @@ if( TRUE ){ # "sScore08"
 
 }
 
-if( FALSE ){ # "sScore09" <- 보류. rawTail, cStepTail의 폭이 하드코딩 되어있다.
-    #   필요시, 다음 함수들을 가변폭에 적응할 수 있도록 커스터마이징 할 것.
-    #       u0.zoidMtx_ana()
-    #       u0.zoidCMtx_ana()
-    #       u0.zoidFMtx_ana()
+if( FALSE ){ # "sScore09"
+
+	bS.sScore09.cName <- c( "rCnt","rD2","rDn","rLr","rRl"	,"eCnt","eD2","eDn","eLr","eRl"
+                            ,"cCnt","cD2","cDn","cLr","cRl"	,"fCnt","fD2","fDn","fLr","fRl"
+    )
+
+    bSMtx.sScore09 <- function( stdMI ,workArea ,wMI ,aObj ,aZoidMtx ){
+		scrMtx <- matrix( 0, nrow=length(workArea), ncol=length(bS.sScore09.cName) )	;colnames(scrMtx) <- bS.sScore09.cName
+        rownames(scrMtx) <- workArea
+        stdMILen <- nrow(wMI$rawTail)
+        if( 0==stdMILen ){
+            return( scrMtx )
+        }
+
+        rObj <- list(  )
+        if( TRUE ){
+        }
+
+
+        for( wIdx in seq_len(length(workArea)) ){
+            aIdx <- workArea[wIdx]
+            aCode <- aObj$aZoidMtx[aIdx,]       ;aRem <- aCode%%10
+            aCStep <- aObj$cStepMtx[aIdx,]      ;aFStep <- aObj$fStepMtx[aIdx,]
+
+            # scrMtx[wIdx,"rebC.r"] <- sum(aCode==wMI$rawTail[stdMILen,])
+            # scrMtx[wIdx,"rebC.c"] <- sum(aCStep==wMI$cStepTail[stdMILen,])
+        }
+
+        return( scrMtx )
+
+    }
+
+    bSMtxLst[["sScore09"]] <- function( phVP ,aZoidMtx ,makeInfoStr=F ){
+        # phVP <- phVP.grp$phVPLst[[1]]
+		aLen <- nrow(aZoidMtx)
+        aObj <- phVP$getCodeW( aZoidMtx )
+
+		scoreMtx <- matrix( 0, nrow=aLen, ncol=length(bS.sScore09.cName) )	;colnames(scoreMtx) <- bS.sScore09.cName
+        rownames(scoreMtx) <- aObj$miIdStr
+		infoMtx <- NULL
+		if( makeInfoStr ){
+			cName <- c( "pvSubHLen" ,"pvSubName" )
+			infoMtx <- matrix( "" ,nrow=aLen ,ncol=length(cName) )	;colnames(infoMtx) <- cName
+			infoMtx[,"pvSubName"] <- aObj$miIdStr
+            for( pvName in names(phVP$stdMILst) ){
+                infoMtx[infoMtx[,"pvSubName"]==pvName ,"pvSubHLen"] <- phVP$stdMILst[[pvName]]$mtxLen
+            }
+		}
+		if( 0==length(aObj$miIdStr) ){
+			return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
+		}
+
+        for( pvName in aObj$miNames ){  # pvName <- aObj$miNames[2]
+            workArea <- which(aObj$miIdStr==pvName)
+            stdMI<-phVP$stdMILst[[pvName]]
+            wMI <- phVP$getCodeH( stdMI )
+            scrMtx <- bSMtx.sScore09( stdMI=stdMI ,workArea ,wMI=wMI ,aObj ,aZoidMtx )
+            scoreMtx[workArea,] <- scrMtx
+        }
+
+        return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
+    }
+
 }
 
 
