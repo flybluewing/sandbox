@@ -1091,7 +1091,7 @@ if( TRUE ){ # "sScore08"
 
 }
 
-if( FALSE ){ # "sScore09"
+if( TRUE ){ # "sScore09"
 
 	bS.sScore09.cName <- c( "rCnt","rD2","rDn","rLr","rRl"	,"eCnt","eD2","eDn","eLr","eRl"
                             ,"cCnt","cD2","cDn","cLr","cRl"	,"fCnt","fD2","fDn","fLr","fRl"
@@ -1105,15 +1105,99 @@ if( FALSE ){ # "sScore09"
             return( scrMtx )
         }
 
-        rObj <- list(  )
-        if( TRUE ){
-        }
+        rObj <- list( rawBan=NULL ,remBan=NULL ,cBan=NULL ,fBan=NULL )
+        if( 0<nrow(stdMI$rawTail) ){
 
+            # rawBan ------------------------------------------
+            df <- bUtil.zoidMtx_ana( wMI$rawTail ,banCfg="raw" )
+            chkCol <- sort(unique(df[,"tgt.col"]))
+            dfLst <- vector("list",6)
+            for( cIdx in chkCol ){	dfLst[[cIdx]]<-df[df[,"tgt.col"]==cIdx ,] }
+            rObj$rawBan <- list( chkCol=chkCol, dfLst=dfLst ,df=df )
+
+            # remBan ------------------------------------------
+            df <- bUtil.zoidMtx_ana( wMI$rawTail%%10 ,banCfg="rem" )
+            chkCol <- sort(unique(df[,"tgt.col"]))
+            dfLst <- vector("list",6)
+            for( cIdx in chkCol ){	dfLst[[cIdx]]<-df[df[,"tgt.col"]==cIdx ,] }
+            rObj$remBan <- list( chkCol=chkCol, dfLst=dfLst ,df=df )
+
+            # cBan ------------------------------------------
+            df <- bUtil.zoidMtx_ana( wMI$cStep ,banCfg="cStep" )
+            chkCol <- sort(unique(df[,"tgt.col"]))
+            dfLst <- vector("list",6)
+            for( cIdx in chkCol ){	dfLst[[cIdx]]<-df[df[,"tgt.col"]==cIdx ,] }
+            rObj$cBan <- list( chkCol=chkCol, dfLst=dfLst ,df=df )
+
+            # fBan ------------------------------------------
+            fStep <- wMI$fStep
+            if( is.null(fStep) ){
+                fStep <- matrix( 0 ,nrow=0 ,ncol=6 )
+            } else if( is.na(fStep[1,1]) ){
+                fStep <- fStep[-1, ,drop=F]
+            }
+
+            df <- bUtil.zoidMtx_ana( fStep ,banCfg="fStep" )
+            chkCol <- sort(unique(df[,"tgt.col"]))
+            dfLst <- vector("list",6)
+            for( cIdx in chkCol ){	dfLst[[cIdx]]<-df[df[,"tgt.col"]==cIdx ,] }
+            rObj$fBan <- list( chkCol=chkCol, dfLst=dfLst ,df=df )
+
+        }
+        rObj$checkBan <- function( srcVal ,banObj ){
+            #	srcVal <- c( 8,23,32,33,34,40)	;banObj <- rObj$rawBan
+            fLst <- list()
+            for( cIdx in banObj$chkCol ){
+                if( !(srcVal[cIdx] %in% banObj$dfLst[[cIdx]][,"banVal"]) ) next	# 처리 속도를 위해
+
+                flag <- srcVal[cIdx] == banObj$dfLst[[cIdx]][,"banVal"]
+                fObj <- list( fInfo=c(cIdx=cIdx ,val=srcVal[cIdx] ,dupLen=sum(flag))
+                            ,typ=sort(as.character(banObj$dfLst[[cIdx]][flag,"tgt.dir"]))
+                        )
+                fLst[[sprintf("C%d",cIdx)]] <- fObj
+            }
+
+            bDupCnt <- sapply( fLst ,function(obj){obj$fInfo["dupLen"]})
+            names(bDupCnt) <- names(fLst)
+
+            typ <- do.call( c ,lapply(fLst,function(obj){obj$typ}))
+            rFObj <- list( cnt=length(fLst) ,bDupCnt=bDupCnt ,typCnt=table(typ) )
+
+            return( rFObj )
+        } # rObj$checkBan( )
 
         for( wIdx in seq_len(length(workArea)) ){
             aIdx <- workArea[wIdx]
             aCode <- aObj$aZoidMtx[aIdx,]       ;aRem <- aCode%%10
             aCStep <- aObj$cStepMtx[aIdx,]      ;aFStep <- aObj$fStepMtx[aIdx,]
+
+			banR <- rObj$checkBan( aCode ,rObj$rawBan )
+			scrMtx[aIdx,"rCnt"] <- ifelse( 1>=banR$cnt ,0 ,banR$cnt )
+			scrMtx[aIdx,"rD2"]	<- sum(banR$bDupCnt==2)
+			scrMtx[aIdx,"rDn"]	<- sum(banR$bDupCnt >2)
+			scrMtx[aIdx,"rLr"]	<- ifelse(is.na(banR$typCnt["Slide\\"]),0,banR$typCnt["Slide\\"])
+			scrMtx[aIdx,"rRl"]	<- ifelse(is.na(banR$typCnt["Slide/"]),0,banR$typCnt["Slide/"])
+
+			banE <- rObj$checkBan( aRem ,rObj$remBan )
+			scrMtx[aIdx,"eCnt"] <- ifelse( 1>=banE$cnt ,0 ,banE$cnt )
+			scrMtx[aIdx,"eD2"]	<- sum(banE$bDupCnt==2)
+			scrMtx[aIdx,"eDn"]	<- sum(banE$bDupCnt >2)
+			scrMtx[aIdx,"eLr"]	<- ifelse(is.na(banE$typCnt["Slide\\"]),0,banE$typCnt["Slide\\"])
+			scrMtx[aIdx,"eRl"]	<- ifelse(is.na(banE$typCnt["Slide/"]),0,banE$typCnt["Slide/"])
+
+			banC <- rObj$checkBan( aCStep ,rObj$cBan )
+			scrMtx[aIdx,"cCnt"] <- ifelse( 1>=banC$cnt ,0 ,banC$cnt )
+			scrMtx[aIdx,"cD2"]	<- sum(banC$bDupCnt==2)
+			scrMtx[aIdx,"cDn"]	<- sum(banC$bDupCnt >2)
+			scrMtx[aIdx,"cLr"]	<- ifelse(is.na(banC$typCnt["Slide\\"]),0,banC$typCnt["Slide\\"])
+			scrMtx[aIdx,"cRl"]	<- ifelse(is.na(banC$typCnt["Slide/"]),0,banC$typCnt["Slide/"])
+
+			banF <- rObj$checkBan( aFStep ,rObj$fBan )
+			scrMtx[aIdx,"fCnt"] <- ifelse( 1>=banF$cnt ,0 ,banF$cnt )
+			scrMtx[aIdx,"fD2"]	<- sum(banF$bDupCnt==2)
+			scrMtx[aIdx,"fDn"]	<- sum(banF$bDupCnt >2)
+			scrMtx[aIdx,"fLr"]	<- ifelse(is.na(banF$typCnt["Slide\\"]),0,banF$typCnt["Slide\\"])
+			scrMtx[aIdx,"fRl"]	<- ifelse(is.na(banF$typCnt["Slide/"]),0,banF$typCnt["Slide/"])
 
             # scrMtx[wIdx,"rebC.r"] <- sum(aCode==wMI$rawTail[stdMILen,])
             # scrMtx[wIdx,"rebC.c"] <- sum(aCStep==wMI$cStepTail[stdMILen,])
@@ -1143,7 +1227,7 @@ if( FALSE ){ # "sScore09"
 			return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
 		}
 
-        for( pvName in aObj$miNames ){  # pvName <- aObj$miNames[2]
+        for( pvName in aObj$miNames ){  # pvName <- aObj$miNames[1]
             workArea <- which(aObj$miIdStr==pvName)
             stdMI<-phVP$stdMILst[[pvName]]
             wMI <- phVP$getCodeH( stdMI )

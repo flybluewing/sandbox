@@ -1720,8 +1720,8 @@ bUtil.getMtxMinVal_fromLst <- function( mtxLst ){
 }
 
 
-bUtil.zoidFMtx_ana <- function( pMtx ,banCfg=NULL ){
-	# Aproject/lib/u0_H.R u0.zoidMtx_ana() ,u0.zoidCMtx_ana() ,u0.zoidFMtx_ana() 참고
+bUtil.zoidMtx_ana <- function( pMtx ,banCfg=NULL ){
+	# Aproject/lib/u0_H.R u0.zoidMtx_ana() ,u0.zoidCMtx_ana() ,u0.zoidFMtx_ana() 기능통합.
 	#	banCfg : {NULL,"raw","rem","cStep","fStep"}
 	#		banLst에 대한 후처리 작업.
 	#			NULL : 후처리 안함.
@@ -1775,6 +1775,8 @@ bUtil.zoidFMtx_ana <- function( pMtx ,banCfg=NULL ){
 	cWidth	<- ncol( pMtx )
 
 	for( cIdx in 1:cWidth ){
+		if( 1>=pMtxLen ) break
+
 		lst <- u0.srchStep_std( pMtx[pMtxLen:1,cIdx] )
 		for( lIdx in seq_len(length(lst)) ){
 			lst[[lIdx]]$tgt.col <- cIdx
@@ -1875,12 +1877,11 @@ bUtil.zoidFMtx_ana <- function( pMtx ,banCfg=NULL ){
 	# for debug -------------------------------------------------------------------------
 	# sapply( banLst ,function(bInfo){ sprintf("%d %s(%s)",bInfo$tgt.col,bInfo$descript,bInfo$tgt.dir) })
 
-	banDF <- NULL
-	if( 0==length(banLst) ){
-		banDF <- data.frame( tgt.col=integer(0) ,banVal=integer(0)
-						,descript=character(0)	,tgt.dir=character(0)
-		)
-	} else {
+	banDF <- data.frame( tgt.col=integer(0) ,banVal=integer(0)
+					,descript=character(0)	,tgt.dir=character(0)
+	)
+	if( 0 < length(banLst) ){
+
 		banDF <- do.call( rbind ,lapply(banLst,function(ban){
 			data.frame( tgt.col=ban$tgt.col ,banVal=ban$banVal 
 					,descript=ban$descript	,tgt.dir=ban$tgt.dir
@@ -1903,5 +1904,6 @@ bUtil.zoidFMtx_ana <- function( pMtx ,banCfg=NULL ){
 		}
 	}
 
+	return( banDF )
 }
 

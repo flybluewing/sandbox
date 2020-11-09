@@ -190,10 +190,10 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
             # resultObj$cut.grp <- cut.grp
             # resultObj$scoreMtx.grp <- scoreMtx.grp
 
-            # aZoidMtx <- matrix(stdZoid ,nrow=1)     # bSMTX
-            # phVP.grp <- bS.getPhVPGrp( gEnv.w ,aZoidMtx )
-            # scoreMtx.grp <- bS.getScoreMtx.grp( phVP.grp ,aZoidMtx ,tgt.scMtx=tgt.scMtx )
-            # cut.grp <- bS.getCutGrp( hMtxLst_bS ,tgt.scMtx )
+            aZoidMtx <- matrix(stdZoid ,nrow=1)     # bSMTX
+            phVP.grp <- bS.getPhVPGrp( gEnv.w ,aZoidMtx )
+            scoreMtx.grp <- bS.getScoreMtx.grp( phVP.grp ,aZoidMtx ,tgt.scMtx=tgt.scMtx )
+            cut.grp <- bS.getCutGrp( hMtxLst_bS ,tgt.scMtx )
 
             # resultObj$scoreMtx.grp <- scoreMtx.grp
             # resultObj$cut.grp <- cut.grp
@@ -230,7 +230,7 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
         rptBanM <- c("score1")
     }
     rptBanTyp <- ("lastRawPair")
-    rptBanM <- c( "score1" )
+    rptBanM <- c( "score2" )
     B.rptCutRstLst( cutRstLst ,file=rptFile ,rptBanTyp=rptBanTyp ,rptBanM=rptBanM )
     lastH   ;tgt.scMtx
 
