@@ -771,6 +771,583 @@ bsScoreMtxCfg[[mName]] <- list(
     ,isHard=NULL  # use default
 )
 
+mName <- "sScore0LAr13"
+bsScoreMtxCfg[[mName]] <- list(
+    mName = mName   ,style=c( freqZero=TRUE )
+    ,fCol = list(
+        "colA1"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    ) 
+        ,"colA2"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+        ,"colA3"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+        ,"colA4"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+        ,"colA5"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+        ,"colA6"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+        ,"colB1"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    ) 
+        ,"colB2"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+        ,"colB3"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+        ,"colB4"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+        ,"colB5"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+        ,"colB6"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+    )
+    ,evtMax = NULL    ,evtMaxFColTot = NULL
+    ,rowReb =c( rawMin=2,lowE=2,rareE=1 )   ,rowRebDup=NULL
+    ,summMtx = matrix(  # all ph fCol phReb xyCnt.fCol xyCnt.phase      / raw ,evt
+                        c(  1 ,2 ,2 ,1 ,1 ,1    ,1 ,1 ,1 ,1 ,1 ,1  ) ,byrow=T
+                    ,ncol=length(summMtxName$cName) ,nrow=length(summMtxName$rName)
+                    ,dimnames=list(summMtxName$rName,summMtxName$cName)
+    )
+    ,summMtx.sum = c(raw=2 ,evt=2)
+    ,summMtx.reb = NULL
+    ,scMtx.sz = matrix( c( 2 ,2 ,1 ,1 ,1 ,1     ,2 ,2 ,1 ,1 ,1 ,1 ) ,byrow=T
+                        #   "r.ph" ,"r.fCol" ,"r.dblHpnFlg" ,"e.ph" ,"e.fCol" ,"e.dblHpnFlg"
+                        #   "rebCnt" ,"rebDup"
+                    ,ncol=length(scMtx.szName$cName) ,nrow=length(scMtx.szName$rName) 
+                    ,dimnames=list(scMtx.szName$rName,scMtx.szName$cName)
+                )
+    ,scMtx.sz.sum = c(rebCnt.r=2 ,rebCnt.e=2)
+    ,isHard=NULL  # use default
+)
+
+mName <- "sScore0LAr24"
+bsScoreMtxCfg[[mName]] <- list(
+    mName = mName   ,style=c( freqZero=TRUE )
+    ,fCol = list(
+        "colA1"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    ) 
+        ,"colA2"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+        ,"colA3"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+        ,"colA4"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+        ,"colA5"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+        ,"colA6"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+        ,"colB1"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    ) 
+        ,"colB2"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+        ,"colB3"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+        ,"colB4"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+        ,"colB5"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+        ,"colB6"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+    )
+    ,evtMax = NULL    ,evtMaxFColTot = NULL
+    ,rowReb =c( rawMin=2,lowE=2,rareE=1 )   ,rowRebDup=NULL
+    ,summMtx = matrix(  # all ph fCol phReb xyCnt.fCol xyCnt.phase      / raw ,evt
+                        c(  1 ,2 ,2 ,1 ,1 ,1    ,1 ,1 ,1 ,1 ,1 ,1  ) ,byrow=T
+                    ,ncol=length(summMtxName$cName) ,nrow=length(summMtxName$rName)
+                    ,dimnames=list(summMtxName$rName,summMtxName$cName)
+    )
+    ,summMtx.sum = c(raw=2 ,evt=2)
+    ,summMtx.reb = NULL
+    ,scMtx.sz = matrix( c( 2 ,2 ,1 ,1 ,1 ,1     ,2 ,2 ,1 ,1 ,1 ,1 ) ,byrow=T
+                        #   "r.ph" ,"r.fCol" ,"r.dblHpnFlg" ,"e.ph" ,"e.fCol" ,"e.dblHpnFlg"
+                        #   "rebCnt" ,"rebDup"
+                    ,ncol=length(scMtx.szName$cName) ,nrow=length(scMtx.szName$rName) 
+                    ,dimnames=list(scMtx.szName$rName,scMtx.szName$cName)
+                )
+    ,scMtx.sz.sum = c(rebCnt.r=2 ,rebCnt.e=2)
+    ,isHard=NULL  # use default
+)
+
+mName <- "sScore0LVr13"
+bsScoreMtxCfg[[mName]] <- list(
+    mName = mName   ,style=c( freqZero=TRUE )
+    ,fCol = list(
+        "colA1"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    ) 
+        ,"colA2"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+        ,"colA3"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+        ,"colA4"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+        ,"colA5"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+        ,"colA6"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+        ,"colB1"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    ) 
+        ,"colB2"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+        ,"colB3"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+        ,"colB4"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+        ,"colB5"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+        ,"colB6"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+    )
+    ,evtMax = NULL    ,evtMaxFColTot = NULL
+    ,rowReb =c( rawMin=2,lowE=2,rareE=1 )   ,rowRebDup=NULL
+    ,summMtx = matrix(  # all ph fCol phReb xyCnt.fCol xyCnt.phase      / raw ,evt
+                        c(  1 ,2 ,2 ,1 ,1 ,1    ,1 ,1 ,1 ,1 ,1 ,1  ) ,byrow=T
+                    ,ncol=length(summMtxName$cName) ,nrow=length(summMtxName$rName)
+                    ,dimnames=list(summMtxName$rName,summMtxName$cName)
+    )
+    ,summMtx.sum = c(raw=2 ,evt=2)
+    ,summMtx.reb = NULL
+    ,scMtx.sz = matrix( c( 2 ,2 ,1 ,1 ,1 ,1     ,2 ,2 ,1 ,1 ,1 ,1 ) ,byrow=T
+                        #   "r.ph" ,"r.fCol" ,"r.dblHpnFlg" ,"e.ph" ,"e.fCol" ,"e.dblHpnFlg"
+                        #   "rebCnt" ,"rebDup"
+                    ,ncol=length(scMtx.szName$cName) ,nrow=length(scMtx.szName$rName) 
+                    ,dimnames=list(scMtx.szName$rName,scMtx.szName$cName)
+                )
+    ,scMtx.sz.sum = c(rebCnt.r=2 ,rebCnt.e=2)
+    ,isHard=NULL  # use default
+)
+
+mName <- "sScore0LVr24"
+bsScoreMtxCfg[[mName]] <- list(
+    mName = mName   ,style=c( freqZero=TRUE )
+    ,fCol = list(
+        "colA1"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    ) 
+        ,"colA2"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+        ,"colA3"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+        ,"colA4"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+        ,"colA5"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+        ,"colA6"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+        ,"colB1"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    ) 
+        ,"colB2"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+        ,"colB3"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+        ,"colB4"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+        ,"colB5"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+        ,"colB6"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+    )
+    ,evtMax = NULL    ,evtMaxFColTot = NULL
+    ,rowReb =c( rawMin=2,lowE=2,rareE=1 )   ,rowRebDup=NULL
+    ,summMtx = matrix(  # all ph fCol phReb xyCnt.fCol xyCnt.phase      / raw ,evt
+                        c(  1 ,2 ,2 ,1 ,1 ,1    ,1 ,1 ,1 ,1 ,1 ,1  ) ,byrow=T
+                    ,ncol=length(summMtxName$cName) ,nrow=length(summMtxName$rName)
+                    ,dimnames=list(summMtxName$rName,summMtxName$cName)
+    )
+    ,summMtx.sum = c(raw=2 ,evt=2)
+    ,summMtx.reb = NULL
+    ,scMtx.sz = matrix( c( 2 ,2 ,1 ,1 ,1 ,1     ,2 ,2 ,1 ,1 ,1 ,1 ) ,byrow=T
+                        #   "r.ph" ,"r.fCol" ,"r.dblHpnFlg" ,"e.ph" ,"e.fCol" ,"e.dblHpnFlg"
+                        #   "rebCnt" ,"rebDup"
+                    ,ncol=length(scMtx.szName$cName) ,nrow=length(scMtx.szName$rName) 
+                    ,dimnames=list(scMtx.szName$rName,scMtx.szName$cName)
+                )
+    ,scMtx.sz.sum = c(rebCnt.r=2 ,rebCnt.e=2)
+    ,isHard=NULL  # use default
+)
+
+#   873, 880, 889에서 colA13,colB13  에서 3이 발생된 적이 있긴 하다..
+mName <- "sScore0LAe13"
+bsScoreMtxCfg[[mName]] <- list(
+    mName = mName   ,style=c( freqZero=TRUE )
+    ,fCol = list(
+        "colA1"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    ) 
+        ,"colA2"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+        ,"colA3"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+        ,"colA4"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+        ,"colA5"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+        ,"colA6"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+        ,"colB1"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    ) 
+        ,"colB2"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+        ,"colB3"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+        ,"colB4"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+        ,"colB5"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+        ,"colB6"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+    )
+    ,evtMax = NULL    ,evtMaxFColTot = NULL
+    ,rowReb =c( rawMin=2,lowE=2,rareE=1 )   ,rowRebDup=NULL
+    ,summMtx = matrix(  # all ph fCol phReb xyCnt.fCol xyCnt.phase      / raw ,evt
+                        c(  1 ,2 ,2 ,1 ,2 ,2    ,1 ,1 ,1 ,1 ,2 ,2  ) ,byrow=T
+                    ,ncol=length(summMtxName$cName) ,nrow=length(summMtxName$rName)
+                    ,dimnames=list(summMtxName$rName,summMtxName$cName)
+    )
+    ,summMtx.sum = c(raw=2 ,evt=2)
+    ,summMtx.reb = NULL
+    ,scMtx.sz = matrix( c( 2 ,2 ,1 ,1 ,1 ,1     ,2 ,2 ,1 ,1 ,1 ,1 ) ,byrow=T
+                        #   "r.ph" ,"r.fCol" ,"r.dblHpnFlg" ,"e.ph" ,"e.fCol" ,"e.dblHpnFlg"
+                        #   "rebCnt" ,"rebDup"
+                    ,ncol=length(scMtx.szName$cName) ,nrow=length(scMtx.szName$rName) 
+                    ,dimnames=list(scMtx.szName$rName,scMtx.szName$cName)
+                )
+    ,scMtx.sz.sum = c(rebCnt.r=2 ,rebCnt.e=2)
+    ,isHard=NULL  # use default
+)
+
+mName <- "sScore0LAe24"
+bsScoreMtxCfg[[mName]] <- list(
+    mName = mName   ,style=c( freqZero=TRUE )
+    ,fCol = list(
+        "colA1"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    ) 
+        ,"colA2"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+        ,"colA3"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+        ,"colA4"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+        ,"colA5"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+        ,"colA6"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+        ,"colB1"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    ) 
+        ,"colB2"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+        ,"colB3"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+        ,"colB4"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+        ,"colB5"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+        ,"colB6"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+    )
+    ,evtMax = NULL    ,evtMaxFColTot = NULL
+    ,rowReb =c( rawMin=2,lowE=2,rareE=1 )   ,rowRebDup=NULL
+    ,summMtx = matrix(  # all ph fCol phReb xyCnt.fCol xyCnt.phase      / raw ,evt
+                        c(  1 ,2 ,2 ,1 ,2 ,2    ,1 ,1 ,1 ,1 ,2 ,2  ) ,byrow=T
+                    ,ncol=length(summMtxName$cName) ,nrow=length(summMtxName$rName)
+                    ,dimnames=list(summMtxName$rName,summMtxName$cName)
+    )
+    ,summMtx.sum = c(raw=2 ,evt=2)
+    ,summMtx.reb = NULL
+    ,scMtx.sz = matrix( c( 2 ,2 ,1 ,1 ,1 ,1     ,2 ,2 ,1 ,1 ,1 ,1 ) ,byrow=T
+                        #   "r.ph" ,"r.fCol" ,"r.dblHpnFlg" ,"e.ph" ,"e.fCol" ,"e.dblHpnFlg"
+                        #   "rebCnt" ,"rebDup"
+                    ,ncol=length(scMtx.szName$cName) ,nrow=length(scMtx.szName$rName) 
+                    ,dimnames=list(scMtx.szName$rName,scMtx.szName$cName)
+                )
+    ,scMtx.sz.sum = c(rebCnt.r=2 ,rebCnt.e=2)
+    ,isHard=NULL  # use default
+)
+
+mName <- "sScore0LVe13"
+bsScoreMtxCfg[[mName]] <- list(
+    mName = mName   ,style=c( freqZero=TRUE )
+    ,fCol = list(
+        "colA1"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    ) 
+        ,"colA2"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+        ,"colA3"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+        ,"colA4"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+        ,"colA5"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+        ,"colA6"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+        ,"colB1"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    ) 
+        ,"colB2"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+        ,"colB3"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+        ,"colB4"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+        ,"colB5"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+        ,"colB6"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+    )
+    ,evtMax = NULL    ,evtMaxFColTot = NULL
+    ,rowReb =c( rawMin=2,lowE=2,rareE=1 )   ,rowRebDup=NULL
+    ,summMtx = matrix(  # all ph fCol phReb xyCnt.fCol xyCnt.phase      / raw ,evt
+                        c(  1 ,2 ,2 ,1 ,2 ,2    ,1 ,1 ,1 ,1 ,2 ,2  ) ,byrow=T
+                    ,ncol=length(summMtxName$cName) ,nrow=length(summMtxName$rName)
+                    ,dimnames=list(summMtxName$rName,summMtxName$cName)
+    )
+    ,summMtx.sum = c(raw=2 ,evt=2)
+    ,summMtx.reb = NULL
+    ,scMtx.sz = matrix( c( 2 ,2 ,1 ,1 ,1 ,1     ,2 ,2 ,1 ,1 ,1 ,1 ) ,byrow=T
+                        #   "r.ph" ,"r.fCol" ,"r.dblHpnFlg" ,"e.ph" ,"e.fCol" ,"e.dblHpnFlg"
+                        #   "rebCnt" ,"rebDup"
+                    ,ncol=length(scMtx.szName$cName) ,nrow=length(scMtx.szName$rName) 
+                    ,dimnames=list(scMtx.szName$rName,scMtx.szName$cName)
+                )
+    ,scMtx.sz.sum = c(rebCnt.r=2 ,rebCnt.e=2)
+    ,isHard=NULL  # use default
+)
+
+mName <- "sScore0LVe24"
+bsScoreMtxCfg[[mName]] <- list(
+    mName = mName   ,style=c( freqZero=TRUE )
+    ,fCol = list(
+        "colA1"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    ) 
+        ,"colA2"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+        ,"colA3"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+        ,"colA4"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+        ,"colA5"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+        ,"colA6"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+        ,"colB1"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    ) 
+        ,"colB2"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+        ,"colB3"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+        ,"colB4"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+        ,"colB5"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+        ,"colB6"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                        ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        ,evtMax.fCol=NULL
+                    )
+    )
+    ,evtMax = NULL    ,evtMaxFColTot = NULL
+    ,rowReb =c( rawMin=2,lowE=2,rareE=1 )   ,rowRebDup=NULL
+    ,summMtx = matrix(  # all ph fCol phReb xyCnt.fCol xyCnt.phase      / raw ,evt
+                        c(  1 ,2 ,2 ,1 ,2 ,2    ,1 ,1 ,1 ,1 ,2 ,2  ) ,byrow=T
+                    ,ncol=length(summMtxName$cName) ,nrow=length(summMtxName$rName)
+                    ,dimnames=list(summMtxName$rName,summMtxName$cName)
+    )
+    ,summMtx.sum = c(raw=2 ,evt=2)
+    ,summMtx.reb = NULL
+    ,scMtx.sz = matrix( c( 2 ,2 ,1 ,1 ,1 ,1     ,2 ,2 ,1 ,1 ,1 ,1 ) ,byrow=T
+                        #   "r.ph" ,"r.fCol" ,"r.dblHpnFlg" ,"e.ph" ,"e.fCol" ,"e.dblHpnFlg"
+                        #   "rebCnt" ,"rebDup"
+                    ,ncol=length(scMtx.szName$cName) ,nrow=length(scMtx.szName$rName) 
+                    ,dimnames=list(scMtx.szName$rName,scMtx.szName$cName)
+                )
+    ,scMtx.sz.sum = c(rebCnt.r=2 ,rebCnt.e=2)
+    ,isHard=NULL  # use default
+)
+
 
 
 
