@@ -950,6 +950,9 @@ B.rptCrScr <- function( resultLst ,crMName ,tgt.scMtx ,rptFile ){
     cat(sprintf("   reported in %s \n",fLog$fileName))
 }
 
+
+
+
 B.rpt_bSMtx <- function( resultLst ,mName ,rptFile ){
     fLog <- k.getFlogObj( sprintf("./report/workRpt/%s.txt",rptFile) )
     fLog$fLogStr( sprintf("Start %s",rptFile) ,pTime=T,pAppend=F)
@@ -982,6 +985,69 @@ B.rpt_bSMtx <- function( resultLst ,mName ,rptFile ){
 
     cat(sprintf("   reported in %s \n",fLog$fileName))
 }
+
+B.rpt_bSMtx_ext <- function( resultLst ,mName ,extFltName="filter01" ,rptFile ){
+    fLog <- k.getFlogObj( sprintf("./report/workRpt/%s.txt",rptFile) )
+    fLog$fLogStr( sprintf("Start %s",rptFile) ,pTime=T,pAppend=F)
+
+    rptMtxLst <- NULL
+    for( hIdx in names(resultLst) ){
+        aIdx <- 1
+
+        scoreMtx.grp <- resultLst[[hIdx]]$scoreMtx.grp
+        cut.grp <- resultLst[[hIdx]]$cut.grp
+        for( pName in names(cut.grp$cutterExtLst[[hName]][[mName]]$stdCut) ){
+            mtxMaker <- bSMtxExtFltLst[[mName]][[extFltName]]
+            extScore <- mtxMaker$getScore( scoreMtx.grp$basic[[pName]][[mName]]$scoreMtx[1,] )
+            rptMtxLst[[pName]] <- rbind( rptMtxLst[[pName]] ,extScore )
+        }
+    }
+    for( pName in names(rptMtxLst) ){
+        rptMtx <- rptMtxLst[[pName]]
+        rownames(rptMtx) <- B.tgtHIdxStr( as.integer(names(resultLst)) )
+        fLog$fLogStr(sprintf("<%s>",pName))
+        fLog$fLogMtx( rptMtx ,pIndent="  ")
+    }
+
+    fLog$fLogStr( "Finish -----" ,pTime=T)
+    cat(sprintf("   reported in %s \n",fLog$fileName))
+}
+
+# B.rpt_bSMtx_multiR( resultLst ,mName ,rptFile )
+B.rpt_bSMtx_multiR <- function( resultLst ,mName ,tgt.scMtx ,rptFile ){
+    fLog <- k.getFlogObj( sprintf("./report/workRpt/%s.txt",rptFile) )
+    fLog$fLogStr( sprintf("Start %s",rptFile) ,pTime=T,pAppend=F)
+
+    rptMtxLst <- NULL
+    for( hIdx in names(resultLst) ){
+        aIdx <- 1
+
+        mtxMaker <- bFMtxMFltLst[[mName]]( tgt.scMtx )
+        if( !mtxMaker$available )   next
+
+        scoreMtx.grp <- resultLst[[hIdx]]$scoreMtx.grp
+        for( pName in names(scoreMtx.grp$basic) ){
+            scoreMtxLst <- scoreMtx.grp$basic[[pName]]
+            rptMtxLst[[pName]] <- rbind( rptMtxLst[[pName]] ,mtxMaker$getScoreMtx( scoreMtxLst )[1,] )
+        }
+    }
+    for( pName in names(rptMtxLst) ){
+        rptMtx <- rptMtxLst[[pName]]
+        rownames(rptMtx) <- B.tgtHIdxStr( as.integer(names(resultLst)) )
+        fLog$fLogStr(sprintf("<%s>",pName))
+        fLog$fLogMtx( rptMtx ,pIndent="  ")
+    }
+
+    fLog$fLogStr( "Finish -----" ,pTime=T)
+
+    cat(sprintf("   reported in %s \n",fLog$fileName))
+
+}
+
+
+
+
+
 
 B.rpt_bSMtx_crScr <- function( resultLst ,mName ,rptFile ){
     fLog <- k.getFlogObj( sprintf("./report/workRpt/%s.txt",rptFile) )

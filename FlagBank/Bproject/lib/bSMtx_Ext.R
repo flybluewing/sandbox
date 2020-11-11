@@ -1,8 +1,8 @@
 
 bSMtxExtFltLst <- list()
 
-mName <- "score9"
-if( FALSE ){ # "sScore09"
+mName <- "sScore09"
+if( TRUE ){ # "sScore09"
 
     bSMtxExtFltLst[[mName]] <- list()
         # rCnt rD2 rDn rLr rRl 
@@ -54,7 +54,7 @@ if( FALSE ){ # "sScore09"
 
         return(fltObj)
     }
-    bFMtxExtFltLst[[mName]]$filter01 <- fltCreater(mName)
+    bSMtxExtFltLst[[mName]]$filter01 <- fltCreater(mName)
 
 }
 

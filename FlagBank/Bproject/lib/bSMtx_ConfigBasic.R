@@ -1926,6 +1926,115 @@ bsScoreMtxCfg[[mName]] <- list(
 
 
 
+# Multi_R ------------------------------------------------
+mName <- "bsMR4567"
+if( TRUE ){
+    bsScoreMtxCfg[[mName]] <- list(
+        mName = mName   ,style=c( freqZero=TRUE )
+        ,fCol = list(
+            "pBanN.r"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                    ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                    ,evtMax.fCol=NULL
+            ) 
+            ,"pBanN.n"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                    ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                    ,evtMax.fCol=NULL
+            )
+            ,"pLCol"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                    ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                    ,evtMax.fCol=NULL
+            )
+            ,"pE3"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                    ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                    ,evtMax.fCol=NULL
+            )
+            ,"pE4"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                    ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                    ,evtMax.fCol=NULL
+            )
+            ,"pMH"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                    ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                    ,evtMax.fCol=NULL
+            )
+            ,"pfNum"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                    ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                    ,evtMax.fCol=NULL
+            )
+            ,"iBanN"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                    ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                    ,evtMax.fCol=NULL
+            )
+            ,"iLCol"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                    ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                    ,evtMax.fCol=NULL
+            )
+            ,"iE3"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                    ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                    ,evtMax.fCol=NULL
+            )
+            ,"iE4"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                    ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                    ,evtMax.fCol=NULL
+            )
+            ,"iMH"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                    ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                    ,evtMax.fCol=NULL
+            )
+            ,"ifNum"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                    ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                    ,evtMax.fCol=NULL
+            )
+            ,"FVa.m"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                    ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                    ,evtMax.fCol=NULL
+            )
+            ,"FVa.c"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                    ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                    ,evtMax.fCol=NULL
+            )
+            ,"m4"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                    ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                    ,evtMax.fCol=NULL
+            )
+            ,"xBan.x"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                    ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                    ,evtMax.fCol=NULL
+            )
+            ,"xLCol"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                    ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                    ,evtMax.fCol=NULL
+            )
+            ,"xEn"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                    ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                    ,evtMax.fCol=NULL
+            )
+            ,"xfNum"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                    ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                    ,evtMax.fCol=NULL
+            )
+            ,"xMH"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                    ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                    ,evtMax.fCol=NULL
+            )
+            ,"eSum_FVaM4"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                    ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                    ,evtMax.fCol=NULL
+            )
+        )
+        ,evtMax = NULL  ,evtMaxFColTot = NULL
+        ,rowReb = NULL  ,rowRebDup=NULL
+        ,summMtx = NULL ,summMtx.sum = NULL ,summMtx.reb = NULL
+        ,scMtx.sz = NULL    ,scMtx.sz.sum = NULL
+        ,isHard=NULL  # use default
+    )
+}
+
+
+
+
+
+
+
 
 
 for( mName in names( bsScoreMtxCfg ) ){ # naming Ãß°¡.

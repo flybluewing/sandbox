@@ -220,8 +220,6 @@ bS.getCutGrp <- function( hMtxLst_bS ,tgt.scMtx=NULL ){
                 } else {
                     fltLst <- list()
                     for( nIdx in names(bSMtxExtFltLst[[mName]]) ){
-                        # bSMtxExtFltLst[[mName]][[nIdx]] 는 FCust_stdCutExt.rawRow() 내부에서 이용됨.
-                        #     fltLst[[nIdx]] <- FCust_stdCutExt.rawRow( hName ,mName ,pName ,scoreMtxObj$scoreMtx ,fltName=nIdx )
                         fltLst[[nIdx]] <- bS_stdCutExt.rawRow( hName ,mName ,pName ,scoreMtxObj$scoreMtx ,fltName=nIdx )
                     }
                     stdCutExt[[pName]] <- fltLst
@@ -243,14 +241,14 @@ bS.getCutGrp <- function( hMtxLst_bS ,tgt.scMtx=NULL ){
         cutterExtLst[[hName]] <- mExtLst
 
         # cutterExtMLst ---------------------------------------------------------------
-        if( TRUE ){        
+        if( TRUE ){
             pLst <- list()  # mName  단위가 없으므로 pName 단위가 됨.
             mScoreMtxLst <- list()
             for( pName in rObj$phaseName ){     # pName <- rObj$phaseName[1]
                 curPCutLst <- list()            # cur Phase Cutter List
                 mtxLst <- list()
-                for( nIdx in names(bFMtxMFltLst) ){ # nIdx <- names(bFMtxMFltLst)[1]
-                    mtxMaker <- bFMtxMFltLst[[nIdx]]( tgt.scMtx )
+                for( nIdx in names(bSMtxRMLst) ){ # nIdx <- names(bSMtxRMLst)[1]
+                    mtxMaker <- bSMtxRMLst[[nIdx]]( tgt.scMtx )
                     if( !mtxMaker$available )   next
 
                     scoreMtxLst <- hMtxLst_bS$scoreMtxLst[[hName]][[pName]]
@@ -268,7 +266,7 @@ bS.getCutGrp <- function( hMtxLst_bS ,tgt.scMtx=NULL ){
                 hIdxName <- rownames(mScoreMtxLst[[1]][[1]])
                 datSize <- length(hIdxName)
 
-                for( mfName in names(mScoreMtxLst[[1]]) ){  # mfName <- names(mScoreMtxLst$basic)[1]
+                for( mfName in names(mScoreMtxLst[[1]]) ){  # mfName <- names(mScoreMtxLst[[1]])[1]
                     fColName <- colnames(mScoreMtxLst[[1]][[mfName]])
                     mtx <- matrix( 0 ,nrow=length(fColName) ,ncol=length(phNames) ,dimnames=list(fColName,phNames) )
 
@@ -494,7 +492,7 @@ bS.cut <- function( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=NULL ,anaOnly=T ,lo
 		# bSMtxMulti ----------------------------------------------------------------
 		availMFName <- names(cut.grp$cutterExtMLst[[hName]]$stdCut[[1]])
 		for( mfName in availMFName ){
-			mtxMaker <- bSMtxMFltLst[[mfName]]( tgt.scMtx )
+			mtxMaker <- bSMtxRMLst[[mfName]]( tgt.scMtx )
 			if( !mtxMaker$available )   next
 
 			mtxLst <- list()
