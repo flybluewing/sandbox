@@ -1022,7 +1022,7 @@ B.rpt_bSMtx_multiR <- function( resultLst ,mName ,tgt.scMtx ,rptFile ){
     for( hIdx in names(resultLst) ){
         aIdx <- 1
 
-        mtxMaker <- bFMtxMFltLst[[mName]]( tgt.scMtx )
+        mtxMaker <- bSMtxRMLst[[mName]]( tgt.scMtx )
         if( !mtxMaker$available )   next
 
         scoreMtx.grp <- resultLst[[hIdx]]$scoreMtx.grp
