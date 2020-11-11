@@ -1928,7 +1928,7 @@ bsScoreMtxCfg[[mName]] <- list(
 
 # Multi_R ------------------------------------------------
 mName <- "bsMR4567"
-if( TRUE ){
+if( FALSE ){
     bsScoreMtxCfg[[mName]] <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(

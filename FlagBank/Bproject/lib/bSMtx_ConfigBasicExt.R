@@ -1,7 +1,7 @@
 bsScrExtMtxCfg <- list()
 
 mName <- "score9"
-if( TRUE ){
+if( FALSE ){
 
     bsScrExtMtxCfg[[mName]] <- list()
 
