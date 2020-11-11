@@ -243,7 +243,52 @@ bS.getCutGrp <- function( hMtxLst_bS ,tgt.scMtx=NULL ){
         cutterExtLst[[hName]] <- mExtLst
 
         # cutterExtMLst ---------------------------------------------------------------
-        if( TRUE ){        }
+        if( TRUE ){        
+            pLst <- list()  # mName  단위가 없으므로 pName 단위가 됨.
+            mScoreMtxLst <- list()
+            for( pName in rObj$phaseName ){     # pName <- rObj$phaseName[1]
+                curPCutLst <- list()            # cur Phase Cutter List
+                mtxLst <- list()
+                for( nIdx in names(bFMtxMFltLst) ){ # nIdx <- names(bFMtxMFltLst)[1]
+                    mtxMaker <- bFMtxMFltLst[[nIdx]]( tgt.scMtx )
+                    if( !mtxMaker$available )   next
+
+                    scoreMtxLst <- hMtxLst_bS$scoreMtxLst[[hName]][[pName]]
+                    mtxLst[[nIdx]] <- mtxMaker$getScoreMtx( scoreMtxLst )
+                    curPCutLst[[nIdx]] <- bS_stdCut.rawRow( hName ,mName=nIdx ,pName ,mtxLst[[nIdx]] )
+                }
+
+                mScoreMtxLst[[pName]] <- mtxLst
+                pLst[[pName]] <- curPCutLst
+            }
+
+            hIdxCut <- list()
+            if( 0<length(mScoreMtxLst[[1]]) ){
+                phNames <- names(mScoreMtxLst)
+                hIdxName <- rownames(mScoreMtxLst[[1]][[1]])
+                datSize <- length(hIdxName)
+
+                for( mfName in names(mScoreMtxLst[[1]]) ){  # mfName <- names(mScoreMtxLst$basic)[1]
+                    fColName <- colnames(mScoreMtxLst[[1]][[mfName]])
+                    mtx <- matrix( 0 ,nrow=length(fColName) ,ncol=length(phNames) ,dimnames=list(fColName,phNames) )
+
+                    mtxLst <- list( )
+                    for( aIdx in seq_len(datSize) ){
+                        mtx[,] <- 0
+                        for( pName in phNames ){
+                            mtx[,pName] <- mScoreMtxLst[[pName]][[mfName]][aIdx,]
+                        }
+                        mtxLst[[1+length(mtxLst)]] <- mtx
+                    }
+                    names(mtxLst) <- hIdxName
+
+                    hIdxCut[[mfName]] <- bS_stdCut.hIdx( hName ,mfName ,mtxLst=mtxLst )
+                }
+
+            }
+            cutterExtMLst[[hName]] <- list( stdCut=pLst ,hIdxCut=hIdxCut )
+
+        }
 
     }
 
@@ -585,7 +630,7 @@ bS.getCut1Score <- function(  scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=NULL ,log
 } # bS.cut1Score()
 
 
-bS.cut_M <- function( crMName ,scoreMtx.grp ,cut.grp ,anaOnly=F ,logger=NULL ){
+bS.cut_M <- function( crMName ,scoreMtx.grp ,cut.grp ,anaOnly=F ,logger=NULL ){ # crMName를 사용한 cut
     # 참고사항
     #   - 일단은 crMName 하나씩 처리하는 것으로 하자. 나중에 상태를 봐 가며 다수 cutter 추가 적용.
     #     bCMtxLst 내에서 bUtil.getCut1Score() 실행되는 횟수를 최소화 하기 위함.

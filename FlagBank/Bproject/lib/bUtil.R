@@ -1891,14 +1891,19 @@ bUtil.zoidMtx_ana <- function( pMtx ,banCfg=NULL ){
 		# 종류별 데이터 후처리
 		if( is.null(banCfg) ){	# 전체 banDF 보존
 		} else if( "raw"==banCfg ){
-			banDF <- banDF[ banDF$banVal>0 ,]
-			banDF <- banDF[ banDF$banVal<46 ,]
+			surFlag <- (banDF$banVal>0) & (banDF$banVal<46)
+			banDF <- banDF[ surFlag , ,drop=F]
 		} else if( "rem"==banCfg ){
-			banDF <- banDF[ banDF$banVal>= 0 ,]
-			banDF <- banDF[ banDF$banVal<=10 ,]
-			banDF[ banDF$banVal==10 ,"banVal"] <- 0
+			surFlag <- (banDF$banVal>= 0) & (banDF$banVal<=10)
+			# 구 버전 R에서는 data.frame의 row가 0일 때 조건식을 시도하면 에러 났었다.
+			#	따라서 필터링 조건들은 미리 flag 값으로 설정하고서 data.frame 을 잘라내도록 한다. 구버전 호환을 위해..
+			banDF <- banDF[ surFlag , ,drop=F]
+			if( 0<nrow(banDF) ){
+				banDF[ banDF$banVal==10 ,"banVal"] <- 0
+			}
 		} else if( "cStep"==banCfg ){
-			banDF <- banDF[ banDF$banVal>0 ,]
+			surFlag <- (banDF$banVal>0)
+			banDF <- banDF[ surFlag , ,drop=F]
 		} else if( "fStep"==banCfg ){
 			# abs() 범위를 설정할 필요가 있으려나..
 		}

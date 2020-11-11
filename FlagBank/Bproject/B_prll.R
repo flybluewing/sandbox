@@ -47,12 +47,14 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
     if( TRUE ){     # RM_B_prll.R
         load( sprintf("Obj_testData.grp.%d.%s.save",lastH,"all") )
     } else {
+        tStmp <- Sys.time()
         # hMtxLst <- B.makeHMtxLst( gEnv, allIdxLst, fRstLst, lastH=configH, tgt.scMtx )
         testData.grp <- B.get_testData.grp( testSpan ,gEnv ,allIdxLst ,fRstLst ,tgt.scMtx=tgt.scMtx)
         save( testData.grp ,file=sprintf("Obj_testData.grp.%d.%s.save",lastH,ifelse(is.null(tgt.scMtx),"all",tgt.scMtx) ) )
         #   save( testData.grp ,file="Obj_testData.grp.save" )
         #   load( sprintf("Obj_testData.grp.%d.%s.save",lastH,ifelse(is.null(tgt.scMtx),"all",tgt.scMtx) ) )
         #           Obj_testData.grp.900.w100.save : configH <- lastH-100 (4hours)
+        tDiff <- Sys.time() - tStmp
     }
 
     #   B.get_cutRst1.grp()
