@@ -459,10 +459,10 @@ if( TRUE ){ # "sScore03"
 			if( 0<nrow(rObj$rebPtn.1$matInfo) ){
 				reb.lastZoid <- rObj$lastZoid[rObj$rebPtn.1$matInfo[,"fromC"]]
 				reb.aZoid <- aCode[rObj$rebPtn.1$matInfo[,"toC"]]
-				scrMtx[aIdx,"rebPtn.1"] <- sum( reb.aZoid==reb.lastZoid )
-                if( 1==scrMtx[aIdx,"rebPtn.1"] ) scrMtx[aIdx,"rebPtn.1"] <- 0
+				scrMtx[wIdx,"rebPtn.1"] <- sum( reb.aZoid==reb.lastZoid )
+                if( 1==scrMtx[wIdx,"rebPtn.1"] ) scrMtx[wIdx,"rebPtn.1"] <- 0
 
-				if( 0<scrMtx[aIdx,"rebPtn.1"] ){
+				if( 0<scrMtx[wIdx,"rebPtn.1"] ){
 					fromCol <- rObj$rebPtn.1$matInfo[,"fromC"][reb.aZoid==reb.lastZoid]
 					toCol <- rObj$rebPtn.1$matInfo[,"toC"][reb.aZoid==reb.lastZoid]
 					infoStr.rebPtn.1 <- sprintf("reb col: (%s)->(%s)",paste(fromCol,collapse=","),paste(toCol,collapse=","))
@@ -477,8 +477,8 @@ if( TRUE ){ # "sScore03"
 								toVal <- aCode[matMtx["to",]]
 								return( all(fromVal==toVal) )
 							})
-				scrMtx[aIdx,"rebPtn.n"] <- sum( flag )
-				if( 0<scrMtx[aIdx,"rebPtn.n"] ){
+				scrMtx[wIdx,"rebPtn.n"] <- sum( flag )
+				if( 0<scrMtx[wIdx,"rebPtn.n"] ){
 					infoStr.rebPtn.n <- sprintf("%s",paste(names(flag)[flag],collapse=" "))
 				}
 			}
@@ -490,31 +490,31 @@ if( TRUE ){ # "sScore03"
 
 				flag <- fCutU.hasPtn( banLst[[idx]]$banVal, aCode ,thld=3 ,fixIdx=banLst[[idx]]$info["fixIdx"] )
 				if( flag ){
-					scrMtx[aIdx,"snR3"] <- 1 + scrMtx[aIdx,"snR3"]
+					scrMtx[wIdx,"snR3"] <- 1 + scrMtx[wIdx,"snR3"]
 					# break             # bSMtx에서는 이미 갯수가 적으니까 속도 문제 걱정은 필요 없겠지.
 				}
 			}
 
 			#	"sncMax.raw" ,"sncFCnt.raw" 
 			snMatCnt.raw <- rObj$seqNextPtn.raw$filt( aCode )$matCnt
-			scrMtx[aIdx,"snMax.r"] <- max( snMatCnt.raw )
-			if( 1==scrMtx[aIdx,"snMax.r"] ) scrMtx[aIdx,"snMax.r"] <- 0
-			scrMtx[aIdx,"snFCnt.r"] <- sum( snMatCnt.raw>=2 )
-            if( 1==scrMtx[aIdx,"snFCnt.r"] ) scrMtx[aIdx,"snFCnt.r"] <- 0
+			scrMtx[wIdx,"snMax.r"] <- max( snMatCnt.raw )
+			if( 1==scrMtx[wIdx,"snMax.r"] ) scrMtx[wIdx,"snMax.r"] <- 0
+			scrMtx[wIdx,"snFCnt.r"] <- sum( snMatCnt.raw>=2 )
+            if( 1==scrMtx[wIdx,"snFCnt.r"] ) scrMtx[wIdx,"snFCnt.r"] <- 0
 
 			#	"sncMax.cStep" ,"sncFCnt.cStep"
 			snMatCnt.cStep <- rObj$seqNextPtn.cStep$filt( aCStep )$matCnt
-			scrMtx[aIdx,"snMax.c"] <- max( snMatCnt.cStep )
-			if( 1==scrMtx[aIdx,"snMax.c"] ) scrMtx[aIdx,"snMax.c"] <- 0
-			scrMtx[aIdx,"snFCnt.c"] <- sum( snMatCnt.cStep>=2 )
-            if( 1==scrMtx[aIdx,"snFCnt.c"] ) scrMtx[aIdx,"snFCnt.c"] <- 0
+			scrMtx[wIdx,"snMax.c"] <- max( snMatCnt.cStep )
+			if( 1==scrMtx[wIdx,"snMax.c"] ) scrMtx[wIdx,"snMax.c"] <- 0
+			scrMtx[wIdx,"snFCnt.c"] <- sum( snMatCnt.cStep>=2 )
+            if( 1==scrMtx[wIdx,"snFCnt.c"] ) scrMtx[wIdx,"snFCnt.c"] <- 0
 
 			#	"sncMax.fStep" ,"sncFCnt.fStep"
 			snMatCnt.fStep <- rObj$seqNextPtn.fStep$filt( aFStep )$matCnt
-			scrMtx[aIdx,"snMax.f"] <- max( snMatCnt.fStep )
-			if( 1==scrMtx[aIdx,"snMax.f"] ) scrMtx[aIdx,"snMax.f"] <- 0
-			scrMtx[aIdx,"snFCnt.f"] <- sum( snMatCnt.fStep>=2 )
-            if( 1==scrMtx[aIdx,"snFCnt.f"] ) scrMtx[aIdx,"snFCnt.f"] <- 0
+			scrMtx[wIdx,"snMax.f"] <- max( snMatCnt.fStep )
+			if( 1==scrMtx[wIdx,"snMax.f"] ) scrMtx[wIdx,"snMax.f"] <- 0
+			scrMtx[wIdx,"snFCnt.f"] <- sum( snMatCnt.fStep>=2 )
+            if( 1==scrMtx[wIdx,"snFCnt.f"] ) scrMtx[wIdx,"snFCnt.f"] <- 0
 
             # scrMtx[wIdx,"rebC.r"] <- sum(aCode==wMI$rawTail[stdMILen,])
             # scrMtx[wIdx,"rebC.c"] <- sum(aCStep==wMI$cStepTail[stdMILen,])
@@ -586,31 +586,31 @@ if( TRUE ){ # "sScore04"
 
 			# pairBanLst
 			pBan.cutInfo <- rstObj$F_pBanLst( makeInfoStr=F )
-			scrMtx[aIdx ,"pBanN.r"] <- pBan.cutInfo$cutHpn["rebPtn"]
-			scrMtx[aIdx ,"pBanN.n"] <- pBan.cutInfo$cutHpn["nextPtn"]
+			scrMtx[wIdx ,"pBanN.r"] <- pBan.cutInfo$cutHpn["rebPtn"]
+			scrMtx[wIdx ,"pBanN.n"] <- pBan.cutInfo$cutHpn["nextPtn"]
 			workCol <- c("pLCol" ,"pE3" ,"pE4"	,"pMH" ,"pfNum")
-			scrMtx[aIdx ,workCol] <- pBan.cutInfo$cutHpn[c("rebLastCol","extMat3","extMat4","multiHpn","foundNum")]
+			scrMtx[wIdx ,workCol] <- pBan.cutInfo$cutHpn[c("rebLastCol","extMat3","extMat4","multiHpn","foundNum")]
 
 			# iBanLst
 			iBan.cutInfo <- rstObj$F_iBanLst( makeInfoStr=F )
-			scrMtx[aIdx ,"iBanN"] <- length(rstObj$iBanLst)
+			scrMtx[wIdx ,"iBanN"] <- length(rstObj$iBanLst)
 			workCol <- c("iLCol" ,"iE3" ,"iE4"	,"iMH" ,"ifNum")
-			scrMtx[aIdx ,workCol] <- iBan.cutInfo$cutHpn[c("rebLastCol","extMat3","extMat4","multiHpn","foundNum")]
+			scrMtx[wIdx ,workCol] <- iBan.cutInfo$cutHpn[c("rebLastCol","extMat3","extMat4","multiHpn","foundNum")]
 
 			# pairHpn
 			if( 0<length(rstObj$pairHpn) ){
 				workCol <- c("FVa.m","FVa.c")
-				scrMtx[aIdx ,workCol ] <- rstObj$pairHpn$foundInfo[c("FVa.max","FVa.hpnCnt")]
+				scrMtx[wIdx ,workCol ] <- rstObj$pairHpn$foundInfo[c("FVa.max","FVa.hpnCnt")]
 
-                if( 0<scrMtx[aIdx ,"FVa.m"] && 1==scrMtx[aIdx ,"FVa.c"] ){
-                    scrMtx[aIdx ,"FVa.c"] <- 0
+                if( 0<scrMtx[wIdx ,"FVa.m"] && 1==scrMtx[wIdx ,"FVa.c"] ){
+                    scrMtx[wIdx ,"FVa.c"] <- 0
                 }
-				if( 1==scrMtx[aIdx ,"FVa.m" ] )	scrMtx[aIdx ,"FVa.m" ] <- 0   # "FVa.m","aFV.m" 에서 1은 너무 흔한 듯.
+				if( 1==scrMtx[wIdx ,"FVa.m" ] )	scrMtx[wIdx ,"FVa.m" ] <- 0   # "FVa.m","aFV.m" 에서 1은 너무 흔한 듯.
 			}
 
 			# match4
 			if( 0<length(rstObj$match4) ){
-				scrMtx[aIdx, "m4"] <- rstObj$match4$foundInfo["matCnt"]
+				scrMtx[wIdx, "m4"] <- rstObj$match4$foundInfo["matCnt"]
 			}
 
             # scrMtx[wIdx,"rebC.r"] <- sum(aCode==wMI$rawTail[stdMILen,])
@@ -684,31 +684,31 @@ if( TRUE ){ # "sScore05"
 
 			# pairBanLst
 			pBan.cutInfo <- rstObj$F_pBanLst( makeInfoStr=F )
-			scrMtx[aIdx ,"pBanN.r"] <- pBan.cutInfo$cutHpn["rebPtn"]
-			scrMtx[aIdx ,"pBanN.n"] <- pBan.cutInfo$cutHpn["nextPtn"]
+			scrMtx[wIdx ,"pBanN.r"] <- pBan.cutInfo$cutHpn["rebPtn"]
+			scrMtx[wIdx ,"pBanN.n"] <- pBan.cutInfo$cutHpn["nextPtn"]
 			workCol <- c("pLCol" ,"pE3" ,"pE4"	,"pMH" ,"pfNum")
-			scrMtx[aIdx ,workCol] <- pBan.cutInfo$cutHpn[c("rebLastCol","extMat3","extMat4","multiHpn","foundNum")]
+			scrMtx[wIdx ,workCol] <- pBan.cutInfo$cutHpn[c("rebLastCol","extMat3","extMat4","multiHpn","foundNum")]
 
 			# iBanLst
 			iBan.cutInfo <- rstObj$F_iBanLst( makeInfoStr=F )
-			scrMtx[aIdx ,"iBanN"] <- length(rstObj$iBanLst)
+			scrMtx[wIdx ,"iBanN"] <- length(rstObj$iBanLst)
 			workCol <- c("iLCol" ,"iE3" ,"iE4"	,"iMH" ,"ifNum")
-			scrMtx[aIdx ,workCol] <- iBan.cutInfo$cutHpn[c("rebLastCol","extMat3","extMat4","multiHpn","foundNum")]
+			scrMtx[wIdx ,workCol] <- iBan.cutInfo$cutHpn[c("rebLastCol","extMat3","extMat4","multiHpn","foundNum")]
 
 			# pairHpn
 			if( 0<length(rstObj$pairHpn) ){
 				workCol <- c("FVa.m","FVa.c")
-				scrMtx[aIdx ,workCol ] <- rstObj$pairHpn$foundInfo[c("FVa.max","FVa.hpnCnt")]
+				scrMtx[wIdx ,workCol ] <- rstObj$pairHpn$foundInfo[c("FVa.max","FVa.hpnCnt")]
 
-                if( 0<scrMtx[aIdx ,"FVa.m"] && 1==scrMtx[aIdx ,"FVa.c"] ){
-                    scrMtx[aIdx ,"FVa.c"] <- 0
+                if( 0<scrMtx[wIdx ,"FVa.m"] && 1==scrMtx[wIdx ,"FVa.c"] ){
+                    scrMtx[wIdx ,"FVa.c"] <- 0
                 }
-				if( 1==scrMtx[aIdx ,"FVa.m" ] )	scrMtx[aIdx ,"FVa.m" ] <- 0   # "FVa.m","aFV.m" 에서 1은 너무 흔한 듯.
+				if( 1==scrMtx[wIdx ,"FVa.m" ] )	scrMtx[wIdx ,"FVa.m" ] <- 0   # "FVa.m","aFV.m" 에서 1은 너무 흔한 듯.
 			}
 
 			# match4
 			if( 0<length(rstObj$match4) ){
-				scrMtx[aIdx, "m4"] <- rstObj$match4$foundInfo["matCnt"]
+				scrMtx[wIdx, "m4"] <- rstObj$match4$foundInfo["matCnt"]
 			}
 
             # scrMtx[wIdx,"rebC.r"] <- sum(aCode==wMI$rawTail[stdMILen,])
@@ -783,31 +783,31 @@ if( TRUE ){ # "sScore06"
 
 			# pairBanLst
 			pBan.cutInfo <- rstObj$F_pBanLst( makeInfoStr=F )
-			scrMtx[aIdx ,"pBanN.r"] <- pBan.cutInfo$cutHpn["rebPtn"]
-			scrMtx[aIdx ,"pBanN.n"] <- pBan.cutInfo$cutHpn["nextPtn"]
+			scrMtx[wIdx ,"pBanN.r"] <- pBan.cutInfo$cutHpn["rebPtn"]
+			scrMtx[wIdx ,"pBanN.n"] <- pBan.cutInfo$cutHpn["nextPtn"]
 			workCol <- c("pLCol" ,"pE3" ,"pE4"	,"pMH" ,"pfNum")
-			scrMtx[aIdx ,workCol] <- pBan.cutInfo$cutHpn[c("rebLastCol","extMat3","extMat4","multiHpn","foundNum")]
+			scrMtx[wIdx ,workCol] <- pBan.cutInfo$cutHpn[c("rebLastCol","extMat3","extMat4","multiHpn","foundNum")]
 
 			# iBanLst
 			iBan.cutInfo <- rstObj$F_iBanLst( makeInfoStr=F )
-			scrMtx[aIdx ,"iBanN"] <- length(rstObj$iBanLst)
+			scrMtx[wIdx ,"iBanN"] <- length(rstObj$iBanLst)
 			workCol <- c("iLCol" ,"iE3" ,"iE4"	,"iMH" ,"ifNum")
-			scrMtx[aIdx ,workCol] <- iBan.cutInfo$cutHpn[c("rebLastCol","extMat3","extMat4","multiHpn","foundNum")]
+			scrMtx[wIdx ,workCol] <- iBan.cutInfo$cutHpn[c("rebLastCol","extMat3","extMat4","multiHpn","foundNum")]
 
 			# pairHpn
 			if( 0<length(rstObj$pairHpn) ){
 				workCol <- c("FVa.m","FVa.c")
-				scrMtx[aIdx ,workCol ] <- rstObj$pairHpn$foundInfo[c("FVa.max","FVa.hpnCnt")]
+				scrMtx[wIdx ,workCol ] <- rstObj$pairHpn$foundInfo[c("FVa.max","FVa.hpnCnt")]
 
-                if( 0<scrMtx[aIdx ,"FVa.m"] && 1==scrMtx[aIdx ,"FVa.c"] ){
-                    scrMtx[aIdx ,"FVa.c"] <- 0
+                if( 0<scrMtx[wIdx ,"FVa.m"] && 1==scrMtx[wIdx ,"FVa.c"] ){
+                    scrMtx[wIdx ,"FVa.c"] <- 0
                 }
-				if( 1==scrMtx[aIdx ,"FVa.m" ] )	scrMtx[aIdx ,"FVa.m" ] <- 0   # "FVa.m","aFV.m" 에서 1은 너무 흔한 듯.
+				if( 1==scrMtx[wIdx ,"FVa.m" ] )	scrMtx[wIdx ,"FVa.m" ] <- 0   # "FVa.m","aFV.m" 에서 1은 너무 흔한 듯.
 			}
 
 			# match4
 			if( 0<length(rstObj$match4) ){
-				scrMtx[aIdx, "m4"] <- rstObj$match4$foundInfo["matCnt"]
+				scrMtx[wIdx, "m4"] <- rstObj$match4$foundInfo["matCnt"]
 			}
 
             # scrMtx[wIdx,"rebC.r"] <- sum(aCode==wMI$rawTail[stdMILen,])
@@ -882,31 +882,31 @@ if( TRUE ){ # "sScore07"
 
 			# pairBanLst
 			pBan.cutInfo <- rstObj$F_pBanLst( makeInfoStr=F )
-			scrMtx[aIdx ,"pBanN.r"] <- pBan.cutInfo$cutHpn["rebPtn"]
-			scrMtx[aIdx ,"pBanN.n"] <- pBan.cutInfo$cutHpn["nextPtn"]
+			scrMtx[wIdx ,"pBanN.r"] <- pBan.cutInfo$cutHpn["rebPtn"]
+			scrMtx[wIdx ,"pBanN.n"] <- pBan.cutInfo$cutHpn["nextPtn"]
 			workCol <- c("pLCol" ,"pE3" ,"pE4"	,"pMH" ,"pfNum")
-			scrMtx[aIdx ,workCol] <- pBan.cutInfo$cutHpn[c("rebLastCol","extMat3","extMat4","multiHpn","foundNum")]
+			scrMtx[wIdx ,workCol] <- pBan.cutInfo$cutHpn[c("rebLastCol","extMat3","extMat4","multiHpn","foundNum")]
 
 			# iBanLst
 			iBan.cutInfo <- rstObj$F_iBanLst( makeInfoStr=F )
-			scrMtx[aIdx ,"iBanN"] <- length(rstObj$iBanLst)
+			scrMtx[wIdx ,"iBanN"] <- length(rstObj$iBanLst)
 			workCol <- c("iLCol" ,"iE3" ,"iE4"	,"iMH" ,"ifNum")
-			scrMtx[aIdx ,workCol] <- iBan.cutInfo$cutHpn[c("rebLastCol","extMat3","extMat4","multiHpn","foundNum")]
+			scrMtx[wIdx ,workCol] <- iBan.cutInfo$cutHpn[c("rebLastCol","extMat3","extMat4","multiHpn","foundNum")]
 
 			# pairHpn
 			if( 0<length(rstObj$pairHpn) ){
 				workCol <- c("FVa.m","FVa.c")
-				scrMtx[aIdx ,workCol ] <- rstObj$pairHpn$foundInfo[c("FVa.max","FVa.hpnCnt")]
+				scrMtx[wIdx ,workCol ] <- rstObj$pairHpn$foundInfo[c("FVa.max","FVa.hpnCnt")]
 
-                if( 0<scrMtx[aIdx ,"FVa.m"] && 1==scrMtx[aIdx ,"FVa.c"] ){
-                    scrMtx[aIdx ,"FVa.c"] <- 0
+                if( 0<scrMtx[wIdx ,"FVa.m"] && 1==scrMtx[wIdx ,"FVa.c"] ){
+                    scrMtx[wIdx ,"FVa.c"] <- 0
                 }
-				if( 1==scrMtx[aIdx ,"FVa.m" ] )	scrMtx[aIdx ,"FVa.m" ] <- 0   # "FVa.m","aFV.m" 에서 1은 너무 흔한 듯.
+				if( 1==scrMtx[wIdx ,"FVa.m" ] )	scrMtx[wIdx ,"FVa.m" ] <- 0   # "FVa.m","aFV.m" 에서 1은 너무 흔한 듯.
 			}
 
 			# match4
 			if( 0<length(rstObj$match4) ){
-				scrMtx[aIdx, "m4"] <- rstObj$match4$foundInfo["matCnt"]
+				scrMtx[wIdx, "m4"] <- rstObj$match4$foundInfo["matCnt"]
 			}
 
             # scrMtx[wIdx,"rebC.r"] <- sum(aCode==wMI$rawTail[stdMILen,])
@@ -1014,39 +1014,39 @@ if( TRUE ){ # "sScore08"
 			cLen <- length(aCStep.srt)
 			if( 3<=cLen ){
                 if( !is.null(rObj$cInfo$max3) ){
-                    scrMtx[aIdx ,"max3"] <- all( aCStep.srt[cLen-0:2]==rObj$cInfo$max3 )
+                    scrMtx[wIdx ,"max3"] <- all( aCStep.srt[cLen-0:2]==rObj$cInfo$max3 )
                 }
                 if( !is.null(rObj$cInfo$min3) ){
-                    scrMtx[aIdx ,"min3"] <- all( aCStep.srt[1:3]==rObj$cInfo$min3 )
+                    scrMtx[wIdx ,"min3"] <- all( aCStep.srt[1:3]==rObj$cInfo$min3 )
                 }
 			}
 			if( 2<=cLen ){
 				matFlag <- ( aCStep==rObj$cInfo$cStep )
                 if( !is.null(rObj$cInfo$max2MatFlag) ){
-				    scrMtx[aIdx ,"max2MatCnt"] <- sum(matFlag[rObj$cInfo$max2MatFlag])
+				    scrMtx[wIdx ,"max2MatCnt"] <- sum(matFlag[rObj$cInfo$max2MatFlag])
                 }
                 if( !is.null(rObj$cInfo$min2MatFlag) ){
-				    scrMtx[aIdx ,"min2MatCnt"] <- sum(matFlag[rObj$cInfo$min2MatFlag])
+				    scrMtx[wIdx ,"min2MatCnt"] <- sum(matFlag[rObj$cInfo$min2MatFlag])
                 }
-				scrMtx[aIdx ,"minMax2MatCnt"] <- scrMtx[aIdx ,"min2MatCnt"] + scrMtx[aIdx ,"max2MatCnt"]
+				scrMtx[wIdx ,"minMax2MatCnt"] <- scrMtx[wIdx ,"min2MatCnt"] + scrMtx[wIdx ,"max2MatCnt"]
 
-				if( 2>scrMtx[aIdx ,"max2MatCnt"] ){	scrMtx[aIdx ,"max2MatCnt"] <- 0	}
+				if( 2>scrMtx[wIdx ,"max2MatCnt"] ){	scrMtx[wIdx ,"max2MatCnt"] <- 0	}
 
-				if( 2>scrMtx[aIdx ,"min2MatCnt"] ){	scrMtx[aIdx ,"min2MatCnt"] <- 0	}
+				if( 2>scrMtx[wIdx ,"min2MatCnt"] ){	scrMtx[wIdx ,"min2MatCnt"] <- 0	}
 
-				if( 3>scrMtx[aIdx ,"minMax2MatCnt"] ){	scrMtx[aIdx ,"minMax2MatCnt"] <- 0	}
+				if( 3>scrMtx[wIdx ,"minMax2MatCnt"] ){	scrMtx[wIdx ,"minMax2MatCnt"] <- 0	}
 
 			}
 
 			cTbl <- table(aCStep)
 			if( length(rObj$cInfo$cTbl)==length(cTbl) ){
-				scrMtx[aIdx ,"cTbl"] <- all(names(cTbl)==names(rObj$cInfo$cTbl)) && all(cTbl==rObj$cInfo$cTbl)
+				scrMtx[wIdx ,"cTbl"] <- all(names(cTbl)==names(rObj$cInfo$cTbl)) && all(cTbl==rObj$cInfo$cTbl)
 			}
 
 			if( !is.null(rObj$fTbl) ){
 				fTbl <- table(aFStep)
 				if( length(rObj$fTbl)==length(fTbl) ){
-					scrMtx[aIdx ,"fTbl"] <- all(names(fTbl)==names(rObj$fTbl)) && all(fTbl==rObj$fTbl)
+					scrMtx[wIdx ,"fTbl"] <- all(names(fTbl)==names(rObj$fTbl)) && all(fTbl==rObj$fTbl)
 				}
 			}
 
@@ -1172,32 +1172,32 @@ if( TRUE ){ # "sScore09"
             aCStep <- aObj$cStepMtx[aIdx,]      ;aFStep <- aObj$fStepMtx[aIdx,]
 
 			banR <- rObj$checkBan( aCode ,rObj$rawBan )
-			scrMtx[aIdx,"rCnt"] <- ifelse( 1>=banR$cnt ,0 ,banR$cnt )
-			scrMtx[aIdx,"rD2"]	<- sum(banR$bDupCnt==2)
-			scrMtx[aIdx,"rDn"]	<- sum(banR$bDupCnt >2)
-			scrMtx[aIdx,"rLr"]	<- ifelse(is.na(banR$typCnt["Slide\\"]),0,banR$typCnt["Slide\\"])
-			scrMtx[aIdx,"rRl"]	<- ifelse(is.na(banR$typCnt["Slide/"]),0,banR$typCnt["Slide/"])
+			scrMtx[wIdx,"rCnt"] <- ifelse( 1>=banR$cnt ,0 ,banR$cnt )
+			scrMtx[wIdx,"rD2"]	<- sum(banR$bDupCnt==2)
+			scrMtx[wIdx,"rDn"]	<- sum(banR$bDupCnt >2)
+			scrMtx[wIdx,"rLr"]	<- ifelse(is.na(banR$typCnt["Slide\\"]),0,banR$typCnt["Slide\\"])
+			scrMtx[wIdx,"rRl"]	<- ifelse(is.na(banR$typCnt["Slide/"]),0,banR$typCnt["Slide/"])
 
 			banE <- rObj$checkBan( aRem ,rObj$remBan )
-			scrMtx[aIdx,"eCnt"] <- ifelse( 1>=banE$cnt ,0 ,banE$cnt )
-			scrMtx[aIdx,"eD2"]	<- sum(banE$bDupCnt==2)
-			scrMtx[aIdx,"eDn"]	<- sum(banE$bDupCnt >2)
-			scrMtx[aIdx,"eLr"]	<- ifelse(is.na(banE$typCnt["Slide\\"]),0,banE$typCnt["Slide\\"])
-			scrMtx[aIdx,"eRl"]	<- ifelse(is.na(banE$typCnt["Slide/"]),0,banE$typCnt["Slide/"])
+			scrMtx[wIdx,"eCnt"] <- ifelse( 1>=banE$cnt ,0 ,banE$cnt )
+			scrMtx[wIdx,"eD2"]	<- sum(banE$bDupCnt==2)
+			scrMtx[wIdx,"eDn"]	<- sum(banE$bDupCnt >2)
+			scrMtx[wIdx,"eLr"]	<- ifelse(is.na(banE$typCnt["Slide\\"]),0,banE$typCnt["Slide\\"])
+			scrMtx[wIdx,"eRl"]	<- ifelse(is.na(banE$typCnt["Slide/"]),0,banE$typCnt["Slide/"])
 
 			banC <- rObj$checkBan( aCStep ,rObj$cBan )
-			scrMtx[aIdx,"cCnt"] <- ifelse( 1>=banC$cnt ,0 ,banC$cnt )
-			scrMtx[aIdx,"cD2"]	<- sum(banC$bDupCnt==2)
-			scrMtx[aIdx,"cDn"]	<- sum(banC$bDupCnt >2)
-			scrMtx[aIdx,"cLr"]	<- ifelse(is.na(banC$typCnt["Slide\\"]),0,banC$typCnt["Slide\\"])
-			scrMtx[aIdx,"cRl"]	<- ifelse(is.na(banC$typCnt["Slide/"]),0,banC$typCnt["Slide/"])
+			scrMtx[wIdx,"cCnt"] <- ifelse( 1>=banC$cnt ,0 ,banC$cnt )
+			scrMtx[wIdx,"cD2"]	<- sum(banC$bDupCnt==2)
+			scrMtx[wIdx,"cDn"]	<- sum(banC$bDupCnt >2)
+			scrMtx[wIdx,"cLr"]	<- ifelse(is.na(banC$typCnt["Slide\\"]),0,banC$typCnt["Slide\\"])
+			scrMtx[wIdx,"cRl"]	<- ifelse(is.na(banC$typCnt["Slide/"]),0,banC$typCnt["Slide/"])
 
 			banF <- rObj$checkBan( aFStep ,rObj$fBan )
-			scrMtx[aIdx,"fCnt"] <- ifelse( 1>=banF$cnt ,0 ,banF$cnt )
-			scrMtx[aIdx,"fD2"]	<- sum(banF$bDupCnt==2)
-			scrMtx[aIdx,"fDn"]	<- sum(banF$bDupCnt >2)
-			scrMtx[aIdx,"fLr"]	<- ifelse(is.na(banF$typCnt["Slide\\"]),0,banF$typCnt["Slide\\"])
-			scrMtx[aIdx,"fRl"]	<- ifelse(is.na(banF$typCnt["Slide/"]),0,banF$typCnt["Slide/"])
+			scrMtx[wIdx,"fCnt"] <- ifelse( 1>=banF$cnt ,0 ,banF$cnt )
+			scrMtx[wIdx,"fD2"]	<- sum(banF$bDupCnt==2)
+			scrMtx[wIdx,"fDn"]	<- sum(banF$bDupCnt >2)
+			scrMtx[wIdx,"fLr"]	<- ifelse(is.na(banF$typCnt["Slide\\"]),0,banF$typCnt["Slide\\"])
+			scrMtx[wIdx,"fRl"]	<- ifelse(is.na(banF$typCnt["Slide/"]),0,banF$typCnt["Slide/"])
 
             # scrMtx[wIdx,"rebC.r"] <- sum(aCode==wMI$rawTail[stdMILen,])
             # scrMtx[wIdx,"rebC.c"] <- sum(aCStep==wMI$cStepTail[stdMILen,])
@@ -1288,28 +1288,28 @@ if( TRUE ){ # "sScore0LAr13"
                 matCntB <- bUtil.checkMatch_LinearPtn( rObj$lPtn2 ,aCode )
             }
 
-            scrMtx[aIdx,"colA1"] <- matCntA[1]
-            scrMtx[aIdx,"colB1"] <- matCntB[1]
-            scrMtx[aIdx,"colA2"] <- matCntA[2]
-            scrMtx[aIdx,"colB2"] <- matCntB[2]
+            scrMtx[wIdx,"colA1"] <- matCntA[1]
+            scrMtx[wIdx,"colB1"] <- matCntB[1]
+            scrMtx[wIdx,"colA2"] <- matCntA[2]
+            scrMtx[wIdx,"colB2"] <- matCntB[2]
             if( 3<=rObj$colLen ){
-                scrMtx[aIdx,"colA3"] <- matCntA[3]
-                scrMtx[aIdx,"colB3"] <- matCntB[3]
+                scrMtx[wIdx,"colA3"] <- matCntA[3]
+                scrMtx[wIdx,"colB3"] <- matCntB[3]
             }
             if( 4<=rObj$colLen ){
-                scrMtx[aIdx,"colA4"] <- matCntA[4]
-                scrMtx[aIdx,"colB4"] <- matCntB[4]
+                scrMtx[wIdx,"colA4"] <- matCntA[4]
+                scrMtx[wIdx,"colB4"] <- matCntB[4]
             }
             if( 5<=rObj$colLen ){
-                scrMtx[aIdx,"colA5"] <- matCntA[5]
-                scrMtx[aIdx,"colB5"] <- matCntB[5]
+                scrMtx[wIdx,"colA5"] <- matCntA[5]
+                scrMtx[wIdx,"colB5"] <- matCntB[5]
             }
             if( 6<=rObj$colLen ){
-                scrMtx[aIdx,"colA6"] <- matCntA[6]
-                scrMtx[aIdx,"colB6"] <- matCntB[6]
+                scrMtx[wIdx,"colA6"] <- matCntA[6]
+                scrMtx[wIdx,"colB6"] <- matCntB[6]
             }
 
-            scrMtx[aIdx ,scrMtx[aIdx,]==1] <- 0
+            scrMtx[wIdx ,scrMtx[wIdx,]==1] <- 0
             # scrMtx[wIdx,"rebC.r"] <- sum(aCode==wMI$rawTail[stdMILen,])
             # scrMtx[wIdx,"rebC.c"] <- sum(aCStep==wMI$cStepTail[stdMILen,])
         }
@@ -1395,28 +1395,28 @@ if( TRUE ){ # "sScore0LAr24"
                 matCntB <- bUtil.checkMatch_LinearPtn( rObj$lPtn2 ,aCode )
             }
 
-            scrMtx[aIdx,"colA1"] <- matCntA[1]
-            scrMtx[aIdx,"colB1"] <- matCntB[1]
-            scrMtx[aIdx,"colA2"] <- matCntA[2]
-            scrMtx[aIdx,"colB2"] <- matCntB[2]
+            scrMtx[wIdx,"colA1"] <- matCntA[1]
+            scrMtx[wIdx,"colB1"] <- matCntB[1]
+            scrMtx[wIdx,"colA2"] <- matCntA[2]
+            scrMtx[wIdx,"colB2"] <- matCntB[2]
             if( 3<=rObj$colLen ){
-                scrMtx[aIdx,"colA3"] <- matCntA[3]
-                scrMtx[aIdx,"colB3"] <- matCntB[3]
+                scrMtx[wIdx,"colA3"] <- matCntA[3]
+                scrMtx[wIdx,"colB3"] <- matCntB[3]
             }
             if( 4<=rObj$colLen ){
-                scrMtx[aIdx,"colA4"] <- matCntA[4]
-                scrMtx[aIdx,"colB4"] <- matCntB[4]
+                scrMtx[wIdx,"colA4"] <- matCntA[4]
+                scrMtx[wIdx,"colB4"] <- matCntB[4]
             }
             if( 5<=rObj$colLen ){
-                scrMtx[aIdx,"colA5"] <- matCntA[5]
-                scrMtx[aIdx,"colB5"] <- matCntB[5]
+                scrMtx[wIdx,"colA5"] <- matCntA[5]
+                scrMtx[wIdx,"colB5"] <- matCntB[5]
             }
             if( 6<=rObj$colLen ){
-                scrMtx[aIdx,"colA6"] <- matCntA[6]
-                scrMtx[aIdx,"colB6"] <- matCntB[6]
+                scrMtx[wIdx,"colA6"] <- matCntA[6]
+                scrMtx[wIdx,"colB6"] <- matCntB[6]
             }
 
-            scrMtx[aIdx ,scrMtx[aIdx,]==1] <- 0
+            scrMtx[wIdx ,scrMtx[wIdx,]==1] <- 0
             # scrMtx[wIdx,"rebC.r"] <- sum(aCode==wMI$rawTail[stdMILen,])
             # scrMtx[wIdx,"rebC.c"] <- sum(aCStep==wMI$cStepTail[stdMILen,])
         }
@@ -1500,28 +1500,28 @@ if( TRUE ){ # "sScore0LVr13"
                 matCntB <- bUtil.checkMatch_LinearPtn( rObj$lPtn2 ,aCode )
             }
 
-            scrMtx[aIdx,"colA1"] <- matCntA[1]
-            scrMtx[aIdx,"colB1"] <- matCntB[1]
-            scrMtx[aIdx,"colA2"] <- matCntA[2]
-            scrMtx[aIdx,"colB2"] <- matCntB[2]
+            scrMtx[wIdx,"colA1"] <- matCntA[1]
+            scrMtx[wIdx,"colB1"] <- matCntB[1]
+            scrMtx[wIdx,"colA2"] <- matCntA[2]
+            scrMtx[wIdx,"colB2"] <- matCntB[2]
             if( 3<=rObj$colLen ){
-                scrMtx[aIdx,"colA3"] <- matCntA[3]
-                scrMtx[aIdx,"colB3"] <- matCntB[3]
+                scrMtx[wIdx,"colA3"] <- matCntA[3]
+                scrMtx[wIdx,"colB3"] <- matCntB[3]
             }
             if( 4<=rObj$colLen ){
-                scrMtx[aIdx,"colA4"] <- matCntA[4]
-                scrMtx[aIdx,"colB4"] <- matCntB[4]
+                scrMtx[wIdx,"colA4"] <- matCntA[4]
+                scrMtx[wIdx,"colB4"] <- matCntB[4]
             }
             if( 5<=rObj$colLen ){
-                scrMtx[aIdx,"colA5"] <- matCntA[5]
-                scrMtx[aIdx,"colB5"] <- matCntB[5]
+                scrMtx[wIdx,"colA5"] <- matCntA[5]
+                scrMtx[wIdx,"colB5"] <- matCntB[5]
             }
             if( 6<=rObj$colLen ){
-                scrMtx[aIdx,"colA6"] <- matCntA[6]
-                scrMtx[aIdx,"colB6"] <- matCntB[6]
+                scrMtx[wIdx,"colA6"] <- matCntA[6]
+                scrMtx[wIdx,"colB6"] <- matCntB[6]
             }
 
-            scrMtx[aIdx ,scrMtx[aIdx,]==1] <- 0
+            scrMtx[wIdx ,scrMtx[wIdx,]==1] <- 0
             # scrMtx[wIdx,"rebC.r"] <- sum(aCode==wMI$rawTail[stdMILen,])
             # scrMtx[wIdx,"rebC.c"] <- sum(aCStep==wMI$cStepTail[stdMILen,])
         }
@@ -1605,28 +1605,28 @@ if( TRUE ){ # "sScore0LVr24"
                 matCntB <- bUtil.checkMatch_LinearPtn( rObj$lPtn2 ,aCode )
             }
 
-            scrMtx[aIdx,"colA1"] <- matCntA[1]
-            scrMtx[aIdx,"colB1"] <- matCntB[1]
-            scrMtx[aIdx,"colA2"] <- matCntA[2]
-            scrMtx[aIdx,"colB2"] <- matCntB[2]
+            scrMtx[wIdx,"colA1"] <- matCntA[1]
+            scrMtx[wIdx,"colB1"] <- matCntB[1]
+            scrMtx[wIdx,"colA2"] <- matCntA[2]
+            scrMtx[wIdx,"colB2"] <- matCntB[2]
             if( 3<=rObj$colLen ){
-                scrMtx[aIdx,"colA3"] <- matCntA[3]
-                scrMtx[aIdx,"colB3"] <- matCntB[3]
+                scrMtx[wIdx,"colA3"] <- matCntA[3]
+                scrMtx[wIdx,"colB3"] <- matCntB[3]
             }
             if( 4<=rObj$colLen ){
-                scrMtx[aIdx,"colA4"] <- matCntA[4]
-                scrMtx[aIdx,"colB4"] <- matCntB[4]
+                scrMtx[wIdx,"colA4"] <- matCntA[4]
+                scrMtx[wIdx,"colB4"] <- matCntB[4]
             }
             if( 5<=rObj$colLen ){
-                scrMtx[aIdx,"colA5"] <- matCntA[5]
-                scrMtx[aIdx,"colB5"] <- matCntB[5]
+                scrMtx[wIdx,"colA5"] <- matCntA[5]
+                scrMtx[wIdx,"colB5"] <- matCntB[5]
             }
             if( 6<=rObj$colLen ){
-                scrMtx[aIdx,"colA6"] <- matCntA[6]
-                scrMtx[aIdx,"colB6"] <- matCntB[6]
+                scrMtx[wIdx,"colA6"] <- matCntA[6]
+                scrMtx[wIdx,"colB6"] <- matCntB[6]
             }
 
-            scrMtx[aIdx ,scrMtx[aIdx,]==1] <- 0
+            scrMtx[wIdx ,scrMtx[wIdx,]==1] <- 0
             # scrMtx[wIdx,"rebC.r"] <- sum(aCode==wMI$rawTail[stdMILen,])
             # scrMtx[wIdx,"rebC.c"] <- sum(aCStep==wMI$cStepTail[stdMILen,])
         }
@@ -1714,28 +1714,28 @@ if( TRUE ){ # "sScore0LAe13"
                 matCntB <- bUtil.checkMatch_LinearPtn( rObj$lPtn2 ,aRem )
             }
 
-            scrMtx[aIdx,"colA1"] <- matCntA[1]
-            scrMtx[aIdx,"colB1"] <- matCntB[1]
-            scrMtx[aIdx,"colA2"] <- matCntA[2]
-            scrMtx[aIdx,"colB2"] <- matCntB[2]
+            scrMtx[wIdx,"colA1"] <- matCntA[1]
+            scrMtx[wIdx,"colB1"] <- matCntB[1]
+            scrMtx[wIdx,"colA2"] <- matCntA[2]
+            scrMtx[wIdx,"colB2"] <- matCntB[2]
             if( 3<=rObj$colLen ){
-                scrMtx[aIdx,"colA3"] <- matCntA[3]
-                scrMtx[aIdx,"colB3"] <- matCntB[3]
+                scrMtx[wIdx,"colA3"] <- matCntA[3]
+                scrMtx[wIdx,"colB3"] <- matCntB[3]
             }
             if( 4<=rObj$colLen ){
-                scrMtx[aIdx,"colA4"] <- matCntA[4]
-                scrMtx[aIdx,"colB4"] <- matCntB[4]
+                scrMtx[wIdx,"colA4"] <- matCntA[4]
+                scrMtx[wIdx,"colB4"] <- matCntB[4]
             }
             if( 5<=rObj$colLen ){
-                scrMtx[aIdx,"colA5"] <- matCntA[5]
-                scrMtx[aIdx,"colB5"] <- matCntB[5]
+                scrMtx[wIdx,"colA5"] <- matCntA[5]
+                scrMtx[wIdx,"colB5"] <- matCntB[5]
             }
             if( 6<=rObj$colLen ){
-                scrMtx[aIdx,"colA6"] <- matCntA[6]
-                scrMtx[aIdx,"colB6"] <- matCntB[6]
+                scrMtx[wIdx,"colA6"] <- matCntA[6]
+                scrMtx[wIdx,"colB6"] <- matCntB[6]
             }
 
-            scrMtx[aIdx ,scrMtx[aIdx,]==1] <- 0
+            scrMtx[wIdx ,scrMtx[wIdx,]==1] <- 0
             # scrMtx[wIdx,"rebC.r"] <- sum(aCode==wMI$rawTail[stdMILen,])
             # scrMtx[wIdx,"rebC.c"] <- sum(aCStep==wMI$cStepTail[stdMILen,])
         }
@@ -1821,28 +1821,28 @@ if( TRUE ){ # "sScore0LAe24"
                 matCntB <- bUtil.checkMatch_LinearPtn( rObj$lPtn2 ,aRem )
             }
 
-            scrMtx[aIdx,"colA1"] <- matCntA[1]
-            scrMtx[aIdx,"colB1"] <- matCntB[1]
-            scrMtx[aIdx,"colA2"] <- matCntA[2]
-            scrMtx[aIdx,"colB2"] <- matCntB[2]
+            scrMtx[wIdx,"colA1"] <- matCntA[1]
+            scrMtx[wIdx,"colB1"] <- matCntB[1]
+            scrMtx[wIdx,"colA2"] <- matCntA[2]
+            scrMtx[wIdx,"colB2"] <- matCntB[2]
             if( 3<=rObj$colLen ){
-                scrMtx[aIdx,"colA3"] <- matCntA[3]
-                scrMtx[aIdx,"colB3"] <- matCntB[3]
+                scrMtx[wIdx,"colA3"] <- matCntA[3]
+                scrMtx[wIdx,"colB3"] <- matCntB[3]
             }
             if( 4<=rObj$colLen ){
-                scrMtx[aIdx,"colA4"] <- matCntA[4]
-                scrMtx[aIdx,"colB4"] <- matCntB[4]
+                scrMtx[wIdx,"colA4"] <- matCntA[4]
+                scrMtx[wIdx,"colB4"] <- matCntB[4]
             }
             if( 5<=rObj$colLen ){
-                scrMtx[aIdx,"colA5"] <- matCntA[5]
-                scrMtx[aIdx,"colB5"] <- matCntB[5]
+                scrMtx[wIdx,"colA5"] <- matCntA[5]
+                scrMtx[wIdx,"colB5"] <- matCntB[5]
             }
             if( 6<=rObj$colLen ){
-                scrMtx[aIdx,"colA6"] <- matCntA[6]
-                scrMtx[aIdx,"colB6"] <- matCntB[6]
+                scrMtx[wIdx,"colA6"] <- matCntA[6]
+                scrMtx[wIdx,"colB6"] <- matCntB[6]
             }
 
-            scrMtx[aIdx ,scrMtx[aIdx,]==1] <- 0
+            scrMtx[wIdx ,scrMtx[wIdx,]==1] <- 0
             # scrMtx[wIdx,"rebC.r"] <- sum(aCode==wMI$rawTail[stdMILen,])
             # scrMtx[wIdx,"rebC.c"] <- sum(aCStep==wMI$cStepTail[stdMILen,])
         }
@@ -1926,28 +1926,28 @@ if( TRUE ){ # "sScore0LVe13"
                 matCntB <- bUtil.checkMatch_LinearPtn( rObj$lPtn2 ,aRem )
             }
 
-            scrMtx[aIdx,"colA1"] <- matCntA[1]
-            scrMtx[aIdx,"colB1"] <- matCntB[1]
-            scrMtx[aIdx,"colA2"] <- matCntA[2]
-            scrMtx[aIdx,"colB2"] <- matCntB[2]
+            scrMtx[wIdx,"colA1"] <- matCntA[1]
+            scrMtx[wIdx,"colB1"] <- matCntB[1]
+            scrMtx[wIdx,"colA2"] <- matCntA[2]
+            scrMtx[wIdx,"colB2"] <- matCntB[2]
             if( 3<=rObj$colLen ){
-                scrMtx[aIdx,"colA3"] <- matCntA[3]
-                scrMtx[aIdx,"colB3"] <- matCntB[3]
+                scrMtx[wIdx,"colA3"] <- matCntA[3]
+                scrMtx[wIdx,"colB3"] <- matCntB[3]
             }
             if( 4<=rObj$colLen ){
-                scrMtx[aIdx,"colA4"] <- matCntA[4]
-                scrMtx[aIdx,"colB4"] <- matCntB[4]
+                scrMtx[wIdx,"colA4"] <- matCntA[4]
+                scrMtx[wIdx,"colB4"] <- matCntB[4]
             }
             if( 5<=rObj$colLen ){
-                scrMtx[aIdx,"colA5"] <- matCntA[5]
-                scrMtx[aIdx,"colB5"] <- matCntB[5]
+                scrMtx[wIdx,"colA5"] <- matCntA[5]
+                scrMtx[wIdx,"colB5"] <- matCntB[5]
             }
             if( 6<=rObj$colLen ){
-                scrMtx[aIdx,"colA6"] <- matCntA[6]
-                scrMtx[aIdx,"colB6"] <- matCntB[6]
+                scrMtx[wIdx,"colA6"] <- matCntA[6]
+                scrMtx[wIdx,"colB6"] <- matCntB[6]
             }
 
-            scrMtx[aIdx ,scrMtx[aIdx,]==1] <- 0
+            scrMtx[wIdx ,scrMtx[wIdx,]==1] <- 0
             # scrMtx[wIdx,"rebC.r"] <- sum(aCode==wMI$rawTail[stdMILen,])
             # scrMtx[wIdx,"rebC.c"] <- sum(aCStep==wMI$cStepTail[stdMILen,])
         }
@@ -2031,28 +2031,28 @@ if( TRUE ){ # "sScore0LVe24"
                 matCntB <- bUtil.checkMatch_LinearPtn( rObj$lPtn2 ,aRem )
             }
 
-            scrMtx[aIdx,"colA1"] <- matCntA[1]
-            scrMtx[aIdx,"colB1"] <- matCntB[1]
-            scrMtx[aIdx,"colA2"] <- matCntA[2]
-            scrMtx[aIdx,"colB2"] <- matCntB[2]
+            scrMtx[wIdx,"colA1"] <- matCntA[1]
+            scrMtx[wIdx,"colB1"] <- matCntB[1]
+            scrMtx[wIdx,"colA2"] <- matCntA[2]
+            scrMtx[wIdx,"colB2"] <- matCntB[2]
             if( 3<=rObj$colLen ){
-                scrMtx[aIdx,"colA3"] <- matCntA[3]
-                scrMtx[aIdx,"colB3"] <- matCntB[3]
+                scrMtx[wIdx,"colA3"] <- matCntA[3]
+                scrMtx[wIdx,"colB3"] <- matCntB[3]
             }
             if( 4<=rObj$colLen ){
-                scrMtx[aIdx,"colA4"] <- matCntA[4]
-                scrMtx[aIdx,"colB4"] <- matCntB[4]
+                scrMtx[wIdx,"colA4"] <- matCntA[4]
+                scrMtx[wIdx,"colB4"] <- matCntB[4]
             }
             if( 5<=rObj$colLen ){
-                scrMtx[aIdx,"colA5"] <- matCntA[5]
-                scrMtx[aIdx,"colB5"] <- matCntB[5]
+                scrMtx[wIdx,"colA5"] <- matCntA[5]
+                scrMtx[wIdx,"colB5"] <- matCntB[5]
             }
             if( 6<=rObj$colLen ){
-                scrMtx[aIdx,"colA6"] <- matCntA[6]
-                scrMtx[aIdx,"colB6"] <- matCntB[6]
+                scrMtx[wIdx,"colA6"] <- matCntA[6]
+                scrMtx[wIdx,"colB6"] <- matCntB[6]
             }
 
-            scrMtx[aIdx ,scrMtx[aIdx,]==1] <- 0
+            scrMtx[wIdx ,scrMtx[wIdx,]==1] <- 0
             # scrMtx[wIdx,"rebC.r"] <- sum(aCode==wMI$rawTail[stdMILen,])
             # scrMtx[wIdx,"rebC.c"] <- sum(aCStep==wMI$cStepTail[stdMILen,])
         }
@@ -2140,28 +2140,28 @@ if( TRUE ){ # "sScore0LAc13"
                 matCntB <- bUtil.checkMatch_LinearPtn( rObj$lPtn2 ,aCStep )
             }
 
-            scrMtx[aIdx,"colA1"] <- matCntA[1]
-            scrMtx[aIdx,"colB1"] <- matCntB[1]
-            scrMtx[aIdx,"colA2"] <- matCntA[2]
-            scrMtx[aIdx,"colB2"] <- matCntB[2]
+            scrMtx[wIdx,"colA1"] <- matCntA[1]
+            scrMtx[wIdx,"colB1"] <- matCntB[1]
+            scrMtx[wIdx,"colA2"] <- matCntA[2]
+            scrMtx[wIdx,"colB2"] <- matCntB[2]
             if( 3<=rObj$colLen ){
-                scrMtx[aIdx,"colA3"] <- matCntA[3]
-                scrMtx[aIdx,"colB3"] <- matCntB[3]
+                scrMtx[wIdx,"colA3"] <- matCntA[3]
+                scrMtx[wIdx,"colB3"] <- matCntB[3]
             }
             if( 4<=rObj$colLen ){
-                scrMtx[aIdx,"colA4"] <- matCntA[4]
-                scrMtx[aIdx,"colB4"] <- matCntB[4]
+                scrMtx[wIdx,"colA4"] <- matCntA[4]
+                scrMtx[wIdx,"colB4"] <- matCntB[4]
             }
             if( 5<=rObj$colLen ){
-                scrMtx[aIdx,"colA5"] <- matCntA[5]
-                scrMtx[aIdx,"colB5"] <- matCntB[5]
+                scrMtx[wIdx,"colA5"] <- matCntA[5]
+                scrMtx[wIdx,"colB5"] <- matCntB[5]
             }
             if( 6<=rObj$colLen ){
-                scrMtx[aIdx,"colA6"] <- matCntA[6]
-                scrMtx[aIdx,"colB6"] <- matCntB[6]
+                scrMtx[wIdx,"colA6"] <- matCntA[6]
+                scrMtx[wIdx,"colB6"] <- matCntB[6]
             }
 
-            scrMtx[aIdx ,scrMtx[aIdx,]==1] <- 0
+            scrMtx[wIdx ,scrMtx[wIdx,]==1] <- 0
             # scrMtx[wIdx,"rebC.r"] <- sum(aCode==wMI$rawTail[stdMILen,])
             # scrMtx[wIdx,"rebC.c"] <- sum(aCStep==wMI$cStepTail[stdMILen,])
         }
@@ -2247,28 +2247,28 @@ if( TRUE ){ # "sScore0LAc24"
                 matCntB <- bUtil.checkMatch_LinearPtn( rObj$lPtn2 ,aCStep )
             }
 
-            scrMtx[aIdx,"colA1"] <- matCntA[1]
-            scrMtx[aIdx,"colB1"] <- matCntB[1]
-            scrMtx[aIdx,"colA2"] <- matCntA[2]
-            scrMtx[aIdx,"colB2"] <- matCntB[2]
+            scrMtx[wIdx,"colA1"] <- matCntA[1]
+            scrMtx[wIdx,"colB1"] <- matCntB[1]
+            scrMtx[wIdx,"colA2"] <- matCntA[2]
+            scrMtx[wIdx,"colB2"] <- matCntB[2]
             if( 3<=rObj$colLen ){
-                scrMtx[aIdx,"colA3"] <- matCntA[3]
-                scrMtx[aIdx,"colB3"] <- matCntB[3]
+                scrMtx[wIdx,"colA3"] <- matCntA[3]
+                scrMtx[wIdx,"colB3"] <- matCntB[3]
             }
             if( 4<=rObj$colLen ){
-                scrMtx[aIdx,"colA4"] <- matCntA[4]
-                scrMtx[aIdx,"colB4"] <- matCntB[4]
+                scrMtx[wIdx,"colA4"] <- matCntA[4]
+                scrMtx[wIdx,"colB4"] <- matCntB[4]
             }
             if( 5<=rObj$colLen ){
-                scrMtx[aIdx,"colA5"] <- matCntA[5]
-                scrMtx[aIdx,"colB5"] <- matCntB[5]
+                scrMtx[wIdx,"colA5"] <- matCntA[5]
+                scrMtx[wIdx,"colB5"] <- matCntB[5]
             }
             if( 6<=rObj$colLen ){
-                scrMtx[aIdx,"colA6"] <- matCntA[6]
-                scrMtx[aIdx,"colB6"] <- matCntB[6]
+                scrMtx[wIdx,"colA6"] <- matCntA[6]
+                scrMtx[wIdx,"colB6"] <- matCntB[6]
             }
 
-            scrMtx[aIdx ,scrMtx[aIdx,]==1] <- 0
+            scrMtx[wIdx ,scrMtx[wIdx,]==1] <- 0
             # scrMtx[wIdx,"rebC.r"] <- sum(aCode==wMI$rawTail[stdMILen,])
             # scrMtx[wIdx,"rebC.c"] <- sum(aCStep==wMI$cStepTail[stdMILen,])
         }
@@ -2352,28 +2352,28 @@ if( TRUE ){ # "sScore0LVc13"
                 matCntB <- bUtil.checkMatch_LinearPtn( rObj$lPtn2 ,aCStep )
             }
 
-            scrMtx[aIdx,"colA1"] <- matCntA[1]
-            scrMtx[aIdx,"colB1"] <- matCntB[1]
-            scrMtx[aIdx,"colA2"] <- matCntA[2]
-            scrMtx[aIdx,"colB2"] <- matCntB[2]
+            scrMtx[wIdx,"colA1"] <- matCntA[1]
+            scrMtx[wIdx,"colB1"] <- matCntB[1]
+            scrMtx[wIdx,"colA2"] <- matCntA[2]
+            scrMtx[wIdx,"colB2"] <- matCntB[2]
             if( 3<=rObj$colLen ){
-                scrMtx[aIdx,"colA3"] <- matCntA[3]
-                scrMtx[aIdx,"colB3"] <- matCntB[3]
+                scrMtx[wIdx,"colA3"] <- matCntA[3]
+                scrMtx[wIdx,"colB3"] <- matCntB[3]
             }
             if( 4<=rObj$colLen ){
-                scrMtx[aIdx,"colA4"] <- matCntA[4]
-                scrMtx[aIdx,"colB4"] <- matCntB[4]
+                scrMtx[wIdx,"colA4"] <- matCntA[4]
+                scrMtx[wIdx,"colB4"] <- matCntB[4]
             }
             if( 5<=rObj$colLen ){
-                scrMtx[aIdx,"colA5"] <- matCntA[5]
-                scrMtx[aIdx,"colB5"] <- matCntB[5]
+                scrMtx[wIdx,"colA5"] <- matCntA[5]
+                scrMtx[wIdx,"colB5"] <- matCntB[5]
             }
             if( 6<=rObj$colLen ){
-                scrMtx[aIdx,"colA6"] <- matCntA[6]
-                scrMtx[aIdx,"colB6"] <- matCntB[6]
+                scrMtx[wIdx,"colA6"] <- matCntA[6]
+                scrMtx[wIdx,"colB6"] <- matCntB[6]
             }
 
-            scrMtx[aIdx ,scrMtx[aIdx,]==1] <- 0
+            scrMtx[wIdx ,scrMtx[wIdx,]==1] <- 0
             # scrMtx[wIdx,"rebC.r"] <- sum(aCode==wMI$rawTail[stdMILen,])
             # scrMtx[wIdx,"rebC.c"] <- sum(aCStep==wMI$cStepTail[stdMILen,])
         }
@@ -2457,28 +2457,28 @@ if( TRUE ){ # "sScore0LVc24"
                 matCntB <- bUtil.checkMatch_LinearPtn( rObj$lPtn2 ,aCStep )
             }
 
-            scrMtx[aIdx,"colA1"] <- matCntA[1]
-            scrMtx[aIdx,"colB1"] <- matCntB[1]
-            scrMtx[aIdx,"colA2"] <- matCntA[2]
-            scrMtx[aIdx,"colB2"] <- matCntB[2]
+            scrMtx[wIdx,"colA1"] <- matCntA[1]
+            scrMtx[wIdx,"colB1"] <- matCntB[1]
+            scrMtx[wIdx,"colA2"] <- matCntA[2]
+            scrMtx[wIdx,"colB2"] <- matCntB[2]
             if( 3<=rObj$colLen ){
-                scrMtx[aIdx,"colA3"] <- matCntA[3]
-                scrMtx[aIdx,"colB3"] <- matCntB[3]
+                scrMtx[wIdx,"colA3"] <- matCntA[3]
+                scrMtx[wIdx,"colB3"] <- matCntB[3]
             }
             if( 4<=rObj$colLen ){
-                scrMtx[aIdx,"colA4"] <- matCntA[4]
-                scrMtx[aIdx,"colB4"] <- matCntB[4]
+                scrMtx[wIdx,"colA4"] <- matCntA[4]
+                scrMtx[wIdx,"colB4"] <- matCntB[4]
             }
             if( 5<=rObj$colLen ){
-                scrMtx[aIdx,"colA5"] <- matCntA[5]
-                scrMtx[aIdx,"colB5"] <- matCntB[5]
+                scrMtx[wIdx,"colA5"] <- matCntA[5]
+                scrMtx[wIdx,"colB5"] <- matCntB[5]
             }
             if( 6<=rObj$colLen ){
-                scrMtx[aIdx,"colA6"] <- matCntA[6]
-                scrMtx[aIdx,"colB6"] <- matCntB[6]
+                scrMtx[wIdx,"colA6"] <- matCntA[6]
+                scrMtx[wIdx,"colB6"] <- matCntB[6]
             }
 
-            scrMtx[aIdx ,scrMtx[aIdx,]==1] <- 0
+            scrMtx[wIdx ,scrMtx[wIdx,]==1] <- 0
             # scrMtx[wIdx,"rebC.r"] <- sum(aCode==wMI$rawTail[stdMILen,])
             # scrMtx[wIdx,"rebC.c"] <- sum(aCStep==wMI$cStepTail[stdMILen,])
         }
@@ -2568,28 +2568,28 @@ if( TRUE ){ # "sScore0LAf13"
                 matCntB <- bUtil.checkMatch_LinearPtn( rObj$lPtn2 ,aFStep )
             }
 
-            scrMtx[aIdx,"colA1"] <- matCntA[1]
-            scrMtx[aIdx,"colB1"] <- matCntB[1]
-            scrMtx[aIdx,"colA2"] <- matCntA[2]
-            scrMtx[aIdx,"colB2"] <- matCntB[2]
+            scrMtx[wIdx,"colA1"] <- matCntA[1]
+            scrMtx[wIdx,"colB1"] <- matCntB[1]
+            scrMtx[wIdx,"colA2"] <- matCntA[2]
+            scrMtx[wIdx,"colB2"] <- matCntB[2]
             if( 3<=rObj$colLen ){
-                scrMtx[aIdx,"colA3"] <- matCntA[3]
-                scrMtx[aIdx,"colB3"] <- matCntB[3]
+                scrMtx[wIdx,"colA3"] <- matCntA[3]
+                scrMtx[wIdx,"colB3"] <- matCntB[3]
             }
             if( 4<=rObj$colLen ){
-                scrMtx[aIdx,"colA4"] <- matCntA[4]
-                scrMtx[aIdx,"colB4"] <- matCntB[4]
+                scrMtx[wIdx,"colA4"] <- matCntA[4]
+                scrMtx[wIdx,"colB4"] <- matCntB[4]
             }
             if( 5<=rObj$colLen ){
-                scrMtx[aIdx,"colA5"] <- matCntA[5]
-                scrMtx[aIdx,"colB5"] <- matCntB[5]
+                scrMtx[wIdx,"colA5"] <- matCntA[5]
+                scrMtx[wIdx,"colB5"] <- matCntB[5]
             }
             if( 6<=rObj$colLen ){
-                scrMtx[aIdx,"colA6"] <- matCntA[6]
-                scrMtx[aIdx,"colB6"] <- matCntB[6]
+                scrMtx[wIdx,"colA6"] <- matCntA[6]
+                scrMtx[wIdx,"colB6"] <- matCntB[6]
             }
 
-            scrMtx[aIdx ,scrMtx[aIdx,]==1] <- 0
+            scrMtx[wIdx ,scrMtx[wIdx,]==1] <- 0
             # scrMtx[wIdx,"rebC.r"] <- sum(aCode==wMI$rawTail[stdMILen,])
             # scrMtx[wIdx,"rebC.c"] <- sum(aCStep==wMI$cStepTail[stdMILen,])
         }
@@ -2678,28 +2678,28 @@ if( TRUE ){ # "sScore0LAf24"
                 matCntB <- bUtil.checkMatch_LinearPtn( rObj$lPtn2 ,aFStep )
             }
 
-            scrMtx[aIdx,"colA1"] <- matCntA[1]
-            scrMtx[aIdx,"colB1"] <- matCntB[1]
-            scrMtx[aIdx,"colA2"] <- matCntA[2]
-            scrMtx[aIdx,"colB2"] <- matCntB[2]
+            scrMtx[wIdx,"colA1"] <- matCntA[1]
+            scrMtx[wIdx,"colB1"] <- matCntB[1]
+            scrMtx[wIdx,"colA2"] <- matCntA[2]
+            scrMtx[wIdx,"colB2"] <- matCntB[2]
             if( 3<=rObj$colLen ){
-                scrMtx[aIdx,"colA3"] <- matCntA[3]
-                scrMtx[aIdx,"colB3"] <- matCntB[3]
+                scrMtx[wIdx,"colA3"] <- matCntA[3]
+                scrMtx[wIdx,"colB3"] <- matCntB[3]
             }
             if( 4<=rObj$colLen ){
-                scrMtx[aIdx,"colA4"] <- matCntA[4]
-                scrMtx[aIdx,"colB4"] <- matCntB[4]
+                scrMtx[wIdx,"colA4"] <- matCntA[4]
+                scrMtx[wIdx,"colB4"] <- matCntB[4]
             }
             if( 5<=rObj$colLen ){
-                scrMtx[aIdx,"colA5"] <- matCntA[5]
-                scrMtx[aIdx,"colB5"] <- matCntB[5]
+                scrMtx[wIdx,"colA5"] <- matCntA[5]
+                scrMtx[wIdx,"colB5"] <- matCntB[5]
             }
             if( 6<=rObj$colLen ){
-                scrMtx[aIdx,"colA6"] <- matCntA[6]
-                scrMtx[aIdx,"colB6"] <- matCntB[6]
+                scrMtx[wIdx,"colA6"] <- matCntA[6]
+                scrMtx[wIdx,"colB6"] <- matCntB[6]
             }
 
-            scrMtx[aIdx ,scrMtx[aIdx,]==1] <- 0
+            scrMtx[wIdx ,scrMtx[wIdx,]==1] <- 0
             # scrMtx[wIdx,"rebC.r"] <- sum(aCode==wMI$rawTail[stdMILen,])
             # scrMtx[wIdx,"rebC.c"] <- sum(aCStep==wMI$cStepTail[stdMILen,])
         }
@@ -2787,28 +2787,28 @@ if( TRUE ){ # "sScore0LVf13"
                 matCntB <- bUtil.checkMatch_LinearPtn( rObj$lPtn2 ,aFStep )
             }
 
-            scrMtx[aIdx,"colA1"] <- matCntA[1]
-            scrMtx[aIdx,"colB1"] <- matCntB[1]
-            scrMtx[aIdx,"colA2"] <- matCntA[2]
-            scrMtx[aIdx,"colB2"] <- matCntB[2]
+            scrMtx[wIdx,"colA1"] <- matCntA[1]
+            scrMtx[wIdx,"colB1"] <- matCntB[1]
+            scrMtx[wIdx,"colA2"] <- matCntA[2]
+            scrMtx[wIdx,"colB2"] <- matCntB[2]
             if( 3<=rObj$colLen ){
-                scrMtx[aIdx,"colA3"] <- matCntA[3]
-                scrMtx[aIdx,"colB3"] <- matCntB[3]
+                scrMtx[wIdx,"colA3"] <- matCntA[3]
+                scrMtx[wIdx,"colB3"] <- matCntB[3]
             }
             if( 4<=rObj$colLen ){
-                scrMtx[aIdx,"colA4"] <- matCntA[4]
-                scrMtx[aIdx,"colB4"] <- matCntB[4]
+                scrMtx[wIdx,"colA4"] <- matCntA[4]
+                scrMtx[wIdx,"colB4"] <- matCntB[4]
             }
             if( 5<=rObj$colLen ){
-                scrMtx[aIdx,"colA5"] <- matCntA[5]
-                scrMtx[aIdx,"colB5"] <- matCntB[5]
+                scrMtx[wIdx,"colA5"] <- matCntA[5]
+                scrMtx[wIdx,"colB5"] <- matCntB[5]
             }
             if( 6<=rObj$colLen ){
-                scrMtx[aIdx,"colA6"] <- matCntA[6]
-                scrMtx[aIdx,"colB6"] <- matCntB[6]
+                scrMtx[wIdx,"colA6"] <- matCntA[6]
+                scrMtx[wIdx,"colB6"] <- matCntB[6]
             }
 
-            scrMtx[aIdx ,scrMtx[aIdx,]==1] <- 0
+            scrMtx[wIdx ,scrMtx[wIdx,]==1] <- 0
             # scrMtx[wIdx,"rebC.r"] <- sum(aCode==wMI$rawTail[stdMILen,])
             # scrMtx[wIdx,"rebC.c"] <- sum(aCStep==wMI$cStepTail[stdMILen,])
         }
@@ -2895,28 +2895,28 @@ if( TRUE ){ # "sScore0LVf24"
                 matCntB <- bUtil.checkMatch_LinearPtn( rObj$lPtn2 ,aFStep )
             }
 
-            scrMtx[aIdx,"colA1"] <- matCntA[1]
-            scrMtx[aIdx,"colB1"] <- matCntB[1]
-            scrMtx[aIdx,"colA2"] <- matCntA[2]
-            scrMtx[aIdx,"colB2"] <- matCntB[2]
+            scrMtx[wIdx,"colA1"] <- matCntA[1]
+            scrMtx[wIdx,"colB1"] <- matCntB[1]
+            scrMtx[wIdx,"colA2"] <- matCntA[2]
+            scrMtx[wIdx,"colB2"] <- matCntB[2]
             if( 3<=rObj$colLen ){
-                scrMtx[aIdx,"colA3"] <- matCntA[3]
-                scrMtx[aIdx,"colB3"] <- matCntB[3]
+                scrMtx[wIdx,"colA3"] <- matCntA[3]
+                scrMtx[wIdx,"colB3"] <- matCntB[3]
             }
             if( 4<=rObj$colLen ){
-                scrMtx[aIdx,"colA4"] <- matCntA[4]
-                scrMtx[aIdx,"colB4"] <- matCntB[4]
+                scrMtx[wIdx,"colA4"] <- matCntA[4]
+                scrMtx[wIdx,"colB4"] <- matCntB[4]
             }
             if( 5<=rObj$colLen ){
-                scrMtx[aIdx,"colA5"] <- matCntA[5]
-                scrMtx[aIdx,"colB5"] <- matCntB[5]
+                scrMtx[wIdx,"colA5"] <- matCntA[5]
+                scrMtx[wIdx,"colB5"] <- matCntB[5]
             }
             if( 6<=rObj$colLen ){
-                scrMtx[aIdx,"colA6"] <- matCntA[6]
-                scrMtx[aIdx,"colB6"] <- matCntB[6]
+                scrMtx[wIdx,"colA6"] <- matCntA[6]
+                scrMtx[wIdx,"colB6"] <- matCntB[6]
             }
 
-            scrMtx[aIdx ,scrMtx[aIdx,]==1] <- 0
+            scrMtx[wIdx ,scrMtx[wIdx,]==1] <- 0
             # scrMtx[wIdx,"rebC.r"] <- sum(aCode==wMI$rawTail[stdMILen,])
             # scrMtx[wIdx,"rebC.c"] <- sum(aCStep==wMI$cStepTail[stdMILen,])
         }

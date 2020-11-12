@@ -9,6 +9,48 @@ if( FALSE ){    # template
     # )
 }
 
+# ClM이 효과 직빵이라 맨 앞에 놓는다.
+crMName <- "crScrN02SumClM"
+if( TRUE ){
+    bCMtxCfg[[crMName]] <- list(  mName = crMName
+        ,fCol = list(
+              "sumTotHpn" = list( rng=c(min=3,max= 6) ) # 3~
+             ,"sumTot1"   = list( rng=c(min=1,max= 6) ) # 1~
+             ,"sumTot2"   = list( rng=c(min=0,max= 6) ) # 0~
+             ,"sumTot3"   = list( rng=c(min=0,max= 1) ) # 0~0
+        )
+    )
+}
+
+crMName <- "crScrN03SumClM"
+if( TRUE ){
+    bCMtxCfg[[crMName]] <- list(  mName = crMName
+        #   .reportworkRpt/CutRstCLM_sumTotA.txt 참고
+        ,fCol = list(
+              "sumTotHpn" = list( rng=c(min=0,max= 5) ) #   ~4  예외 : 826
+             ,"sumTot1"   = list( rng=c(min=0,max= 3) ) # 
+             ,"sumTot2"   = list( rng=c(min=0,max= 2) ) # 
+             ,"sumTot3"   = list( rng=c(min=0,max= 1) ) #   ~0  예외 : 884 
+        )
+    )
+}
+
+crMName <- "crScrN04SumClM"
+if( TRUE ){
+    bCMtxCfg[[crMName]] <- list(  mName = crMName
+        #   .reportworkRpt/CutRstCLM_sumTotL.txt 참고
+        ,fCol = list(
+              "sumTotHpn" = list( rng=c(min=0,max= 1) ) #
+             ,"sumTot1"   = list( rng=c(min=0,max= 1) ) # 
+             ,"sumTot2"   = list( rng=c(min=0,max= 1) ) # 
+             ,"sumTot3"   = list( rng=c(min=0,max= 1) ) #
+        )
+    )
+}
+
+
+
+
 crMName <- "crScrN01R"
 if( TRUE ){
     bCMtxCfg[[crMName]] <- list(  mName = crMName
@@ -76,6 +118,7 @@ if( TRUE ){
         )
     )
 }
+
 
 crMName <- "crScrN02R"
 if( TRUE ){
@@ -162,7 +205,6 @@ if( TRUE ){
         )
     )
 }
-
 
 
 crMName <- "crScrN03R"
@@ -344,43 +386,7 @@ if( TRUE ){
 
 
 
-crMName <- "crScrN02SumClM"
-if( TRUE ){
-    bCMtxCfg[[crMName]] <- list(  mName = crMName
-        ,fCol = list(
-              "sumTotHpn" = list( rng=c(min=3,max= 6) ) # 3~
-             ,"sumTot1"   = list( rng=c(min=1,max= 6) ) # 1~
-             ,"sumTot2"   = list( rng=c(min=0,max= 6) ) # 0~
-             ,"sumTot3"   = list( rng=c(min=0,max= 1) ) # 0~0
-        )
-    )
-}
 
-crMName <- "crScrN03SumClM"
-if( TRUE ){
-    bCMtxCfg[[crMName]] <- list(  mName = crMName
-        #   .reportworkRpt/CutRstCLM_sumTotA.txt 참고
-        ,fCol = list(
-              "sumTotHpn" = list( rng=c(min=0,max= 5) ) #   ~4  예외 : 826
-             ,"sumTot1"   = list( rng=c(min=0,max= 3) ) # 
-             ,"sumTot2"   = list( rng=c(min=0,max= 2) ) # 
-             ,"sumTot3"   = list( rng=c(min=0,max= 1) ) #   ~0  예외 : 884 
-        )
-    )
-}
-
-crMName <- "crScrN04SumClM"
-if( TRUE ){
-    bCMtxCfg[[crMName]] <- list(  mName = crMName
-        #   .reportworkRpt/CutRstCLM_sumTotL.txt 참고
-        ,fCol = list(
-              "sumTotHpn" = list( rng=c(min=0,max= 1) ) #
-             ,"sumTot1"   = list( rng=c(min=0,max= 1) ) # 
-             ,"sumTot2"   = list( rng=c(min=0,max= 1) ) # 
-             ,"sumTot3"   = list( rng=c(min=0,max= 1) ) #
-        )
-    )
-}
 
 
 for( idx in seq_len(length(bCMtxCfg)) ){
