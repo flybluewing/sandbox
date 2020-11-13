@@ -188,8 +188,9 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
             # resultObj$cutRst1Score <- bUtil.getCut1Score( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx )
             # resultObj$cutRst1Score_bS <- cutRst.bS$cutRst1Score
 
-            # resultObj$fHName <- fHName            # bFMtx
-            # resultObj$cut.grp <- cut.grp
+            resultObj$fHName <- fHName
+            
+            # resultObj$cut.grp <- cut.grp            # bFMtx
             # resultObj$scoreMtx.grp <- scoreMtx.grp
 
             aZoidMtx <- matrix(stdZoid ,nrow=1)     # bSMTX
@@ -292,7 +293,7 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
                 B.rpt_bSMtx_multiR( resultLst ,mName ,tgt.scMtx ,rptFile )
             }
 
-            mNameSet <- c("bSMScr01R","bSMScr01E")  # names(bSMtxMCfg)
+            mNameSet <- c("bSMScr01R","bSMScr01E")  # names(bSMtxMCfg) or bSMtxCMLst
             for( crMName in mNameSet ){  # bUtil.cut2() 대체
                 rptFile <- sprintf("Inspec_bSMtx_%s_H%d",crMName,lastH)
                 B.rpt_bSMtx_crScr( resultLst ,mName ,rptFile )

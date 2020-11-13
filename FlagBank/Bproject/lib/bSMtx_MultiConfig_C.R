@@ -91,7 +91,7 @@ if( FALSE ){
 }
 
 crMName <- "crScrN02SumClM"
-if( TRUE ){
+if( FALSE ){
     bCMtxCfg[[crMName]] <- list(  mName = crMName
         ,fCol = list(
               "sumTotHpn" = list( rng=c(min=0,max= 1) )
@@ -191,7 +191,7 @@ if( FALSE ){
 }
 
 crMName <- "crScrN04SumClM"
-if( TRUE ){
+if( FALSE ){
     bCMtxCfg[[crMName]] <- list(  mName = crMName
         ,fCol = list(
               "sumTotHpn" = list( rng=c(min=0,max= 1) )
