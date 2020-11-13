@@ -1049,7 +1049,7 @@ B.rpt_bSMtx_multiR <- function( resultLst ,mName ,tgt.scMtx ,rptFile ){
 
 
 
-B.rpt_bSMtx_crScr <- function( resultLst ,mName ,rptFile ){
+B.rpt_bSMtx_crScr <- function( resultLst ,crMName ,rptFile ){
     fLog <- k.getFlogObj( sprintf("./report/workRpt/%s.txt",rptFile) )
     fLog$fLogStr( sprintf("Start %s",rptFile) ,pTime=T,pAppend=F)
 
@@ -1067,7 +1067,7 @@ B.rpt_bSMtx_crScr <- function( resultLst ,mName ,rptFile ){
         rptMtx <- rbind( rptMtx ,crScrMtx[aIdx,] )
     }
     rownames(rptMtx) <- B.tgtHIdxStr( as.integer(names(resultLst)) )
-    fLog$fLogMtx( t(rptMtx) )
+    fLog$fLogMtx( rptMtx )
 
 
     fLog$fLogStr( "Finish -----" ,pTime=T)

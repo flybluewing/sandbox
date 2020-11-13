@@ -175,7 +175,7 @@ if( TRUE ){
 
 crMName <- "bSMScr02PhEvt"  # phase 별로 evt 갯수 제한.(한 개 phase에서 다수 mName을 대상으로..)
 if( TRUE ){
-    bCMtxLst[[crMName]] <- function( hCRScr=NULL ){
+    bSMtxCMLst[[crMName]] <- function( hCRScr=NULL ){
         # hCRScr : cutRst1Score 히스토리. Rebound 체크 기능은 나중에 구현한다.
         rObj <- list( 	idStr=crMName  ,mName=c("sScore01","sScore02","sScore03","sScore04","sScore05","sScore06","sScore07","sScore08","sScore08")
         )
@@ -259,7 +259,7 @@ if( TRUE ){
 
 crMName <- "bSMScr02Sum"
 if( TRUE ){
-    bCMtxLst[[crMName]] <- function( hCRScr=NULL ){
+    bSMtxCMLst[[crMName]] <- function( hCRScr=NULL ){
 
         rObj <- list( 	idStr=crMName  ,mName=c("sScore01","sScore02","sScore03","sScore04","sScore05","sScore06","sScore07","sScore08","sScore08")
         )
@@ -316,7 +316,7 @@ if( TRUE ){
 
 crMName <- "bSMScr02SumClM"
 if( TRUE ){
-    bCMtxLst[[crMName]] <- function( hCRScr=NULL ){
+    bSMtxCMLst[[crMName]] <- function( hCRScr=NULL ){
 
         rObj <- list( 	idStr=crMName  ,mName=c("sScore01","sScore02","sScore03","sScore04","sScore05","sScore06","sScore07","sScore08","sScore08")
         )
@@ -526,7 +526,7 @@ if( TRUE ){
 
 crMName <- "bSMScr04PhEvt"  # phase 별로 evt 갯수 제한.(한 개 phase에서 다수 mName을 대상으로..)
 if( TRUE ){
-    bCMtxLst[[crMName]] <- function( hCRScr=NULL ){
+    bSMtxCMLst[[crMName]] <- function( hCRScr=NULL ){
         # hCRScr : cutRst1Score 히스토리. Rebound 체크 기능은 나중에 구현한다.
         mName <- c("sScoreLAr13","sScoreLAr24","sScoreLVr13","sScoreLVr24")
         mName <- c( mName ,c("sScoreLAe13","sScoreLAe24","sScoreLVe13","sScoreLVe24") )
@@ -613,7 +613,7 @@ if( TRUE ){
 
 crMName <- "bSMScr04Sum"
 if( TRUE ){
-    bCMtxLst[[crMName]] <- function( hCRScr=NULL ){
+    bSMtxCMLst[[crMName]] <- function( hCRScr=NULL ){
 
         mName <- c("sScoreLAr13","sScoreLAr24","sScoreLVr13","sScoreLVr24")
         mName <- c( mName ,c("sScoreLAe13","sScoreLAe24","sScoreLVe13","sScoreLVe24") )
@@ -671,9 +671,9 @@ if( TRUE ){
 }
 
 
-crMName <- "bSMScr02SumClM"
+crMName <- "bSMScr04SumClM"
 if( TRUE ){
-    bCMtxLst[[crMName]] <- function( hCRScr=NULL ){
+    bSMtxCMLst[[crMName]] <- function( hCRScr=NULL ){
 
         mName <- c("sScoreLAr13","sScoreLAr24","sScoreLVr13","sScoreLVr24")
         mName <- c( mName ,c("sScoreLAe13","sScoreLAe24","sScoreLVe13","sScoreLVe24") )

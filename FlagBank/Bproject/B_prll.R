@@ -296,7 +296,7 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
             mNameSet <- c("bSMScr01R","bSMScr01E")  # names(bSMtxMCfg) or bSMtxCMLst
             for( crMName in mNameSet ){  # bUtil.cut2() 대체
                 rptFile <- sprintf("Inspec_bSMtx_%s_H%d",crMName,lastH)
-                B.rpt_bSMtx_crScr( resultLst ,mName ,rptFile )
+                B.rpt_bSMtx_crScr( resultLst ,crMName ,rptFile )
                 # crCutRst <- bS.cut_M( crMName ,scoreMtx.grp ,cut.grp ,anaOnly=T )
                 # cutRst.bS$cutInfoLst <- append( cutRst.bS$cutInfoLst ,crCutRst$cutInfoLst )
             }
