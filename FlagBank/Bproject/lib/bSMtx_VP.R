@@ -229,7 +229,7 @@ bS.vp_zw <- function( gEnv, aZoidMtx ){
 
     vpObj$getCodeH <- function( stdMI ){
         wLst <- list()
-        wLst$rawTail <- stdMI$rawTail[,1:5]
+        wLst$rawTail <- stdMI$rawTail[,1:5,drop=F]
         wLst$lastRaw <- wLst$rawTail[nrow(wLst$rawTail),]
 
         wLst$cStepTail <- stdMI$cStepTail
