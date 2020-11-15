@@ -350,7 +350,40 @@ if( TRUE ){
     }
 }
 
+crMName <- "bSMScr02HpnCnt"
+if( FALSE ){
+    bSMtxCMLst[[crMName]] <- function( hCRScr=NULL ){
 
+        rObj <- list( 	idStr=crMName  ,mName=c("sScore01","sScore02","sScore03","sScore04","sScore05","sScore06","sScore07","sScore08","sScore08")
+        )
+
+        rObj$fMtxObj <- function( scoreMtx.grp ,cut.grp ,fHName="sfcLate" ){
+
+            tgt.scMtx <- rObj$mName
+            cutRst1Score <- bS.getCut1Score( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx )
+
+            aLen <- length(cutRst1Score$aLst)
+            cName <- c(  "sumTotHpn" ,"sumTot1" ,"sumTot2" ,"sumTot3"
+            )
+            crScrMtx <- matrix( 0, nrow=aLen, ncol=length(cName) )	;colnames(crScrMtx) <- cName
+
+            phNameAll <- names(scoreMtx.grp$basic)
+
+            for( aIdx in 1:aLen ){
+                clM <- bUtil.getClMCnt_cutRst1Score( cutRst1=cutRst1Score$aLst[[aIdx]] ,cfgLst=bsScoreMtxCfg ,mNameGrp=rObj$mName ,fHName )
+                # crScrMtx[aIdx,"sumTotHpn"]  <- sum(clM$sumTot>0)
+                # crScrMtx[aIdx,"sumTot1"]  <- sum(clM$sumTot==1)
+                # crScrMtx[aIdx,"sumTot2"]  <- sum(clM$sumTot==2)
+                # crScrMtx[aIdx,"sumTot3"]  <- sum(clM$sumTot==3)
+
+                # clM$summMtx ,clM$summMtx.reb에 대해서는... 차후에 검토하자. (bSMScr01Sum을 보며 가늠할 것.)
+            }
+
+            return( crScrMtx )
+
+        }
+    }
+}
 
 
 crMName <- "bSMScr04R"  # Cut-Result, Score N, Raw val only

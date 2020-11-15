@@ -1690,6 +1690,106 @@ bUtil.getClM_cutRst1Score <- function( cutRst1 ,cfgLst ,mNameGrp ,fHName=NULL ){
 	return( list(summMtx=summMtxClM,summMtx.reb=summMtx.rebClM,scMtx.sz=scMtx.szClM,sumTot=sumTotClM) )
 }
 
+bUtil.getClMCnt_cutRst1Score <- function( cutRst1 ,cfgLst ,mNameGrp ,fHName=NULL ){
+	# bUtil.getClM_cutRst1Score() 와 유사하나 Max가 아닌 발생 횟수를 조사함.(hName이 아닌 mName 단위)
+
+	summMtxMin <- NULL	;summMtx.rebMin <- NULL	;scMtx.szMin <- NULL
+	wind <- c("min"=0 ,"max"=0)
+
+	summMtxLst <- list()		;summMtx.rebLst <- list()		;scMtx.szLst <- list()
+	sumTotLst <- list()
+
+	if( is.null(fHName) ){
+		fHName <- names(cutRst1)
+	}
+	for( mName in mNameGrp ){
+		for( hName in fHName ){
+
+			summ <- cutRst1[[hName]]$basic[[mName]]$summ
+			cfg <- cfgLst[[mName]]
+			
+			# summMtx
+			if( is.null(summMtxMin) ){
+				summMtxMin <- cfg$summMtx
+				summMtxMin[,] <- 0
+			}
+			clMtx <- bUtil.closeMax_Mtx( scoreMtx=summ$summMtx ,windMtxMin=summMtxMin ,windMtxMax=cfg$summMtx )
+			if( is.null(summMtxLst[[mName]]) ){
+				summMtxLst[[mName]] <- clMtx>0
+			} else {
+				summMtxLst[[mName]] <- summMtxLst[[mName]]>0 | clMtx>0
+			}
+
+			# summMtx.reb
+			if( is.null(summMtx.rebMin) ){
+				summMtx.rebMin <- cfg$summMtx
+				summMtx.rebMin[,] <- 0
+			}
+			clMtx <- bUtil.closeMax_Mtx( scoreMtx=summ$summMtx.reb ,windMtxMin=summMtx.rebMin ,windMtxMax=cfg$summMtx.reb )
+			if( is.null(summMtx.rebLst[[mName]]) ){
+				summMtx.rebLst[[mName]] <- clMtx>0
+			} else {
+				summMtx.rebLst[[mName]] <- summMtx.rebLst[[mName]]>0 | clMtx>0
+			}
+
+			# scMtx.sz
+			if( is.null(scMtx.szMin) ){
+				scMtx.szMin <- cfg$summMtx
+				scMtx.szMin[,] <- 0
+			}
+			clMtx <- bUtil.closeMax_Mtx( scoreMtx=summ$scMtx.sz ,windMtxMin=scMtx.szMin ,windMtxMax=cfg$scMtx.sz )
+			if( is.null(scMtx.szLst[[mName]]) ){
+				scMtx.szLst[[mName]] <- clMtx>0
+			} else {
+				scMtx.szLst[[mName]] <- scMtx.szLst[[mName]]>0 | clMtx>0
+			}
+
+
+
+			# sumTot ----------------------------------------------------------------------
+			#	FCust_H.R의 FCust_stdCut.hIdx() 함수 참고.
+			sumTot <- c("lev2ClM"=0 ,"lev3ClM"=0 ,"summMtxRaw"=0 ,"summMtxEvt"=0 ,"scMtxSzRaw"=0 ,"scMtxSzEvt"=0 )
+			if( TRUE ){
+				botThld		<- summ$fColEvt$closeMaxDistVal - 2
+				eSumLev2	<- sum(summ$fColEvt$fClMMtx[,"lev2ClM"] > botThld )
+				wind["max"] <- cfg$evtMaxFColTot["lev2Max"]
+				sumTot["lev2ClM"] <- bUtil.closeMax( eSumLev2 ,wind=wind )
+				botThld <- summ$fColEvt$closeMaxDistVal - 2
+				eSumLev3 <- sum(summ$fColEvt$fClMMtx[,"lev3ClM"] > botThld )
+				wind["max"] <- cfg$evtMaxFColTot["lev3Max"]
+				sumTot["lev3ClM"] <- bUtil.closeMax( eSumLev3 ,wind=wind )
+
+				wind["max"] <- cfg$summMtx.sum["raw"]
+				sumTot["summMtxRaw"] <- bUtil.closeMax( sum(summ$summMtx["raw",]) ,wind=wind )
+				wind["max"] <- cfg$summMtx.sum["evt"]
+				sumTot["summMtxEvt"] <- bUtil.closeMax( sum(summ$summMtx["evt",]) ,wind=wind )
+
+				wind["max"] <- cfg$scMtx.sz.sum["rebCnt.r"]
+				sumCol <- c("r.ph","r.fCol","r.dblHpnFlg")
+				sumTot["scMtxSzRaw"] <- bUtil.closeMax( sum(summ$scMtx.sz["rebCnt",sumCol]) ,wind=wind )
+
+				wind["max"] <- cfg$scMtx.sz.sum["rebCnt.e"]
+				sumCol <- c("e.ph","e.fCol","e.dblHpnFlg")
+				sumTot["scMtxSzEvt"] <- bUtil.closeMax( sum(summ$scMtx.sz["rebCnt",sumCol]) ,wind=wind )
+			}
+			if( is.null(sumTotLst[[mName]]) ){
+				sumTotLst[[mName]] <- sumTot>0
+			} else {
+				sumTotLst[[mName]] <- sumTotLst[[mName]]>0 | sumTot>0
+			}
+
+		}
+	}
+
+	summMtxClM		<- bUtil.getMtxSumVal_fromLst( summMtxLst )
+	summMtx.rebClM	<- bUtil.getMtxSumVal_fromLst( summMtx.rebLst )
+	scMtx.szClM		<- bUtil.getMtxSumVal_fromLst( scMtx.szLst )
+	sumTotClM		<- bUtil.getMtxSumVal_fromLst( sumTotLst )
+
+	return( list(summMtx=summMtxClM,summMtx.reb=summMtx.rebClM,scMtx.sz=scMtx.szClM,sumTot=sumTotClM) )
+
+}
+
 bUtil.getMtxMaxVal_fromLst <- function( mtxLst ){
 	# mtxLst <- summMtxLst
 	rMtx <- NULL
@@ -1717,6 +1817,19 @@ bUtil.getMtxMinVal_fromLst <- function( mtxLst ){
 		rMtx[mtxFlag] <- mtxLst[[idx]][mtxFlag]
 	}
 	return( rMtx )
+}
+
+bUtil.getMtxSumVal_fromLst <- function( mtxLst ){
+	mtxSum <- NULL
+	for( idx in seq_len(length(mtxLst)) ){
+		if( idx==1 ){
+			mtxSum <- mtxLst[[idx]]
+			next
+		}
+
+		mtxSum <- mtxSum + mtxLst[[idx]]
+	}
+	return( mtxSum )
 }
 
 
