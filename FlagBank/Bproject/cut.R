@@ -57,6 +57,14 @@ tDiff <- Sys.time() - tStmp
 sprintf("hMtxLs,cut.grp    Time cost : %.1f%s",tDiff,units(tDiff))  # 17 min, 59GB RAM
 
 
+# Effective mName. CUT 효과가 좋은 mName(multi_R, multi_C)들의 목록.
+#   이들부터 먼저 처리하여 전체 작업속도를 높이기 위함.
+#   names(bCMtxCfg), names(bFMtxMFltLst) 에 적용할 것.
+EMN <- list()   
+EMN$bFMtx_multiC <- c()
+EMN$bFMtx_multiR <- c()
+EMN$bSMtx_multiC <- c()
+EMN$bSMtx_multiR <- c()
 
 # ----------------------------------------------------------------------------------
 
@@ -304,6 +312,11 @@ for( sfcIdx in 0 ){ # 0:2
 
         # aux() ------------------------------------------------------------------
     }
+
+    # less Effective cutters -----------------------------------------------------
+    # allIdxF <- curH.LECut_bFMtx( gEnv ,allIdxF ,hMtxLst ,fHName ,tgt.scMtx ,EMN ,pllLLog )
+    # allIdxF <- curH.LECut_bSMtx( gEnv ,allIdxF ,hMtxLst ,fHName ,tgt.scMtx ,EMN ,pllLLog )
+
 
     rptStr <- sprintf( "allIdxF size : %d" ,length(allIdxF) )
     prllLog$fLogStr( rptStr, pTime=T)   ;rptStr

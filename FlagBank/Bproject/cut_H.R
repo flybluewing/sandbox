@@ -178,6 +178,19 @@ cutH.bS.Cut <- function( gEnv ,allIdxF ,hMtxLst_bS ,fHName ,tgt.scMtx=NULL ){
 
 
 
+curH.LECut_bFMtx <- function( gEnv ,allIdxF ,hMtxLst ,fHName ,tgt.scMtx ,EMN ,pllLLog ){
+    # QQE:todo
+}
+
+curH.LECut_bSMtx <- function( gEnv ,allIdxF ,hMtxLst ,fHName ,tgt.scMtx ,EMN ,pllLLog ){
+    # QQE:todo
+}
+
+
+
+
+
+
 CRpt.cutRst1Score <- function( aZoidMtx ,filter.grp ,cut.grp ,fHName ,logFile="CRpt_CutRst1Score" ){
     #   aZoidMtx <- gEnv$allZoidMtx[sort(allIdxF),,drop=F]
 
