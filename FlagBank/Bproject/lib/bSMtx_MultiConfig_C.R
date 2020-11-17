@@ -60,6 +60,7 @@ if( TRUE ){
                             ,evt=matrix( c(c(3,3),c(1,2)) ,ncol=2)
              )
         )
+        ,evtMax = c("lev1"=1 ,"lev2"=1 ,"lev3"=1)
     )
 }
 
@@ -247,10 +248,19 @@ if( FALSE ){
     )
 }
 
-for( idx in seq_len(length(bSMtxMCfg)) ){
+
+for( crMName in names( bSMtxMCfg ) ){ # naming 추가.
+
+    for( fcName in names(bSMtxMCfg[[crMName]]$fCol) ){
+        colnames(bSMtxMCfg[[crMName]]$fCol[[fcName]]$evt) <- c("lev","val")
+    }
+
+    if( is.null(bSMtxMCfg[[crMName]]$evtMax) ){
+        #   한 개 phase 내에서의 이벤트 발생 제한.
+        #   "levN"=M    N등급 이상 이벤트 갯수는 M개 이내.
+        #   주의 : 이름이 붙었을 뿐, 사실상 evtMax 순서가 evt 레벨로서 사용된다.
+        bSMtxMCfg[[crMName]]$evtMax     <- c("lev1"=3 ,"lev2"=2 ,"lev3"=1)
+    }
 
 }
-
-
-
 

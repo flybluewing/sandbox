@@ -876,6 +876,7 @@ bS_stdCut.mMtxRow <- function( crMName ){
 
         cfg <- bSMtxMCfg[[ rObj$defId["mName"] ]]
 
+        # each fCol ---------------------------------------------------------------
         cutLst.fCol <- list()
         for( fcName in names(cfg$fCol) ){
             for( aIdx in seq_len(val.len) ){
@@ -897,13 +898,43 @@ bS_stdCut.mMtxRow <- function( crMName ){
             }
         }
 
+        # sm row: evtCnt (cfg ver 2.0) --------------------------------------------
+        cutLst.rowE <- list()
+        for( aIdx in seq_len(val.len) ){
+            if( 2.0 > cfg$ver ) next
+
+            evt.sm <- bFCust.getEvt( crScrMtx[aIdx ,] ,cfg$fCol )
+
+            for( idx in 1:length(cfg$evtMax) ){
+                fndFlag <- idx <= evt.sm["lev",]
+
+                if( cfg$evtMax[idx] < sum(fndFlag,na.rm=T) ){
+
+                    infoStr <- "evtMax"
+                    if( anaMode ){
+                        fndFlag[is.na(fndFlag)] <- FALSE
+                        infoStr <- sprintf("%s(%d)",names(evt.sm["lev",fndFlag]),evt.sm["lev",fndFlag])
+                        infoStr <- sprintf("evtMax - %s",paste(infoStr,collapse=",") )
+                    }
+                    cutLst.rowE[[as.character(aIdx)]] <- list( idx=aIdx ,info=infoStr )
+                    
+                    break
+                }
+            }
+
+        }
+
+
         cutLst <- list()
         if( TRUE ){ 
             # 나중에 rebound 체크 타입 추가할 수 있도록 cutLst와 cLst 별도구분하여 저장.
             idxFCol <- if( length(cutLst.fCol)==0 ) integer(0) else sapply( cutLst.fCol  ,function(p){p$idx} )
-            idxAll <- sort(union(idxFCol,integer(0)))   # 지금은 idxFCol 뿐이지만 나중엔 늘어날 것임.
+            idxRowE <- if( length(cutLst.rowE)==0 ) integer(0) else sapply( cutLst.rowE  ,function(p){p$idx} )
+
+            idxAll <- sort(union(idxFCol,idxRowE))
 
             names(cutLst.fCol)  <- idxFCol
+            names(cutLst.rowE)  <- idxRowE
 
             for( aIdx in idxAll ){
                 idStr <- as.character(aIdx)
@@ -911,6 +942,10 @@ bS_stdCut.mMtxRow <- function( crMName ){
                 if( !is.null(cutLst.fCol[[idStr]]) ){
                     cLst[["crRawFCol"]] <- cutLst.fCol[[idStr]]
                     cLst[["crRawFCol"]]$idObjDesc <- c( typ="crMtxFCol" ,rObj$defId )
+                }
+                if( !is.null(cutLst.rowE[[idStr]]) ){
+                    cLst[["rowE"]] <- cutLst.rowE[[idStr]]
+                    cLst[["rowE"]]$idObjDesc <- c( typ="rowE" ,rObj$defId )
                 }
 
                 cutLst[[idStr]] <- list( idx=aIdx ,cLst=cLst )
