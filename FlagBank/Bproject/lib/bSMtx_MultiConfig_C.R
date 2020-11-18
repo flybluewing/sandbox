@@ -226,7 +226,7 @@ if( TRUE ){
 
 
 crMName <- "bSMScr04R"
-if( FALSE ){
+if( TRUE ){
     bSMtxMCfg[[crMName]] <- list(  mName = crMName
         ,fCol = list(
               "hpn0"    =  list( rng=c(min=10,max=10) )
@@ -311,7 +311,7 @@ if( FALSE ){
     )
 }
 
-crMName <- "crScrN04SumClM"
+crMName <- "bSMScr04SumClM"
 if( FALSE ){
     bSMtxMCfg[[crMName]] <- list(  mName = crMName
         ,fCol = list(

@@ -190,16 +190,16 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
 
             resultObj$fHName <- fHName
             
-            # resultObj$cut.grp <- cut.grp            # bFMtx
-            # resultObj$scoreMtx.grp <- scoreMtx.grp
+            resultObj$cut.grp <- cut.grp            # bFMtx
+            resultObj$scoreMtx.grp <- scoreMtx.grp
 
-            # aZoidMtx <- matrix(stdZoid ,nrow=1)     # bSMTX
-            # phVP.grp <- bS.getPhVPGrp( gEnv.w ,aZoidMtx )
-            # scoreMtx.grp <- bS.getScoreMtx.grp( phVP.grp ,aZoidMtx ,tgt.scMtx=tgt.scMtx )
-            # cut.grp <- bS.getCutGrp( hMtxLst_bS ,tgt.scMtx )
+            aZoidMtx <- matrix(stdZoid ,nrow=1)     # bSMTX
+            phVP.grp <- bS.getPhVPGrp( gEnv.w ,aZoidMtx )
+            scoreMtx.grp <- bS.getScoreMtx.grp( phVP.grp ,aZoidMtx ,tgt.scMtx=tgt.scMtx )
+            cut.grp <- bS.getCutGrp( hMtxLst_bS ,tgt.scMtx )
 
-            # resultObj$scoreMtx.grp <- scoreMtx.grp
-            # resultObj$cut.grp <- cut.grp
+            resultObj$scoreMtx.grp <- scoreMtx.grp
+            resultObj$cut.grp <- cut.grp
 
         }
 
