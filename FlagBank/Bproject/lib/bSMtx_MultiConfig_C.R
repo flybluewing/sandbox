@@ -202,21 +202,21 @@ if( TRUE ){
     )
 }
 
-crMName <- "crScrN02SumClM"
+crMName <- "bSMScr02SumClM"
 if( TRUE ){
     bSMtxMCfg[[crMName]] <- list(  mName=crMName ,ver=2.0
         ,fCol = list(
-              "sumTotHpn" = list( rng=c(min=0,max= 0) 
-                            ,evt=matrix( c(c(3),c(4)) ,ncol=2)
+              "sumTotHpn" = list( rng=c(min=0,max= 4) 
+                            ,evt=matrix( c(c(1,2),c(3,4)) ,ncol=2)
               )
-             ,"sumTot1"   = list( rng=c(min=0,max= 1) 
-                            ,evt=matrix( c(c(3),c(4)) ,ncol=2)
+             ,"sumTot1"   = list( rng=c(min=0,max= 4) 
+                            ,evt=matrix( c(c(1,2),c(3,4)) ,ncol=2)
               )
-             ,"sumTot2"   = list( rng=c(min=0,max= 1) 
-                            ,evt=matrix( c(c(3),c(4)) ,ncol=2)
+             ,"sumTot2"   = list( rng=c(min=0,max= 3) 
+                            ,evt=matrix( c(c(1,2),c(2,3)) ,ncol=2)
               )
              ,"sumTot3"   = list( rng=c(min=0,max= 1) 
-                            ,evt=matrix( c(c(3),c(4)) ,ncol=2)
+                            ,evt=matrix( c(c(2),c(1)) ,ncol=2)
               )
         )
         ,evtMax = c("lev1"=3,"lev2"=2,"lev3"=1)
