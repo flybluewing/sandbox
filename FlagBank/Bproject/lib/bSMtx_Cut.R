@@ -901,7 +901,7 @@ bS_stdCut.mMtxRow <- function( crMName ){
         # sm row: evtCnt (cfg ver 2.0) --------------------------------------------
         cutLst.rowE <- list()
         for( aIdx in seq_len(val.len) ){
-            if( 2.0 > cfg$ver ) next
+            if( is.null(cfg$ver) || (2.0>cfg$ver) ) next
 
             evt.sm <- bFCust.getEvt( crScrMtx[aIdx ,] ,cfg$fCol )
 
