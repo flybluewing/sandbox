@@ -14,10 +14,10 @@ Bprll.getTgtScMtx <- function( ){
 
     #   tgt.scMtx <- c("score1")    ;tgt.scMtx <- c( tgt.scMtx  ,c("sScoreNew") )
     tgt.scMtx <- c( tgt.scMtx  ,c("sScore01","sScore02","sScore03","sScore04","sScore05","sScore06","sScore07","sScore08","sScore09") )
-    tgt.scMtx <- c( tgt.scMtx  ,c("sScoreLAr13","sScoreLAr24","sScoreLVr13","sScoreLVr24") )
-    tgt.scMtx <- c( tgt.scMtx  ,c("sScoreLAe13","sScoreLAe24","sScoreLVe13","sScoreLVe24") )
-    tgt.scMtx <- c( tgt.scMtx  ,c("sScoreLAc13","sScoreLAc24","sScoreLVc13","sScoreLVc24") )
-    tgt.scMtx <- c( tgt.scMtx  ,c("sScoreLAf13","sScoreLAf24","sScoreLVf13","sScoreLVf24") )
+    tgt.scMtx <- c( tgt.scMtx  ,c("sScore0LAr13","sScore0LAr24","sScore0LVr13","sScore0LVr24") )
+    tgt.scMtx <- c( tgt.scMtx  ,c("sScore0LAe13","sScore0LAe24","sScore0LVe13","sScore0LVe24") )
+    tgt.scMtx <- c( tgt.scMtx  ,c("sScore0LAc13","sScore0LAc24","sScore0LVc13","sScore0LVc24") )
+    tgt.scMtx <- c( tgt.scMtx  ,c("sScore0LAf13","sScore0LAf24","sScore0LVf13","sScore0LVf24") )
 
     return( tgt.scMtx )
 }
