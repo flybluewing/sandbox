@@ -186,7 +186,7 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
             #     "sumMtx" 
 
             # resultObj$cutRst1Score <- bUtil.getCut1Score( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx )
-            # resultObj$cutRst1Score_bS <- cutRst.bS$cutRst1Score
+            resultObj$cutRst1Score_bS <- cutRst.bS$cutRst1Score
 
             resultObj$fHName <- fHName
             

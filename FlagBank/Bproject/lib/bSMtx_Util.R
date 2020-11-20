@@ -628,7 +628,7 @@ bS.getCut1Score <- function(  scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=NULL ,log
 } # bS.cut1Score()
 
 
-bS.cut_M <- function( crMName ,scoreMtx.grp ,cut.grp ,anaOnly=F ,logger=NULL ){ # crMName를 사용한 cut
+bS.cut_M <- function( crMName ,scoreMtx.grp ,cut.grp ,fHName ,anaOnly=F  ,logger=NULL ){ # crMName를 사용한 cut
     # 참고사항
     #   - 일단은 crMName 하나씩 처리하는 것으로 하자. 나중에 상태를 봐 가며 다수 cutter 추가 적용.
     #     bCMtxLst 내에서 bUtil.getCut1Score() 실행되는 횟수를 최소화 하기 위함.
@@ -660,7 +660,7 @@ bS.cut_M <- function( crMName ,scoreMtx.grp ,cut.grp ,anaOnly=F ,logger=NULL ){ 
         return( list( surFlag=surFlag ,cutInfoLst=cutInfoLst ) )
     }
 
-    crScrMtx <- mtxMaker$fMtxObj( scoreMtx.grp ,cut.grp )
+    crScrMtx <- mtxMaker$fMtxObj( scoreMtx.grp ,cut.grp ,fHName )
     cutObj <- bS_stdCut.mMtxRow( crMName )
     cRst <- cutObj$cut( crScrMtx )
     if( !anaOnly ){	surFlag <- surFlag & cRst$surFlag   #  차후 다수 필터 적용을 대비한 & 연산

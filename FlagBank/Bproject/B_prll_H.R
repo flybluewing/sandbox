@@ -35,7 +35,7 @@ Bprll.bSCut <- function( gEnv.w ,stdZoid ,hMtxLst_bS ,fHName ,tgt.scMtx ){
         #   anaOnly=TRUE 에서, cutRst$surFlag는 항상 TRUE임을 유의.
 
     for( crMName in names(bSMtxMCfg) ){  # bUtil.cut2() 대체
-        crCutRst <- bS.cut_M( crMName ,scoreMtx.grp ,cut.grp ,anaOnly=T )
+        crCutRst <- bS.cut_M( crMName ,scoreMtx.grp ,cut.grp ,fHName ,anaOnly=T )
         cutRst.bS$cutInfoLst <- append( cutRst.bS$cutInfoLst ,crCutRst$cutInfoLst )
     }
 

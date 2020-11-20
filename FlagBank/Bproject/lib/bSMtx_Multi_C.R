@@ -655,6 +655,7 @@ if( TRUE ){
         rObj <- list( 	idStr=crMName  ,mName=mName )
 
         rObj$fMtxObj <- function( scoreMtx.grp ,cut.grp ,fHName="sfcLate" ){
+            #   일단 sfcLate 만 사용.
             tgt.scMtx <- rObj$mName
             cutRst1Score <- bS.getCut1Score( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx )
 

@@ -286,7 +286,7 @@ if( TRUE ){
 }
 
 crMName <- "bSMScr04E"
-if( FALSE ){
+if( FALSE ){    #   LAV에서 2 이상만 가져오다보니 Evt 체크는 Raw체크와 중복된다.
     bSMtxMCfg[[crMName]] <- list(  mName = crMName
         ,fCol = list(
               "hpn0"    = list( rng=c(min=0,max=0) )
@@ -311,50 +311,101 @@ if( FALSE ){
 }
 
 crMName <- "bSMScr04PhEvt"
-if( FALSE ){
-    bSMtxMCfg[[crMName]] <- list(  mName = crMName
+if( TRUE ){
+    bSMtxMCfg[[crMName]] <- list(  mName=crMName ,ver=2.0
         ,fCol = list(
-              "e3Max"   = list( rng=c(min=0,max=0) )
-             ,"e3MCnt"  = list( rng=c(min=0,max=0) )
-             ,"e2Max"   = list( rng=c(min=0,max=0) )
-             ,"e2MCnt"  = list( rng=c(min=0,max=0) )
-             ,"e1Max"   = list( rng=c(min=0,max=0) )
-             ,"e1MCnt"  = list( rng=c(min=0,max=0) )
-             ,"rebRawMax"   = list( rng=c(min=0,max=0) )
-             ,"rebRawMCnt"  = list( rng=c(min=0,max=0) )
-             ,"rebEvtMax"   = list( rng=c(min=0,max=0) )
-             ,"rebEvtMCnt"  = list( rng=c(min=0,max=0) )
+              "e3Max"   = list( rng=c(min=0,max=2)  
+                            ,evt=matrix( c(c(3,4),c(3,4)) ,ncol=2)
+              )
+             ,"e3MCnt"  = list( rng=c(min=0,max=0)  
+                            ,evt=matrix( c(c(3),c(13)) ,ncol=2)
+              )
+             ,"e2Max"   = list( rng=c(min=0,max=0)  
+                            ,evt=matrix( c(c(3),c(13)) ,ncol=2)
+              )
+             ,"e2MCnt"  = list( rng=c(min=0,max=0)  
+                            ,evt=matrix( c(c(3),c(13)) ,ncol=2)
+              )
+             ,"e1Max"   = list( rng=c(min=0,max=0)  
+                            ,evt=matrix( c(c(3),c(13)) ,ncol=2)
+              )
+             ,"e1MCnt"  = list( rng=c(min=0,max=0)  
+                            ,evt=matrix( c(c(3),c(13)) ,ncol=2)
+              )
+             ,"rebRawMax"   = list( rng=c(min=0,max=0)  
+                            ,evt=matrix( c(c(3),c(13)) ,ncol=2)
+              )
+             ,"rebRawMCnt"  = list( rng=c(min=0,max=0)  
+                            ,evt=matrix( c(c(3),c(13)) ,ncol=2)
+              )
+             ,"rebEvtMax"   = list( rng=c(min=0,max=0)  
+                            ,evt=matrix( c(c(3),c(13)) ,ncol=2)
+              )
+             ,"rebEvtMCnt"  = list( rng=c(min=0,max=0)  
+                            ,evt=matrix( c(c(3),c(13)) ,ncol=2)
+              )
         )
+        ,evtMax = c("lev1"=3,"lev2"=2,"lev3"=1)
     )
 }
 
 crMName <- "bSMScr04Sum"
-if( FALSE ){
-    bSMtxMCfg[[crMName]] <- list(  mName = crMName
+if( TRUE ){
+    bSMtxMCfg[[crMName]] <- list(  mName=crMName ,ver=2.0
         ,fCol = list(
-              "summSumRaw"  = list( rng=c(min=0,max=1) )
-             ,"summSumEvt"  = list( rng=c(min=0,max=1) )
-             ,"summSumOthRaw"   = list( rng=c(min=0,max=1) )
-             ,"summSumOthEvt"   = list( rng=c(min=0,max=1) )
-             ,"summSumRebRaw"   = list( rng=c(min=0,max=1) )
-             ,"summSumRebEvt"   = list( rng=c(min=0,max=1) )
-             ,"summSumRebOthRaw"= list( rng=c(min=0,max=1) )
-             ,"summSumRebOthEvt"= list( rng=c(min=0,max=1) )
-             ,"szSumRebCnt" = list( rng=c(min=0,max=1) )
-             ,"szSumRebDup" = list( rng=c(min=0,max=1) )
+              "summSumRaw"  = list( rng=c(min=0,max=0)  
+                            ,evt=matrix( c(c(3,4),c(3,4)) ,ncol=2)
+              )
+             ,"summSumEvt"  = list( rng=c(min=0,max=0)  
+                            ,evt=matrix( c(c(3,4),c(3,4)) ,ncol=2)
+              )
+             ,"summSumOthRaw"   = list( rng=c(min=0,max=0)  
+                            ,evt=matrix( c(c(3,4),c(3,4)) ,ncol=2)
+              )
+             ,"summSumOthEvt"   = list( rng=c(min=0,max=0)  
+                            ,evt=matrix( c(c(3,4),c(3,4)) ,ncol=2)
+              )
+             ,"summSumRebRaw"   = list( rng=c(min=0,max=0)  
+                            ,evt=matrix( c(c(3,4),c(3,4)) ,ncol=2)
+              )
+             ,"summSumRebEvt"   = list( rng=c(min=0,max=0)  
+                            ,evt=matrix( c(c(3,4),c(3,4)) ,ncol=2)
+              )
+             ,"summSumRebOthRaw"= list( rng=c(min=0,max=0)  
+                            ,evt=matrix( c(c(3,4),c(3,4)) ,ncol=2)
+              )
+             ,"summSumRebOthEvt"= list( rng=c(min=0,max=0)  
+                            ,evt=matrix( c(c(3,4),c(3,4)) ,ncol=2)
+              )
+             ,"szSumRebCnt" = list( rng=c(min=0,max=0)  
+                            ,evt=matrix( c(c(3,4),c(3,4)) ,ncol=2)
+              )
+             ,"szSumRebDup" = list( rng=c(min=0,max=0)  
+                            ,evt=matrix( c(c(3,4),c(3,4)) ,ncol=2)
+              )
         )
+        ,evtMax = c("lev1"=3,"lev2"=2,"lev3"=1)
     )
 }
 
 crMName <- "bSMScr04SumClM"
-if( FALSE ){
-    bSMtxMCfg[[crMName]] <- list(  mName = crMName
+if( TRUE ){
+    bSMtxMCfg[[crMName]] <- list(  mName=crMName ,ver=2.0
         ,fCol = list(
-              "sumTotHpn" = list( rng=c(min=0,max= 1) )
-             ,"sumTot1"   = list( rng=c(min=0,max= 1) )
-             ,"sumTot2"   = list( rng=c(min=0,max= 1) )
-             ,"sumTot3"   = list( rng=c(min=0,max= 1) )
+              "sumTotHpn" = list( rng=c(min=0,max= 1)  
+                            ,evt=matrix( c(c(3,3),c(2,3)) ,ncol=2)
+              )
+             ,"sumTot1"   = list( rng=c(min=0,max= 1)  
+                            ,evt=matrix( c(c(3,4),c(3,4)) ,ncol=2)
+              )
+             ,"sumTot2"   = list( rng=c(min=0,max= 0)  
+                            ,evt=matrix( c(c(3,4),c(3,4)) ,ncol=2)
+              )
+             ,"sumTot3"   = list( rng=c(min=0,max= 0)  
+                            ,evt=matrix( c(c(3,4),c(3,4)) ,ncol=2)
+              )
         )
+        ,evtMax = c("lev1"=3,"lev2"=2,"lev3"=1)
     )
 }
 
