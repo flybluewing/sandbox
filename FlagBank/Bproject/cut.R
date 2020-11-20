@@ -60,7 +60,7 @@ sprintf("hMtxLs,cut.grp    Time cost : %.1f%s",tDiff,units(tDiff))  # 17 min, 59
 # Effective mName. CUT 효과가 좋은 mName(multi_R, multi_C)들의 목록.
 #   이들부터 먼저 처리하여 전체 작업속도를 높이기 위함.
 #   names(bCMtxCfg), names(bFMtxMFltLst) 에 적용할 것.
-EMN <- list()   
+EMN <- list()
 EMN$bFMtx_multiC <- c()
 EMN$bFMtx_multiR <- c()
 EMN$bSMtx_multiC <- c()
@@ -96,7 +96,7 @@ for( sfcIdx in 0 ){ # 0:2
     #   
     surFlag <- rep( T ,length(allIdxF) )
     bLst <- k.blockLst( length(allIdxF) ,100*ifelse(testMode,5,400) )
-    prllLog$fLogStr( sprintf("start cut0 for group%d. bLst size %d",sfcIdx,length(bLst)), pTime=T)
+    prllLog$fLogStr( sprintf("start cut0 for group%d 1st. bLst size %d",sfcIdx,length(bLst)), pTime=T)
 
     sfExport("fHName")  ;sfExport("allIdxF")    ;sfExport("cutH.InitialCut")
     resultLst <- sfLapply( bLst ,function( blk ){
@@ -134,7 +134,7 @@ for( sfcIdx in 0 ){ # 0:2
     #   
     surFlag <- rep( T ,length(allIdxF) )
     bLst <- k.blockLst( length(allIdxF) ,100*ifelse(testMode,5,50) )
-    prllLog$fLogStr( sprintf("start cut0 for group%d. bLst size %d",sfcIdx,length(bLst)), pTime=T)
+    prllLog$fLogStr( sprintf("start cut0 for group%d 2nd. bLst size %d",sfcIdx,length(bLst)), pTime=T)
 
     sfExport("fHName")  ;sfExport("allIdxF")    ;sfExport("cutH.InitialCut")
     resultLst <- sfLapply( bLst ,function( blk ){
@@ -165,7 +165,7 @@ for( sfcIdx in 0 ){ # 0:2
         surFlag[ blk["start"]:blk["end"] ] <- resultLst[[idx]]$surFlag
     }
     allIdxF <- allIdxF[surFlag]
-    logger$fLogStr(sprintf("   - bUtil.cut1( byMethod 1st )   final size :%7d",length(allIdxF)),pTime=T)
+    logger$fLogStr(sprintf("   - bUtil.cut1( byMethod 2st )   final size :%7d",length(allIdxF)),pTime=T)
     if( saveMidResult ) save( allIdxF ,file=sprintf("./save/cutResult/Obj_allIdxF%d_cut0_byM2nd_%d.save",sfcIdx,lastH) )
     rptStr <- sprintf( "allIdxF size : %dk" ,length(allIdxF) %/% 1000 )
     prllLog$fLogStr( rptStr, pTime=T)   ;rptStr
@@ -301,11 +301,9 @@ for( sfcIdx in 0 ){ # 0:2
     if( TRUE ){
 
         # cutH.bS.Cut() ------------------------------------------------------------------
-        cutRst.bS <- cutH.bS.Cut( gEnv ,allIdxF ,hMtxLst_bS ,fHName ,tgt.scMtx=tgt.scMtx )
-        surFlag <- cutRst.bS$surFlag
-        allIdxF <- allIdxF[surFlag]
+        allIdxF <- cutH.bS.Cut( gEnv ,allIdxF ,hMtxLst_bS ,fHName ,tgt.scMtx=tgt.scMtx ,prllLog )
 
-        prllLog$fLogStr(    sprintf("   - cutH.bS.Cut( )   survival size :%7d  time:%.1f%s",length(allIdxF),cutRst.bS$tDiff,units(cutRst.bS$tDiff) )
+        prllLog$fLogStr(    sprintf("   - cutH.bS.Cut( )   final survival size :%7d",length(allIdxF))
                             ,pTime=T
         )
         if( saveMidResult ) save( allIdxF ,file=sprintf("./save/cutResult/Obj_allIdxF%d_bScut_%d.save",sfcIdx,lastH) )

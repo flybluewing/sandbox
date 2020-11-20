@@ -157,29 +157,44 @@ cutH.bC.Cut <- function( gEnv ,allIdxF ,blk ,filter.grp ,tgt.scMtx ,logger=NULL 
 }
 
 
-cutH.bS.Cut <- function( gEnv ,allIdxF ,hMtxLst_bS ,fHName ,tgt.scMtx=NULL ){
+cutH.bS.Cut <- function( gEnv ,allIdxF ,hMtxLst_bS ,fHName ,tgt.scMtx=NULL ,prllLog ){
     #  gEnv ,stdZoid ,hMtxLst_bS ,fHName 
 
     tStmp <- Sys.time()
 
     aZoidMtx <- gEnv$allZoidMtx[allIdxF ,,drop=F]
     phVP.grp <- bS.getPhVPGrp( gEnv ,aZoidMtx )
-
     cut.grp <- bS.getCutGrp( hMtxLst_bS ,tgt.scMtx=tgt.scMtx )  # curHMtxLst 적용 추가 필요.
-
     scoreMtx.grp <- bS.getScoreMtx.grp( phVP.grp ,aZoidMtx ,tgt.scMtx=tgt.scMtx )
 
     cutRst.bS <- bS.cut( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx ,anaOnly=F ) 
+    allIdxF <- allIdxF[cutRst.bS$surFlag]
+    tDiff <- Sys.time() - tStmp
+    prllLog$fLogStr(    sprintf("   - cutH.bS.Cut -- bS.cut()  survival size :%7d  time:%.1f%s",length(allIdxF),tDiff,units(tDiff) )
+                        ,pTime=T
+    )
 
-    # Todo : bS.cut_M() 적용.
-    # for( crMName in names(bSMtxMCfg) ){  # bUtil.cut2() 대체
-    #     crCutRst <- bS.cut_M( crMName ,scoreMtx.grp ,cut.grp ,fHName ,anaOnly=T )
-    #     cutRst.bS$cutInfoLst <- append( cutRst.bS$cutInfoLst ,crCutRst$cutInfoLst )
-    # }
 
-    cutRst.bS$tDiff <- Sys.time() - tStmp
+    # 
+    for( crMName in names(bSMtxMCfg) ){
+        aZoidMtx <- gEnv$allZoidMtx[allIdxF ,,drop=F]
+        phVP.grp <- bS.getPhVPGrp( gEnv ,aZoidMtx )
+        cut.grp <- bS.getCutGrp( hMtxLst_bS ,tgt.scMtx=tgt.scMtx )  # curHMtxLst 적용 추가 필요.
+        scoreMtx.grp <- bS.getScoreMtx.grp( phVP.grp ,aZoidMtx ,tgt.scMtx=tgt.scMtx )
 
-    return( cutRst.bS )
+        crCutRst <- bS.cut_M( crMName ,scoreMtx.grp ,cut.grp ,fHName ,anaOnly=T )
+        allIdxF <- allIdxF[crCutRst$surFlag]
+        prllLog$fLogStr(    sprintf("   - cutH.bS.Cut -- bS.cut_M(%s)  survival size :%7d  ",crMName,length(allIdxF))
+                            ,pTime=T
+        )
+    }
+    tDiff <- Sys.time() - tStmp
+    prllLog$fLogStr(    sprintf("   - cutH.bS.Cut -- bS.cut_M() finish  survival size :%7d  time:%.1f%s",length(allIdxF),tDiff,units(tDiff) )
+                        ,pTime=T
+    )
+
+
+    return( allIdxF )
 }
 
 
