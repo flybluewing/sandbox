@@ -1,6 +1,6 @@
 source("header.r")  ;source("B_H.R")    ;source("cut_H.R")
 
-lastH <- 934            # lastH <- 894      # °³¹ß»ùÇÃ 894_1 899_1 934_1(?)
+lastH <- 937            # lastH <- 894      # °³¹ß»ùÇÃ 894_1 899_1 934_1(?)
 tgt.scMtx <- NULL
 testMode <- F            #check
 prllNum <- 5

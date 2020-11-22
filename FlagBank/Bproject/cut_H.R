@@ -182,7 +182,7 @@ cutH.bS.Cut <- function( gEnv ,allIdxF ,hMtxLst_bS ,fHName ,tgt.scMtx=NULL ,prll
         cut.grp <- bS.getCutGrp( hMtxLst_bS ,tgt.scMtx=tgt.scMtx )  # curHMtxLst 적용 추가 필요.
         scoreMtx.grp <- bS.getScoreMtx.grp( phVP.grp ,aZoidMtx ,tgt.scMtx=tgt.scMtx )
 
-        crCutRst <- bS.cut_M( crMName ,scoreMtx.grp ,cut.grp ,fHName ,anaOnly=T )
+        crCutRst <- bS.cut_M( crMName ,scoreMtx.grp ,cut.grp ,fHName )
         allIdxF <- allIdxF[crCutRst$surFlag]
         prllLog$fLogStr(    sprintf("   - cutH.bS.Cut -- bS.cut_M(%s)  survival size :%7d  ",crMName,length(allIdxF))
                             ,pTime=T
