@@ -74,6 +74,46 @@ if( FALSE ){
 }
 
 
+mName <- "sScore02"
+if( FALSE ){
+
+    bsScrExtMtxCfg[[mName]] <- list()
+
+    bsScrExtMtxCfg[[mName]]$filter01 <- list(
+        mName = mName   ,style=c( freqZero=TRUE )
+        ,fCol = list(
+            "xxx"=list( rng=matrix( c(0,0 ,0,0) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
+                            ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        ) 
+            ,"xxx"=list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                            ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        )
+        )
+        ,evtMax = NULL        ,rowReb = NULL                        ,rowRebDup=NULL
+        ,summMtx = NULL       ,summMtx.reb = NULL                   ,summMtx.sum = NULL
+        ,scMtx.sz = NULL      ,scMtx.sz.sum = NULL
+        ,isHard=NULL  # use default
+    )
+
+    bsScrExtMtxCfg[[mName]]$filter02 <- list(
+        mName = mName   ,style=c( freqZero=TRUE )
+        ,fCol = list(
+            "xxx"=list( rng=matrix( c(0,0 ,0,0) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
+                            ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        ) 
+            ,"xxx"=list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                            ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        )
+        )
+        ,evtMax = NULL        ,rowReb = NULL                        ,rowRebDup=NULL
+        ,summMtx = NULL       ,summMtx.reb = NULL                   ,summMtx.sum = NULL
+        ,scMtx.sz = NULL      ,scMtx.sz.sum = NULL
+        ,isHard=NULL  # use default
+    )
+
+}
+
+
 mName <- "sScore09"
 if( FALSE ){
 

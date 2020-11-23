@@ -129,7 +129,7 @@ if( TRUE ){
             matFlag <- all( score[c("inc.r","inc.c")]==score[c("inc.r2","inc.c2")] ) && all( score[c("inc.r","inc.c")]==score[c("inc.r3","inc.c3")] )
             if( matFlag ){
                 #   그냥 3개 컬럼 매치 여부로만 하면 빈도가 높을 것 같아, 매치되는 총 갯수로 한다.
-                rVal["matCntInc12"]  <- sum(score[c("inc.r","inc.c")])
+                rVal["matCntInc123"]  <- sum(score[c("inc.r","inc.c")])
             }
 
             return( rVal )
