@@ -628,6 +628,7 @@ B.rptFMtx_ext <- function( resultLst ,mName ,extFltName="filter01" ,rptFile ){
         aIdx <- 1
 
         scoreMtx.grp <- resultLst[[hIdx]]$scoreMtx.grp
+        cut.grp <- resultLst[[hIdx]]$cut.grp
         for( pName in names(cut.grp$cutterExtLst[[hName]][[mName]]$stdCut) ){
             mtxMaker <- bFMtxExtFltLst[[mName]][[extFltName]]
             extScore <- mtxMaker$getScore( scoreMtx.grp$basic[[pName]][[mName]]$scoreMtx[1,] )
