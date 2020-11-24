@@ -9,35 +9,35 @@ if( FALSE ){
     bsScrExtMtxCfg[[mName]]$filter01 <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
-            "remN.num"=list( rng=matrix( c(0,1 ,0,2) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
+            "remN.num"=list( rng=matrix( c(0,0 ,0,0) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
                             ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
                         ) 
-            ,"remN.len.tot"=list( rng=matrix( c(0,1 ,0,2) ,ncol=2 )
+            ,"remN.len.tot"=list( rng=matrix( c(0,2 ,0,4) ,ncol=2 )
+                            ,evt=matrix( c(c(2,2,3,3,3),c(2,3,4,5,6)) ,ncol=2)
+                        )
+            ,"remN.len.val"=list( rng=matrix( c(0,2 ,0,2) ,ncol=2 )
                             ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
                         )
-            ,"remN.len.val"=list( rng=matrix( c(0,1 ,0,2) ,ncol=2 )
+            ,"cN.num"=list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
                             ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
                         )
-            ,"cN.num"=list( rng=matrix( c(0,1 ,0,2) ,ncol=2 )
+            ,"cN.len.tot"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3,3),c(2,3,4,5,6)) ,ncol=2)
+                        )
+            ,"cN.len.val"=list( rng=matrix( c(0,2 ,0,2) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3),c(2,3,4)) ,ncol=2)
+                        )
+            ,"fN.num"=list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
                             ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
                         )
-            ,"cN.len.tot"=list( rng=matrix( c(0,1 ,0,2) ,ncol=2 )
-                            ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+            ,"fN.len.tot"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3,3),c(2,3,4,5,6)) ,ncol=2)
                         )
-            ,"cN.len.val"=list( rng=matrix( c(0,1 ,0,2) ,ncol=2 )
-                            ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
-                        )
-            ,"fN.num"=list( rng=matrix( c(0,1 ,0,2) ,ncol=2 )
-                            ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
-                        )
-            ,"fN.len.tot"=list( rng=matrix( c(0,1 ,0,2) ,ncol=2 )
-                            ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
-                        )
-            ,"fN.len.val"=list( rng=matrix( c(0,1 ,0,2) ,ncol=2 )
+            ,"fN.len.val"=list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
                             ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
                         )
         )
-        ,evtMax = NULL        ,rowReb = NULL                        ,rowRebDup=NULL
+        ,evtMax = NULL        ,rowReb = c(rawMin=1,lowE=1,rareE=1)  ,rowRebDup=NULL
         ,summMtx = NULL       ,summMtx.reb = NULL                   ,summMtx.sum = NULL
         ,scMtx.sz = NULL      ,scMtx.sz.sum = NULL
         ,isHard=NULL  # use default
@@ -47,25 +47,25 @@ if( FALSE ){
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
             "evt0.num"=list( rng=matrix( c(0,1 ,0,2) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
-                            ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                            ,evt=matrix( c(c(2,3,3),c(2,3,4)) ,ncol=2)
                         ) 
             ,"evt0.len.tot"=list( rng=matrix( c(0,1 ,0,2) ,ncol=2 )
-                            ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                            ,evt=matrix( c(c(2,3,3),c(2,3,4)) ,ncol=2)
                         )
-            ,"evt0.len.val"=list( rng=matrix( c(0,1 ,0,2) ,ncol=2 )
-                            ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+            ,"evt0.len.val"=list( rng=matrix( c(0,1 ,0,3) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3),c(2,3,4)) ,ncol=2)
                         )
             ,"evt1.num"=list( rng=matrix( c(0,1 ,0,2) ,ncol=2 )
-                            ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                            ,evt=matrix( c(c(2,3,3),c(2,3,4)) ,ncol=2)
                         )
-            ,"evt1.len.tot"=list( rng=matrix( c(0,1 ,0,2) ,ncol=2 )
-                            ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+            ,"evt1.len.tot"=list( rng=matrix( c(0,1 ,0,3) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3),c(2,3,4)) ,ncol=2)
                         )
             ,"evt1.len.val"=list( rng=matrix( c(0,1 ,0,2) ,ncol=2 )
-                            ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                            ,evt=matrix( c(c(2,3,3),c(2,3,4)) ,ncol=2)
                         )
         )
-        ,evtMax = NULL        ,rowReb = NULL                        ,rowRebDup=NULL
+        ,evtMax = NULL        ,rowReb = c(rawMin=1,lowE=1,rareE=1)  ,rowRebDup=NULL
         ,summMtx = NULL       ,summMtx.reb = NULL                   ,summMtx.sum = NULL
         ,scMtx.sz = NULL      ,scMtx.sz.sum = NULL
         ,isHard=NULL  # use default
@@ -82,10 +82,31 @@ if( FALSE ){
     bsScrExtMtxCfg[[mName]]$filter01 <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
-            "xxx"=list( rng=matrix( c(0,0 ,0,0) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
-                            ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+            "rebCN.r"=list( rng=matrix( c(0,0 ,0,5) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
+                            ,evt=matrix( c(c(3,3,3,5),c(2,3,4,5)) ,ncol=2)
                         ) 
-            ,"xxx"=list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+            ,"rebCN.c"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3),c(2,3,4)) ,ncol=2)
+                        )
+            ,"rebCN.f"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                            ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        )
+            ,"incN.r"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                            ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        )
+            ,"incN.c"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                            ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        )
+            ,"incN.f"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                            ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        )
+            ,"matCntRebC12"=list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                            ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        )
+            ,"matCntInc12"=list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                            ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        )
+            ,"matCntInc123"=list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
                             ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
                         )
         )
@@ -98,10 +119,16 @@ if( FALSE ){
     bsScrExtMtxCfg[[mName]]$filter02 <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
-            "xxx"=list( rng=matrix( c(0,0 ,0,0) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
+            "evtRebC"=list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
                             ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
-                        ) 
-            ,"xxx"=list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                        )
+            ,"evtRebC2"=list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                            ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        )
+            ,"evtInc"=list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                            ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                        )
+            ,"evtInc2"=list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
                             ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
                         )
         )
@@ -159,4 +186,90 @@ if( FALSE ){
 }
 
 
+
+for( mName in names( bsScrExtMtxCfg ) ){              # mName <- names( bsScrExtMtxCfg )[1]
+    for( fName in names(bsScrExtMtxCfg[[mName]]) ){   # fName <- names(bsScrExtMtxCfg[[mName]])[1]
+        # bsScrExtMtxCfg[[mName]][[fName]]
+        for( fcName in names(bsScrExtMtxCfg[[mName]][[fName]]$fCol) ){    # fcName <- names(bsScrExtMtxCfg[[mName]][[fName]]$fCol)[1]
+            colnames(bsScrExtMtxCfg[[mName]][[fName]]$fCol[[fcName]]$rng) <- c("lev1","lev2")
+            rownames(bsScrExtMtxCfg[[mName]][[fName]]$fCol[[fcName]]$rng) <- c("min","max")
+
+            colnames(bsScrExtMtxCfg[[mName]][[fName]]$fCol[[fcName]]$evt) <- c("lev","val")
+
+            if( is.null(bsScrExtMtxCfg[[mName]][[fName]]$fCol[[fcName]]$evtMax.fCol ) ){
+                # fCol 별 전체 phase 대상으로 evt 발생 제한.
+                bsScrExtMtxCfg[[mName]][[fName]]$fCol[[fcName]]$evtMax.fCol <- c( minLev=2 ,maxHpn=1 )
+            }
+        }
+
+        if( is.null(bsScrExtMtxCfg[[mName]][[fName]]$evtMax) ){
+            #   한 개 phase 내에서의 이벤트 발생 제한.
+            #   "minLev"이상 이벤트가 maxHpn 보다 초과할 때 Cut
+            evtMax <- matrix( c(2,1,3,0 ,2,2,3,1)
+                                ,byrow=T ,ncol=4
+                                ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
+                            )
+            bsScrExtMtxCfg[[mName]][[fName]]$evtMax     <- evtMax
+        }
+        if( is.null(bsScrExtMtxCfg[[mName]][[fName]]$rowReb) ){
+            bsScrExtMtxCfg[[mName]][[fName]]$rowReb <- c( rawMin=1 ,lowE=2 ,rareE=1 )
+        }
+        if( is.null(bsScrExtMtxCfg[[mName]][[fName]]$rowRebDup) ){  # 조건 : >=
+            bsScrExtMtxCfg[[mName]][[fName]]$rowRebDup <- c( lowE=1 ,rareE=1 )
+        }
+        if( is.null(bsScrExtMtxCfg[[mName]][[fName]]$summMtx) ){
+            #     $summMtx    all ph fCol phReb xyCnt.fCol xyCnt.phase
+            #             raw   0  0    0     0          0           0
+            #             evt   0  0    0     0          0           0
+            # cName <- c( "all" ,"ph" ,"fCol" ,"phReb" ,"xyCnt.fCol" ,"xyCnt.phase" )
+            # rName <- c( "raw" ,"evt" )
+            thldVal <- c(   1 ,2 ,2 ,2 ,2 ,1    # xyCnt.fCol, xyCnt.fCol은 
+                            ,1 ,2 ,2 ,2 ,2 ,1 
+                        )
+            bsScrExtMtxCfg[[mName]][[fName]]$summMtx <- matrix( thldVal ,byrow=T
+                        ,ncol=length(summMtxName$cName) ,nrow=length(summMtxName$rName)
+                        ,dimnames=list(summMtxName$rName,summMtxName$cName)
+                    )
+        }
+        if( is.null(bsScrExtMtxCfg[[mName]][[fName]]$summMtx.reb ) ){
+            #     $summMtx.reb    all ph fCol phReb xyCnt.fCol xyCnt.phase
+            #                 raw   0  0    0     0          0           0
+            #                 evt   0  0    0     0          0           0
+            cName <- c( "all" ,"ph" ,"fCol" ,"phReb" ,"xyCnt.fCol" ,"xyCnt.phase" )
+            rName <- c( "raw" ,"evt" )
+            thldVal <- c(   1 ,1 ,1 ,1 ,1 ,1    # xyCnt.fCol, xyCnt.fCol은 봐가며 조절해야 할 듯.
+                            ,1 ,1 ,1 ,1 ,1 ,1 
+                        )
+            bsScrExtMtxCfg[[mName]][[fName]]$summMtx.reb <- matrix( thldVal ,byrow=T
+                        ,ncol=length(cName) ,nrow=length(rName) ,dimnames=list(rName,cName)
+                    )
+        }
+        if( is.null(bsScrExtMtxCfg[[mName]][[fName]]$scMtx.sz ) ){
+            #     $scMtx.sz      r.ph r.fCol r.dblHpnFlg e.ph e.fCol e.dblHpnFlg
+            #             rebCnt    0      0           0    0      0           0
+            #             rebDup    0      0           0    0      0           0
+            # cName <- c( "r.ph" ,"r.fCol" ,"r.dblHpnFlg" ,"e.ph" ,"e.fCol" ,"e.dblHpnFlg" )
+            # rName <- c( "rebCnt" ,"rebDup" )
+            # thldVal <- c(   2 ,2 ,1 ,2 ,2 ,1
+            #                 ,1 ,1 ,1 ,1 ,1 ,1 
+            #             )
+            thldVal <- c(    1 ,1 ,1 ,1 ,1 ,1
+                            ,1 ,1 ,1 ,1 ,1 ,1 
+                        )
+            bsScrExtMtxCfg[[mName]][[fName]]$scMtx.sz <- matrix( thldVal ,byrow=T
+                        ,ncol=length(scMtx.szName$cName) ,nrow=length(scMtx.szName$rName) 
+                        ,dimnames=list(scMtx.szName$rName,scMtx.szName$cName)
+                    )
+        }
+        if( is.null(bsScrExtMtxCfg[[mName]][[fName]]$summMtx.sum) ){
+            # 개개 cut은 피했지만 전체 발생 총합은 한계를 넘는 경우.
+            bsScrExtMtxCfg[[mName]][[fName]]$summMtx.sum <- c(raw=2 ,evt=2)
+        }
+        if( is.null(bsScrExtMtxCfg[[mName]][[fName]]$scMtx.sz.sum ) ){
+            #   rebCnt.r = r.ph+r.fCol    rebCnt.e = e.ph+e.fCol
+            bsScrExtMtxCfg[[mName]][[fName]]$scMtx.sz.sum <- c(rebCnt.r=2 ,rebCnt.e=2)
+        }
+
+    }   # fName
+}   # mName
 

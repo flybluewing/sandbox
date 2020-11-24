@@ -185,21 +185,21 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
             #     "summMtxRaw"     "summMtxEvt"     "summMtx.RebRaw" "summMtx.RebEvt" "szMtxCnt"       "szMtxDup"       
             #     "sumMtx" 
 
-            resultObj$cutRst1Score <- bUtil.getCut1Score( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx )
+            # resultObj$cutRst1Score <- bUtil.getCut1Score( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx )
             # resultObj$cutRst1Score_bS <- cutRst.bS$cutRst1Score
 
             resultObj$fHName <- fHName
 
-            resultObj$cut.grp <- cut.grp            # bFMtx
-            resultObj$scoreMtx.grp <- scoreMtx.grp
-
-            # aZoidMtx <- matrix(stdZoid ,nrow=1)     # bSMTX
-            # phVP.grp <- bS.getPhVPGrp( gEnv.w ,aZoidMtx )
-            # scoreMtx.grp <- bS.getScoreMtx.grp( phVP.grp ,aZoidMtx ,tgt.scMtx=tgt.scMtx )
-            # cut.grp <- bS.getCutGrp( hMtxLst_bS ,tgt.scMtx )
-
+            # resultObj$cut.grp <- cut.grp            # bFMtx
             # resultObj$scoreMtx.grp <- scoreMtx.grp
-            # resultObj$cut.grp <- cut.grp
+
+            aZoidMtx <- matrix(stdZoid ,nrow=1)     # bSMTX
+            phVP.grp <- bS.getPhVPGrp( gEnv.w ,aZoidMtx )
+            scoreMtx.grp <- bS.getScoreMtx.grp( phVP.grp ,aZoidMtx ,tgt.scMtx=tgt.scMtx )
+            cut.grp <- bS.getCutGrp( hMtxLst_bS ,tgt.scMtx )
+
+            resultObj$scoreMtx.grp <- scoreMtx.grp
+            resultObj$cut.grp <- cut.grp
 
         }
 

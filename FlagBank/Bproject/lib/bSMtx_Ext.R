@@ -58,7 +58,7 @@ if( TRUE ){
             #   score <- scoreMtx.grp$basic$basic$score1$scoreMtx[1,]
             rVal <- rep(0,length(fltObj$mInfo$cName))  ;names(rVal) <- fltObj$mInfo$cName
 
-            scrEvt <- bFCust.getEvt( score ,scoreMtxCfg[[fltObj$mInfo$mName]]$fCol )["lev",]
+            scrEvt <- bFCust.getEvt( score ,bsScoreMtxCfg[[fltObj$mInfo$mName]]$fCol )["lev",]
 
             rVal["evt0.num"]    <- sum(scrEvt[c("rem0.num","c0.num","f0.num")] ,na.rm=T)
             rVal["evt0.len.tot"]<- sum(scrEvt[c("rem0.len.tot","c0.len.tot","f0.len.tot")] ,na.rm=T)
@@ -88,7 +88,7 @@ if( TRUE ){
 }
 
 mName <- "sScore02"
-if( FALSE ){
+if( TRUE ){
     bSMtxExtFltLst[[mName]] <- list()
         # rebC.r  rebC.c  rebC.f 
         # rebC2.r rebC2.c rebC2.f   
@@ -152,9 +152,8 @@ if( FALSE ){
             #   score <- scoreMtx.grp$basic$basic$score1$scoreMtx[1,]
             rVal <- rep(0,length(fltObj$mInfo$cName))  ;names(rVal) <- fltObj$mInfo$cName
 
-            scrEvt <- bFCust.getEvt( score ,scoreMtxCfg[[fltObj$mInfo$mName]]$fCol )["lev",]
+            scrEvt <- bFCust.getEvt( score ,bsScoreMtxCfg[[fltObj$mInfo$mName]]$fCol )["lev",]
 
-            rVal["evtRebLR"]    <- sum(scrEvt[c("rebL","rebR")] ,na.rm=T)
             rVal["evtRebC"]     <- sum(scrEvt[c("rebC.r","rebC.c","rebC.f")] ,na.rm=T)
             rVal["evtRebC2"]    <- sum(scrEvt[c("rebC2.r","rebC2.c","rebC2.f")] ,na.rm=T)
             rVal["evtInc"]      <- sum(scrEvt[c("inc.r","inc.c","inc.f")] ,na.rm=T)
@@ -199,7 +198,7 @@ if( FALSE ){
             #   score <- scoreMtx.grp$basic$basic[[mName]]$scoreMtx[1,]
             rVal <- rep(0,length(fltObj$mInfo$cName))  ;names(rVal) <- fltObj$mInfo$cName
 
-            scrEvt <- bFCust.getEvt( score ,scoreMtxCfg[[fltObj$mInfo$mName]]$fCol )["lev",]
+            scrEvt <- bFCust.getEvt( score ,bsScoreMtxCfg[[fltObj$mInfo$mName]]$fCol )["lev",]
 
             rVal["rebPtnESum"]  <- sum(scrEvt[c("rebPtn.1","rebPtn.n")] ,na.rm=T)
             rVal["snR3E"]       <- sum(scrEvt[c("snR3"    )] ,na.rm=T)
@@ -248,7 +247,7 @@ if( FALSE ){
             #   score <- scoreMtx.grp$basic$basic[[mName]]$scoreMtx[1,]
             rVal <- rep(0,length(fltObj$mInfo$cName))  ;names(rVal) <- fltObj$mInfo$cName
 
-            scrEvt <- bFCust.getEvt( score ,scoreMtxCfg[[fltObj$mInfo$mName]]$fCol )["lev",]
+            scrEvt <- bFCust.getEvt( score ,bsScoreMtxCfg[[fltObj$mInfo$mName]]$fCol )["lev",]
 
             rVal["xBan.x"]  <- sum(score[c("pBanN.r","pBanN.n","iBanN")] ,na.rm=T)
             rVal["xLCol"]   <- sum(score[c("pLCol","iLCol")] ,na.rm=T)
@@ -296,7 +295,7 @@ if( FALSE ){
             #   score <- scoreMtx.grp$basic$basic[[mName]]$scoreMtx[1,]
             rVal <- rep(0,length(fltObj$mInfo$cName))  ;names(rVal) <- fltObj$mInfo$cName
 
-            scrEvt <- bFCust.getEvt( score ,scoreMtxCfg[[fltObj$mInfo$mName]]$fCol )["lev",]
+            scrEvt <- bFCust.getEvt( score ,bsScoreMtxCfg[[fltObj$mInfo$mName]]$fCol )["lev",]
 
             rVal["xBan.x"]  <- sum(score[c("pBanN.r","pBanN.n","iBanN")] ,na.rm=T)
             rVal["xLCol"]   <- sum(score[c("pLCol","iLCol")] ,na.rm=T)
@@ -343,7 +342,7 @@ if( FALSE ){
             #   score <- scoreMtx.grp$basic$basic[[mName]]$scoreMtx[1,]
             rVal <- rep(0,length(fltObj$mInfo$cName))  ;names(rVal) <- fltObj$mInfo$cName
 
-            scrEvt <- bFCust.getEvt( score ,scoreMtxCfg[[fltObj$mInfo$mName]]$fCol )["lev",]
+            scrEvt <- bFCust.getEvt( score ,bsScoreMtxCfg[[fltObj$mInfo$mName]]$fCol )["lev",]
 
             rVal["xBan.x"]  <- sum(score[c("pBanN.r","pBanN.n","iBanN")] ,na.rm=T)
             rVal["xLCol"]   <- sum(score[c("pLCol","iLCol")] ,na.rm=T)
@@ -390,7 +389,7 @@ if( FALSE ){
             #   score <- scoreMtx.grp$basic$basic[[mName]]$scoreMtx[1,]
             rVal <- rep(0,length(fltObj$mInfo$cName))  ;names(rVal) <- fltObj$mInfo$cName
 
-            scrEvt <- bFCust.getEvt( score ,scoreMtxCfg[[fltObj$mInfo$mName]]$fCol )["lev",]
+            scrEvt <- bFCust.getEvt( score ,bsScoreMtxCfg[[fltObj$mInfo$mName]]$fCol )["lev",]
 
             rVal["xBan.x"]  <- sum(score[c("pBanN.r","pBanN.n","iBanN")] ,na.rm=T)
             rVal["xLCol"]   <- sum(score[c("pLCol","iLCol")] ,na.rm=T)
@@ -439,7 +438,7 @@ if( FALSE ){
             #   score <- scoreMtx.grp$basic$basic[[mName]]$scoreMtx[1,]
             rVal <- rep(0,length(fltObj$mInfo$cName))  ;names(rVal) <- fltObj$mInfo$cName
 
-            scrEvt <- bFCust.getEvt( score ,scoreMtxCfg[[fltObj$mInfo$mName]]$fCol )["lev",]
+            scrEvt <- bFCust.getEvt( score ,bsScoreMtxCfg[[fltObj$mInfo$mName]]$fCol )["lev",]
 
             rVal["c3x"]     <- sum(score[c("c31","c32","c33","c34")] ,na.rm=T)
             rVal["c2x"]     <- sum(score[c("c21","c22","c23","c24","c25")] ,na.rm=T)
