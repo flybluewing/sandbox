@@ -740,12 +740,12 @@ scoreMtxCfg[[mName]] <- list(
     ,evtMax = NULL
     ,rowReb = NULL
     ,rowRebDup = NULL
-    ,summMtx = matrix( c(   1 ,2 ,2 ,2 ,2 ,2    , 1 ,2 ,2 ,2 ,2 ,2 ) ,byrow=T # all ph fCol phReb xyCnt.fCol xyCnt.phase
+    ,summMtx = matrix( c(   1 ,2 ,2 ,2 ,2 ,2    ,1 ,2 ,2 ,2 ,2 ,2 ) ,byrow=T # all ph fCol phReb xyCnt.fCol xyCnt.phase
                     ,ncol=length(summMtxName$cName) ,nrow=length(summMtxName$rName)
                     ,dimnames=list(summMtxName$rName,summMtxName$cName)
     )
     ,summMtx.reb = NULL ,summMtx.sum = NULL
-    ,scMtx.sz = matrix( c(  3 ,2 ,1 ,3 ,2 ,1     ,1 ,1 ,1 ,1 ,1 ,1 ) ,byrow=T
+    ,scMtx.sz = matrix( c(  3 ,2 ,1 ,3 ,2 ,1    ,1 ,1 ,1 ,1 ,1 ,1 ) ,byrow=T
                         #   "r.ph" ,"r.fCol" ,"r.dblHpnFlg" ,"e.ph" ,"e.fCol" ,"e.dblHpnFlg"
                         #   "rebCnt" ,"rebDup"
                     ,ncol=length(scMtx.szName$cName) ,nrow=length(scMtx.szName$rName) 
@@ -4266,6 +4266,9 @@ for( mName in names( scoreMtxCfg ) ){ # naming 추가.
 
         colnames(scoreMtxCfg[[mName]]$fCol[[fcName]]$evt) <- c("lev","val")
 
+        # ,forbidEvtReb=c(2,3)    # just for dev
+        # ,freqVal=c(1,2)   # just for dev
+
         if( is.null(scoreMtxCfg[[mName]]$fCol[[fcName]]$evtMax.fCol ) ){
             # fCol 별 전체 phase 대상으로 evt 발생 제한.( >= 기준 cut )
             # scoreMtxCfg[[mName]]$fCol[[fcName]]$evtMax.fCol <- c( lev1Max=2 ,lev2Max=2 ,lev3Max=2 )
@@ -4287,7 +4290,7 @@ for( mName in names( scoreMtxCfg ) ){ # naming 추가.
         scoreMtxCfg[[mName]]$evtMax     <- evtMax
     }
     if( is.null(scoreMtxCfg[[mName]]$rowReb) ){
-        scoreMtxCfg[[mName]]$rowReb <- c( rawMin=1 ,lowE=2 ,rareE=1 )
+        scoreMtxCfg[[mName]]$rowReb <- c( rawMin=1 ,lowE=2 ,rareE=1 ,dupESum=2 )
     }
     if( is.null(scoreMtxCfg[[mName]]$rowRebDup) ){  # 조건 : >=
         scoreMtxCfg[[mName]]$rowRebDup <- c( lowE=1 ,rareE=1 )

@@ -91,7 +91,7 @@ bS_stdCut.rawRow <- function( hName ,mName ,pName ,scoreMtxH ){
         checkRawReb.cnt <- sum(rObj$lastScore>0)
         checkRawReb.flag <- checkRawReb.cnt >= cfg$rowReb["rawMin"]
         checkEvtReb.flag <- FALSE
-        if( 0<sum(rObj$lastEvt["lev"],na.rm=T) ){
+        if( 0<sum(rObj$lastEvt["lev",],na.rm=T) ){
             checkEvtReb.cnt <- c( lowE=sum(rObj$lastEvt["lev",]>0,na.rm=T) ,rareE=sum(rObj$lastEvt["lev",]>1,na.rm=T) )
             checkEvtReb.flag <- any( checkEvtReb.cnt >= cfg$rowReb[c("lowE","rareE")] )
             checkEvtReb.str <- paste(names(checkEvtReb.cnt),checkEvtReb.cnt,sep=".")
@@ -255,6 +255,7 @@ bS_stdCutExt.rawRow <- function( hName ,mName ,pName ,scoreMtxH ,fltName ){
         extFilter <- bSMtxExtFltLst[[ rObj$defId["mName"] ]][[ rObj$defId["fltName"] ]]
         scrExtMtx <- extFilter$getScoreMtx( scoreMtx )
         cfg <- bsScrExtMtxCfg[[ rObj$defId["mName"] ]][[ rObj$defId["fltName"] ]]
+        cfgOpt <- bUtil.getCfgOptions(cfg)
 
         # each fCol --------------------------------------------
         cutLst.fCol <- list()
@@ -309,10 +310,19 @@ bS_stdCutExt.rawRow <- function( hName ,mName ,pName ,scoreMtxH ,fltName ){
 
         # sm row: rebound --------------------------------------------
         cutLst.reb <- list()
-        checkRawReb.cnt <- sum(rObj$lastScore>0)
-        checkRawReb.flag <- checkRawReb.cnt >= cfg$rowReb["rawMin"]
-        checkEvtReb.flag <- FALSE
-        if( 0<sum(rObj$lastEvt["lev"],na.rm=T) ){
+        evtRebFbd <- character(0)     # 재발생이 금지된 이벤트
+        for( nIdx in names(cfgOpt$evtRebFbd) ){
+            if( rObj$lastEvt["lev",nIdx] %in% cfgOpt$evtRebFbd[[nIdx]] ){
+                evtRebFbd <- c( evtRebFbd ,nIdx )
+            }
+        }
+
+        checkRawReb.flag <- FALSE
+        if( 0==length(evtRebFbd) ){
+            checkRawReb.flag <- sum(rObj$lastScore>0) >= cfg$rowReb["rawMin"]
+        }
+        checkEvtReb.flag <- FALSE   ;checkEvtReb.str <- NULL
+        if( 0<sum(rObj$lastEvt["lev",],na.rm=T) ){
             checkEvtReb.cnt <- c( lowE=sum(rObj$lastEvt["lev",]>0,na.rm=T) ,rareE=sum(rObj$lastEvt["lev",]>1,na.rm=T) )
             checkEvtReb.flag <- any( checkEvtReb.cnt >= cfg$rowReb[c("lowE","rareE")] )
             checkEvtReb.str <- paste(names(checkEvtReb.cnt),checkEvtReb.cnt,sep=".")
@@ -333,11 +343,15 @@ bS_stdCutExt.rawRow <- function( hName ,mName ,pName ,scoreMtxH ,fltName ){
             if( checkRawReb.flag ){
                 if( !anaMode && alreadyDead[aIdx] ) next
 
-                if( all(rObj$lastScore==smRow) ){
-                    alreadyDead[aIdx] <- TRUE
+                if( all(rObj$lastScore==smRow) ){   # checkRawReb.flag.... 일단 최소 매치 숫자는 넘은 상태.
+                    matCnt <- bUtil.getMatCnt( smRow ,cfgOpt$freq )
 
-                    infoStr <- sprintf("rReb(last:%d)",checkRawReb.cnt )
-                    cutLst.reb[[as.character(aIdx)]] <- list( idx=aIdx ,info=infoStr )
+                    if( matCnt["tot"]>matCnt["freq"] ){     # 매칭 컬럼 모두가 빈번하게 발생하는 값이 아니라면 OK.
+                        alreadyDead[aIdx] <- TRUE
+
+                        infoStr <- sprintf("rReb(last:%d)",matCnt["tot"] )
+                        cutLst.reb[[as.character(aIdx)]] <- list( idx=aIdx ,info=infoStr )
+                    }
                 }
             }
 

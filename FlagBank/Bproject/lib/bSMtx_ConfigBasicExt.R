@@ -2,42 +2,51 @@ bsScrExtMtxCfg <- list()
 
 
 mName <- "sScore01"
-if( FALSE ){
+if( TRUE ){
 
     bsScrExtMtxCfg[[mName]] <- list()
 
     bsScrExtMtxCfg[[mName]]$filter01 <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
-            "remN.num"=list( rng=matrix( c(0,0 ,0,0) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
-                            ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+            "remN.num"=list( rng=matrix( c(0,2 ,0,2) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
+                            ,evt=matrix( c(c(1,3,3),c(2,3,4)) ,ncol=2)
+                            ,freqVal=c(2)
                         ) 
             ,"remN.len.tot"=list( rng=matrix( c(0,2 ,0,4) ,ncol=2 )
-                            ,evt=matrix( c(c(2,2,3,3,3),c(2,3,4,5,6)) ,ncol=2)
+                            ,evt=matrix( c(c(2,2,3,3),c(3,4,5,6)) ,ncol=2)
+                            ,freqVal=c(2)
+                            ,forbidEvtReb=c(2,3)
                         )
             ,"remN.len.val"=list( rng=matrix( c(0,2 ,0,2) ,ncol=2 )
-                            ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                            ,evt=matrix( c(c(1,3,3),c(2,3,4)) ,ncol=2)
                         )
             ,"cN.num"=list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
-                            ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                            ,evt=matrix( c(c(1,3,3),c(2,3,4)) ,ncol=2)
+                            ,freqVal=c(2)
                         )
             ,"cN.len.tot"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
-                            ,evt=matrix( c(c(2,3,3,3,3),c(2,3,4,5,6)) ,ncol=2)
+                            ,evt=matrix( c(c(3,3,3,3),c(3,4,5,6)) ,ncol=2)
+                            ,freqVal=c(2)
                         )
             ,"cN.len.val"=list( rng=matrix( c(0,2 ,0,2) ,ncol=2 )
-                            ,evt=matrix( c(c(2,3,3),c(2,3,4)) ,ncol=2)
+                            ,evt=matrix( c(c(1,3,3),c(2,3,4)) ,ncol=2)
                         )
-            ,"fN.num"=list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
-                            ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+            ,"fN.num"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                            ,evt=matrix( c(c(3,3),c(3,4)) ,ncol=2)
                         )
-            ,"fN.len.tot"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
-                            ,evt=matrix( c(c(2,3,3,3,3),c(2,3,4,5,6)) ,ncol=2)
+            ,"fN.len.tot"=list( rng=matrix( c(0,0 ,0,3) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(3,4,5,6)) ,ncol=2)
+                            ,freqVal=c(2)
                         )
-            ,"fN.len.val"=list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+            ,"fN.len.val"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
                             ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
                         )
         )
-        ,evtMax = NULL        ,rowReb = c(rawMin=1,lowE=1,rareE=1)  ,rowRebDup=NULL
+        ,evtMax = NULL        
+        # ,rowReb = c(rawMin=3,lowE=1,rareE=1)    # *.val에서 발생이 일어나면 *.tot에서도 값이 발생하기 때문에..
+        ,rowReb = c(rawMin=1,lowE=1,rareE=1)    # *.val에서 발생이 일어나면 *.tot에서도 값이 발생하기 때문에..
+        ,rowRebDup=NULL
         ,summMtx = NULL       ,summMtx.reb = NULL                   ,summMtx.sum = NULL
         ,scMtx.sz = NULL      ,scMtx.sz.sum = NULL
         ,isHard=NULL  # use default
@@ -47,25 +56,25 @@ if( FALSE ){
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
             "evt0.num"=list( rng=matrix( c(0,1 ,0,2) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
-                            ,evt=matrix( c(c(2,3,3),c(2,3,4)) ,ncol=2)
+                            ,evt=matrix( c(c(3,3),c(3,4)) ,ncol=2)
                         ) 
-            ,"evt0.len.tot"=list( rng=matrix( c(0,1 ,0,2) ,ncol=2 )
-                            ,evt=matrix( c(c(2,3,3),c(2,3,4)) ,ncol=2)
+            ,"evt0.len.tot"=list( rng=matrix( c(0,1 ,0,3) ,ncol=2 )
+                            ,evt=matrix( c(c(3,3),c(3,4)) ,ncol=2)
                         )
             ,"evt0.len.val"=list( rng=matrix( c(0,1 ,0,3) ,ncol=2 )
-                            ,evt=matrix( c(c(2,3,3),c(2,3,4)) ,ncol=2)
+                            ,evt=matrix( c(c(3,3),c(3,4)) ,ncol=2)
                         )
             ,"evt1.num"=list( rng=matrix( c(0,1 ,0,2) ,ncol=2 )
-                            ,evt=matrix( c(c(2,3,3),c(2,3,4)) ,ncol=2)
+                            ,evt=matrix( c(c(3,3),c(3,4)) ,ncol=2)
                         )
             ,"evt1.len.tot"=list( rng=matrix( c(0,1 ,0,3) ,ncol=2 )
-                            ,evt=matrix( c(c(2,3,3),c(2,3,4)) ,ncol=2)
+                            ,evt=matrix( c(c(3,3),c(3,4)) ,ncol=2)
                         )
             ,"evt1.len.val"=list( rng=matrix( c(0,1 ,0,2) ,ncol=2 )
-                            ,evt=matrix( c(c(2,3,3),c(2,3,4)) ,ncol=2)
+                            ,evt=matrix( c(c(3,3),c(3,4)) ,ncol=2)
                         )
         )
-        ,evtMax = NULL        ,rowReb = c(rawMin=1,lowE=1,rareE=1)  ,rowRebDup=NULL
+        ,evtMax = NULL        ,rowReb = c(rawMin=2,lowE=1,rareE=1)  ,rowRebDup=NULL
         ,summMtx = NULL       ,summMtx.reb = NULL                   ,summMtx.sum = NULL
         ,scMtx.sz = NULL      ,scMtx.sz.sum = NULL
         ,isHard=NULL  # use default
