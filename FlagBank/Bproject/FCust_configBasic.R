@@ -66,102 +66,207 @@ scMtx.szName <- list(   cName=c( "r.ph" ,"r.fCol" ,"r.dblHpnFlg" ,"e.ph" ,"e.fCo
 
 
 mName <- "score1"
-scoreMtxCfg[[mName]] <- list(
-    mName = mName   ,style=c( freqZero=TRUE )
-    ,fCol = list(
-        "rem0.num"=list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )
-                        ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
-                        ,evtMax.fCol=c( lev1Max=5 ,lev2Max=5 ,lev3Max=2 )
-                    ) 
-        ,"rem0.len.tot"=list( rng=matrix( c(0,2 ,0,2) ,ncol=2 )
-                        ,evt=matrix( c(c(2,3,3,3,3),c(2,3,4,5,6)) ,ncol=2)
-                        ,evtMax.fCol=c( lev1Max=5 ,lev2Max=5 ,lev3Max=2 )
-                    )
-        ,"rem0.len.val"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
-                        ,evt=matrix( c(c(3,3,3,3,3),c(2,3,4,5,6)) ,ncol=2)
-                    )
-        ,"rem1.num"=list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )
-                        ,evt=matrix( c(c(1,2,3,3),c(1,2,3,4)) ,ncol=2)
-                        ,evtMax.fCol=c( lev1Max=7 ,lev2Max=4 ,lev3Max=2 )
-                    )
-        ,"rem1.len.tot"=list( rng=matrix( c(0,2 ,0,3) ,ncol=2 )
-                        ,evt=matrix( c(c(1,1,2,3,3),c(2,3,4,5,6)) ,ncol=2)
-                        ,evtMax.fCol=c( lev1Max=7 ,lev2Max=4 ,lev3Max=2 )
-                    )
-        ,"rem1.len.val"=list( rng=matrix( c(0,2 ,0,2) ,ncol=2 )
-                        ,evt=matrix( c(c(1,2,3,3,3),c(2,3,4,5,6)) ,ncol=2)
-                    )
-        ,"c0.num"=list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )
-                        ,evt=matrix( c(c(2,3,3,3,3),c(1,2,3,4,5)) ,ncol=2)
-                        ,evtMax.fCol=c( lev1Max=4 ,lev2Max=4 ,lev3Max=2 )
-                    )
-        ,"c0.len.tot"=list( rng=matrix( c(0,2 ,0,2) ,ncol=2 )
-                        ,evt=matrix( c(c(1,3,3,3),c(2,3,4,5)) ,ncol=2)
-                    )
-        ,"c0.len.val"=list( rng=matrix( c(0,2 ,0,2) ,ncol=2 )
-                        ,evt=matrix( c(c(3,3,3,3),c(2,3,4,5)) ,ncol=2)
-                    )
-        ,"c1.num"=list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )
-                        ,evt=matrix( c(c(1,3,3,3,3),c(1,2,3,4,5)) ,ncol=2)
-                        ,evtMax.fCol=c( lev1Max=5 ,lev2Max=3 ,lev3Max=2 )
-                    )
-        ,"c1.len.tot"=list( rng=matrix( c(0,2 ,0,3) ,ncol=2 )
-                        ,evt=matrix( c(c(1,2,3,3),c(2,3,4,5)) ,ncol=2)
-                        ,evtMax.fCol=c( lev1Max=5 ,lev2Max=3 ,lev3Max=2 )
-                    )
-        ,"c1.len.val"=list( rng=matrix( c(0,2 ,0,2) ,ncol=2 )
-                        ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
-                    )
-        ,"f0.num"=list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )
-                        ,evt=matrix( c(c(1,2,3,3,3),c(1,2,3,4,5)) ,ncol=2)
-                    )
-        ,"f0.len.tot"=list( rng=matrix( c(0,2 ,0,3) ,ncol=2 )
-                        ,evt=matrix( c(c(1,2,3,3,3),c(2,3,4,5,6)) ,ncol=2)
-                    )
-        ,"f0.len.val"=list( rng=matrix( c(0,2 ,0,2) ,ncol=2 )
-                        ,evt=matrix( c(c(3,3,3,3,3),c(2,3,4,5,6)) ,ncol=2)
-                    )
-        ,"f1.num"=list( rng=matrix( c(0,1 ,0,2) ,ncol=2 )
-                        ,evt=matrix( c(c(1,2,3,3,3),c(1,2,3,4,5)) ,ncol=2)
-                    )
-        ,"f1.len.tot"=list( rng=matrix( c(0,2 ,0,3) ,ncol=2 )
-                        ,evt=matrix( c(c(1,2,3,3,3),c(2,3,4,5,6)) ,ncol=2)
-                    )
-        ,"f1.len.val"=list( rng=matrix( c(0,2 ,0,2) ,ncol=2 )
-                        ,evt=matrix( c(c(1,2,3,3,3),c(2,3,4,5,6)) ,ncol=2)
-                    )
+if( TRUE ){
+    scoreMtxCfg[[mName]] <- list(
+        mName = mName   ,style=c( freqZero=TRUE )
+        ,fCol = list(
+            "rem0.num"=list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
+                            ,evtMax.fCol=c( lev1Max=5 ,lev2Max=5 ,lev3Max=2 )
+                            ,freqVal=c(2)   # just for dev
+                            ,forbidEvtReb=c(2,3)    # just for dev
+                        ) 
+            ,"rem0.len.tot"=list( rng=matrix( c(0,2 ,0,2) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3,3),c(2,3,4,5,6)) ,ncol=2)
+                            ,evtMax.fCol=c( lev1Max=5 ,lev2Max=5 ,lev3Max=2 )
+                            ,freqVal=c(1,2,3)   # just for dev
+                            # ,forbidEvtReb=c(2,3)    # just for dev
+                        )
+            ,"rem0.len.val"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                            ,evt=matrix( c(c(3,3,3,3,3),c(2,3,4,5,6)) ,ncol=2)
+                        )
+            ,"rem1.num"=list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(1,2,3,3),c(1,2,3,4)) ,ncol=2)
+                            ,evtMax.fCol=c( lev1Max=7 ,lev2Max=4 ,lev3Max=2 )
+                            ,freqVal=c(1,2)   # just for dev
+                        )
+            ,"rem1.len.tot"=list( rng=matrix( c(0,2 ,0,3) ,ncol=2 )
+                            ,evt=matrix( c(c(1,1,2,3,3),c(2,3,4,5,6)) ,ncol=2)
+                            ,evtMax.fCol=c( lev1Max=7 ,lev2Max=4 ,lev3Max=2 )
+                            ,freqVal=c(1,2)   # just for dev
+                        )
+            ,"rem1.len.val"=list( rng=matrix( c(0,2 ,0,2) ,ncol=2 )
+                            ,evt=matrix( c(c(1,2,3,3,3),c(2,3,4,5,6)) ,ncol=2)
+                        )
+            ,"c0.num"=list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3,3),c(1,2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=c( lev1Max=4 ,lev2Max=4 ,lev3Max=2 )
+                        )
+            ,"c0.len.tot"=list( rng=matrix( c(0,2 ,0,2) ,ncol=2 )
+                            ,evt=matrix( c(c(1,3,3,3),c(2,3,4,5)) ,ncol=2)
+                        )
+            ,"c0.len.val"=list( rng=matrix( c(0,2 ,0,2) ,ncol=2 )
+                            ,evt=matrix( c(c(3,3,3,3),c(2,3,4,5)) ,ncol=2)
+                        )
+            ,"c1.num"=list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(1,3,3,3,3),c(1,2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=c( lev1Max=5 ,lev2Max=3 ,lev3Max=2 )
+                        )
+            ,"c1.len.tot"=list( rng=matrix( c(0,2 ,0,3) ,ncol=2 )
+                            ,evt=matrix( c(c(1,2,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=c( lev1Max=5 ,lev2Max=3 ,lev3Max=2 )
+                        )
+            ,"c1.len.val"=list( rng=matrix( c(0,2 ,0,2) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                        )
+            ,"f0.num"=list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(1,2,3,3,3),c(1,2,3,4,5)) ,ncol=2)
+                        )
+            ,"f0.len.tot"=list( rng=matrix( c(0,2 ,0,3) ,ncol=2 )
+                            ,evt=matrix( c(c(1,2,3,3,3),c(2,3,4,5,6)) ,ncol=2)
+                        )
+            ,"f0.len.val"=list( rng=matrix( c(0,2 ,0,2) ,ncol=2 )
+                            ,evt=matrix( c(c(3,3,3,3,3),c(2,3,4,5,6)) ,ncol=2)
+                        )
+            ,"f1.num"=list( rng=matrix( c(0,1 ,0,2) ,ncol=2 )
+                            ,evt=matrix( c(c(1,2,3,3,3),c(1,2,3,4,5)) ,ncol=2)
+                        )
+            ,"f1.len.tot"=list( rng=matrix( c(0,2 ,0,3) ,ncol=2 )
+                            ,evt=matrix( c(c(1,2,3,3,3),c(2,3,4,5,6)) ,ncol=2)
+                        )
+            ,"f1.len.val"=list( rng=matrix( c(0,2 ,0,2) ,ncol=2 )
+                            ,evt=matrix( c(c(1,2,3,3,3),c(2,3,4,5,6)) ,ncol=2)
+                        )
 
-        ,"zwNum"=list( rng=matrix( c(0,1 ,0,2) ,ncol=2 )
-                        ,evt=matrix( c(c(2,3,3,3,3),c(1,2,3,4,5)) ,ncol=2)
-                        ,evtMax.fCol=c( lev1Max=4 ,lev2Max=4 ,lev3Max=2 )
-                    )
-        ,"zwC1Num"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
-                        ,evt=matrix( c(c(3,3,3,3,3),c(1,2,3,4,5)) ,ncol=2)
-                    )
-    )
-    #   XXX.tot, XXX.val 관계 때문에 2개 fCol 동시발생이 흔함을 고려.
-    ,evtMax = matrix( c(2,3,3,1 ,2,4,3,2)  # evt in row over fCols
-                        ,byrow=T ,ncol=4
-                        ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
-                    )
-    ,evtMaxFColTot = c( lev1Max=5 ,lev2Max=3 ,lev3Max=3 )
-    ,rowReb = c( rawMin=3 ,lowE=3 ,rareE=1 )
-    ,rowRebDup=NULL
-    ,summMtx = matrix( c( 1 ,2 ,3 ,2 ,2 ,1     ,1 ,2 ,3 ,2 ,2 ,1 ) ,byrow=T # all ph fCol phReb xyCnt.fCol xyCnt.phase
-            ,ncol=length(summMtxName$cName) ,nrow=length(summMtxName$rName)
-            ,dimnames=list(summMtxName$rName,summMtxName$cName)
+            ,"zwNum"=list( rng=matrix( c(0,1 ,0,2) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3,3),c(1,2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=c( lev1Max=4 ,lev2Max=4 ,lev3Max=2 )
+                        )
+            ,"zwC1Num"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(3,3,3,3,3),c(1,2,3,4,5)) ,ncol=2)
+                        )
         )
-    ,summMtx.reb = NULL
-    ,summMtx.sum = c(raw=4 ,evt=4)
-    ,scMtx.sz = matrix( c( 4 ,4 ,1 ,4 ,4 ,1     ,2 ,3 ,1 ,1 ,1 ,1 ) ,byrow=T
-                        #   "r.ph" ,"r.fCol" ,"r.dblHpnFlg" ,"e.ph" ,"e.fCol" ,"e.dblHpnFlg"
-                        #   "rebCnt" ,"rebDup"
-                    ,ncol=length(scMtx.szName$cName) ,nrow=length(scMtx.szName$rName) 
-                    ,dimnames=list(scMtx.szName$rName,scMtx.szName$cName)
-                )
-    ,scMtx.sz.sum = c(rebCnt.r=5 ,rebCnt.e=5)
-    ,isHard=NULL  # use default
-)
+        #   XXX.tot, XXX.val 관계 때문에 2개 fCol 동시발생이 흔함을 고려.
+        ,evtMax = matrix( c(2,3,3,1 ,2,4,3,2)  # evt in row over fCols
+                            ,byrow=T ,ncol=4
+                            ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
+                        )
+        ,evtMaxFColTot = c( lev1Max=5 ,lev2Max=3 ,lev3Max=3 )
+        ,rowReb = c( rawMin=1 ,lowE=1 ,rareE=1 ,dupESum=2 )
+        ,rowRebDup=NULL
+        ,summMtx = matrix( c( 1 ,2 ,3 ,2 ,2 ,1     ,1 ,2 ,3 ,2 ,2 ,1 ) ,byrow=T # all ph fCol phReb xyCnt.fCol xyCnt.phase
+                ,ncol=length(summMtxName$cName) ,nrow=length(summMtxName$rName)
+                ,dimnames=list(summMtxName$rName,summMtxName$cName)
+            )
+        ,summMtx.reb = NULL
+        ,summMtx.sum = c(raw=4 ,evt=4)
+        ,scMtx.sz = matrix( c( 4 ,4 ,1 ,4 ,4 ,1     ,2 ,3 ,1 ,1 ,1 ,1 ) ,byrow=T
+                            #   "r.ph" ,"r.fCol" ,"r.dblHpnFlg" ,"e.ph" ,"e.fCol" ,"e.dblHpnFlg"
+                            #   "rebCnt" ,"rebDup"
+                        ,ncol=length(scMtx.szName$cName) ,nrow=length(scMtx.szName$rName) 
+                        ,dimnames=list(scMtx.szName$rName,scMtx.szName$cName)
+                    )
+        ,scMtx.sz.sum = c(rebCnt.r=5 ,rebCnt.e=5)
+        ,isHard=NULL  # use default
+    )
+} else {    # 원본 백업.
+    # scoreMtxCfg[[mName]] <- list(
+    #     mName = mName   ,style=c( freqZero=TRUE )
+    #     ,fCol = list(
+    #         "rem0.num"=list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )
+    #                         ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+    #                         ,evtMax.fCol=c( lev1Max=5 ,lev2Max=5 ,lev3Max=2 )
+    #                     ) 
+    #         ,"rem0.len.tot"=list( rng=matrix( c(0,2 ,0,2) ,ncol=2 )
+    #                         ,evt=matrix( c(c(2,3,3,3,3),c(2,3,4,5,6)) ,ncol=2)
+    #                         ,evtMax.fCol=c( lev1Max=5 ,lev2Max=5 ,lev3Max=2 )
+    #                     )
+    #         ,"rem0.len.val"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+    #                         ,evt=matrix( c(c(3,3,3,3,3),c(2,3,4,5,6)) ,ncol=2)
+    #                     )
+    #         ,"rem1.num"=list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )
+    #                         ,evt=matrix( c(c(1,2,3,3),c(1,2,3,4)) ,ncol=2)
+    #                         ,evtMax.fCol=c( lev1Max=7 ,lev2Max=4 ,lev3Max=2 )
+    #                     )
+    #         ,"rem1.len.tot"=list( rng=matrix( c(0,2 ,0,3) ,ncol=2 )
+    #                         ,evt=matrix( c(c(1,1,2,3,3),c(2,3,4,5,6)) ,ncol=2)
+    #                         ,evtMax.fCol=c( lev1Max=7 ,lev2Max=4 ,lev3Max=2 )
+    #                     )
+    #         ,"rem1.len.val"=list( rng=matrix( c(0,2 ,0,2) ,ncol=2 )
+    #                         ,evt=matrix( c(c(1,2,3,3,3),c(2,3,4,5,6)) ,ncol=2)
+    #                     )
+    #         ,"c0.num"=list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )
+    #                         ,evt=matrix( c(c(2,3,3,3,3),c(1,2,3,4,5)) ,ncol=2)
+    #                         ,evtMax.fCol=c( lev1Max=4 ,lev2Max=4 ,lev3Max=2 )
+    #                     )
+    #         ,"c0.len.tot"=list( rng=matrix( c(0,2 ,0,2) ,ncol=2 )
+    #                         ,evt=matrix( c(c(1,3,3,3),c(2,3,4,5)) ,ncol=2)
+    #                     )
+    #         ,"c0.len.val"=list( rng=matrix( c(0,2 ,0,2) ,ncol=2 )
+    #                         ,evt=matrix( c(c(3,3,3,3),c(2,3,4,5)) ,ncol=2)
+    #                     )
+    #         ,"c1.num"=list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )
+    #                         ,evt=matrix( c(c(1,3,3,3,3),c(1,2,3,4,5)) ,ncol=2)
+    #                         ,evtMax.fCol=c( lev1Max=5 ,lev2Max=3 ,lev3Max=2 )
+    #                     )
+    #         ,"c1.len.tot"=list( rng=matrix( c(0,2 ,0,3) ,ncol=2 )
+    #                         ,evt=matrix( c(c(1,2,3,3),c(2,3,4,5)) ,ncol=2)
+    #                         ,evtMax.fCol=c( lev1Max=5 ,lev2Max=3 ,lev3Max=2 )
+    #                     )
+    #         ,"c1.len.val"=list( rng=matrix( c(0,2 ,0,2) ,ncol=2 )
+    #                         ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+    #                     )
+    #         ,"f0.num"=list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )
+    #                         ,evt=matrix( c(c(1,2,3,3,3),c(1,2,3,4,5)) ,ncol=2)
+    #                     )
+    #         ,"f0.len.tot"=list( rng=matrix( c(0,2 ,0,3) ,ncol=2 )
+    #                         ,evt=matrix( c(c(1,2,3,3,3),c(2,3,4,5,6)) ,ncol=2)
+    #                     )
+    #         ,"f0.len.val"=list( rng=matrix( c(0,2 ,0,2) ,ncol=2 )
+    #                         ,evt=matrix( c(c(3,3,3,3,3),c(2,3,4,5,6)) ,ncol=2)
+    #                     )
+    #         ,"f1.num"=list( rng=matrix( c(0,1 ,0,2) ,ncol=2 )
+    #                         ,evt=matrix( c(c(1,2,3,3,3),c(1,2,3,4,5)) ,ncol=2)
+    #                     )
+    #         ,"f1.len.tot"=list( rng=matrix( c(0,2 ,0,3) ,ncol=2 )
+    #                         ,evt=matrix( c(c(1,2,3,3,3),c(2,3,4,5,6)) ,ncol=2)
+    #                     )
+    #         ,"f1.len.val"=list( rng=matrix( c(0,2 ,0,2) ,ncol=2 )
+    #                         ,evt=matrix( c(c(1,2,3,3,3),c(2,3,4,5,6)) ,ncol=2)
+    #                     )
+
+    #         ,"zwNum"=list( rng=matrix( c(0,1 ,0,2) ,ncol=2 )
+    #                         ,evt=matrix( c(c(2,3,3,3,3),c(1,2,3,4,5)) ,ncol=2)
+    #                         ,evtMax.fCol=c( lev1Max=4 ,lev2Max=4 ,lev3Max=2 )
+    #                     )
+    #         ,"zwC1Num"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+    #                         ,evt=matrix( c(c(3,3,3,3,3),c(1,2,3,4,5)) ,ncol=2)
+    #                     )
+    #     )
+    #     #   XXX.tot, XXX.val 관계 때문에 2개 fCol 동시발생이 흔함을 고려.
+    #     ,evtMax = matrix( c(2,3,3,1 ,2,4,3,2)  # evt in row over fCols
+    #                         ,byrow=T ,ncol=4
+    #                         ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
+    #                     )
+    #     ,evtMaxFColTot = c( lev1Max=5 ,lev2Max=3 ,lev3Max=3 )
+    #     ,rowReb = c( rawMin=3 ,lowE=3 ,rareE=1 )
+    #     ,rowRebDup=NULL
+    #     ,summMtx = matrix( c( 1 ,2 ,3 ,2 ,2 ,1     ,1 ,2 ,3 ,2 ,2 ,1 ) ,byrow=T # all ph fCol phReb xyCnt.fCol xyCnt.phase
+    #             ,ncol=length(summMtxName$cName) ,nrow=length(summMtxName$rName)
+    #             ,dimnames=list(summMtxName$rName,summMtxName$cName)
+    #         )
+    #     ,summMtx.reb = NULL
+    #     ,summMtx.sum = c(raw=4 ,evt=4)
+    #     ,scMtx.sz = matrix( c( 4 ,4 ,1 ,4 ,4 ,1     ,2 ,3 ,1 ,1 ,1 ,1 ) ,byrow=T
+    #                         #   "r.ph" ,"r.fCol" ,"r.dblHpnFlg" ,"e.ph" ,"e.fCol" ,"e.dblHpnFlg"
+    #                         #   "rebCnt" ,"rebDup"
+    #                     ,ncol=length(scMtx.szName$cName) ,nrow=length(scMtx.szName$rName) 
+    #                     ,dimnames=list(scMtx.szName$rName,scMtx.szName$cName)
+    #                 )
+    #     ,scMtx.sz.sum = c(rebCnt.r=5 ,rebCnt.e=5)
+    #     ,isHard=NULL  # use default
+    # )
+}
 
 mName <- "score2"
 scoreMtxCfg[[mName]] <- list(
@@ -225,7 +330,7 @@ scoreMtxCfg[[mName]] <- list(
     ) 
     ,evtMax = NULL
     ,evtMaxFColTot = c( lev1Max=5 ,lev2Max=3 ,lev3Max=3 )
-    ,rowReb = c( rawMin=4 ,lowE=1 ,rareE=1 )
+    ,rowReb = c( rawMin=4 ,lowE=1 ,rareE=1 ,dupESum=2 )
     ,rowRebDup = c( lowE=4 ,rareE=1 )
     # ,summMtx = NULL ,summMtx.reb = NULL 
     ,summMtx = matrix( c(   1 ,2 ,2 ,2 ,1 ,1     ,1 ,3 ,2 ,2 ,1 ,1 ) ,byrow=T # all ph fCol phReb xyCnt.fCol xyCnt.phase
@@ -290,7 +395,7 @@ scoreMtxCfg[[mName]] <- list(
                     ) 
     ) 
     ,evtMax = NULL
-    ,rowReb = c( rawMin=2 ,lowE=2 ,rareE=1 )
+    ,rowReb = c( rawMin=2 ,lowE=2 ,rareE=1 ,dupESum=2 )
     ,rowRebDup = c( lowE=2 ,rareE=1 )
     # ,summMtx = NULL
     ,summMtx = matrix( c(  1 ,2 ,3 ,2 ,2 ,1   ,1 ,2 ,3 ,2 ,2 ,2 ) ,byrow=T # all ph fCol phReb xyCnt.fCol xyCnt.phase
@@ -470,7 +575,7 @@ scoreMtxCfg[[mName]] <- list(
                     )
     ) 
     ,evtMax = NULL
-    ,rowReb = c( rawMin=4 ,lowE=2 ,rareE=1 )
+    ,rowReb = c( rawMin=4 ,lowE=2 ,rareE=1 ,dupESum=2 )
     ,rowRebDup = NULL
     ,summMtx = matrix( c( 1 ,3 ,2 ,2 ,2 ,1   ,1 ,2 ,2 ,2 ,2 ,1 ) ,byrow=T
                     ,ncol=length(summMtxName$cName) ,nrow=length(summMtxName$rName)
@@ -823,7 +928,7 @@ scoreMtxCfg[[mName]] <- list(
                     ) 
     ) 
     ,evtMax = NULL
-    ,rowReb = c( rawMin=3 ,lowE=2 ,rareE=1 )
+    ,rowReb = c( rawMin=3 ,lowE=2 ,rareE=1 ,dupESum=2 )
     ,rowRebDup = c( lowE=2 ,rareE=2 )
     ,summMtx = matrix( c(  1 ,3 ,2 ,2 ,2 ,1     , 1 ,3 ,2 ,2 ,2 ,2 ) ,byrow=T # all ph fCol phReb xyCnt.fCol xyCnt.phase
             ,ncol=length(summMtxName$cName) ,nrow=length(summMtxName$rName)
@@ -1522,7 +1627,7 @@ scoreMtxCfg[[mName]] <- list(
     )
     ,evtMax = NULL
     ,evtMaxFColTot = NULL
-    ,rowReb = c( rawMin=2 ,lowE=2 ,rareE=1 )    ,rowRebDup=NULL
+    ,rowReb = c( rawMin=2 ,lowE=2 ,rareE=1 ,dupESum=2 )    ,rowRebDup=NULL
     ,summMtx = matrix( c(   1 ,3 ,2 ,2 ,2 ,1  ,1 ,2 ,2 ,2 ,2 ,1 ) ,byrow=T # all ph fCol phReb xyCnt.fCol xyCnt.phase
             ,ncol=length(summMtxName$cName) ,nrow=length(summMtxName$rName)
             ,dimnames=list(summMtxName$rName,summMtxName$cName)
@@ -2990,7 +3095,7 @@ scoreMtxCfg[[mfName]] <- list(
     )
     ,evtMaxFColTot = NULL
     ,evtMax     = NULL      
-    ,rowReb = c( rawMin=3 ,lowE=2 ,rareE=1 )
+    ,rowReb = c( rawMin=3 ,lowE=2 ,rareE=1 ,dupESum=2 )
     ,rowRebDup = NULL
     ,summMtx   = matrix( c(  1 ,3 ,2 ,2 ,2 ,1     , 1 ,3 ,2 ,2 ,2 ,2 ) ,byrow=T # all ph fCol phReb xyCnt.fCol xyCnt.phase
             ,ncol=length(summMtxName$cName) ,nrow=length(summMtxName$rName)

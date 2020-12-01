@@ -8,9 +8,13 @@ if( TRUE ){
         ,fCol = list(
             "remN.num"=list( rng=matrix( c(0,2 ,0,2) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
                             ,evt=matrix( c(c(1,2,3,3,3),c(2,3,4,5,6)) ,ncol=2)
+                            ,freqVal=c(2)   # just for dev
+                            ,forbidEvtReb=c(2,3)    # just for dev
+                            # ,freqVal=c(1,2)   # just for dev
                         ) 
             ,"remN.len.tot"=list( rng=matrix( c(0,4 ,0,4) ,ncol=2 )
                             ,evt=matrix( c(c(1,2,3,3),c(3,4,5,6)) ,ncol=2)
+                            ,freqVal=c(1,2)   # just for dev
                         )
             ,"remN.len.val"=list( rng=matrix( c(0,2 ,0,3) ,ncol=2 )
                             ,evt=matrix( c(c(1,2,3,3,3),c(2,3,4,5,6)) ,ncol=2)
@@ -35,7 +39,7 @@ if( TRUE ){
                         )
         )
         ,evtMax = NULL        
-        ,rowReb = c( rawMin=3 ,lowE=2 ,rareE=1 )
+        ,rowReb = c( rawMin=3 ,lowE=2 ,rareE=1 ,dupESum=2 )
         ,rowRebDup=NULL
         ,summMtx = NULL       ,summMtx.reb = NULL   ,summMtx.sum = NULL
         ,scMtx.sz = NULL      ,scMtx.sz.sum = NULL
@@ -64,12 +68,81 @@ if( TRUE ){
                         )
         )
         ,evtMax = NULL        
-        ,rowReb = c( rawMin=3 ,lowE=2 ,rareE=1 )
+        ,rowReb = c( rawMin=3 ,lowE=2 ,rareE=1 ,dupESum=2 )
         ,rowRebDup=NULL
         ,summMtx = NULL       ,summMtx.reb = NULL   ,summMtx.sum = NULL
         ,scMtx.sz = NULL      ,scMtx.sz.sum = NULL
         ,isHard=NULL  # use default
     )
+} else {    # 기존 코드 백업.
+    scrExtMtxCfg[[mName]]$filter01 <- list(
+        mName = mName   ,style=c( freqZero=TRUE )
+        ,fCol = list(
+            "remN.num"=list( rng=matrix( c(0,2 ,0,2) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
+                            ,evt=matrix( c(c(1,2,3,3,3),c(2,3,4,5,6)) ,ncol=2)
+                        ) 
+            ,"remN.len.tot"=list( rng=matrix( c(0,4 ,0,4) ,ncol=2 )
+                            ,evt=matrix( c(c(1,2,3,3),c(3,4,5,6)) ,ncol=2)
+                        )
+            ,"remN.len.val"=list( rng=matrix( c(0,2 ,0,3) ,ncol=2 )
+                            ,evt=matrix( c(c(1,2,3,3,3),c(2,3,4,5,6)) ,ncol=2)
+                        )
+            ,"cN.num"=list( rng=matrix( c(0,2 ,0,2) ,ncol=2 )
+                            ,evt=matrix( c(c(1,2,3,3,3),c(2,3,4,5,6)) ,ncol=2)
+                        )
+            ,"cN.len.tot"=list( rng=matrix( c(0,4 ,0,5) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(3,4,5,6)) ,ncol=2)
+                        )
+            ,"cN.len.val"=list( rng=matrix( c(0,4 ,0,4) ,ncol=2 )
+                            ,evt=matrix( c(c(1,2,3,3),c(2,3,4,5)) ,ncol=2)
+                        )
+            ,"fN.num"=list( rng=matrix( c(0,2 ,0,3) ,ncol=2 )
+                            ,evt=matrix( c(c(1,2,3,3,3),c(2,3,4,5,6)) ,ncol=2)
+                        )
+            ,"fN.len.tot"=list( rng=matrix( c(0,4 ,0,4) ,ncol=2 )
+                            ,evt=matrix( c(c(1,2,3,3),c(3,4,5,6)) ,ncol=2)
+                        )
+            ,"fN.len.val"=list( rng=matrix( c(0,4 ,0,4) ,ncol=2 )
+                            ,evt=matrix( c(c(1,2,3,3),c(3,4,5,6)) ,ncol=2)
+                        )
+        )
+        ,evtMax = NULL        
+        ,rowReb = c( rawMin=3 ,lowE=2 ,rareE=1 ,dupESum=2 )
+        ,rowRebDup=NULL
+        ,summMtx = NULL       ,summMtx.reb = NULL   ,summMtx.sum = NULL
+        ,scMtx.sz = NULL      ,scMtx.sz.sum = NULL
+        ,isHard=NULL  # use default
+    )
+    scrExtMtxCfg[[mName]]$filter02 <- list(
+        mName = mName   ,style=c( freqZero=TRUE )
+        ,fCol = list(
+            "evt0.num"=list( rng=matrix( c(0,4 ,0,6) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
+                            ,evt=matrix( c(c(1,2,3,3,3,3,3),c(2,3,4,5,6,7,8)) ,ncol=2)
+                        ) 
+            ,"evt0.len.tot"=list( rng=matrix( c(0,4 ,0,6) ,ncol=2 )
+                            ,evt=matrix( c(c(1,2,3,3,3,3,3),c(2,3,4,5,6,7,8)) ,ncol=2)
+                        )
+            ,"evt0.len.val"=list( rng=matrix( c(0,4 ,0,6) ,ncol=2 )
+                            ,evt=matrix( c(c(1,2,3,3,3,3,3),c(2,3,4,5,6,7,8)) ,ncol=2)
+                        )
+            ,"evt1.num"=list( rng=matrix( c(0,4 ,0,6) ,ncol=2 )
+                            ,evt=matrix( c(c(1,2,3,3,3,3,3),c(2,3,4,5,6,7,8)) ,ncol=2)
+                        )
+            ,"evt1.len.tot"=list( rng=matrix( c(0,4 ,0,6) ,ncol=2 )
+                            ,evt=matrix( c(c(1,2,3,3,3,3,3),c(2,3,4,5,6,7,8)) ,ncol=2)
+                        )
+            ,"evt1.len.val"=list( rng=matrix( c(0,4 ,0,6) ,ncol=2 )
+                            ,evt=matrix( c(c(1,2,3,3,3,3,3),c(2,3,4,5,6,7,8)) ,ncol=2)
+                        )
+        )
+        ,evtMax = NULL        
+        ,rowReb = c( rawMin=3 ,lowE=2 ,rareE=1 ,dupESum=2 )
+        ,rowRebDup=NULL
+        ,summMtx = NULL       ,summMtx.reb = NULL   ,summMtx.sum = NULL
+        ,scMtx.sz = NULL      ,scMtx.sz.sum = NULL
+        ,isHard=NULL  # use default
+    )
+
 }
 
 mName <- "score2"
@@ -109,7 +182,7 @@ if( TRUE ){
         ,evtMax = matrix( c(2,1,3,1 ,2,2,3,1)   ,byrow=T    ,ncol=4
                         ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
         )
-        ,rowReb = c( rawMin=3 ,lowE=2 ,rareE=1 )
+        ,rowReb = c( rawMin=3 ,lowE=2 ,rareE=1 ,dupESum=2 )
         ,rowRebDup=NULL
         ,summMtx = NULL       ,summMtx.reb = NULL   ,summMtx.sum = NULL
         ,scMtx.sz = NULL      ,scMtx.sz.sum = NULL
@@ -138,7 +211,7 @@ if( TRUE ){
                         )
         )
         ,evtMax = NULL        
-        ,rowReb = c( rawMin=3 ,lowE=2 ,rareE=1 )
+        ,rowReb = c( rawMin=3 ,lowE=2 ,rareE=1 ,dupESum=2 )
         ,rowRebDup=NULL
         ,summMtx = NULL       ,summMtx.reb = NULL   ,summMtx.sum = NULL
         ,scMtx.sz = NULL      ,scMtx.sz.sum = NULL
@@ -175,7 +248,7 @@ if( TRUE ){
                         )
         )
         ,evtMax = NULL        
-        ,rowReb = c( rawMin=2 ,lowE=2 ,rareE=1 )
+        ,rowReb = c( rawMin=2 ,lowE=2 ,rareE=1 ,dupESum=2 )
         ,rowRebDup=NULL
         ,summMtx = NULL       ,summMtx.reb = NULL   ,summMtx.sum = NULL
         ,scMtx.sz = NULL      ,scMtx.sz.sum = NULL
@@ -210,7 +283,7 @@ if( TRUE ){    # sample
                             ,evt=matrix( c(c(1,2,3,3),c(2,3,4,5)) ,ncol=2)
                         )
         )
-        ,evtMax = NULL        ,rowReb = c( rawMin=2 ,lowE=2 ,rareE=1 )
+        ,evtMax = NULL        ,rowReb = c( rawMin=2 ,lowE=2 ,rareE=1 ,dupESum=2 )
         ,rowRebDup=NULL
         ,summMtx = NULL       ,summMtx.reb = NULL   ,summMtx.sum = NULL
         ,scMtx.sz = NULL      ,scMtx.sz.sum = NULL
@@ -246,8 +319,8 @@ if( TRUE ){    # sample
         )
         ,evtMax = matrix( c(2,1,3,0 ,2,2,3,2) ,byrow=T ,ncol=4
                             ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
-        )        
-        ,rowReb = c( rawMin=2 ,lowE=2 ,rareE=1 )        
+        )
+        ,rowReb = c( rawMin=2 ,lowE=2 ,rareE=1 ,dupESum=2 )
         ,rowRebDup=NULL
         ,summMtx = NULL       ,summMtx.reb = NULL   ,summMtx.sum = NULL
         ,scMtx.sz = NULL      ,scMtx.sz.sum = NULL
@@ -365,7 +438,7 @@ if( TRUE ){    # sample
         ,evtMax = matrix( c(2,1,3,1 ,2,2,3,1)       ,byrow=T ,ncol=4
                             ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
         )
-        ,rowReb = c( rawMin=2 ,lowE=2 ,rareE=1 )        
+        ,rowReb = c( rawMin=2 ,lowE=2 ,rareE=1 ,dupESum=2 )
         ,rowRebDup=NULL
         ,summMtx = NULL       ,summMtx.reb = NULL   ,summMtx.sum = NULL
         ,scMtx.sz = NULL      ,scMtx.sz.sum = NULL
@@ -408,7 +481,8 @@ if( TRUE ){    # sample
                             ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
                         )
         )
-        ,evtMax = NULL        ,rowReb = c(rawMin=2,lowE=2,rareE=1)  ,rowRebDup=NULL
+        ,evtMax = NULL
+        ,rowReb = c(rawMin=2,lowE=2,rareE=1,dupESum=2)              ,rowRebDup=NULL
         ,summMtx = NULL       ,summMtx.reb = NULL                   ,summMtx.sum = NULL
         ,scMtx.sz = NULL      ,scMtx.sz.sum = NULL
         ,isHard=NULL  # use default
@@ -455,8 +529,8 @@ if( TRUE ){    # sample
                         )
         )
         ,evtMax = NULL        
-        ,rowReb = c( rawMin=3 ,lowE=2 ,rareE=1 )    ,rowRebDup=NULL
-        ,summMtx = NULL       ,summMtx.reb = NULL   ,summMtx.sum = NULL
+        ,rowReb = c( rawMin=3 ,lowE=2 ,rareE=1 ,dupESum=2 ) ,rowRebDup=NULL
+        ,summMtx = NULL       ,summMtx.reb = NULL           ,summMtx.sum = NULL
         ,scMtx.sz = NULL      ,scMtx.sz.sum = NULL
         ,isHard=NULL  # use default
     )
@@ -495,8 +569,8 @@ if( TRUE ){    # sample
         ,evtMax = matrix( c(2,1,3,0 ,2,2,3,1) ,byrow=T ,ncol=4
                                 ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
         )
-        ,rowReb = c( rawMin=3 ,lowE=2 ,rareE=1 )    ,rowRebDup=NULL
-        ,summMtx = NULL       ,summMtx.reb = NULL   ,summMtx.sum = NULL
+        ,rowReb = c( rawMin=3 ,lowE=2 ,rareE=1 ,dupESum=2 )     ,rowRebDup=NULL
+        ,summMtx = NULL       ,summMtx.reb = NULL               ,summMtx.sum = NULL
         ,scMtx.sz = NULL      ,scMtx.sz.sum = NULL
         ,isHard=NULL  # use default
     )
@@ -773,8 +847,8 @@ if( TRUE ){
         ,evtMax = matrix( c(2,1,3,1 ,2,1,3,1)   ,byrow=T ,ncol=4
                     ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
         )
-        ,rowReb = c( rawMin=2 ,lowE=2 ,rareE=1 )  ,rowRebDup=NULL
-        ,summMtx = NULL     ,summMtx.reb = NULL   ,summMtx.sum = NULL
+        ,rowReb = c( rawMin=2 ,lowE=2 ,rareE=1 ,dupESum=2 ) ,rowRebDup=NULL
+        ,summMtx = NULL     ,summMtx.reb = NULL             ,summMtx.sum = NULL
         ,scMtx.sz = NULL    ,scMtx.sz.sum = NULL
         ,isHard=NULL  # use default
     )
@@ -828,8 +902,8 @@ if( TRUE ){
         ,evtMax = matrix( c(2,1,3,1 ,2,1,3,1)   ,byrow=T ,ncol=4
                     ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
         )
-        ,rowReb = c( rawMin=2 ,lowE=2 ,rareE=1 )  ,rowRebDup=NULL
-        ,summMtx = NULL       ,summMtx.reb = NULL   ,summMtx.sum = NULL
+        ,rowReb = c( rawMin=2 ,lowE=2 ,rareE=1 ,dupESum=2 ) ,rowRebDup=NULL
+        ,summMtx = NULL       ,summMtx.reb = NULL           ,summMtx.sum = NULL
         ,scMtx.sz = NULL      ,scMtx.sz.sum = NULL
         ,isHard=NULL  # use default
     )
@@ -883,8 +957,8 @@ if( TRUE ){
         ,evtMax = matrix( c(2,1,3,1 ,2,1,3,1)   ,byrow=T ,ncol=4
                     ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
         )
-        ,rowReb = c( rawMin=2 ,lowE=2 ,rareE=1 )  ,rowRebDup=NULL
-        ,summMtx = NULL       ,summMtx.reb = NULL   ,summMtx.sum = NULL
+        ,rowReb = c( rawMin=2 ,lowE=2 ,rareE=1 ,dupESum=2 ) ,rowRebDup=NULL
+        ,summMtx = NULL       ,summMtx.reb = NULL           ,summMtx.sum = NULL
         ,scMtx.sz = NULL      ,scMtx.sz.sum = NULL
         ,isHard=NULL  # use default
     )
@@ -938,8 +1012,8 @@ if( TRUE ){
         ,evtMax = matrix( c(2,1,3,1 ,2,1,3,1)   ,byrow=T ,ncol=4
                     ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
         )
-        ,rowReb = c( rawMin=2 ,lowE=2 ,rareE=1 )  ,rowRebDup=NULL
-        ,summMtx = NULL       ,summMtx.reb = NULL   ,summMtx.sum = NULL
+        ,rowReb = c( rawMin=2 ,lowE=2 ,rareE=1 ,dupESum=2 ) ,rowRebDup=NULL
+        ,summMtx = NULL       ,summMtx.reb = NULL           ,summMtx.sum = NULL
         ,scMtx.sz = NULL      ,scMtx.sz.sum = NULL
         ,isHard=NULL  # use default
     )
@@ -994,8 +1068,8 @@ if( TRUE ){
         ,evtMax = matrix( c(2,1,3,1 ,2,1,3,1)   ,byrow=T ,ncol=4
                     ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
         )
-        ,rowReb = c( rawMin=2 ,lowE=2 ,rareE=1 )  ,rowRebDup=NULL
-        ,summMtx = NULL     ,summMtx.reb = NULL   ,summMtx.sum = NULL
+        ,rowReb = c( rawMin=2 ,lowE=2 ,rareE=1 ,dupESum=2 ) ,rowRebDup=NULL
+        ,summMtx = NULL     ,summMtx.reb = NULL             ,summMtx.sum = NULL
         ,scMtx.sz = NULL    ,scMtx.sz.sum = NULL
         ,isHard=NULL  # use default
     )
@@ -1049,8 +1123,8 @@ if( TRUE ){
         ,evtMax = matrix( c(2,1,3,1 ,2,1,3,1)   ,byrow=T ,ncol=4
                     ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
         )
-        ,rowReb = c( rawMin=2 ,lowE=2 ,rareE=1 )  ,rowRebDup=NULL
-        ,summMtx = NULL     ,summMtx.reb = NULL   ,summMtx.sum = NULL
+        ,rowReb = c( rawMin=2 ,lowE=2 ,rareE=1 ,dupESum=2 ) ,rowRebDup=NULL
+        ,summMtx = NULL     ,summMtx.reb = NULL             ,summMtx.sum = NULL
         ,scMtx.sz = NULL    ,scMtx.sz.sum = NULL
         ,isHard=NULL  # use default
     )
@@ -1104,8 +1178,8 @@ if( TRUE ){
         ,evtMax = matrix( c(2,2,3,1 ,2,2,3,1)   ,byrow=T ,ncol=4
                     ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
         )
-        ,rowReb = c( rawMin=2 ,lowE=2 ,rareE=1 )  ,rowRebDup=NULL
-        ,summMtx = NULL     ,summMtx.reb = NULL   ,summMtx.sum = NULL
+        ,rowReb = c( rawMin=2 ,lowE=2 ,rareE=1 ,dupESum=2 ) ,rowRebDup=NULL
+        ,summMtx = NULL     ,summMtx.reb = NULL             ,summMtx.sum = NULL
         ,scMtx.sz = NULL    ,scMtx.sz.sum = NULL
         ,isHard=NULL  # use default
     )
@@ -1159,8 +1233,8 @@ if( TRUE ){
         ,evtMax = matrix( c(2,2,3,1 ,2,2,3,1)   ,byrow=T ,ncol=4
                     ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
         )
-        ,rowReb = c( rawMin=2 ,lowE=2 ,rareE=1 )  ,rowRebDup=NULL
-        ,summMtx = NULL     ,summMtx.reb = NULL   ,summMtx.sum = NULL
+        ,rowReb = c( rawMin=2 ,lowE=2 ,rareE=1 ,dupESum=2 ) ,rowRebDup=NULL
+        ,summMtx = NULL     ,summMtx.reb = NULL             ,summMtx.sum = NULL
         ,scMtx.sz = NULL    ,scMtx.sz.sum = NULL
         ,isHard=NULL  # use default
     )
@@ -1215,8 +1289,8 @@ if( TRUE ){
         ,evtMax = matrix( c(2,1,3,1 ,2,1,3,1)   ,byrow=T ,ncol=4
                     ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
         )
-        ,rowReb = c( rawMin=1 ,lowE=2 ,rareE=1 )  ,rowRebDup=NULL
-        ,summMtx = NULL     ,summMtx.reb = NULL   ,summMtx.sum = NULL
+        ,rowReb = c( rawMin=1 ,lowE=2 ,rareE=1 ,dupESum=2 ) ,rowRebDup=NULL
+        ,summMtx = NULL     ,summMtx.reb = NULL             ,summMtx.sum = NULL
         ,scMtx.sz = NULL    ,scMtx.sz.sum = NULL
         ,isHard=NULL  # use default
     )
@@ -1270,8 +1344,8 @@ if( TRUE ){
         ,evtMax = matrix( c(2,1,3,1 ,2,1,3,1)   ,byrow=T ,ncol=4
                     ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
         )
-        ,rowReb = c( rawMin=1 ,lowE=2 ,rareE=1 )  ,rowRebDup=NULL
-        ,summMtx = NULL     ,summMtx.reb = NULL   ,summMtx.sum = NULL
+        ,rowReb = c( rawMin=1 ,lowE=2 ,rareE=1 ,dupESum=2 ) ,rowRebDup=NULL
+        ,summMtx = NULL     ,summMtx.reb = NULL             ,summMtx.sum = NULL
         ,scMtx.sz = NULL    ,scMtx.sz.sum = NULL
         ,isHard=NULL  # use default
     )
@@ -1325,8 +1399,8 @@ if( TRUE ){
         ,evtMax = matrix( c(2,1,3,1 ,2,1,3,1)   ,byrow=T ,ncol=4
                     ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
         )
-        ,rowReb = c( rawMin=1 ,lowE=2 ,rareE=1 )  ,rowRebDup=NULL
-        ,summMtx = NULL     ,summMtx.reb = NULL   ,summMtx.sum = NULL
+        ,rowReb = c( rawMin=1 ,lowE=2 ,rareE=1 ,dupESum=2 ) ,rowRebDup=NULL
+        ,summMtx = NULL     ,summMtx.reb = NULL             ,summMtx.sum = NULL
         ,scMtx.sz = NULL    ,scMtx.sz.sum = NULL
         ,isHard=NULL  # use default
     )
@@ -1380,8 +1454,8 @@ if( TRUE ){
         ,evtMax = matrix( c(2,1,3,1 ,2,1,3,1)   ,byrow=T ,ncol=4
                     ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
         )
-        ,rowReb = c( rawMin=1 ,lowE=2 ,rareE=1 )  ,rowRebDup=NULL
-        ,summMtx = NULL     ,summMtx.reb = NULL   ,summMtx.sum = NULL
+        ,rowReb = c( rawMin=1 ,lowE=2 ,rareE=1 ,dupESum=2 ) ,rowRebDup=NULL
+        ,summMtx = NULL     ,summMtx.reb = NULL             ,summMtx.sum = NULL
         ,scMtx.sz = NULL    ,scMtx.sz.sum = NULL
         ,isHard=NULL  # use default
     )
@@ -1454,7 +1528,7 @@ for( mName in names( scrExtMtxCfg ) ){              # mName <- names( scrExtMtxC
             scrExtMtxCfg[[mName]][[fName]]$evtMax     <- evtMax
         }
         if( is.null(scrExtMtxCfg[[mName]][[fName]]$rowReb) ){
-            scrExtMtxCfg[[mName]][[fName]]$rowReb <- c( rawMin=1 ,lowE=2 ,rareE=1 )
+            scrExtMtxCfg[[mName]][[fName]]$rowReb <- c( rawMin=1 ,lowE=2 ,rareE=1 ,dupESum=2 )
         }
         if( is.null(scrExtMtxCfg[[mName]][[fName]]$rowRebDup) ){  # 조건 : >=
             scrExtMtxCfg[[mName]][[fName]]$rowRebDup <- c( lowE=1 ,rareE=1 )

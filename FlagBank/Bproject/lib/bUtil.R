@@ -2095,6 +2095,9 @@ bUtil.getRowRebCutter <- function( rCObj ,cfg ){
 	# ctrObj$rawReb	: NULL 아니면 reb 체크 활성화.
 	hpnCol <- colnames(ctrObj$rebInfo)[ctrObj$rebInfo["val",]>0]
 	if( length(hpnCol) >= cfg$rowReb["rawMin"] ){
+		# rawReb 체크가 필요 없는지 여부만 확인하면 된다.
+		rawReb <- list( infoStr=sprintf("rReb(hpn:%d)",sum(rCObj$lastScore>0)) )
+		ctrObj$rawReb <- rawReb
 
 		if( any(ctrObj$rebInfo["fbdEvt",hpnCol]>0) ) {
 			# 재발생이 금지된 Evt 가 lastScore에 포함되어 있는 상태이므로
@@ -2104,18 +2107,14 @@ bUtil.getRowRebCutter <- function( rCObj ,cfg ){
 			# 발생이 일어난 컬럼들이 모두 빈번발생 값들인지? (freqVal)
 			# 	--> rawReb 검사자체를 할 필요가 없는 상태.
 			ctrObj$rawReb <- NULL
-		} else {
-			rawReb <- list( infoStr=sprintf("rReb(hpn:%d)",sum(rCObj$lastScore>0)) )
-			ctrObj$rawReb <- rawReb
-
-			# 하지만 2번 연속발생 Evt 존재하고
+		} else if( any(ctrObj$rebInfo["evtDup",hpnCol]>0) ){
+			# 2번 연속발생 Evt 존재하고
 			# 때문에 rawReb를 체크할 필요자체가 없는 조건이라면..
-			if( any(ctrObj$rebInfo["evtDup",hpnCol]>0) ){
-				rebDupFlag <- !is.na(ctrObj$rebInfo["evt",]) & (ctrObj$rebInfo["evtDup",]>0)
-				dupESum <- sum(ctrObj$rebInfo["evt",rebDupFlag],na.rm=T)
-				if( cfg$rowReb["dupESum"] <= dupESum ){
-					ctrObj$rawReb <- NULL
-				}
+
+			rebDupFlag <- !is.na(ctrObj$rebInfo["evt",]) & (ctrObj$rebInfo["evtDup",]>0)
+			dupESum <- sum(ctrObj$rebInfo["evt",rebDupFlag],na.rm=T)
+			if( cfg$rowReb["dupESum"] <= dupESum ){
+				ctrObj$rawReb <- NULL
 			}
 		}
 
@@ -2123,7 +2122,9 @@ bUtil.getRowRebCutter <- function( rCObj ,cfg ){
 
 	# ctrObj$evtReb	: NULL 아니면 reb 체크 활성화.
 	#		evt 중복발생(evtHpnDup) 정보도 포함한다.
-	if( any(!is.na(ctrObj$rebInfo["evt",])) ){
+	if( all(is.na(ctrObj$rebInfo["evt",])) ){
+		ctrObj$evtReb <- NULL
+	} else {
 		# forbiddenEvt 나 EvtRebDup는 aZoid/aCode 체크 시 확인해야 만 한다.
 		#	lastCode와 aCode에서 매치되는 evt가 얼마나 있을 지 알 수 없으므로.
 		evtReb <- list()
@@ -2133,13 +2134,13 @@ bUtil.getRowRebCutter <- function( rCObj ,cfg ){
 	ctrObj$cut <- function( aIdx ,smRow ,evt.sm ){
 		# smRow <- scoreMtx[aIdx ,]
 		# evt.sm <- bFCust.getEvt(smRow,cfg$fCol)
-		rebCutLst <- list()
+		rebCutLst <- list( idx=aIdx ,infoStr=NULL )
 		surFlag <- TRUE
 
 		if( !is.null(ctrObj$rawReb) ){
 			matFlag <- ctrObj$rebInfo["val",]==smRow
 			if( all(matFlag) ){
-				rebCutLst[[1+length(rebCutLst)]] <- list( idx=aIdx ,infoStr=ctrObj$rawReb$infoStr )
+				rebCutLst$infoStr <- c( rebCutLst$infoStr ,ctrObj$rawReb$infoStr )
 				surFlag <- FALSE
 			}
 		}
@@ -2154,7 +2155,7 @@ bUtil.getRowRebCutter <- function( rCObj ,cfg ){
 				if( any(forbidEvtCheck) ){	# 금지된 Evt 반복은 없다.
 					infoStr <- names(levDup)[forbidEvtCheck]
 					infoStr <- sprintf("forbidden Evt Reb -- %s", paste(infoStr,collapse=",") )
-					rebCutLst[[1+length(rebCutLst)]] <- list( idx=aIdx ,infoStr=infoStr )
+					rebCutLst$infoStr <- c( rebCutLst$infoStr ,infoStr )
 					surFlag <- FALSE
 				}
 
@@ -2164,7 +2165,7 @@ bUtil.getRowRebCutter <- function( rCObj ,cfg ){
 					if( cfg$rowReb["dupESum"]<=sum(levDup[evtRebDupCheck]) ){
 						infoStr <- paste( names(levDup[evtRebDupCheck]),levDup[evtRebDupCheck],sep=":")
 						infoStr <- sprintf("Evt Reb Dup -- %s", paste(infoStr,collapse=",") )
-						rebCutLst[[1+length(rebCutLst)]] <- list( idx=aIdx ,infoStr=infoStr )
+						rebCutLst$infoStr <- c( rebCutLst$infoStr ,infoStr )
 						surFlag <- FALSE
 					}
 				}
@@ -2175,7 +2176,7 @@ bUtil.getRowRebCutter <- function( rCObj ,cfg ){
 						evtHpn <- !is.na(levDup)
 						infoStr <- paste( names(levDup[evtHpn]),levDup[evtHpn],sep=":")
 						infoStr <- sprintf("Evt Reb Cnt -- %s", paste(infoStr,collapse=",") )
-						rebCutLst[[1+length(rebCutLst)]] <- list( idx=aIdx ,infoStr=infoStr )
+						rebCutLst$infoStr <- c( rebCutLst$infoStr ,infoStr )
 						surFlag <- FALSE
 					}
 				}
@@ -2183,7 +2184,7 @@ bUtil.getRowRebCutter <- function( rCObj ,cfg ){
 			}	# if( any(!is.na(evt.sm["lev",])) )
 		}
 
-		if( 0==length(rebCutLst) )	rebCutLst<-NULL
+		if( 0==length(rebCutLst$infoStr) )	rebCutLst<-NULL
 
 		return( rebCutLst )
 	}
