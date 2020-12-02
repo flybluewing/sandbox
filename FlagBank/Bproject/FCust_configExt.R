@@ -2,7 +2,7 @@ scrExtMtxCfg <- list()
 
 mName <- "score1"
 scrExtMtxCfg[[mName]] <- list()
-if( TRUE ){
+if( FALSE ){
     scrExtMtxCfg[[mName]]$filter01 <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
@@ -74,7 +74,7 @@ if( TRUE ){
         ,scMtx.sz = NULL      ,scMtx.sz.sum = NULL
         ,isHard=NULL  # use default
     )
-} else {    # 기존 코드 백업.
+} else if( FALSE ) {    # 기존 코드 백업.
     scrExtMtxCfg[[mName]]$filter01 <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
@@ -1515,6 +1515,9 @@ for( mName in names( scrExtMtxCfg ) ){              # mName <- names( scrExtMtxC
             if( is.null(scrExtMtxCfg[[mName]][[fName]]$fCol[[fcName]]$evtMax.fCol ) ){
                 # fCol 별 전체 phase 대상으로 evt 발생 제한.
                 scrExtMtxCfg[[mName]][[fName]]$fCol[[fcName]]$evtMax.fCol <- c( minLev=2 ,maxHpn=1 )
+            }
+            if( is.null(scrExtMtxCfg[[mName]][[fName]]$fCol[[fcName]]$forbidEvtReb) ){
+                scrExtMtxCfg[[mName]][[fName]]$fCol[[fcName]]$forbidEvtReb <- c(1,2,3,4)
             }
         }
 
