@@ -73,6 +73,7 @@ if( TRUE ){
     )
 
 } else if( FALSE ) {    # 기존 코드 백업.
+    
     scrExtMtxCfg[[mName]]$filter01 <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(

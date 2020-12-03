@@ -166,6 +166,7 @@ if( TRUE ){
         ,isHard=NULL  # use default
     )
 } else {    # 원본 백업.
+
     # scoreMtxCfg[[mName]] <- list(
     #     mName = mName   ,style=c( freqZero=TRUE )
     #     ,fCol = list(
@@ -230,7 +231,6 @@ if( TRUE ){
     #         ,"f1.len.val"=list( rng=matrix( c(0,2 ,0,2) ,ncol=2 )
     #                         ,evt=matrix( c(c(1,2,3,3,3),c(2,3,4,5,6)) ,ncol=2)
     #                     )
-
     #         ,"zwNum"=list( rng=matrix( c(0,1 ,0,2) ,ncol=2 )
     #                         ,evt=matrix( c(c(2,3,3,3,3),c(1,2,3,4,5)) ,ncol=2)
     #                         ,evtMax.fCol=c( lev1Max=4 ,lev2Max=4 ,lev3Max=2 )
@@ -262,6 +262,7 @@ if( TRUE ){
     #     ,scMtx.sz.sum = c(rebCnt.r=5 ,rebCnt.e=5)
     #     ,isHard=NULL  # use default
     # )
+
 }
 
 mName <- "score2"
