@@ -2,19 +2,16 @@ scrExtMtxCfg <- list()
 
 mName <- "score1"
 scrExtMtxCfg[[mName]] <- list()
-if( FALSE ){
+if( TRUE ){
+
     scrExtMtxCfg[[mName]]$filter01 <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
             "remN.num"=list( rng=matrix( c(0,2 ,0,2) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
                             ,evt=matrix( c(c(1,2,3,3,3),c(2,3,4,5,6)) ,ncol=2)
-                            ,freqVal=c(2)   # just for dev
-                            ,forbidEvtReb=c(2,3)    # just for dev
-                            # ,freqVal=c(1,2)   # just for dev
                         ) 
             ,"remN.len.tot"=list( rng=matrix( c(0,4 ,0,4) ,ncol=2 )
                             ,evt=matrix( c(c(1,2,3,3),c(3,4,5,6)) ,ncol=2)
-                            ,freqVal=c(1,2)   # just for dev
                         )
             ,"remN.len.val"=list( rng=matrix( c(0,2 ,0,3) ,ncol=2 )
                             ,evt=matrix( c(c(1,2,3,3,3),c(2,3,4,5,6)) ,ncol=2)
@@ -39,7 +36,7 @@ if( FALSE ){
                         )
         )
         ,evtMax = NULL        
-        ,rowReb = c( rawMin=3 ,lowE=2 ,rareE=1 ,dupESum=2 )
+        ,rowReb = c( rawMin=3 ,lowE=2 ,rareE=1 ,dupESum=1 )
         ,rowRebDup=NULL
         ,summMtx = NULL       ,summMtx.reb = NULL   ,summMtx.sum = NULL
         ,scMtx.sz = NULL      ,scMtx.sz.sum = NULL
@@ -68,12 +65,13 @@ if( FALSE ){
                         )
         )
         ,evtMax = NULL        
-        ,rowReb = c( rawMin=3 ,lowE=2 ,rareE=1 ,dupESum=2 )
+        ,rowReb = c( rawMin=3 ,lowE=2 ,rareE=1 ,dupESum=1 )
         ,rowRebDup=NULL
         ,summMtx = NULL       ,summMtx.reb = NULL   ,summMtx.sum = NULL
         ,scMtx.sz = NULL      ,scMtx.sz.sum = NULL
         ,isHard=NULL  # use default
     )
+
 } else if( FALSE ) {    # 기존 코드 백업.
     scrExtMtxCfg[[mName]]$filter01 <- list(
         mName = mName   ,style=c( freqZero=TRUE )
@@ -1517,7 +1515,7 @@ for( mName in names( scrExtMtxCfg ) ){              # mName <- names( scrExtMtxC
                 scrExtMtxCfg[[mName]][[fName]]$fCol[[fcName]]$evtMax.fCol <- c( minLev=2 ,maxHpn=1 )
             }
             if( is.null(scrExtMtxCfg[[mName]][[fName]]$fCol[[fcName]]$forbidEvtReb) ){
-                scrExtMtxCfg[[mName]][[fName]]$fCol[[fcName]]$forbidEvtReb <- c(1,2,3,4)
+                scrExtMtxCfg[[mName]][[fName]]$fCol[[fcName]]$forbidEvtReb <- c(2,3,4)
             }
         }
 
