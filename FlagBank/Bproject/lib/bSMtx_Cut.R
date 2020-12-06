@@ -331,7 +331,7 @@ bS_stdCutExt.rawRow <- function( hName ,mName ,pName ,scoreMtxH ,fltName ){
         for( aIdx in seq_len(val.len) ){
             if( !anaMode && alreadyDead[aIdx] ) next
 
-            smRow <- scoreMtx[aIdx ,]
+            smRow <- scrExtMtx[aIdx ,]
             evt.sm <- bFCust.getEvt(smRow,cfg$fCol)
 
             rebCut <- ctrObj$cut( aIdx ,smRow ,evt.sm )
