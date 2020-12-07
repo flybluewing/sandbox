@@ -1309,7 +1309,7 @@ if( TRUE ){ # "sScore0LAr13"
                 scrMtx[wIdx,"colB6"] <- matCntB[6]
             }
 
-            scrMtx[wIdx ,scrMtx[wIdx,]==1] <- 0
+            # scrMtx[wIdx ,scrMtx[wIdx,]==1] <- 0
             # scrMtx[wIdx,"rebC.r"] <- sum(aCode==wMI$rawTail[stdMILen,])
             # scrMtx[wIdx,"rebC.c"] <- sum(aCStep==wMI$cStepTail[stdMILen,])
         }
@@ -1416,7 +1416,7 @@ if( TRUE ){ # "sScore0LAr24"
                 scrMtx[wIdx,"colB6"] <- matCntB[6]
             }
 
-            scrMtx[wIdx ,scrMtx[wIdx,]==1] <- 0
+            # scrMtx[wIdx ,scrMtx[wIdx,]==1] <- 0
             # scrMtx[wIdx,"rebC.r"] <- sum(aCode==wMI$rawTail[stdMILen,])
             # scrMtx[wIdx,"rebC.c"] <- sum(aCStep==wMI$cStepTail[stdMILen,])
         }
@@ -1521,7 +1521,7 @@ if( TRUE ){ # "sScore0LVr13"
                 scrMtx[wIdx,"colB6"] <- matCntB[6]
             }
 
-            scrMtx[wIdx ,scrMtx[wIdx,]==1] <- 0
+            # scrMtx[wIdx ,scrMtx[wIdx,]==1] <- 0
             # scrMtx[wIdx,"rebC.r"] <- sum(aCode==wMI$rawTail[stdMILen,])
             # scrMtx[wIdx,"rebC.c"] <- sum(aCStep==wMI$cStepTail[stdMILen,])
         }
@@ -1626,7 +1626,7 @@ if( TRUE ){ # "sScore0LVr24"
                 scrMtx[wIdx,"colB6"] <- matCntB[6]
             }
 
-            scrMtx[wIdx ,scrMtx[wIdx,]==1] <- 0
+            # scrMtx[wIdx ,scrMtx[wIdx,]==1] <- 0
             # scrMtx[wIdx,"rebC.r"] <- sum(aCode==wMI$rawTail[stdMILen,])
             # scrMtx[wIdx,"rebC.c"] <- sum(aCStep==wMI$cStepTail[stdMILen,])
         }
@@ -1735,7 +1735,7 @@ if( TRUE ){ # "sScore0LAe13"
                 scrMtx[wIdx,"colB6"] <- matCntB[6]
             }
 
-            scrMtx[wIdx ,scrMtx[wIdx,]==1] <- 0
+            # scrMtx[wIdx ,scrMtx[wIdx,]==1] <- 0
             # scrMtx[wIdx,"rebC.r"] <- sum(aCode==wMI$rawTail[stdMILen,])
             # scrMtx[wIdx,"rebC.c"] <- sum(aCStep==wMI$cStepTail[stdMILen,])
         }
@@ -1842,7 +1842,7 @@ if( TRUE ){ # "sScore0LAe24"
                 scrMtx[wIdx,"colB6"] <- matCntB[6]
             }
 
-            scrMtx[wIdx ,scrMtx[wIdx,]==1] <- 0
+            # scrMtx[wIdx ,scrMtx[wIdx,]==1] <- 0
             # scrMtx[wIdx,"rebC.r"] <- sum(aCode==wMI$rawTail[stdMILen,])
             # scrMtx[wIdx,"rebC.c"] <- sum(aCStep==wMI$cStepTail[stdMILen,])
         }
@@ -1947,7 +1947,7 @@ if( TRUE ){ # "sScore0LVe13"
                 scrMtx[wIdx,"colB6"] <- matCntB[6]
             }
 
-            scrMtx[wIdx ,scrMtx[wIdx,]==1] <- 0
+            # scrMtx[wIdx ,scrMtx[wIdx,]==1] <- 0
             # scrMtx[wIdx,"rebC.r"] <- sum(aCode==wMI$rawTail[stdMILen,])
             # scrMtx[wIdx,"rebC.c"] <- sum(aCStep==wMI$cStepTail[stdMILen,])
         }
@@ -2052,7 +2052,7 @@ if( TRUE ){ # "sScore0LVe24"
                 scrMtx[wIdx,"colB6"] <- matCntB[6]
             }
 
-            scrMtx[wIdx ,scrMtx[wIdx,]==1] <- 0
+            # scrMtx[wIdx ,scrMtx[wIdx,]==1] <- 0
             # scrMtx[wIdx,"rebC.r"] <- sum(aCode==wMI$rawTail[stdMILen,])
             # scrMtx[wIdx,"rebC.c"] <- sum(aCStep==wMI$cStepTail[stdMILen,])
         }
@@ -2161,7 +2161,7 @@ if( TRUE ){ # "sScore0LAc13"
                 scrMtx[wIdx,"colB6"] <- matCntB[6]
             }
 
-            scrMtx[wIdx ,scrMtx[wIdx,]==1] <- 0
+            # scrMtx[wIdx ,scrMtx[wIdx,]==1] <- 0
             # scrMtx[wIdx,"rebC.r"] <- sum(aCode==wMI$rawTail[stdMILen,])
             # scrMtx[wIdx,"rebC.c"] <- sum(aCStep==wMI$cStepTail[stdMILen,])
         }
@@ -2268,7 +2268,7 @@ if( TRUE ){ # "sScore0LAc24"
                 scrMtx[wIdx,"colB6"] <- matCntB[6]
             }
 
-            scrMtx[wIdx ,scrMtx[wIdx,]==1] <- 0
+            # scrMtx[wIdx ,scrMtx[wIdx,]==1] <- 0
             # scrMtx[wIdx,"rebC.r"] <- sum(aCode==wMI$rawTail[stdMILen,])
             # scrMtx[wIdx,"rebC.c"] <- sum(aCStep==wMI$cStepTail[stdMILen,])
         }
@@ -2373,7 +2373,7 @@ if( TRUE ){ # "sScore0LVc13"
                 scrMtx[wIdx,"colB6"] <- matCntB[6]
             }
 
-            scrMtx[wIdx ,scrMtx[wIdx,]==1] <- 0
+            # scrMtx[wIdx ,scrMtx[wIdx,]==1] <- 0
             # scrMtx[wIdx,"rebC.r"] <- sum(aCode==wMI$rawTail[stdMILen,])
             # scrMtx[wIdx,"rebC.c"] <- sum(aCStep==wMI$cStepTail[stdMILen,])
         }
@@ -2478,7 +2478,7 @@ if( TRUE ){ # "sScore0LVc24"
                 scrMtx[wIdx,"colB6"] <- matCntB[6]
             }
 
-            scrMtx[wIdx ,scrMtx[wIdx,]==1] <- 0
+            # scrMtx[wIdx ,scrMtx[wIdx,]==1] <- 0
             # scrMtx[wIdx,"rebC.r"] <- sum(aCode==wMI$rawTail[stdMILen,])
             # scrMtx[wIdx,"rebC.c"] <- sum(aCStep==wMI$cStepTail[stdMILen,])
         }
@@ -2589,7 +2589,7 @@ if( TRUE ){ # "sScore0LAf13"
                 scrMtx[wIdx,"colB6"] <- matCntB[6]
             }
 
-            scrMtx[wIdx ,scrMtx[wIdx,]==1] <- 0
+            # scrMtx[wIdx ,scrMtx[wIdx,]==1] <- 0
             # scrMtx[wIdx,"rebC.r"] <- sum(aCode==wMI$rawTail[stdMILen,])
             # scrMtx[wIdx,"rebC.c"] <- sum(aCStep==wMI$cStepTail[stdMILen,])
         }
@@ -2699,7 +2699,7 @@ if( TRUE ){ # "sScore0LAf24"
                 scrMtx[wIdx,"colB6"] <- matCntB[6]
             }
 
-            scrMtx[wIdx ,scrMtx[wIdx,]==1] <- 0
+            # scrMtx[wIdx ,scrMtx[wIdx,]==1] <- 0
             # scrMtx[wIdx,"rebC.r"] <- sum(aCode==wMI$rawTail[stdMILen,])
             # scrMtx[wIdx,"rebC.c"] <- sum(aCStep==wMI$cStepTail[stdMILen,])
         }
@@ -2808,7 +2808,7 @@ if( TRUE ){ # "sScore0LVf13"
                 scrMtx[wIdx,"colB6"] <- matCntB[6]
             }
 
-            scrMtx[wIdx ,scrMtx[wIdx,]==1] <- 0
+            # scrMtx[wIdx ,scrMtx[wIdx,]==1] <- 0
             # scrMtx[wIdx,"rebC.r"] <- sum(aCode==wMI$rawTail[stdMILen,])
             # scrMtx[wIdx,"rebC.c"] <- sum(aCStep==wMI$cStepTail[stdMILen,])
         }
@@ -2916,7 +2916,7 @@ if( TRUE ){ # "sScore0LVf24"
                 scrMtx[wIdx,"colB6"] <- matCntB[6]
             }
 
-            scrMtx[wIdx ,scrMtx[wIdx,]==1] <- 0
+            # scrMtx[wIdx ,scrMtx[wIdx,]==1] <- 0
             # scrMtx[wIdx,"rebC.r"] <- sum(aCode==wMI$rawTail[stdMILen,])
             # scrMtx[wIdx,"rebC.c"] <- sum(aCStep==wMI$cStepTail[stdMILen,])
         }

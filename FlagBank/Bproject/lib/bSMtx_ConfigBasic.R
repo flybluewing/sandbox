@@ -192,7 +192,7 @@ bsScoreMtxCfg[[mName]] <- list(
                 ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
     )
     ,evtMaxFColTot = NULL
-    ,rowReb = c( rawMin=2 ,lowE=2 ,rareE=1 ,dupESum=1 )    ,rowRebDup=NULL
+    ,rowReb = c( rawMin=2 ,lowE=1 ,rareE=1 ,dupESum=1 )    ,rowRebDup=NULL
     ,summMtx = matrix(  # all ph fCol phReb xyCnt.fCol xyCnt.phase      / raw ,evt
                         c(  1 ,3 ,2 ,2 ,2 ,1    ,1 ,1 ,1 ,1 ,1 ,1  ) ,byrow=T
                     ,ncol=length(summMtxName$cName) ,nrow=length(summMtxName$rName)
