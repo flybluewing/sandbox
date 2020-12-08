@@ -300,7 +300,7 @@ if( TRUE ){
 }
 
 mName <- "sScore03"
-if( FALSE ){
+if( TRUE ){
 
     bSMtxExtFltLst[[mName]] <- list()
         # rebPtn.1    rebPtn.n 
