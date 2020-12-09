@@ -7,7 +7,6 @@ if( FALSE ){    # document
 
 bSMtxRMLst <- list()
 
-
 mfName <- "bsMR4567"
 if( TRUE ){
 
@@ -242,6 +241,20 @@ if( TRUE ){
 
             return( rMtx )
         }
+
+        return(fltObj)
+
+    }
+
+}
+
+mfName <- "bsMRLArn"
+if( FALSE ){
+
+    bSMtxRMLst[[mfName]] <- function( tgt.scMtx=NULL ){
+
+        fltMNames = c("sScore0LAr13","sScore0LAr24")
+        fltObj <- bS.get_bSMtxRM_bsMRLXxn( tgt.scMtx=tgt.scMtx ,fltMNames=fltMNames )
 
         return(fltObj)
 

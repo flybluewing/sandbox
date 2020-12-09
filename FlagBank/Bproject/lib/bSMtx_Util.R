@@ -676,3 +676,86 @@ bS.cut_M <- function( crMName ,scoreMtx.grp ,cut.grp ,fHName ,anaOnly=F  ,logger
 }
 
 
+bS.get_bSMtxRM_bsMRLXxn <- function( tgt.scMtx=NULL ,fltMNames ){
+
+        fltObj <- list( mInfo=list() )
+        fltObj$mInfo$mName <- mfName
+        fltObj$available <- TRUE    # bFCust.getFCustGrp() 에서 확인됨.
+
+        fltObj$fltMNames <- fltMNames
+        fltObj$mInfo$cName <- c( "hpn1","hpnE"
+                                ,"col1Hpn1" ,"col1Hpn2" ,"col1Hpn3" ,"col1Hpn4" ,"col1Hpn5" ,"col1Hpn6"
+                                ,"colEHpn1" ,"colEHpn2" ,"colEHpn3" ,"colEHpn4" ,"colEHpn5" ,"colEHpn6"
+		)
+
+        # tgt.scMtx가 fltObj$fltMNames 를 모두 포함하고 있는 지 체크.
+        if( !is.null(tgt.scMtx) ){
+            #   scoreMtxLst는 체크하지 않는다. 차라리 나중에 에러나는 게 인지하기 쉬우므로.            
+            mFlag <- fltObj$fltMNames %in% tgt.scMtx
+            fltObj$available <- ifelse( all(mFlag) ,fltObj$available ,FALSE )
+        }
+
+        fltObj$getScore <- function( mmMtxLst ,mmEMtxLst ,aIdx ){
+
+            rowVal <- rep( 0 ,length(fltObj$mInfo$cName) )
+            names(rowVal) <- fltObj$mInfo$cName
+
+            cName <- c( "hpn1" ,"hpnE" ,"col1Hpn1" ,"col1Hpn2" ,"col1Hpn3" ,"col1Hpn4" ,"col1Hpn5" ,"col1Hpn6" )
+            ignoreCol <- cName[ rowVal[cName]==1 ]
+            rowVal[ ignoreCol ] <- 0
+
+            for( mName in fltObj$fltMNames ){
+                rVal <- mmMtxLst[[mName]][aIdx,]
+                eVal <- mmEMtxLst[[mName]][aIdx,]
+                rowVal["hpn1"] <- rowVal["hpn1"] + sum( rVal == 1 )
+                rowVal["hpnE"] <- rowVal["hpnE"] + sum( !is.na(eVal) )
+
+                rowVal["col1Hpn1"] <- rowVal["col1Hpn1"] + sum( rVal[c("colA1","colB1")]==1 )
+                rowVal["col1Hpn2"] <- rowVal["col1Hpn2"] + sum( rVal[c("colA2","colB2")]==1 )
+                rowVal["col1Hpn3"] <- rowVal["col1Hpn3"] + sum( rVal[c("colA3","colB3")]==1 )
+                rowVal["col1Hpn4"] <- rowVal["col1Hpn4"] + sum( rVal[c("colA4","colB4")]==1 )
+                rowVal["col1Hpn5"] <- rowVal["col1Hpn5"] + sum( rVal[c("colA5","colB5")]==1 )
+                rowVal["col1Hpn6"] <- rowVal["col1Hpn6"] + sum( rVal[c("colA6","colB6")]==1 )
+
+                rowVal["colEHpn1"] <- rowVal["colEHpn1"] + sum( !is.na(eVal[c("colA1","colB1")]) )
+                rowVal["colEHpn2"] <- rowVal["colEHpn2"] + sum( !is.na(eVal[c("colA2","colB2")]) )
+                rowVal["colEHpn3"] <- rowVal["colEHpn3"] + sum( !is.na(eVal[c("colA3","colB3")]) )
+                rowVal["colEHpn4"] <- rowVal["colEHpn4"] + sum( !is.na(eVal[c("colA4","colB4")]) )
+                rowVal["colEHpn5"] <- rowVal["colEHpn5"] + sum( !is.na(eVal[c("colA5","colB5")]) )
+                rowVal["colEHpn6"] <- rowVal["colEHpn6"] + sum( !is.na(eVal[c("colA6","colB6")]) )
+
+            }
+
+            return( rowVal )
+        }
+
+
+        fltObj$getScoreMtx <- function( scoreMtxLst ){
+
+            mmMtxLst <- lapply( scoreMtxLst[fltObj$fltMNames] ,function(mtxObj){mtxObj$scoreMtx} )
+            mmEMtxLst <- list()
+            for( mName in fltObj$fltMNames ){
+                eMtx <- mmMtxLst[[mName]]
+                eMtx[,] <- NA
+                for( rIdx in seq_len(nrow(eMtx)) ){
+                    eMtx[rIdx,] <- bFCust.getEvt( mmMtxLst[[mName]][rIdx,] ,bsScoreMtxCfg[[mName]]$fCol )["lev",]
+                }
+                mmEMtxLst[[mName]] <- eMtx
+            }
+
+            rMtx <- matrix( 0 ,nrow=nrow(mmMtxLst[[1]]) ,ncol=length(fltObj$mInfo$cName) )
+            colnames(rMtx) <- fltObj$mInfo$cName
+            if( !fltObj$available ) return( rMtx )
+
+            for( aIdx in seq_len(nrow(rMtx)) ){
+                rMtx[aIdx,] <- fltObj$getScore( mmMtxLst ,mmEMtxLst ,aIdx )
+            }
+            rownames(rMtx) <- rownames(mmMtxLst[[1]])
+
+            return( rMtx )
+        }
+
+        return(fltObj)
+
+}
+
