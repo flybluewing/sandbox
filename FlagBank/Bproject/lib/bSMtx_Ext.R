@@ -350,7 +350,7 @@ if( TRUE ){
 
 
 mName <- "sScore04"
-if( FALSE ){
+if( TRUE ){
 
     bSMtxExtFltLst[[mName]] <- list()
         # pBanN.r pBanN.n pLCol pE3 pE4 pMH pfNum 
@@ -398,7 +398,7 @@ if( FALSE ){
 
 
 mName <- "sScore05"
-if( FALSE ){
+if( TRUE ){
 
     bSMtxExtFltLst[[mName]] <- list()
         # pBanN.r pBanN.n pLCol pE3 pE4 pMH pfNum 
@@ -445,7 +445,7 @@ if( FALSE ){
 }
 
 mName <- "sScore06"
-if( FALSE ){
+if( TRUE ){
 
     bSMtxExtFltLst[[mName]] <- list()
         # pBanN.r pBanN.n pLCol pE3 pE4 pMH pfNum 
@@ -492,7 +492,7 @@ if( FALSE ){
 }
 
 mName <- "sScore07"
-if( FALSE ){
+if( TRUE ){
 
     bSMtxExtFltLst[[mName]] <- list()
         # pBanN.r pBanN.n pLCol pE3 pE4 pMH pfNum 
@@ -540,7 +540,7 @@ if( FALSE ){
 
 
 mName <- "sScore08"
-if( FALSE ){
+if( TRUE ){
 
     bSMtxExtFltLst[[mName]] <- list()
         # c31 c32 c33 c34 

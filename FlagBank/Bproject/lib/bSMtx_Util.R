@@ -216,7 +216,7 @@ bS.getCutGrp <- function( hMtxLst_bS ,tgt.scMtx=NULL ){
                 scoreMtxObj <- bS.HMtxLst_getMtxLst( hMtxLst_bS , hName ,mName ,pName )
                 stdCut[[pName]] <- bS_stdCut.rawRow( hName ,mName ,pName ,scoreMtxObj$scoreMtx )
 
-                if( is.null(bSMtxExtFltLst[[mName]]) ){   stdCutExt[[mName]] <- list()
+                if( is.null(bSMtxExtFltLst[[mName]]) ){   stdCutExt[[pName]] <- list()
                 } else {
                     fltLst <- list()
                     for( nIdx in names(bSMtxExtFltLst[[mName]]) ){

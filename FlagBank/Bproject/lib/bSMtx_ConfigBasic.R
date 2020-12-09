@@ -280,75 +280,78 @@ bsScoreMtxCfg[[mName]] <- list(
 
 mName <- "sScore04"
 bsScoreMtxCfg[[mName]] <- list(
+    # sScore04는 evt는 커녕, hpn자체도 드물다. 
+    #   bS_stdCut.hIdx() 에서 hpn 수를 가지고 필터링 조건을 추가해 줄 필요가 있음.
     mName = mName   ,style=c( freqZero=TRUE )
     ,fCol = list(
         "pBanN.r"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
                         ,evt=matrix( c(c(3,3,3,3),c(2,3,4,5)) ,ncol=2)
-                        ,evtMax.fCol=NULL
+                        ,evtMax.fCol=c( lev1Max=2 ,lev2Max=2 ,lev3Max=2 )
                     ) 
         ,"pBanN.n"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
                         ,evt=matrix( c(c(3,3,3,3),c(2,3,4,5)) ,ncol=2)
-                        ,evtMax.fCol=NULL
+                        ,evtMax.fCol=c( lev1Max=2 ,lev2Max=2 ,lev3Max=2 )
                     )
         ,"pLCol"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
                         ,evt=matrix( c(c(3,3,3,3),c(1,2,3,4)) ,ncol=2)
-                        ,evtMax.fCol=NULL
+                        ,evtMax.fCol=c( lev1Max=2 ,lev2Max=2 ,lev3Max=2 )
                     )
         ,"pE3"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
                         ,evt=matrix( c(c(3,3,3,3),c(1,2,3,4)) ,ncol=2)
-                        ,evtMax.fCol=NULL
+                        ,evtMax.fCol=c( lev1Max=2 ,lev2Max=2 ,lev3Max=2 )
                     )
         ,"pE4"=list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
                         ,evt=matrix( c(c(3,3,3,3),c(1,2,3,4)) ,ncol=2)
-                        ,evtMax.fCol=NULL
+                        ,evtMax.fCol=c( lev1Max=2 ,lev2Max=2 ,lev3Max=2 )
                     )
         ,"pMH"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
                         ,evt=matrix( c(c(3,3,3,3),c(2,3,4,5)) ,ncol=2)
-                        ,evtMax.fCol=NULL
+                        ,evtMax.fCol=c( lev1Max=2 ,lev2Max=2 ,lev3Max=2 )
                     )
         ,"pfNum"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
                         ,evt=matrix( c(c(3,3,3,3),c(2,3,4,5)) ,ncol=2)
-                        ,evtMax.fCol=NULL
+                        ,evtMax.fCol=c( lev1Max=2 ,lev2Max=2 ,lev3Max=2 )
                     )
         ,"iBanN"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
                         ,evt=matrix( c(c(3,3,3,3),c(2,3,4,5)) ,ncol=2)
-                        ,evtMax.fCol=NULL
+                        ,evtMax.fCol=c( lev1Max=2 ,lev2Max=2 ,lev3Max=2 )
                     )
         ,"iLCol"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
                         ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
-                        ,evtMax.fCol=NULL
+                        ,evtMax.fCol=c( lev1Max=2 ,lev2Max=2 ,lev3Max=2 )   # H864 ,H880 검토 요.
                     )
         ,"iE3"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
                         ,evt=matrix( c(c(3,3,3,3),c(1,2,3,4)) ,ncol=2)
-                        ,evtMax.fCol=NULL
+                        ,evtMax.fCol=c( lev1Max=2 ,lev2Max=2 ,lev3Max=2 )
                     )
         ,"iE4"=list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
                         ,evt=matrix( c(c(3,3,3,3),c(1,2,3,4)) ,ncol=2)
-                        ,evtMax.fCol=NULL
+                        ,evtMax.fCol=c( lev1Max=2 ,lev2Max=2 ,lev3Max=2 )
                     )
         ,"iMH"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
                         ,evt=matrix( c(c(3,3,3,3),c(2,3,4,5)) ,ncol=2)
-                        ,evtMax.fCol=NULL
+                        ,evtMax.fCol=c( lev1Max=2 ,lev2Max=2 ,lev3Max=2 )
                     )
         ,"ifNum"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
                         ,evt=matrix( c(c(3,3,3,3),c(2,3,4,5)) ,ncol=2)
-                        ,evtMax.fCol=NULL
+                        ,evtMax.fCol=c( lev1Max=2 ,lev2Max=2 ,lev3Max=2 )
                     )
         ,"FVa.m"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
                         ,evt=matrix( c(c(3,3,3,3),c(2,3,4,5)) ,ncol=2)
-                        ,evtMax.fCol=NULL
+                        ,evtMax.fCol=c( lev1Max=2 ,lev2Max=2 ,lev3Max=2 )
                     )
         ,"FVa.c"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
                         ,evt=matrix( c(c(3,3,3,3),c(2,3,4,5)) ,ncol=2)
-                        ,evtMax.fCol=NULL
+                        ,evtMax.fCol=c( lev1Max=2 ,lev2Max=2 ,lev3Max=2 )
                     )
         ,"m4"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
                         ,evt=matrix( c(c(3,3,3,3),c(2,3,4,5)) ,ncol=2)
-                        ,evtMax.fCol=NULL
+                        ,evtMax.fCol=c( lev1Max=2 ,lev2Max=2 ,lev3Max=2 )
                     )
     )
     ,evtMax = NULL    ,evtMaxFColTot = NULL
-    ,rowReb = NULL    ,rowRebDup=NULL
+    ,rowReb = c( rawMin=1 ,lowE=1 ,rareE=1 ,dupESum=1 )    
+    ,rowRebDup=NULL
     ,summMtx = NULL   ,summMtx.sum = NULL    ,summMtx.reb = NULL
     ,scMtx.sz = matrix( c( 2 ,2 ,1 ,2 ,2 ,1     ,1 ,1 ,1 ,1 ,1 ,1 ) ,byrow=T
                         #   "r.ph" ,"r.fCol" ,"r.dblHpnFlg" ,"e.ph" ,"e.fCol" ,"e.dblHpnFlg"

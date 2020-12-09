@@ -1318,7 +1318,7 @@ bFCust.getFCustGrp <- function( hMtxLst ,tgt.scMtx=NULL ){
                 scoreMtxObj <- B.HMtxLst_getMtxLst( hMtxLst , hName ,mName ,pName )
                 stdCut[[pName]] <- FCust_stdCut.rawRow( hName ,mName ,pName ,scoreMtxObj$scoreMtx )
 
-                if( is.null(bFMtxExtFltLst[[mName]]) ){   stdCutExt[[mName]] <- list()
+                if( is.null(bFMtxExtFltLst[[mName]]) ){   stdCutExt[[pName]] <- list()
                 } else {
                     fltLst <- list()
                     for( nIdx in names(bFMtxExtFltLst[[mName]]) ){
