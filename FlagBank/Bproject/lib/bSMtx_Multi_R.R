@@ -249,16 +249,110 @@ if( TRUE ){
 }
 
 mfName <- "bsMRLArn"
-if( FALSE ){
-
+if( TRUE ){
     bSMtxRMLst[[mfName]] <- function( tgt.scMtx=NULL ){
-
         fltMNames = c("sScore0LAr13","sScore0LAr24")
-        fltObj <- bS.get_bSMtxRM_bsMRLXxn( tgt.scMtx=tgt.scMtx ,fltMNames=fltMNames )
-
-        return(fltObj)
-
+        return( bS.get_bSMtxRM_bsMRLXxn( tgt.scMtx=tgt.scMtx ,fltMNames=fltMNames ) )
     }
-
 }
+mfName <- "bsMRLVrn"
+if( TRUE ){
+    bSMtxRMLst[[mfName]] <- function( tgt.scMtx=NULL ){
+        fltMNames = c("sScore0LVr13","sScore0LVr24")
+        return( bS.get_bSMtxRM_bsMRLXxn( tgt.scMtx=tgt.scMtx ,fltMNames=fltMNames ) )
+    }
+}
+mfName <- "bsMRLAVrn"
+if( TRUE ){
+    bSMtxRMLst[[mfName]] <- function( tgt.scMtx=NULL ){
+        fltMNames = c("sScore0LAr13","sScore0LAr24","sScore0LVr13","sScore0LVr24")
+        return( bS.get_bSMtxRM_bsMRLXxn( tgt.scMtx=tgt.scMtx ,fltMNames=fltMNames ) )
+    }
+}
+
+mfName <- "bsMRLAen"
+if( TRUE ){
+    bSMtxRMLst[[mfName]] <- function( tgt.scMtx=NULL ){
+        fltMNames = c("sScore0LAe13","sScore0LAe24")
+        return( bS.get_bSMtxRM_bsMRLXxn( tgt.scMtx=tgt.scMtx ,fltMNames=fltMNames ) )
+    }
+}
+mfName <- "bsMRLVen"
+if( TRUE ){
+    bSMtxRMLst[[mfName]] <- function( tgt.scMtx=NULL ){
+        fltMNames = c("sScore0LVe13","sScore0LVe24")
+        return( bS.get_bSMtxRM_bsMRLXxn( tgt.scMtx=tgt.scMtx ,fltMNames=fltMNames ) )
+    }
+}
+
+mfName <- "bsMRLAcn"
+if( TRUE ){
+    bSMtxRMLst[[mfName]] <- function( tgt.scMtx=NULL ){
+        fltMNames = c("sScore0LAc13","sScore0LAc24")
+        return( bS.get_bSMtxRM_bsMRLXxn( tgt.scMtx=tgt.scMtx ,fltMNames=fltMNames ) )
+    }
+}
+mfName <- "bsMRLVcn"
+if( TRUE ){
+    bSMtxRMLst[[mfName]] <- function( tgt.scMtx=NULL ){
+        fltMNames = c("sScore0LVc13","sScore0LVc24")
+        return( bS.get_bSMtxRM_bsMRLXxn( tgt.scMtx=tgt.scMtx ,fltMNames=fltMNames ) )
+    }
+}
+
+mfName <- "bsMRLAfn"
+if( TRUE ){
+    bSMtxRMLst[[mfName]] <- function( tgt.scMtx=NULL ){
+        fltMNames = c("sScore0LAf13","sScore0LAf24")
+        return( bS.get_bSMtxRM_bsMRLXxn( tgt.scMtx=tgt.scMtx ,fltMNames=fltMNames ) )
+    }
+}
+mfName <- "bsMRLVfn"
+if( TRUE ){
+    bSMtxRMLst[[mfName]] <- function( tgt.scMtx=NULL ){
+        fltMNames = c("sScore0LVf13","sScore0LVf24")
+        return( bS.get_bSMtxRM_bsMRLXxn( tgt.scMtx=tgt.scMtx ,fltMNames=fltMNames ) )
+    }
+}
+mfName <- "bsMRLAVfn"
+if( TRUE ){
+    bSMtxRMLst[[mfName]] <- function( tgt.scMtx=NULL ){
+        fltMNames = c("sScore0LAf13","sScore0LAf24","sScore0LVf13","sScore0LVf24")
+        return( bS.get_bSMtxRM_bsMRLXxn( tgt.scMtx=tgt.scMtx ,fltMNames=fltMNames ) )
+    }
+}
+
+
+mfName <- "bsMRLAecf13"
+if( TRUE ){
+    bSMtxRMLst[[mfName]] <- function( tgt.scMtx=NULL ){
+        fltMNames = c("sScore0LAe13","sScore0LAc13","sScore0LAf13")
+        return( bS.get_bSMtxRM_bsMRLXecfnn( tgt.scMtx=tgt.scMtx ,fltMNames=fltMNames ) )
+    }
+}
+
+mfName <- "bsMRLAecf24"
+if( TRUE ){
+    bSMtxRMLst[[mfName]] <- function( tgt.scMtx=NULL ){
+        fltMNames = c("sScore0LAe24","sScore0LAc24","sScore0LAf24")
+        return( bS.get_bSMtxRM_bsMRLXecfnn( tgt.scMtx=tgt.scMtx ,fltMNames=fltMNames ) )
+    }
+}
+
+mfName <- "bsMRLVecf13"
+if( TRUE ){
+    bSMtxRMLst[[mfName]] <- function( tgt.scMtx=NULL ){
+        fltMNames = c("sScore0LVe13","sScore0LVc13","sScore0LVf13")
+        return( bS.get_bSMtxRM_bsMRLXecfnn( tgt.scMtx=tgt.scMtx ,fltMNames=fltMNames ) )
+    }
+}
+
+mfName <- "bsMRLVecf24"
+if( TRUE ){
+    bSMtxRMLst[[mfName]] <- function( tgt.scMtx=NULL ){
+        fltMNames = c("sScore0LVe24","sScore0LVc24","sScore0LVf24")
+        return( bS.get_bSMtxRM_bsMRLXecfnn( tgt.scMtx=tgt.scMtx ,fltMNames=fltMNames ) )
+    }
+}
+
 

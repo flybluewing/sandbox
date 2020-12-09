@@ -1036,7 +1036,7 @@ B.rpt_bSMtx_multiR <- function( resultLst ,mName ,tgt.scMtx ,rptFile ){
         rptMtx <- rptMtxLst[[pName]]
         rownames(rptMtx) <- B.tgtHIdxStr( as.integer(names(resultLst)) )
         fLog$fLogStr(sprintf("<%s>",pName))
-        fLog$fLogMtx( rptMtx ,pIndent="  ")
+        fLog$fLogMtx( t(rptMtx) ,pIndent="  ")
     }
 
     fLog$fLogStr( "Finish -----" ,pTime=T)
