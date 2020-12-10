@@ -370,6 +370,7 @@ bsScoreMtxCfg[[mName]] <- list(
         "pBanN.r"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
                         ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
                         ,evtMax.fCol=NULL
+                        ,freqVal=c(1)
                     ) 
         ,"pBanN.n"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
                         ,evt=matrix( c(c(3,3,3,3),c(2,3,4,5)) ,ncol=2)
@@ -377,6 +378,7 @@ bsScoreMtxCfg[[mName]] <- list(
                     )
         ,"pLCol"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
                         ,evt=matrix( c(c(2,3,3),c(2,3,4)) ,ncol=2)
+                        ,freqVal=c(1)
                         ,evtMax.fCol=NULL
                     )
         ,"pE3"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
@@ -397,6 +399,7 @@ bsScoreMtxCfg[[mName]] <- list(
                     )
         ,"iBanN"=list( rng=matrix( c(0,0 ,0,3) ,ncol=2 )
                         ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                        # ,freqVal=c(1)     # H867
                         ,evtMax.fCol=NULL
                     )
         ,"iLCol"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
@@ -421,6 +424,7 @@ bsScoreMtxCfg[[mName]] <- list(
                     )
         ,"FVa.m"=list( rng=matrix( c(0,0 ,0,3) ,ncol=2 )
                         ,evt=matrix( c(c(1,3,3,3),c(2,3,4,5)) ,ncol=2)
+                        ,freqVal=c(1,2)
                         ,evtMax.fCol=NULL
                     )
         ,"FVa.c"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
@@ -433,7 +437,8 @@ bsScoreMtxCfg[[mName]] <- list(
                     )
     )
     ,evtMax = NULL    ,evtMaxFColTot = NULL
-    ,rowReb =c( rawMin=3,lowE=2,rareE=1 ,dupESum=1 )    ,rowRebDup=NULL
+    # ,rowReb =c( rawMin=3,lowE=2,rareE=1 ,dupESum=1 )    ,rowRebDup=NULL
+    ,rowReb =c( rawMin=1,lowE=2,rareE=1 ,dupESum=1 )    ,rowRebDup=NULL
     ,summMtx = matrix(  # all ph fCol phReb xyCnt.fCol xyCnt.phase      / raw ,evt
                         c(  1 ,3 ,3 ,1 ,2 ,2    ,1 ,2 ,2 ,1 ,2 ,2  ) ,byrow=T
                     ,ncol=length(summMtxName$cName) ,nrow=length(summMtxName$rName)

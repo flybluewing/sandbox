@@ -295,7 +295,36 @@ if( TRUE ){
         # iBanN iLCol iE3 iE4 iMH ifNum 
         # FVa.m FVa.c 
         # m4
-              
+
+    fltCreater <- function( mName ){
+        # 발생 빈도가 높아서 fCol[[fColName]]$freqVal 값으로 예외처리된 것들을 모아서 rebCnt 필터링
+        #   freqVal 설정된 fCol들이 너무 많아질 경우를 위한 보완.
+        fltObj <- list( mInfo=list() )
+        fltObj$mInfo$mName = mName
+        fltObj$mInfo$cName <- c("pBanN.r","pBanN.n","iBanN","FVa.c")
+
+        fltObj$getScore <- function( score ){
+            rVal <- rep(0,length(fltObj$mInfo$cName))  ;names(rVal) <- fltObj$mInfo$cName
+            scrEvt <- bFCust.getEvt( score ,scoreMtxCfg[[fltObj$mInfo$mName]]$fCol )["lev",]
+            rVal[ fltObj$mInfo$cName ]   <- score[ fltObj$mInfo$cName ]
+            return( rVal )
+        }
+        fltObj$getScoreMtx <- function( scoreMtx ){
+            rMtx <- matrix( 0 ,nrow=nrow(scoreMtx) ,ncol=length(fltObj$mInfo$cName) )
+            colnames(rMtx) <- fltObj$mInfo$cName
+
+            for( rIdx in seq_len(nrow(rMtx)) ){
+                rMtx[rIdx,] <- fltObj$getScore( scoreMtx[rIdx,] )
+            }
+            rownames(rMtx) <- rownames(scoreMtx)
+
+            return( rMtx )
+        }
+
+        return(fltObj)
+    }
+    bFMtxExtFltLst[[mName]]$freqValReb <- fltCreater(mName)
+
     fltCreater <- function( mName ){
         fltObj <- list( mInfo=list() )
         fltObj$mInfo$mName = mName

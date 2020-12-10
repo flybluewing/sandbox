@@ -189,7 +189,7 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
 
             # resultObj$cutRst1Score <- bUtil.getCut1Score( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx )
             # resultObj$cut.grp <- cut.grp            # bFMtx
-            # resultObj$scoreMtx.grp <- scoreMtx.grp
+            resultObj$scoreMtx.grp <- scoreMtx.grp
 
             # resultObj$cutRst1Score_bS <- cutRst.bS$cutRst1Score
             # aZoidMtx <- matrix(stdZoid ,nrow=1)     # bSMTX
