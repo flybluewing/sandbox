@@ -447,16 +447,18 @@ if( TRUE ){
 }
 
 mName <- "sScore06"
-if( FALSE ){
+if( TRUE ){
     bsScrExtMtxCfg[[mName]] <- list()
     bsScrExtMtxCfg[[mName]]$filter01 <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
-            "xBan.x"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
-                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+            "xBan.x"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
+                            ,evt=matrix( c(c(1,3,3),c(2,3,4)) ,ncol=2)
+                            # ,freqVal=c(1)     # 고려
                         )
             ,"xLCol"=list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )
-                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                            ,evt=matrix( c(c(1,2,3,3),c(1,2,3,4)) ,ncol=2)
+                            # ,freqVal=c(1)     # 고려
                         )
             ,"xEn"=list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )
                             ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
@@ -465,13 +467,16 @@ if( FALSE ){
                             ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
                         )
             ,"xMH"=list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )
-                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                            ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
                         )
             ,"eSum_FVaM4"=list( rng=matrix( c(0,5 ,0,5) ,ncol=2 )
-                            ,evt=matrix( c(c(1,2,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,evt=matrix( c(c(1,1,3,3),c(2,3,4,5)) ,ncol=2)
+                            # ,freqVal=c(1,2)     # 고려
                         )
         )
-        ,evtMax = NULL        ,rowReb = NULL        ,rowRebDup=NULL
+        ,evtMax = NULL        
+        ,rowReb = c( rawMin=1,lowE=1,rareE=1 ,dupESum=1 )        
+        ,rowRebDup=NULL
         ,summMtx = NULL       ,summMtx.reb = NULL   ,summMtx.sum = NULL
         ,scMtx.sz = NULL      ,scMtx.sz.sum = NULL
         ,isHard=NULL  # use default

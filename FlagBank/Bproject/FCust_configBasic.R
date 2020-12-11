@@ -926,7 +926,6 @@ scoreMtxCfg[[mName]] <- list(
     ,evtMax = NULL
     ,rowReb = c( rawMin=1 ,lowE=1 ,rareE=1 ,dupESum=1 ) # H880(dupESum=3 °í·Á..)
     ,rowRebDup = NULL
-    # ,summMtx = NULL ,summMtx.reb = NULL 
     ,summMtx = matrix( c(   1 ,2 ,2 ,2 ,2 ,1     , 1 ,2 ,2 ,2 ,2 ,2 ) ,byrow=T # all ph fCol phReb xyCnt.fCol xyCnt.phase
             ,ncol=length(summMtxName$cName) ,nrow=length(summMtxName$rName)
             ,dimnames=list(summMtxName$rName,summMtxName$cName)

@@ -530,7 +530,9 @@ bsScoreMtxCfg[[mName]] <- list(
                     )
     )
     ,evtMax = NULL    ,evtMaxFColTot = NULL
-    ,rowReb = NULL    ,rowRebDup=NULL
+    # ,rowReb = c( rawMin=1,lowE=2,rareE=1 ,dupESum=1 )
+    ,rowReb = c( rawMin=1,lowE=1,rareE=1 ,dupESum=1 )
+    ,rowRebDup=NULL
     ,summMtx = NULL   ,summMtx.sum = NULL    ,summMtx.reb = NULL
     ,scMtx.sz = matrix( c( 3 ,3 ,1 ,2 ,2 ,1     ,1 ,1 ,1 ,1 ,1 ,1 ) ,byrow=T
                         #   "r.ph" ,"r.fCol" ,"r.dblHpnFlg" ,"e.ph" ,"e.fCol" ,"e.dblHpnFlg"
