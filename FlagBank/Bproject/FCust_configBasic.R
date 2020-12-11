@@ -946,7 +946,6 @@ scoreMtxCfg[[mName]] <- list(
 )
 
 mName <- "score7"
-
 scoreMtxCfg[[mName]] <- list(
     mName = mName   ,style=c( freqZero=TRUE )
     ,fCol = list(
@@ -1030,18 +1029,22 @@ scoreMtxCfg[[mName]] <- list(
         "c31"=list( rng=matrix( c(0,1 ,0,1) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
                         ,evt=matrix( c(c(2,3,3,3,3),c(1,2,3,4,5)) ,ncol=2)
                         ,evtMax.fCol=c( lev1Max=3 ,lev2Max=3 ,lev3Max=2 )
+                        ,forbidEvtReb=integer(0)
                     )
         ,"c32"=list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )
                         ,evt=matrix( c(c(2,3,3,3,3),c(1,2,3,4,5)) ,ncol=2)
                         ,evtMax.fCol=c( lev1Max=3 ,lev2Max=3 ,lev3Max=2 )
+                        ,forbidEvtReb=integer(0)
                     ) 
         ,"c33"=list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )
                         ,evt=matrix( c(c(2,3,3,3,3),c(1,2,3,4,5)) ,ncol=2)
                         ,evtMax.fCol=c( lev1Max=3 ,lev2Max=3 ,lev3Max=2 )
+                        ,forbidEvtReb=integer(0)
                     ) 
         ,"c34"=list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )
                         ,evt=matrix( c(c(2,3,3,3,3),c(1,2,3,4,5)) ,ncol=2)
                         ,evtMax.fCol=c( lev1Max=3 ,lev2Max=3 ,lev3Max=2 )
+                        ,forbidEvtReb=integer(0)
                     ) 
         ,"c21"=list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )
                         ,evt=matrix( c(c(1,3,3,3,3),c(1,2,3,4,5)) ,ncol=2)
@@ -1070,6 +1073,7 @@ scoreMtxCfg[[mName]] <- list(
         ,"min3"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
                         ,evt=matrix( c(c(2,3,3,3,3),c(1,2,3,4,5)) ,ncol=2)
                         ,evtMax.fCol=c( lev1Max=4 ,lev2Max=4 ,lev3Max=2 )
+                        ,forbidEvtReb=integer(0)
                     ) 
         ,"max2MatCnt"=list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )
                         ,evt=matrix( c(c(3,3,3,3),c(2,3,4,5)) ,ncol=2)
@@ -1078,6 +1082,7 @@ scoreMtxCfg[[mName]] <- list(
         ,"min2MatCnt"=list( rng=matrix( c(0,2 ,0,2) ,ncol=2 )
                         ,evt=matrix( c(c(3,3,3,3),c(2,3,4,5)) ,ncol=2)
                         ,evtMax.fCol=c( lev1Max=3 ,lev2Max=3 ,lev3Max=3 )
+                        ,forbidEvtReb=integer(0)
                     )
         ,"minMax2MatCnt"=list( rng=matrix( c(0,0 ,0,4) ,ncol=2 )
                         ,evt=matrix( c(c(2,3,3,3),c(3,4,5,6)) ,ncol=2)
@@ -1093,7 +1098,7 @@ scoreMtxCfg[[mName]] <- list(
                     ) 
     )
     ,evtMax = NULL
-    ,rowReb = NULL
+    ,rowReb = c( rawMin=2 ,lowE=2 ,rareE=2 ,dupESum=2 )
     ,rowRebDup = NULL
     ,summMtx = matrix( c(   1 ,2 ,2 ,2 ,2 ,2    ,1 ,2 ,2 ,2 ,2 ,2 ) ,byrow=T # all ph fCol phReb xyCnt.fCol xyCnt.phase
                     ,ncol=length(summMtxName$cName) ,nrow=length(summMtxName$rName)
