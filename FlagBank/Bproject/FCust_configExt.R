@@ -513,6 +513,7 @@ if( TRUE ){    # sample
                         )
             ,"xLCol"=list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )
                             ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                            ,forbidEvtReb=c(3) ,freqVal=c(1)   
                         )
             ,"xEn"=list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )
                             ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
@@ -527,7 +528,9 @@ if( TRUE ){    # sample
                             ,evt=matrix( c(c(1,2,3,3),c(2,3,4,5)) ,ncol=2)
                         )
         )
-        ,evtMax = NULL        ,rowReb = NULL        ,rowRebDup=NULL
+        ,evtMax = NULL        
+        ,rowReb = c( rawMin=1 ,lowE=2 ,rareE=2 ,dupESum=1 ) # H880(dupESum=3µµ °í·Á..)
+        ,rowRebDup=NULL
         ,summMtx = NULL       ,summMtx.reb = NULL   ,summMtx.sum = NULL
         ,scMtx.sz = NULL      ,scMtx.sz.sum = NULL
         ,isHard=NULL  # use default

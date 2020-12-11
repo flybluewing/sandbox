@@ -830,8 +830,7 @@ scoreMtxCfg[[mName]] <- list(
                     )
     ) 
     ,evtMax = NULL
-    # ,rowReb = c( rawMin=4 ,lowE=2 ,rareE=1 ,dupESum=2 )
-    ,rowReb = c( rawMin=1 ,lowE=1 ,rareE=1 ,dupESum=1 )    
+    ,rowReb = c( rawMin=1 ,lowE=1 ,rareE=1 ,dupESum=1 )
     ,rowRebDup = NULL
     ,summMtx = matrix( c( 1 ,3 ,2 ,2 ,2 ,1   ,1 ,2 ,2 ,2 ,2 ,1 ) ,byrow=T
                     ,ncol=length(summMtxName$cName) ,nrow=length(summMtxName$rName)
@@ -869,6 +868,7 @@ scoreMtxCfg[[mName]] <- list(
         ,"pLCol"=list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )
                         ,evt=matrix( c(c(2,3,3,3,3),c(1,2,3,4,5)) ,ncol=2)
                         ,evtMax.fCol=c( lev1Max=3 ,lev2Max=2 ,lev3Max=2 )
+                        ,forbidEvtReb=c(3) ,freqVal=c(1)   # H880(dupESum=3도 고려..)
                     ) 
         ,"pE3"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
                         ,evt=matrix( c(c(2,3,3,3,3),c(1,2,3,4,5)) ,ncol=2)
@@ -924,7 +924,7 @@ scoreMtxCfg[[mName]] <- list(
                     ) 
     ) 
     ,evtMax = NULL
-    ,rowReb = NULL  # use default   c( rawMin=  )
+    ,rowReb = c( rawMin=1 ,lowE=1 ,rareE=1 ,dupESum=1 ) # H880(dupESum=3 고려..)
     ,rowRebDup = NULL
     # ,summMtx = NULL ,summMtx.reb = NULL 
     ,summMtx = matrix( c(   1 ,2 ,2 ,2 ,2 ,1     , 1 ,2 ,2 ,2 ,2 ,2 ) ,byrow=T # all ph fCol phReb xyCnt.fCol xyCnt.phase
