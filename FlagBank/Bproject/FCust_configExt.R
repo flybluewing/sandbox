@@ -564,7 +564,9 @@ if( TRUE ){    # sample
                             ,evt=matrix( c(c(1,2,3,3),c(2,3,4,5)) ,ncol=2)
                         )
         )
-        ,evtMax = NULL        ,rowReb = NULL        ,rowRebDup=NULL
+        ,evtMax = NULL        
+        ,rowReb = c( rawMin=1 ,lowE=1 ,rareE=1 ,dupESum=1 )        
+        ,rowRebDup=NULL
         ,summMtx = NULL       ,summMtx.reb = NULL   ,summMtx.sum = NULL
         ,scMtx.sz = NULL      ,scMtx.sz.sum = NULL
         ,isHard=NULL  # use default

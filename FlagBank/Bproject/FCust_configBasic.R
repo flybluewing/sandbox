@@ -946,6 +946,7 @@ scoreMtxCfg[[mName]] <- list(
 )
 
 mName <- "score7"
+
 scoreMtxCfg[[mName]] <- list(
     mName = mName   ,style=c( freqZero=TRUE )
     ,fCol = list(
@@ -1009,19 +1010,13 @@ scoreMtxCfg[[mName]] <- list(
                         ,evt=matrix( c(c(2,3,3,3,3),c(1,2,3,4,5)) ,ncol=2)
                         ,evtMax.fCol=c( lev1Max=2 ,lev2Max=2 ,lev3Max=2 )
                     ) 
-        # ,"aFV.m"=list( rng=matrix( c(0,1 ,0,2) ,ncol=2 )
-        #                 ,evt=matrix( c(c(2,3,3,3,3),c(1,2,3,4,5)) ,ncol=2)
-        #             ) 
-        # ,"aFV.c"=list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )
-        #                 ,evt=matrix( c(c(2,3,3,3,3),c(1,2,3,4,5)) ,ncol=2)
-        #             ) 
         ,"m4"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
                         ,evt=matrix( c(c(2,3,3,3,3),c(1,2,3,4,5)) ,ncol=2)
                         ,evtMax.fCol=c( lev1Max=2 ,lev2Max=2 ,lev3Max=2 )
                     ) 
     ) 
     ,evtMax = NULL
-    ,rowReb = NULL  # use default   c( rawMin=  )
+    ,rowReb = c( rawMin=1 ,lowE=1 ,rareE=1 ,dupESum=1 )
     ,rowRebDup = NULL
     ,summMtx = NULL ,summMtx.reb = NULL ,summMtx.sum = NULL
     ,scMtx.sz = NULL    ,scMtx.sz.sum = NULL
