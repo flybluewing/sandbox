@@ -631,7 +631,7 @@ mName <- "sScore08"
 bsScoreMtxCfg[[mName]] <- list(
     mName = mName   ,style=c( freqZero=TRUE )
     ,fCol = list(
-        "max3"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+        "max3"=list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
                         ,evt=matrix( c(c(3,3,3,3),c(1,2,3,4)) ,ncol=2)
                         ,evtMax.fCol=NULL
                     ) 
@@ -651,17 +651,18 @@ bsScoreMtxCfg[[mName]] <- list(
                         ,evt=matrix( c(c(3),c(5)) ,ncol=2)  # extentionÀ¸·Î »¬±î?
                         ,evtMax.fCol=NULL
                     )
-        ,"cTbl"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+        ,"cTbl"=list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
                         ,evt=matrix( c(c(3,3,3,3),c(1,2,3,4)) ,ncol=2)
                         ,evtMax.fCol=NULL
                     )
-        ,"fTbl"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+        ,"fTbl"=list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
                         ,evt=matrix( c(c(3,3,3,3),c(1,2,3,4)) ,ncol=2)
                         ,evtMax.fCol=NULL
                     )
     )
     ,evtMax = NULL    ,evtMaxFColTot = NULL
-    ,rowReb = NULL    ,rowRebDup=NULL
+    ,rowReb = c( rawMin=1,lowE=1,rareE=1 ,dupESum=1 )
+    ,rowRebDup=NULL
     ,summMtx = matrix(  # all ph fCol phReb xyCnt.fCol xyCnt.phase      / raw ,evt
                         c(  1 ,2 ,2 ,1 ,2 ,2    ,1 ,2 ,2 ,1 ,1 ,1  ) ,byrow=T
                     ,ncol=length(summMtxName$cName) ,nrow=length(summMtxName$rName)

@@ -521,47 +521,8 @@ if( TRUE ){
 
 mName <- "sScore08"
 if( FALSE ){
-    bsScrExtMtxCfg[[mName]] <- list()
-    bsScrExtMtxCfg[[mName]]$filter01 <- list(
-        mName = mName   ,style=c( freqZero=TRUE )
-        ,fCol = list(
-            "c3x"=list( rng=matrix( c(0,1 ,0,1) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
-                            ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
-                        ) 
-            ,"c2x"=list( rng=matrix( c(0,2 ,0,2) ,ncol=2 )
-                            ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
-                        )
-            ,"c3x2xOvLAll"=list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )
-                            ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
-                        )
-            ,"c3x2xOvLPar"=list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )
-                            ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
-                        )
-            ,"c3x2xOvLNo"=list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )           # H800_0
-                            ,evt=matrix( c(c(3,3,3,3),c(1,2,3,4)) ,ncol=2)
-                        )
-            ,"maxMin3"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
-                            ,evt=matrix( c(c(3,3),c(1,2)) ,ncol=2)
-                        )
-            ,"max3min2"=list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )
-                            ,evt=matrix( c(c(3,3),c(1,2)) ,ncol=2)
-                        )
-            ,"max2min3"=list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )
-                            ,evt=matrix( c(c(3,3),c(1,2)) ,ncol=2)
-                        )
-            ,"cfTbl"=list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
-                            ,evt=matrix( c(c(3,3),c(1,2)) ,ncol=2)
-                        )
-        )
-        ,evtMax = matrix( c(2,1,3,1 ,2,2,3,1)       ,byrow=T ,ncol=4
-                            ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
-        )
-        ,rowReb = c( rawMin=1 ,lowE=1 ,rareE=1 ,dupESum=2 )
-        ,rowRebDup=NULL
-        ,summMtx = NULL       ,summMtx.reb = NULL   ,summMtx.sum = NULL
-        ,scMtx.sz = NULL      ,scMtx.sz.sum = NULL
-        ,isHard=NULL  # use default
-    )
+    # 폐지. cStep의 폭이 일정치 않아서 score8처럼 유지할 수가 없다.
+    #   그냥 sScore08 자체에 score8 ext 개념 추가했음.
 }
 
 mName <- "sScore09"
