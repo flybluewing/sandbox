@@ -769,9 +769,9 @@ if( TRUE ){
             rVal["hpn1All"]  <- sum(score==1 ,na.rm=T)
             rVal["hpnEAll"]  <- sum(evtFlag  ,na.rm=T)
 
-            # 값이 1인것은 삭제. 별 의미가 없다.
-            cName <- c( "colAn_hpn1" ,"hpnEAll" ,"colBn_hpn1" ,"colHpn1" ,"colHpn2" ,"colHpn3" ,"colHpn4" ,"colHpn5" ,"colHpn6" ,"hpn1All" ,"hpnEAll" )
-            rVal[ cName[rVal[cName]==1] ] <- 0
+            # freqValReb 옵션도입으로 인해 적용 취소.
+            # cName <- c( "colAn_hpn1" ,"hpnEAll" ,"colBn_hpn1" ,"colHpn1" ,"colHpn2" ,"colHpn3" ,"colHpn4" ,"colHpn5" ,"colHpn6" ,"hpn1All" ,"hpnEAll" )
+            # rVal[ cName[rVal[cName]==1] ] <- 0
 
             # rVal["xxx"]  <- sum(score[c("xxx","xxx","xxx")] ,na.rm=T)
             # rVal["xxx"]  <- sum(scrEvt[c("xxx","xxx")] ,na.rm=T)
@@ -836,9 +836,9 @@ if( TRUE ){
             rVal["hpn1All"]  <- sum(score==1 ,na.rm=T)
             rVal["hpnEAll"]  <- sum(evtFlag  ,na.rm=T)
 
-            # 값이 1인것은 삭제. 별 의미가 없다.
-            cName <- c( "colAn_hpn1" ,"colBn_hpn1" ,"colHpn1" ,"colHpn2" ,"colHpn3" ,"colHpn4" ,"colHpn5" ,"colHpn6" ,"hpn1All" ,"hpnEAll" )
-            rVal[ cName[rVal[cName]==1] ] <- 0
+            # freqValReb 옵션도입으로 인해 적용 취소.
+            # cName <- c( "colAn_hpn1" ,"colBn_hpn1" ,"colHpn1" ,"colHpn2" ,"colHpn3" ,"colHpn4" ,"colHpn5" ,"colHpn6" ,"hpn1All" ,"hpnEAll" )
+            # rVal[ cName[rVal[cName]==1] ] <- 0
 
             # rVal["xxx"]  <- sum(score[c("xxx","xxx","xxx")] ,na.rm=T)
             # rVal["xxx"]  <- sum(scrEvt[c("xxx","xxx")] ,na.rm=T)
@@ -902,9 +902,9 @@ if( TRUE ){
             rVal["hpn1All"]  <- sum(score==1 ,na.rm=T)
             rVal["hpnEAll"]  <- sum(evtFlag  ,na.rm=T)
 
-            # 값이 1인것은 삭제. 별 의미가 없다.
-            cName <- c( "colAn_hpn1" ,"colBn_hpn1" ,"colHpn1" ,"colHpn2" ,"colHpn3" ,"colHpn4" ,"colHpn5" ,"colHpn6" ,"hpn1All" ,"hpnEAll" )
-            rVal[ cName[rVal[cName]==1] ] <- 0 
+            # freqValReb 옵션도입으로 인해 적용 취소.
+            # cName <- c( "colAn_hpn1" ,"colBn_hpn1" ,"colHpn1" ,"colHpn2" ,"colHpn3" ,"colHpn4" ,"colHpn5" ,"colHpn6" ,"hpn1All" ,"hpnEAll" )
+            # rVal[ cName[rVal[cName]==1] ] <- 0 
 
             # rVal["xxx"]  <- sum(score[c("xxx","xxx","xxx")] ,na.rm=T)
             # rVal["xxx"]  <- sum(scrEvt[c("xxx","xxx")] ,na.rm=T)
@@ -968,9 +968,9 @@ if( TRUE ){
             rVal["hpn1All"]  <- sum(score==1 ,na.rm=T)
             rVal["hpnEAll"]  <- sum(evtFlag  ,na.rm=T)
 
-            # 값이 1인것은 삭제. 별 의미가 없다.
-            cName <- c( "colAn_hpn1" ,"colBn_hpn1" ,"colHpn1" ,"colHpn2" ,"colHpn3" ,"colHpn4" ,"colHpn5" ,"colHpn6" ,"hpn1All" ,"hpnEAll" )
-            rVal[ cName[rVal[cName]==1] ] <- 0 
+            # freqValReb 옵션도입으로 인해 적용 취소.
+            # cName <- c( "colAn_hpn1" ,"colBn_hpn1" ,"colHpn1" ,"colHpn2" ,"colHpn3" ,"colHpn4" ,"colHpn5" ,"colHpn6" ,"hpn1All" ,"hpnEAll" )
+            # rVal[ cName[rVal[cName]==1] ] <- 0 
 
             # rVal["xxx"]  <- sum(score[c("xxx","xxx","xxx")] ,na.rm=T)
             # rVal["xxx"]  <- sum(scrEvt[c("xxx","xxx")] ,na.rm=T)
@@ -1035,9 +1035,9 @@ if( TRUE ){
             rVal["hpn1All"]  <- sum(score==1 ,na.rm=T)
             rVal["hpnEAll"]  <- sum(evtFlag  ,na.rm=T)
 
-            # 값이 1인것은 삭제. 별 의미가 없다.
-            cName <- c( "colAn_hpn1" ,"colBn_hpn1" ,"colHpn1" ,"colHpn2" ,"colHpn3" ,"colHpn4" ,"colHpn5" ,"colHpn6" ,"hpn1All" ,"hpnEAll" )
-            rVal[ cName[rVal[cName]==1] ] <- 0
+            # freqValReb 옵션도입으로 인해 적용 취소.
+            # cName <- c( "colAn_hpn1" ,"colBn_hpn1" ,"colHpn1" ,"colHpn2" ,"colHpn3" ,"colHpn4" ,"colHpn5" ,"colHpn6" ,"hpn1All" ,"hpnEAll" )
+            # rVal[ cName[rVal[cName]==1] ] <- 0
 
             # rVal["xxx"]  <- sum(score[c("xxx","xxx","xxx")] ,na.rm=T)
             # rVal["xxx"]  <- sum(scrEvt[c("xxx","xxx")] ,na.rm=T)
@@ -1101,9 +1101,9 @@ if( TRUE ){
             rVal["hpn1All"]  <- sum(score==1 ,na.rm=T)
             rVal["hpnEAll"]  <- sum(evtFlag  ,na.rm=T)
 
-            # 값이 1인것은 삭제. 별 의미가 없다.
-            cName <- c( "colAn_hpn1" ,"colBn_hpn1" ,"colHpn1" ,"colHpn2" ,"colHpn3" ,"colHpn4" ,"colHpn5" ,"colHpn6" ,"hpn1All" ,"hpnEAll" )
-            rVal[ cName[rVal[cName]==1] ] <- 0
+            # freqValReb 옵션도입으로 인해 적용 취소.
+            # cName <- c( "colAn_hpn1" ,"colBn_hpn1" ,"colHpn1" ,"colHpn2" ,"colHpn3" ,"colHpn4" ,"colHpn5" ,"colHpn6" ,"hpn1All" ,"hpnEAll" )
+            # rVal[ cName[rVal[cName]==1] ] <- 0
 
             # rVal["xxx"]  <- sum(score[c("xxx","xxx","xxx")] ,na.rm=T)
             # rVal["xxx"]  <- sum(scrEvt[c("xxx","xxx")] ,na.rm=T)
@@ -1167,9 +1167,9 @@ if( TRUE ){
             rVal["hpn1All"]  <- sum(score==1 ,na.rm=T)
             rVal["hpnEAll"]  <- sum(evtFlag  ,na.rm=T)
 
-            # 값이 1인것은 삭제. 별 의미가 없다.
-            cName <- c( "colAn_hpn1" ,"colBn_hpn1" ,"colHpn1" ,"colHpn2" ,"colHpn3" ,"colHpn4" ,"colHpn5" ,"colHpn6" ,"hpn1All" ,"hpnEAll" )
-            rVal[ cName[rVal[cName]==1] ] <- 0
+            # freqValReb 옵션도입으로 인해 적용 취소.
+            # cName <- c( "colAn_hpn1" ,"colBn_hpn1" ,"colHpn1" ,"colHpn2" ,"colHpn3" ,"colHpn4" ,"colHpn5" ,"colHpn6" ,"hpn1All" ,"hpnEAll" )
+            # rVal[ cName[rVal[cName]==1] ] <- 0
 
             # rVal["xxx"]  <- sum(score[c("xxx","xxx","xxx")] ,na.rm=T)
             # rVal["xxx"]  <- sum(scrEvt[c("xxx","xxx")] ,na.rm=T)
@@ -1233,9 +1233,9 @@ if( TRUE ){
             rVal["hpn1All"]  <- sum(score==1 ,na.rm=T)
             rVal["hpnEAll"]  <- sum(evtFlag  ,na.rm=T)
 
-            # 값이 1인것은 삭제. 별 의미가 없다.
-            cName <- c( "colAn_hpn1" ,"colBn_hpn1" ,"colHpn1" ,"colHpn2" ,"colHpn3" ,"colHpn4" ,"colHpn5" ,"colHpn6" ,"hpn1All" ,"hpnEAll" )
-            rVal[ cName[rVal[cName]==1] ] <- 0
+            # freqValReb 옵션도입으로 인해 적용 취소.
+            # cName <- c( "colAn_hpn1" ,"colBn_hpn1" ,"colHpn1" ,"colHpn2" ,"colHpn3" ,"colHpn4" ,"colHpn5" ,"colHpn6" ,"hpn1All" ,"hpnEAll" )
+            # rVal[ cName[rVal[cName]==1] ] <- 0
 
             # rVal["xxx"]  <- sum(score[c("xxx","xxx","xxx")] ,na.rm=T)
             # rVal["xxx"]  <- sum(scrEvt[c("xxx","xxx")] ,na.rm=T)
@@ -1300,9 +1300,9 @@ if( TRUE ){
             rVal["hpn1All"]  <- sum(score==1 ,na.rm=T)
             rVal["hpnEAll"]  <- sum(evtFlag  ,na.rm=T)
 
-            # 값이 1인것은 삭제. 별 의미가 없다.
-            cName <- c( "colAn_hpn1" ,"colBn_hpn1" ,"colHpn1" ,"colHpn2" ,"colHpn3" ,"colHpn4" ,"colHpn5" ,"colHpn6" ,"hpn1All" ,"hpnEAll" )
-            rVal[ cName[rVal[cName]==1] ] <- 0
+            # freqValReb 옵션도입으로 인해 적용 취소.
+            # cName <- c( "colAn_hpn1" ,"colBn_hpn1" ,"colHpn1" ,"colHpn2" ,"colHpn3" ,"colHpn4" ,"colHpn5" ,"colHpn6" ,"hpn1All" ,"hpnEAll" )
+            # rVal[ cName[rVal[cName]==1] ] <- 0
 
             # rVal["xxx"]  <- sum(score[c("xxx","xxx","xxx")] ,na.rm=T)
             # rVal["xxx"]  <- sum(scrEvt[c("xxx","xxx")] ,na.rm=T)
@@ -1366,9 +1366,9 @@ if( TRUE ){
             rVal["hpn1All"]  <- sum(score==1 ,na.rm=T)
             rVal["hpnEAll"]  <- sum(evtFlag  ,na.rm=T)
 
-            # 값이 1인것은 삭제. 별 의미가 없다.
-            cName <- c( "colAn_hpn1" ,"colBn_hpn1" ,"colHpn1" ,"colHpn2" ,"colHpn3" ,"colHpn4" ,"colHpn5" ,"colHpn6" ,"hpn1All" ,"hpnEAll" )
-            rVal[ cName[rVal[cName]==1] ] <- 0
+            # freqValReb 옵션도입으로 인해 적용 취소.
+            # cName <- c( "colAn_hpn1" ,"colBn_hpn1" ,"colHpn1" ,"colHpn2" ,"colHpn3" ,"colHpn4" ,"colHpn5" ,"colHpn6" ,"hpn1All" ,"hpnEAll" )
+            # rVal[ cName[rVal[cName]==1] ] <- 0
 
             # rVal["xxx"]  <- sum(score[c("xxx","xxx","xxx")] ,na.rm=T)
             # rVal["xxx"]  <- sum(scrEvt[c("xxx","xxx")] ,na.rm=T)
@@ -1432,9 +1432,9 @@ if( TRUE ){
             rVal["hpn1All"]  <- sum(score==1 ,na.rm=T)
             rVal["hpnEAll"]  <- sum(evtFlag  ,na.rm=T)
 
-            # 값이 1인것은 삭제. 별 의미가 없다.
-            cName <- c( "colAn_hpn1" ,"colBn_hpn1" ,"colHpn1" ,"colHpn2" ,"colHpn3" ,"colHpn4" ,"colHpn5" ,"colHpn6" ,"hpn1All" ,"hpnEAll" )
-            rVal[ cName[rVal[cName]==1] ] <- 0
+            # freqValReb 옵션도입으로 인해 적용 취소.
+            # cName <- c( "colAn_hpn1" ,"colBn_hpn1" ,"colHpn1" ,"colHpn2" ,"colHpn3" ,"colHpn4" ,"colHpn5" ,"colHpn6" ,"hpn1All" ,"hpnEAll" )
+            # rVal[ cName[rVal[cName]==1] ] <- 0
 
             # rVal["xxx"]  <- sum(score[c("xxx","xxx","xxx")] ,na.rm=T)
             # rVal["xxx"]  <- sum(scrEvt[c("xxx","xxx")] ,na.rm=T)
@@ -1498,9 +1498,9 @@ if( TRUE ){
             rVal["hpn1All"]  <- sum(score==1 ,na.rm=T)
             rVal["hpnEAll"]  <- sum(evtFlag  ,na.rm=T)
 
-            # 값이 1인것은 삭제. 별 의미가 없다.
-            cName <- c( "colAn_hpn1" ,"colBn_hpn1" ,"colHpn1" ,"colHpn2" ,"colHpn3" ,"colHpn4" ,"colHpn5" ,"colHpn6" ,"hpn1All" ,"hpnEAll" )
-            rVal[ cName[rVal[cName]==1] ] <- 0
+            # freqValReb 옵션도입으로 인해 적용 취소.
+            # cName <- c( "colAn_hpn1" ,"colBn_hpn1" ,"colHpn1" ,"colHpn2" ,"colHpn3" ,"colHpn4" ,"colHpn5" ,"colHpn6" ,"hpn1All" ,"hpnEAll" )
+            # rVal[ cName[rVal[cName]==1] ] <- 0
 
             # rVal["xxx"]  <- sum(score[c("xxx","xxx","xxx")] ,na.rm=T)
             # rVal["xxx"]  <- sum(scrEvt[c("xxx","xxx")] ,na.rm=T)
@@ -1565,9 +1565,9 @@ if( TRUE ){
             rVal["hpn1All"]  <- sum(score==1 ,na.rm=T)
             rVal["hpnEAll"]  <- sum(evtFlag  ,na.rm=T)
 
-            # 값이 1인것은 삭제. 별 의미가 없다.
-            cName <- c( "colAn_hpn1" ,"colBn_hpn1" ,"colHpn1" ,"colHpn2" ,"colHpn3" ,"colHpn4" ,"colHpn5" ,"colHpn6" ,"hpn1All" ,"hpnEAll" )
-            rVal[ cName[rVal[cName]==1] ] <- 0
+            # freqValReb 옵션도입으로 인해 적용 취소.
+            # cName <- c( "colAn_hpn1" ,"colBn_hpn1" ,"colHpn1" ,"colHpn2" ,"colHpn3" ,"colHpn4" ,"colHpn5" ,"colHpn6" ,"hpn1All" ,"hpnEAll" )
+            # rVal[ cName[rVal[cName]==1] ] <- 0
 
             # rVal["xxx"]  <- sum(score[c("xxx","xxx","xxx")] ,na.rm=T)
             # rVal["xxx"]  <- sum(scrEvt[c("xxx","xxx")] ,na.rm=T)
@@ -1631,9 +1631,9 @@ if( TRUE ){
             rVal["hpn1All"]  <- sum(score==1 ,na.rm=T)
             rVal["hpnEAll"]  <- sum(evtFlag  ,na.rm=T)
 
-            # 값이 1인것은 삭제. 별 의미가 없다.
-            cName <- c( "colAn_hpn1" ,"colBn_hpn1" ,"colHpn1" ,"colHpn2" ,"colHpn3" ,"colHpn4" ,"colHpn5" ,"colHpn6" ,"hpn1All" ,"hpnEAll" )
-            rVal[ cName[rVal[cName]==1] ] <- 0
+            # freqValReb 옵션도입으로 인해 적용 취소.
+            # cName <- c( "colAn_hpn1" ,"colBn_hpn1" ,"colHpn1" ,"colHpn2" ,"colHpn3" ,"colHpn4" ,"colHpn5" ,"colHpn6" ,"hpn1All" ,"hpnEAll" )
+            # rVal[ cName[rVal[cName]==1] ] <- 0
 
             # rVal["xxx"]  <- sum(score[c("xxx","xxx","xxx")] ,na.rm=T)
             # rVal["xxx"]  <- sum(scrEvt[c("xxx","xxx")] ,na.rm=T)
@@ -1697,9 +1697,9 @@ if( TRUE ){
             rVal["hpn1All"]  <- sum(score==1 ,na.rm=T)
             rVal["hpnEAll"]  <- sum(evtFlag  ,na.rm=T)
 
-            # 값이 1인것은 삭제. 별 의미가 없다.
-            cName <- c( "colAn_hpn1" ,"colBn_hpn1" ,"colHpn1" ,"colHpn2" ,"colHpn3" ,"colHpn4" ,"colHpn5" ,"colHpn6" ,"hpn1All" ,"hpnEAll" )
-            rVal[ cName[rVal[cName]==1] ] <- 0
+            # freqValReb 옵션도입으로 인해 적용 취소.
+            # cName <- c( "colAn_hpn1" ,"colBn_hpn1" ,"colHpn1" ,"colHpn2" ,"colHpn3" ,"colHpn4" ,"colHpn5" ,"colHpn6" ,"hpn1All" ,"hpnEAll" )
+            # rVal[ cName[rVal[cName]==1] ] <- 0
 
             # rVal["xxx"]  <- sum(score[c("xxx","xxx","xxx")] ,na.rm=T)
             # rVal["xxx"]  <- sum(scrEvt[c("xxx","xxx")] ,na.rm=T)
@@ -1763,9 +1763,9 @@ if( TRUE ){
             rVal["hpn1All"]  <- sum(score==1 ,na.rm=T)
             rVal["hpnEAll"]  <- sum(evtFlag  ,na.rm=T)
 
-            # 값이 1인것은 삭제. 별 의미가 없다.
-            cName <- c( "colAn_hpn1" ,"colBn_hpn1" ,"colHpn1" ,"colHpn2" ,"colHpn3" ,"colHpn4" ,"colHpn5" ,"colHpn6" ,"hpn1All" ,"hpnEAll" )
-            rVal[ cName[rVal[cName]==1] ] <- 0
+            # freqValReb 옵션도입으로 인해 적용 취소.
+            # cName <- c( "colAn_hpn1" ,"colBn_hpn1" ,"colHpn1" ,"colHpn2" ,"colHpn3" ,"colHpn4" ,"colHpn5" ,"colHpn6" ,"hpn1All" ,"hpnEAll" )
+            # rVal[ cName[rVal[cName]==1] ] <- 0
 
             # rVal["xxx"]  <- sum(score[c("xxx","xxx","xxx")] ,na.rm=T)
             # rVal["xxx"]  <- sum(scrEvt[c("xxx","xxx")] ,na.rm=T)

@@ -1970,13 +1970,19 @@ if( TRUE ){
                     ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
         )
         ,evtMaxFColTot = NULL
-        ,rowReb = NULL      ,rowRebDup=NULL
-        ,summMtx = matrix( c(   1 ,1 ,1 ,1 ,1 ,1  ,1 ,1 ,1 ,1 ,1 ,1 ) ,byrow=T # all ph fCol phReb xyCnt.fCol xyCnt.phase
+        ,rowReb = c( rawMin=1 ,lowE=1 ,rareE=1 ,dupESum=1 )
+        ,rowRebDup=NULL
+        ,summMtx = matrix( c( 1 ,1 ,1 ,1 ,2 ,2  ,1 ,1 ,1 ,1 ,1 ,1 ) ,byrow=T # all ph fCol phReb xyCnt.fCol xyCnt.phase
                 ,ncol=length(summMtxName$cName) ,nrow=length(summMtxName$rName)
                 ,dimnames=list(summMtxName$rName,summMtxName$cName)
             )
         ,summMtx.reb = NULL     ,summMtx.sum = NULL
-        ,scMtx.sz = NULL    ,scMtx.sz.sum = NULL
+        ,scMtx.sz = matrix( c( 2 ,2 ,1 ,1 ,1 ,1  ,1 ,1 ,1 ,1 ,1 ,1 ) ,byrow=T
+                    # c( "rebCnt" ,"rebDup" ) / c( "r.ph" ,"r.fCol" ,"r.dblHpnFlg" ,"e.ph" ,"e.fCol" ,"e.dblHpnFlg" )
+                    ,ncol=length(scMtx.szName$cName) ,nrow=length(scMtx.szName$rName) 
+                    ,dimnames=list(scMtx.szName$rName,scMtx.szName$cName)
+                )
+        ,scMtx.sz.sum = c(rebCnt.r=3 ,rebCnt.e=2)
         ,isHard=NULL  # use default
     )
 }
@@ -2039,13 +2045,19 @@ if( TRUE ){
                     ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
         )
         ,evtMaxFColTot = NULL
-        ,rowReb = NULL      ,rowRebDup=NULL
-        ,summMtx = matrix( c(   1 ,1 ,1 ,1 ,1 ,1  ,1 ,1 ,1 ,1 ,1 ,1 ) ,byrow=T # all ph fCol phReb xyCnt.fCol xyCnt.phase
+        ,rowReb = c( rawMin=1 ,lowE=1 ,rareE=1 ,dupESum=1 )     ,rowRebDup=NULL
+        ,summMtx = matrix( c(   1 ,1 ,1 ,1 ,2 ,2  ,1 ,1 ,1 ,1 ,1 ,1 ) ,byrow=T # all ph fCol phReb xyCnt.fCol xyCnt.phase
                 ,ncol=length(summMtxName$cName) ,nrow=length(summMtxName$rName)
                 ,dimnames=list(summMtxName$rName,summMtxName$cName)
             )
-        ,summMtx.reb = NULL     ,summMtx.sum = NULL
-        ,scMtx.sz = NULL    ,scMtx.sz.sum = NULL
+        ,summMtx.reb = NULL
+        ,summMtx.sum = NULL
+        ,scMtx.sz = matrix( c( 2 ,2 ,1 ,1 ,1 ,1  ,1 ,1 ,1 ,1 ,1 ,1 ) ,byrow=T
+                    # c( "rebCnt" ,"rebDup" ) / c( "r.ph" ,"r.fCol" ,"r.dblHpnFlg" ,"e.ph" ,"e.fCol" ,"e.dblHpnFlg" )
+                    ,ncol=length(scMtx.szName$cName) ,nrow=length(scMtx.szName$rName) 
+                    ,dimnames=list(scMtx.szName$rName,scMtx.szName$cName)
+                )
+        ,scMtx.sz.sum = c(rebCnt.r=3 ,rebCnt.e=2)
         ,isHard=NULL  # use default
     )
 }
@@ -2108,13 +2120,18 @@ if( TRUE ){
                     ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
         )
         ,evtMaxFColTot = NULL
-        ,rowReb = NULL      ,rowRebDup=NULL
-        ,summMtx = matrix( c(   1 ,1 ,1 ,1 ,1 ,1  ,1 ,1 ,1 ,1 ,1 ,1 ) ,byrow=T # all ph fCol phReb xyCnt.fCol xyCnt.phase
+        ,rowReb = c( rawMin=1 ,lowE=1 ,rareE=1 ,dupESum=1 )     ,rowRebDup=NULL
+        ,summMtx = matrix( c(   1 ,1 ,1 ,1 ,2 ,2  ,1 ,1 ,1 ,1 ,1 ,1 ) ,byrow=T # all ph fCol phReb xyCnt.fCol xyCnt.phase
                 ,ncol=length(summMtxName$cName) ,nrow=length(summMtxName$rName)
                 ,dimnames=list(summMtxName$rName,summMtxName$cName)
             )
         ,summMtx.reb = NULL     ,summMtx.sum = NULL
-        ,scMtx.sz = NULL    ,scMtx.sz.sum = NULL
+        ,scMtx.sz = matrix( c( 2 ,2 ,1 ,1 ,1 ,1  ,1 ,1 ,1 ,1 ,1 ,1 ) ,byrow=T
+                    # c( "rebCnt" ,"rebDup" ) / c( "r.ph" ,"r.fCol" ,"r.dblHpnFlg" ,"e.ph" ,"e.fCol" ,"e.dblHpnFlg" )
+                    ,ncol=length(scMtx.szName$cName) ,nrow=length(scMtx.szName$rName) 
+                    ,dimnames=list(scMtx.szName$rName,scMtx.szName$cName)
+                )
+        ,scMtx.sz.sum = c(rebCnt.r=3 ,rebCnt.e=2)
         ,isHard=NULL  # use default
     )
 }
@@ -2177,13 +2194,18 @@ if( TRUE ){
                     ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
         )
         ,evtMaxFColTot = NULL
-        ,rowReb = NULL      ,rowRebDup=NULL
-        ,summMtx = matrix( c(   1 ,1 ,1 ,1 ,1 ,1  ,1 ,1 ,1 ,1 ,1 ,1 ) ,byrow=T # all ph fCol phReb xyCnt.fCol xyCnt.phase
+        ,rowReb = c( rawMin=1 ,lowE=1 ,rareE=1 ,dupESum=1 )     ,rowRebDup=NULL
+        ,summMtx = matrix( c(   1 ,1 ,1 ,1 ,2 ,2  ,1 ,1 ,1 ,1 ,1 ,1 ) ,byrow=T # all ph fCol phReb xyCnt.fCol xyCnt.phase
                 ,ncol=length(summMtxName$cName) ,nrow=length(summMtxName$rName)
                 ,dimnames=list(summMtxName$rName,summMtxName$cName)
             )
         ,summMtx.reb = NULL     ,summMtx.sum = NULL
-        ,scMtx.sz = NULL    ,scMtx.sz.sum = NULL
+        ,scMtx.sz = matrix( c( 2 ,2 ,1 ,1 ,1 ,1  ,1 ,1 ,1 ,1 ,1 ,1 ) ,byrow=T
+                    # c( "rebCnt" ,"rebDup" ) / c( "r.ph" ,"r.fCol" ,"r.dblHpnFlg" ,"e.ph" ,"e.fCol" ,"e.dblHpnFlg" )
+                    ,ncol=length(scMtx.szName$cName) ,nrow=length(scMtx.szName$rName) 
+                    ,dimnames=list(scMtx.szName$rName,scMtx.szName$cName)
+                )
+        ,scMtx.sz.sum = c(rebCnt.r=3 ,rebCnt.e=2)
         ,isHard=NULL  # use default
     )
 }
