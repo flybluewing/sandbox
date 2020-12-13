@@ -681,6 +681,8 @@ bsScoreMtxCfg[[mName]] <- list(
 
 mName <- "sScore09"
 bsScoreMtxCfg[[mName]] <- list(
+    #   rCnt, eCnt, cCnt, fCnt 에서 1 값은 생략되어 있다. 
+    #   1 생략 철회 및 관련 cut cfg 업데이트 적용 필요.
     mName = mName   ,style=c( freqZero=TRUE )
     ,fCol = list(
         "rCnt"=list( rng=matrix( c(0,0 ,0,3) ,ncol=2 )
@@ -706,30 +708,37 @@ bsScoreMtxCfg[[mName]] <- list(
         ,"eCnt"=list( rng=matrix( c(0,0 ,0,4) ,ncol=2 )
                         ,evt=matrix( c(c(3,3,3),c(4,5,6)) ,ncol=2)
                         ,evtMax.fCol=NULL
+                        ,freqVal=c(1,2)
                     ) 
         ,"eD2"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
                         ,evt=matrix( c(c(1,3,3),c(2,3,4)) ,ncol=2)
                         ,evtMax.fCol=NULL
+                        ,freqVal=c(1)
                     )
         ,"eDn"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
                         ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
                         ,evtMax.fCol=NULL
+                        ,freqVal=c(1)
                     )
         ,"eLr"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
                         ,evt=matrix( c(c(3,3,3),c(3,4,5)) ,ncol=2)
                         ,evtMax.fCol=NULL
+                        ,freqVal=c(1)
                     )
         ,"eRl"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
                         ,evt=matrix( c(c(3,3,3),c(3,4,5)) ,ncol=2)
                         ,evtMax.fCol=NULL
+                        ,freqVal=c(1)
                     )
         ,"cCnt"=list( rng=matrix( c(0,0 ,0,3) ,ncol=2 )
                         ,evt=matrix( c(c(3,3,3),c(4,5,6)) ,ncol=2)
                         ,evtMax.fCol=NULL
+                        ,freqVal=c(1,2)
                     ) 
         ,"cD2"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
                         ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
                         ,evtMax.fCol=NULL
+                        ,freqVal=c(1)
                     )
         ,"cDn"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
                         ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
@@ -738,10 +747,12 @@ bsScoreMtxCfg[[mName]] <- list(
         ,"cLr"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
                         ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
                         ,evtMax.fCol=NULL
+                        ,freqVal=c(1)
                     )
         ,"cRl"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
                         ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
                         ,evtMax.fCol=NULL
+                        ,freqVal=c(1)
                     )
         ,"fCnt"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
                         ,evt=matrix( c(c(3,3,3),c(3,4,5)) ,ncol=2)
@@ -765,7 +776,9 @@ bsScoreMtxCfg[[mName]] <- list(
                     )
     )
     ,evtMax = NULL    ,evtMaxFColTot = NULL
-    ,rowReb =c( rawMin=3,lowE=2,rareE=1,dupESum=1 )   ,rowRebDup=NULL
+    # ,rowReb =c( rawMin=3,lowE=2,rareE=1,dupESum=1 )
+    ,rowReb =c( rawMin=1,lowE=1,rareE=1,dupESum=1 ) 
+    ,rowRebDup=NULL
     ,summMtx = matrix(  # all ph fCol phReb xyCnt.fCol xyCnt.phase      / raw ,evt
                         c(  1 ,2 ,3 ,1 ,1 ,1    ,1 ,1 ,1 ,1 ,2 ,2  ) ,byrow=T
                     ,ncol=length(summMtxName$cName) ,nrow=length(summMtxName$rName)

@@ -526,15 +526,59 @@ if( FALSE ){
 }
 
 mName <- "sScore09"
-if( FALSE ){
+if( TRUE ){
 
     bsScrExtMtxCfg[[mName]] <- list()
+
+    bsScrExtMtxCfg[[mName]]$freqValReb <- list(
+        # c( "rD2" ,"rLr" ,"rRl" ,"eD2" ,"eLr" ,"eRl" ,"cD2" ,"cLr" ,"cRl" ,"fCnt" )
+        mName = mName   ,style=c( freqZero=TRUE )
+        ,fCol = list(
+            "rD2"=list( rng=matrix( c(0,7 ,0,7) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
+                            ,evt=matrix( c(c(3),c(4)) ,ncol=2)
+                        )
+            ,"rLr"=list( rng=matrix( c(0,7 ,0,7) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
+                            ,evt=matrix( c(c(3),c(4)) ,ncol=2)
+                        )
+            ,"rRl"=list( rng=matrix( c(0,7 ,0,7) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
+                            ,evt=matrix( c(c(3),c(4)) ,ncol=2)
+                        )
+            ,"eD2"=list( rng=matrix( c(0,7 ,0,7) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
+                            ,evt=matrix( c(c(3),c(4)) ,ncol=2)
+                        )
+            ,"eLr"=list( rng=matrix( c(0,7 ,0,7) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
+                            ,evt=matrix( c(c(3),c(4)) ,ncol=2)
+                        )
+            ,"eRl"=list( rng=matrix( c(0,7 ,0,7) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
+                            ,evt=matrix( c(c(3),c(4)) ,ncol=2)
+                        )
+            ,"cD2"=list( rng=matrix( c(0,7 ,0,7) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
+                            ,evt=matrix( c(c(3),c(4)) ,ncol=2)
+                        )
+            ,"cLr"=list( rng=matrix( c(0,7 ,0,7) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
+                            ,evt=matrix( c(c(3),c(4)) ,ncol=2)
+                        )
+            ,"cRl"=list( rng=matrix( c(0,7 ,0,7) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
+                            ,evt=matrix( c(c(3),c(4)) ,ncol=2)
+                        )
+            ,"fCnt"=list( rng=matrix( c(0,7 ,0,7) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
+                            ,evt=matrix( c(c(3),c(4)) ,ncol=2)
+                        )
+        )
+        ,evtMax = NULL
+        ,rowReb = c(rawMin=2,lowE=1,rareE=1,dupESum=1)
+        ,rowRebDup=NULL
+        ,summMtx = NULL       ,summMtx.reb = NULL                   ,summMtx.sum = NULL
+        ,scMtx.sz = NULL      ,scMtx.sz.sum = NULL
+        ,isHard=NULL  # use default
+    )
 
     bsScrExtMtxCfg[[mName]]$filter01 <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
             "xCntECnt"=list( rng=matrix( c(0,1 ,0,2) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
                             ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                            ,freqVal=c(1)
                         ) 
             ,"xD2ECnt"=list( rng=matrix( c(0,1 ,0,2) ,ncol=2 )
                             ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
@@ -561,7 +605,9 @@ if( FALSE ){
                             ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
                         )
         )
-        ,evtMax = NULL        ,rowReb = c(rawMin=1,lowE=1,rareE=1)  ,rowRebDup=NULL
+        ,evtMax = NULL        
+        ,rowReb = c(rawMin=1,lowE=1,rareE=1,dupESum=1)
+        ,rowRebDup=NULL
         ,summMtx = NULL       ,summMtx.reb = NULL                   ,summMtx.sum = NULL
         ,scMtx.sz = NULL      ,scMtx.sz.sum = NULL
         ,isHard=NULL  # use default

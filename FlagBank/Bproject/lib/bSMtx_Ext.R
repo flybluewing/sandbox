@@ -629,6 +629,35 @@ if( TRUE ){ # "sScore09"
     fltCreater <- function( mName ){
         fltObj <- list( mInfo=list() )
         fltObj$mInfo$mName = mName
+        fltObj$mInfo$cName <- c( "rD2" ,"rLr" ,"rRl" ,"eD2" ,"eLr" ,"eRl" ,"cD2" ,"cLr" ,"cRl" ,"fCnt" )
+        fltObj$getScore <- function( score ){
+            #   score <- scoreMtx.grp$basic$basic[[mName]]$scoreMtx[1,]
+            rVal <- rep(0,length(fltObj$mInfo$cName))  ;names(rVal) <- fltObj$mInfo$cName
+            scrEvt <- bFCust.getEvt( score ,bsScoreMtxCfg[[fltObj$mInfo$mName]]$fCol )["lev",]
+
+            rVal[fltObj$mInfo$cName]<- score[fltObj$mInfo$cName]
+            return( rVal )
+        }
+        fltObj$getScoreMtx <- function( scoreMtx ){
+            rMtx <- matrix( 0 ,nrow=nrow(scoreMtx) ,ncol=length(fltObj$mInfo$cName) )
+            colnames(rMtx) <- fltObj$mInfo$cName
+
+            for( rIdx in seq_len(nrow(rMtx)) ){
+                rMtx[rIdx,] <- fltObj$getScore( scoreMtx[rIdx,] )
+            }
+            rownames(rMtx) <- rownames(scoreMtx)
+
+            return( rMtx )
+        }
+
+        return(fltObj)
+    }
+    bSMtxExtFltLst[[mName]]$freqValReb <- fltCreater(mName)
+
+
+    fltCreater <- function( mName ){
+        fltObj <- list( mInfo=list() )
+        fltObj$mInfo$mName = mName
         fltObj$mInfo$cName <- c("xCntECnt" 
                                 ,"xD2ECnt" ,"xDnECnt","xLrECnt","xRlECnt" 
                                 ,"r2EvtCnt" ,"e2EvtCnt" ,"c2EvtCnt" ,"f2EvtCnt" 
