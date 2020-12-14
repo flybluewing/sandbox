@@ -949,7 +949,7 @@ if( TRUE ){
             ,"colHpn6"=list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )
                             ,evt=matrix( c(c(3,3,3,3,3,3,3,3),c(2,3,4,5,6,7,8,9)) ,ncol=2)
                         )
-            ,"hpn1All"=list( rng=matrix( c(0,1 ,0,2) ,ncol=2 )
+            ,"hpn1All"=list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )
                             ,evt=matrix( c(c(3,3,3,3,3,3,3),c(3,4,5,6,7,8,9)) ,ncol=2)
                         )
             ,"hpnEAll"=list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )
@@ -1004,7 +1004,7 @@ if( TRUE ){
             ,"colHpn6"=list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )
                             ,evt=matrix( c(c(3,3,3,3,3,3,3,3),c(2,3,4,5,6,7,8,9)) ,ncol=2)
                         )
-            ,"hpn1All"=list( rng=matrix( c(0,1 ,0,2) ,ncol=2 )
+            ,"hpn1All"=list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )
                             ,evt=matrix( c(c(3,3,3,3,3,3,3),c(3,4,5,6,7,8,9)) ,ncol=2)
                         )
             ,"hpnEAll"=list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )
@@ -1521,7 +1521,7 @@ if( TRUE ){
 }
 
 mName <- "scoreLAf24"
-if( FALSE ){
+if( TRUE ){
     scrExtMtxCfg[[mName]] <- list()
 
     scrExtMtxCfg[[mName]]$filter01 <- list(
@@ -1576,7 +1576,7 @@ if( FALSE ){
 }
 
 mName <- "scoreLVf13"
-if( FALSE ){
+if( TRUE ){
     scrExtMtxCfg[[mName]] <- list()
 
     scrExtMtxCfg[[mName]]$filter01 <- list(
@@ -1612,7 +1612,7 @@ if( FALSE ){
             ,"colHpn6"=list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )
                             ,evt=matrix( c(c(3,3,3,3,3,3,3,3),c(2,3,4,5,6,7,8,9)) ,ncol=2)
                         )
-            ,"hpn1All"=list( rng=matrix( c(0,1 ,0,2) ,ncol=2 )
+            ,"hpn1All"=list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )
                             ,evt=matrix( c(c(3,3,3,3,3,3,3),c(3,4,5,6,7,8,9)) ,ncol=2)
                         )
             ,"hpnEAll"=list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )
@@ -1631,7 +1631,7 @@ if( FALSE ){
 }
 
 mName <- "scoreLVf24"
-if( FALSE ){
+if( TRUE ){
     scrExtMtxCfg[[mName]] <- list()
 
     scrExtMtxCfg[[mName]]$filter01 <- list(
@@ -1667,7 +1667,7 @@ if( FALSE ){
             ,"colHpn6"=list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )
                             ,evt=matrix( c(c(3,3,3,3,3,3,3,3),c(2,3,4,5,6,7,8,9)) ,ncol=2)
                         )
-            ,"hpn1All"=list( rng=matrix( c(0,1 ,0,2) ,ncol=2 )
+            ,"hpn1All"=list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )
                             ,evt=matrix( c(c(3,3,3,3,3,3,3),c(3,4,5,6,7,8,9)) ,ncol=2)
                         )
             ,"hpnEAll"=list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )

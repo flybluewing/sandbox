@@ -2268,7 +2268,7 @@ if( TRUE ){
                     ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
         )
         ,evtMaxFColTot = c( lev1Max=3 ,lev2Max=3 ,lev3Max=4 )
-        ,rowReb = NULL      ,rowRebDup=NULL
+        ,rowReb = c( rawMin=1 ,lowE=1 ,rareE=1 ,dupESum=1 )     ,rowRebDup=NULL
         ,summMtx = matrix( c(   1 ,1 ,1 ,1 ,2 ,2  ,1 ,1 ,1 ,1 ,2 ,2 ) ,byrow=T # all ph fCol phReb xyCnt.fCol xyCnt.phase
                 ,ncol=length(summMtxName$cName) ,nrow=length(summMtxName$rName)
                 ,dimnames=list(summMtxName$rName,summMtxName$cName)
