@@ -1466,7 +1466,7 @@ if( FALSE ){
 
 
 mName <- "scoreLAf13"
-if( FALSE ){
+if( TRUE ){
     scrExtMtxCfg[[mName]] <- list()
 
     scrExtMtxCfg[[mName]]$filter01 <- list(
@@ -1502,7 +1502,7 @@ if( FALSE ){
             ,"colHpn6"=list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )
                             ,evt=matrix( c(c(3,3,3,3,3,3,3,3),c(2,3,4,5,6,7,8,9)) ,ncol=2)
                         )
-            ,"hpn1All"=list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )
+            ,"hpn1All"=list( rng=matrix( c(0,1 ,0,2) ,ncol=2 )
                             ,evt=matrix( c(c(3,3,3,3,3,3,3),c(3,4,5,6,7,8,9)) ,ncol=2)
                         )
             ,"hpnEAll"=list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )
@@ -1512,7 +1512,7 @@ if( FALSE ){
         ,evtMax = matrix( c(2,1,3,1 ,2,1,3,1)   ,byrow=T ,ncol=4
                     ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
         )
-        ,rowReb = c( rawMin=1 ,lowE=2 ,rareE=1 ,dupESum=2 ) ,rowRebDup=NULL
+        ,rowReb = c( rawMin=1 ,lowE=1 ,rareE=1 ,dupESum=1 ) ,rowRebDup=NULL
         ,summMtx = NULL     ,summMtx.reb = NULL             ,summMtx.sum = NULL
         ,scMtx.sz = NULL    ,scMtx.sz.sum = NULL
         ,isHard=NULL  # use default
@@ -1557,7 +1557,7 @@ if( FALSE ){
             ,"colHpn6"=list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )
                             ,evt=matrix( c(c(3,3,3,3,3,3,3,3),c(2,3,4,5,6,7,8,9)) ,ncol=2)
                         )
-            ,"hpn1All"=list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )
+            ,"hpn1All"=list( rng=matrix( c(0,1 ,0,2) ,ncol=2 )
                             ,evt=matrix( c(c(3,3,3,3,3,3,3),c(3,4,5,6,7,8,9)) ,ncol=2)
                         )
             ,"hpnEAll"=list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )
@@ -1567,7 +1567,7 @@ if( FALSE ){
         ,evtMax = matrix( c(2,1,3,1 ,2,1,3,1)   ,byrow=T ,ncol=4
                     ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
         )
-        ,rowReb = c( rawMin=1 ,lowE=2 ,rareE=1 ,dupESum=2 ) ,rowRebDup=NULL
+        ,rowReb = c( rawMin=1 ,lowE=1 ,rareE=1 ,dupESum=1 ) ,rowRebDup=NULL
         ,summMtx = NULL     ,summMtx.reb = NULL             ,summMtx.sum = NULL
         ,scMtx.sz = NULL    ,scMtx.sz.sum = NULL
         ,isHard=NULL  # use default
@@ -1612,7 +1612,7 @@ if( FALSE ){
             ,"colHpn6"=list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )
                             ,evt=matrix( c(c(3,3,3,3,3,3,3,3),c(2,3,4,5,6,7,8,9)) ,ncol=2)
                         )
-            ,"hpn1All"=list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )
+            ,"hpn1All"=list( rng=matrix( c(0,1 ,0,2) ,ncol=2 )
                             ,evt=matrix( c(c(3,3,3,3,3,3,3),c(3,4,5,6,7,8,9)) ,ncol=2)
                         )
             ,"hpnEAll"=list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )
@@ -1622,7 +1622,7 @@ if( FALSE ){
         ,evtMax = matrix( c(2,1,3,1 ,2,1,3,1)   ,byrow=T ,ncol=4
                     ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
         )
-        ,rowReb = c( rawMin=1 ,lowE=2 ,rareE=1 ,dupESum=2 ) ,rowRebDup=NULL
+        ,rowReb = c( rawMin=1 ,lowE=1 ,rareE=1 ,dupESum=1 ) ,rowRebDup=NULL
         ,summMtx = NULL     ,summMtx.reb = NULL             ,summMtx.sum = NULL
         ,scMtx.sz = NULL    ,scMtx.sz.sum = NULL
         ,isHard=NULL  # use default
@@ -1667,7 +1667,7 @@ if( FALSE ){
             ,"colHpn6"=list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )
                             ,evt=matrix( c(c(3,3,3,3,3,3,3,3),c(2,3,4,5,6,7,8,9)) ,ncol=2)
                         )
-            ,"hpn1All"=list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )
+            ,"hpn1All"=list( rng=matrix( c(0,1 ,0,2) ,ncol=2 )
                             ,evt=matrix( c(c(3,3,3,3,3,3,3),c(3,4,5,6,7,8,9)) ,ncol=2)
                         )
             ,"hpnEAll"=list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )
@@ -1677,7 +1677,7 @@ if( FALSE ){
         ,evtMax = matrix( c(2,1,3,1 ,2,1,3,1)   ,byrow=T ,ncol=4
                     ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
         )
-        ,rowReb = c( rawMin=1 ,lowE=2 ,rareE=1 ,dupESum=2 ) ,rowRebDup=NULL
+        ,rowReb = c( rawMin=1 ,lowE=1 ,rareE=1 ,dupESum=1 ) ,rowRebDup=NULL
         ,summMtx = NULL     ,summMtx.reb = NULL             ,summMtx.sum = NULL
         ,scMtx.sz = NULL    ,scMtx.sz.sum = NULL
         ,isHard=NULL  # use default

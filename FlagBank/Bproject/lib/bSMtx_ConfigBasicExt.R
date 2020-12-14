@@ -213,16 +213,16 @@ if( TRUE ){
                             ,freqVal=c(1,2)
                         )
             ,"rebCN.f"=list( rng=matrix( c(0,0 ,0,3) ,ncol=2 )
-                            ,evt=matrix( c(c(1,2,3,5),c(2,3,4,5)) ,ncol=2)
+                            ,evt=matrix( c(c(2,3,5),c(3,4,5)) ,ncol=2)
                         )
             ,"incN.r"=list( rng=matrix( c(0,0 ,0,3) ,ncol=2 )
-                            ,evt=matrix( c(c(1,2,3,5),c(2,3,4,5)) ,ncol=2)
+                            ,evt=matrix( c(c(2,3,5),c(3,4,5)) ,ncol=2)
                         )
             ,"incN.c"=list( rng=matrix( c(0,0 ,0,3) ,ncol=2 )
-                            ,evt=matrix( c(c(1,2,3,5),c(2,3,4,5)) ,ncol=2)
+                            ,evt=matrix( c(c(2,3,5),c(3,4,5)) ,ncol=2)
                         )
             ,"incN.f"=list( rng=matrix( c(0,0 ,0,3) ,ncol=2 )
-                            ,evt=matrix( c(c(1,2,3,5),c(2,3,4,5)) ,ncol=2)
+                            ,evt=matrix( c(c(2,3,5),c(3,4,5)) ,ncol=2)
                         )
             ,"matCntRebC12"=list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
                             ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
@@ -234,7 +234,8 @@ if( TRUE ){
                             ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
                         )
         )
-        ,evtMax = NULL        ,rowReb = NULL                        ,rowRebDup=NULL
+        ,evtMax = NULL        
+        ,rowReb = c(rawMin=1,lowE=1,rareE=1,dupESum=1 )             ,rowRebDup=NULL
         ,summMtx = NULL       ,summMtx.reb = NULL                   ,summMtx.sum = NULL
         ,scMtx.sz = NULL      ,scMtx.sz.sum = NULL
         ,isHard=NULL  # use default
@@ -256,7 +257,8 @@ if( TRUE ){
                             ,evt=matrix( c(c(2,3,3,3),c(4,5,6,7)) ,ncol=2)
                         )
         )
-        ,evtMax = NULL        ,rowReb = NULL                        ,rowRebDup=NULL
+        ,evtMax = NULL        
+        ,rowReb = c(rawMin=1,lowE=1,rareE=1,dupESum=1 )             ,rowRebDup=NULL
         ,summMtx = NULL       ,summMtx.reb = NULL                   ,summMtx.sum = NULL
         ,scMtx.sz = NULL      ,scMtx.sz.sum = NULL
         ,isHard=NULL  # use default
@@ -522,7 +524,7 @@ if( TRUE ){
 mName <- "sScore08"
 if( FALSE ){
     # 폐지. cStep의 폭이 일정치 않아서 score8처럼 유지할 수가 없다.
-    #   그냥 sScore08 자체에 score8 ext 개념 추가했음.
+    #   그냥 sScore08 자체에 score8 ext 개념을 적용했음.
 }
 
 mName <- "sScore09"
