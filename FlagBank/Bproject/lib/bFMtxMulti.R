@@ -2252,7 +2252,7 @@ if( TRUE ){
 
 
 mfName <- "mfLAVr_hpn1AB"
-if( TRUE ){     # cfg 생성할 것.   reb 상황에 따라 r,f 통합여부 결정.
+if( FALSE ){     # cfg 생성할 것.   reb 상황에 따라 r,f 통합여부 결정.
     bFMtxMFltLst[[mfName]] <- function( tgt.scMtx=NULL ){
         fltObj <- list( mInfo=list() )
         fltObj$mInfo$mName <- mfName
@@ -2326,7 +2326,7 @@ if( TRUE ){     # cfg 생성할 것.   reb 상황에 따라 r,f 통합여부 결정.
 }
 
 mfName <- "mfLAVe_hpn1AB"
-if( TRUE ){
+if( FALSE ){
     bFMtxMFltLst[[mfName]] <- function( tgt.scMtx=NULL ){
         fltObj <- list( mInfo=list() )
         fltObj$mInfo$mName <- mfName
@@ -2399,13 +2399,13 @@ if( TRUE ){
 }
 
 mfName <- "mfLAVc_hpn1AB"
-if( TRUE ){
+if( FALSE ){
     bFMtxMFltLst[[mfName]] <- function( tgt.scMtx=NULL ){
         fltObj <- list( mInfo=list() )
         fltObj$mInfo$mName <- mfName
         fltObj$available <- TRUE    # bFCust.getFCustGrp() 에서 확인됨.
 
-        fltObj$fltMNames <- c("scoreLAc13","scoreLAc24","scoreLVc24","scoreLVc24")
+        fltObj$fltMNames <- c("scoreLAc13","scoreLAc24","scoreLVc13","scoreLVc24")
         fltObj$mInfo$cName <- c( "Ac13Hpn1A" ,"Ac13Hpn1B" ,"Ac24Hpn1A" ,"Ac24Hpn1B" 
                                 ,"Vc13Hpn1A" ,"Vc13Hpn1B" ,"Vc24Hpn1A" ,"Vc24Hpn1B" 
         )
@@ -2472,7 +2472,7 @@ if( TRUE ){
 }
 
 mfName <- "mfLAVf_hpn1AB"
-if( TRUE ){
+if( FALSE ){
     bFMtxMFltLst[[mfName]] <- function( tgt.scMtx=NULL ){
         fltObj <- list( mInfo=list() )
         fltObj$mInfo$mName <- mfName
