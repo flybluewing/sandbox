@@ -248,22 +248,35 @@ if( TRUE ){
 
 }
 
+
+# -------------------------------------------------------------------------------
+# 일단 이후는 결과를 보류하고 추세에 따라 작업여부를 판단하자.
+#     추가대상 목록
+#         mfFreqVal1234
+#         mfFreqVal567
+#         mfFreqVal89
+#         mfLAVr_hpn1AB
+#         mfLAVe_hpn1AB
+#         mfLAVc_hpn1AB
+#         mfLAVf_hpn1AB
+
+
 mfName <- "bsMRLArn"
-if( TRUE ){
+if( FALSE ){
     bSMtxRMLst[[mfName]] <- function( tgt.scMtx=NULL ){
         fltMNames = c("sScore0LAr13","sScore0LAr24")
         return( bS.get_bSMtxRM_bsMRLXxn( tgt.scMtx=tgt.scMtx ,fltMNames=fltMNames ) )
     }
 }
 mfName <- "bsMRLVrn"
-if( TRUE ){
+if( FALSE ){
     bSMtxRMLst[[mfName]] <- function( tgt.scMtx=NULL ){
         fltMNames = c("sScore0LVr13","sScore0LVr24")
         return( bS.get_bSMtxRM_bsMRLXxn( tgt.scMtx=tgt.scMtx ,fltMNames=fltMNames ) )
     }
 }
 mfName <- "bsMRLAVrn"
-if( TRUE ){
+if( FALSE ){
     bSMtxRMLst[[mfName]] <- function( tgt.scMtx=NULL ){
         fltMNames = c("sScore0LAr13","sScore0LAr24","sScore0LVr13","sScore0LVr24")
         return( bS.get_bSMtxRM_bsMRLXxn( tgt.scMtx=tgt.scMtx ,fltMNames=fltMNames ) )
@@ -271,14 +284,14 @@ if( TRUE ){
 }
 
 mfName <- "bsMRLAen"
-if( TRUE ){
+if( FALSE ){
     bSMtxRMLst[[mfName]] <- function( tgt.scMtx=NULL ){
         fltMNames = c("sScore0LAe13","sScore0LAe24")
         return( bS.get_bSMtxRM_bsMRLXxn( tgt.scMtx=tgt.scMtx ,fltMNames=fltMNames ) )
     }
 }
 mfName <- "bsMRLVen"
-if( TRUE ){
+if( FALSE ){
     bSMtxRMLst[[mfName]] <- function( tgt.scMtx=NULL ){
         fltMNames = c("sScore0LVe13","sScore0LVe24")
         return( bS.get_bSMtxRM_bsMRLXxn( tgt.scMtx=tgt.scMtx ,fltMNames=fltMNames ) )
@@ -286,14 +299,14 @@ if( TRUE ){
 }
 
 mfName <- "bsMRLAcn"
-if( TRUE ){
+if( FALSE ){
     bSMtxRMLst[[mfName]] <- function( tgt.scMtx=NULL ){
         fltMNames = c("sScore0LAc13","sScore0LAc24")
         return( bS.get_bSMtxRM_bsMRLXxn( tgt.scMtx=tgt.scMtx ,fltMNames=fltMNames ) )
     }
 }
 mfName <- "bsMRLVcn"
-if( TRUE ){
+if( FALSE ){
     bSMtxRMLst[[mfName]] <- function( tgt.scMtx=NULL ){
         fltMNames = c("sScore0LVc13","sScore0LVc24")
         return( bS.get_bSMtxRM_bsMRLXxn( tgt.scMtx=tgt.scMtx ,fltMNames=fltMNames ) )
@@ -301,21 +314,21 @@ if( TRUE ){
 }
 
 mfName <- "bsMRLAfn"
-if( TRUE ){
+if( FALSE ){
     bSMtxRMLst[[mfName]] <- function( tgt.scMtx=NULL ){
         fltMNames = c("sScore0LAf13","sScore0LAf24")
         return( bS.get_bSMtxRM_bsMRLXxn( tgt.scMtx=tgt.scMtx ,fltMNames=fltMNames ) )
     }
 }
 mfName <- "bsMRLVfn"
-if( TRUE ){
+if( FALSE ){
     bSMtxRMLst[[mfName]] <- function( tgt.scMtx=NULL ){
         fltMNames = c("sScore0LVf13","sScore0LVf24")
         return( bS.get_bSMtxRM_bsMRLXxn( tgt.scMtx=tgt.scMtx ,fltMNames=fltMNames ) )
     }
 }
 mfName <- "bsMRLAVfn"
-if( TRUE ){
+if( FALSE ){
     bSMtxRMLst[[mfName]] <- function( tgt.scMtx=NULL ){
         fltMNames = c("sScore0LAf13","sScore0LAf24","sScore0LVf13","sScore0LVf24")
         return( bS.get_bSMtxRM_bsMRLXxn( tgt.scMtx=tgt.scMtx ,fltMNames=fltMNames ) )
@@ -324,7 +337,7 @@ if( TRUE ){
 
 
 mfName <- "bsMRLAecf13"
-if( TRUE ){
+if( FALSE ){
     bSMtxRMLst[[mfName]] <- function( tgt.scMtx=NULL ){
         fltMNames = c("sScore0LAe13","sScore0LAc13","sScore0LAf13")
         return( bS.get_bSMtxRM_bsMRLXecfnn( tgt.scMtx=tgt.scMtx ,fltMNames=fltMNames ) )
@@ -332,7 +345,7 @@ if( TRUE ){
 }
 
 mfName <- "bsMRLAecf24"
-if( TRUE ){
+if( FALSE ){
     bSMtxRMLst[[mfName]] <- function( tgt.scMtx=NULL ){
         fltMNames = c("sScore0LAe24","sScore0LAc24","sScore0LAf24")
         return( bS.get_bSMtxRM_bsMRLXecfnn( tgt.scMtx=tgt.scMtx ,fltMNames=fltMNames ) )
@@ -340,7 +353,7 @@ if( TRUE ){
 }
 
 mfName <- "bsMRLVecf13"
-if( TRUE ){
+if( FALSE ){
     bSMtxRMLst[[mfName]] <- function( tgt.scMtx=NULL ){
         fltMNames = c("sScore0LVe13","sScore0LVc13","sScore0LVf13")
         return( bS.get_bSMtxRM_bsMRLXecfnn( tgt.scMtx=tgt.scMtx ,fltMNames=fltMNames ) )
@@ -348,7 +361,7 @@ if( TRUE ){
 }
 
 mfName <- "bsMRLVecf24"
-if( TRUE ){
+if( FALSE ){
     bSMtxRMLst[[mfName]] <- function( tgt.scMtx=NULL ){
         fltMNames = c("sScore0LVe24","sScore0LVc24","sScore0LVf24")
         return( bS.get_bSMtxRM_bsMRLXecfnn( tgt.scMtx=tgt.scMtx ,fltMNames=fltMNames ) )
