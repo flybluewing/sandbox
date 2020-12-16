@@ -2423,8 +2423,8 @@ if( FALSE ){
             names(rowVal) <- fltObj$mInfo$cName
 
             # colA1 colA2 colA3 colA4 colA5 colA6 colB1 colB2 colB3 colB4 colB5 colB6
-            colA <- c( "colA1" ,"colA2" ,"colA3" ,"colA4" ,"colA5" ,"colA6" )
-            colB <- c( "colB1" ,"colB2" ,"colB3" ,"colB4" ,"colB5" ,"colB6" )
+            colA <- c( "colA1" ,"colA2" ,"colA3" ,"colA4" ,"colA5" )
+            colB <- c( "colB1" ,"colB2" ,"colB3" ,"colB4" ,"colB5" )
 
             rowVal["Ac13Hpn1A"] <- sum( mmMtxLst[["scoreLAc13"]][aIdx,colA]==1 )
             rowVal["Ac13Hpn1B"] <- sum( mmMtxLst[["scoreLAc13"]][aIdx,colB]==1 )
