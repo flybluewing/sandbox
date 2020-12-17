@@ -3335,8 +3335,6 @@ if( FALSE ){
     )
 }
 
-
-
 mfName <- "mf4567"
 if( FALSE ){
     scoreMtxCfg[[mfName]] <- list(
@@ -3449,6 +3447,347 @@ if( FALSE ){
                         #             rebDup    0      0           0    0      0           0
         )
         ,scMtx.sz.sum = c(rebCnt.r=6 ,rebCnt.e=3)
+        ,isHard=NULL  # use default
+    )
+}
+
+
+mfName <- "mfFreqVal1234"
+if( FALSE ){
+    scoreMtxCfg[[mfName]] <- list(
+        mName = mName   ,style=c( freqZero=TRUE )
+        ,fCol = list(
+            "s1rem0.len.tot" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # ,freqVal=c(1) ,forbidEvtReb=c(3)
+                        )
+            ,"s1rem1.len.tot" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # ,freqVal=c(1) ,forbidEvtReb=c(3)
+                        )
+            ,"s1c0.len.tot" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # ,freqVal=c(1) ,forbidEvtReb=c(3)
+                        )
+            ,"s1c1.len.tot" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # ,freqVal=c(1) ,forbidEvtReb=c(3)
+                        )
+            ,"s1f0.len.tot" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # ,freqVal=c(1) ,forbidEvtReb=c(3)
+                        )
+            ,"s1f1.len.tot" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # ,freqVal=c(1) ,forbidEvtReb=c(3)
+                        )
+            ,"s1zwNum" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # ,freqVal=c(1) ,forbidEvtReb=c(3)
+                        )
+            ,"s2rebV.r" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # ,freqVal=c(1) ,forbidEvtReb=c(3)
+                        )
+            ,"s2rebC.r" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # ,freqVal=c(1) ,forbidEvtReb=c(3)
+                        )
+            ,"s2rebC.c" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # ,freqVal=c(1) ,forbidEvtReb=c(3)
+                        )
+            ,"s2rebC.f" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # ,freqVal=c(1) ,forbidEvtReb=c(3)
+                        )
+            ,"s2rebC2.r" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # ,freqVal=c(1) ,forbidEvtReb=c(3)
+                        )
+            ,"s2rebC2.c" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # ,freqVal=c(1) ,forbidEvtReb=c(3)
+                        )
+            ,"s2rebC2.f" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # ,freqVal=c(1) ,forbidEvtReb=c(3)
+                        )
+            ,"s2inc.r" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # ,freqVal=c(1) ,forbidEvtReb=c(3)
+                        )
+            ,"s2inc.c" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # ,freqVal=c(1) ,forbidEvtReb=c(3)
+                        )
+            ,"s2inc.f" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # ,freqVal=c(1) ,forbidEvtReb=c(3)
+                        )
+            ,"s2inc.r2" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # ,freqVal=c(1) ,forbidEvtReb=c(3)
+                        )
+            ,"s2inc.c2" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # ,freqVal=c(1) ,forbidEvtReb=c(3)
+                        )
+            ,"s2inc.f2" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # ,freqVal=c(1) ,forbidEvtReb=c(3)
+                        )
+            ,"s2inc.r3" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # ,freqVal=c(1) ,forbidEvtReb=c(3)
+                        )
+            ,"s2inc.c3" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # ,freqVal=c(1) ,forbidEvtReb=c(3)
+                        )
+            ,"s3rebPtn.1" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # ,freqVal=c(1) ,forbidEvtReb=c(3)
+                        )
+            ,"s3snMax.r" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # ,freqVal=c(1) ,forbidEvtReb=c(3)
+                        )
+            ,"s3snMax.c" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # ,freqVal=c(1) ,forbidEvtReb=c(3)
+                        )
+            ,"s3snMax.f" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # ,freqVal=c(1) ,forbidEvtReb=c(3)
+                        )
+            ,"s4pBanN.r" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # ,freqVal=c(1) ,forbidEvtReb=c(3)
+                        )
+            ,"s4pBanN.n" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # ,freqVal=c(1) ,forbidEvtReb=c(3)
+                        )
+            ,"s4pLCol" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # ,freqVal=c(1) ,forbidEvtReb=c(3)
+                        )
+            ,"s4pE3" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # ,freqVal=c(1) ,forbidEvtReb=c(3)
+                        )
+            ,"s4pfNum" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # ,freqVal=c(1) ,forbidEvtReb=c(3)
+                        )
+            ,"s4iBanN" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # ,freqVal=c(1) ,forbidEvtReb=c(3)
+                        )
+            ,"s4iLCol" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # ,freqVal=c(1) ,forbidEvtReb=c(3)
+                        )
+            ,"s4ifNum" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # ,freqVal=c(1) ,forbidEvtReb=c(3)
+                        )
+            ,"s4FVa.m" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # ,freqVal=c(1) ,forbidEvtReb=c(3)
+                        )
+        )
+        ,evtMaxFColTot = NULL
+        ,evtMax     = NULL      
+        ,rowReb = c( rawMin=1 ,lowE=1 ,rareE=1 ,dupESum=2 )
+        ,rowRebDup = NULL
+        ,summMtx   = matrix( c(  1 ,1 ,1 ,1 ,1 ,1     , 1 ,1 ,1 ,1 ,1 ,1 ) ,byrow=T # all ph fCol phReb xyCnt.fCol xyCnt.phase
+                ,ncol=length(summMtxName$cName) ,nrow=length(summMtxName$rName)
+                ,dimnames=list(summMtxName$rName,summMtxName$cName)
+        )
+        ,summMtx.reb = NULL
+        ,summMtx.sum = c(raw=4 ,evt=3)
+        ,scMtx.sz = matrix( c(  1 ,1 ,1 ,1 ,1 ,1   ,1 ,1 ,1 ,1 ,1 ,1 ) ,byrow=T
+                        ,ncol=length(scMtx.szName$cName) ,nrow=length(scMtx.szName$rName) 
+                        ,dimnames=list(scMtx.szName$rName,scMtx.szName$cName)
+                        #     $scMtx.sz      r.ph r.fCol r.dblHpnFlg e.ph e.fCol e.dblHpnFlg
+                        #             rebCnt    0      0           0    0      0           0
+                        #             rebDup    0      0           0    0      0           0
+        )
+        ,scMtx.sz.sum = c(rebCnt.r=2 ,rebCnt.e=2)
+        ,isHard=NULL  # use default
+    )
+}
+
+mfName <- "mfFreqVal567"
+if( FALSE ){
+    scoreMtxCfg[[mfName]] <- list(
+        mName = mName   ,style=c( freqZero=TRUE )
+        ,fCol = list(
+            "s5pBanN.r" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # ,freqVal=c(1) ,forbidEvtReb=c(3)
+                        )
+            ,"s5pBanN.n" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # ,freqVal=c(1) ,forbidEvtReb=c(3)
+                        )
+            ,"s5pLCol" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # ,freqVal=c(1) ,forbidEvtReb=c(3)
+                        )
+            ,"s5pE3" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # ,freqVal=c(1) ,forbidEvtReb=c(3)
+                        )
+            ,"s5pfNum" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # ,freqVal=c(1) ,forbidEvtReb=c(3)
+                        )
+            ,"s5iBanN" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # ,freqVal=c(1) ,forbidEvtReb=c(3)
+                        )
+            ,"s5iLCol" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # ,freqVal=c(1) ,forbidEvtReb=c(3)
+                        )
+            ,"s5ifNum" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # ,freqVal=c(1) ,forbidEvtReb=c(3)
+                        )
+            ,"s5FVa.m" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # ,freqVal=c(1) ,forbidEvtReb=c(3)
+                        )
+            ,"s6pBanN.r" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # ,freqVal=c(1) ,forbidEvtReb=c(3)
+                        )
+            ,"s6pBanN.n" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # ,freqVal=c(1) ,forbidEvtReb=c(3)
+                        )
+            ,"s6pLCol" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # ,freqVal=c(1) ,forbidEvtReb=c(3)
+                        )
+            ,"s6pE3" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # ,freqVal=c(1) ,forbidEvtReb=c(3)
+                        )
+            ,"s6pfNum" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # ,freqVal=c(1) ,forbidEvtReb=c(3)
+                        )
+            ,"s6iBanN" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # ,freqVal=c(1) ,forbidEvtReb=c(3)
+                        )
+            ,"s6iLCol" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # ,freqVal=c(1) ,forbidEvtReb=c(3)
+                        )
+            ,"s6ifNum" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # ,freqVal=c(1) ,forbidEvtReb=c(3)
+                        )
+            ,"s6FVa.m" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # ,freqVal=c(1) ,forbidEvtReb=c(3)
+                        )
+            ,"s7pBanN.r" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # ,freqVal=c(1) ,forbidEvtReb=c(3)
+                        )
+            ,"s7pBanN.n" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # ,freqVal=c(1) ,forbidEvtReb=c(3)
+                        )
+            ,"s7pLCol" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # ,freqVal=c(1) ,forbidEvtReb=c(3)
+                        )
+            ,"s7pE3" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # ,freqVal=c(1) ,forbidEvtReb=c(3)
+                        )
+            ,"s7pfNum" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # ,freqVal=c(1) ,forbidEvtReb=c(3)
+                        )
+            ,"s7iBanN" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # ,freqVal=c(1) ,forbidEvtReb=c(3)
+                        )
+            ,"s7iLCol" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # ,freqVal=c(1) ,forbidEvtReb=c(3)
+                        )
+            ,"s7ifNum" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # ,freqVal=c(1) ,forbidEvtReb=c(3)
+                        )
+            ,"s7FVa.m" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # ,freqVal=c(1) ,forbidEvtReb=c(3)
+                        )
+        )
+        ,evtMaxFColTot = NULL
+        ,evtMax     = NULL      
+        ,rowReb = c( rawMin=1 ,lowE=1 ,rareE=1 ,dupESum=2 )
+        ,rowRebDup = NULL
+        ,summMtx   = matrix( c(  1 ,1 ,1 ,1 ,1 ,1     , 1 ,1 ,1 ,1 ,1 ,1 ) ,byrow=T # all ph fCol phReb xyCnt.fCol xyCnt.phase
+                ,ncol=length(summMtxName$cName) ,nrow=length(summMtxName$rName)
+                ,dimnames=list(summMtxName$rName,summMtxName$cName)
+        )
+        ,summMtx.reb = NULL
+        ,summMtx.sum = c(raw=4 ,evt=3)
+        ,scMtx.sz = matrix( c(  1 ,1 ,1 ,1 ,1 ,1   ,1 ,1 ,1 ,1 ,1 ,1 ) ,byrow=T
+                        ,ncol=length(scMtx.szName$cName) ,nrow=length(scMtx.szName$rName) 
+                        ,dimnames=list(scMtx.szName$rName,scMtx.szName$cName)
+                        #     $scMtx.sz      r.ph r.fCol r.dblHpnFlg e.ph e.fCol e.dblHpnFlg
+                        #             rebCnt    0      0           0    0      0           0
+                        #             rebDup    0      0           0    0      0           0
+        )
+        ,scMtx.sz.sum = c(rebCnt.r=2 ,rebCnt.e=2)
+        ,isHard=NULL  # use default
+    )
+}
+
+mfName <- "mfFreqVal89"
+if( FALSE ){
+    scoreMtxCfg[[mfName]] <- list(
+        mName = mName   ,style=c( freqZero=TRUE )
+        ,fCol = list(
+            "xxx" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # ,freqVal=c(1) ,forbidEvtReb=c(3)
+                        )
+            ,"xxx" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # ,freqVal=c(1) ,forbidEvtReb=c(3)
+                        )
+        )
+        ,evtMaxFColTot = NULL
+        ,evtMax     = NULL      
+        ,rowReb = c( rawMin=1 ,lowE=1 ,rareE=1 ,dupESum=2 )
+        ,rowRebDup = NULL
+        ,summMtx   = matrix( c(  1 ,1 ,1 ,1 ,1 ,1     , 1 ,1 ,1 ,1 ,1 ,1 ) ,byrow=T # all ph fCol phReb xyCnt.fCol xyCnt.phase
+                ,ncol=length(summMtxName$cName) ,nrow=length(summMtxName$rName)
+                ,dimnames=list(summMtxName$rName,summMtxName$cName)
+        )
+        ,summMtx.reb = NULL
+        ,summMtx.sum = c(raw=4 ,evt=3)
+        ,scMtx.sz = matrix( c(  1 ,1 ,1 ,1 ,1 ,1   ,1 ,1 ,1 ,1 ,1 ,1 ) ,byrow=T
+                        ,ncol=length(scMtx.szName$cName) ,nrow=length(scMtx.szName$rName) 
+                        ,dimnames=list(scMtx.szName$rName,scMtx.szName$cName)
+                        #     $scMtx.sz      r.ph r.fCol r.dblHpnFlg e.ph e.fCol e.dblHpnFlg
+                        #             rebCnt    0      0           0    0      0           0
+                        #             rebDup    0      0           0    0      0           0
+        )
+        ,scMtx.sz.sum = c(rebCnt.r=2 ,rebCnt.e=2)
         ,isHard=NULL  # use default
     )
 }
@@ -4729,6 +5068,249 @@ if( FALSE ){
         ,isHard=NULL  # use default
     )
 }
+
+
+mfName <- "mfLAVr_hpn1AB"
+if( FALSE ){
+    scoreMtxCfg[[mfName]] <- list(
+        mName = mName   ,style=c( freqZero=TRUE )
+        ,fCol = list(
+            "Ar13Hpn1A" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # ,freqVal=c(1) ,forbidEvtReb=c(3)
+                        )
+            ,"Ar13Hpn1B" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # ,freqVal=c(1) ,forbidEvtReb=c(3)
+                        )
+            ,"Ar24Hpn1A" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # ,freqVal=c(1) ,forbidEvtReb=c(3)
+                        )
+            ,"Ar24Hpn1B" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # ,freqVal=c(1) ,forbidEvtReb=c(3)
+                        )
+            ,"Vr13Hpn1A" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # ,freqVal=c(1) ,forbidEvtReb=c(3)
+                        )
+            ,"Vr13Hpn1B" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # ,freqVal=c(1) ,forbidEvtReb=c(3)
+                        )
+            ,"Vr24Hpn1A" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # ,freqVal=c(1) ,forbidEvtReb=c(3)
+                        )
+            ,"Vr24Hpn1B" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # ,freqVal=c(1) ,forbidEvtReb=c(3)
+                        )
+        )
+        ,evtMaxFColTot = NULL
+        ,evtMax     = NULL      
+        ,rowReb = c( rawMin=1 ,lowE=1 ,rareE=1 ,dupESum=2 )
+        ,rowRebDup = NULL
+        ,summMtx   = matrix( c(  1 ,1 ,1 ,1 ,1 ,1     , 1 ,1 ,1 ,1 ,1 ,1 ) ,byrow=T # all ph fCol phReb xyCnt.fCol xyCnt.phase
+                ,ncol=length(summMtxName$cName) ,nrow=length(summMtxName$rName)
+                ,dimnames=list(summMtxName$rName,summMtxName$cName)
+        )
+        ,summMtx.reb = NULL
+        ,summMtx.sum = c(raw=4 ,evt=3)
+        ,scMtx.sz = matrix( c(  1 ,1 ,1 ,1 ,1 ,1   ,1 ,1 ,1 ,1 ,1 ,1 ) ,byrow=T
+                        ,ncol=length(scMtx.szName$cName) ,nrow=length(scMtx.szName$rName) 
+                        ,dimnames=list(scMtx.szName$rName,scMtx.szName$cName)
+                        #     $scMtx.sz      r.ph r.fCol r.dblHpnFlg e.ph e.fCol e.dblHpnFlg
+                        #             rebCnt    0      0           0    0      0           0
+                        #             rebDup    0      0           0    0      0           0
+        )
+        ,scMtx.sz.sum = c(rebCnt.r=2 ,rebCnt.e=2)
+        ,isHard=NULL  # use default
+    )
+}
+
+mfName <- "mfLAVe_hpn1AB"
+if( FALSE ){
+    scoreMtxCfg[[mfName]] <- list(
+        mName = mName   ,style=c( freqZero=TRUE )
+        ,fCol = list(
+            "Ae13Hpn1A" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # ,freqVal=c(1) ,forbidEvtReb=c(3)
+                        )
+            ,"Ae13Hpn1B" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # ,freqVal=c(1) ,forbidEvtReb=c(3)
+                        )
+            ,"Ae24Hpn1A" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # ,freqVal=c(1) ,forbidEvtReb=c(3)
+                        )
+            ,"Ae24Hpn1B" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # ,freqVal=c(1) ,forbidEvtReb=c(3)
+                        )
+            ,"Ve13Hpn1A" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # ,freqVal=c(1) ,forbidEvtReb=c(3)
+                        )
+            ,"Ve13Hpn1B" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # ,freqVal=c(1) ,forbidEvtReb=c(3)
+                        )
+            ,"Ve24Hpn1A" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # ,freqVal=c(1) ,forbidEvtReb=c(3)
+                        )
+            ,"Ve24Hpn1B" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # ,freqVal=c(1) ,forbidEvtReb=c(3)
+                        )
+        )
+        ,evtMaxFColTot = NULL
+        ,evtMax     = NULL      
+        ,rowReb = c( rawMin=1 ,lowE=1 ,rareE=1 ,dupESum=2 )
+        ,rowRebDup = NULL
+        ,summMtx   = matrix( c(  1 ,1 ,1 ,1 ,1 ,1     , 1 ,1 ,1 ,1 ,1 ,1 ) ,byrow=T # all ph fCol phReb xyCnt.fCol xyCnt.phase
+                ,ncol=length(summMtxName$cName) ,nrow=length(summMtxName$rName)
+                ,dimnames=list(summMtxName$rName,summMtxName$cName)
+        )
+        ,summMtx.reb = NULL
+        ,summMtx.sum = c(raw=4 ,evt=3)
+        ,scMtx.sz = matrix( c(  1 ,1 ,1 ,1 ,1 ,1   ,1 ,1 ,1 ,1 ,1 ,1 ) ,byrow=T
+                        ,ncol=length(scMtx.szName$cName) ,nrow=length(scMtx.szName$rName) 
+                        ,dimnames=list(scMtx.szName$rName,scMtx.szName$cName)
+                        #     $scMtx.sz      r.ph r.fCol r.dblHpnFlg e.ph e.fCol e.dblHpnFlg
+                        #             rebCnt    0      0           0    0      0           0
+                        #             rebDup    0      0           0    0      0           0
+        )
+        ,scMtx.sz.sum = c(rebCnt.r=2 ,rebCnt.e=2)
+        ,isHard=NULL  # use default
+    )
+}
+
+mfName <- "mfLAVc_hpn1AB"
+if( FALSE ){
+    scoreMtxCfg[[mfName]] <- list(
+        mName = mName   ,style=c( freqZero=TRUE )
+        ,fCol = list(
+            "Ac13Hpn1A" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # ,freqVal=c(1) ,forbidEvtReb=c(3)
+                        )
+            ,"Ac13Hpn1B" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # ,freqVal=c(1) ,forbidEvtReb=c(3)
+                        )
+            ,"Ac24Hpn1A" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # ,freqVal=c(1) ,forbidEvtReb=c(3)
+                        )
+            ,"Ac24Hpn1B" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # ,freqVal=c(1) ,forbidEvtReb=c(3)
+                        )
+            ,"Vc13Hpn1A" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # ,freqVal=c(1) ,forbidEvtReb=c(3)
+                        )
+            ,"Vc13Hpn1B" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # ,freqVal=c(1) ,forbidEvtReb=c(3)
+                        )
+            ,"Vc24Hpn1A" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # ,freqVal=c(1) ,forbidEvtReb=c(3)
+                        )
+            ,"Vc24Hpn1B" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # ,freqVal=c(1) ,forbidEvtReb=c(3)
+                        )
+        )
+        ,evtMaxFColTot = NULL
+        ,evtMax     = NULL      
+        ,rowReb = c( rawMin=1 ,lowE=1 ,rareE=1 ,dupESum=2 )
+        ,rowRebDup = NULL
+        ,summMtx   = matrix( c(  1 ,1 ,1 ,1 ,1 ,1     , 1 ,1 ,1 ,1 ,1 ,1 ) ,byrow=T # all ph fCol phReb xyCnt.fCol xyCnt.phase
+                ,ncol=length(summMtxName$cName) ,nrow=length(summMtxName$rName)
+                ,dimnames=list(summMtxName$rName,summMtxName$cName)
+        )
+        ,summMtx.reb = NULL
+        ,summMtx.sum = c(raw=4 ,evt=3)
+        ,scMtx.sz = matrix( c(  1 ,1 ,1 ,1 ,1 ,1   ,1 ,1 ,1 ,1 ,1 ,1 ) ,byrow=T
+                        ,ncol=length(scMtx.szName$cName) ,nrow=length(scMtx.szName$rName) 
+                        ,dimnames=list(scMtx.szName$rName,scMtx.szName$cName)
+                        #     $scMtx.sz      r.ph r.fCol r.dblHpnFlg e.ph e.fCol e.dblHpnFlg
+                        #             rebCnt    0      0           0    0      0           0
+                        #             rebDup    0      0           0    0      0           0
+        )
+        ,scMtx.sz.sum = c(rebCnt.r=2 ,rebCnt.e=2)
+        ,isHard=NULL  # use default
+    )
+}
+
+mfName <- "mfLAVf_hpn1AB"
+if( FALSE ){
+    scoreMtxCfg[[mfName]] <- list(
+        mName = mName   ,style=c( freqZero=TRUE )
+        ,fCol = list(
+            "Af13Hpn1A" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # ,freqVal=c(1) ,forbidEvtReb=c(3)
+                        )
+            ,"Af13Hpn1B" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # ,freqVal=c(1) ,forbidEvtReb=c(3)
+                        )
+            ,"Af24Hpn1A" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # ,freqVal=c(1) ,forbidEvtReb=c(3)
+                        )
+            ,"Af24Hpn1B" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # ,freqVal=c(1) ,forbidEvtReb=c(3)
+                        )
+            ,"Vf13Hpn1A" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # ,freqVal=c(1) ,forbidEvtReb=c(3)
+                        )
+            ,"Vf13Hpn1B" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # ,freqVal=c(1) ,forbidEvtReb=c(3)
+                        )
+            ,"Vf24Hpn1A" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # ,freqVal=c(1) ,forbidEvtReb=c(3)
+                        )
+            ,"Vf24Hpn1B" =list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # ,freqVal=c(1) ,forbidEvtReb=c(3)
+                        )
+        )
+        ,evtMaxFColTot = NULL
+        ,evtMax     = NULL      
+        ,rowReb = c( rawMin=1 ,lowE=1 ,rareE=1 ,dupESum=2 )
+        ,rowRebDup = NULL
+        ,summMtx   = matrix( c(  1 ,1 ,1 ,1 ,1 ,1     , 1 ,1 ,1 ,1 ,1 ,1 ) ,byrow=T # all ph fCol phReb xyCnt.fCol xyCnt.phase
+                ,ncol=length(summMtxName$cName) ,nrow=length(summMtxName$rName)
+                ,dimnames=list(summMtxName$rName,summMtxName$cName)
+        )
+        ,summMtx.reb = NULL
+        ,summMtx.sum = c(raw=4 ,evt=3)
+        ,scMtx.sz = matrix( c(  1 ,1 ,1 ,1 ,1 ,1   ,1 ,1 ,1 ,1 ,1 ,1 ) ,byrow=T
+                        ,ncol=length(scMtx.szName$cName) ,nrow=length(scMtx.szName$rName) 
+                        ,dimnames=list(scMtx.szName$rName,scMtx.szName$cName)
+                        #     $scMtx.sz      r.ph r.fCol r.dblHpnFlg e.ph e.fCol e.dblHpnFlg
+                        #             rebCnt    0      0           0    0      0           0
+                        #             rebDup    0      0           0    0      0           0
+        )
+        ,scMtx.sz.sum = c(rebCnt.r=2 ,rebCnt.e=2)
+        ,isHard=NULL  # use default
+    )
+}
+
+
 
 
 for( mName in names( scoreMtxCfg ) ){ # naming Ãß°¡.
