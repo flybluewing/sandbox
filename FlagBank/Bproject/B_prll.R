@@ -248,7 +248,7 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
             mNameSet <- c("scoreLAr13","scoreLAr24","scoreLVr13","scoreLVr24")
             for( mName in mNameSet ){
                 rptFile <- sprintf("Inspec_H%d_cutRst1Score",lastH)
-                B.rptCutRst1Score_byMtx( resultLst ,mName ,rptFile)
+                B.rptCutRst1Score_byMtx( resultLst ,mName ,rptFile ,transMtx=F )
             }
             mNameSet <- c("score1","score2","scoreLAr13")      # names(bFMtxExtFltLst)
             for( mName in mNameSet ){

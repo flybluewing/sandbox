@@ -743,7 +743,7 @@ B.rptCutRst1Score <- function( resultLst ,file="CutRst1Score" ){
 
 }
 
-B.rptCutRst1Score_byMtx <- function( resultLst ,mName ,rptFile="cutRst1Score"){
+B.rptCutRst1Score_byMtx <- function( resultLst ,mName ,rptFile="cutRst1Score" ,transMtx=F ){
 
     removeZeroRow <- function( mtx ){
         flag <- apply( mtx ,1 ,function(rDat){all(rDat==0)})
@@ -830,7 +830,9 @@ B.rptCutRst1Score_byMtx <- function( resultLst ,mName ,rptFile="cutRst1Score"){
         rownames(rptMtx) <- B.tgtHIdxStr( as.integer(names(resultLst)) )
         
         logScoreMtx$fLogStr(sprintf("<%s>",pName))
-        logScoreMtx$fLogMtx( rptMtx ,pIndent="  ")
+        if( transMtx ){ logScoreMtx$fLogMtx( t(rptMtx) ,pIndent="  ")
+        } else {    logScoreMtx$fLogMtx( rptMtx ,pIndent="  ")          }
+        
     }
     logScoreMtx$fLogStr("End",pTime=T)
 }
