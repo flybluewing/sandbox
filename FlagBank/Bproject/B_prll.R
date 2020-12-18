@@ -269,6 +269,13 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
                 B.rptCrScr( resultLst ,crMName ,tgt.scMtx ,rptFile )
             }
             B.rpt_CutRstClM( resultLst ,tgt.scMtx ,rptfile=sprintf("Inspec_CutRstCLM_%d",lastH) )
+
+            mNameSet <- c( "bScr01" ,"bScr02" )
+            for( mName in mNameSet ){
+                rptFile <- sprintf("Inspec_H%d_mf",lastH)
+                B.rptCutRst1Score_mfMtx( resultLst ,mName ,rptFile ,transMtx=F )
+            }
+
         }
 
         if( FALSE ){    # bSMtx

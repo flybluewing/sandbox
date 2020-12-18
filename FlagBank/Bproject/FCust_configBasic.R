@@ -3125,7 +3125,7 @@ mName <- "bScr01"
 scoreMtxCfg[[mName]] <- list(
     mName = mName   ,style=c( freqZero=TRUE )
     ,fCol = list(
-        "raw.1"=list( rng=matrix( c(NA,NA ,1,2) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
+         "raw.1"=list( rng=matrix( c(NA,NA ,1,2) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
                         ,evt=matrix( c(c(1,3,3,3,3),c(2,3,4,5,6)) ,ncol=2 ) # colname c("lev","val")
                     )
         ,"raw.3"=list( rng=matrix( c(NA,NA ,1,2) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
@@ -3138,16 +3138,16 @@ scoreMtxCfg[[mName]] <- list(
                         ,evt=matrix( c(c(1,2,3,3,3),c(2,3,4,5,6)) ,ncol=2 ) # colname c("lev","val")
                     )
         ,"rem.1"=list( rng=matrix( c(NA,NA ,1,3) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
-                        ,evt=matrix( c(c(1,2,3,3),c(3,4,5,6)) ,ncol=2 ) # colname c("lev","val")
+                        ,evt=matrix( c(c(1,3,3,3),c(3,4,5,6)) ,ncol=2 ) # colname c("lev","val")
                     )
         ,"rem.3"=list( rng=matrix( c(NA,NA ,1,3) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
-                        ,evt=matrix( c(c(1,2,3,3),c(3,4,5,6)) ,ncol=2 ) # colname c("lev","val")
+                        ,evt=matrix( c(c(1,3,3,3),c(3,4,5,6)) ,ncol=2 ) # colname c("lev","val")
                     )
         ,"rem.4"=list( rng=matrix( c(NA,NA ,1,3) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
-                        ,evt=matrix( c(c(1,2,3,3),c(3,4,5,6)) ,ncol=2 ) # colname c("lev","val")
+                        ,evt=matrix( c(c(1,3,3,3),c(3,4,5,6)) ,ncol=2 ) # colname c("lev","val")
                     )
         ,"rem.6"=list( rng=matrix( c(NA,NA ,1,3) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
-                        ,evt=matrix( c(c(1,2,3,3),c(3,4,5,6)) ,ncol=2 ) # colname c("lev","val")
+                        ,evt=matrix( c(c(1,3,3,3),c(3,4,5,6)) ,ncol=2 ) # colname c("lev","val")
                     )
         ,"c.1"=list( rng=matrix( c(NA,NA ,0,2) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
                         ,evt=matrix( c(c(1,3,3,3),c(2,3,4,5)) ,ncol=2 ) # colname c("lev","val")
@@ -3172,7 +3172,8 @@ scoreMtxCfg[[mName]] <- list(
                     )
     )
     ,evtMax = NULL
-    ,rowReb = NULL  ,rowRebDup = c( lowE=3 ,rareE=1 )
+    ,rowReb = c( rawMin=1 ,lowE=4 ,rareE=1 ,dupESum=4 )     ,rowRebDup=NULL
+    # ,rowRebDup = c( lowE=3 ,rareE=1 )
     ,summMtx = NULL ,summMtx.reb = NULL ,summMtx.sum = NULL
     ,scMtx.sz = NULL,scMtx.sz.sum = NULL
     ,isHard=NULL  # use default
