@@ -3104,7 +3104,7 @@ if( TRUE ){
         )
         ,evtMax = NULL
         ,evtMaxFColTot = NULL
-        ,rowReb = NULL      ,rowRebDup=NULL
+        ,rowReb = c( rawMin=1 ,lowE=1 ,rareE=1 ,dupESum=1 )     ,rowRebDup=NULL
         ,summMtx = NULL     ,summMtx.reb = NULL     ,summMtx.sum = NULL
         ,scMtx.sz = matrix( c(   2 ,1 ,1 ,1 ,1 ,1   ,1 ,1 ,1 ,1 ,1 ,1 ) ,byrow=T
                         ,ncol=length(scMtx.szName$cName) ,nrow=length(scMtx.szName$rName) 
