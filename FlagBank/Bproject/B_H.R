@@ -837,7 +837,7 @@ B.rptCutRst1Score_byMtx <- function( resultLst ,mName ,rptFile="cutRst1Score" ,t
     logScoreMtx$fLogStr("End",pTime=T)
 }
 
-B.rptCutRst1Score_mfMtx <- function( resultLst ,file="CutRst1Scroe_mf" ,transMtx=F ){
+B.rptCutRst1Score_mfMtx <- function( resultLst ,mName ,rptFile="CutRst1Scroe_mf" ,transMtx=F ){
 
     logScoreMtx <- k.getFlogObj( sprintf("./report/workRpt/%s_%s_ScoreMtx.txt",rptFile,mName) )
     logScoreMtx$fLogStr("Start by B.rptCutRst1Score_byMtx()",pTime=T,pAppend=F)

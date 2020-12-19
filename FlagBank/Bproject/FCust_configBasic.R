@@ -3254,7 +3254,7 @@ scoreMtxCfg[[mName]] <- list(
                     )
     )
     ,evtMax = NULL
-    ,rowReb = NULL  ,rowRebDup = NULL
+    ,rowReb = c( rawMin=1 ,lowE=1 ,rareE=1 ,dupESum=1 )     ,rowRebDup=NULL
     ,summMtx = NULL ,summMtx.reb = NULL ,summMtx.sum = NULL
     ,scMtx.sz = NULL,scMtx.sz.sum = NULL
     ,isHard=NULL  # use default
