@@ -646,7 +646,7 @@ B.rptFMtx_ext <- function( resultLst ,mName ,extFltName="filter01" ,rptFile ){
     cat(sprintf("   reported in %s \n",fLog$fileName))
 }
 
-B.rptFMtx_multiR <- function( resultLst ,mName ,tgt.scMtx ,rptFile ){
+B.rptFMtx_multiR <- function( resultLst ,mfName ,tgt.scMtx ,rptFile ){
     fLog <- k.getFlogObj( sprintf("./report/workRpt/%s.txt",rptFile) )
     fLog$fLogStr( sprintf("Start %s",rptFile) ,pTime=T,pAppend=F)
 
@@ -654,7 +654,7 @@ B.rptFMtx_multiR <- function( resultLst ,mName ,tgt.scMtx ,rptFile ){
     for( hIdx in names(resultLst) ){
         aIdx <- 1
 
-        mtxMaker <- bFMtxMFltLst[[mName]]( tgt.scMtx )
+        mtxMaker <- bFMtxMFltLst[[mfName]]( tgt.scMtx )
         if( !mtxMaker$available )   next
 
         scoreMtx.grp <- resultLst[[hIdx]]$scoreMtx.grp

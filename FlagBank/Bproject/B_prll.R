@@ -232,7 +232,7 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
         rptBanM <- c("score1")
     }
     rptBanTyp <- c("aux_sfc","lastRawPair")
-    rptBanM <- c("score2","sScore02","scoreLAe13")
+    rptBanM <- c("scoreA","scoreB","scoreC","scoreD")
     B.rptCutRstLst( cutRstLst ,file=rptFile ,rptBanTyp=rptBanTyp ,rptBanM=rptBanM )
     lastH   ;tgt.scMtx
 
@@ -258,9 +258,9 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
                 }
             }
             mNameSet <- c("mfLAVrn")
-            for( mName in mNameSet ){
-                rptFile <- sprintf("Inspec_H%d_fMtxMultiR_%s",lastH,mName)
-                B.rptFMtx_multiR( resultLst ,mName ,tgt.scMtx ,rptFile)
+            for( mfName in mNameSet ){
+                rptFile <- sprintf("Inspec_H%d_fMtxMultiR_%s",lastH,mfName)
+                B.rptFMtx_multiR( resultLst ,mfName ,tgt.scMtx ,rptFile)
             }
             # mNameSet <- c( "crScrN03R" ,"crScrN03E" ,"crScrN03PhEvt" ,"crScrN03Sum" ,"crScrN04R" ,"crScrN04E" ,"crScrN04PhEvt" ,"crScrN04Sum" )
             mNameSet <- c( "crScrN03R" ,"crScrN03E" ,"crScrN03PhEvt" ,"crScrN03Sum" )

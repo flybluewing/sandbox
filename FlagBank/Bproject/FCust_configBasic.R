@@ -3264,7 +3264,7 @@ scoreMtxCfg[[mName]] <- list(
 
 
 mfName <- "mfABCD"
-if( FALSE ){
+if( TRUE ){
     scoreMtxCfg[[mfName]] <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
@@ -3294,7 +3294,7 @@ if( FALSE ){
                         )
             ,"pabbAH1" =list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )
                             ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
-                            ,evtMax.fCol=NULL
+                            ,evtMax.fCol=NULL   # ,freqVal=c(1) # H880, H793, H799
                         )
             ,"pabbAH2" =list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )
                             ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
@@ -3326,7 +3326,8 @@ if( FALSE ){
                         )
         )
         ,evtMaxFColTot = NULL
-        ,evtMax     = NULL      ,rowReb = NULL          ,rowRebDup = NULL
+        ,evtMax     = NULL      
+        ,rowReb = c( rawMin=1 ,lowE=1 ,rareE=1 ,dupESum=1 )     ,rowRebDup=NULL
         ,summMtx    = NULL      ,summMtx.reb = NULL     ,summMtx.sum = NULL
         ,scMtx.sz = matrix( c(  2 ,2 ,1 ,1 ,1 ,1   ,1 ,1 ,1 ,1 ,1 ,1 ) ,byrow=T
                         ,ncol=length(scMtx.szName$cName) ,nrow=length(scMtx.szName$rName) 
