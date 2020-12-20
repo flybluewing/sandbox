@@ -676,7 +676,7 @@ bS.cut_M <- function( crMName ,scoreMtx.grp ,cut.grp ,fHName ,anaOnly=F  ,logger
 }
 
 
-bS.get_bSMtxRM_bsMRLXxn <- function( tgt.scMtx=NULL ,fltMNames ){
+bS.get_bSMtxRM_bsMRLXxn <- function( mfName ,tgt.scMtx=NULL ,fltMNames ){   #   폐지. mfName 변수의 범위가 애매해진다.
 
         fltObj <- list( mInfo=list() )
         fltObj$mInfo$mName <- mfName
@@ -700,10 +700,6 @@ bS.get_bSMtxRM_bsMRLXxn <- function( tgt.scMtx=NULL ,fltMNames ){
             rowVal <- rep( 0 ,length(fltObj$mInfo$cName) )
             names(rowVal) <- fltObj$mInfo$cName
 
-            cName <- c( "hpn1" ,"hpnE" ,"col1Hpn1" ,"col1Hpn2" ,"col1Hpn3" ,"col1Hpn4" ,"col1Hpn5" ,"col1Hpn6" )
-            ignoreCol <- cName[ rowVal[cName]==1 ]
-            rowVal[ ignoreCol ] <- 0
-
             for( mName in fltObj$fltMNames ){
                 rVal <- mmMtxLst[[mName]][aIdx,]
                 eVal <- mmEMtxLst[[mName]][aIdx,]
@@ -725,6 +721,11 @@ bS.get_bSMtxRM_bsMRLXxn <- function( tgt.scMtx=NULL ,fltMNames ){
                 rowVal["colEHpn6"] <- rowVal["colEHpn6"] + sum( !is.na(eVal[c("colA6","colB6")]) )
 
             }
+
+            #   freqVal 옵션으로 대체.
+            # cName <- c( "hpn1" ,"hpnE" ,"col1Hpn1" ,"col1Hpn2" ,"col1Hpn3" ,"col1Hpn4" ,"col1Hpn5" ,"col1Hpn6" )
+            # ignoreCol <- cName[ rowVal[cName]==1 ]
+            # rowVal[ ignoreCol ] <- 0
 
             return( rowVal )
         }

@@ -740,23 +740,12 @@ if( TRUE ){
 
             }
 
-            cName <- c( "hpn1" ,"hpnE" ,"col1Hpn1" ,"col1Hpn2" ,"col1Hpn3" ,"col1Hpn4" ,"col1Hpn5" ,"col1Hpn6" )
-            ignoreCol <- cName[ rowVal[cName]==1 ]
-            rowVal[ ignoreCol ] <- 0
+            # cName <- c( "hpn1" ,"hpnE" ,"col1Hpn1" ,"col1Hpn2" ,"col1Hpn3" ,"col1Hpn4" ,"col1Hpn5" ,"col1Hpn6" )
+            # ignoreCol <- cName[ rowVal[cName]==1 ]
+            # rowVal[ ignoreCol ] <- 0
 
             return( rowVal )
 
-            # cName <- "hpn1"   # code template
-            # for( mName in fltObj$fltMNames ){
-            #     val[mName] <- mmMtxLst[[mName]][aIdx,cName] >= 1
-            # }
-            # rowVal[cName] <- sum(val[c("score6","score7")]) + any( 0<val[c("score4","score5")] )
-
-            # for( nIdx in names(mmMtxLst) ){   # 테스트 데이터 생성용.
-            #     for( aIdx in 1:10 ){
-            #         mmMtxLst[[nIdx]][aIdx,] <- sample(1:5,length(mmMtxLst[[nIdx]][aIdx,]),replace=T)
-            #     }
-            # }
         }
 
         fltObj$getScoreMtx <- function( scoreMtxLst ){
@@ -839,23 +828,12 @@ if( TRUE ){
 
             }
 
-            cName <- c( "hpn1" ,"hpnE" ,"col1Hpn1" ,"col1Hpn2" ,"col1Hpn3" ,"col1Hpn4" ,"col1Hpn5" ,"col1Hpn6" )
-            ignoreCol <- cName[ rowVal[cName]==1 ]
-            rowVal[ ignoreCol ] <- 0
+            # cName <- c( "hpn1" ,"hpnE" ,"col1Hpn1" ,"col1Hpn2" ,"col1Hpn3" ,"col1Hpn4" ,"col1Hpn5" ,"col1Hpn6" )
+            # ignoreCol <- cName[ rowVal[cName]==1 ]
+            # rowVal[ ignoreCol ] <- 0
 
             return( rowVal )
 
-            # cName <- "hpn1"   # code template
-            # for( mName in fltObj$fltMNames ){
-            #     val[mName] <- mmMtxLst[[mName]][aIdx,cName] >= 1
-            # }
-            # rowVal[cName] <- sum(val[c("score6","score7")]) + any( 0<val[c("score4","score5")] )
-
-            # for( nIdx in names(mmMtxLst) ){   # 테스트 데이터 생성용.
-            #     for( aIdx in 1:10 ){
-            #         mmMtxLst[[nIdx]][aIdx,] <- sample(1:5,length(mmMtxLst[[nIdx]][aIdx,]),replace=T)
-            #     }
-            # }
         }
 
         fltObj$getScoreMtx <- function( scoreMtxLst ){
@@ -938,23 +916,12 @@ if( TRUE ){
 
             }
 
-            cName <- c( "hpn1" ,"hpnE" ,"col1Hpn1" ,"col1Hpn2" ,"col1Hpn3" ,"col1Hpn4" ,"col1Hpn5" ,"col1Hpn6" )
-            ignoreCol <- cName[ rowVal[cName]==1 ]
-            rowVal[ ignoreCol ] <- 0
+            # cName <- c( "hpn1" ,"hpnE" ,"col1Hpn1" ,"col1Hpn2" ,"col1Hpn3" ,"col1Hpn4" ,"col1Hpn5" ,"col1Hpn6" )
+            # ignoreCol <- cName[ rowVal[cName]==1 ]
+            # rowVal[ ignoreCol ] <- 0
 
             return( rowVal )
 
-            # cName <- "hpn1"   # code template
-            # for( mName in fltObj$fltMNames ){
-            #     val[mName] <- mmMtxLst[[mName]][aIdx,cName] >= 1
-            # }
-            # rowVal[cName] <- sum(val[c("score6","score7")]) + any( 0<val[c("score4","score5")] )
-
-            # for( nIdx in names(mmMtxLst) ){   # 테스트 데이터 생성용.
-            #     for( aIdx in 1:10 ){
-            #         mmMtxLst[[nIdx]][aIdx,] <- sample(1:5,length(mmMtxLst[[nIdx]][aIdx,]),replace=T)
-            #     }
-            # }
         }
 
         fltObj$getScoreMtx <- function( scoreMtxLst ){
@@ -1038,23 +1005,12 @@ if( TRUE ){
 
             }
 
-            cName <- c( "hpn1" ,"hpnE" ,"col1Hpn1" ,"col1Hpn2" ,"col1Hpn3" ,"col1Hpn4" ,"col1Hpn5" ,"col1Hpn6" )
-            ignoreCol <- cName[ rowVal[cName]==1 ]
-            rowVal[ ignoreCol ] <- 0
+            # cName <- c( "hpn1" ,"hpnE" ,"col1Hpn1" ,"col1Hpn2" ,"col1Hpn3" ,"col1Hpn4" ,"col1Hpn5" ,"col1Hpn6" )
+            # ignoreCol <- cName[ rowVal[cName]==1 ]
+            # rowVal[ ignoreCol ] <- 0
 
             return( rowVal )
 
-            # cName <- "hpn1"   # code template
-            # for( mName in fltObj$fltMNames ){
-            #     val[mName] <- mmMtxLst[[mName]][aIdx,cName] >= 1
-            # }
-            # rowVal[cName] <- sum(val[c("score6","score7")]) + any( 0<val[c("score4","score5")] )
-
-            # for( nIdx in names(mmMtxLst) ){   # 테스트 데이터 생성용.
-            #     for( aIdx in 1:10 ){
-            #         mmMtxLst[[nIdx]][aIdx,] <- sample(1:5,length(mmMtxLst[[nIdx]][aIdx,]),replace=T)
-            #     }
-            # }
         }
 
         fltObj$getScoreMtx <- function( scoreMtxLst ){
@@ -1137,23 +1093,11 @@ if( TRUE ){
 
             }
 
-            cName <- c( "hpn1" ,"hpnE" ,"col1Hpn1" ,"col1Hpn2" ,"col1Hpn3" ,"col1Hpn4" ,"col1Hpn5" ,"col1Hpn6" )
-            ignoreCol <- cName[ rowVal[cName]==1 ]
-            rowVal[ ignoreCol ] <- 0
+            # cName <- c( "hpn1" ,"hpnE" ,"col1Hpn1" ,"col1Hpn2" ,"col1Hpn3" ,"col1Hpn4" ,"col1Hpn5" ,"col1Hpn6" )
+            # ignoreCol <- cName[ rowVal[cName]==1 ]
+            # rowVal[ ignoreCol ] <- 0
 
             return( rowVal )
-
-            # cName <- "hpn1"   # code template
-            # for( mName in fltObj$fltMNames ){
-            #     val[mName] <- mmMtxLst[[mName]][aIdx,cName] >= 1
-            # }
-            # rowVal[cName] <- sum(val[c("score6","score7")]) + any( 0<val[c("score4","score5")] )
-
-            # for( nIdx in names(mmMtxLst) ){   # 테스트 데이터 생성용.
-            #     for( aIdx in 1:10 ){
-            #         mmMtxLst[[nIdx]][aIdx,] <- sample(1:5,length(mmMtxLst[[nIdx]][aIdx,]),replace=T)
-            #     }
-            # }
         }
 
         fltObj$getScoreMtx <- function( scoreMtxLst ){
@@ -1235,23 +1179,12 @@ if( TRUE ){
 
             }
 
-            cName <- c( "hpn1" ,"hpnE" ,"col1Hpn1" ,"col1Hpn2" ,"col1Hpn3" ,"col1Hpn4" ,"col1Hpn5" )
-            ignoreCol <- cName[ rowVal[cName]==1 ]
-            rowVal[ ignoreCol ] <- 0
+            # cName <- c( "hpn1" ,"hpnE" ,"col1Hpn1" ,"col1Hpn2" ,"col1Hpn3" ,"col1Hpn4" ,"col1Hpn5" )
+            # ignoreCol <- cName[ rowVal[cName]==1 ]
+            # rowVal[ ignoreCol ] <- 0
 
             return( rowVal )
 
-            # cName <- "hpn1"   # code template
-            # for( mName in fltObj$fltMNames ){
-            #     val[mName] <- mmMtxLst[[mName]][aIdx,cName] >= 1
-            # }
-            # rowVal[cName] <- sum(val[c("score6","score7")]) + any( 0<val[c("score4","score5")] )
-
-            # for( nIdx in names(mmMtxLst) ){   # 테스트 데이터 생성용.
-            #     for( aIdx in 1:10 ){
-            #         mmMtxLst[[nIdx]][aIdx,] <- sample(1:5,length(mmMtxLst[[nIdx]][aIdx,]),replace=T)
-            #     }
-            # }
         }
 
         fltObj$getScoreMtx <- function( scoreMtxLst ){
@@ -1332,23 +1265,12 @@ if( TRUE ){
 
             }
 
-            cName <- c( "hpn1" ,"hpnE" ,"col1Hpn1" ,"col1Hpn2" ,"col1Hpn3" ,"col1Hpn4" ,"col1Hpn5" )
-            ignoreCol <- cName[ rowVal[cName]==1 ]
-            rowVal[ ignoreCol ] <- 0
+            # cName <- c( "hpn1" ,"hpnE" ,"col1Hpn1" ,"col1Hpn2" ,"col1Hpn3" ,"col1Hpn4" ,"col1Hpn5" )
+            # ignoreCol <- cName[ rowVal[cName]==1 ]
+            # rowVal[ ignoreCol ] <- 0
 
             return( rowVal )
 
-            # cName <- "hpn1"   # code template
-            # for( mName in fltObj$fltMNames ){
-            #     val[mName] <- mmMtxLst[[mName]][aIdx,cName] >= 1
-            # }
-            # rowVal[cName] <- sum(val[c("score6","score7")]) + any( 0<val[c("score4","score5")] )
-
-            # for( nIdx in names(mmMtxLst) ){   # 테스트 데이터 생성용.
-            #     for( aIdx in 1:10 ){
-            #         mmMtxLst[[nIdx]][aIdx,] <- sample(1:5,length(mmMtxLst[[nIdx]][aIdx,]),replace=T)
-            #     }
-            # }
         }
 
         fltObj$getScoreMtx <- function( scoreMtxLst ){
@@ -1432,23 +1354,11 @@ if( TRUE ){
 
             }
 
-            cName <- c( "hpn1" ,"hpnE" ,"col1Hpn1" ,"col1Hpn2" ,"col1Hpn3" ,"col1Hpn4" ,"col1Hpn5" ,"col1Hpn6" )
-            ignoreCol <- cName[ rowVal[cName]==1 ]
-            rowVal[ ignoreCol ] <- 0
+            # cName <- c( "hpn1" ,"hpnE" ,"col1Hpn1" ,"col1Hpn2" ,"col1Hpn3" ,"col1Hpn4" ,"col1Hpn5" ,"col1Hpn6" )
+            # ignoreCol <- cName[ rowVal[cName]==1 ]
+            # rowVal[ ignoreCol ] <- 0
 
             return( rowVal )
-
-            # cName <- "hpn1"   # code template
-            # for( mName in fltObj$fltMNames ){
-            #     val[mName] <- mmMtxLst[[mName]][aIdx,cName] >= 1
-            # }
-            # rowVal[cName] <- sum(val[c("score6","score7")]) + any( 0<val[c("score4","score5")] )
-
-            # for( nIdx in names(mmMtxLst) ){   # 테스트 데이터 생성용.
-            #     for( aIdx in 1:10 ){
-            #         mmMtxLst[[nIdx]][aIdx,] <- sample(1:5,length(mmMtxLst[[nIdx]][aIdx,]),replace=T)
-            #     }
-            # }
         }
 
         fltObj$getScoreMtx <- function( scoreMtxLst ){
@@ -1531,23 +1441,12 @@ if( TRUE ){
 
             }
 
-            cName <- c( "hpn1" ,"hpnE" ,"col1Hpn1" ,"col1Hpn2" ,"col1Hpn3" ,"col1Hpn4" ,"col1Hpn5" ,"col1Hpn6" )
-            ignoreCol <- cName[ rowVal[cName]==1 ]
-            rowVal[ ignoreCol ] <- 0
+            # cName <- c( "hpn1" ,"hpnE" ,"col1Hpn1" ,"col1Hpn2" ,"col1Hpn3" ,"col1Hpn4" ,"col1Hpn5" ,"col1Hpn6" )
+            # ignoreCol <- cName[ rowVal[cName]==1 ]
+            # rowVal[ ignoreCol ] <- 0
 
             return( rowVal )
 
-            # cName <- "hpn1"   # code template
-            # for( mName in fltObj$fltMNames ){
-            #     val[mName] <- mmMtxLst[[mName]][aIdx,cName] >= 1
-            # }
-            # rowVal[cName] <- sum(val[c("score6","score7")]) + any( 0<val[c("score4","score5")] )
-
-            # for( nIdx in names(mmMtxLst) ){   # 테스트 데이터 생성용.
-            #     for( aIdx in 1:10 ){
-            #         mmMtxLst[[nIdx]][aIdx,] <- sample(1:5,length(mmMtxLst[[nIdx]][aIdx,]),replace=T)
-            #     }
-            # }
         }
 
         fltObj$getScoreMtx <- function( scoreMtxLst ){
@@ -1630,23 +1529,12 @@ if( TRUE ){
 
             }
 
-            cName <- c( "hpn1" ,"hpnE" ,"col1Hpn1" ,"col1Hpn2" ,"col1Hpn3" ,"col1Hpn4" ,"col1Hpn5" ,"col1Hpn6" )
-            ignoreCol <- cName[ rowVal[cName]==1 ]
-            rowVal[ ignoreCol ] <- 0
+            # cName <- c( "hpn1" ,"hpnE" ,"col1Hpn1" ,"col1Hpn2" ,"col1Hpn3" ,"col1Hpn4" ,"col1Hpn5" ,"col1Hpn6" )
+            # ignoreCol <- cName[ rowVal[cName]==1 ]
+            # rowVal[ ignoreCol ] <- 0
 
             return( rowVal )
 
-            # cName <- "hpn1"   # code template
-            # for( mName in fltObj$fltMNames ){
-            #     val[mName] <- mmMtxLst[[mName]][aIdx,cName] >= 1
-            # }
-            # rowVal[cName] <- sum(val[c("score6","score7")]) + any( 0<val[c("score4","score5")] )
-
-            # for( nIdx in names(mmMtxLst) ){   # 테스트 데이터 생성용.
-            #     for( aIdx in 1:10 ){
-            #         mmMtxLst[[nIdx]][aIdx,] <- sample(1:5,length(mmMtxLst[[nIdx]][aIdx,]),replace=T)
-            #     }
-            # }
         }
 
         fltObj$getScoreMtx <- function( scoreMtxLst ){
@@ -1774,23 +1662,12 @@ if( TRUE ){
 
             }
 
-            cName <- c( "hpnA1" ,"hpnB1" ,"hpnAE" ,"hpnBE" )
-            ignoreCol <- cName[ rowVal[cName]<=3 ]  # 3 이하는 의미 중복 오류만 많아질 듯.
-            rowVal[ ignoreCol ] <- 0
+            # cName <- c( "hpnA1" ,"hpnB1" ,"hpnAE" ,"hpnBE" )
+            # ignoreCol <- cName[ rowVal[cName]<=3 ]  # 3 이하는 의미 중복 오류만 많아질 듯.
+            # rowVal[ ignoreCol ] <- 0
 
             return( rowVal )
 
-            # cName <- "hpn1"   # code template
-            # for( mName in fltObj$fltMNames ){
-            #     val[mName] <- mmMtxLst[[mName]][aIdx,cName] >= 1
-            # }
-            # rowVal[cName] <- sum(val[c("score6","score7")]) + any( 0<val[c("score4","score5")] )
-
-            # for( nIdx in names(mmMtxLst) ){   # 테스트 데이터 생성용.
-            #     for( aIdx in 1:10 ){
-            #         mmMtxLst[[nIdx]][aIdx,] <- sample(1:5,length(mmMtxLst[[nIdx]][aIdx,]),replace=T)
-            #     }
-            # }
         }
 
         fltObj$getScoreMtx <- function( scoreMtxLst ){
@@ -1915,23 +1792,12 @@ if( TRUE ){
 
             }
 
-            cName <- c( "hpnA1" ,"hpnB1" ,"hpnAE" ,"hpnBE" )
-            ignoreCol <- cName[ rowVal[cName]<=3 ]  # 3 이하는 의미 중복 오류만 많아질 듯.
-            rowVal[ ignoreCol ] <- 0
+            # cName <- c( "hpnA1" ,"hpnB1" ,"hpnAE" ,"hpnBE" )
+            # ignoreCol <- cName[ rowVal[cName]<=3 ]  # 3 이하는 의미 중복 오류만 많아질 듯.
+            # rowVal[ ignoreCol ] <- 0
 
             return( rowVal )
 
-            # cName <- "hpn1"   # code template
-            # for( mName in fltObj$fltMNames ){
-            #     val[mName] <- mmMtxLst[[mName]][aIdx,cName] >= 1
-            # }
-            # rowVal[cName] <- sum(val[c("score6","score7")]) + any( 0<val[c("score4","score5")] )
-
-            # for( nIdx in names(mmMtxLst) ){   # 테스트 데이터 생성용.
-            #     for( aIdx in 1:10 ){
-            #         mmMtxLst[[nIdx]][aIdx,] <- sample(1:5,length(mmMtxLst[[nIdx]][aIdx,]),replace=T)
-            #     }
-            # }
         }
 
         fltObj$getScoreMtx <- function( scoreMtxLst ){
@@ -2056,23 +1922,12 @@ if( TRUE ){
 
             }
 
-            cName <- c( "hpnA1" ,"hpnB1" ,"hpnAE" ,"hpnBE" )
-            ignoreCol <- cName[ rowVal[cName]<=3 ]  # 3 이하는 의미 중복 오류만 많아질 듯.
-            rowVal[ ignoreCol ] <- 0
+            # cName <- c( "hpnA1" ,"hpnB1" ,"hpnAE" ,"hpnBE" )
+            # ignoreCol <- cName[ rowVal[cName]<=3 ]  # 3 이하는 의미 중복 오류만 많아질 듯.
+            # rowVal[ ignoreCol ] <- 0
 
             return( rowVal )
 
-            # cName <- "hpn1"   # code template
-            # for( mName in fltObj$fltMNames ){
-            #     val[mName] <- mmMtxLst[[mName]][aIdx,cName] >= 1
-            # }
-            # rowVal[cName] <- sum(val[c("score6","score7")]) + any( 0<val[c("score4","score5")] )
-
-            # for( nIdx in names(mmMtxLst) ){   # 테스트 데이터 생성용.
-            #     for( aIdx in 1:10 ){
-            #         mmMtxLst[[nIdx]][aIdx,] <- sample(1:5,length(mmMtxLst[[nIdx]][aIdx,]),replace=T)
-            #     }
-            # }
         }
 
         fltObj$getScoreMtx <- function( scoreMtxLst ){
@@ -2197,23 +2052,12 @@ if( TRUE ){
 
             }
 
-            cName <- c( "hpnA1" ,"hpnB1" ,"hpnAE" ,"hpnBE" )
-            ignoreCol <- cName[ rowVal[cName]<=3 ]  # 3 이하는 의미 중복 오류만 많아질 듯.
-            rowVal[ ignoreCol ] <- 0
+            # cName <- c( "hpnA1" ,"hpnB1" ,"hpnAE" ,"hpnBE" )
+            # ignoreCol <- cName[ rowVal[cName]<=3 ]  # 3 이하는 의미 중복 오류만 많아질 듯.
+            # rowVal[ ignoreCol ] <- 0
 
             return( rowVal )
 
-            # cName <- "hpn1"   # code template
-            # for( mName in fltObj$fltMNames ){
-            #     val[mName] <- mmMtxLst[[mName]][aIdx,cName] >= 1
-            # }
-            # rowVal[cName] <- sum(val[c("score6","score7")]) + any( 0<val[c("score4","score5")] )
-
-            # for( nIdx in names(mmMtxLst) ){   # 테스트 데이터 생성용.
-            #     for( aIdx in 1:10 ){
-            #         mmMtxLst[[nIdx]][aIdx,] <- sample(1:5,length(mmMtxLst[[nIdx]][aIdx,]),replace=T)
-            #     }
-            # }
         }
 
         fltObj$getScoreMtx <- function( scoreMtxLst ){

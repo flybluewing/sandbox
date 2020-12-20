@@ -3342,21 +3342,21 @@ if( TRUE ){
 }
 
 mfName <- "mf4567"
-if( FALSE ){
+if( TRUE ){
     scoreMtxCfg[[mfName]] <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
             "pBanN.r" =list( rng=matrix( c(0,1 ,0,1) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
                             ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
-                            ,evtMax.fCol=NULL
+                            ,evtMax.fCol=NULL  ,freqVal=1
                         )
             ,"pBanN.n" =list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )
                             ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
-                            ,evtMax.fCol=NULL
+                            ,evtMax.fCol=NULL  ,freqVal=1
                         )
             ,"pLCol" =list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )
                             ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
-                            ,evtMax.fCol=NULL
+                            ,evtMax.fCol=NULL  ,freqVal=1
                         )
             ,"pE3" =list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )
                             ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
@@ -3400,7 +3400,7 @@ if( FALSE ){
                         )
             ,"FVa.m" =list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )
                             ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
-                            ,evtMax.fCol=NULL
+                            ,evtMax.fCol=NULL  ,freqVal=1
                         )
             ,"FVa.c" =list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )
                             ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
@@ -3411,7 +3411,7 @@ if( FALSE ){
                             ,evtMax.fCol=NULL
                         )
             ,"xBan.x" =list( rng=matrix( c(0,1 ,0,2) ,ncol=2 )
-                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,evt=matrix( c(c(3,3,3),c(3,4,5)) ,ncol=2)
                             ,evtMax.fCol=NULL
                         )
             ,"xLCol" =list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )
@@ -3437,7 +3437,8 @@ if( FALSE ){
         )
         ,evtMaxFColTot = NULL
         ,evtMax     = NULL      
-        ,rowReb = c( rawMin=3 ,lowE=2 ,rareE=1 ,dupESum=2 )
+        # ,rowReb = c( rawMin=3 ,lowE=2 ,rareE=1 ,dupESum=2 )
+        ,rowReb = c( rawMin=1 ,lowE=1 ,rareE=1 ,dupESum=1 )
         ,rowRebDup = NULL
         ,summMtx   = matrix( c(  1 ,3 ,2 ,2 ,2 ,1     , 1 ,3 ,2 ,2 ,2 ,2 ) ,byrow=T # all ph fCol phReb xyCnt.fCol xyCnt.phase
                 ,ncol=length(summMtxName$cName) ,nrow=length(summMtxName$rName)
