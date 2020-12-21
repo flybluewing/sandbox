@@ -3922,7 +3922,7 @@ if( TRUE ){
 }
 
 mfName <- "mfLArn"
-if( FALSE ){
+if( TRUE ){
     scoreMtxCfg[[mfName]] <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
@@ -3983,10 +3983,16 @@ if( FALSE ){
                             ,evtMax.fCol=NULL
                         )
         )
-        ,evtMaxFColTot = NULL
-        ,evtMax     = NULL      ,rowReb = NULL          ,rowRebDup = NULL
-        ,summMtx    = NULL      ,summMtx.reb = NULL     ,summMtx.sum = NULL
-        ,scMtx.sz = matrix( c(  2 ,2 ,1 ,2 ,2 ,1     ,1 ,1 ,1 ,1 ,1 ,1 ) ,byrow=T
+        ,evtMaxFColTot = NULL        ,evtMax = NULL
+        ,rowReb = c( rawMin=1 ,lowE=1 ,rareE=1 ,dupESum=1 )     # H787 hpn(1) ,col1Hpn(1)
+        ,rowRebDup = NULL
+        ,summMtx   = matrix( c(  1 ,2 ,2 ,1 ,2 ,2     , 1 ,1 ,1 ,1 ,1 ,1 ) ,byrow=T # all ph fCol phReb xyCnt.fCol xyCnt.phase
+                ,ncol=length(summMtxName$cName) ,nrow=length(summMtxName$rName)
+                ,dimnames=list(summMtxName$rName,summMtxName$cName)
+        )
+        ,summMtx.reb = NULL     
+        ,summMtx.sum = c(raw=3 ,evt=2)
+        ,scMtx.sz = matrix( c(  3 ,3 ,1 ,2 ,2 ,1     ,2 ,2 ,1 ,1 ,1 ,1 ) ,byrow=T
                             #   "r.ph" ,"r.fCol" ,"r.dblHpnFlg" ,"e.ph" ,"e.fCol" ,"e.dblHpnFlg"
                             #   "rebCnt" ,"rebDup"
                         ,ncol=length(scMtx.szName$cName) ,nrow=length(scMtx.szName$rName) 
