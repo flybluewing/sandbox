@@ -8,7 +8,7 @@ if( FALSE ){    # document
 bSMtxRMLst <- list()
 
 mfName <- "bsMR4567"
-if( FALSE ){
+if( TRUE ){
 
     bSMtxRMLst[[mfName]] <- function( tgt.scMtx=NULL ){
 

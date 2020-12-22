@@ -3342,7 +3342,7 @@ if( TRUE ){
 }
 
 mfName <- "mf4567"
-if( TRUE ){
+if( TRUE ){     #   freqVal 재할용 가능성 있음.
     scoreMtxCfg[[mfName]] <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
@@ -3941,6 +3941,14 @@ if( TRUE ){
         ,isHard=NULL  # use default
     )
 }
+
+#   추가 요소
+#       - mf4567 : freqVal 재활용 가능성 있음.
+#       - mfLArn, mfLVrn 등.. : reb는 의미없으나 evt와 hpn1에 대한 min/max 제한가능.
+#       - mfLAV_hpn1 : rcf에서의 hpn1 통합(col1~col6). freqVal로서의 재활용 가능성 있음.
+#       
+
+
 
 
 for( mName in names( scoreMtxCfg ) ){ # naming 추가.

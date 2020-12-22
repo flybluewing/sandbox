@@ -1956,22 +1956,24 @@ bsScoreMtxCfg[[mName]] <- list(
 
 
 # Multi_R ------------------------------------------------
-mName <- "bsMR4567"
+mName <- "bsMR4567"     # freqVal 재활용 필요.
 if( TRUE ){
     bsScoreMtxCfg[[mName]] <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
-            "pBanN.r"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
-                    ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+            "pBanN.r"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                    ,evt=matrix( c(c(2,3,3),c(2,3,4)) ,ncol=2)
                     ,evtMax.fCol=NULL
+                    ,freqVal=1
             ) 
             ,"pBanN.n"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
                     ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
                     ,evtMax.fCol=NULL
             )
-            ,"pLCol"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
-                    ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+            ,"pLCol"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                    ,evt=matrix( c(c(2,3,3),c(2,3,4)) ,ncol=2)
                     ,evtMax.fCol=NULL
+                    ,freqVal=1
             )
             ,"pE3"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
                     ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
@@ -1989,12 +1991,13 @@ if( TRUE ){
                     ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
                     ,evtMax.fCol=NULL
             )
-            ,"iBanN"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
-                    ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+            ,"iBanN"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                    ,evt=matrix( c(c(2,3,3),c(2,3,4)) ,ncol=2)
                     ,evtMax.fCol=NULL
+                    ,freqVal=1
             )
-            ,"iLCol"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
-                    ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+            ,"iLCol"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                    ,evt=matrix( c(c(2,3,3),c(2,3,4)) ,ncol=2)
                     ,evtMax.fCol=NULL
             )
             ,"iE3"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
@@ -2016,6 +2019,7 @@ if( TRUE ){
             ,"FVa.m"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
                     ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
                     ,evtMax.fCol=NULL
+                    ,freqVal=1
             )
             ,"FVa.c"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
                     ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
@@ -2025,24 +2029,24 @@ if( TRUE ){
                     ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
                     ,evtMax.fCol=NULL
             )
-            ,"xBan.x"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
-                    ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+            ,"xBan.x"=list( rng=matrix( c(0,0 ,0,3) ,ncol=2 )
+                    ,evt=matrix( c(c(3,3),c(3,4)) ,ncol=2)
                     ,evtMax.fCol=NULL
             )
             ,"xLCol"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
                     ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
                     ,evtMax.fCol=NULL
             )
-            ,"xEn"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
-                    ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+            ,"xEn"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                    ,evt=matrix( c(c(2,3,3),c(2,3,4)) ,ncol=2)
                     ,evtMax.fCol=NULL
             )
             ,"xfNum"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
                     ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
                     ,evtMax.fCol=NULL
             )
-            ,"xMH"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
-                    ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+            ,"xMH"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                    ,evt=matrix( c(c(2,3,3),c(2,3,4)) ,ncol=2)
                     ,evtMax.fCol=NULL
             )
             ,"eSum_FVaM4"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
@@ -2051,9 +2055,22 @@ if( TRUE ){
             )
         )
         ,evtMax = NULL  ,evtMaxFColTot = NULL
-        ,rowReb = NULL  ,rowRebDup=NULL
-        ,summMtx = NULL ,summMtx.sum = NULL ,summMtx.reb = NULL
-        ,scMtx.sz = NULL    ,scMtx.sz.sum = NULL
+        ,rowReb = c( rawMin=1 ,lowE=1 ,rareE=1 ,dupESum=1 )     ,rowRebDup=NULL
+        ,summMtx = matrix( c(   1 ,2 ,3 ,1 ,2 ,2  ,1 ,1 ,1 ,1 ,1 ,1 ) ,byrow=T # all ph fCol phReb xyCnt.fCol xyCnt.phase
+            ,ncol=length(summMtxName$cName) ,nrow=length(summMtxName$rName)
+            ,dimnames=list(summMtxName$rName,summMtxName$cName)
+        )
+        ,summMtx.sum = c(raw=4 ,evt=2)
+        ,summMtx.reb = matrix( c(   1 ,2 ,2 ,1 ,1 ,1  ,1 ,1 ,1 ,1 ,1 ,1 ) ,byrow=T # all ph fCol phReb xyCnt.fCol xyCnt.phase
+            ,ncol=length(summMtxName$cName) ,nrow=length(summMtxName$rName)
+            ,dimnames=list(summMtxName$rName,summMtxName$cName)
+        )
+        ,scMtx.sz = matrix( c( 3 ,3 ,1 ,2 ,2 ,1  ,2 ,2 ,1 ,1 ,1 ,1 ) ,byrow=T
+                # c( "rebCnt" ,"rebDup" ) / c( "r.ph" ,"r.fCol" ,"r.dblHpnFlg" ,"e.ph" ,"e.fCol" ,"e.dblHpnFlg" )
+                ,ncol=length(scMtx.szName$cName) ,nrow=length(scMtx.szName$rName) 
+                ,dimnames=list(scMtx.szName$rName,scMtx.szName$cName)
+        )
+        ,scMtx.sz.sum = c(rebCnt.r=5 ,rebCnt.e=2)
         ,isHard=NULL  # use default
     )
 }
