@@ -259,9 +259,9 @@ if( TRUE ){ # "sScore02"
                 scrMtx[wIdx,"inc.f2"] <- sum(inc.fStep2==aFStep)
             }
 
-            # 1은 너무 흔해서 지워버리기로 한다.
-            remFlag <- scrMtx[wIdx,]==1
-            scrMtx[wIdx,remFlag] <- 0
+            #   freqVal 옵션 적용에 따라 1무시 정책은 폐기.
+            # remFlag <- scrMtx[wIdx,]==1
+            # scrMtx[wIdx,remFlag] <- 0
 
             if( any(scrMtx[wIdx,]>=2) ){
                 aQuo <- fCutU.getQuoObj( aZoidMtx[aIdx,] ,valSet=T )
@@ -1172,28 +1172,28 @@ if( TRUE ){ # "sScore09"
             aCStep <- aObj$cStepMtx[aIdx,]      ;aFStep <- aObj$fStepMtx[aIdx,]
 
 			banR <- rObj$checkBan( aCode ,rObj$rawBan )
-			scrMtx[wIdx,"rCnt"] <- ifelse( 1>=banR$cnt ,0 ,banR$cnt )
+			scrMtx[wIdx,"rCnt"] <- banR$cnt
 			scrMtx[wIdx,"rD2"]	<- sum(banR$bDupCnt==2)
 			scrMtx[wIdx,"rDn"]	<- sum(banR$bDupCnt >2)
 			scrMtx[wIdx,"rLr"]	<- ifelse(is.na(banR$typCnt["Slide\\"]),0,banR$typCnt["Slide\\"])
 			scrMtx[wIdx,"rRl"]	<- ifelse(is.na(banR$typCnt["Slide/"]),0,banR$typCnt["Slide/"])
 
 			banE <- rObj$checkBan( aRem ,rObj$remBan )
-			scrMtx[wIdx,"eCnt"] <- ifelse( 1>=banE$cnt ,0 ,banE$cnt )
+			scrMtx[wIdx,"eCnt"] <- banE$cnt
 			scrMtx[wIdx,"eD2"]	<- sum(banE$bDupCnt==2)
 			scrMtx[wIdx,"eDn"]	<- sum(banE$bDupCnt >2)
 			scrMtx[wIdx,"eLr"]	<- ifelse(is.na(banE$typCnt["Slide\\"]),0,banE$typCnt["Slide\\"])
 			scrMtx[wIdx,"eRl"]	<- ifelse(is.na(banE$typCnt["Slide/"]),0,banE$typCnt["Slide/"])
 
 			banC <- rObj$checkBan( aCStep ,rObj$cBan )
-			scrMtx[wIdx,"cCnt"] <- ifelse( 1>=banC$cnt ,0 ,banC$cnt )
+			scrMtx[wIdx,"cCnt"] <- banC$cnt
 			scrMtx[wIdx,"cD2"]	<- sum(banC$bDupCnt==2)
 			scrMtx[wIdx,"cDn"]	<- sum(banC$bDupCnt >2)
 			scrMtx[wIdx,"cLr"]	<- ifelse(is.na(banC$typCnt["Slide\\"]),0,banC$typCnt["Slide\\"])
 			scrMtx[wIdx,"cRl"]	<- ifelse(is.na(banC$typCnt["Slide/"]),0,banC$typCnt["Slide/"])
 
 			banF <- rObj$checkBan( aFStep ,rObj$fBan )
-			scrMtx[wIdx,"fCnt"] <- ifelse( 1>=banF$cnt ,0 ,banF$cnt )
+			scrMtx[wIdx,"fCnt"] <- banF$cnt
 			scrMtx[wIdx,"fD2"]	<- sum(banF$bDupCnt==2)
 			scrMtx[wIdx,"fDn"]	<- sum(banF$bDupCnt >2)
 			scrMtx[wIdx,"fLr"]	<- ifelse(is.na(banF$typCnt["Slide\\"]),0,banF$typCnt["Slide\\"])
