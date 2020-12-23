@@ -3946,7 +3946,7 @@ if( TRUE ){
 #       - mf4567 : freqVal 재활용 가능성 있음.
 #       - mfLArn, mfLVrn 등.. : reb는 의미없으나 evt와 hpn1에 대한 min/max 제한가능.
 #       - mfLAV_hpn1 : rcf에서의 hpn1 통합(col1~col6). freqVal로서의 재활용 가능성 있음.
-#       
+#       - mf25ELecf : 발생 빈도 확인 후 추가. ELecf 필터링이 목적.
 
 
 

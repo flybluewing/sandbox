@@ -2075,6 +2075,125 @@ if( TRUE ){
     )
 }
 
+mName <- "bsMR1234"     # freqVal 재활용 필요.
+if( TRUE ){
+    bsScoreMtxCfg[[mName]] <- list(
+        mName = mName   ,style=c( freqZero=TRUE )
+        ,fCol = list(
+            "s1rem0.len.tot"=list( rng=matrix( c(0,0 ,0,9) ,ncol=2 )
+                    ,evt=matrix( c(c(3),c(9)) ,ncol=2)  ,evtMax.fCol=NULL
+            ) 
+            ,"s1rem1.len.tot"=list( rng=matrix( c(0,0 ,0,9) ,ncol=2 )
+                    ,evt=matrix( c(c(3),c(9)) ,ncol=2)  ,evtMax.fCol=NULL
+            )
+            ,"s1c0.len.tot"=list( rng=matrix( c(0,0 ,0,9) ,ncol=2 )
+                    ,evt=matrix( c(c(3),c(9)) ,ncol=2)  ,evtMax.fCol=NULL
+            )
+            ,"s1c1.len.tot"=list( rng=matrix( c(0,0 ,0,9) ,ncol=2 )
+                    ,evt=matrix( c(c(3),c(9)) ,ncol=2)  ,evtMax.fCol=NULL
+            )
+            ,"s1f0.len.tot"=list( rng=matrix( c(0,0 ,0,9) ,ncol=2 )
+                    ,evt=matrix( c(c(3),c(9)) ,ncol=2)  ,evtMax.fCol=NULL
+            )
+            ,"s1f1.len.tot"=list( rng=matrix( c(0,0 ,0,9) ,ncol=2 )
+                    ,evt=matrix( c(c(3),c(9)) ,ncol=2)  ,evtMax.fCol=NULL
+            )
+            ,"s2rebC.r"=list( rng=matrix( c(0,0 ,0,9) ,ncol=2 )
+                    ,evt=matrix( c(c(3),c(9)) ,ncol=2)  ,evtMax.fCol=NULL
+            )
+            ,"s2rebC.c"=list( rng=matrix( c(0,0 ,0,9) ,ncol=2 )
+                    ,evt=matrix( c(c(3),c(9)) ,ncol=2)  ,evtMax.fCol=NULL
+            )
+            ,"s2rebC.f"=list( rng=matrix( c(0,0 ,0,9) ,ncol=2 )
+                    ,evt=matrix( c(c(3),c(9)) ,ncol=2)  ,evtMax.fCol=NULL
+            )
+            ,"s2rebC2.r"=list( rng=matrix( c(0,0 ,0,9) ,ncol=2 )
+                    ,evt=matrix( c(c(3),c(9)) ,ncol=2)  ,evtMax.fCol=NULL
+            )
+            ,"s2rebC2.c"=list( rng=matrix( c(0,0 ,0,9) ,ncol=2 )
+                    ,evt=matrix( c(c(3),c(9)) ,ncol=2)  ,evtMax.fCol=NULL
+            )
+            ,"s2rebC2.f"=list( rng=matrix( c(0,0 ,0,9) ,ncol=2 )
+                    ,evt=matrix( c(c(3),c(9)) ,ncol=2)  ,evtMax.fCol=NULL
+            )
+            ,"s2inc.r"=list( rng=matrix( c(0,0 ,0,9) ,ncol=2 )
+                    ,evt=matrix( c(c(3),c(9)) ,ncol=2)  ,evtMax.fCol=NULL
+            )
+            ,"s2inc.c"=list( rng=matrix( c(0,0 ,0,9) ,ncol=2 )
+                    ,evt=matrix( c(c(3),c(9)) ,ncol=2)  ,evtMax.fCol=NULL
+            )
+            ,"s2inc.f"=list( rng=matrix( c(0,0 ,0,9) ,ncol=2 )
+                    ,evt=matrix( c(c(3),c(9)) ,ncol=2)  ,evtMax.fCol=NULL
+            )
+            ,"s2inc.r2"=list( rng=matrix( c(0,0 ,0,9) ,ncol=2 )
+                    ,evt=matrix( c(c(3),c(9)) ,ncol=2)  ,evtMax.fCol=NULL
+            )
+            ,"s2inc.c2"=list( rng=matrix( c(0,0 ,0,9) ,ncol=2 )
+                    ,evt=matrix( c(c(3),c(9)) ,ncol=2)  ,evtMax.fCol=NULL
+            )
+            ,"s2inc.f2"=list( rng=matrix( c(0,0 ,0,9) ,ncol=2 )
+                    ,evt=matrix( c(c(3),c(9)) ,ncol=2)  ,evtMax.fCol=NULL
+            )
+            ,"s3rebPtn.1"=list( rng=matrix( c(0,0 ,0,9) ,ncol=2 )
+                    ,evt=matrix( c(c(3),c(9)) ,ncol=2)  ,evtMax.fCol=NULL
+            )
+            ,"s3snMax.r"=list( rng=matrix( c(0,0 ,0,9) ,ncol=2 )
+                    ,evt=matrix( c(c(3),c(9)) ,ncol=2)  ,evtMax.fCol=NULL
+            )
+            ,"s3snMax.c"=list( rng=matrix( c(0,0 ,0,9) ,ncol=2 )
+                    ,evt=matrix( c(c(3),c(9)) ,ncol=2)  ,evtMax.fCol=NULL
+            )
+            ,"s3snMax.f"=list( rng=matrix( c(0,0 ,0,9) ,ncol=2 )
+                    ,evt=matrix( c(c(3),c(9)) ,ncol=2)  ,evtMax.fCol=NULL
+            )
+            ,"s4pBanN.r"=list( rng=matrix( c(0,0 ,0,9) ,ncol=2 )
+                    ,evt=matrix( c(c(3),c(9)) ,ncol=2)  ,evtMax.fCol=NULL
+            )
+            ,"s4pBanN.n"=list( rng=matrix( c(0,0 ,0,9) ,ncol=2 )
+                    ,evt=matrix( c(c(3),c(9)) ,ncol=2)  ,evtMax.fCol=NULL
+            )
+            ,"s4pLCol"=list( rng=matrix( c(0,0 ,0,9) ,ncol=2 )
+                    ,evt=matrix( c(c(3),c(9)) ,ncol=2)  ,evtMax.fCol=NULL
+            )
+            ,"s4pE3"=list( rng=matrix( c(0,0 ,0,9) ,ncol=2 )
+                    ,evt=matrix( c(c(3),c(9)) ,ncol=2)  ,evtMax.fCol=NULL
+            )
+            ,"s4pfNum"=list( rng=matrix( c(0,0 ,0,9) ,ncol=2 )
+                    ,evt=matrix( c(c(3),c(9)) ,ncol=2)  ,evtMax.fCol=NULL
+            )
+            ,"s4iBanN"=list( rng=matrix( c(0,0 ,0,9) ,ncol=2 )
+                    ,evt=matrix( c(c(3),c(9)) ,ncol=2)  ,evtMax.fCol=NULL
+            )
+            ,"s4iLCol"=list( rng=matrix( c(0,0 ,0,9) ,ncol=2 )
+                    ,evt=matrix( c(c(3),c(9)) ,ncol=2)  ,evtMax.fCol=NULL
+            )
+            ,"s4ifNum"=list( rng=matrix( c(0,0 ,0,9) ,ncol=2 )
+                    ,evt=matrix( c(c(3),c(9)) ,ncol=2)  ,evtMax.fCol=NULL
+            )
+            ,"s4FVa.m"=list( rng=matrix( c(0,0 ,0,9) ,ncol=2 )
+                    ,evt=matrix( c(c(3),c(9)) ,ncol=2)  ,evtMax.fCol=NULL
+            )
+        )
+        ,evtMax = NULL  ,evtMaxFColTot = NULL
+        ,rowReb = c( rawMin=2 ,lowE=1 ,rareE=1 ,dupESum=1 )     ,rowRebDup=NULL
+        ,summMtx = matrix( c(   1 ,3 ,3 ,2 ,1 ,1  ,1 ,1 ,1 ,1 ,1 ,1 ) ,byrow=T # all ph fCol phReb xyCnt.fCol xyCnt.phase
+            ,ncol=length(summMtxName$cName) ,nrow=length(summMtxName$rName)
+            ,dimnames=list(summMtxName$rName,summMtxName$cName)
+        )
+        ,summMtx.sum = c(raw=4 ,evt=2)
+        ,summMtx.reb = matrix( c(   1 ,1 ,2 ,1 ,1 ,1  ,1 ,1 ,1 ,1 ,1 ,1 ) ,byrow=T # all ph fCol phReb xyCnt.fCol xyCnt.phase
+            ,ncol=length(summMtxName$cName) ,nrow=length(summMtxName$rName)
+            ,dimnames=list(summMtxName$rName,summMtxName$cName)
+        )
+        ,scMtx.sz = matrix( c( 6 ,3 ,1 ,1 ,1 ,1  ,3 ,3 ,1 ,1 ,1 ,1 ) ,byrow=T
+                # c( "rebCnt" ,"rebDup" ) / c( "r.ph" ,"r.fCol" ,"r.dblHpnFlg" ,"e.ph" ,"e.fCol" ,"e.dblHpnFlg" )
+                ,ncol=length(scMtx.szName$cName) ,nrow=length(scMtx.szName$rName) 
+                ,dimnames=list(scMtx.szName$rName,scMtx.szName$cName)
+        )
+        ,scMtx.sz.sum = c(rebCnt.r=6 ,rebCnt.e=2)
+        ,isHard=NULL  # use default
+    )
+}
 
 
 mName <- "bsMRLArn"
