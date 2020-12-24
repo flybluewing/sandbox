@@ -197,7 +197,7 @@ if( TRUE ){
 }
 
 mName <- "sScore02"
-if( TRUE ){
+if( FALSE ){
 
     bsScrExtMtxCfg[[mName]] <- list()
 
