@@ -346,7 +346,7 @@ if( TRUE ){
 
         fltObj$fltMNames <- c(   "sScore05","sScore06","sScore09"
                                 ,"sScore0LAe13","sScore0LAe24","sScore0LVe24","sScore0LVe24"
-                                ,"sScore0LAf13","sScore0LAf24","sScore0LVf24","sScore0LVf24"
+                                ,"sScore0LAc13","sScore0LAc24","sScore0LVc24","sScore0LVc24"
                                 ,"sScore0LAf13","sScore0LAf24","sScore0LVf24","sScore0LVf24"
         )        
         fltObj$mInfo$cName <- c( "pBanN.r","pBanN.n","pLCol","pE3","pfNum","iBanN","iLCol","ifNum","FVa.m"

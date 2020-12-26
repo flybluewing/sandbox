@@ -1963,6 +1963,9 @@ bsScoreMtxCfg[[mName]] <- list(
 
 
 # Multi_R ------------------------------------------------
+#   추가 후보
+#       - bsMR2569
+#       - bsMR29Lecf
 mName <- "bsMR4567"     # freqVal 재활용 필요.
 if( TRUE ){
     bsScoreMtxCfg[[mName]] <- list(
@@ -2245,13 +2248,15 @@ if( TRUE ){
             )
             ,"eCnt"=list( rng=matrix( c(0,0 ,0,9) ,ncol=2 )
                     ,evt=matrix( c(c(3),c(9)) ,ncol=2)  ,evtMax.fCol=NULL
-                    ,freqVal=1:2
+                    ,freqVal=1:3
             )
             ,"cCnt"=list( rng=matrix( c(0,0 ,0,9) ,ncol=2 )
                     ,evt=matrix( c(c(3),c(9)) ,ncol=2)  ,evtMax.fCol=NULL
+                    ,freqVal=1:2
             )
             ,"fCnt"=list( rng=matrix( c(0,0 ,0,9) ,ncol=2 )
                     ,evt=matrix( c(c(3),c(9)) ,ncol=2)  ,evtMax.fCol=NULL
+                    ,freqVal=1
             )
             ,"Ae13Hpn1A"=list( rng=matrix( c(0,0 ,0,9) ,ncol=2 )
                     ,evt=matrix( c(c(3),c(9)) ,ncol=2)  ,evtMax.fCol=NULL
@@ -2337,8 +2342,8 @@ if( TRUE ){
             )
         )
         ,evtMax = NULL  ,evtMaxFColTot = NULL
-        ,rowReb = c( rawMin=2 ,lowE=1 ,rareE=1 ,dupESum=1 )     ,rowRebDup=NULL
-        ,summMtx = matrix( c(   1 ,3 ,3 ,1 ,1 ,1  ,1 ,1 ,1 ,1 ,1 ,1 ) ,byrow=T # all ph fCol phReb xyCnt.fCol xyCnt.phase
+        ,rowReb = c( rawMin=1 ,lowE=1 ,rareE=1 ,dupESum=1 )     ,rowRebDup=NULL
+        ,summMtx = matrix( c(   1 ,3 ,4 ,2 ,1 ,1  ,1 ,1 ,1 ,1 ,1 ,1 ) ,byrow=T # all ph fCol phReb xyCnt.fCol xyCnt.phase
             ,ncol=length(summMtxName$cName) ,nrow=length(summMtxName$rName)
             ,dimnames=list(summMtxName$rName,summMtxName$cName)
         )
@@ -2347,7 +2352,7 @@ if( TRUE ){
             ,ncol=length(summMtxName$cName) ,nrow=length(summMtxName$rName)
             ,dimnames=list(summMtxName$rName,summMtxName$cName)
         )
-        ,scMtx.sz = matrix( c( 3 ,5 ,1 ,1 ,1 ,1  ,2 ,3 ,1 ,1 ,1 ,1 ) ,byrow=T
+        ,scMtx.sz = matrix( c( 3 ,6 ,1 ,1 ,1 ,1  ,2 ,2 ,1 ,1 ,1 ,1 ) ,byrow=T
                 # c( "rebCnt" ,"rebDup" ) / c( "r.ph" ,"r.fCol" ,"r.dblHpnFlg" ,"e.ph" ,"e.fCol" ,"e.dblHpnFlg" )
                 ,ncol=length(scMtx.szName$cName) ,nrow=length(scMtx.szName$rName) 
                 ,dimnames=list(scMtx.szName$rName,scMtx.szName$cName)
