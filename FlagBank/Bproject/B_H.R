@@ -959,7 +959,7 @@ B.rpt_CutRstClM <- function( resultLst ,tgt.scMtx ,rptfile="CutRstCLM" ){
     cat(sprintf("   reported in %s \n",logSumTot$fileName))
 }
 
-B.rptCrScr <- function( resultLst ,crMName ,tgt.scMtx ,rptFile ){
+B.rptCrScr <- function( resultLst ,crMName ,tgt.scMtx ,rptFile ,transMtx=T ){
 
     fLog <- k.getFlogObj( sprintf("./report/workRpt/%s.txt",rptFile) )
     fLog$fLogStr( sprintf("Start %s",rptFile) ,pTime=T,pAppend=F)
@@ -976,7 +976,8 @@ B.rptCrScr <- function( resultLst ,crMName ,tgt.scMtx ,rptFile ){
         )
     }
     rownames(crMtx) <- B.tgtHIdxStr( as.integer(names(resultLst)) )
-    fLog$fLogMtx( crMtx )
+    if( transMtx ){   fLog$fLogMtx( t(crMtx) )
+    } else {    fLog$fLogMtx( crMtx )   }
 
     fLog$fLogStr( "Finish -----" ,pTime=T)
 
