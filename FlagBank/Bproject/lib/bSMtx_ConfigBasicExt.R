@@ -197,7 +197,7 @@ if( TRUE ){
 }
 
 mName <- "sScore02"
-if( FALSE ){
+if( TRUE ){
 
     bsScrExtMtxCfg[[mName]] <- list()
 
@@ -205,37 +205,43 @@ if( FALSE ){
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
             "rebCN.r"=list( rng=matrix( c(0,0 ,0,5) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
-                            ,evt=matrix( c(c(2,3,5),c(3,4,5)) ,ncol=2)
-                            # ,freqVal=c(1,2)   # 적용 고려 중. H873,H832
+                            ,evt=matrix( c(c(1,3,5),c(3,4,5)) ,ncol=2)
+                            ,freqVal=1:2
                         ) 
-            ,"rebCN.c"=list( rng=matrix( c(0,0 ,0,3) ,ncol=2 )
-                            ,evt=matrix( c(c(2,3),c(3,4)) ,ncol=2)
-                            ,freqVal=c(1,2)
+            ,"rebCN.c"=list( rng=matrix( c(0,0 ,0,4) ,ncol=2 )
+                            ,evt=matrix( c(c(1,3),c(3,4)) ,ncol=2)
+                            ,freqVal=1:2
                         )
             ,"rebCN.f"=list( rng=matrix( c(0,0 ,0,3) ,ncol=2 )
                             ,evt=matrix( c(c(2,3,5),c(3,4,5)) ,ncol=2)
+                            ,freqVal=1
                         )
-            ,"incN.r"=list( rng=matrix( c(0,0 ,0,3) ,ncol=2 )
-                            ,evt=matrix( c(c(2,3,5),c(3,4,5)) ,ncol=2)
+            ,"incN.r"=list( rng=matrix( c(0,0 ,0,4) ,ncol=2 )
+                            ,evt=matrix( c(c(1,3,5),c(3,4,5)) ,ncol=2)
+                            ,freqVal=1:2
                         )
-            ,"incN.c"=list( rng=matrix( c(0,0 ,0,3) ,ncol=2 )
-                            ,evt=matrix( c(c(2,3,5),c(3,4,5)) ,ncol=2)
+            ,"incN.c"=list( rng=matrix( c(0,0 ,0,4) ,ncol=2 )
+                            ,evt=matrix( c(c(1,3,5),c(3,4,5)) ,ncol=2)
+                            ,freqVal=1:2
                         )
             ,"incN.f"=list( rng=matrix( c(0,0 ,0,3) ,ncol=2 )
                             ,evt=matrix( c(c(2,3,5),c(3,4,5)) ,ncol=2)
+                            ,freqVal=1
                         )
-            ,"matCntRebC12"=list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+            ,"matCntRebC12"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
                             ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
                         )
-            ,"matCntInc12"=list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+            ,"matCntInc12"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
                             ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
                         )
             ,"matCntInc123"=list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
                             ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
                         )
         )
-        ,evtMax = NULL        
-        ,rowReb = c(rawMin=1,lowE=1,rareE=1,dupESum=1 )             ,rowRebDup=NULL
+        ,evtMax = matrix( c(2,1,3,0 ,2,2,3,1)   ,byrow=T ,ncol=4
+                         ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
+        )        
+        ,rowReb = c(rawMin=1,lowE=2,rareE=1,dupESum=1 )             ,rowRebDup=NULL
         ,summMtx = NULL       ,summMtx.reb = NULL                   ,summMtx.sum = NULL
         ,scMtx.sz = NULL      ,scMtx.sz.sum = NULL
         ,isHard=NULL  # use default
@@ -244,21 +250,22 @@ if( FALSE ){
     bsScrExtMtxCfg[[mName]]$filter02 <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
-            "evtRebC"=list( rng=matrix( c(0,0 ,0,3) ,ncol=2 )
-                            ,evt=matrix( c(c(2,3,3,3),c(4,5,6,7)) ,ncol=2)
+            "evtRebC"=list( rng=matrix( c(0,0 ,0,4) ,ncol=2 )
+                            ,evt=matrix( c(c(1,2,3,3,3),c(2,3,4,5,6)) ,ncol=2)
                         )
-            ,"evtRebC2"=list( rng=matrix( c(0,0 ,0,3) ,ncol=2 )
-                            ,evt=matrix( c(c(2,3,3,3),c(4,5,6,7)) ,ncol=2)
+            ,"evtRebC2"=list( rng=matrix( c(0,0 ,0,4) ,ncol=2 )
+                            ,evt=matrix( c(c(1,2,3,3,3),c(2,3,4,5,6)) ,ncol=2)
                         )
-            ,"evtInc"=list( rng=matrix( c(0,0 ,0,3) ,ncol=2 )
-                            ,evt=matrix( c(c(2,3,3,3),c(4,5,6,7)) ,ncol=2)
+            ,"evtInc"=list( rng=matrix( c(0,0 ,0,4) ,ncol=2 )
+                            ,evt=matrix( c(c(1,2,3,3,3),c(2,3,4,5,6)) ,ncol=2)
                         )
-            ,"evtInc2"=list( rng=matrix( c(0,0 ,0,3) ,ncol=2 )
-                            ,evt=matrix( c(c(2,3,3,3),c(4,5,6,7)) ,ncol=2)
+            ,"evtInc2"=list( rng=matrix( c(0,0 ,0,4) ,ncol=2 )
+                            ,evt=matrix( c(c(1,2,3,3,3),c(2,3,4,5,6)) ,ncol=2)
+                            # ,freqVal=1:2
                         )
         )
         ,evtMax = NULL        
-        ,rowReb = c(rawMin=1,lowE=1,rareE=1,dupESum=1 )             ,rowRebDup=NULL
+        ,rowReb = c(rawMin=2,lowE=2,rareE=1,dupESum=1 )             ,rowRebDup=NULL
         ,summMtx = NULL       ,summMtx.reb = NULL                   ,summMtx.sum = NULL
         ,scMtx.sz = NULL      ,scMtx.sz.sum = NULL
         ,isHard=NULL  # use default
@@ -1476,8 +1483,7 @@ for( mName in names( bsScrExtMtxCfg ) ){              # mName <- names( bsScrExt
         if( is.null(bsScrExtMtxCfg[[mName]][[fName]]$evtMax) ){
             #   한 개 phase 내에서의 이벤트 발생 제한.
             #   "minLev"이상 이벤트가 maxHpn 보다 초과할 때 Cut
-            evtMax <- matrix( c(2,1,3,0 ,2,2,3,1)
-                                ,byrow=T ,ncol=4
+            evtMax <- matrix( c(2,1,3,0 ,2,2,3,1)   ,byrow=T ,ncol=4
                                 ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
                             )
             bsScrExtMtxCfg[[mName]][[fName]]$evtMax     <- evtMax
