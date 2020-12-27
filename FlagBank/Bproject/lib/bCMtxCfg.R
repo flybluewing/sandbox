@@ -40,6 +40,16 @@ if( TRUE ){
     bCMtxCfg[[crMName]] <- list(  mName = crMName
         #   .reportworkRpt/CutRstCLM_sumTotL.txt 참고
         ,fCol = list(
+              "sumTotHpn" = list( rng=c(min=0,max= 3) ) #   H888 ,H891  sumTotHpn(4)
+             ,"sumTot1"   = list( rng=c(min=0,max= 3) ) # 
+             ,"sumTot2"   = list( rng=c(min=0,max= 3) ) # 
+             ,"sumTot3"   = list( rng=c(min=0,max= 0) ) #
+        )
+    )
+} else if( FALSE ){ # 기존 백업
+    bCMtxCfg[[crMName]] <- list(  mName = crMName
+        #   .reportworkRpt/CutRstCLM_sumTotL.txt 참고
+        ,fCol = list(
               "sumTotHpn" = list( rng=c(min=0,max= 1) ) #
              ,"sumTot1"   = list( rng=c(min=0,max= 1) ) # 
              ,"sumTot2"   = list( rng=c(min=0,max= 1) ) # 
@@ -296,7 +306,32 @@ if( TRUE ){
 
 
 crMName <- "crScrN04R"
-if( FALSE ){    # LA,LV에서 1 이하값은 모두 제거하고 있기 때문에 Raw 체크는 의미 없다.
+if( TRUE ){     # 코드 백업이 필요 없다... ㅎ
+    bCMtxCfg[[crMName]] <- list(  mName = crMName
+        ,fCol = list(
+              "hpn"  = list( rng=c(min=3,max=11) ) # H896 hpn(14)
+             ,"ph"   = list( rng=c(min=0,max= 2) )
+             ,"fCol" = list( rng=c(min=0,max= 2) )
+             ,"phReb"    = list( rng=c(min=0,max=1) )
+             ,"xyCnt.fCol"   = list( rng=c(min=0,max=2) )
+             ,"xyCnt.phase"  = list( rng=c(min=0,max=2) )
+             ,"ph_Reb"       = list( rng=c(min=0,max=1) )
+             ,"fCol_Reb"     = list( rng=c(min=0,max=1) )
+             ,"phReb_Reb"    = list( rng=c(min=0,max=1) )
+             ,"xyCnt.fCol_Reb"   = list( rng=c(min=0,max=1) )
+             ,"xyCnt.phase_Reb"  = list( rng=c(min=0,max=1) )
+             ,"ph_sz"        = list( rng=c(min=0,max=7) )
+             ,"fCol_sz"      = list( rng=c(min=0,max=7) )
+             ,"dblHpnFlg_sz" = list( rng=c(min=0,max=1) )
+             ,"ph_szDup"     = list( rng=c(min=0,max=1) )
+             ,"fCol_szDup"   = list( rng=c(min=0,max=1) )
+             ,"dblHpnFlg_szDup"  = list( rng=c(min=0,max=1) )
+        )
+    )
+}
+
+crMName <- "crScrN04E"
+if( TRUE ){
     bCMtxCfg[[crMName]] <- list(  mName = crMName
         ,fCol = list(
               "hpn"  = list( rng=c(min=10,max=16) ) # c(min=10,max=16)
@@ -318,10 +353,7 @@ if( FALSE ){    # LA,LV에서 1 이하값은 모두 제거하고 있기 때문에 Raw 체크는 의미
              ,"dblHpnFlg_szDup"  = list( rng=c(min=0,max=1) )
         )
     )
-}
-
-crMName <- "crScrN04E"
-if( TRUE ){
+} else if(FALSE){
     bCMtxCfg[[crMName]] <- list(  mName = crMName
         ,fCol = list(
               "hpn"  = list( rng=c(min=10,max=16) ) # c(min=10,max=16)
@@ -361,10 +393,40 @@ if( TRUE ){
              ,"rebEvtMCnt"  = list( rng=c(min=0,max=1) )
         )
     )
+} else if( FALSE ){
+    bCMtxCfg[[crMName]] <- list(  mName = crMName
+        ,fCol = list(
+              "e3Max"   = list( rng=c(min=0,max=6) )
+             ,"e3MCnt"  = list( rng=c(min=0,max=2) )
+             ,"e2Max"   = list( rng=c(min=0,max=1) )
+             ,"e2MCnt"  = list( rng=c(min=0,max=1) )
+             ,"e1Max"   = list( rng=c(min=0,max=1) )
+             ,"e1MCnt"  = list( rng=c(min=0,max=1) )
+             ,"rebRawMax"   = list( rng=c(min=0,max=1) )
+             ,"rebRawMCnt"  = list( rng=c(min=0,max=1) )
+             ,"rebEvtMax"   = list( rng=c(min=0,max=1) )
+             ,"rebEvtMCnt"  = list( rng=c(min=0,max=1) )
+        )
+    )
 }
 
 crMName <- "crScrN04Sum"
 if( TRUE ){
+    bCMtxCfg[[crMName]] <- list(  mName = crMName
+        ,fCol = list(
+              "summSumRaw"      = list( rng=c(min=0,max= 1) )   # H869 4
+             ,"summSumEvt"      = list( rng=c(min=0,max= 1) )
+             ,"summSumOthRaw"   = list( rng=c(min=0,max= 1) )   # H827 4
+             ,"summSumOthEvt"   = list( rng=c(min=0,max= 1) )
+             ,"summSumRebRaw"   = list( rng=c(min=0,max= 1) )
+             ,"summSumRebEvt"   = list( rng=c(min=0,max= 1) )
+             ,"summSumRebOthRaw"= list( rng=c(min=0,max= 1) )
+             ,"summSumRebOthEvt"= list( rng=c(min=0,max= 1) )
+             ,"szSumRebCnt"     = list( rng=c(min=0,max=11) )   # 829 4
+             ,"szSumRebDup"     = list( rng=c(min=0,max= 1) )
+        )
+    )
+} else if( FALSE ){
     bCMtxCfg[[crMName]] <- list(  mName = crMName
         ,fCol = list(
               "summSumRaw"      = list( rng=c(min=0,max= 1) )

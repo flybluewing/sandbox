@@ -5,7 +5,7 @@ if( FALSE ){    # document
 bSMtxMCfg <- list()
 
 crMName <- "bSMScr02R"
-if( TRUE ){
+if( FALSE ){
     bSMtxMCfg[[crMName]] <- list(  mName = crMName ,ver=2.0
         ,fCol = list(
               "hpn0"    =  list( rng=c(min=2,max=6) 
@@ -65,7 +65,7 @@ if( TRUE ){
 }
 
 crMName <- "bSMScr02E"
-if( TRUE ){
+if( FALSE ){
     bSMtxMCfg[[crMName]] <- list(  mName=crMName ,ver=2.0
         ,fCol = list(
               "hpn0"    = list( rng=c(min=4,max=8) 
@@ -125,7 +125,7 @@ if( TRUE ){
 }
 
 crMName <- "bSMScr02PhEvt"
-if( TRUE ){
+if( FALSE ){
     bSMtxMCfg[[crMName]] <- list(  mName=crMName ,ver=2.0
         ,fCol = list(
               "e3Max"   = list( rng=c(min=0,max=2) 
@@ -164,7 +164,7 @@ if( TRUE ){
 }
 
 crMName <- "bSMScr02Sum"
-if( TRUE ){
+if( FALSE ){
     bSMtxMCfg[[crMName]] <- list(  mName = crMName ,ver=2.0
         ,fCol = list(
               "summSumRaw"  = list( rng=c(min=0,max=3) 
@@ -203,7 +203,7 @@ if( TRUE ){
 }
 
 crMName <- "bSMScr02SumClM"
-if( TRUE ){
+if( FALSE ){
     bSMtxMCfg[[crMName]] <- list(  mName=crMName ,ver=2.0
         ,fCol = list(
               "sumTotHpn" = list( rng=c(min=0,max= 4) 
@@ -226,7 +226,7 @@ if( TRUE ){
 
 
 crMName <- "bSMScr04R"
-if( TRUE ){
+if( FALSE ){
     bSMtxMCfg[[crMName]] <- list(  mName=crMName ,ver=2.0
         ,fCol = list(
               "hpn0"    =  list( rng=c(min=13,max=16) 
@@ -286,7 +286,7 @@ if( TRUE ){
 }
 
 crMName <- "bSMScr04E"
-if( FALSE ){    #   LAV에서 2 이상만 가져오다보니 Evt 체크는 Raw체크와 중복된다.
+if( FALSE ){    #   원래 FALSE. LAV에서 2 이상만 가져오다보니 Evt 체크는 Raw체크와 중복된다.
     bSMtxMCfg[[crMName]] <- list(  mName = crMName
         ,fCol = list(
               "hpn0"    = list( rng=c(min=0,max=0) )
@@ -311,7 +311,7 @@ if( FALSE ){    #   LAV에서 2 이상만 가져오다보니 Evt 체크는 Raw체크와 중복된다.
 }
 
 crMName <- "bSMScr04PhEvt"
-if( TRUE ){
+if( FALSE ){
     bSMtxMCfg[[crMName]] <- list(  mName=crMName ,ver=2.0
         ,fCol = list(
               "e3Max"   = list( rng=c(min=0,max=2)  
@@ -350,7 +350,7 @@ if( TRUE ){
 }
 
 crMName <- "bSMScr04Sum"
-if( TRUE ){
+if( FALSE ){
     bSMtxMCfg[[crMName]] <- list(  mName=crMName ,ver=2.0
         ,fCol = list(
               "summSumRaw"  = list( rng=c(min=0,max=0)  
@@ -389,7 +389,7 @@ if( TRUE ){
 }
 
 crMName <- "bSMScr04SumClM"
-if( TRUE ){
+if( FALSE ){
     bSMtxMCfg[[crMName]] <- list(  mName=crMName ,ver=2.0
         ,fCol = list(
               "sumTotHpn" = list( rng=c(min=0,max= 1)  
