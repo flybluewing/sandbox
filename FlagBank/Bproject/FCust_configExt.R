@@ -575,7 +575,7 @@ if( TRUE ){    # sample
 }
 
 mName <- "score8"
-if( TRUE ){    # sample
+if( TRUE ){
     scrExtMtxCfg[[mName]] <- list()
     scrExtMtxCfg[[mName]]$filter01 <- list(
         mName = mName   ,style=c( freqZero=TRUE )
@@ -584,7 +584,7 @@ if( TRUE ){    # sample
                             ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
                         ) 
             ,"c2x"=list( rng=matrix( c(0,2 ,0,2) ,ncol=2 )
-                            ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
+                            ,evt=matrix( c(c(1,3,3),c(2,3,4)) ,ncol=2)
                             ,forbidEvtReb=integer(0)
                         )
             ,"c3x2xOvLAll"=list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )
@@ -597,7 +597,7 @@ if( TRUE ){    # sample
                             ,evt=matrix( c(c(3,3,3,3),c(1,2,3,4)) ,ncol=2)
                         )
             ,"maxMin3"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
-                            ,evt=matrix( c(c(3,3),c(1,2)) ,ncol=2)
+                            ,evt=matrix( c(c(1,3),c(1,2)) ,ncol=2)  # min3가 흔해서 의미가 없는 컬럼이 되었다..
                         )
             ,"max3min2"=list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )
                             ,evt=matrix( c(c(3,3),c(1,2)) ,ncol=2)
@@ -613,7 +613,7 @@ if( TRUE ){    # sample
         ,evtMax = matrix( c(2,1,3,1 ,2,2,3,1)       ,byrow=T ,ncol=4
                             ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
         )
-        ,rowReb = c( rawMin=2 ,lowE=2 ,rareE=1 ,dupESum=2 )
+        ,rowReb = c( rawMin=2 ,lowE=2 ,rareE=1 ,dupESum=1 )
         ,rowRebDup=NULL
         ,summMtx = NULL       ,summMtx.reb = NULL   ,summMtx.sum = NULL
         ,scMtx.sz = NULL      ,scMtx.sz.sum = NULL

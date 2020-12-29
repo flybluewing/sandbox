@@ -119,7 +119,7 @@ if( TRUE ){
              ,"e3MCnt"  = list( rng=c(min=0,max=1) )
              ,"e2Max"   = list( rng=c(min=0,max=2) )
              ,"e2MCnt"  = list( rng=c(min=0,max=1) )
-             ,"e1Max"   = list( rng=c(min=0,max=2) )
+             ,"e1Max"   = list( rng=c(min=0,max=3) )
              ,"e1MCnt"  = list( rng=c(min=0,max=3) )
              ,"rebRawMax"   = list( rng=c(min=0,max=1) )
              ,"rebRawMCnt"  = list( rng=c(min=0,max=1) )
@@ -188,7 +188,7 @@ if( TRUE ){
              ,"e3MCnt"  = list( rng=c(min=0,max=1) )    # 2 for 2/20
              ,"e2Max"   = list( rng=c(min=0,max=2) )
              ,"e2MCnt"  = list( rng=c(min=0,max=2) )
-             ,"e1Max"   = list( rng=c(min=0,max=2) )
+             ,"e1Max"   = list( rng=c(min=0,max=3) )
              ,"e1MCnt"  = list( rng=c(min=0,max=3) )
              ,"rebRawMax"   = list( rng=c(min=0,max=1) )
              ,"rebRawMCnt"  = list( rng=c(min=0,max=1) )

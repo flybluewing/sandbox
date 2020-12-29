@@ -1104,14 +1104,14 @@ scoreMtxCfg[[mName]] <- list(
                     ,ncol=length(summMtxName$cName) ,nrow=length(summMtxName$rName)
                     ,dimnames=list(summMtxName$rName,summMtxName$cName)
     )
-    ,summMtx.reb = NULL ,summMtx.sum = NULL
+    ,summMtx.reb = NULL ,summMtx.sum = c(raw=3 ,evt=3)
     ,scMtx.sz = matrix( c(  3 ,2 ,1 ,3 ,2 ,1    ,1 ,1 ,1 ,1 ,1 ,1 ) ,byrow=T
                         #   "r.ph" ,"r.fCol" ,"r.dblHpnFlg" ,"e.ph" ,"e.fCol" ,"e.dblHpnFlg"
                         #   "rebCnt" ,"rebDup"
                     ,ncol=length(scMtx.szName$cName) ,nrow=length(scMtx.szName$rName) 
                     ,dimnames=list(scMtx.szName$rName,scMtx.szName$cName)
     )
-    ,scMtx.sz.sum = c( rebCnt.r=3 ,rebCnt.e=3 )
+    ,scMtx.sz.sum = c( rebCnt.r=4 ,rebCnt.e=4 )
     ,isHard=NULL  # use default
 )
 
@@ -3947,7 +3947,7 @@ if( TRUE ){
 #       - mfLArn, mfLVrn 등.. : reb는 의미없으나 evt와 hpn1에 대한 min/max 제한가능.
 #       - mfLAV_hpn1 : rcf에서의 hpn1 통합(col1~col6). freqVal로서의 재활용 가능성 있음.
 #       - mf25ELecf : 발생 빈도 확인 후 추가. ELecf 필터링이 목적.
-
+#       - mf2_8c2x  : score2 에서의 cStep 일치와 score8의 c2x 컬럼 동시일치 가능성 (fMtx를 새로 짜야 할 수도..)
 
 
 
