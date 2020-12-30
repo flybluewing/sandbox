@@ -351,7 +351,7 @@ if( TRUE ){
 }
 
 crMName <- "bSMScr02HpnCnt"
-if( FALSE ){
+if( FALSE ){    # ÀÌ°Ç ¹¹¿´Áö??
     bSMtxCMLst[[crMName]] <- function( hCRScr=NULL ){
 
         rObj <- list( 	idStr=crMName  ,mName=c("sScore01","sScore02","sScore03","sScore04","sScore05","sScore06","sScore07","sScore08","sScore08")

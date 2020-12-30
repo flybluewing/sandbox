@@ -1,6 +1,11 @@
 source("header.r")  ;source("B_H.R")    ;source("cut_H.R")
+if( FALSE ){    # document
+    # lastH <- 893(for 894_1 stdIdx:7913455 )
+    # lastH <- 898(for 899_1 stdIdx:5739750   allIdxLst 작성 필요)
+    # lastH <- 933(for 934_1 stdIdx: 233713 )
+}
 
-lastH <- 937            # lastH <- 894      # 개발샘플 894_1 899_1 934_1(?)
+lastH <- 898    # for H899_1
 tgt.scMtx <- NULL
 testMode <- F            #check
 prllNum <- 5
