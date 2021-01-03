@@ -12,14 +12,8 @@ prllNum <- 7     # 실수가 잦아서 그냥 오류 코드로 놔둔다.
 prllLog <- k.getFlogObj( "./log/parallel_log_Hist.txt" )
 prll.initHeader <- function( ){
     k <- sfLapply(1:prllNum,function(prllId){
-        curWd <- getwd()
-        setwd("..")
-        source("hCommon.R")
-
-        setwd( curWd )
-        source("header.r")
-        source("B_H.R")
-        source("B_prll_H.R")
+        curWd <- getwd();setwd("..");source("hCommon.R")
+        setwd( curWd );source("header.r");source("B_H.R");source("B_prll_H.R")
     })
 }
 
@@ -232,7 +226,8 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
         rptBanM <- c("score1")
     }
     rptBanTyp <- c("aux_sfc","lastRawPair")
-    rptBanM <- c(tgt.scMtx,c("mf4567","bsMR1234","bSMScr02R","bSMScr02E"))
+    rptBanM <- c(tgt.scMtx,c("mf4567","bsMR1234","bSMScr02R","bSMScr02E","bSMScr02PhEvt"))
+    rptBanM <- c(rptBanM,c("bSMScr04R","bSMScr04E","bSMScr04PhEvt"))
     B.rptCutRstLst( cutRstLst ,file=rptFile ,rptBanTyp=rptBanTyp ,rptBanM=rptBanM )
     lastH   ;tgt.scMtx
 
