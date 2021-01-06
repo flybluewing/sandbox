@@ -2204,7 +2204,7 @@ BUtil.makeScoreMtxHObj <- function(){
 	sMtxHObj <- list( scrFile="./save/System/Obj_scoreMtxH.save" )
 
 	sMtxHObj$initData <- function( hSpan ,gEnv ){
-		scoreMtxH <- list( std.grp=list() ,bS.grp=list() ,stdIdxSet=integer(0) )
+		scoreMtxH <- list( std.grp=list() ,bS.grp=list() ,stdIdx=integer(0) )
 		save( scoreMtxH ,file=sMtxHObj$scrFile )
 	}
 
@@ -2213,30 +2213,61 @@ BUtil.makeScoreMtxHObj <- function(){
 
 		load(sMtxHObj$scrFile)	# scoreMtxH
 
-		for( curHIdx in hSpan ){    # curHIdx <- hSpan[1]
+		# for( curHIdx in hSpan ){    # curHIdx <- hSpan[1]
+		# 	idStr <- as.character(curHIdx)
+
+		# 	gEnv.w <- gEnv              ;gEnv.w$zhF <- gEnv$zhF[1:(curHIdx-1),]
+
+		# 	stdZoid <- gEnv$zhF[curHIdx,]
+		# 	stdIdx <- k.getIdx_AllZoidMtx( gEnv, stdZoid )
+		# 	scoreMtxH$stdIdxSet[[idStr]] <- stdIdx
+
+		# 	stdMI.grp <- bUtil.getStdMILst( gEnv.w ,fRstLst=NULL )
+		# 	filter.grp <- getFilter.grp( stdMI.grp ,tgt.scMtx=tgt.scMtx )
+		# 	scoreMtx.grp <- getScoreMtx.grp( matrix(stdZoid,nrow=1) ,filter.grp ,makeInfoStr=F )
+		# 	scoreMtxH$std.grp[[idStr]] <- scoreMtx.grp
+
+		# 	aZoidMtx <- matrix(stdZoid ,nrow=1)
+		# 	phVP.grp <- bS.getPhVPGrp( gEnv.w ,aZoidMtx )
+		# 	scoreMtx.grp <- bS.getScoreMtx.grp( phVP.grp ,aZoidMtx ,tgt.scMtx=tgt.scMtx )
+		# 	scoreMtxH$bS.grp[[idStr]] <- scoreMtx.grp
+		# }
+
+		# hIdx <- as.integer(names(scoreMtxH$std.grp))
+		# scoreMtxH$std.grp	<- scoreMtxH$std.grp[order(hIdx)]
+		# scoreMtxH$bS.grp	<- scoreMtxH$bS.grp[order(hIdx)]
+		# scoreMtxH$stdIdxSet	<- scoreMtxH$stdIdxSet[order(hIdx)]
+
+		sfExport("gEnv")
+		k <- sfLapply(1:prllNum,function(prllId){
+			curWd <- getwd();setwd("..");source("hCommon.R")
+			setwd( curWd );source("header.r");source("B_H.R");source("B_prll_H.R")
+		})
+		resultLst <- sfLapply( hSpan ,function( curHIdx ){
 			idStr <- as.character(curHIdx)
+			tgt.scMtx<-NULL
 
 			gEnv.w <- gEnv              ;gEnv.w$zhF <- gEnv$zhF[1:(curHIdx-1),]
 
 			stdZoid <- gEnv$zhF[curHIdx,]
 			stdIdx <- k.getIdx_AllZoidMtx( gEnv, stdZoid )
-			scoreMtxH$stdIdxSet[[idStr]] <- stdIdx
+			# scoreMtxH$stdIdxSet[[idStr]] <- stdIdx
 
 			stdMI.grp <- bUtil.getStdMILst( gEnv.w ,fRstLst=NULL )
 			filter.grp <- getFilter.grp( stdMI.grp ,tgt.scMtx=tgt.scMtx )
-			scoreMtx.grp <- getScoreMtx.grp( matrix(stdZoid,nrow=1) ,filter.grp ,makeInfoStr=F )
-			scoreMtxH$std.grp[[idStr]] <- scoreMtx.grp
+			std.grp <-  getScoreMtx.grp( matrix(stdZoid,nrow=1) ,filter.grp ,makeInfoStr=F )
+			# scoreMtxH$std.grp[[idStr]] <- scoreMtx.grp
 
 			aZoidMtx <- matrix(stdZoid ,nrow=1)
 			phVP.grp <- bS.getPhVPGrp( gEnv.w ,aZoidMtx )
-			scoreMtx.grp <- bS.getScoreMtx.grp( phVP.grp ,aZoidMtx ,tgt.scMtx=tgt.scMtx )
-			scoreMtxH$bS.grp[[idStr]] <- scoreMtx.grp
-		}
+			bS.grp <- bS.getScoreMtx.grp( phVP.grp ,aZoidMtx ,tgt.scMtx=tgt.scMtx )
+			# scoreMtxH$bS.grp[[idStr]] <- scoreMtx.grp
 
-		hIdx <- as.integer(names(scoreMtxH$std.grp))
-		scoreMtxH$std.grp	<- scoreMtxH$std.grp[order(hIdx)]
-		scoreMtxH$bS.grp	<- scoreMtxH$bS.grp[order(hIdx)]
-		scoreMtxH$stdIdxSet	<- scoreMtxH$stdIdxSet[order(hIdx)]
+			return( list(idStr=idStr ,stdIdx=stdIdx,std.grp=std.grp,bS.grp=bS.grp) )
+		})
+
+
+
 
 		save( scoreMtxH ,file=sMtxHObj$scrFile )
 		# 정렬 기능 확인 요.
