@@ -306,7 +306,7 @@ if( TRUE ){
 
 
 crMName <- "crScrN04R"
-if( TRUE ){     # 코드 백업이 필요 없다... ㅎ
+if( TRUE ){
     bCMtxCfg[[crMName]] <- list(  mName = crMName
         ,fCol = list(
               "hpn"  = list( rng=c(min=3,max=11) ) # H896 hpn(14)

@@ -2203,74 +2203,72 @@ BUtil.makeScoreMtxHObj <- function(){
 
 	sMtxHObj <- list( scrFile="./save/System/Obj_scoreMtxH.save" )
 
-	sMtxHObj$initData <- function( hSpan ,gEnv ){
+	sMtxHObj$initData <- function( hSpan ){
 		scoreMtxH <- list( std.grp=list() ,bS.grp=list() ,stdIdx=integer(0) )
 		save( scoreMtxH ,file=sMtxHObj$scrFile )
 	}
 
-	sMtxHObj$addData <- function( hSpan ,gEnv ){
+	sMtxHObj$addData <- function( hSpan ){
 		tgt.scMtx=NULL
 
 		load(sMtxHObj$scrFile)	# scoreMtxH
 
-		# for( curHIdx in hSpan ){    # curHIdx <- hSpan[1]
-		# 	idStr <- as.character(curHIdx)
+		lastH <- hSpan[length(hSpan)]
+		fileName <- sprintf("../Aproject/Obj_allIdxLstZ%d.save",lastH)
+		cat( sprintf("    Loading %s \n",fileName) )	;load(fileName)
+		fileName <- sprintf("../Aproject/save/Obj_fRstLstZ%d.save",lastH)
+		cat( sprintf("    Loading %s \n",fileName) )	;load(fileName)		;names(fRstLst) <- names(allIdxLst$stdFiltedCnt)
+		fileName <- sprintf("../Aproject/save/Obj_gEnvZ%d.save",lastH)
+		cat( sprintf("    Loading %s \n",fileName) )	;load(fileName)
 
-		# 	gEnv.w <- gEnv              ;gEnv.w$zhF <- gEnv$zhF[1:(curHIdx-1),]
 
-		# 	stdZoid <- gEnv$zhF[curHIdx,]
-		# 	stdIdx <- k.getIdx_AllZoidMtx( gEnv, stdZoid )
-		# 	scoreMtxH$stdIdxSet[[idStr]] <- stdIdx
-
-		# 	stdMI.grp <- bUtil.getStdMILst( gEnv.w ,fRstLst=NULL )
-		# 	filter.grp <- getFilter.grp( stdMI.grp ,tgt.scMtx=tgt.scMtx )
-		# 	scoreMtx.grp <- getScoreMtx.grp( matrix(stdZoid,nrow=1) ,filter.grp ,makeInfoStr=F )
-		# 	scoreMtxH$std.grp[[idStr]] <- scoreMtx.grp
-
-		# 	aZoidMtx <- matrix(stdZoid ,nrow=1)
-		# 	phVP.grp <- bS.getPhVPGrp( gEnv.w ,aZoidMtx )
-		# 	scoreMtx.grp <- bS.getScoreMtx.grp( phVP.grp ,aZoidMtx ,tgt.scMtx=tgt.scMtx )
-		# 	scoreMtxH$bS.grp[[idStr]] <- scoreMtx.grp
-		# }
-
-		# hIdx <- as.integer(names(scoreMtxH$std.grp))
-		# scoreMtxH$std.grp	<- scoreMtxH$std.grp[order(hIdx)]
-		# scoreMtxH$bS.grp	<- scoreMtxH$bS.grp[order(hIdx)]
-		# scoreMtxH$stdIdxSet	<- scoreMtxH$stdIdxSet[order(hIdx)]
-
-		sfExport("gEnv")
-		k <- sfLapply(1:prllNum,function(prllId){
-			curWd <- getwd();setwd("..");source("hCommon.R")
-			setwd( curWd );source("header.r");source("B_H.R");source("B_prll_H.R")
-		})
+		sfExport("gEnv")	;sfExport("fRstLst")	;sfExport("allIdxLst")	;sfExport("tgt.scMtx")
+		# k <- sfLapply(1:prllNum,function(prllId){	# Header loading.
+		# 	curWd <- getwd();setwd("..");source("hCommon.R")
+		# 	setwd( curWd );source("header.r");source("B_H.R");source("B_prll_H.R")
+		# })
 		resultLst <- sfLapply( hSpan ,function( curHIdx ){
+
 			idStr <- as.character(curHIdx)
-			tgt.scMtx<-NULL
-
-			gEnv.w <- gEnv              ;gEnv.w$zhF <- gEnv$zhF[1:(curHIdx-1),]
-
 			stdZoid <- gEnv$zhF[curHIdx,]
 			stdIdx <- k.getIdx_AllZoidMtx( gEnv, stdZoid )
-			# scoreMtxH$stdIdxSet[[idStr]] <- stdIdx
 
-			stdMI.grp <- bUtil.getStdMILst( gEnv.w ,fRstLst=NULL )
+
+			wLastH <- curHIdx-1
+			wLastSpan <- 1:which(names(fRstLst)==wLastH)
+			gEnv.w <- gEnv              ;gEnv.w$zhF <- gEnv$zhF[1:wLastH,]
+			allIdxLst.w <- allIdxLst    ;allIdxLst.w$stdFiltedCnt <- allIdxLst$stdFiltedCnt[wLastSpan]
+										allIdxLst.w$infoMtx <- allIdxLst$infoMtx[wLastSpan,]
+			fRstLst.w <- fRstLst[wLastSpan]
+
+
+			curHMtxLst <- B.makeHMtxLst( gEnv.w, allIdxLst.w, fRstLst.w, tgt.scMtx )
+			cut.grp <- bFCust.getFCustGrp( curHMtxLst ,tgt.scMtx )
+			curStdFilted <- fRstLst[[as.character(curHIdx)]]    #   평가가 아닌 실제에선, remLst 으로부터 가져올 것.
+			fHName <- bUtil.getSfcLstName( fRstLst.w[[length(fRstLst.w)]] ,curStdFiltedCnt=length(curStdFilted) ,cut.grp )
+
+			stdMI.grp <- bUtil.getStdMILst( gEnv.w ,fRstLst.w )
 			filter.grp <- getFilter.grp( stdMI.grp ,tgt.scMtx=tgt.scMtx )
-			std.grp <-  getScoreMtx.grp( matrix(stdZoid,nrow=1) ,filter.grp ,makeInfoStr=F )
-			# scoreMtxH$std.grp[[idStr]] <- scoreMtx.grp
+			scoreMtx.grp <- getScoreMtx.grp( matrix(stdZoid,nrow=1) ,filter.grp ,makeInfoStr=F )
+			std.grp <- bUtil.getCut1Score( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx )
 
-			aZoidMtx <- matrix(stdZoid ,nrow=1)
+
+			hMtxLst_bS <- bS.makeHMtxLst( gEnv.w, allIdxLst.w, fRstLst.w ,tgt.scMtx )
+			aZoidMtx <- matrix(stdZoid ,nrow=1) # Bprll.bSCut() 참고
 			phVP.grp <- bS.getPhVPGrp( gEnv.w ,aZoidMtx )
-			bS.grp <- bS.getScoreMtx.grp( phVP.grp ,aZoidMtx ,tgt.scMtx=tgt.scMtx )
-			# scoreMtxH$bS.grp[[idStr]] <- scoreMtx.grp
+			scoreMtx.grp <- bS.getScoreMtx.grp( phVP.grp ,aZoidMtx ,tgt.scMtx=tgt.scMtx )
+			cut.grp <- bS.getCutGrp( hMtxLst_bS ,tgt.scMtx )
+			bS.grp <- bS.getCut1Score( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx )
+
 
 			return( list(idStr=idStr ,stdIdx=stdIdx,std.grp=std.grp,bS.grp=bS.grp) )
 		})
 
-
+		# Merge and sort
 
 
 		save( scoreMtxH ,file=sMtxHObj$scrFile )
-		# 정렬 기능 확인 요.
+		
 	}
 
 	sMtxHObj$getData <- function( hSpan ){

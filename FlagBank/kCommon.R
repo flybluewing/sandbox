@@ -530,9 +530,12 @@ k.getFlogObj <- function( fileName ){
 	logObj$fCat <- function( msgStr ){
 		cat( msgStr ,pFile=logObj$fileName )
 	}
-	logObj$fLogMtx <- function( mtx ,pIndent="" ,pAppend=T ){
+	logObj$fLogMtx <- function( mtx ,pIndent="" ,pClearZero=FALSE ,pAppend=T ){
 		dfStr <- capture.output( mtx )
 		dfStr <- gsub("FALSE","    .",dfStr)	;dfStr <- gsub(" TRUE","    T",dfStr)
+		if( pClearZero ){
+			dfStr <- gsub("  0","  .",dfStr)
+		}
 		cat( sprintf("%s%s\n",pIndent,dfStr) ,file=logObj$fileName ,append=pAppend )
 	}
 	logObj$fLogMtxLst <- function( mtxLst ,pIndent="" ,pSep="" ,pFirstRowName=T ){

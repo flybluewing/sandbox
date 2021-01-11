@@ -296,6 +296,51 @@ cutH.getAllIdxF <- function( logFile="allIdxF.txt" ){
     return( k[,1] )
 }
 
+cutH.reportScoreHistory <- function( hMtxLst ,rmEmptyCol=TRUE ){
+
+    reportFile <- sprintf("./report/cut/scoreMtx_Last/hMtxLst.txt")
+    logger <- k.getFlogObj( reportFile )
+    logger$fLogStr( sprintf("Start (lastH:%d rmEmptyCol:%s)--------------------",hMtxLst$lastH,rmEmptyCol) ,pAppend=F ,pTime=T )
+    
+    for( hName in names(hMtxLst$scoreMtxLst) ){
+        # hName <- names(hMtxLst$scoreMtxLst)[2]
+        # pName <- names(hMtxLst$scoreMtxLst[[hName]])[2]
+        # mName <- names(hMtxLst$scoreMtxLst[[hName]][[pName]])[2]
+
+        scrMtxLst <- list()
+        for( pName in names(hMtxLst$scoreMtxLst[[hName]]) ){
+            for( mName in names(hMtxLst$scoreMtxLst[[hName]][[pName]]) ){
+                scoreMtxH <- hMtxLst$scoreMtxLst[[hName]][[pName]][[mName]]$scoreMtx
+                scrMtxLst[[mName]] <- rbind( scrMtxLst[[mName]] ,scoreMtxH[nrow(scoreMtxH) ,] )
+            }
+        }
+
+        phaseName <- bUtil.getShortPhaseName(hMtxLst$phaseName)
+        for( mName in names(scrMtxLst) ){
+            scrMtx <- scrMtxLst[[mName]]
+            rownames(scrMtx) <- phaseName
+
+            rptMtx <- t(scrMtx)
+            hpnFlag <- apply( rptMtx ,1 ,function(rVal){any(rVal>0)})
+            rptMtx <- rptMtx[hpnFlag,,drop=F]
+            if( 0==sum(hpnFlag) ){
+                logger$fLogStr( sprintf("%s - %s ( Hpn Zero )",hName,mName) )
+            } else {
+                logger$fLogStr( sprintf("%s - %s",hName,mName) )
+                logger$fLogMtx( rptMtx ,pClearZero=T ,pIndent="    " )
+            }
+        }
+
+    }
+
+
+    logger$fLogStr("Finish --------------------------",pTime=T)
+
+}
+
+# cutH.reportScoreHistory_bS
+
+
 # Code BackUp
 if( FALSE ){    # cutH.InitialCut() 사용 이후로 필요 없어진 듯 하다.
     # surFlag <- rep( T ,length(allIdxF) )

@@ -45,9 +45,9 @@ tStmp <- Sys.time()
 # ----------------------------------------------------------------------------------
 #       stdIdx <- k.getIdx_AllZoidMtx( gEnv, stdZoid )
 stdMI.grp <- bUtil.getStdMILst( gEnv ,fRstLst )     ;stdMI.grp$anyWarn( )
-if( TRUE ){
-    load( sprintf("./save/finalCut/Obj_cut_hMtxLst_%d.save",lastH) )
-    load( sprintf("./save/finalCut/Obj_cut_hMtxLst_bS_%d.save",lastH) )
+if( TRUE ){     #   hMtxLst ,hMtxLst_bS
+    load( sprintf("./save/finalCut/Obj_cut_hMtxLst_%d.save",lastH) )        # hMtxLst
+    load( sprintf("./save/finalCut/Obj_cut_hMtxLst_bS_%d.save",lastH) )     # hMtxLst_bS
 } else {
     hMtxLst <- B.makeHMtxLst( gEnv, allIdxLst, fRstLst, lastH=lastH, tgt.scMtx )
     hMtxLst_bS <- bS.makeHMtxLst( gEnv, allIdxLst, fRstLst ,tgt.scMtx )
@@ -61,19 +61,12 @@ sfExport("tgt.scMtx")   ;sfExport("hMtxLst")    ;sfExport("cut.grp")    ;sfExpor
 tDiff <- Sys.time() - tStmp
 sprintf("hMtxLs,cut.grp    Time cost : %.1f%s",tDiff,units(tDiff))  # 17 min, 59GB RAM
 
-
-# Effective mName. CUT 효과가 좋은 mName(multi_R, multi_C)들의 목록.
-#   이들부터 먼저 처리하여 전체 작업속도를 높이기 위함.
-#   names(bCMtxCfg), names(bFMtxMFltLst) 에 적용할 것.
-EMN <- list()
-EMN$bFMtx_multiC <- c()
-EMN$bFMtx_multiR <- c()
-EMN$bSMtx_multiC <- c()
-EMN$bSMtx_multiR <- c()
-
 # ----------------------------------------------------------------------------------
 
 for( sfcIdx in 0 ){ # 0:2
+    
+    cutH.reportScoreHistory( hMtxLst ,rmEmptyCol=TRUE )
+    # cutH.reportScoreHistory_bS( hMtxLst_bS ,rmEmptyCol=TRUE )
 
     saveMidResult <- FALSE
     aZoidGrpName <- sprintf("allZoid.idx%d",sfcIdx)
@@ -335,6 +328,9 @@ for( sfcIdx in 0 ){ # 0:2
 
     # ===================================================================================
     # -- Inspection on survivor ---------------------------------------------------------
+    load( sprintf("./save/finalCut/Obj_allIdxF_%d_grp%d.save",lastH,sfcIdx) )
+    cutH.reportSurvivor( sfcIdx ,aZoidMtx=gEnv$allZoidMtx[allIdxF,,drop=F] )
+
     CRpt.cutRst1Score( gEnv$allZoidMtx[sort(allIdxF),,drop=F] ,filter.grp ,cut.grp ,fHName )
 
     # bUtil.cut2() ----------------------------------------------------------------------

@@ -267,15 +267,16 @@ Bprll.stdCutTest <- function( testData.grp ,tgt.scMtx ,testSpan ,exportObj=TRUE 
 }
 
 
-Bprll.buildTestData_CR <- function( hSpan ){
-    # hSpan <- 790:800  ;tgt.scMtx=NULL
+Bprll.buildTestData_CR <- function( hSpan ){    # working
+    # hSpan <- 798:800  ;tgt.scMtx=c("score1","score2","sScore01","sScore02")
 
     lastH <- hSpan[length(hSpan)]
     load(sprintf("../Aproject/Obj_allIdxLstZ%d.save",lastH) )
     load(sprintf("../Aproject/save/Obj_fRstLstZ%d.save",lastH) )    ;names(fRstLst) <- names(allIdxLst$stdFiltedCnt)
     load(sprintf("../Aproject/save/Obj_gEnvZ%d.save",lastH))
 
-    for( curHIdx in hSpan ){
+
+    for( curHIdx in hSpan ){    # curHIdx <- hSpan[1]
         wLastH <- curHIdx-1
         wLastSpan <- 1:which(names(fRstLst)==wLastH)
 
@@ -285,18 +286,29 @@ Bprll.buildTestData_CR <- function( hSpan ){
         allIdxLst.w <- allIdxLst    ;allIdxLst.w$stdFiltedCnt <- allIdxLst$stdFiltedCnt[wLastSpan]
                                     allIdxLst.w$infoMtx <- allIdxLst$infoMtx[wLastSpan,]
         fRstLst.w <- fRstLst[wLastSpan]
+        stdZoid <- gEnv$zhF[curHIdx,]
+        curStdFilted <- fRstLst[[as.character(curHIdx)]]    #   평가가 아닌 실제에선, remLst 으로부터 가져옴.
 
-        curHMtxLst <- testData.grp$curHMtxLst.grp[[as.character(curHIdx)]]
-            # B.makeHMtxLst() 의 lastH는 allIdxLst.w$stdFiltedCnt에 의존한다.
-            # curHIdx-1 시점까지의 scoreMtx가 curHMtxLst에 담겨있다.
 
-        cut.grp <- bFCust.getFCustGrp( curHMtxLst ,tgt.scMtx )  # curHMtxLst 적용 추가 필요.
+        hMtxLst <- B.makeHMtxLst( gEnv.w, allIdxLst.w, fRstLst.w, tgt.scMtx )
+        stdMI.grp <- bUtil.getStdMILst( gEnv.w ,fRstLst.w )     ;stdMI.grp$anyWarn( )
+        cut.grp <- bFCust.getFCustGrp( hMtxLst ,tgt.scMtx )
+        fHName <- bUtil.getSfcLstName( fRstLst.w[[length(fRstLst.w)]] ,curStdFiltedCnt=length(curStdFilted) ,cut.grp )
+        filter.grp <- getFilter.grp( stdMI.grp ,tgt.scMtx=tgt.scMtx )
+        scoreMtx.grp <- getScoreMtx.grp( matrix(stdZoid,nrow=1) ,filter.grp ,makeInfoStr=F )
+        cutRst1Score <- bUtil.getCut1Score( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx )
+
+
+        hMtxLst_bS <- bS.makeHMtxLst( gEnv.w, allIdxLst.w, fRstLst.w ,tgt.scMtx )
+        aZoidMtx <- matrix(stdZoid ,nrow=1) # Bprll.bSCut() 참고
+        phVP.grp <- bS.getPhVPGrp( gEnv.w ,aZoidMtx )
+        scoreMtx.grp <- bS.getScoreMtx.grp( phVP.grp ,aZoidMtx ,tgt.scMtx=tgt.scMtx )
+        cut.grp <- bS.getCutGrp( hMtxLst_bS ,tgt.scMtx )
+        cutRst1Score <- bS.getCut1Score( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx )
 
     }
 
-
 }
-
 
 if( FALSE ){ # text
 
