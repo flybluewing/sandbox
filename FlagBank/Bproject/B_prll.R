@@ -16,11 +16,9 @@ prll.initHeader <- function( ){
         setwd( curWd );source("header.r");source("B_H.R");source("B_prll_H.R")
     })
 }
+sfInit( parallel=T, cpus=prllNum )  ;prll.initHeader( ) ;sfExport("prllLog") 
 
-sfInit( parallel=T, cpus=prllNum )
-sfExport("prllLog") ;sfExport("lastH")
-sfExport("gEnv")    ;sfExport("fRstLst")    ;sfExport("allIdxLst")
-prll.initHeader( )
+sfExport("lastH")   ;sfExport("gEnv")    ;sfExport("fRstLst")    ;sfExport("allIdxLst")
 prllLog$fLogStr("parallel init", pTime=T ,pAppend=F )
 cat(sprintf("* Parallel ready... see log : %s \n",prllLog$fileName))
 

@@ -2195,7 +2195,7 @@ bUtil.getRowRebCutter <- function( rCObj ,cfg ){
 
 
 #-----------------------------------------------------------------------------------
-#	scoreMtxHObj
+#	scoreMtxHObj	: ./worklet/HBuild_cr.R
 #-----------------------------------------------------------------------------------
 scoreMtxHObj <- NULL
 
@@ -2203,15 +2203,18 @@ BUtil.makeScoreMtxHObj <- function(){
 
 	sMtxHObj <- list( scrFile="./save/System/Obj_scoreMtxH.save" )
 
-	sMtxHObj$initData <- function( hSpan ){
+	sMtxHObj$initData <- function( ){
 		scoreMtxH <- list( std.grp=list() ,bS.grp=list() ,stdIdx=integer(0) )
 		save( scoreMtxH ,file=sMtxHObj$scrFile )
+
+		cat(sprintf("    scoreMtxH is initiated(%s) \n",sMtxHObj$scrFile))
 	}
 
-	sMtxHObj$addData <- function( hSpan ){
+	sMtxHObj$addData <- function( hSpan ,tgt.scMtx=NULL ){
 		tgt.scMtx=NULL
 
-		load(sMtxHObj$scrFile)	# scoreMtxH
+		objName <- load(sMtxHObj$scrFile)	# scoreMtxH
+		cat(sprintf("    %s is loaded from \"%s\" \n",objName,sMtxHObj$scrFile))
 
 		lastH <- hSpan[length(hSpan)]
 		fileName <- sprintf("../Aproject/Obj_allIdxLstZ%d.save",lastH)
@@ -2223,10 +2226,6 @@ BUtil.makeScoreMtxHObj <- function(){
 
 
 		sfExport("gEnv")	;sfExport("fRstLst")	;sfExport("allIdxLst")	;sfExport("tgt.scMtx")
-		# k <- sfLapply(1:prllNum,function(prllId){	# Header loading.
-		# 	curWd <- getwd();setwd("..");source("hCommon.R")
-		# 	setwd( curWd );source("header.r");source("B_H.R");source("B_prll_H.R")
-		# })
 		resultLst <- sfLapply( hSpan ,function( curHIdx ){
 
 			idStr <- as.character(curHIdx)
@@ -2249,7 +2248,7 @@ BUtil.makeScoreMtxHObj <- function(){
 
 			stdMI.grp <- bUtil.getStdMILst( gEnv.w ,fRstLst.w )
 			filter.grp <- getFilter.grp( stdMI.grp ,tgt.scMtx=tgt.scMtx )
-			scoreMtx.grp <- getScoreMtx.grp( matrix(stdZoid,nrow=1) ,filter.grp ,makeInfoStr=F )
+			scoreMtx.grp <- getScoreMtx.grp( matrix(stdZoid,nrow=1) ,filter.grp ,makeInfoStr=T )
 			std.grp <- bUtil.getCut1Score( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx )
 
 
@@ -2265,7 +2264,17 @@ BUtil.makeScoreMtxHObj <- function(){
 		})
 
 		# Merge and sort
+		for( idx in 1:length(resultLst) ){
+			idStr <- resultLst[[idx]]$idStr
+			scoreMtxH$stdIdx[idStr]		<- resultLst[[idx]]$stdIdx
+			scoreMtxH$std.grp[[idStr]]	<- resultLst[[idx]]$std.grp$aLst[[1]]
+			scoreMtxH$bS.grp[[idStr]]	<- resultLst[[idx]]$bS.grp$aLst[[1]]
+		}
 
+		idx <- as.integer(names(scoreMtxH$std.grp))
+		scoreMtxH$stdIdx	<- scoreMtxH$stdIdx[ order(idx) ]
+		scoreMtxH$std.grp	<- scoreMtxH$std.grp[ order(idx) ]
+		scoreMtxH$bS.grp	<- scoreMtxH$bS.grp[ order(idx) ]
 
 		save( scoreMtxH ,file=sMtxHObj$scrFile )
 		
