@@ -2224,7 +2224,7 @@ BUtil.makeScoreMtxHObj <- function(){
 		fileName <- sprintf("../Aproject/save/Obj_gEnvZ%d.save",lastH)
 		cat( sprintf("    Loading %s \n",fileName) )	;load(fileName)
 
-
+		tStmp <- Sys.time()
 		sfExport("gEnv")	;sfExport("fRstLst")	;sfExport("allIdxLst")	;sfExport("tgt.scMtx")
 		resultLst <- sfLapply( hSpan ,function( curHIdx ){
 
@@ -2278,6 +2278,9 @@ BUtil.makeScoreMtxHObj <- function(){
 
 		save( scoreMtxH ,file=sMtxHObj$scrFile )
 		
+		tDiff <- Sys.time() - tStmp
+		rptStr <- sprintf("    time cost :%.1f%s \n",tDiff,units(tDiff))
+		cat( rptStr )
 	}
 
 	sMtxHObj$getData <- function( hSpan ){

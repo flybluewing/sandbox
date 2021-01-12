@@ -24,6 +24,9 @@ source("./lib/bSMtx_Multi_C.R")     ;source("./lib/bSMtx_MultiConfig_C.R")
 source("./lib/bSMtx_Util.R")        ;source("./lib/bSMtx_Cut.R")
 source("./lib/bSMtx_ConfigBasic.R") ;source("./lib/bSMtx_ConfigBasicExt.R")
 
+source("./lib/bHCRMtx_Util.R")
+source("./lib/bHCRMtx.R")
+
 source("./lib/FinalCut_H.R")
 
 source("FCust_H.R")
