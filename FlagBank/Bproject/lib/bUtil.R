@@ -2195,25 +2195,30 @@ bUtil.getRowRebCutter <- function( rCObj ,cfg ){
 
 
 #-----------------------------------------------------------------------------------
-#	scoreMtxHObj	: ./worklet/HBuild_cr.R
+#	crScrHTool	: ./worklet/HBuild_cr.R
 #-----------------------------------------------------------------------------------
-scoreMtxHObj <- NULL
+crScrHTool <- NULL
+	# 	crScrH	: stdIdx	,std.grp	,bS.grp
+	# 		std.grp/bS.grp	: raw ,summ
+	# 			raw : rebMtx.ph ,evtHpnLevMtx ,phaseReb
+	# 			summ : fColEvt ,summMtx ,summMtx.reb ,scMtx.sz
 
-BUtil.makeScoreMtxHObj <- function(){
 
-	sMtxHObj <- list( scrFile="./save/System/Obj_scoreMtxH.save" )
+BUtil.makeCrScrHTool <- function(){
+
+	sMtxHObj <- list( scrFile="./save/System/Obj_crScrH.save" )
 
 	sMtxHObj$initData <- function( ){
-		scoreMtxH <- list( std.grp=list() ,bS.grp=list() ,stdIdx=integer(0) )
-		save( scoreMtxH ,file=sMtxHObj$scrFile )
+		crScrH <- list( std.grp=list() ,bS.grp=list() ,stdIdx=integer(0) )
+		save( crScrH ,file=sMtxHObj$scrFile )
 
-		cat(sprintf("    scoreMtxH is initiated(%s) \n",sMtxHObj$scrFile))
+		cat(sprintf("    crScrH is initiated(%s) \n",sMtxHObj$scrFile))
 	}
 
 	sMtxHObj$addData <- function( hSpan ,tgt.scMtx=NULL ){
 		tgt.scMtx=NULL
 
-		objName <- load(sMtxHObj$scrFile)	# scoreMtxH
+		objName <- load(sMtxHObj$scrFile)	# crScrH
 		cat(sprintf("    %s is loaded from \"%s\" \n",objName,sMtxHObj$scrFile))
 
 		lastH <- hSpan[length(hSpan)]
@@ -2266,17 +2271,17 @@ BUtil.makeScoreMtxHObj <- function(){
 		# Merge and sort
 		for( idx in 1:length(resultLst) ){
 			idStr <- resultLst[[idx]]$idStr
-			scoreMtxH$stdIdx[idStr]		<- resultLst[[idx]]$stdIdx
-			scoreMtxH$std.grp[[idStr]]	<- resultLst[[idx]]$std.grp$aLst[[1]]
-			scoreMtxH$bS.grp[[idStr]]	<- resultLst[[idx]]$bS.grp$aLst[[1]]
+			crScrH$stdIdx[idStr]	<- resultLst[[idx]]$stdIdx
+			crScrH$std.grp[[idStr]]	<- resultLst[[idx]]$std.grp$aLst[[1]]
+			crScrH$bS.grp[[idStr]]	<- resultLst[[idx]]$bS.grp$aLst[[1]]
 		}
 
-		idx <- as.integer(names(scoreMtxH$std.grp))
-		scoreMtxH$stdIdx	<- scoreMtxH$stdIdx[ order(idx) ]
-		scoreMtxH$std.grp	<- scoreMtxH$std.grp[ order(idx) ]
-		scoreMtxH$bS.grp	<- scoreMtxH$bS.grp[ order(idx) ]
+		idx <- as.integer(names(crScrH$std.grp))
+		crScrH$stdIdx	<- crScrH$stdIdx[ order(idx) ]
+		crScrH$std.grp	<- crScrH$std.grp[ order(idx) ]
+		crScrH$bS.grp	<- crScrH$bS.grp[ order(idx) ]
 
-		save( scoreMtxH ,file=sMtxHObj$scrFile )
+		save( crScrH ,file=sMtxHObj$scrFile )
 		
 		tDiff <- Sys.time() - tStmp
 		rptStr <- sprintf("    time cost :%.1f%s \n",tDiff,units(tDiff))
@@ -2284,7 +2289,7 @@ BUtil.makeScoreMtxHObj <- function(){
 	}
 
 	sMtxHObj$getData <- function( hSpan ){
-		load(sMtxHObj$scrFile)	# scoreMtxH
+		load(sMtxHObj$scrFile)	# crScrH
 
 		missingH <- hSpan
 		cat( sprintf("    Warn! missing History : %s \n" ,paste(missingH,collapse=",")) )
@@ -2295,7 +2300,7 @@ BUtil.makeScoreMtxHObj <- function(){
 	return( sMtxHObj )
 
 }
-scoreMtxHObj <- BUtil.makeScoreMtxHObj()
+crScrHTool <- BUtil.makeCrScrHTool()
 
 
 

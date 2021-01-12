@@ -14,9 +14,10 @@ prll.initHeader <- function( ){
 sfInit( parallel=T, cpus=prllNum )  ;prll.initHeader( ) ;sfExport("prllLog") 
 
 
-tgt.scMtx <- NULL       # tgt.scMtx <- c("score1","score2","sScore01","sScore02")
+tgt.scMtx <- NULL       #   13min per H
+# tgt.scMtx <- c("score1","score2","sScore01","sScore02")   
 
 
-#   scoreMtxHObj$initData()
-scoreMtxHObj$addData( 860:880 ,tgt.scMtx )
+#   crScrHTool$initData()
+crScrHTool$addData( 860:880 ,tgt.scMtx )
 
