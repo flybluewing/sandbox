@@ -19,5 +19,5 @@ tgt.scMtx <- NULL       #   13min per H
 
 
 #   crScrHTool$initData()
-crScrHTool$addData( 860:880 ,tgt.scMtx )
+crScrHTool$addData( 860:880 ,tgt.scMtx )    # hSpan=860:880 ,prllNum=7   48min
 
