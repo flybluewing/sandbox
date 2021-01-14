@@ -6,16 +6,15 @@ HCR.getMName <- function( workMName ,crScrH ){
 
 
 
-HCR.MtxTmpl_szPhReb <- function( idStr ,hName ,mName ,workMName ,crScrH ){
+HCR.MtxTmpl_szReb <- function( mName ,wMLst ,szColName ){
+    #   HCR.getMName(tgt.scMtx ,crScrH)     # bFMtx, bSMtx에 따라 분리추출된 mName
 
-	rObj <- list( 	idStr=idStr ,mNameLst=HCR.getMName(workMName ,crScrH)
-                    ,mInfo=c("hName"=hName,"mName"=mName)
+	rObj <- list( 	idStr=idStr ,wMLst=wMLst
+                    ,mInfo=c("mName"=mName ,"szColName"=szColName )
 				)
 
-    # mNameLst에 따라 crScrH 에서 필요한 부분만 추출, HMtx 형태를 만듬.
-
-
-    rObj$fMtxObj <- function( crMtx ){
+    rObj$fMtxObj <- function( crLst ){
+        # crLst : cutRst List. bFMtx/bSMtx 모두 포함된 리스트
 
     }
 

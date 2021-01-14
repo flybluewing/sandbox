@@ -2288,13 +2288,13 @@ BUtil.makeCrScrHTool <- function(){
 		cat( rptStr )
 	}
 
-	sMtxHObj$getData <- function( hSpan ){
+	sMtxHObj$getData <- function( hSpan=NULL ){
 		load(sMtxHObj$scrFile)	# crScrH
 
-		missingH <- hSpan
-		cat( sprintf("    Warn! missing History : %s \n" ,paste(missingH,collapse=",")) )
+		# missingH <- hSpan
+		# cat( sprintf("    Warn! missing History : %s \n" ,paste(missingH,collapse=",")) )
 
-		# working
+		return( crScrH )
 	}
 
 	return( sMtxHObj )

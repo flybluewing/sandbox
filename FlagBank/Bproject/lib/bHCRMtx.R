@@ -2,10 +2,11 @@
 
 bHCRMtxLst <- list()
 
+
 mName <- "HCRsz_bf01Ph"
 if( FALSE ){
-    
-    bHCRMtxLst[[mName]] <- HCR.MtxTmpl_szPhReb( )
+    wMLst=NULL
+    bHCRMtxLst[[mName]] <- HCR.MtxTmpl_szReb( mName=mName ,wMLst=wMLst ,szColName="ph" )
 }
 
 
