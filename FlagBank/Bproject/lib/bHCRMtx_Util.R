@@ -17,14 +17,20 @@ HCR.getMName <- function( workMName ,crScrH ,warn=T ){
 }
 
 
-HCR.MtxTmpl_szReb <- function( mName ,wMLst ,szColName ){
+HCR.MtxTmpl_szReb <- function( mName ,wMLst ,szColName ,szRowName ){
     #   HCR.getMName(tgt.scMtx ,crScrH)     # bFMtx, bSMtx에 따라 분리추출된 mName
+    #   swColName : r.ph r.fCol r.dblHpnFlg e.ph e.fCol e.dblHpnFlg
+    #   swRowName : rebCnt / rebDup
 
 	rObj <- list( 	mInfo=c("mName"=mName ,"szColName"=szColName ) ,wMLst=wMLst
 				)
 
+    rObj$cName <- c( wMLst$bf ,wMLst$bS )
+
     rObj$fMtxObj <- function( crLst ){
         # crLst : cutRst List. bFMtx/bSMtx 모두 포함된 리스트
+
+
 
     }
 
