@@ -14,6 +14,7 @@ B.makeHMtxLst <- function( gEnv, allIdxLst, fRstLst ,tgt.scMtx=NULL ,lastH=NULL 
 
     fRstLst.hSpan <- as.integer(names(fRstLst))
 
+    # repace : bUtil.getSfcHLst( stdFiltedCnt ,baseSpan ,fRstLst )
     baseSpan <- 700:lastH
     stdFiltedCnt <- allIdxLst$stdFiltedCnt[as.character(baseSpan)]
 
