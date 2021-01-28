@@ -45,14 +45,18 @@ tStmp <- Sys.time()
 # ----------------------------------------------------------------------------------
 #       stdIdx <- k.getIdx_AllZoidMtx( gEnv, stdZoid )
 stdMI.grp <- bUtil.getStdMILst( gEnv ,fRstLst )     ;stdMI.grp$anyWarn( )
+crScrH <- crScrHTool$getData()
 if( TRUE ){     #   hMtxLst ,hMtxLst_bS
-    load( sprintf("./save/finalCut/Obj_cut_hMtxLst_%d.save",lastH) )        # hMtxLst
-    load( sprintf("./save/finalCut/Obj_cut_hMtxLst_bS_%d.save",lastH) )     # hMtxLst_bS
+    load( sprintf("./save/finalCut/Obj_cut_hMtxLst_%d.save",lastH)      )   # hMtxLst
+    load( sprintf("./save/finalCut/Obj_cut_hMtxLst_bS_%d.save",lastH)   )   # hMtxLst_bS
+    load( sprintf("./save/finalCut/Obj_cut_hMtxLst_HCR_%d.save",lastH)  )   # hMtxLst_HCR
 } else {
     hMtxLst <- B.makeHMtxLst( gEnv, allIdxLst, fRstLst, lastH=lastH, tgt.scMtx )
     hMtxLst_bS <- bS.makeHMtxLst( gEnv, allIdxLst, fRstLst ,tgt.scMtx )
-    save( hMtxLst ,file=sprintf("./save/finalCut/Obj_cut_hMtxLst_%d.save",lastH) )
-    save( hMtxLst_bS ,file=sprintf("./save/finalCut/Obj_cut_hMtxLst_bS_%d.save",lastH) )
+    hMtxLst_HCR <- HCR.makeHCRMtxLst( crScrH ,allIdxLst ,fRstLst ,lastH=NULL ,tgt.scMtx=NULL)
+    save( hMtxLst       ,file=sprintf("./save/finalCut/Obj_cut_hMtxLst_%d.save",lastH)      )
+    save( hMtxLst_bS    ,file=sprintf("./save/finalCut/Obj_cut_hMtxLst_bS_%d.save",lastH)   )
+    save( hMtxLst_HCR   ,file=sprintf("./save/finalCut/Obj_cut_hMtxLst_HCR_%d.save",lastH)  )
 }
 cut.grp <- bFCust.getFCustGrp( hMtxLst ,tgt.scMtx )
 filter.grp <- getFilter.grp( stdMI.grp ,tgt.scMtx=tgt.scMtx )
@@ -307,6 +311,27 @@ for( sfcIdx in 0 ){ # 0:2
         if( saveMidResult ) save( allIdxF ,file=sprintf("./save/cutResult/Obj_allIdxF%d_bScut_%d.save",sfcIdx,lastH) )
 
         # aux() ------------------------------------------------------------------
+    }
+
+    # HCR.cut() ------------------------------------------------------------------
+    if( TRUE ){
+
+        aZoidMtx <- gEnv$allZoidMtx[allIdxF,,drop=F]
+        scoreMtx.grp <- getScoreMtx.grp( aZoidMtx ,filter.grp ,makeInfoStr=T )
+        std.grp <- bUtil.getCut1Score( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx )
+
+        phVP.grp <- bS.getPhVPGrp( gEnv ,aZoidMtx )
+        scoreMtx.grp <- bS.getScoreMtx.grp( phVP.grp ,aZoidMtx ,tgt.scMtx=tgt.scMtx )
+        cut.grp <- bS.getCutGrp( hMtxLst_bS ,tgt.scMtx )
+        bS.grp <- bS.getCut1Score( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx )
+
+        crScrA <- list( stdIdx=allIdxF ,std.grp=std.grp$aLst ,bS.grp=bS.grp$aLst )  # crScr of aZoid
+
+        allIdxF <- cutH.HCR.cut( gEnv ,allIdxF ,crScrA ,hMtxLst_HCR ,fHName ,tgt.scMtx=tgt.scMtx ,prllLog )
+        prllLog$fLogStr(    sprintf("   - cutH.HCR.Cut( )   final survival size :%7d",length(allIdxF))
+                            ,pTime=T
+        )
+        if( saveMidResult ) save( allIdxF ,file=sprintf("./save/cutResult/Obj_allIdxF%d_HCRcut_%d.save",sfcIdx,lastH) )
     }
 
     # less Effective cutters -----------------------------------------------------

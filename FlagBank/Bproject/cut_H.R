@@ -197,6 +197,17 @@ cutH.bS.Cut <- function( gEnv ,allIdxF ,hMtxLst_bS ,fHName ,tgt.scMtx=NULL ,prll
     return( allIdxF )
 }
 
+cutH.HCR.cut <- function( gEnv ,allIdxF ,crScrA ,hMtxLst_HCR ,fHName ,tgt.scMtx=NULL ,prllLog ){
+    #   working
+        # scoreMtx.grp <- bS.getScoreMtx.grp( phVP.grp ,aZoidMtx ,tgt.scMtx=tgt.scMtx )
+        # cut.grp <- bS.getCutGrp( hMtxLst_bS ,tgt.scMtx )
+        # bS.grp <- bS.getCut1Score( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx )
+
+    scoreMtx.grp <- HCR.getScoreMtx.grp( crScrA ,hIdxStr=NULL ,tgt.scMtx=tgt.scMtx )
+    cut.grp <- HCR.getCutterGrp( hMtxLst_HCR ,tgt.scMtx )
+
+    # crScrA    : crScr from aZoid
+}
 
 
 curH.LECut_bFMtx <- function( gEnv ,allIdxF ,hMtxLst ,fHName ,tgt.scMtx ,EMN ,pllLLog ){

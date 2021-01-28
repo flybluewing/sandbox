@@ -69,50 +69,51 @@ HCR.makeHCRMtxLst <- function( crScrH ,allIdxLst ,fRstLst ,lastH=NULL ,tgt.scMtx
     
 
     sfcHLst <- bUtil.getSfcHLst( stdFiltedCnt=allIdxLst$stdFiltedCnt[as.character(baseSpan)] ,baseSpan ,fRstLst )
+    # filterLst <- HCR.getFilter.grp()  # HCR.getScoreMtx.grp() 내부에서 호출된다.
 
     scoreMtxLst <- list()
     for( sfcIdx in names(sfcHLst) ){
 
-        scoreMtx.grp.lst <- list( )
-        for( hIdx in sfcHLst[[sfcIdx]] ){
-
-            # hSpanStr <- as.character( sfcHLst[[sfcIdx]] )
-            # crScrH.w <- crScrH
-            # crScrH.w$stdIdx     <- crScrH.w$stdIdx[hSpanStr]
-            # crScrH.w$std.grp    <- crScrH.w$std.grp[hSpanStr]
-            # crScrH.w$bS.grp     <- crScrH.w$bS.grp[hSpanStr]
-
-            filterLst <- HCR.getFilter.grp()
-            # HCR.getScoreMtx.grp
-
-            # stdZoid <- gEnv$zhF[hIdx ,]
-            # wEnv <- gEnv
-            # wEnv$zhF <- gEnv$zhF[1:(hIdx-1),]
-
-            # fRstLst.w <- fRstLst[as.character(fRstLst.hSpan[fRstLst.hSpan<hIdx])]
-
-            # working
-            # stdMI.grp <- bUtil.getStdMILst( wEnv ,fRstLst.w )
-            # filter.grp <- getFilter.grp( stdMI.grp ,tgt.scMtx )
-
-            # scoreMtx.grp <- getScoreMtx.grp.4H( stdZoid ,filter.grp )
-            # scoreMtx.grp.lst[[sprintf("hIdx:%d",hIdx)]] <- scoreMtx.grp
-        }
+        hIdxStr <- as.character( sfcHLst[[sfcIdx]] )
+        scoreMtx.grp <- HCR.getScoreMtx.grp( crScrH ,hIdxStr ,tgt.scMtx=tgt.scMtx )
+        scoreMtxLst[[sfcIdx]] <- scoreMtx.grp
     }
 
+    rObj <- list( scoreMtxLst=scoreMtxLst ,mInfo=list(hName=names(scoreMtxLst)) )
+    rObj$mInfo$mName <- names(scoreMtxLst[[1]]$basic)
 
-
-
-
+    return( rObj )
 }
 
-HCR.getScoreMtx.grp <- function( ){
+HCR.getScoreMtx.grp <- function( crScrH ,hIdxStr=NULL ,tgt.scMtx=NULL ){
+    #   ph 단계가 없음을 유의하자.
 
+    rObj <- list()
+
+    crScrW <- crScrH
+    if( !is.null(hIdxStr) ){
+        crScrW$stdIdx   <- crScrW$stdIdx[hIdxStr]
+        crScrW$std.grp  <- crScrW$std.grp[hIdxStr]
+        crScrW$bS.grp   <- crScrW$bS.grp[hIdxStr]
+    }
+
+    filterLst <- HCR.getFilter.grp( tgt.scMtx )
+
+    scoreMtxLst <- list()
+    for( mName in names(filterLst) ){
+        scoreMtxLst[[mName]] <- filterLst[[mName]]$fMtxObj( crScrW )
+    }
+
+    rObj$basic <- scoreMtxLst
+
+    return( rObj )
 }
 
-HCR.getCutterGrp <- function( hCRLst ,tgt.scMtx ){
+HCR.getCutterGrp <- function( hMtxLst_HCR ,tgt.scMtx ){
     # bFCust.getFCustGrp( hMtxLst ,tgt.scMtx ) 참고.
 
+    #   crScrHTool$addData
+    # BUtil.makeCrScrHTool()
 }
 
 HCR.MtxTmpl_szReb <- function( mName ,wMLst ,szColName ,szRowName ){
