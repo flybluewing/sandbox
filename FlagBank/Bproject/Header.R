@@ -25,7 +25,7 @@ source("./lib/bSMtx_Util.R")        ;source("./lib/bSMtx_Cut.R")
 source("./lib/bSMtx_ConfigBasic.R") ;source("./lib/bSMtx_ConfigBasicExt.R")
 
 source("./lib/bHCRMtx_Util.R")
-source("./lib/bHCRMtx.R")
+source("./lib/bHCRMtx.R")           ;source("./lib/bHCRMtx_configBasic.R")
 
 source("./lib/FinalCut_H.R")
 

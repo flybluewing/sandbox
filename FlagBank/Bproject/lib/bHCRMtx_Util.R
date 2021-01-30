@@ -109,13 +109,208 @@ HCR.getScoreMtx.grp <- function( crScrH ,hIdxStr=NULL ,tgt.scMtx=NULL ){
     return( rObj )
 }
 
-HCR.getCutterGrp <- function( hMtxLst_HCR ,tgt.scMtx ){
+HCR.getCutterGrp <- function( hMtxLst_HCR ,fHName ,tgt.scMtx ){
     # bFCust.getFCustGrp( hMtxLst ,tgt.scMtx ) 참고.
 
-    #   crScrHTool$addData
-    # BUtil.makeCrScrHTool()
+    rObj <- list( mInfo=list(hName=fHName) )
+    rObj$mInfo$mName <- HCR.getHCRNames( tgt.scMtx )
+
+    cutterLst <- list()
+    for( hName in rObj$mInfo$hName ){
+        #   hName<-rObj$mInfo$hName[2]  ;mName<-rObj$mInfo$mName[1]
+
+        # <stdCut>
+        stdCut <- list()
+        for( mName in rObj$mInfo$mName ){
+            scoreMtxH <- HCR.HMtxLst_getMtx( hMtxLst_HCR ,hName ,mName )
+            stdCut[[mName]] <- HCR.stdCut_rawRow( hName ,mName ,scoreMtxH )
+        }
+
+        # <hIdxCut>
+
+        cutterLst[[hName]] <- list( stdCut=stdCut )
+    }
+
+    rObj$cutterLst          <- cutterLst
+    return( rObj )
+
 }
 
+HCR.HMtxLst_getMtx <- function( hMtxLst_HCR ,hName ,mName ){
+    mtx <- NULL
+    mtx <- hMtxLst_HCR$scoreMtxLst[[hName]]$basic[[mName]]
+    return( mtx )
+}
+
+HCR.stdCut_rawRow <- function( hName ,mName ,scoreMtxH ){
+    # FCust_stdCut.rawRow  참고.
+
+    rObj <- list( defId=c(hName=hName,mName=mName,pName="N/A(HCR)") )
+
+    hLen <- nrow(scoreMtxH)
+    rObj$lastScore <- scoreMtxH[hLen,]
+    rObj$available <- TRUE
+
+    if( rObj$available ){
+        cfg <- HCRMtxCfg[[mName]]
+        if( !is.null(cfg) ){
+            rObj$isHard <- cfg$isHard   # 별 의미 없어지는 듯.
+
+            rObj$lastEvt <- bFCust.getEvt( rObj$lastScore ,cfg$fCol )
+            if( hLen>1 ){
+                evt2 <- bFCust.getEvt( scoreMtxH[hLen-1 ,] ,cfg$fCol )
+                rObj$evtReb <- bFCust.evtComp( evt2["lev",] ,rObj$lastEvt["lev",] ) # ,levMin=2
+                if( all(is.na(rObj$evtReb$levDup)) )    rObj$evtReb <- NULL
+            }
+
+        } else {
+            rObj$available <- FALSE
+        }   # cfg
+    }
+
+    rObj$cut <- function( scoreMtx ,alreadyDead=NULL ,anaMode=TRUE ){
+
+        val.len <- nrow(scoreMtx)
+        if( is.null(alreadyDead) )	alreadyDead <- rep( F, val.len )
+
+        cutLst <- list()
+        if( !rObj$available ) return( list(cutLst=cutLst,surFlag=!alreadyDead) )
+
+        hardFlag <- FALSE   # 일단은 사용 안함.
+        cfg <- HCRMtxCfg[[ rObj$defId["mName"] ]]
+
+        # sm row: evtCnt  --------------------------------------------
+        cutLst.rowE <- list()
+        for( aIdx in seq_len(val.len) ){
+            if( !anaMode && alreadyDead[aIdx] ) next
+
+            evt.sm <- bFCust.getEvt( scoreMtx[aIdx ,] ,cfg$fCol )
+            evtMin <- cfg$evtMax[ifelse(hardFlag,"lev1","lev2"),]
+            evtCnt <- sum( evt.sm["lev" ,]>=evtMin["minLev"] ,na.rm=T )
+            evtCntH <- sum( evt.sm["lev" ,]>=evtMin["minLevH"] ,na.rm=T )
+            if( evtCnt>evtMin["maxHpn"] || evtCntH>evtMin["maxHpnH"] ){
+                alreadyDead[aIdx] <- TRUE
+
+                infoStr=""
+                if( anaMode ){
+                    flag <- evt.sm["lev",]>=evtMin["minLev"]
+                    flag[is.na(flag)] <- F
+
+                    infoStr <- sprintf("evtCnt:%d(%s)",evtCnt,paste(evt.sm["lev" ,flag],collapse=","))
+                }
+                cutLst.rowE[[as.character(aIdx)]] <- list( idx=aIdx ,info=infoStr )
+            }
+        }
+
+        # sm row: rebound --------------------------------------------
+        cutLst.reb <- list()
+        ctrObj <- bUtil.getRowRebCutter( rObj ,cfg )
+        for( aIdx in seq_len(val.len) ){
+            if( !anaMode && alreadyDead[aIdx] ) next
+
+            smRow <- scoreMtx[aIdx ,]
+            evt.sm <- bFCust.getEvt(smRow,cfg$fCol)
+
+            rebCut <- ctrObj$cut( aIdx ,smRow ,evt.sm )
+            if( !is.null(rebCut) ){
+                alreadyDead[aIdx] <- TRUE
+                cutLst.reb[[as.character(aIdx)]] <- rebCut
+            }
+        }
+
+
+        if( anaMode ){  # build cutLst. anaMode일때만 필요. (aZoid생존여부는 alreadyDead에서 세팅되므로.)
+            idxReb  <- if( length(cutLst.reb)==0 ) integer(0) else sapply( cutLst.reb   ,function(p){p$idx} )
+            idxRowE <- if( length(cutLst.rowE)==0 ) integer(0) else sapply( cutLst.rowE  ,function(p){p$idx} )
+
+            idxAll <- sort(union(idxReb,idxRowE))
+
+            cutLst <- list()
+            names(cutLst.reb)   <- idxReb
+            names(idxRowE)      <- idxRowE
+
+            for( aIdx in idxAll ){
+                idStr <- as.character(aIdx)
+
+                cLst <- list()
+                if( !is.null(cutLst.reb[[idStr]]) ){
+                    cLst[["rawReb"]] <- cutLst.reb[[idStr]]
+                    cLst[["rawReb"]]$idObjDesc <- c( typ="rawReb" ,rObj$defId )
+                }
+                if( !is.null(cutLst.rowE[[idStr]]) ){
+                    cLst[["rowE"]] <- cutLst.rowE[[idStr]]
+                    cLst[["rowE"]]$idObjDesc <- c( typ="rowE" ,rObj$defId )
+                }
+
+                cutLst[[idStr]] <- list( idx=aIdx ,cLst=cLst )
+            }
+        }
+
+
+        return( list(cutLst=cutLst,surFlag=!alreadyDead) )
+    }
+
+    return( rObj )
+
+}
+
+HCR.cut1 <- function( scoreMtx.grp ,cut.grp ,anaOnly=T ){
+    # fHName 이 필요한가? cut.grp에 다 있는데..
+    # tgt.scMtx이 필요한가? cut.grp 생성 시 이미 tgt.scMtx 제한이 반영되어 있다.
+
+	reportStatus <- function( tStmp ,strWhere ,surFlag ,logger ){
+		#	strWhere <- sprintf("[%s,%s] stdLst",hName,mName)
+		if( is.null(logger) )	return( NULL )
+		tDiff <- Sys.time() - tStmp
+		rptStr <- sprintf("    %s  %d/%d  %.1f%s ",strWhere,sum(surFlag),length(surFlag),tDiff,units(tDiff) )
+		logger$fLogStr( rptStr )
+	}
+
+    scMtxName <- cut.grp$mInfo$mName        # scMtxName
+
+	cutInfoLst <- list()
+    datLen <- 1
+	if( !anaOnly ){
+		cutInfoLst <- NULL
+
+		if( 0<length(scMtxName) ){
+			datLen <- nrow(scoreMtx.grp$basic[[1]])
+		}
+	}
+
+
+	tStmp <- Sys.time()
+	if( !is.null(logger) ) logger$fLogStr("Start", pTime=T ,pAppend=F )
+
+    surFlag <- rep( T ,datLen )
+	auxInfoLst <- list( basic=list() ,mf=list() )
+    for( hName in cut.grp$mInfo$hName ){ # hName <- cut.grp$mInfo$hName[1]
+
+        for( mName in scMtxName ){ # mName <- scMtxName[1]
+
+            scoreMtx <- scoreMtx.grp$basic[[mName]]
+            cutObj <- cut.grp$cutterLst[[hName]]$stdCut[[mName]]
+            cRst <- cutObj$cut( scoreMtx ,alreadyDead=!surFlag ,anaMode=anaOnly )
+            if( !anaOnly ){	surFlag <- surFlag & cRst$surFlag
+            } else {
+                if( 0<length(cRst$cutLst) ){    # anaOnly일 때는 어차피 datLen이 1이므로 cRst$cutLst 순서는 의미없다.
+                    cutInfoLst <- append( cutInfoLst 
+                                        ,lapply( cRst$cutLst[[1]]$cLst ,function(p){ c(p$idObjDesc ,info=p$info) } ) 
+                                    )
+                }
+            }
+        } # for(mName)
+
+    }
+
+    return( list( surFlag=surFlag ,cutInfoLst=cutInfoLst ,auxInfoLst=auxInfoLst ) )
+
+}
+
+
+
+
+# -- Template for bHCRMtx -----------------------------------------------------------------------------------
 HCR.MtxTmpl_szReb <- function( mName ,wMLst ,szColName ,szRowName ){
     #   HCR.getMName(tgt.scMtx ,crScrH)     # bFMtx, bSMtx에 따라 분리추출된 mName
     #   swColName : r.ph r.fCol r.dblHpnFlg e.ph e.fCol e.dblHpnFlg
