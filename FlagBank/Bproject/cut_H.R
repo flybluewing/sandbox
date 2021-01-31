@@ -208,9 +208,9 @@ cutH.HCR.cut <- function( gEnv ,allIdxF ,crScrA ,hMtxLst_HCR ,fHName ,tgt.scMtx=
     scoreMtx.grp <- HCR.getScoreMtx.grp( crScrA ,hIdxStr=NULL ,tgt.scMtx=tgt.scMtx )
     cut.grp <- HCR.getCutterGrp( hMtxLst_HCR ,fHName ,tgt.scMtx )   # bFMtx,bSMtx에서도 cut.grp 생성 시 fHName을 적용하도록 개선 요.
 
-    cutRst1 <- HCR.cut1( scoreMtx.grp ,cut.grp ,anaOnly=T ) 
+    cutRst1 <- HCR.cut1( scoreMtx.grp ,cut.grp ,anaOnly=F ) 
 
-    return( allIdxF )
+    return( allIdxF[cutRst1$surFlag] )
 
 }
 

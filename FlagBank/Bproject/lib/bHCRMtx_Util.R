@@ -71,6 +71,12 @@ HCR.makeHCRMtxLst <- function( crScrH ,allIdxLst ,fRstLst ,lastH=NULL ,tgt.scMtx
     sfcHLst <- bUtil.getSfcHLst( stdFiltedCnt=allIdxLst$stdFiltedCnt[as.character(baseSpan)] ,baseSpan ,fRstLst )
     # filterLst <- HCR.getFilter.grp()  # HCR.getScoreMtx.grp() 내부에서 호출된다.
 
+    crScrH.min <- min(as.integer(names(crScrH$stdIdx))) # crScrH 기록이 존재하는 범위 내로 sfcHLst를 한정한다.
+    for( sfcIdx in names(sfcHLst) ){
+        availFlag <- sfcHLst[[sfcIdx]] >= crScrH.min
+        sfcHLst[[sfcIdx]] <- sfcHLst[[sfcIdx]][availFlag]
+    }
+
     scoreMtxLst <- list()
     for( sfcIdx in names(sfcHLst) ){
 

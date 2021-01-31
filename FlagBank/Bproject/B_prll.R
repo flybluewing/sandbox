@@ -52,9 +52,68 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
 
     cutRstLst <- Bprll.stdCutTest( testData.grp ,tgt.scMtx ,testSpan ,exportObj=TRUE )
 
-    if( TRUE ){    curHIdx <- testSpan
+    tStmp1 <- Sys.time()
+    if( TRUE ){
+        crScrH <- crScrHTool$getData()
+        sfExport("testData.grp")    ;sfExport("tgt.scMtx")          ;sfExport("crScrH")
+        prll.initHeader( )          ;source("FCust_configBasic.R")  ;source("FCust_configExt.R")
+        prllLog$fLogStr("- bUtil.cut() ----------------------------",pTime=T)
 
+        if( TRUE ){ curHIdx <- testSpan[1]
+            wLastH <- curHIdx-1
+            wLastSpan <- 1:which(names(fRstLst)==wLastH)
+            gEnv.w <- gEnv              ;gEnv.w$zhF <- gEnv$zhF[1:wLastH,]
+            allIdxLst.w <- allIdxLst    ;allIdxLst.w$stdFiltedCnt <- allIdxLst$stdFiltedCnt[wLastSpan]
+                                        allIdxLst.w$infoMtx <- allIdxLst$infoMtx[wLastSpan,]
+            fRstLst.w <- fRstLst[wLastSpan]
+
+            # -[std.grp]----------------------------------------------------------------------
+            stdZoid <- gEnv$zhF[curHIdx,]
+            stdIdx <- testData.grp$stdIdx[[as.character(curHIdx)]]
+
+            stdMI.grp <- bUtil.getStdMILst( gEnv.w ,fRstLst.w )
+            filter.grp <- getFilter.grp( stdMI.grp ,tgt.scMtx=tgt.scMtx )
+            scoreMtx.grp <- getScoreMtx.grp( matrix(stdZoid,nrow=1) ,filter.grp ,makeInfoStr=T )
+
+            curStdFilted <- fRstLst[[as.character(curHIdx)]]
+            curHMtxLst <- testData.grp$curHMtxLst.grp[[as.character(curHIdx)]]
+            cut.grp <- bFCust.getFCustGrp( curHMtxLst ,tgt.scMtx )
+            fHName <- bUtil.getSfcLstName( fRstLst.w[[length(fRstLst.w)]] ,curStdFiltedCnt=length(curStdFilted) ,cut.grp )
+            std.grp <- bUtil.getCut1Score( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx )
+
+            # -[bS.grp]-----------------------------------------------------------------------
+            aZoidMtx <- matrix(stdZoid,nrow=1)
+            phVP.grp <- bS.getPhVPGrp( gEnv.w ,aZoidMtx )
+            scoreMtx.grp <- bS.getScoreMtx.grp( phVP.grp ,aZoidMtx ,tgt.scMtx=tgt.scMtx )
+            cut.grp <- bS.getCutGrp( hMtxLst_bS=testData.grp$curHMtxLst_bS.grp[[as.character(curHIdx)]] ,tgt.scMtx )
+            bS.grp <- bS.getCut1Score( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx )
+
+            # -[bS.grp]-----------------------------------------------------------------------
+            crScrA <- list( stdIdx=stdIdx ,std.grp=std.grp$aLst ,bS.grp=bS.grp$aLst )  # crScr of aZoid
+            scoreMtx.grp <- HCR.getScoreMtx.grp( crScrA ,hIdxStr=NULL ,tgt.scMtx=tgt.scMtx )
+            hMtxLst_HCR <- HCR.makeHCRMtxLst( crScrH ,allIdxLst.w ,fRstLst.w ,lastH=wLastH ,tgt.scMtx=tgt.scMtx)
+            cut.grp <- HCR.getCutterGrp( hMtxLst_HCR ,fHName ,tgt.scMtx )   # bFMtx,bSMtx에서도 cut.grp 생성 시 fHName을 적용하도록 개선 요.
+            cutRst1 <- HCR.cut1( scoreMtx.grp ,cut.grp ,anaOnly=T ) 
+
+            # working : HCR.makeHCRMtxLst() his 기반으로 수정.
+            #           bHCRMtx.R           과거 His 응용하도록 수정
+            #           HCR.stdCut_rawRow() hMtxLst에서 과거 역사가 없는 경우에 대한  수정.
+            #           HCR.cur1()  logger??
+
+        }
+
+        names( resultLst ) <- sapply( resultLst ,function(p){p$hIdx})
+        cutRstLst <- lapply( resultLst ,function(p){p$cutRst})
+        names(cutRstLst) <- paste("H",testSpan,sep="")
+        names(cutRstLst) <- paste( names(cutRstLst) ,allIdxLst$stdFiltedCnt[as.character(testSpan)] ,sep="_" )
+
+        if( is.null(resultLst) || 0==length(resultLst) ){
+            cat("    Warning!! resultLst is empty. \n")
+        }
     }
+    tDiff1 <- Sys.time() - tStmp1  ;tDiff1     # 2.1min / 7prllNum
+    cat( sprintf("    resultLst %d (time cost : %.1f%s)  \n",length(resultLst),tDiff1,units(tDiff1)) )
+
 
     rptFile <- ifelse(1==length(tgt.scMtx),sprintf("cutRstLst_%d",length(tgt.scMtx)),"cutRstLst")
     if( 1==length(tgt.scMtx) ){

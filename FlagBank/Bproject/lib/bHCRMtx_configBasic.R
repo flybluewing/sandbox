@@ -27,7 +27,7 @@ if( TRUE ){
 }
 
 mName <- "HCRsz_bf01fCol"
-if( FALSE ){
+if( TRUE ){
     HCRMtxCfg[[mName]] <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
@@ -50,6 +50,7 @@ if( FALSE ){
     )
 
 }
+
 
 for( mName in names( HCRMtxCfg ) ){
 
