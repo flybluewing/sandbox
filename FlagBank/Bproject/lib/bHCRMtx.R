@@ -9,19 +9,44 @@ if( TRUE ){
     # scMtx.sz            r.ph r.fCol r.dblHpnFlg e.ph e.fCol e.dblHpnFlg
     #                 rebCnt    0      0           0    0      0           0
     #                 rebDup    0      0           0    0      0           0
-
     #   mName 별 중복 카운트 수만 비교할 뿐, 중복 발생 phase를 비교하는 것은 아님을 유의.
-    workMName <- c("score1","score2","sScore01","sScore02")
-    wMLst= HCR.getMName( workMName ,crScrH ,warn=F )
-    bHCRMtxLst[[mName]] <- HCR.MtxTmpl_szReb( mName=mName ,wMLst=wMLst ,szColName="r.ph" ,szRowName="rebCnt" )
+
+    fMaker <- function( mName ,crScrH ){
+
+        workMName <- c("score1","score2","sScore01","sScore02")        
+
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,crScrH,warn=F) )
+        rObj$getFilter <- function( crScrH=NULL ){
+            # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
+            fObj <- HCR.MtxTmpl_szReb( mName=mName ,wMLst=rObj$wMLst ,szColName="r.ph" ,szRowName="rebCnt" )
+            return( fObj )
+        }
+
+        return( rObj )
+    }
+    bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
+
 }
 
 mName <- "HCRsz_bf01fCol"
 if( TRUE ){
     #   mName 별 중복 카운트 수만 비교할 뿐, 중복 발생 fCol을 비교하는 것은 아님을 유의.
-    workMName <- c("score1","score2","sScore01","sScore02")
-    wMLst= HCR.getMName( workMName ,crScrH ,warn=F )
-    bHCRMtxLst[[mName]] <- HCR.MtxTmpl_szReb( mName=mName ,wMLst=wMLst ,szColName="r.fCol" ,szRowName="rebCnt" )
+
+    fMaker <- function( mName ,crScrH ){
+
+        workMName <- c("score1","score2","sScore01","sScore02")
+
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,crScrH,warn=F) )
+        rObj$getFilter <- function( crScrH=NULL ){
+            # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
+            fObj <- HCR.MtxTmpl_szReb( mName=mName ,wMLst=rObj$wMLst ,szColName="r.fCol" ,szRowName="rebCnt" )
+            return( fObj )
+        }
+
+        return( rObj )
+    }
+    bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
+
 }
 
 crScrH <- NULL

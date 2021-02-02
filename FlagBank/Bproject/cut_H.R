@@ -198,14 +198,13 @@ cutH.bS.Cut <- function( gEnv ,allIdxF ,hMtxLst_bS ,fHName ,tgt.scMtx=NULL ,prll
 }
 
 cutH.HCR.cut <- function( gEnv ,allIdxF ,crScrA ,hMtxLst_HCR ,fHName ,tgt.scMtx=NULL ,prllLog ){
+    # 폐기
     #   working
         # scoreMtx.grp <- bS.getScoreMtx.grp( phVP.grp ,aZoidMtx ,tgt.scMtx=tgt.scMtx )
         # cut.grp <- bS.getCutGrp( hMtxLst_bS ,tgt.scMtx )
         # bS.grp <- bS.getCut1Score( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx )
-
-    # fHName이 필요한가..?  hMtxLst_HCR에 이미 정보가 있음.
-
-    scoreMtx.grp <- HCR.getScoreMtx.grp( crScrA ,hIdxStr=NULL ,tgt.scMtx=tgt.scMtx )
+  
+    # scoreMtx.grp <- HCR.getScoreMtx.grp( crScrA ,hIdxStr=NULL ,tgt.scMtx=tgt.scMtx )
     cut.grp <- HCR.getCutterGrp( hMtxLst_HCR ,fHName ,tgt.scMtx )   # bFMtx,bSMtx에서도 cut.grp 생성 시 fHName을 적용하도록 개선 요.
 
     cutRst1 <- HCR.cut1( scoreMtx.grp ,cut.grp ,anaOnly=F ) 

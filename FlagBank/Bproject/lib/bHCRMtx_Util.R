@@ -35,12 +35,18 @@ HCR.getHCRNames <- function( tgt.scMtx=NULL ){
     return( tgt.HCRMtx )
 }
 
-HCR.getFilter.grp <- function( tgt.scMtx=NULL ){   # tgt.scMtx
+HCR.getFilter.grp <- function( tgt.scMtx=NULL ,crScrH ){   # tgt.scMtx
     #   bFMtx.R getFilter.grp() 참고.
 
     tgt.HCRMtx <- HCR.getHCRNames( tgt.scMtx )
 
-    return( bHCRMtxLst[tgt.HCRMtx] )
+    filterLst <- list()
+    for( mName in tgt.HCRMtx ){
+        # bHCRMtxLst[tgt.HCRMtx]
+        filterLst[[mName]] <- bHCRMtxLst[[mName]]$getFilter( crScrH )
+    }
+
+    return( filterLst )
 
 }
 
@@ -66,7 +72,6 @@ HCR.makeHCRMtxLst <- function( crScrH ,allIdxLst ,fRstLst ,lastH=NULL ,tgt.scMtx
 
     fRstLst.hSpan <- as.integer(names(fRstLst)[1]):lastH
     fRstLst <- fRstLst[as.character(fRstLst.hSpan)]
-    
 
     sfcHLst <- bUtil.getSfcHLst( stdFiltedCnt=allIdxLst$stdFiltedCnt[as.character(baseSpan)] ,baseSpan ,fRstLst )
     # filterLst <- HCR.getFilter.grp()  # HCR.getScoreMtx.grp() 내부에서 호출된다.
@@ -77,12 +82,33 @@ HCR.makeHCRMtxLst <- function( crScrH ,allIdxLst ,fRstLst ,lastH=NULL ,tgt.scMtx
         sfcHLst[[sfcIdx]] <- sfcHLst[[sfcIdx]][availFlag]
     }
 
+
+    basicLst.empty <- list()    # sfcHLst 에서 데이터가 없는 경우를 위한 디폴트 값 준비.
+    filterLst <- HCR.getFilter.grp( tgt.scMtx ,crScrH )
+    for( mName in names(filterLst) ){
+        cName <- filterLst[[mName]]$cName
+        basicLst.empty[[mName]] <- matrix( 0 ,nrow=0 ,ncol=length(cName) ,dimnames=list(NULL,cName) )
+    }
+
     scoreMtxLst <- list()
     for( sfcIdx in names(sfcHLst) ){
 
-        hIdxStr <- as.character( sfcHLst[[sfcIdx]] )
-        scoreMtx.grp <- HCR.getScoreMtx.grp( crScrH ,hIdxStr ,tgt.scMtx=tgt.scMtx )
-        scoreMtxLst[[sfcIdx]] <- scoreMtx.grp
+        basicLst <- basicLst.empty
+        for( hIdx in sfcHLst[[sfcIdx]] ){
+            workH <- hIdx-1
+            crScrW <- crScrHTool$bySpan(crScrH,workH)
+            filterLst <- HCR.getFilter.grp( tgt.scMtx ,crScrW )
+
+            hIdxStr <- as.character(hIdx)
+            crScrA <- list( stdIdx=crScrH$stdIdx[hIdxStr] ,std.grp=crScrH$std.grp[hIdxStr] ,bS.grp=crScrH$bS.grp[hIdxStr] )
+            mtxGrp <- HCR.getScoreMtx.grp( crScrA ,filterLst ,tgt.scMtx=tgt.scMtx )
+            for( mName in names(mtxGrp$basic) ){
+                basicLst[[mName]] <- rbind( basicLst[[mName]] ,mtxGrp$basic[[mName]] )
+            }
+            # scoreLst[[as.character(hIdx)]] <- HCR.getScoreMtx.grp( crScrA ,filterLst ,tgt.scMtx=tgt.scMtx )
+        }
+
+        scoreMtxLst[[sfcIdx]] <- list( basic=basicLst )
     }
 
     rObj <- list( scoreMtxLst=scoreMtxLst ,mInfo=list(hName=names(scoreMtxLst)) )
@@ -91,23 +117,14 @@ HCR.makeHCRMtxLst <- function( crScrH ,allIdxLst ,fRstLst ,lastH=NULL ,tgt.scMtx
     return( rObj )
 }
 
-HCR.getScoreMtx.grp <- function( crScrH ,hIdxStr=NULL ,tgt.scMtx=NULL ){
+HCR.getScoreMtx.grp <- function( crScrA ,filterLst ,tgt.scMtx=NULL ){
     #   ph 단계가 없음을 유의하자.
 
     rObj <- list()
 
-    crScrW <- crScrH
-    if( !is.null(hIdxStr) ){
-        crScrW$stdIdx   <- crScrW$stdIdx[hIdxStr]
-        crScrW$std.grp  <- crScrW$std.grp[hIdxStr]
-        crScrW$bS.grp   <- crScrW$bS.grp[hIdxStr]
-    }
-
-    filterLst <- HCR.getFilter.grp( tgt.scMtx )
-
     scoreMtxLst <- list()
     for( mName in names(filterLst) ){
-        scoreMtxLst[[mName]] <- filterLst[[mName]]$fMtxObj( crScrW )
+        scoreMtxLst[[mName]] <- filterLst[[mName]]$fMtxObj( crScrA )
     }
 
     rObj$basic <- scoreMtxLst
@@ -154,10 +171,10 @@ HCR.stdCut_rawRow <- function( hName ,mName ,scoreMtxH ){
     rObj <- list( defId=c(hName=hName,mName=mName,pName="N/A(HCR)") )
 
     hLen <- nrow(scoreMtxH)
-    rObj$lastScore <- scoreMtxH[hLen,]
+    rObj$lastScore <- if(hLen>0) scoreMtxH[hLen,] else NULL
     rObj$available <- TRUE
 
-    if( rObj$available ){
+    if( rObj$available && !is.null(rObj$lastScore) ){
         cfg <- HCRMtxCfg[[mName]]
         if( !is.null(cfg) ){
             rObj$isHard <- cfg$isHard   # 별 의미 없어지는 듯.
@@ -260,7 +277,7 @@ HCR.stdCut_rawRow <- function( hName ,mName ,scoreMtxH ){
 
 }
 
-HCR.cut1 <- function( scoreMtx.grp ,cut.grp ,anaOnly=T ){
+HCR.cut1 <- function( scoreMtx.grp ,cut.grp ,anaOnly=T ,logger=NULL ){
     # fHName 이 필요한가? cut.grp에 다 있는데..
     # tgt.scMtx이 필요한가? cut.grp 생성 시 이미 tgt.scMtx 제한이 반영되어 있다.
 

@@ -2082,10 +2082,10 @@ bUtil.getCfgOptions <- function( cfg ){
 }
 
 #	row cutter 객체에서 사용되는 rebind check cutter.
+#		lastScore 자체가 없는 경우, rowReb/evtReb 가 NULL이 된다.
 bUtil.getRowRebCutter <- function( rCObj ,cfg ){
 	# rCObj : row cutter obj.
 	#	FCust_stdCut.rawRow() 의 rObj.
-
 
 	#	ctrObj : cutter Obj
 	ctrObj <- list( cfg=cfg ,rebInfo=NULL ,rawReb=NULL ,evtReb=NULL )
@@ -2315,13 +2315,31 @@ BUtil.makeCrScrHTool <- function(){
 		cat( rptStr )
 	}
 
-	sMtxHObj$getData <- function( hSpan=NULL ){
+	sMtxHObj$getData <- function( ){
 		load(sMtxHObj$scrFile)	# crScrH
 
 		# missingH <- hSpan
 		# cat( sprintf("    Warn! missing History : %s \n" ,paste(missingH,collapse=",")) )
 
 		return( crScrH )
+	}
+
+	sMtxHObj$bySpan <- function( crScrH ,lastH ){
+		crScrW <- crScrH
+
+		crSpan <- as.integer(names(crScrW$stdIdx))
+		if( lastH > crSpan[length(crSpan)] ){
+			cat(sprintf("  Error! no data for lastH(%d) in crSpan \n",lastH ))
+			return( NULL )
+		}
+
+		spanFlag <- crSpan<=lastH
+		
+		crScrW$stdIdx <- crScrW$stdIdx[spanFlag]
+		crScrW$std.grp <- crScrW$std.grp[spanFlag]
+		crScrW$bS.grp <- crScrW$bS.grp[spanFlag]
+
+		return( crScrW )
 	}
 
 	return( sMtxHObj )

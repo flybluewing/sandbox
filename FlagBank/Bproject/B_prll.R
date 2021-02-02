@@ -55,11 +55,13 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
     tStmp1 <- Sys.time()
     if( TRUE ){
         crScrH <- crScrHTool$getData()
-        sfExport("testData.grp")    ;sfExport("tgt.scMtx")          ;sfExport("crScrH")
+        sfExport("testData.grp")    ;sfExport("tgt.scMtx")          ;sfExport("crScrH") ;sfExport("crScrHTool")
         prll.initHeader( )          ;source("FCust_configBasic.R")  ;source("FCust_configExt.R")
-        prllLog$fLogStr("- bUtil.cut() ----------------------------",pTime=T)
+        prllLog$fLogStr("- HCR ----------------------------",pTime=T)
 
-        if( TRUE ){ curHIdx <- testSpan[1]
+        resultLst <- sfLapply( testSpan ,function( curHIdx ){
+            # curHIdx <- testSpan[1]
+
             wLastH <- curHIdx-1
             wLastSpan <- 1:which(names(fRstLst)==wLastH)
             gEnv.w <- gEnv              ;gEnv.w$zhF <- gEnv$zhF[1:wLastH,]
@@ -88,19 +90,29 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
             cut.grp <- bS.getCutGrp( hMtxLst_bS=testData.grp$curHMtxLst_bS.grp[[as.character(curHIdx)]] ,tgt.scMtx )
             bS.grp <- bS.getCut1Score( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx )
 
-            # -[bS.grp]-----------------------------------------------------------------------
+            # =============================================================================
+            #  HCR.cut1( )
+            cutRst <- list( surFlag=T ,cutInfoLst=list() )      # cutRst$surFlag는 의미없다. anaOnly=T 이므로
+
             crScrA <- list( stdIdx=stdIdx ,std.grp=std.grp$aLst ,bS.grp=bS.grp$aLst )  # crScr of aZoid
-            scoreMtx.grp <- HCR.getScoreMtx.grp( crScrA ,hIdxStr=NULL ,tgt.scMtx=tgt.scMtx )
-            hMtxLst_HCR <- HCR.makeHCRMtxLst( crScrH ,allIdxLst.w ,fRstLst.w ,lastH=wLastH ,tgt.scMtx=tgt.scMtx)
-            cut.grp <- HCR.getCutterGrp( hMtxLst_HCR ,fHName ,tgt.scMtx )   # bFMtx,bSMtx에서도 cut.grp 생성 시 fHName을 적용하도록 개선 요.
-            cutRst1 <- HCR.cut1( scoreMtx.grp ,cut.grp ,anaOnly=T ) 
+            # crScrW <- crScrHTool$bySpan(crScrH,wLastH)
+            # filterLst <- HCR.getFilter.grp( tgt.scMtx ,crScrW )
+            # scoreMtx.grp <- HCR.getScoreMtx.grp( crScrA ,filterLst ,tgt.scMtx=tgt.scMtx )
+            # hMtxLst_HCR <- HCR.makeHCRMtxLst( crScrH ,allIdxLst.w ,fRstLst.w ,lastH=wLastH ,tgt.scMtx=tgt.scMtx)
+            # cut.grp <- HCR.getCutterGrp( hMtxLst_HCR ,fHName ,tgt.scMtx )   # bFMtx,bSMtx에서도 cut.grp 생성 시 fHName을 적용하도록 개선 요.
+            # cutRst1 <- HCR.cut1( scoreMtx.grp ,cut.grp ,anaOnly=T ) 
+            # cutRst$cutInfoLst <- append( cutRst$cutInfoLst ,cutRst1$cutInfoLst )
 
-            # working : HCR.makeHCRMtxLst() his 기반으로 수정.
-            #           bHCRMtx.R           과거 His 응용하도록 수정
-            #           HCR.stdCut_rawRow() hMtxLst에서 과거 역사가 없는 경우에 대한  수정.
-            #           HCR.cur1()  logger??
+            resultObj <- list( hIdx=curHIdx ,cutRst=cutRst)
+            if( FALSE ){ # for later inspection...
+                resultObj$fHName <- fHName
+                resultObj$std.grp <- std.grp
+                resultObj$bS.grp <- bS.grp
+                resultObj$scoreMtx.grp <- scoreMtx.grp 
+            }
 
-        }
+            return( resultObj )
+        })
 
         names( resultLst ) <- sapply( resultLst ,function(p){p$hIdx})
         cutRstLst <- lapply( resultLst ,function(p){p$cutRst})

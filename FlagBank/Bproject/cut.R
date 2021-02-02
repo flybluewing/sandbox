@@ -45,7 +45,7 @@ tStmp <- Sys.time()
 # ----------------------------------------------------------------------------------
 #       stdIdx <- k.getIdx_AllZoidMtx( gEnv, stdZoid )
 stdMI.grp <- bUtil.getStdMILst( gEnv ,fRstLst )     ;stdMI.grp$anyWarn( )
-crScrH <- crScrHTool$getData()
+crScrH <- crScrHTool$getData( )     ;crScrH <- crScrHTool$bySpan(crScrH,lastH)
 if( TRUE ){     #   hMtxLst ,hMtxLst_bS
     load( sprintf("./save/finalCut/Obj_cut_hMtxLst_%d.save",lastH)      )   # hMtxLst
     load( sprintf("./save/finalCut/Obj_cut_hMtxLst_bS_%d.save",lastH)   )   # hMtxLst_bS
@@ -326,8 +326,12 @@ for( sfcIdx in 0 ){ # 0:2
         bS.grp <- bS.getCut1Score( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx )
 
         crScrA <- list( stdIdx=allIdxF ,std.grp=std.grp$aLst ,bS.grp=bS.grp$aLst )  # crScr of aZoid
+        filterLst <- HCR.getFilter.grp( tgt.scMtx ,crScrH )
+        scoreMtx.grp <- HCR.getScoreMtx.grp( crScrA ,filterLst ,tgt.scMtx=tgt.scMtx )
+        cut.grp <- HCR.getCutterGrp( hMtxLst_HCR ,fHName ,tgt.scMtx )
+        cutRst1 <- HCR.cut1( scoreMtx.grp ,cut.grp ,anaOnly=F ) 
+        allIdxF <- allIdxF[cutRst1$surFlag]
 
-        allIdxF <- cutH.HCR.cut( gEnv ,allIdxF ,crScrA ,hMtxLst_HCR ,fHName ,tgt.scMtx=tgt.scMtx ,prllLog )
         prllLog$fLogStr(    sprintf("   - cutH.HCR.Cut( )   final survival size :%7d",length(allIdxF))
                             ,pTime=T
         )
