@@ -49,4 +49,22 @@ if( TRUE ){
 
 }
 
+mName <- "HCRreb_sz01"
+if( TRUE ){
+
+    fMaker <- function( mName ,crScrH ){
+        workMName <- c("score1","score2","sScore01","sScore02")
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,crScrH,warn=F) )
+        rObj$szCol <- c( "r.ph" ,"r.fCol" ,"r.dblHpnFlg" )
+
+        rObj$getFilter <- function( crScrH ){
+            fObj <- HCR.MtxTmpl_rebSz( mName=mName ,wMLst=rObj$wMLst ,crScrH ,szCol=rObj$szCol )
+            return( fObj )
+        }
+    }
+    bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
+
+}
+
+
 crScrH <- NULL

@@ -19,6 +19,7 @@ tgt.scMtx <- NULL       #   13min per H
 
 
 #   crScrHTool$initData()       # bUtil.R ÀÇ BUtil.makeCrScrHTool( ) Âü°í.
-crScrHTool$addData( 860:880 ,tgt.scMtx )    # hSpan=860:880 ,prllNum=7   48min
+crScrHTool$addData( 730:940 ,tgt.scMtx )    # hSpan=860:880 ,prllNum=7   48 min
+                                            # hSpan=730:940 ,prllNum=7  7.2 hours
 
 crScrH <- crScrHTool$getData()

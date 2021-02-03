@@ -56,30 +56,35 @@ bS.makeHMtxLst <- function( gEnv, allIdxLst, fRstLst ,tgt.scMtx=NULL ,lastH=NULL
     fRstLst.hSpan <- as.integer(names(fRstLst))
 
     baseSpan <- 700:lastH
-    stdFiltedCnt <- allIdxLst$stdFiltedCnt[as.character(baseSpan)]
+    sfcHLst <- bUtil.getSfcHLst( stdFiltedCnt=allIdxLst$stdFiltedCnt[as.character(baseSpan)] ,baseSpan ,fRstLst )
+    if( FALSE ){
+        # baseSpan <- 700:lastH
+        # stdFiltedCnt <- allIdxLst$stdFiltedCnt[as.character(baseSpan)]
 
-    # ----------------------------------------------------
-    sfcHLst <- list(    sfcLate= baseSpan[length(baseSpan)] - 20:0
-                        ,sfc0=as.integer(names(stdFiltedCnt)[stdFiltedCnt==0])
-                        ,sfc1=as.integer(names(stdFiltedCnt)[stdFiltedCnt==1])
-                        ,sfc2=as.integer(names(stdFiltedCnt)[stdFiltedCnt==2])
-                    )
+        # # ----------------------------------------------------
+        # sfcHLst <- list(    sfcLate= baseSpan[length(baseSpan)] - 20:0
+        #                     ,sfc0=as.integer(names(stdFiltedCnt)[stdFiltedCnt==0])
+        #                     ,sfc1=as.integer(names(stdFiltedCnt)[stdFiltedCnt==1])
+        #                     ,sfc2=as.integer(names(stdFiltedCnt)[stdFiltedCnt==2])
+        #                 )
 
-    stdFilter <- c("D0000.A","A0100.A","AP000.E")   # "AR000.B","AL000A","C1000.A"
-    for( sfnIdx in stdFilter ){
-        #   sfnIdx <- "D0000.A"
-        hSpan <- baseSpan[sapply( fRstLst[as.character(baseSpan)] ,function(p){ sfnIdx %in% p } )]
-        hSpan.NG <- hSpan+1
-        hSpan.NG <- hSpan.NG[hSpan.NG<=lastH]
-        sfcHLst[[sprintf("NG%s",sfnIdx)]] <- hSpan.NG
+        # stdFilter <- c("D0000.A","A0100.A","AP000.E")   # "AR000.B","AL000A","C1000.A"
+        # for( sfnIdx in stdFilter ){
+        #     #   sfnIdx <- "D0000.A"
+        #     hSpan <- baseSpan[sapply( fRstLst[as.character(baseSpan)] ,function(p){ sfnIdx %in% p } )]
+        #     hSpan.NG <- hSpan+1
+        #     hSpan.NG <- hSpan.NG[hSpan.NG<=lastH]
+        #     sfcHLst[[sprintf("NG%s",sfnIdx)]] <- hSpan.NG
+        # }
+        # lenMax <- 20
+        # for( hName in names(sfcHLst) ){ # hLst 범위는 20 이내로 하자.
+        #     hLen <- length(sfcHLst[[hName]])
+        #     if( lenMax < hLen ){
+        #         sfcHLst[[hName]] <- sfcHLst[[hName]][ (hLen-lenMax+1):hLen ]
+        #     }
+        # }
     }
-    lenMax <- 20
-    for( hName in names(sfcHLst) ){ # hLst 범위는 20 이내로 하자.
-        hLen <- length(sfcHLst[[hName]])
-        if( lenMax < hLen ){
-            sfcHLst[[hName]] <- sfcHLst[[hName]][ (hLen-lenMax+1):hLen ]
-        }
-    }
+
 
     scoreMtxLst <- list()
     for( sfcIdx in names(sfcHLst) ){    # sfcIdx <- names(sfcHLst)[2]

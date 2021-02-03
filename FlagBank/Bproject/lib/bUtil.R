@@ -501,6 +501,7 @@ bUtil.cut2 <- function( cutRst1Score ,fHName ,tgt.scMtx=NULL ,anaOnly=F ,logger=
 
 
 bUtil.getSfcHLst <- function( stdFiltedCnt ,baseSpan ,fRstLst ){
+	lastH <- baseSpan[length(baseSpan)]
 
     sfcHLst <- list(    sfcLate= baseSpan[length(baseSpan)] - 20:0
                         ,sfc0=as.integer(names(stdFiltedCnt)[stdFiltedCnt==0])
@@ -2243,7 +2244,6 @@ BUtil.makeCrScrHTool <- function(){
 	}
 
 	sMtxHObj$addData <- function( hSpan ,tgt.scMtx=NULL ){
-		tgt.scMtx=NULL
 
 		objName <- load(sMtxHObj$scrFile)	# crScrH
 		cat(sprintf("    %s is loaded from \"%s\" \n",objName,sMtxHObj$scrFile))
@@ -2272,7 +2272,6 @@ BUtil.makeCrScrHTool <- function(){
 										allIdxLst.w$infoMtx <- allIdxLst$infoMtx[wLastSpan,]
 			fRstLst.w <- fRstLst[wLastSpan]
 
-
 			curHMtxLst <- B.makeHMtxLst( gEnv.w, allIdxLst.w, fRstLst.w, tgt.scMtx )
 			cut.grp <- bFCust.getFCustGrp( curHMtxLst ,tgt.scMtx )
 			curStdFilted <- fRstLst[[as.character(curHIdx)]]    #   평가가 아닌 실제에선, remLst 으로부터 가져올 것.
@@ -2283,14 +2282,12 @@ BUtil.makeCrScrHTool <- function(){
 			scoreMtx.grp <- getScoreMtx.grp( matrix(stdZoid,nrow=1) ,filter.grp ,makeInfoStr=T )
 			std.grp <- bUtil.getCut1Score( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx )
 
-
 			hMtxLst_bS <- bS.makeHMtxLst( gEnv.w, allIdxLst.w, fRstLst.w ,tgt.scMtx )
 			aZoidMtx <- matrix(stdZoid ,nrow=1) # Bprll.bSCut() 참고
 			phVP.grp <- bS.getPhVPGrp( gEnv.w ,aZoidMtx )
 			scoreMtx.grp <- bS.getScoreMtx.grp( phVP.grp ,aZoidMtx ,tgt.scMtx=tgt.scMtx )
 			cut.grp <- bS.getCutGrp( hMtxLst_bS ,tgt.scMtx )
 			bS.grp <- bS.getCut1Score( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx )
-
 
 			return( list(idStr=idStr ,stdIdx=stdIdx,std.grp=std.grp,bS.grp=bS.grp) )
 		})

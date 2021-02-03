@@ -372,4 +372,62 @@ HCR.MtxTmpl_szReb <- function( mName ,wMLst ,szColName ,szRowName ){
 }
 
 
+HCR.MtxTmpl_rebSz <- function( mName=mName ,wMLst=rObj$wMLst ,crScrH ,szCol ){
+    #   szCol : r.ph      r.fCol r.dblHpnFlg        e.ph      e.fCol e.dblHpnFlg
 
+	rObj <- list( 	mInfo=c("mName"=mName ,"szRowName"="rebCnt" ) ,wMLst=wMLst ,szCol=szCol
+				)
+
+    rObj$cName <- c( wMLst$bf ,wMLst$bS )
+
+    rObj$szLst <- NULL
+    crScrH.len <- length(crScrH$std.grp)
+    if( 0<crScrH.len ){
+        lastHStr <- names(crScrH$std.grp)[crScrH.len]
+        rObj$mInfo["lastH"] <- lastHStr
+        
+        szLst_bf <- lapply( crScrH$std.grp[[lastHStr]]$sfcLate$basic[ rObj$wMLst$bf ] ,function( crObj ){
+            crObj$summ$scMtx.sz[rObj$mInfo["szRowName"],szCol]
+        })
+        szLst_bS <- lapply( crScrH$bS.grp[[lastHStr]]$sfcLate$basic[ rObj$wMLst$bS ] ,function( crObj ){
+            crObj$summ$scMtx.sz[rObj$mInfo["szRowName"],szCol]
+        })
+        rObj$szLst <- append( szLst_bf ,szLst_bS )
+    }
+
+    rObj$fMtxObj <- function( crScrA ){
+        datLen <- length(crScrA$std.grp) ;datNam <- names(crScrA$std.grp) # datNam은 NULL일 수도 있다.
+
+        scrMtx <- matrix( 0 ,nrow=datLen ,ncol=length(rObj$cName) ,dimnames=list(datNam,rObj$cName) )
+        if( is.null(rObj$szLst) ){
+            return( scrMtx )
+        }
+
+        for( rIdx in seq_len(datLen) ){
+            std.grp <- crScrA$std.grp[[rIdx]]$sfcLate$basic
+            bS.grp <- crScrA$bS.grp[[rIdx]]$sfcLate$basic
+
+            for( wmName in rObj$wMLst$bf ){
+                szA <- std.grp[[wmName]]$summ$scMtx.sz[rObj$mInfo["szRowName"] ,rObj$szCol]
+                matFlag <- szA == rObj$szLst[[wmName]]
+                if( all(matFlag) ){
+                    matFlag <- matFlag & (szA>0)
+                    scrMtx[rIdx,wmName] <- sum( szA[matFlag] )
+                }
+            }
+            for( wmName in rObj$wMLst$bS ){
+                szA <- bS.grp[[wmName]]$summ$scMtx.sz[rObj$mInfo["szRowName"] ,rObj$szCol]
+                matFlag <- szA == rObj$szLst[[wmName]]
+                if( all(matFlag) ){
+                    matFlag <- matFlag & (szA>0)
+                    scrMtx[rIdx,wmName] <- sum( szA[matFlag] )
+                }
+            }
+        }
+
+        return( scrMtx )
+    }
+
+    return( rObj )
+
+}
