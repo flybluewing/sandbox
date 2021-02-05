@@ -5,7 +5,7 @@ load(sprintf("../Aproject/Obj_allIdxLstZ%d.save",lastH) )
 load(sprintf("../Aproject/save/Obj_fRstLstZ%d.save",lastH) )
 names(fRstLst) <- names(allIdxLst$stdFiltedCnt)
 load(sprintf("../Aproject/save/Obj_gEnvZ%d.save",lastH))
-
+crScrH <- crScrHTool$getData()
 
 #-[Parallel init work]-------------------------------------------------------------
 prllNum <- 7     # 실수가 잦아서 그냥 오류 코드로 놔둔다.
@@ -19,6 +19,7 @@ prll.initHeader <- function( ){
 sfInit( parallel=T, cpus=prllNum )  ;prll.initHeader( ) ;sfExport("prllLog") 
 
 sfExport("lastH")   ;sfExport("gEnv")    ;sfExport("fRstLst")    ;sfExport("allIdxLst")
+sfExport("crScrH")  ;sfExport("crScrHTool")
 prllLog$fLogStr("parallel init", pTime=T ,pAppend=F )
 cat(sprintf("* Parallel ready... see log : %s \n",prllLog$fileName))
 
@@ -38,14 +39,13 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
 
     if( TRUE ){     # RM_B_prll.R
         load( sprintf("Obj_testData.grp.%d.%s.save",lastH,"all") )
+        load( sprintf("Obj_testData_HCR.grp.%d.%s.save",lastH,"all") )
     } else {
         tStmp <- Sys.time()
-        # hMtxLst <- B.makeHMtxLst( gEnv, allIdxLst, fRstLst, lastH=configH, tgt.scMtx )
         testData.grp <- B.get_testData.grp( testSpan ,gEnv ,allIdxLst ,fRstLst ,tgt.scMtx=tgt.scMtx)
+        testData_HCR.grp <- HCR.get_testData.grp( testSpan ,crScrH ,allIdxLst ,fRstLst ,lastH=NULL ,tgt.scMtx=NULL )
         save( testData.grp ,file=sprintf("Obj_testData.grp.%d.%s.save",lastH,ifelse(is.null(tgt.scMtx),"all",tgt.scMtx) ) )
-        #   save( testData.grp ,file="Obj_testData.grp.save" )
-        #   load( sprintf("Obj_testData.grp.%d.%s.save",lastH,ifelse(is.null(tgt.scMtx),"all",tgt.scMtx) ) )
-        #           Obj_testData.grp.900.w100.save : configH <- lastH-100 (4hours)
+        save( testData_HCR.grp ,file=sprintf("Obj_testData_HCR.grp.%d.%s.save",lastH,ifelse(is.null(tgt.scMtx),"all",tgt.scMtx) ) )
         tDiff <- Sys.time() - tStmp
     }
 
@@ -54,9 +54,8 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
 
     tStmp1 <- Sys.time()
     if( TRUE ){
-        crScrH <- crScrHTool$getData()
-        sfExport("testData.grp")    ;sfExport("tgt.scMtx")          ;sfExport("crScrH") ;sfExport("crScrHTool")
-        prll.initHeader( )          ;source("FCust_configBasic.R")  ;source("FCust_configExt.R")
+        sfExport("tgt.scMtx")       ;sfExport("testData.grp")   ;sfExport("testData_HCR.grp")
+        prll.initHeader( )
         prllLog$fLogStr("- HCR ----------------------------",pTime=T)
 
         resultLst <- sfLapply( testSpan ,function( curHIdx ){
@@ -95,13 +94,14 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
             cutRst <- list( surFlag=T ,cutInfoLst=list() )      # cutRst$surFlag는 의미없다. anaOnly=T 이므로
 
             crScrA <- list( stdIdx=stdIdx ,std.grp=std.grp$aLst ,bS.grp=bS.grp$aLst )  # crScr of aZoid
-            # crScrW <- crScrHTool$bySpan(crScrH,wLastH)
-            # filterLst <- HCR.getFilter.grp( tgt.scMtx ,crScrW )
-            # scoreMtx.grp <- HCR.getScoreMtx.grp( crScrA ,filterLst ,tgt.scMtx=tgt.scMtx )
-            # hMtxLst_HCR <- HCR.makeHCRMtxLst( crScrH ,allIdxLst.w ,fRstLst.w ,lastH=wLastH ,tgt.scMtx=tgt.scMtx)
-            # cut.grp <- HCR.getCutterGrp( hMtxLst_HCR ,fHName ,tgt.scMtx )   # bFMtx,bSMtx에서도 cut.grp 생성 시 fHName을 적용하도록 개선 요.
-            # cutRst1 <- HCR.cut1( scoreMtx.grp ,cut.grp ,anaOnly=T ) 
-            # cutRst$cutInfoLst <- append( cutRst$cutInfoLst ,cutRst1$cutInfoLst )
+            crScrW <- crScrHTool$bySpan(crScrH,wLastH)
+            filterLst <- HCR.getFilter.grp( tgt.scMtx ,crScrW )
+            scoreMtx.grp <- HCR.getScoreMtx.grp( crScrA ,filterLst ,tgt.scMtx=tgt.scMtx )
+            # hMtxLst_HCR <- HCR.makeHCRMtxLst( crScrW ,allIdxLst.w ,fRstLst.w ,lastH=wLastH ,tgt.scMtx=tgt.scMtx)
+            hMtxLst_HCR <- testData_HCR.grp$curHMtxLst_HCR.grp[[as.character(curHIdx)]]
+            cut.grp <- HCR.getCutterGrp( hMtxLst_HCR ,fHName ,tgt.scMtx )   # bFMtx,bSMtx에서도 cut.grp 생성 시 fHName을 적용하도록 개선 요.
+            cutRst1 <- HCR.cut1( scoreMtx.grp ,cut.grp ,anaOnly=T ) 
+            cutRst$cutInfoLst <- append( cutRst$cutInfoLst ,cutRst1$cutInfoLst )
 
             resultObj <- list( hIdx=curHIdx ,cutRst=cutRst)
             if( FALSE ){ # for later inspection...

@@ -330,6 +330,48 @@ HCR.cut1 <- function( scoreMtx.grp ,cut.grp ,anaOnly=T ,logger=NULL ){
 
 }
 
+HCR.get_testData.grp <- function( testSpan ,crScrH ,allIdxLst ,fRstLst ,lastH=NULL ,tgt.scMtx=NULL ){
+    # gEnv, allIdxLst, fRstLst ,tgt.scMtx=NULL ,lastH=NULL
+
+    tStmp <- Sys.time()
+    sfExport("tgt.scMtx")                       ;sfExport("prllLog")
+    sfExport("crScrH")  ;sfExport("crScrHTool")
+    sfExport("gEnv")    ;sfExport("fRstLst")    ;sfExport("allIdxLst")
+
+    resultLst <- sfLapply(testSpan,function(curHIdx){
+        tStmp.prll <- Sys.time()
+
+        wLastH <- curHIdx-1
+        wLastSpan <- 1:which(names(fRstLst)==wLastH)
+        gEnv.w <- gEnv              ;gEnv.w$zhF <- gEnv$zhF[1:wLastH,]
+        allIdxLst.w <- allIdxLst    ;allIdxLst.w$stdFiltedCnt <- allIdxLst$stdFiltedCnt[wLastSpan]
+                                    allIdxLst.w$infoMtx <- allIdxLst$infoMtx[wLastSpan,]
+        fRstLst.w <- fRstLst[wLastSpan]
+
+        stdIdx <- crScrH$stdIdx[ as.character(curHIdx) ]
+        crScrW <- crScrHTool$bySpan(crScrH,wLastH)
+        hMtxLst_HCR <- HCR.makeHCRMtxLst( crScrW ,allIdxLst.w ,fRstLst.w ,lastH=wLastH ,tgt.scMtx=tgt.scMtx)
+
+        tDiff <- Sys.time() - tStmp.prll
+        prllLog$fLogStr(sprintf("    B.get_testData.grp - hIdx:%d finished %.1f%s",curHIdx,tDiff,units(tDiff)))
+
+        rObj <- list( hIdx=curHIdx ,stdIdx=stdIdx ,hMtxLst_HCR=hMtxLst_HCR )
+
+        return( rObj )
+    })
+    names(resultLst) <- sapply(resultLst,function(p){ p$hIdx })
+
+    curHMtxLst_HCR.grp <- lapply(resultLst,function(p){ p$hMtxLst_HCR })
+    stdIdx.grp <- lapply(resultLst,function(p){ p$stdIdx })
+
+    tDiff <- Sys.time() - tStmp
+    cat(sprintf("time : %.1f,%s   \n",tDiff,units(tDiff)))
+
+    rLst <- list(curHMtxLst_HCR.grp=curHMtxLst_HCR.grp ,stdIdx.grp=stdIdx.grp )
+
+    return( rLst )
+
+}
 
 
 

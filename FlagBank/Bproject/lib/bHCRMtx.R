@@ -61,6 +61,8 @@ if( TRUE ){
             fObj <- HCR.MtxTmpl_rebSz( mName=mName ,wMLst=rObj$wMLst ,crScrH ,szCol=rObj$szCol )
             return( fObj )
         }
+
+        return( rObj )
     }
     bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
 

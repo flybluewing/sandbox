@@ -53,7 +53,7 @@ if( TRUE ){     #   hMtxLst ,hMtxLst_bS
 } else {
     hMtxLst <- B.makeHMtxLst( gEnv, allIdxLst, fRstLst, lastH=lastH, tgt.scMtx )
     hMtxLst_bS <- bS.makeHMtxLst( gEnv, allIdxLst, fRstLst ,tgt.scMtx )
-    hMtxLst_HCR <- HCR.makeHCRMtxLst( crScrH ,allIdxLst ,fRstLst ,lastH=NULL ,tgt.scMtx=NULL)
+    hMtxLst_HCR <- HCR.makeHCRMtxLst( crScrH ,allIdxLst ,fRstLst ,lastH=NULL ,tgt.scMtx=tgt.scMtx )
     save( hMtxLst       ,file=sprintf("./save/finalCut/Obj_cut_hMtxLst_%d.save",lastH)      )
     save( hMtxLst_bS    ,file=sprintf("./save/finalCut/Obj_cut_hMtxLst_bS_%d.save",lastH)   )
     save( hMtxLst_HCR   ,file=sprintf("./save/finalCut/Obj_cut_hMtxLst_HCR_%d.save",lastH)  )

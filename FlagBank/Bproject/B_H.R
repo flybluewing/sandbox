@@ -1165,6 +1165,9 @@ B.get_testData.grp <- function( testSpan ,gEnv ,allIdxLst ,fRstLst ,tgt.scMtx=NU
 
     tStmp <- Sys.time()
     sfExport("tgt.scMtx")   ;sfExport("get.scoreMtx.grp")
+    sfExport("prllLog")
+    sfExport("gEnv")    ;sfExport("fRstLst")    ;sfExport("allIdxLst")
+
     resultLst <- sfLapply(testSpan,function(curHIdx){
         tStmp.prll <- Sys.time()
 
