@@ -500,7 +500,7 @@ FCust_stdCut.rawRow <- function( hName ,mName ,pName ,scoreMtxH ){
         val.len <- nrow(scoreMtx)
         if( is.null(alreadyDead) )	alreadyDead <- rep( F, val.len )
 
-        cutLst <- list()
+        cutLst <- list()    # anaMode=T일때만 필요. F이면 surFlag만 사용된다.
         if( !rObj$available ) return( list(cutLst=cutLst,surFlag=!alreadyDead) )
 
         hardFlag <- rObj$isHard( rObj$defId["pName"] )$flag["p"]

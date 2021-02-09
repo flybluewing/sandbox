@@ -49,7 +49,7 @@ if( TRUE ){
 
 }
 
-mName <- "HCRreb_sz01"
+mName <- "HCRreb_szC01R"    # rebCnt
 if( TRUE ){
 
     fMaker <- function( mName ,crScrH ){
@@ -68,5 +68,10 @@ if( TRUE ){
 
 }
 
+mName <- "HCRreb_szC01E"
 
-crScrH <- NULL
+mName <- "HCRreb_szD01R"    # rebDup
+mName <- "HCRreb_szD01E"
+
+
+# crScrH <- NULL

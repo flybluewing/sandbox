@@ -202,6 +202,32 @@ HCR.stdCut_rawRow <- function( hName ,mName ,scoreMtxH ){
         hardFlag <- FALSE   # 일단은 사용 안함.
         cfg <- HCRMtxCfg[[ rObj$defId["mName"] ]]
 
+        # each fCol --------------------------------------------
+        cutLst.fCol <- list()
+        for( fcName in names(cfg$fCol) ){
+            for( aIdx in seq_len(val.len) ){
+                if( !anaMode && alreadyDead[aIdx] ) next
+
+                surWin <- cfg$fCol[[fcName]]$rng[ ,ifelse(hardFlag,"lev1","lev2")]
+                val <- scoreMtx[aIdx,fcName]
+                if( !bUtil.in(val,surWin) ){
+                    alreadyDead[aIdx] <- TRUE
+
+                    infoStr <- sprintf("%s(%d)",fcName,val )
+                    cObj <- cutLst.fCol[[as.character(aIdx)]]
+                    if( is.null(cObj) ){
+                        cutLst.fCol[[as.character(aIdx)]] <- list( idx=aIdx ,info=infoStr )
+                    } else {
+                        cutLst.fCol[[as.character(aIdx)]]$info <- paste( cObj$info, infoStr, collapse=", " )
+                    }
+
+                }
+
+            }
+
+        }
+
+
         # sm row: evtCnt  --------------------------------------------
         cutLst.rowE <- list()
         for( aIdx in seq_len(val.len) ){
@@ -243,12 +269,16 @@ HCR.stdCut_rawRow <- function( hName ,mName ,scoreMtxH ){
 
 
         if( anaMode ){  # build cutLst. anaMode일때만 필요. (aZoid생존여부는 alreadyDead에서 세팅되므로.)
+            idxFCol <- if( length(cutLst.fCol)==0 ) integer(0) else sapply( cutLst.fCol  ,function(p){p$idx} )
             idxReb  <- if( length(cutLst.reb)==0 ) integer(0) else sapply( cutLst.reb   ,function(p){p$idx} )
             idxRowE <- if( length(cutLst.rowE)==0 ) integer(0) else sapply( cutLst.rowE  ,function(p){p$idx} )
 
-            idxAll <- sort(union(idxReb,idxRowE))
+            idxAll <- union(idxFCol,idxReb)
+            idxAll <- sort(union(idxAll,idxRowE))
+
 
             cutLst <- list()
+            names(cutLst.fCol)  <- idxFCol
             names(cutLst.reb)   <- idxReb
             names(idxRowE)      <- idxRowE
 
@@ -256,6 +286,10 @@ HCR.stdCut_rawRow <- function( hName ,mName ,scoreMtxH ){
                 idStr <- as.character(aIdx)
 
                 cLst <- list()
+                if( !is.null(cutLst.fCol[[idStr]]) ){
+                    cLst[["rawFCol"]] <- cutLst.fCol[[idStr]]
+                    cLst[["rawFCol"]]$idObjDesc <- c( typ="rawFCol" ,rObj$defId )
+                }
                 if( !is.null(cutLst.reb[[idStr]]) ){
                     cLst[["rawReb"]] <- cutLst.reb[[idStr]]
                     cLst[["rawReb"]]$idObjDesc <- c( typ="rawReb" ,rObj$defId )
@@ -268,7 +302,6 @@ HCR.stdCut_rawRow <- function( hName ,mName ,scoreMtxH ){
                 cutLst[[idStr]] <- list( idx=aIdx ,cLst=cLst )
             }
         }
-
 
         return( list(cutLst=cutLst,surFlag=!alreadyDead) )
     }
@@ -307,9 +340,10 @@ HCR.cut1 <- function( scoreMtx.grp ,cut.grp ,anaOnly=T ,logger=NULL ){
 
     surFlag <- rep( T ,datLen )
 	auxInfoLst <- list( basic=list() ,mf=list() )
-    for( hName in cut.grp$mInfo$hName ){ # hName <- cut.grp$mInfo$hName[1]
+    for( hName in cut.grp$mInfo$hName ){ # 
 
-        for( mName in scMtxName ){ # mName <- scMtxName[1]
+        for( mName in scMtxName ){
+            # hName<-cut.grp$mInfo$hName[1]    ;mName <- scMtxName[1]
 
             scoreMtx <- scoreMtx.grp$basic[[mName]]
             cutObj <- cut.grp$cutterLst[[hName]]$stdCut[[mName]]
