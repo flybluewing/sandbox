@@ -13,7 +13,7 @@ if( TRUE ){
 
     fMaker <- function( mName ,crScrH ){
 
-        workMName <- c("score1","score2","sScore01","sScore02")        
+        workMName <- c("score1","score2","score3","score5","score8","score9")   # score 4,6,7 ºüÁü.
 
         rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,crScrH,warn=F) )
         rObj$getFilter <- function( crScrH=NULL ){
@@ -34,7 +34,7 @@ if( TRUE ){
 
     fMaker <- function( mName ,crScrH ){
 
-        workMName <- c("score1","score2","sScore01","sScore02")
+        workMName <- c("score1","score2","score3","score5","score8","score9")   # score 4,6,7 ºüÁü.
 
         rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,crScrH,warn=F) )
         rObj$getFilter <- function( crScrH=NULL ){
@@ -50,7 +50,7 @@ if( TRUE ){
 }
 
 mName <- "HCRreb_szC01R"    # rebCnt
-if( TRUE ){
+if( FALSE ){
 
     fMaker <- function( mName ,crScrH ){
         workMName <- c("score1","score2","sScore01","sScore02")

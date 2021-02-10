@@ -43,8 +43,8 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
     } else {
         tStmp <- Sys.time()
         testData.grp <- B.get_testData.grp( testSpan ,gEnv ,allIdxLst ,fRstLst ,tgt.scMtx=tgt.scMtx)
-        testData_HCR.grp <- HCR.get_testData.grp( testSpan ,crScrH ,allIdxLst ,fRstLst ,lastH=NULL ,tgt.scMtx=NULL )
         save( testData.grp ,file=sprintf("Obj_testData.grp.%d.%s.save",lastH,ifelse(is.null(tgt.scMtx),"all",tgt.scMtx) ) )
+        testData_HCR.grp <- HCR.get_testData.grp( testSpan ,crScrH ,allIdxLst ,fRstLst ,lastH=NULL ,tgt.scMtx=NULL )
         save( testData_HCR.grp ,file=sprintf("Obj_testData_HCR.grp.%d.%s.save",lastH,ifelse(is.null(tgt.scMtx),"all",tgt.scMtx) ) )
         tDiff <- Sys.time() - tStmp
     }
@@ -52,9 +52,10 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
 
     cutRstLst <- Bprll.stdCutTest( testData.grp ,tgt.scMtx ,testSpan ,exportObj=TRUE )
 
+
+    sfExport("tgt.scMtx")       ;sfExport("testData.grp")   ;sfExport("testData_HCR.grp")
     tStmp1 <- Sys.time()
     if( TRUE ){
-        sfExport("tgt.scMtx")       ;sfExport("testData.grp")   ;sfExport("testData_HCR.grp")
         prll.initHeader( )
         prllLog$fLogStr("- HCR ----------------------------",pTime=T)
 
