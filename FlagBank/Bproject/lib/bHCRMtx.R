@@ -50,10 +50,10 @@ if( TRUE ){
 }
 
 mName <- "HCRreb_szC01R"    # rebCnt
-if( FALSE ){
+if( TRUE ){
 
     fMaker <- function( mName ,crScrH ){
-        workMName <- c("score1","score2","sScore01","sScore02")
+        workMName <- c("score1","score2","score3","score5")
         rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,crScrH,warn=F) )
         rObj$szCol <- c( "r.ph" ,"r.fCol" ,"r.dblHpnFlg" )
 

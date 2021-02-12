@@ -34,7 +34,7 @@ if( FALSE ){
 }
 
 mName <- "HCRsz_bf01fCol"
-if( TRUE ){
+if( FALSE ){
     HCRMtxCfg[[mName]] <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
@@ -65,20 +65,20 @@ if( TRUE ){
 }
 
 mName <- "HCRreb_szC01R"
-if( FALSE ){
+if( TRUE ){
     HCRMtxCfg[[mName]] <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
-            "score1"=list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+            "score1"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
                             ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
                         ) 
-            ,"score2"=list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+            ,"score2"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
                             ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
                         )
-            ,"sScore01"=list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+            ,"score3"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
                             ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
                         )
-            ,"sScore02"=list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+            ,"score5"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
                             ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
                         )
         )
