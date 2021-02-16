@@ -48,6 +48,27 @@ if( TRUE ){
 
 }
 
+mName <- "HCRsz_bfavPh"
+if( TRUE ){
+    fMaker <- function( mName ,crScrH ){
+
+        workMName <- c("scoreLAr13","scoreLAr24","scoreLVr13","scoreLVr24")
+        workMName <- c( workMName ,"scoreLAc13","scoreLAc24","scoreLVc13","scoreLVc24" )
+        workMName <- c( workMName ,"scoreLAf13","scoreLAf24","scoreLVf13","scoreLVf24" )
+
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,crScrH,warn=F) )
+        rObj$getFilter <- function( crScrH=NULL ){
+            # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
+            fObj <- HCR.MtxTmpl_szReb( mName=mName ,wMLst=rObj$wMLst ,szColName="r.ph" ,szRowName="rebCnt" )
+            return( fObj )
+        }
+
+        return( rObj )
+    }
+    bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
+
+}
+
 mName <- "HCRsz_bf01fCol"
 if( TRUE ){
     #   mName 별 중복 카운트 수만 비교할 뿐, 중복 발생 fCol을 비교하는 것은 아님을 유의.
@@ -77,6 +98,29 @@ if( TRUE ){
 
         workMName <- c("score4","score6","score7","scoreA","scoreB","scoreC","scoreD","scoreE","scoreF")
         workMName <- c( workMName ,"scoreLAe13","scoreLAe24","scoreLVe13","scoreLVe24" )
+
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,crScrH,warn=F) )
+        rObj$getFilter <- function( crScrH=NULL ){
+            # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
+            fObj <- HCR.MtxTmpl_szReb( mName=mName ,wMLst=rObj$wMLst ,szColName="r.fCol" ,szRowName="rebCnt" )
+            return( fObj )
+        }
+
+        return( rObj )
+    }
+    bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
+
+}
+
+mName <- "HCRsz_bfavfCol"
+if( TRUE ){
+    #   mName 별 중복 카운트 수만 비교할 뿐, 중복 발생 fCol을 비교하는 것은 아님을 유의.
+
+    fMaker <- function( mName ,crScrH ){
+
+        workMName <- c("scoreLAr13","scoreLAr24","scoreLVr13","scoreLVr24")
+        workMName <- c( workMName ,"scoreLAc13","scoreLAc24","scoreLVc13","scoreLVc24" )
+        workMName <- c( workMName ,"scoreLAf13","scoreLAf24","scoreLVf13","scoreLVf24" )
 
         rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,crScrH,warn=F) )
         rObj$getFilter <- function( crScrH=NULL ){
@@ -128,6 +172,51 @@ if( TRUE ){
     bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
 
 }
+
+mName <- "HCRreb_szCAavR"    # rebCnt
+if( TRUE ){
+
+    fMaker <- function( mName ,crScrH ){
+        workMName <- c("scoreA","scoreB","scoreC","scoreD","scoreE","scoreF")
+        workMName <- c( workMName ,c("scoreLAe13","scoreLAe24","scoreLVe13","scoreLVe24") )
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,crScrH,warn=F) )
+        rObj$szCol <- c( "r.ph" ,"r.fCol" ,"r.dblHpnFlg" )
+
+        rObj$getFilter <- function( crScrH ){
+            fObj <- HCR.MtxTmpl_rebSz( mName=mName ,wMLst=rObj$wMLst ,crScrH ,szCol=rObj$szCol )
+            return( fObj )
+        }
+
+        return( rObj )
+    }
+    bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
+
+}
+
+mName <- "HCRreb_szCavR"
+if( TRUE ){
+
+    fMaker <- function( mName ,crScrH ){
+        workMName <- c("scoreLAr13","scoreLAr24","scoreLVr13","scoreLVr24")
+        workMName <- c( workMName ,"scoreLAc13","scoreLAc24","scoreLVc13","scoreLVc24" )
+        workMName <- c( workMName ,"scoreLAf13","scoreLAf24","scoreLVf13","scoreLVf24" )
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,crScrH,warn=F) )
+        rObj$szCol <- c( "r.ph" ,"r.fCol" ,"r.dblHpnFlg" )
+
+        rObj$getFilter <- function( crScrH ){
+            fObj <- HCR.MtxTmpl_rebSz( mName=mName ,wMLst=rObj$wMLst ,crScrH ,szCol=rObj$szCol )
+            return( fObj )
+        }
+
+        return( rObj )
+    }
+    bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
+
+}
+
+
+
+
 
 
 mName <- "HCRreb_szC01E"

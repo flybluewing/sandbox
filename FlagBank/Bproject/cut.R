@@ -5,7 +5,7 @@ if( FALSE ){    # document
     # lastH <- 933(for 934_1 stdIdx: 233713 )
 }
 
-lastH <- 898    # for H899_1
+lastH <- 950    # for H899_1
 tgt.scMtx <- NULL
 testMode <- F            #check
 prllNum <- 5
