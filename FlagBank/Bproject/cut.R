@@ -68,7 +68,7 @@ sprintf("hMtxLs,cut.grp    Time cost : %.1f%s",tDiff,units(tDiff))  # 17 min, 59
 # ----------------------------------------------------------------------------------
 
 for( sfcIdx in 0 ){ # 0:2
-    
+
     cutH.reportScoreHistory( hMtxLst ,rmEmptyCol=TRUE )
     # cutH.reportScoreHistory_bS( hMtxLst_bS ,rmEmptyCol=TRUE )
 
@@ -314,7 +314,7 @@ for( sfcIdx in 0 ){ # 0:2
     }
 
     # HCR.cut() ------------------------------------------------------------------
-    if( TRUE ){
+    if( FALSE ){
 
         aZoidMtx <- gEnv$allZoidMtx[allIdxF,,drop=F]
         scoreMtx.grp <- getScoreMtx.grp( aZoidMtx ,filter.grp ,makeInfoStr=T )

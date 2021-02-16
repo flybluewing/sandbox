@@ -4,6 +4,9 @@ bHCRMtxLst <- list()
 
 crScrH <- crScrHTool$getData()  # bHCRMtxLst 정의가 끝난 후, 마지막에 NULL 처리됨을 주의.
 
+# ------------------------------------------------------------------------------------------
+#   szMtx for bFMtx (Ph,fCol)
+# ------------------------------------------------------------------------------------------
 mName <- "HCRsz_bf01Ph"
 if( TRUE ){
     # scMtx.sz            r.ph r.fCol r.dblHpnFlg e.ph e.fCol e.dblHpnFlg
@@ -27,7 +30,6 @@ if( TRUE ){
     bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
 
 }
-
 mName <- "HCRsz_bf2APh"
 if( TRUE ){
     fMaker <- function( mName ,crScrH ){
@@ -47,7 +49,6 @@ if( TRUE ){
     bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
 
 }
-
 mName <- "HCRsz_bfavPh"
 if( TRUE ){
     fMaker <- function( mName ,crScrH ){
@@ -68,7 +69,6 @@ if( TRUE ){
     bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
 
 }
-
 mName <- "HCRsz_bf01fCol"
 if( TRUE ){
     #   mName 별 중복 카운트 수만 비교할 뿐, 중복 발생 fCol을 비교하는 것은 아님을 유의.
@@ -89,7 +89,6 @@ if( TRUE ){
     bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
 
 }
-
 mName <- "HCRsz_bf2AfCol"
 if( TRUE ){
     #   mName 별 중복 카운트 수만 비교할 뿐, 중복 발생 fCol을 비교하는 것은 아님을 유의.
@@ -111,7 +110,6 @@ if( TRUE ){
     bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
 
 }
-
 mName <- "HCRsz_bfavfCol"
 if( TRUE ){
     #   mName 별 중복 카운트 수만 비교할 뿐, 중복 발생 fCol을 비교하는 것은 아님을 유의.
@@ -135,7 +133,110 @@ if( TRUE ){
 
 }
 
-mName <- "HCRreb_szC01R"    # rebCnt
+# ------------------------------------------------------------------------------------------
+#   szMtx for bSMtx (Ph,fCol)
+# ------------------------------------------------------------------------------------------
+mName <- "HCRsz_bS01Ph"
+if( TRUE ){
+    # scMtx.sz            r.ph r.fCol r.dblHpnFlg e.ph e.fCol e.dblHpnFlg
+    #                 rebCnt    0      0           0    0      0           0
+    #                 rebDup    0      0           0    0      0           0
+    #   mName 별 중복 카운트 수만 비교할 뿐, 중복 발생 phase를 비교하는 것은 아님을 유의.
+
+    fMaker <- function( mName ,crScrH ){
+
+        workMName <- c("sScore01","sScore02","sScore03","sScore05","sScore08","sScore09")   # sScore 4,6,7 빠짐.
+
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,crScrH,warn=F) )
+        rObj$getFilter <- function( crScrH=NULL ){
+            # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
+            fObj <- HCR.MtxTmpl_szReb( mName=mName ,wMLst=rObj$wMLst ,szColName="r.ph" ,szRowName="rebCnt" )
+            return( fObj )
+        }
+
+        return( rObj )
+    }
+    bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
+}
+mName <- "HCRsz_bS2APh"
+if( TRUE ){
+    fMaker <- function( mName ,crScrH ){
+
+        workMName <- c("sScore04","sScore06","sScore07")
+        workMName <- c( workMName ,"sScore0LAe13","sScore0LAe24","sScore0LVe13","sScore0LVe24" )
+
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,crScrH,warn=F) )
+        rObj$getFilter <- function( crScrH=NULL ){
+            # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
+            fObj <- HCR.MtxTmpl_szReb( mName=mName ,wMLst=rObj$wMLst ,szColName="r.ph" ,szRowName="rebCnt" )
+            return( fObj )
+        }
+
+        return( rObj )
+    }
+    bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
+
+}
+mName <- "HCRsz_bSavPh"
+if( TRUE ){
+    fMaker <- function( mName ,crScrH ){
+
+        workMName <- c("sScore0LAr13","sScore0LAr24","sScore0LVr13","sScore0LVr24")
+        workMName <- c( workMName ,"sScore0LAc13","sScore0LAc24","sScore0LVc13","sScore0LVc24" )
+        workMName <- c( workMName ,"sScore0LAf13","sScore0LAf24","sScore0LVf13","sScore0LVf24" )
+
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,crScrH,warn=F) )
+        rObj$getFilter <- function( crScrH=NULL ){
+            # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
+            fObj <- HCR.MtxTmpl_szReb( mName=mName ,wMLst=rObj$wMLst ,szColName="r.ph" ,szRowName="rebCnt" )
+            return( fObj )
+        }
+
+        return( rObj )
+    }
+    bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
+
+}
+
+
+
+mName <- "HCRsz_bS01fCol"
+mName <- "HCRsz_bS2AfCol"
+mName <- "HCRsz_bSavfCol"
+
+
+
+# ------------------------------------------------------------------------------------------
+#   szMtx for bSMtx + bSMtx (Ph,fCol)
+# ------------------------------------------------------------------------------------------
+mName <- "HCRsz_bfS01Ph"
+if( TRUE ){
+    fMaker <- function( mName ,crScrH ){
+
+        workMName <- c("score1","score2","score3","score5","score8","score9")   # score 4,6,7 빠짐.
+        workMName <- c( workMName ,"sScore01","sScore02","sScore03","sScore05","sScore08","sScore09")   # sScore 4,6,7 빠짐.
+
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,crScrH,warn=F) )
+        rObj$getFilter <- function( crScrH=NULL ){
+            # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
+            fObj <- HCR.MtxTmpl_szReb( mName=mName ,wMLst=rObj$wMLst ,szColName="r.ph" ,szRowName="rebCnt" )
+            return( fObj )
+        }
+
+        return( rObj )
+    }
+    bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
+
+}
+
+
+
+
+
+# ------------------------------------------------------------------------------------------
+#   szMtx for bFMtx reb (r.ph,r.fCol,r.dblHpnFlg)
+# ------------------------------------------------------------------------------------------
+mName <- "HCRreb_szC01R"
 if( TRUE ){
 
     fMaker <- function( mName ,crScrH ){
@@ -153,8 +254,7 @@ if( TRUE ){
     bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
 
 }
-
-mName <- "HCRreb_szC02R"    # rebCnt
+mName <- "HCRreb_szC02R"
 if( TRUE ){
 
     fMaker <- function( mName ,crScrH ){
@@ -172,8 +272,7 @@ if( TRUE ){
     bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
 
 }
-
-mName <- "HCRreb_szCAavR"    # rebCnt
+mName <- "HCRreb_szCAavR"
 if( TRUE ){
 
     fMaker <- function( mName ,crScrH ){
@@ -192,7 +291,6 @@ if( TRUE ){
     bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
 
 }
-
 mName <- "HCRreb_szCavR"
 if( TRUE ){
 
@@ -214,15 +312,82 @@ if( TRUE ){
 
 }
 
-
-
-
-
-
+# ------------------------------------------------------------------------------------------
+#   szMtx for bFMtx reb (e.ph,e.fCol,e.dblHpnFlg)
+# ------------------------------------------------------------------------------------------
 mName <- "HCRreb_szC01E"
+mName <- "HCRreb_szC02E"
+mName <- "HCRreb_szCAavE"
+mName <- "HCRreb_szCavE"
 
-mName <- "HCRreb_szD01R"    # rebDup
-mName <- "HCRreb_szD01E"
+# ------------------------------------------------------------------------------------------
+#   szMtx for bSMtx reb (r.ph,r.fCol,r.dblHpnFlg)
+# ------------------------------------------------------------------------------------------
+mName <- "HCRreb_szS01R"
+mName <- "HCRreb_szS02R"
+mName <- "HCRreb_szSAavR"
+mName <- "HCRreb_szSavR"
+
+# ------------------------------------------------------------------------------------------
+#   szMtx for bSMtx reb (e.ph,e.fCol,e.dblHpnFlg)
+# ------------------------------------------------------------------------------------------
+mName <- "HCRreb_szS01E"
+mName <- "HCRreb_szS02E"
+mName <- "HCRreb_szSAavE"
+mName <- "HCRreb_szSavE"
+
+
+#   work New
+# ------------------------------------------------------------------------------------------
+#   ph reb by mNames for bfMtx raw
+# ------------------------------------------------------------------------------------------
+mName <- "HCRreb_phRawF01"
+if( FALSE ){
+    fMaker <- function( mName ,crScrH ){
+        workMName <- c("score1","score2","score3","score4")
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,crScrH,warn=F) )
+
+        rObj$getFilter <- function( crScrH ){
+            fObj <- HCR.MtxTmpl_phReb_raw( mName ,wMName=rObj$wMLst$bf ,crScrH ,mGrp="std.grp" )
+            return( fObj )
+        }
+
+        return( rObj )
+    }
+    bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
+}
+
+#   work New
+# ------------------------------------------------------------------------------------------
+#   ph reb by mNames for bSMtx raw
+# ------------------------------------------------------------------------------------------
+mName <- "HCRreb_phRawS01"
+if( FALSE ){
+    fMaker <- function( mName ,crScrH ){
+        workMName <- c("sScore01","sScore02","sScore03","sScore04")
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,crScrH,warn=F) )
+
+        rObj$getFilter <- function( crScrH ){
+            fObj <- HCR.MtxTmpl_phReb_raw( mName ,wMName=rObj$wMLst$bS ,crScrH ,mGrp="bS.grp" )
+            return( fObj )
+        }
+
+        return( rObj )
+    }
+    bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
+}
+
+
+#   work New
+# ------------------------------------------------------------------------------------------
+#   ph reb by mNames for fMtx sz
+# ------------------------------------------------------------------------------------------
+
+
+
+
+
 
 
 # crScrH <- NULL
+

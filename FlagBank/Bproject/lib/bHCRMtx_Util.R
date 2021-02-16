@@ -507,3 +507,69 @@ HCR.MtxTmpl_rebSz <- function( mName=mName ,wMLst=rObj$wMLst ,crScrH ,szCol ){
     return( rObj )
 
 }
+
+HCR.MtxTmpl_phReb_raw <- function( mName ,wMName ,crScrH ,mGrp ){
+    # mGrp : std.grp bS.grp
+
+        # rebMtx.ph                   colVal1 colVal3 colVal6 remPair zw cSCVal1 cSCVal2 cSCVal3 cSCVal4 cSCVal5
+        #                 rebFlag.raw       0       0       0       0  0       0       0       0       0       0
+        #                 hpn.raw           0       1       0       0  0       0       0       0       0       3
+
+	rObj <- list( mInfo=c("mName"=mName ,"mGrp"=mGrp ) ,wMName=wMName )
+
+    crScrL <- crScrH[[mGrp]][[length(crScrH$stdIdx)]]   # crScr Late
+    rObj$cName <- colnames( crScrL$sfcLate$basic[[1]]$raw$rebMtx.ph )
+
+    rObj$getRebMtx <- function( crScr ,wMName ,cName ){
+        # wMName<-rObj$wMName    ;cName<-rObj$cName
+        rMtx <- matrix( 0 ,nrow=length(wMName) ,ncol=length(cName) ,dimnames=list(wMName,cName) )
+        for( phIdx in cName ){
+            rMtx[,phIdx] <- sapply( crScrL$sfcLate$basic[wMName] ,function(mObj){ 
+                return( mObj$raw$rebMtx.ph["rebFlag.raw",phIdx] )
+            })
+        }
+        return( rMtx )
+    }
+
+    rObj$lastMtx <- rObj$getRebMtx( crScrL ,wMName=rObj$wMName ,cName=rObj$cName )
+    rObj$availPh <- !apply(rObj$lastMtx ,2 ,function(rDat){ all(0==rDat) })   # 모두 0인 ph는 비교작업이 필요 없으니까..
+
+
+    rObj$fMtxObj <- function( crScrA ){
+        #   debug  crScrA <- crScrH
+        datLen <- length(crScrA$std.grp) ;datNam <- names(crScrA$std.grp) # datNam은 NULL일 수도 있다.
+
+        scrMtx <- matrix( 0 ,nrow=datLen ,ncol=length(rObj$cName) ,dimnames=list(datNam,rObj$cName) )
+        if( all(!rObj$availPh) ){
+            return( scrMtx )
+        }
+
+        for( rIdx in seq_len(datLen) ){
+            std.grp <- crScrA$std.grp[[rIdx]]$sfcLate$basic
+            bS.grp <- crScrA$bS.grp[[rIdx]]$sfcLate$basic
+
+            crScr <- crScrA[[ rObj$mInfo["mGrp"] ]][[rIdx]]
+            mtxA <- rObj$getRebMtx( crScr ,wMName=rObj$wMName ,cName=rObj$cName )
+
+            for( phIdx in rObj$cName ){
+                if( !rObj$availPh[phIdx] ) next
+
+                matchF <- rObj$lastMtx[,phIdx]==mtxA[,phIdx]
+                if( all(matchF) ){
+                    scrMtx[rIdx,phIdx] <- sum( mtxA[,phIdx]>0 )   # hpnCnt로 할까... hpnMax로 할까.
+                }
+            }
+        }
+
+        return( scrMtx )
+    }
+
+
+    return( rObj )
+
+}
+
+HCR.MtxTmpl_phReb_sz <- function( ){
+    # working  sz를 위한 HCR.MtxTmpl_phReb
+    #   crScrH 에서 raw만 있고 sz는 없어서 아직 적용 불가.
+}

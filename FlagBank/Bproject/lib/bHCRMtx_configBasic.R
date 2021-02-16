@@ -1,8 +1,10 @@
 HCRMtxCfg <- list()
 
-
+# ------------------------------------------------------------------------------------------
+#   szMtx for bFMtx (Ph,fCol)
+# ------------------------------------------------------------------------------------------
 mName <- "HCRsz_bf01Ph"
-if( TRUE ){ # done. OK
+if( FALSE ){ # done. OK
     HCRMtxCfg[[mName]] <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
@@ -32,9 +34,8 @@ if( TRUE ){ # done. OK
     )
 
 }
-
 mName <- "HCRsz_bf2APh"
-if( TRUE ){ # done. OK
+if( FALSE ){ # done. OK
     HCRMtxCfg[[mName]] <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
@@ -90,9 +91,8 @@ if( TRUE ){ # done. OK
     )
 
 }
-
 mName <- "HCRsz_bfavPh"
-if( TRUE ){ # done. OK
+if( FALSE ){ # done. OK
     HCRMtxCfg[[mName]] <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
@@ -139,10 +139,8 @@ if( TRUE ){ # done. OK
     )
 
 }
-
-
 mName <- "HCRsz_bf01fCol"
-if( TRUE ){ # done. OK
+if( FALSE ){ # done. OK
     HCRMtxCfg[[mName]] <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
@@ -171,9 +169,8 @@ if( TRUE ){ # done. OK
     )
 
 }
-
 mName <- "HCRsz_bf2AfCol"
-if( TRUE ){ # done. OK
+if( FALSE ){ # done. OK
     HCRMtxCfg[[mName]] <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
@@ -223,9 +220,8 @@ if( TRUE ){ # done. OK
     )
 
 }
-
 mName <- "HCRsz_bfavfCol"
-if( TRUE ){ # done. OK
+if( FALSE ){ # done. OK
     HCRMtxCfg[[mName]] <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
@@ -273,9 +269,180 @@ if( TRUE ){ # done. OK
 
 }
 
+# ------------------------------------------------------------------------------------------
+#   szMtx for bSMtx (Ph,fCol)
+# ------------------------------------------------------------------------------------------
+mName <- "HCRsz_bS01Ph"
+if( TRUE ){ # done. OK
+    HCRMtxCfg[[mName]] <- list(
+        mName = mName   ,style=c( freqZero=TRUE )
+        ,fCol = list(
+            "sScore01"=list( rng=matrix( c(0,0 ,0,4) ,ncol=2 )
+                            ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        ) 
+            ,"sScore02"=list( rng=matrix( c(0,0 ,0,4) ,ncol=2 )
+                            ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"sScore03"=list( rng=matrix( c(0,0 ,0,4) ,ncol=2 )
+                            ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"sScore05"=list( rng=matrix( c(0,0 ,0,4) ,ncol=2 )
+                            ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"sScore08"=list( rng=matrix( c(0,0 ,0,4) ,ncol=2 )
+                            ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"sScore09"=list( rng=matrix( c(0,0 ,0,4) ,ncol=2 )
+                            ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+        )
+        ,evtMax = NULL
+        ,rowReb = c( rawMin=2 ,lowE=2,rareE=1 ,dupESum=2 )
+        ,isHard=NULL  # use default
+    )
+
+}
+mName <- "HCRsz_bS2APh"
+if( FALSE ){
+    HCRMtxCfg[[mName]] <- list(
+        mName = mName   ,style=c( freqZero=TRUE )
+        ,fCol = list(
+            "sScore04"=list( rng=matrix( c(0,0 ,10,14) ,ncol=2 )
+                            ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        ) 
+            ,"sScore06"=list( rng=matrix( c(0,0 ,0,4) ,ncol=2 )
+                            ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"sScore07"=list( rng=matrix( c(0,0 ,0,4) ,ncol=2 )
+                            ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"sScore0LAe13"=list( rng=matrix( c(0,0 ,0,4) ,ncol=2 )
+                            ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"sScore0LAe24"=list( rng=matrix( c(0,0 ,0,4) ,ncol=2 )
+                            ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"sScore0LVe13"=list( rng=matrix( c(0,0 ,0,4) ,ncol=2 )
+                            ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"sScore0LVe24"=list( rng=matrix( c(0,0 ,0,4) ,ncol=2 )
+                            ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+        )
+        ,evtMax = NULL
+        ,rowReb = NULL  # c( rawMin=1 ,lowE=3 ,rareE=1 ,dupESum=2 )
+        ,isHard=NULL  # use default
+    )
+}
+mName <- "HCRsz_bSavPh"
+if( FALSE ){
+    HCRMtxCfg[[mName]] <- list(
+        mName = mName   ,style=c( freqZero=TRUE )
+        ,fCol = list(
+            "sScore0LAr13"=list( rng=matrix( c(0,0 ,10,14) ,ncol=2 )
+                            ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        ) 
+            ,"sScore0LAr24"=list( rng=matrix( c(0,0 ,0,4) ,ncol=2 )
+                            ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"sScore0LVr13"=list( rng=matrix( c(0,0 ,0,4) ,ncol=2 )
+                            ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"sScore0LVr24"=list( rng=matrix( c(0,0 ,0,4) ,ncol=2 )
+                            ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"sScore0LAc13"=list( rng=matrix( c(0,0 ,0,4) ,ncol=2 )
+                            ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"sScore0LAc24"=list( rng=matrix( c(0,0 ,0,4) ,ncol=2 )
+                            ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"sScore0LVc13"=list( rng=matrix( c(0,0 ,0,4) ,ncol=2 )
+                            ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"sScore0LVc24"=list( rng=matrix( c(0,0 ,0,4) ,ncol=2 )
+                            ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"sScore0LAf13"=list( rng=matrix( c(0,0 ,0,4) ,ncol=2 )
+                            ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"sScore0LAf24"=list( rng=matrix( c(0,0 ,0,4) ,ncol=2 )
+                            ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"sScore0LVf13"=list( rng=matrix( c(0,0 ,0,4) ,ncol=2 )
+                            ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"sScore0LVf24"=list( rng=matrix( c(0,0 ,0,4) ,ncol=2 )
+                            ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+        )
+        ,evtMax = NULL
+        ,rowReb = NULL  # c( rawMin=1 ,lowE=3 ,rareE=1 ,dupESum=2 )
+        ,isHard=NULL  # use default
+    )
+
+}
+
+
+# ------------------------------------------------------------------------------------------
+#   szMtx for bfMtx + bSMtx (Ph,fCol)
+# ------------------------------------------------------------------------------------------
+mName <- "HCRsz_bfS01Ph"
+if( TRUE ){
+    HCRMtxCfg[[mName]] <- list(
+        mName = mName   ,style=c( freqZero=TRUE )
+        ,fCol = list(
+            "score1"=list( rng=matrix( c(0,0 ,0,4) ,ncol=2 )
+                            ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        ) 
+            ,"score2"=list( rng=matrix( c(0,0 ,0,4) ,ncol=2 )
+                            ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"score3"=list( rng=matrix( c(0,0 ,0,4) ,ncol=2 )
+                            ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
+                            ,freqVal=c(1)
+                        )
+            ,"score5"=list( rng=matrix( c(0,0 ,0,4) ,ncol=2 )
+                            ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"score8"=list( rng=matrix( c(0,0 ,0,4) ,ncol=2 )
+                            ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"score9"=list( rng=matrix( c(0,0 ,0,4) ,ncol=2 )
+                            ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"sScore01"=list( rng=matrix( c(0,0 ,0,4) ,ncol=2 )
+                            ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        ) 
+            ,"sScore02"=list( rng=matrix( c(0,0 ,0,4) ,ncol=2 )
+                            ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"sScore03"=list( rng=matrix( c(0,0 ,0,4) ,ncol=2 )
+                            ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"sScore05"=list( rng=matrix( c(0,0 ,0,4) ,ncol=2 )
+                            ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"sScore08"=list( rng=matrix( c(0,0 ,0,4) ,ncol=2 )
+                            ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"sScore09"=list( rng=matrix( c(0,0 ,0,4) ,ncol=2 )
+                            ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+        )
+        ,evtMax = NULL
+        ,rowReb = c( rawMin=1 ,lowE=3,rareE=1 ,dupESum=2 )
+        ,isHard=NULL  # use default
+    )
+
+}
+
+
+
+
 
 mName <- "HCRreb_szC01R"    # HCRreb_szC는 발생 자체가 희귀하긴 하다.
-if( TRUE ){ # done. OK
+if( FALSE ){ # done. OK
     HCRMtxCfg[[mName]] <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
@@ -300,7 +467,7 @@ if( TRUE ){ # done. OK
 }
 
 mName <- "HCRreb_szC02R"
-if( TRUE ){ # done. OK
+if( FALSE ){ # done. OK
     HCRMtxCfg[[mName]] <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
@@ -328,7 +495,7 @@ if( TRUE ){ # done. OK
 }
 
 mName <- "HCRreb_szCAavR"
-if( TRUE ){ # done. OK
+if( FALSE ){ # done. OK
     HCRMtxCfg[[mName]] <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
@@ -371,7 +538,7 @@ if( TRUE ){ # done. OK
 }
 
 mName <- "HCRreb_szCavR"
-if( TRUE ){ # done. OK
+if( FALSE ){ # done. OK
     HCRMtxCfg[[mName]] <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
