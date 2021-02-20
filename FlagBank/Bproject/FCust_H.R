@@ -1017,7 +1017,7 @@ FCust_stdCut.hIdx <- function( hName ,mName ,mtxLst ){
             scMtx.sz["rebCnt","e.fCol"] <- sum(rebInfo$matEvt$fCol["mat",])
             scMtx.sz["rebCnt","e.dblHpnFlg"] <- rebInfo$matEvt$dblHpn["mat"]
 
-            if( !is.null(rObj$szObj$rebInfo) ){
+            if( !is.null(rObj$szObj$rebInfo) ){ # reb Dup
                 matFlag <- (rObj$szObj$rebInfo$matRaw$ph["mat",]>0) & (rebInfo$matRaw$ph["mat",]>0)
                 scMtx.sz["rebDup","r.ph"] <- sum( matFlag )
                 matFlag <- (rObj$szObj$rebInfo$matRaw$fCol["mat",]>0) & (rebInfo$matRaw$fCol["mat",]>0)

@@ -197,6 +197,21 @@ cutH.bS.Cut <- function( gEnv ,allIdxF ,hMtxLst_bS ,fHName ,tgt.scMtx=NULL ,prll
     return( allIdxF )
 }
 
+cutH.bN.Cut <- function( gEnv ,allIdxF ,hMtxLst_bN ,fHName ,tgt.scMtx=NULL ,prllLog ){
+
+    stdMI.grp   <- bN.getStdMILst( gEnv ,fRstLst )          ;stdMI.grp$anyWarn( )
+    cut.grp     <- bN.getFCustGrp( hMtxLst_bN ,tgt.scMtx )
+    filter.grp  <- bN.getFilter.grp( stdMI.grp ,tgt.scMtx=tgt.scMtx )
+
+
+
+    # scoreMtx.grp <- getScoreMtx.grp( gEnv$allZoidMtx[allIdxF[blkSpan],,drop=F] ,filter.grp ,tgt.scMtx=tgt.scMtx )
+    # crCutRst <- bC.cut( crMName ,scoreMtx.grp ,cut.grp ,fHName ,anaOnly=F )
+
+    return( allIdxF )
+}
+
+
 cutH.HCR.cut <- function( gEnv ,allIdxF ,crScrA ,hMtxLst_HCR ,fHName ,tgt.scMtx=NULL ,prllLog ){
     # Æó±â
     #   working
@@ -354,6 +369,7 @@ cutH.reportScoreHistory <- function( hMtxLst ,rmEmptyCol=TRUE ){
 }
 
 # cutH.reportScoreHistory_bS
+
 
 
 # Code BackUp

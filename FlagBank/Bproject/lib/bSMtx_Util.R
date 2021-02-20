@@ -554,7 +554,7 @@ bS.cut <- function( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=NULL ,anaOnly=T ,lo
 
 
 #   return 값 : tgt.scMtx에 해당 mName이 없는 경우, cutRst1Score$aLst[[n]] 은 NULL이다.
-bS.getCut1Score <- function(  scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=NULL ,logger=NULL ){
+bS.getCut1Score <- function(  scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=NULL ,logger=NULL ,deepInfo=F ){
 
 	reportStatus <- function( tStmp ,strWhere ,surFlag ,logger ){
 		#	strWhere <- sprintf("[%s,%s] stdLst",hName,mName)
@@ -597,6 +597,11 @@ bS.getCut1Score <- function(  scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=NULL ,log
 				summObj <- hIdxCut$getSummScore( rawObj )
 
 				basicLst[[mName]] <- list(raw=raw4Ass ,summ=summObj)
+				if( deepInfo){
+                    # sz 정보추가.
+					#   rawObj$rebInfo 는 bFCust.getSkipZero_byHIdx.ass() 로부터 나왔음.
+					basicLst[[mName]]$rawSz <- list( ph=rawObj$rebInfo$matRaw$ph ,fCol=rawObj$rebInfo$matRaw$fCol )
+				}
 				reportStatus( tStmp ,sprintf("[%s,%s] hIdxLst",hName,mName) ,surFlag ,logger )
 			}
 

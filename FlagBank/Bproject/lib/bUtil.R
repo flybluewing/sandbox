@@ -197,7 +197,7 @@ bUtil.cut1 <- function( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=NULL ,anaOnly=F
 
 } # bUtil.cut1()
 
-bUtil.getCut1Score <- function(  scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=NULL ,logger=NULL ){
+bUtil.getCut1Score <- function(  scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=NULL ,logger=NULL ,deepInfo=F ){
 
 	reportStatus <- function( tStmp ,strWhere ,surFlag ,logger ){
 		#	strWhere <- sprintf("[%s,%s] stdLst",hName,mName)
@@ -234,6 +234,11 @@ bUtil.getCut1Score <- function(  scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=NULL ,
 				summObj <- hIdxCut$getSummScore( rawObj )
 
 				basicLst[[mName]] <- list(raw=raw4Ass ,summ=summObj)
+				if( deepInfo){
+					# rawObj$rebInfo 는 bFCust.getSkipZero_byHIdx.ass() 로부터 나왔다.
+					basicLst[[mName]]$rawSz <- list( ph=rawObj$rebInfo$matRaw$ph ,fCol=rawObj$rebInfo$matRaw$fCol )
+				}
+
 				reportStatus( tStmp ,sprintf("[%s,%s] hIdxLst",hName,mName) ,surFlag ,logger )
 			}
 
@@ -2280,14 +2285,14 @@ BUtil.makeCrScrHTool <- function(){
 			stdMI.grp <- bUtil.getStdMILst( gEnv.w ,fRstLst.w )
 			filter.grp <- getFilter.grp( stdMI.grp ,tgt.scMtx=tgt.scMtx )
 			scoreMtx.grp <- getScoreMtx.grp( matrix(stdZoid,nrow=1) ,filter.grp ,makeInfoStr=T )
-			std.grp <- bUtil.getCut1Score( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx )
+			std.grp <- bUtil.getCut1Score( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx ,deepInfo=T )	# deepInfo : sz 정보 추가
 
 			hMtxLst_bS <- bS.makeHMtxLst( gEnv.w, allIdxLst.w, fRstLst.w ,tgt.scMtx )
 			aZoidMtx <- matrix(stdZoid ,nrow=1) # Bprll.bSCut() 참고
 			phVP.grp <- bS.getPhVPGrp( gEnv.w ,aZoidMtx )
 			scoreMtx.grp <- bS.getScoreMtx.grp( phVP.grp ,aZoidMtx ,tgt.scMtx=tgt.scMtx )
 			cut.grp <- bS.getCutGrp( hMtxLst_bS ,tgt.scMtx )
-			bS.grp <- bS.getCut1Score( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx )
+			bS.grp <- bS.getCut1Score( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx ,deepInfo=T )	# deepInfo : sz 정보 추가
 
 			return( list(idStr=idStr ,stdIdx=stdIdx,std.grp=std.grp,bS.grp=bS.grp) )
 		})

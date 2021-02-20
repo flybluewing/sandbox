@@ -27,6 +27,11 @@ source("./lib/bSMtx_ConfigBasic.R") ;source("./lib/bSMtx_ConfigBasicExt.R")
 source("./lib/bHCRMtx_Util.R")
 source("./lib/bHCRMtx.R")           ;source("./lib/bHCRMtx_configBasic.R")
 
+source("./lib/bNMtx_Util.R")        ;source("./lib/bNMtx.R")
+source("./lib/bNMtx_configBasic.R")
+
+
+
 source("./lib/FinalCut_H.R")
 
 source("FCust_H.R")

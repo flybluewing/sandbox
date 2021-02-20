@@ -1,8 +1,8 @@
 source("header.r")  ;source("B_H.R")    ;source("cut_H.R")
 if( FALSE ){    # document
-    # lastH <- 893(for 894_1 stdIdx:7913455 )
-    # lastH <- 898(for 899_1 stdIdx:5739750   allIdxLst 작성 필요)
-    # lastH <- 933(for 934_1 stdIdx: 233713 )
+    # lastH <- 893(for 894_1 stdIdx:7913455 )   16
+    # lastH <- 898(for 899_1 stdIdx:5739750 )
+    # lastH <- 933(for 934_1 stdIdx: 233713 )   26
 }
 
 lastH <- 950    # for H899_1
@@ -49,13 +49,16 @@ crScrH <- crScrHTool$getData( )     ;crScrH <- crScrHTool$bySpan(crScrH,lastH)
 if( TRUE ){     #   hMtxLst ,hMtxLst_bS
     load( sprintf("./save/finalCut/Obj_cut_hMtxLst_%d.save",lastH)      )   # hMtxLst
     load( sprintf("./save/finalCut/Obj_cut_hMtxLst_bS_%d.save",lastH)   )   # hMtxLst_bS
+    load( sprintf("./save/finalCut/Obj_cut_hMtxLst_bN_%d.save",lastH)   )   # hMtxLst_bN
     load( sprintf("./save/finalCut/Obj_cut_hMtxLst_HCR_%d.save",lastH)  )   # hMtxLst_HCR
 } else {
     hMtxLst <- B.makeHMtxLst( gEnv, allIdxLst, fRstLst, lastH=lastH, tgt.scMtx )
     hMtxLst_bS <- bS.makeHMtxLst( gEnv, allIdxLst, fRstLst ,tgt.scMtx )
+    hMtxLst_bN <- bN.makeHMtxLst( gEnv, allIdxLst, fRstLst ,tgt.scMtx ,lastH=lastH )
     hMtxLst_HCR <- HCR.makeHCRMtxLst( crScrH ,allIdxLst ,fRstLst ,lastH=NULL ,tgt.scMtx=tgt.scMtx )
     save( hMtxLst       ,file=sprintf("./save/finalCut/Obj_cut_hMtxLst_%d.save",lastH)      )
     save( hMtxLst_bS    ,file=sprintf("./save/finalCut/Obj_cut_hMtxLst_bS_%d.save",lastH)   )
+    save( hMtxLst_bN    ,file=sprintf("./save/finalCut/Obj_cut_hMtxLst_bN_%d.save",lastH)   )
     save( hMtxLst_HCR   ,file=sprintf("./save/finalCut/Obj_cut_hMtxLst_HCR_%d.save",lastH)  )
 }
 cut.grp <- bFCust.getFCustGrp( hMtxLst ,tgt.scMtx )
@@ -299,9 +302,8 @@ for( sfcIdx in 0 ){ # 0:2
     }   # sprintf("./save/cutResult/Obj_allIdxF%d_chkStdMIPair_%d.save",sfcIdx,lastH)
 
 
-    # bS.cut() ------------------------------------------------------------------
+    # bS.cut() ---<2 hours>---------------------------------------------------------------
     if( TRUE ){
-
         # cutH.bS.Cut() ------------------------------------------------------------------
         allIdxF <- cutH.bS.Cut( gEnv ,allIdxF ,hMtxLst_bS ,fHName ,tgt.scMtx=tgt.scMtx ,prllLog )
 
@@ -309,8 +311,15 @@ for( sfcIdx in 0 ){ # 0:2
                             ,pTime=T
         )
         if( saveMidResult ) save( allIdxF ,file=sprintf("./save/cutResult/Obj_allIdxF%d_bScut_%d.save",sfcIdx,lastH) )
+    }
 
-        # aux() ------------------------------------------------------------------
+    # bN.cut() ---<2 hours>---------------------------------------------------------------
+    if( TRUE ){
+        allIdxF <- cutH.bN.Cut( gEnv ,allIdxF ,hMtxLst_bN ,fHName ,tgt.scMtx=NULL ,prllLog )
+        prllLog$fLogStr(    sprintf("   - cutH.bS.Cut( )   final survival size :%7d",length(allIdxF))
+                            ,pTime=T
+        )
+        if( saveMidResult ) save( allIdxF ,file=sprintf("./save/cutResult/Obj_allIdxF%d_bScut_%d.save",sfcIdx,lastH) )
     }
 
     # HCR.cut() ------------------------------------------------------------------
@@ -345,8 +354,8 @@ for( sfcIdx in 0 ){ # 0:2
 
     rptStr <- sprintf( "allIdxF size : %d" ,length(allIdxF) )
     prllLog$fLogStr( rptStr, pTime=T)   ;rptStr
-    save( allIdxF ,file=sprintf("./save/finalCut/Obj_allIdxF_%d_grp%d.save",lastH,sfcIdx) )
-    cat(sprintf("saved in %s\n",sprintf("./save/finalCut/Obj_allIdxF_%d_grp%d.save",lastH,sfcIdx)))
+    finalSaveFile <- sprintf("./save/finalCut/Obj_allIdxF_%d_grp%d.save",lastH,sfcIdx)
+    save( allIdxF ,file=finalSaveFile )             ;cat(sprintf("saved in %s\n",finalSaveFile))
 
     logFileName <- sprintf("allIdxF_%d_grp%d.txt",lastH,sfcIdx)
     cutH.logAllIdxF( allIdxF ,gEnv ,logFileName=logFileName )
