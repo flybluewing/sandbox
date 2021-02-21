@@ -202,10 +202,9 @@ cutH.bN.Cut <- function( gEnv ,allIdxF ,hMtxLst_bN ,fHName ,tgt.scMtx=NULL ,prll
     stdMI.grp   <- bN.getStdMILst( gEnv ,fRstLst )          ;stdMI.grp$anyWarn( )
     cut.grp     <- bN.getFCustGrp( hMtxLst_bN ,tgt.scMtx )
     filter.grp  <- bN.getFilter.grp( stdMI.grp ,tgt.scMtx=tgt.scMtx )
+    scoreMtx.grp<- bN.getScoreMtx.grp( gEnv$allZoidMtx[allIdxF,,drop=F] ,filter.grp ,tgt.scMtx=tgt.scMtx )
 
-
-
-    # scoreMtx.grp <- getScoreMtx.grp( gEnv$allZoidMtx[allIdxF[blkSpan],,drop=F] ,filter.grp ,tgt.scMtx=tgt.scMtx )
+    cutRst1 <- bN.cut1( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx ,anaOnly=F ) 
     # crCutRst <- bC.cut( crMName ,scoreMtx.grp ,cut.grp ,fHName ,anaOnly=F )
 
     return( allIdxF )

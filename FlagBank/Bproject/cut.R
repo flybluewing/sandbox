@@ -313,8 +313,8 @@ for( sfcIdx in 0 ){ # 0:2
         if( saveMidResult ) save( allIdxF ,file=sprintf("./save/cutResult/Obj_allIdxF%d_bScut_%d.save",sfcIdx,lastH) )
     }
 
-    # bN.cut() ---<2 hours>---------------------------------------------------------------
-    if( TRUE ){
+    # bN.cut() ---<N hours>---------------------------------------------------------------
+    if( FALSE ){
         allIdxF <- cutH.bN.Cut( gEnv ,allIdxF ,hMtxLst_bN ,fHName ,tgt.scMtx=NULL ,prllLog )
         prllLog$fLogStr(    sprintf("   - cutH.bS.Cut( )   final survival size :%7d",length(allIdxF))
                             ,pTime=T

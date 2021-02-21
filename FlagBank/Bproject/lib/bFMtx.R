@@ -62,8 +62,8 @@ getScoreMtx.grp_byFCol <- function( scoreMtx.grp ){
 	#	scoreMtx의 각 fCol 별 Mtx. column은 phase.
 	#		(Column이 phase 이므로 기본 phase만 가능하다.)
 	phaseName <- names(scoreMtx.grp$basic)
-	mtxInfoLst <- lapply(scoreMtx.grp$basic$basic ,function( scoreObj ){ colnames(scoreObj$scoreMtx) })
-	rowSize <- nrow(scoreMtx.grp$basic[["basic"]][[1]]$scoreMtx)
+	mtxInfoLst <- lapply(scoreMtx.grp$basic[[1]] ,function( scoreObj ){ colnames(scoreObj$scoreMtx) })
+	rowSize <- nrow(scoreMtx.grp$basic[[1]][[1]]$scoreMtx)
 
 	# hMtx_byFCol[["sfcLate"]][["score2"]][["rebV.r"]]
 	mLst <- list()
@@ -93,12 +93,12 @@ getScoreMtx.grp_byHIdx <- function( scoreMtx.grp ,tgt.scMtx=NULL ){
 	phaseName <- names(scoreMtx.grp$basic)
 	mtxInfoLst <- list()
 	if( is.null(tgt.scMtx) ){
-		mtxInfoLst <- lapply(scoreMtx.grp$basic$basic ,function( scoreObj ){ colnames(scoreObj$scoreMtx) })
+		mtxInfoLst <- lapply(scoreMtx.grp$basic[[1]] ,function( scoreObj ){ colnames(scoreObj$scoreMtx) })
 	} else {
-		mtxInfoLst <- lapply(scoreMtx.grp$basic$basic[tgt.scMtx] ,function( scoreObj ){ colnames(scoreObj$scoreMtx) })
+		mtxInfoLst <- lapply(scoreMtx.grp$basic[[1]][tgt.scMtx] ,function( scoreObj ){ colnames(scoreObj$scoreMtx) })
 	}
 
-	rowSize <- nrow(scoreMtx.grp$basic[["basic"]][[1]]$scoreMtx)
+	rowSize <- nrow(scoreMtx.grp$basic[[1]][[1]]$scoreMtx)
 
 	# hMtx_byHIdx[["sfcLate"]][["score2"]][["820"]]
 	mLst <- list()
