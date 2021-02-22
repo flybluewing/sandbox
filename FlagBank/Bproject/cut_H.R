@@ -198,6 +198,8 @@ cutH.bS.Cut <- function( gEnv ,allIdxF ,hMtxLst_bS ,fHName ,tgt.scMtx=NULL ,prll
 }
 
 cutH.bN.Cut <- function( gEnv ,allIdxF ,hMtxLst_bN ,fHName ,tgt.scMtx=NULL ,prllLog ){
+    # 작업 중...
+    #   bN.get_testData.grp() 도 작성 필요.
 
     stdMI.grp   <- bN.getStdMILst( gEnv ,fRstLst )          ;stdMI.grp$anyWarn( )
     cut.grp     <- bN.getFCustGrp( hMtxLst_bN ,tgt.scMtx )
@@ -205,7 +207,7 @@ cutH.bN.Cut <- function( gEnv ,allIdxF ,hMtxLst_bN ,fHName ,tgt.scMtx=NULL ,prll
     scoreMtx.grp<- bN.getScoreMtx.grp( gEnv$allZoidMtx[allIdxF,,drop=F] ,filter.grp ,tgt.scMtx=tgt.scMtx )
 
     cutRst1 <- bN.cut1( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx ,anaOnly=F ) 
-    # crCutRst <- bC.cut( crMName ,scoreMtx.grp ,cut.grp ,fHName ,anaOnly=F )
+    # csr <- bN.getCut1Score( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx ,deepInfo=T )
 
     return( allIdxF )
 }

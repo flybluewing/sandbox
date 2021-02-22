@@ -602,27 +602,11 @@ bS.getCut1Score <- function(  scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=NULL ,log
 					#   rawObj$rebInfo 는 bFCust.getSkipZero_byHIdx.ass() 로부터 나왔음.
 					basicLst[[mName]]$rawSz <- list( ph=rawObj$rebInfo$matRaw$ph ,fCol=rawObj$rebInfo$matRaw$fCol )
 				}
-				reportStatus( tStmp ,sprintf("[%s,%s] hIdxLst",hName,mName) ,surFlag ,logger )
+				# reportStatus( tStmp ,sprintf("[%s,%s] hIdxLst",hName,mName) ,surFlag ,logger )
 			}
 
 			bScrLst <- list()	# QQE:hold
 			bScrMtxName <- character(0)
-			# for( mName in bScrMtxName ){
-			# 	cutLst <- cut.grp$cutterLst.bScr[[hName]][[mName]]$stdLst
-			# 	scoreMtx <- scoreMtx.grp$mf[[mName]]$scoreMtx
-			# 	for( cnIdx in names(cutLst) ){  # cnIdx <- names(cutLst)[1]
-			# 		cuttedLst <- cutLst[[cnIdx]]$cut( scoreMtx ,!surFlag )
-			# 		if( 0<length(cuttedLst) ){
-			# 			if( anaOnly ){	cutInfoLst[[1+length(cutInfoLst)]] <- c( cuttedLst[[1]]$idObjDesc ,cuttedLst[[1]]$info )
-			# 			} else {
-			# 				cut_aIdx <- sapply( cuttedLst ,function(p){p$idx} )
-			# 				surFlag[cut_aIdx] <- FALSE
-			# 			}
-			# 		}
-			# 	}
-
-			# 	reportStatus( tStmp ,sprintf("[%s,%s] bScrMtx",hName,mName) ,surFlag ,logger )
-			# }
 
 			hLst[[hName]] <- list( basic=basicLst ,bScr=bScrLst )
 		}

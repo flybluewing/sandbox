@@ -1,6 +1,61 @@
+#   경고! 코딩만 하고 동작테스트는 아직 안해봤다. ㅋㅋㅋㅋ
 bN.get_testData.grp <- function( testSpan ,gEnv ,allIdxLst ,fRstLst ,tgt.scMtx=tgt.scMtx){
     #   testData.grp <- B.get_testData.grp( testSpan ,gEnv ,allIdxLst ,fRstLst ,tgt.scMtx=tgt.scMtx) 
-    # working
+
+    tStmp <- Sys.time()
+    sfExport("tgt.scMtx")   ;sfExport("get.scoreMtx.grp")
+    sfExport("prllLog")
+    sfExport("gEnv")    ;sfExport("fRstLst")    ;sfExport("allIdxLst")
+
+    resultLst <- sfLapply(testSpan,function(curHIdx){
+        tStmp.prll <- Sys.time()
+
+        wLastH <-curHIdx-1
+        wLastSpan <- 1:which(names(fRstLst)==wLastH)
+
+        # ------------------------------------------------------------------------
+        # curHMtxLst.grp
+        gEnv.w <- gEnv              ;gEnv.w$zhF <- gEnv$zhF[1:wLastH,]
+        allIdxLst.w <- allIdxLst    ;allIdxLst.w$stdFiltedCnt <- allIdxLst$stdFiltedCnt[wLastSpan]
+                                    allIdxLst.w$infoMtx <- allIdxLst$infoMtx[wLastSpan,]
+        fRstLst.w <- fRstLst[wLastSpan]
+
+        curHMtxLst_bN <- B.makeHMtxLst( gEnv.w, allIdxLst.w, fRstLst.w, tgt.scMtx )
+
+        # ------------------------------------------------------------------------
+        # stdIdx.grp
+        stdZoid <- gEnv$zhF[curHIdx,]
+        stdIdx <- k.getIdx_AllZoidMtx( gEnv, stdZoid )
+
+        tDiff <- Sys.time() - tStmp.prll
+        prllLog$fLogStr(sprintf("    bN.get_testData.grp - hIdx:%d finished %.1f%s",curHIdx,tDiff,units(tDiff)))
+
+        rObj <- list( hIdx=curHIdx ,stdIdx=stdIdx ,hMtxLst_bN=curHMtxLst_bN ) 
+
+        if( get.scoreMtx.grp ){
+            stdMI.grp   <- bN.getStdMILst( gEnv.w ,fRstLst.w )
+            filter.grp  <- bN.getFilter.grp( stdMI.grp ,tgt.scMtx=tgt.scMtx )
+            rObj$scoreMtx.grp <- bN.getScoreMtx.grp( matrix(stdZoid,nrow=1) ,filter.grp ,tgt.scMtx=tgt.scMtx )
+        }
+
+        return( rObj )
+    })
+    names(resultLst) <- sapply(resultLst,function(p){ p$hIdx })
+
+    curHMtxLst.grp <- lapply(resultLst,function(p){ p$hMtxLst })
+    curHMtxLst_bS.grp <- lapply(resultLst,function(p){ p$hMtxLst_bS })
+    stdIdx.grp <- lapply(resultLst,function(p){ p$stdIdx })
+
+    tDiff <- Sys.time() - tStmp
+    cat(sprintf("time : %.1f,%s   \n",tDiff,units(tDiff)))
+
+    rLst <- list(curHMtxLst.grp=curHMtxLst.grp ,stdIdx.grp=stdIdx.grp ,curHMtxLst_bS.grp=curHMtxLst_bS.grp )
+    if( get.scoreMtx.grp ){
+        rLst$scoreMtxLst.grp <- lapply(resultLst,function(p){p$scoreMtx.grp})
+    }
+
+    return( rLst )
+
 }
 
 bN.getFilter.grp <- function( stdMI.grp ,tgt.scMtx=NULL ){
@@ -1146,7 +1201,7 @@ bN.cut1 <- function( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=NULL ,anaOnly=F ,l
 
 } # bUtil.cut1()
 
-bN.getCut1Score <- function(  scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=NULL ,logger=NULL ,deepInfo=F ){
+bN.getCut1Score <- function( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=NULL ,logger=NULL ,deepInfo=F ){
 
 	reportStatus <- function( tStmp ,strWhere ,surFlag ,logger ){
 		#	strWhere <- sprintf("[%s,%s] stdLst",hName,mName)
@@ -1188,7 +1243,7 @@ bN.getCut1Score <- function(  scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=NULL ,log
 					basicLst[[mName]]$rawSz <- list( ph=rawObj$rebInfo$matRaw$ph ,fCol=rawObj$rebInfo$matRaw$fCol )
 				}
 
-				reportStatus( tStmp ,sprintf("[%s,%s] hIdxLst",hName,mName) ,surFlag ,logger )
+				# reportStatus( tStmp ,sprintf("[%s,%s] hIdxLst",hName,mName) ,surFlag ,logger )
 			}
 
 			bScrLst <- list()	#  bf와 달리, bN에서는 bScrLst가 없음.

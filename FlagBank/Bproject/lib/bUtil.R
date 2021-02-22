@@ -239,27 +239,11 @@ bUtil.getCut1Score <- function(  scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=NULL ,
 					basicLst[[mName]]$rawSz <- list( ph=rawObj$rebInfo$matRaw$ph ,fCol=rawObj$rebInfo$matRaw$fCol )
 				}
 
-				reportStatus( tStmp ,sprintf("[%s,%s] hIdxLst",hName,mName) ,surFlag ,logger )
+				# reportStatus( tStmp ,sprintf("[%s,%s] hIdxLst",hName,mName) ,surFlag ,logger )
 			}
 
 			bScrLst <- list()	# QQE:hold
 			bScrMtxName <- character(0)
-			# for( mName in bScrMtxName ){
-			# 	cutLst <- cut.grp$cutterLst.bScr[[hName]][[mName]]$stdLst
-			# 	scoreMtx <- scoreMtx.grp$mf[[mName]]$scoreMtx
-			# 	for( cnIdx in names(cutLst) ){  # cnIdx <- names(cutLst)[1]
-			# 		cuttedLst <- cutLst[[cnIdx]]$cut( scoreMtx ,!surFlag )
-			# 		if( 0<length(cuttedLst) ){
-			# 			if( anaOnly ){	cutInfoLst[[1+length(cutInfoLst)]] <- c( cuttedLst[[1]]$idObjDesc ,cuttedLst[[1]]$info )
-			# 			} else {
-			# 				cut_aIdx <- sapply( cuttedLst ,function(p){p$idx} )
-			# 				surFlag[cut_aIdx] <- FALSE
-			# 			}
-			# 		}
-			# 	}
-
-			# 	reportStatus( tStmp ,sprintf("[%s,%s] bScrMtx",hName,mName) ,surFlag ,logger )
-			# }
 
 			hLst[[hName]] <- list( basic=basicLst ,bScr=bScrLst )
 		}
@@ -2294,7 +2278,17 @@ BUtil.makeCrScrHTool <- function(){
 			cut.grp <- bS.getCutGrp( hMtxLst_bS ,tgt.scMtx )
 			bS.grp <- bS.getCut1Score( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx ,deepInfo=T )	# deepInfo : sz 정보 추가
 
-			return( list(idStr=idStr ,stdIdx=stdIdx,std.grp=std.grp,bS.grp=bS.grp) )
+
+			stdMI.grp   <- bN.getStdMILst( gEnv.w ,fRstLst.w )          ;stdMI.grp$anyWarn( )
+			hMtxLst_bN	<- bN.makeHMtxLst( gEnv.w, allIdxLst.w, fRstLst.w ,tgt.scMtx )
+			cut.grp     <- bN.getFCustGrp( hMtxLst_bN ,tgt.scMtx )
+			filter.grp  <- bN.getFilter.grp( stdMI.grp ,tgt.scMtx=tgt.scMtx )
+			scoreMtx.grp<- bN.getScoreMtx.grp( matrix(stdZoid,nrow=1) ,filter.grp ,tgt.scMtx=tgt.scMtx )
+
+			cutRst1 <- bN.cut1( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx ,anaOnly=F ) 
+			bN.grp <- bN.getCut1Score( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx ,deepInfo=T )
+
+			return( list(idStr=idStr ,stdIdx=stdIdx,std.grp=std.grp,bS.grp=bS.grp,bN.grp=bN.grp) )
 		})
 
 		# Merge and sort
@@ -2303,12 +2297,14 @@ BUtil.makeCrScrHTool <- function(){
 			crScrH$stdIdx[idStr]	<- resultLst[[idx]]$stdIdx
 			crScrH$std.grp[[idStr]]	<- resultLst[[idx]]$std.grp$aLst[[1]]
 			crScrH$bS.grp[[idStr]]	<- resultLst[[idx]]$bS.grp$aLst[[1]]
+			crScrH$bN.grp[[idStr]]	<- resultLst[[idx]]$bN.grp$aLst[[1]]
 		}
 
 		idx <- as.integer(names(crScrH$std.grp))
 		crScrH$stdIdx	<- crScrH$stdIdx[ order(idx) ]
 		crScrH$std.grp	<- crScrH$std.grp[ order(idx) ]
 		crScrH$bS.grp	<- crScrH$bS.grp[ order(idx) ]
+		crScrH$bN.grp	<- crScrH$bN.grp[ order(idx) ]
 
 		save( crScrH ,file=sMtxHObj$scrFile )
 		
