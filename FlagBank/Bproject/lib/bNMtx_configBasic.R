@@ -2785,6 +2785,80 @@ if( TRUE ){
     )
 }
 
+mName <- "scoreFV"
+if( TRUE ){
+    scoreMtxCfg[[mName]] <- list(
+        mName = mName   ,style=c( freqZero=TRUE )
+        ,fCol = list(
+            "distR"=list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                            ,evt=matrix( c(c(1,2,3,3,3,3,3),c(1,2,3,4,5,6,7)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                        )
+            ,"distC"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(3,3,3,3,3,3),c(2,3,4,5,6,7)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                        )
+            ,"distF"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(3,3,3,3,3,3),c(2,3,4,5,6,7)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                        )
+            ,"rCnt"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(3,3,3,3,3,3),c(2,3,4,5,6,7)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                        )
+            ,"rNumMax"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(3,3,3,3,3,3),c(2,3,4,5,6,7)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                        )
+            ,"rRebNumMax"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(3,3,3,3,3,3),c(2,3,4,5,6,7)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                        )
+            ,"eCnt"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(3,3,3,3,3,3),c(2,3,4,5,6,7)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                        )
+            ,"eNumMax"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(3,3,3,3,3,3),c(2,3,4,5,6,7)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                        )
+            ,"eRebNumMax"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(3,3,3,3,3,3),c(2,3,4,5,6,7)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                        )
+            ,"cCnt"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(3,3,3,3,3,3),c(2,3,4,5,6,7)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                        )
+            ,"cNumMax"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(3,3,3,3,3,3),c(2,3,4,5,6,7)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                        )
+            ,"cRebNumMax"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(3,3,3,3,3,3),c(2,3,4,5,6,7)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                        )
+            ,"fCnt"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(3,3,3,3,3,3),c(2,3,4,5,6,7)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                        )
+            ,"fNumMax"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(3,3,3,3,3,3),c(2,3,4,5,6,7)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                        )
+            ,"fRebNumMax"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(3,3,3,3,3,3),c(2,3,4,5,6,7)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                        )
+        )
+        ,evtMax = NULL      ,evtMaxFColTot = NULL
+        ,rowReb = NULL      ,rowRebDup=NULL
+        ,summMtx = NULL     ,summMtx.reb = NULL     ,summMtx.sum = NULL
+        ,scMtx.sz = NULL    ,scMtx.sz.sum = NULL
+        ,isHard=NULL  # use default
+    )
+}
+
 
 
 

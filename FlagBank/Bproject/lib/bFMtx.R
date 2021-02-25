@@ -219,6 +219,9 @@ getFilter.grp <- function( stdMI.grp ,tgt.scMtx=NULL ){
         if( is.null(tgt.scMtx) || ("scoreLVf24" %in%tgt.scMtx ) ){
 			mtxObjLst[[1+length(mtxObjLst)]] <- bFMtx.scoreLVf24( stdMIObj )
 		}
+        if( is.null(tgt.scMtx) || ("scoreFV" %in%tgt.scMtx ) ){
+			mtxObjLst[[1+length(mtxObjLst)]] <- bFMtx.scoreFV( stdMIObj )
+		}
 
 		names(mtxObjLst) <- sapply(mtxObjLst,function(p){p$idStr})
 		return( mtxObjLst )
@@ -4478,6 +4481,186 @@ bFMtx.scoreLnAV <- function( stdMIObj ){
 
 	# 
 }
+
+bFMtx.scoreFV <- function( stdMIObj ){	# dealing Far Value
+
+	stdMI <- stdMIObj$stdMI
+	zMtx <- stdMIObj$zMtx
+	mObj <- list( 	idStr="scoreFV"	,zMtx.size=nrow(zMtx)	,lastZoid=stdMI$lastZoid	)
+	mObj$cName <- c( "distR","distC","distF" 
+					,"rCnt","rNumMax","rRebNumMax" ,"eCnt","eNumMax","eRebNumMax" ,"cCnt","cNumMax","cRebNumMax" ,"fCnt","fNumMax","fRebNumMax" 
+	)
+
+	mObj$hpnPtnThld <- matrix( c( 1,1,1,1  ,2,2,2,2 ) ,nrow=4,ncol=2,dimnames=list(c("raw","rem","cStep","fStep"),c("L","C") ) )
+		#  rem 빼고는 최소 기준만 적용해도 발생자체가 드문 듯. 
+
+	mObj$getStepMtx <- function( zMtx ){
+		cStepMtx <- zMtx[,2:6,drop=F] - zMtx[,1:5,drop=F]
+		fStepMtx <- matrix( NA ,nrow=1 ,ncol=ncol(zMtx) )
+		dLen <- nrow(zMtx)
+		if( 0 < dLen){
+			fStepMtx <- rbind( fStepMtx ,zMtx[2:dLen,] - zMtx[1:(dLen-1),] )
+		}
+		return( list(remMtx=zMtx%%10 ,cStepMtx=cStepMtx ,fStepMtx=fStepMtx) )
+	}
+	mObj$hpnPtn <- function( aHpnPtn ,lHpnInfo=NULL ,distThld=6 ){
+		# lHpnCch : Last hpn cache
+		rtnVal <- c("cnt"=0 ,"ptnNumMax"=0 ,"rebPtnNumMax"=0 )
+
+		for( fIdx in seq_len(length(aHpnPtn$fndLst)) ){
+			info <- aHpnPtn$fndLst[[fIdx]]$info
+			if( distThld >= info["dist"] ) next
+
+			rtnVal["cnt"] <- rtnVal["cnt"] + 1
+			ptnNum <- info["cntL"] + (info["cntC"]-1)
+			if( ptnNum > rtnVal["ptnNumMax"] ){
+				rtnVal["ptnNumMax"] <- ptnNum
+			}
+
+			if(  !is.null(lHpnInfo)  &&  any(info["cIdx"] %in% lHpnInfo["cIdx",])  ){
+				fIdx <- which( info["cIdx"]==lHpnInfo["cIdx",] )
+
+				if( lHpnInfo["dist",fIdx]>distThld ){
+					ptnNum <- lHpnInfo["cntL",fIdx] + (lHpnInfo["cntC",fIdx]-1)
+					if( ptnNum > rtnVal["rebPtnNumMax"] ){
+						rtnVal["rebPtnNumMax"] <- ptnNum
+					}
+				}
+			}
+
+		}
+
+		return( rtnVal )
+	}
+
+	mObj$available <- FALSE
+	if( (6*2) < mObj$zMtx.size ){	# 12 정도는 되어야 최소한의 데이터가 나올 듯.
+		stepLst <- mObj$getStepMtx( zMtx )
+		stepLst$fStep[1,] <- 700		# NA를 700으로 전환. 700이 나올 일은 없겠지.
+
+		lhDist <- list()
+		# Last Hpn Dist ---------------------------------------------------
+		lhDist[["raw"]]	<- bUtil.mtxEngine_LastHpnDist( zMtx )$distMtx > 6
+		lhDist[["cStep"]]	<- bUtil.mtxEngine_LastHpnDist( stepLst$cStepMtx )$distMtx > 6
+		lhDist[["fStep"]]	<- bUtil.mtxEngine_LastHpnDist( stepLst$fStepMtx )$distMtx > 6
+
+		lhPtn <- list()
+		# Last Hpn Ptn ----------------------------------------------------
+		hpnPtn	<- bUtil.getLastHpnPtn( zMtx ,aCode=zMtx[mObj$zMtx.size ,] ,srchIdx=(mObj$zMtx.size-1) 
+							,naVal=0 ,thld=mObj$hpnPtnThld["raw",] 
+		)
+		lhPtn[["raw"]] <- if(0==length(hpnPtn$fndLst)) NULL else sapply( hpnPtn$fndLst ,function(hObj){ hObj$info })
+
+		hpnPtn<- bUtil.getLastHpnPtn( stepLst$remMtx ,aCode=stepLst$remMtx[mObj$zMtx.size ,] ,srchIdx=(mObj$zMtx.size-1) 
+							,naVal=0 ,thld=mObj$hpnPtnThld["rem",] 
+		)
+		lhPtn[["rem"]] <- if(0==length(hpnPtn$fndLst)) NULL else sapply( hpnPtn$fndLst ,function(hObj){ hObj$info })
+
+		hpnPtn<- bUtil.getLastHpnPtn( stepLst$cStepMtx ,aCode=stepLst$cStepMtx[mObj$zMtx.size ,] ,srchIdx=(mObj$zMtx.size-1) 
+							,naVal=0 ,thld=mObj$hpnPtnThld["cStep",] 
+		)
+		lhPtn[["cStep"]] <- if(0==length(hpnPtn$fndLst)) NULL else sapply( hpnPtn$fndLst ,function(hObj){ hObj$info })
+
+		hpnPtn<- bUtil.getLastHpnPtn( stepLst$fStepMtx ,aCode=stepLst$fStepMtx[mObj$zMtx.size ,] ,srchIdx=(mObj$zMtx.size-1) 
+							,naVal=0 ,thld=mObj$hpnPtnThld["fStep",] 
+		)
+		lhPtn[["fStep"]] <- if(0==length(hpnPtn$fndLst)) NULL else sapply( hpnPtn$fndLst ,function(hObj){ hObj$info })
+
+		mObj$zMtx <- zMtx
+		mObj$lhDist <- lhDist
+		mObj$lhPtn	<- lhPtn
+		mObj$available <- TRUE
+	}
+
+
+	mObj$fMtxObj <- function( aZoidMtx ,makeInfoStr=F ){
+
+		aLen <- nrow(aZoidMtx)
+		scoreMtx <- matrix( 0, nrow=aLen, ncol=length(mObj$cName) )	;colnames(scoreMtx) <- mObj$cName
+
+		infoMtx <- NULL
+		if( makeInfoStr ){
+			cName <- c( "zMtx.size" )
+			infoMtx <- matrix( "" ,nrow=aLen ,ncol=length(cName) )	;colnames(infoMtx) <- cName
+			infoMtx[,"zMtx.size"] <- mObj$zMtx.size
+		}
+		if( !mObj$available ){
+			return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
+		}
+
+		# mObj$available 이면 h 수는 6*2 이상인 상태이다.
+		stepLst <- mObj$getStepMtx( mObj$zMtx )
+		stepLst$fStepMtx[1,] <- 700		# NA를 700으로 전환. 700이 나올 일은 없겠지.
+		lRaw	<- sort(unique( as.vector(mObj$zMtx[mObj$zMtx.size - 5:0 ,]) ))
+		lCStep	<- sort(unique( as.vector(stepLst$cStepMtx[mObj$zMtx.size - 5:0 ,]) ))
+		lFStep	<- sort(unique( as.vector(stepLst$fStepMtx[mObj$zMtx.size - 5:0 ,]) ))
+
+		for( aIdx in 1:aLen ){
+			aZoid <- aZoidMtx[aIdx,]
+			aRem <- aZoid %% 10
+			aCStep <- aZoid[2:6] - aZoid[1:5]	
+			aFStep <- aZoid - mObj$lastZoid
+
+			# Hpn Dist ---------------------------------------------------
+			matFlag <- mObj$lhDist$raw[6,] == !(aZoid %in% lRaw)
+			if( all(matFlag) ){
+				scoreMtx[aIdx,"distR"] <- sum(mObj$lhDist$raw[6,])
+			}
+			matFlag <- mObj$lhDist$cStep[6,] == !(aCStep %in% lCStep)
+			if( all(matFlag) ){
+				scoreMtx[aIdx,"distC"] <- sum(mObj$lhDist$cStep[6,])
+			}
+			matFlag <- mObj$lhDist$fStep[6,] == !(aFStep %in% lFStep)
+			if( all(matFlag) ){
+				scoreMtx[aIdx,"distC"] <- sum(mObj$lhDist$fStep[6,])
+			}
+
+
+			# Hpn Ptn ----------------------------------------------------
+			aHpnPtn	<- bUtil.getLastHpnPtn( mObj$zMtx ,aCode=aZoid
+								 ,srchIdx=NULL ,naVal=0 ,thld=mObj$hpnPtnThld["raw",] 
+			)
+			fndScore <- mObj$hpnPtn( aHpnPtn ,mObj$lhPtn[["raw"]] ,distThld=6 )
+			scoreMtx[aIdx,"rCnt"	]	<- fndScore["cnt"]
+			scoreMtx[aIdx,"rNumMax"	]	<- fndScore["ptnNumMax"]
+			scoreMtx[aIdx,"rRebNumMax"]	<- fndScore["rebPtnNumMax"]
+
+			aHpnPtn	<- bUtil.getLastHpnPtn( stepLst$remMtx ,aCode=aRem
+								 ,srchIdx=NULL ,naVal=0 ,thld=mObj$hpnPtnThld["rem",] 
+			)
+			fndScore <- mObj$hpnPtn( aHpnPtn ,mObj$lhPtn[["rem"]] ,distThld=6 )
+			scoreMtx[aIdx,"eCnt"	]	<- fndScore["cnt"]
+			scoreMtx[aIdx,"eNumMax"	]	<- fndScore["ptnNumMax"]
+			scoreMtx[aIdx,"eRebNumMax"]	<- fndScore["rebPtnNumMax"]
+
+			aHpnPtn	<- bUtil.getLastHpnPtn( stepLst$cStepMtx ,aCode=aCStep
+								 ,srchIdx=NULL ,naVal=0 ,thld=mObj$hpnPtnThld["cStep",] 
+			)
+			fndScore <- mObj$hpnPtn( aHpnPtn ,mObj$lhPtn[["cStep"]] ,distThld=6 )
+			scoreMtx[aIdx,"cCnt"	]	<- fndScore["cnt"]
+			scoreMtx[aIdx,"cNumMax"	]	<- fndScore["ptnNumMax"]
+			scoreMtx[aIdx,"cRebNumMax"]	<- fndScore["rebPtnNumMax"]
+
+			aHpnPtn	<- bUtil.getLastHpnPtn( stepLst$fStepMtx ,aCode=aFStep
+								 ,srchIdx=NULL ,naVal=0 ,thld=mObj$hpnPtnThld["fStep",] 
+			)
+			fndScore <- mObj$hpnPtn( aHpnPtn ,mObj$lhPtn[["fStep"]] ,distThld=6 )
+			scoreMtx[aIdx,"fCnt"	]	<- fndScore["cnt"]
+			scoreMtx[aIdx,"fNumMax"	]	<- fndScore["ptnNumMax"]
+			scoreMtx[aIdx,"fRebNumMax"]	<- fndScore["rebPtnNumMax"]
+
+		}
+
+		return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
+
+	}
+
+	return( mObj )
+
+}
+
+
+
 
 
 bFMtx.scoreZ <- function( stdMIObj ){

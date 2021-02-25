@@ -2958,6 +2958,9 @@ if( TRUE ){ # "sScore0LVf24"
 
 }
 
+if( FALSE ){ # sScore0FV. cStepMtx,fStepMtx 등등의 폭이 일정치 않음을 반영 할 것.
+}
+
 
 
 if( FALSE ){ # "sScore0X"

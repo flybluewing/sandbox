@@ -2211,6 +2211,132 @@ bUtil.getRowRebCutter <- function( rCObj ,cfg ){
 }
 
 
+
+bUtil.getFarValDist <- function( hCodeMtx ,aCode ,naVal=0 ){
+	rVal <- rep( naVal ,length(aCode) )
+
+	rLen <- nrow(hCodeMtx)
+	for( cIdx in 1:length(aCode) ){
+		fndIdx <- which(hCodeMtx[,cIdx]==aCode[cIdx])
+		fLen <- length(fndIdx)
+		if( 0==fLen )	next
+
+		rVal[cIdx] <- rLen - fndIdx[fLen] +1
+	}
+
+	return( rVal )
+}
+bUtil.getFarValRebMtx <- function( codeMtx ,nearDist=6 ,naVal=0 ){
+	# stdMIObj <- stdMI.grp$basic[["nextZW"]]
+	# codeMtx <- stdMIObj$zMtx[,2:6] - stdMIObj$zMtx[,1:5]
+
+	dLen <- nrow( codeMtx )
+	rMtx <- matrix( naVal ,ncol=ncol(codeMtx) ,nrow=nearDist )
+		# stdMI$rawTail 값이 6개가 안돼더라도, rMtx는 6개로 통일하는 게 다루기 좋을 듯.
+
+	if( nearDist >= dLen ){
+		return( rMtx )
+	}
+
+	for( rIdx in 1:nearDist ){
+		curRIdx <- dLen-rIdx + 1
+		# aCode <- codeMtx[dLen-1+1,]		;hCodeMtx <- codeMtx[1:(dLen-1), ,drop=F]
+		rMtx[nearDist-rIdx+1 ,] <- bUtil.getFarValDist( hCodeMtx=codeMtx[1:(curRIdx-1), ,drop=F]  ,aCode=codeMtx[curRIdx,] ,naVal=naVal )
+	}
+
+	return( rMtx )
+}
+bUtil.engineScoreFDC <- function( ){
+
+}
+
+
+bUtil.getLastHpnDist <- function( hCodeMtx ,aCode ,srchIdx=NULL ,naVal=0 ,depth=6 ){
+	# aCode <- c( 8,10,13,36,37,40 )
+	#	aCode의 길이는 hCodeMtx 폭과 상관이 없다.(h에서의 hpn만 체크하므로)
+
+	rObj <- list( fndLst=list() )
+
+	if( is.null(srchIdx) ){
+		srchIdx <- nrow(hCodeMtx)
+	} else if( srchIdx > nrow(hCodeMtx) ){
+		return( rObj )
+	}
+
+	for( cIdx in 1:length(aCode) ){
+		for( rIdx in srchIdx:1 ){
+			fndIdx <- which(hCodeMtx[rIdx,]==aCode[cIdx])
+			if( 0<length(fndIdx) ){
+				fndInfo <- c( cIdx ,(srchIdx-rIdx+1) ,fndIdx[1] )	;names(fndInfo)<-c("originCol","dist","firstCol")
+				rObj$fndLst[[as.character(cIdx)]] <- list( info=fndInfo ,fndColIdx=fndIdx )
+				break
+			}
+		}
+	}
+
+	return( rObj )
+
+}
+
+bUtil.mtxEngine_LastHpnDist <- function( hCodeMtx ){
+
+	rEngObj <- list( available=F )
+
+	optVal <- c( "naVal"=0 ,"depth"=6 )
+	rEngObj$distMtx <- matrix( optVal["naVal"] ,nrow=optVal["depth"] ,ncol=ncol(hCodeMtx) )
+	rEngObj$fColMtx <- rEngObj$distMtx		# first fnd Col
+
+	hLen <- nrow(hCodeMtx)
+	if( optVal["depth"] < hLen ){
+		for( rIdx in 1:optVal["depth"] ){
+			fndRst <- bUtil.getLastHpnDist( hCodeMtx ,aCode=hCodeMtx[hLen-rIdx+1,] ,srchIdx=(hLen-rIdx) ,depth=optVal["depth"] )
+			for( idx in seq_len(length(fndRst$fndLst)) ){
+				fndInfo <- fndRst$fndLst[[idx]]$info
+				rEngObj$distMtx[ optVal["depth"]-rIdx+1 ,fndInfo["originCol"] ] <- fndInfo["dist"]
+				rEngObj$fColMtx[ optVal["depth"]-rIdx+1 ,fndInfo["originCol"] ] <- fndInfo["firstCol"]
+			}
+		}
+
+		# rEngObj$available <- sum( rEngObj$distMtx==optVal["naVal"] )
+		rEngObj$available <- any( rEngObj$distMtx==optVal["naVal"] )
+	}
+
+	return( rEngObj )
+
+}
+
+bUtil.getLastHpnPtn <- function( hCodeMtx ,aCode ,srchIdx=NULL ,naVal=0 ,depth=6 ,thld=c("L"=2,"C"=3) ){
+	# 
+	rObj <- list( fndLst=list() )
+
+	if( is.null(srchIdx) ){
+		srchIdx <- nrow(hCodeMtx)
+	} else if( srchIdx > nrow(hCodeMtx) ){
+		return( rObj )
+	}
+
+	for( cIdx in 1:length(aCode) ){
+		fndIdx <- which(hCodeMtx[srchIdx:1,cIdx]==aCode[cIdx])
+		if( 0==length(fndIdx) || 1==fndIdx[1] ) next
+
+		rIdx <- srchIdx - fndIdx[1] + 1
+		matCntL <- sum(hCodeMtx[rIdx-1,]==hCodeMtx[srchIdx,])	# before
+		matCntC <- sum(hCodeMtx[rIdx,]==aCode)		# current
+		if( thld["L"]<=matCntL && thld["C"]<=matCntC ){
+			matInfo <- c( fndIdx[1] ,cIdx ,matCntL ,matCntC ,aCode[cIdx] )
+			names(matInfo) <- c("dist","cIdx","cntL","cntC","val")
+			rObj$fndLst[[as.character(cIdx)]] <- list( info=matInfo ,matFlag=(hCodeMtx[rIdx,]==aCode) )
+		}
+	}
+
+	return( rObj )
+}
+bUtil.mtxEngine_LastHpnPtn <- function( hCodeMtx ){
+	rEngObj <- list( available=F )
+	return( rEngObj )
+}
+
+
 #-----------------------------------------------------------------------------------
 #	crScrHTool	: ./worklet/HBuild_cr.R
 #-----------------------------------------------------------------------------------
