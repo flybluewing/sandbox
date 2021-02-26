@@ -4536,7 +4536,7 @@ bFMtx.scoreFV <- function( stdMIObj ){	# dealing Far Value
 	mObj$available <- FALSE
 	if( (6*2) < mObj$zMtx.size ){	# 12 정도는 되어야 최소한의 데이터가 나올 듯.
 		stepLst <- mObj$getStepMtx( zMtx )
-		stepLst$fStep[1,] <- 700		# NA를 700으로 전환. 700이 나올 일은 없겠지.
+		stepLst$fStepMtx[1,] <- 700		# NA를 700으로 전환. 700이 나올 일은 없겠지.
 
 		lhDist <- list()
 		# Last Hpn Dist ---------------------------------------------------
@@ -4660,7 +4660,60 @@ bFMtx.scoreFV <- function( stdMIObj ){	# dealing Far Value
 }
 
 
+if( FALSE ){	# 개발 중
 
+	# testData 생성
+	stdMIObj <- stdMI.grp$basic[["nextZW"]]
+
+	cIdx <- 1:6
+	leftIdx <- cIdx
+	combMtx <- combinations( length(leftIdx) ,2)
+	combLst <- list()
+	
+
+	bFMtx.scoreG <- function( stdMIObj ){
+		stdMI <- stdMIObj$stdMI
+		zMtx <- stdMIObj$zMtx
+		mObj <- list( 	idStr="scoreG"	,zMtx.size=nrow(zMtx)	,lastZoid=stdMI$lastZoid	)
+		mObj$cName <- c( "xxx","xxx","xxx" )
+
+		mObj$combMtx6 <- matrix( 0 
+							,ncol=6 
+		)	# 차라리 하드코딩이 낫다.
+
+		mObj$fMtxObj <- function( aZoidMtx ,makeInfoStr=F ){
+
+			aLen <- nrow(aZoidMtx)
+			scoreMtx <- matrix( 0, nrow=aLen, ncol=length(mObj$cName) )	;colnames(scoreMtx) <- mObj$cName
+
+			infoMtx <- NULL
+			if( makeInfoStr ){
+				cName <- c( "zMtx.size" )
+				infoMtx <- matrix( "" ,nrow=aLen ,ncol=length(cName) )	;colnames(infoMtx) <- cName
+				infoMtx[,"zMtx.size"] <- mObj$zMtx.size
+			}
+			if( !mObj$available ){
+				return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
+			}
+
+
+			for( aIdx in 1:aLen ){
+				aZoid <- aZoidMtx[aIdx,]
+				aRem <- aZoid %% 10
+				aCStep <- aZoid[2:6] - aZoid[1:5]	
+				aFStep <- aZoid - mObj$lastZoid
+
+			}
+
+			return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
+
+		}
+
+		return( mObj )
+
+	}
+
+}
 
 
 bFMtx.scoreZ <- function( stdMIObj ){

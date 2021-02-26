@@ -2787,7 +2787,7 @@ if( TRUE ){
 
 mName <- "scoreFV"
 if( TRUE ){
-    scoreMtxCfg[[mName]] <- list(
+    bNScoreMtxCfg[[mName]] <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
             "distR"=list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
