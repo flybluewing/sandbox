@@ -5,7 +5,7 @@ if( FALSE ){    # document
     # lastH <- 933(for 934_1 stdIdx: 233713 )   26  
 }
 
-lastH <- 950    # for H899_1
+lastH <- 952    # for H899_1
 tgt.scMtx <- NULL
 testMode <- F            #check
 prllNum <- 5
@@ -52,6 +52,7 @@ if( TRUE ){     #   hMtxLst ,hMtxLst_bS
     load( sprintf("./save/finalCut/Obj_cut_hMtxLst_bN_%d.save",lastH)   )   # hMtxLst_bN
     load( sprintf("./save/finalCut/Obj_cut_hMtxLst_HCR_%d.save",lastH)  )   # hMtxLst_HCR
 } else {
+    crScrHTool$addData( lastH - 5:0 )
     hMtxLst <- B.makeHMtxLst( gEnv, allIdxLst, fRstLst, lastH=lastH, tgt.scMtx )
     hMtxLst_bS <- bS.makeHMtxLst( gEnv, allIdxLst, fRstLst ,tgt.scMtx )
     hMtxLst_bN <- bN.makeHMtxLst( gEnv, allIdxLst, fRstLst ,tgt.scMtx )

@@ -1684,7 +1684,88 @@ if( TRUE ){
 
 }
 
+mName <- "scoreFV"
+if( TRUE ){
+    scrExtMtxCfg[[mName]] <- list()
 
+    scrExtMtxCfg[[mName]]$filter01 <- list(
+        mName = mName   ,style=c( freqZero=TRUE )
+        ,fCol = list(
+            "distC"=list( rng=matrix( c(0,5 ,0,5) ,ncol=2 )
+                            ,evt=matrix( c(c(1,2,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                            ,freqVal=c(1)
+                            ,forbidEvtReb=c(4)  # 1~3은 기본 필터에서 이미 체크되었으므로.
+                        )
+            ,"rCnt"=list( rng=matrix( c(0,3 ,0,3) ,ncol=2 )
+                            ,evt=matrix( c(c(1,1,1,3,3,3,3),c(1,2,3,4,5,6,7)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                            ,freqVal=c(1,2)
+                        )
+            ,"cCnt"=list( rng=matrix( c(0,3 ,0,3) ,ncol=2 )
+                            ,evt=matrix( c(c(1,1,3,3,3,3,3),c(1,2,3,4,5,6,7)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                            ,freqVal=c(1,2)
+                        )
+            ,"fCnt"=list( rng=matrix( c(0,3 ,0,3) ,ncol=2 )
+                            ,evt=matrix( c(c(1,2,3,3,3,3),c(2,3,4,5,6,7)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                        )
+        )
+        ,evtMax = matrix( c(2,2,3,1 ,2,2,3,1)   ,byrow=T ,ncol=4
+                            ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
+        )
+        ,rowReb = NULL ,rowRebDup=NULL
+        ,summMtx = NULL     ,summMtx.reb = NULL             ,summMtx.sum = NULL
+        ,scMtx.sz = NULL    ,scMtx.sz.sum = NULL
+        ,isHard=NULL  # use default
+    )
+    scrExtMtxCfg[[mName]]$filter02 <- list(
+        mName = mName   ,style=c( freqZero=TRUE )
+        ,fCol = list(
+            "distC"=list( rng=matrix( c(0,5 ,0,5) ,ncol=2 )
+                            ,evt=matrix( c(c(1,2,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,freqVal=c(1)
+                            ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                            ,forbidEvtReb=c(4)  # 1~3은 기본 필터에서 이미 체크되었으므로.
+                        )
+            ,"rNumMax"=list( rng=matrix( c(0,4 ,0,4) ,ncol=2 )
+                            ,evt=matrix( c(c(1,1,2,3,3,3,3),c(2,3,4,5,6,7,8)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                            ,freqVal=c(2)
+                        )
+            ,"rRebNumMax"=list( rng=matrix( c(0,3 ,0,3) ,ncol=2 )
+                            ,evt=matrix( c(c(1,2,3,3,3,3,3),c(2,3,4,5,6,7,8)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                        )
+            ,"cNumMax"=list( rng=matrix( c(0,4 ,0,4) ,ncol=2 )
+                            ,evt=matrix( c(c(1,1,2,3,3,3),c(2,3,4,5,6,7)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                            ,freqVal=c(2,3)
+                        )
+            ,"cRebNumMax"=list( rng=matrix( c(0,2 ,0,2) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3,3,3),c(2,3,4,5,6,7)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                        )
+            ,"fNumMax"=list( rng=matrix( c(0,5 ,0,5) ,ncol=2 )
+                            ,evt=matrix( c(c(1,1,2,3,3,3),c(2,3,4,5,6,7)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                        )
+            ,"fRebNumMax"=list( rng=matrix( c(0,4 ,0,4) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3,3,3),c(2,3,4,5,6,7)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                        )
+        )
+        ,evtMax = matrix( c(2,2,3,1 ,2,2,3,1)   ,byrow=T ,ncol=4
+                            ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
+        )
+        ,rowReb = NULL ,rowRebDup=NULL
+        ,summMtx = NULL     ,summMtx.reb = NULL             ,summMtx.sum = NULL
+        ,scMtx.sz = NULL    ,scMtx.sz.sum = NULL
+        ,isHard=NULL  # use default
+    )
+
+}
 
 
 
