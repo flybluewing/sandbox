@@ -337,7 +337,7 @@ if( TRUE ){
 
 
 mfName <- "bsMR569Lecf"
-if( TRUE ){
+if( FALSE ){    # check cfg
     bSMtxRMLst[[mfName]] <- function( tgt.scMtx=NULL ){
 
         fltObj <- list( mInfo=list() )
@@ -345,9 +345,9 @@ if( TRUE ){
         fltObj$available <- TRUE    # bFCust.getFCustGrp() ¿¡¼­ È®ÀÎµÊ.
 
         fltObj$fltMNames <- c(   "sScore05","sScore06","sScore09"
-                                ,"sScore0LAe13","sScore0LAe24","sScore0LVe24","sScore0LVe24"
-                                ,"sScore0LAc13","sScore0LAc24","sScore0LVc24","sScore0LVc24"
-                                ,"sScore0LAf13","sScore0LAf24","sScore0LVf24","sScore0LVf24"
+                                ,"sScore0LAe13","sScore0LAe24","sScore0LVe13","sScore0LVe24"
+                                ,"sScore0LAc13","sScore0LAc24","sScore0LVc13","sScore0LVc24"
+                                ,"sScore0LAf13","sScore0LAf24","sScore0LVf13","sScore0LVf24"
         )        
         fltObj$mInfo$cName <- c( "pBanN.r","pBanN.n","pLCol","pE3","pfNum","iBanN","iLCol","ifNum","FVa.m"
                                 ,"eCnt" ,"cCnt" ,"fCnt"

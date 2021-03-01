@@ -693,8 +693,7 @@ if( TRUE ){
 }
 
 mfName <- "mf9ELecf"
-if( TRUE ){ # 재확인 필요. scoreLVx13 이 scoreLVx24 로 코딩되어 있었다.
-
+if( FALSE ){ # config 점검 요.
     bFMtxMFltLst[[mfName]] <- function( tgt.scMtx=NULL ){
         fltObj <- list( mInfo=list() )
         fltObj$mInfo$mName <- mfName
@@ -702,7 +701,7 @@ if( TRUE ){ # 재확인 필요. scoreLVx13 이 scoreLVx24 로 코딩되어 있었다.
 
         fltObj$fltMNames <- c( "score9" ,"scoreE"
                             ,"scoreLAe13","scoreLAe24","scoreLVe13","scoreLVe24"
-                            ,"scoreLAf13","scoreLAf24","scoreLVf13","scoreLVf24"
+                            ,"scoreLAc13","scoreLAc24","scoreLVc13","scoreLVc24"
                             ,"scoreLAf13","scoreLAf24","scoreLVf13","scoreLVf24"
         )
         fltObj$mInfo$cName <- c( "rCnt" ,"eCnt" ,"cCnt" ,"fCnt" ,"cH0MLen" ,"cH1MLen" ,"cH2MLen"
@@ -805,7 +804,6 @@ if( TRUE ){ # 재확인 필요. scoreLVx13 이 scoreLVx24 로 코딩되어 있었다.
 
 mfName <- "mfE_59FVLav"
 if( TRUE ){
-
     bFMtxMFltLst[[mfName]] <- function( tgt.scMtx=NULL ){
 
         fltObj <- list( mInfo=list() )
@@ -893,14 +891,225 @@ if( TRUE ){
         return(fltObj)
 
     }
+}
+
+mfName <- "mfrcf_N9FVLav"
+if( FALSE ){    # config 세팅 요.
+
+    bFMtxMFltLst[[mfName]] <- function( tgt.scMtx=NULL ){
+
+        fltObj <- list( mInfo=list() )
+        fltObj$mInfo$mName <- mfName
+        fltObj$available <- TRUE    # bFCust.getFCustGrp() 에서 확인됨.
+
+        fltObj$fltMNames <- c(  "score4","score6","score7"
+                                ,"score9","scoreFV"
+                                ,"scoreLAr13","scoreLAr24","scoreLVr13","scoreLVr24"
+                                ,"scoreLAc13","scoreLAc24","scoreLVc13","scoreLVc24"
+                                ,"scoreLAf13","scoreLAf24","scoreLVf13","scoreLVf24"
+        )
+        fltObj$mInfo$cName <- c( "sNpBanN.r","sNpBanN.n","sNpLCol","sNpE3","sNpfNum","sNiBanN","sNiLCol","sNifNum","sNFVa.m"
+                                ,"s9rCnt","s9cCnt","s9fCnt"
+                                ,"fvdistR","fvdistC","fvdistF" ,"fvrCnt","fvcCnt","fvfCnt"
+                                ,"Ax13Hpn1A" ,"Ax13Hpn1B" ,"Ax24Hpn1A" ,"Ax24Hpn1B" 
+                                ,"Vx13Hpn1A" ,"Vx13Hpn1B" ,"Vx24Hpn1A" ,"Vx24Hpn1B" 
+        )
+
+        # tgt.scMtx가 fltObj$fltMNames 를 모두 포함하고 있는 지 체크.
+        if( !is.null(tgt.scMtx) ){
+            #   scoreMtxLst는 체크하지 않는다. 차라리 나중에 에러나는 게 인지하기 쉬우므로.            
+            mFlag <- fltObj$fltMNames %in% tgt.scMtx
+            fltObj$available <- ifelse( all(mFlag) ,fltObj$available ,FALSE )
+        }
+
+        fltObj$getScore <- function( mmMtxLst ,mmEMtxLst ,aIdx ){
+
+            rowVal <- rep( 0 ,length(fltObj$mInfo$cName) )
+            names(rowVal) <- fltObj$mInfo$cName
+
+            colAx <- c( "colA1" ,"colA2" ,"colA3" ,"colA4" ,"colA5" ,"colA6" )
+            colBx <- c( "colB1" ,"colB2" ,"colB3" ,"colB4" ,"colB5" ,"colB6" )
+            colAc <- c( "colA1" ,"colA2" ,"colA3" ,"colA4" ,"colA5" )
+            colBc <- c( "colB1" ,"colB2" ,"colB3" ,"colB4" ,"colB5" )
+
+            rowVal["Ax13Hpn1A"] <- sum(mmMtxLst[["scoreLAr13"]][aIdx,colAx]==1) + sum(mmMtxLst[["scoreLAc13"]][aIdx,colAc]==1) + sum(mmMtxLst[["scoreLAf13"]][aIdx,colAx]==1)
+            rowVal["Ax13Hpn1B"] <- sum(mmMtxLst[["scoreLAr13"]][aIdx,colBx]==1) + sum(mmMtxLst[["scoreLAc13"]][aIdx,colBc]==1) + sum(mmMtxLst[["scoreLAf13"]][aIdx,colBx]==1)
+            rowVal["Ax24Hpn1A"] <- sum(mmMtxLst[["scoreLAr24"]][aIdx,colAx]==1) + sum(mmMtxLst[["scoreLAc24"]][aIdx,colAc]==1) + sum(mmMtxLst[["scoreLAf24"]][aIdx,colAx]==1)
+            rowVal["Ax24Hpn1B"] <- sum(mmMtxLst[["scoreLAr24"]][aIdx,colBx]==1) + sum(mmMtxLst[["scoreLAc24"]][aIdx,colBc]==1) + sum(mmMtxLst[["scoreLAf24"]][aIdx,colBx]==1)
+            rowVal["Vx13Hpn1A"] <- sum(mmMtxLst[["scoreLVr13"]][aIdx,colAx]==1) + sum(mmMtxLst[["scoreLVc13"]][aIdx,colAc]==1) + sum(mmMtxLst[["scoreLVf13"]][aIdx,colAx]==1)
+            rowVal["Vx13Hpn1B"] <- sum(mmMtxLst[["scoreLVr13"]][aIdx,colBx]==1) + sum(mmMtxLst[["scoreLVc13"]][aIdx,colBc]==1) + sum(mmMtxLst[["scoreLVf13"]][aIdx,colBx]==1)
+            rowVal["Vx24Hpn1A"] <- sum(mmMtxLst[["scoreLVr24"]][aIdx,colAx]==1) + sum(mmMtxLst[["scoreLVc24"]][aIdx,colAc]==1) + sum(mmMtxLst[["scoreLVf24"]][aIdx,colAx]==1)
+            rowVal["Vx24Hpn1B"] <- sum(mmMtxLst[["scoreLVr24"]][aIdx,colBx]==1) + sum(mmMtxLst[["scoreLVc24"]][aIdx,colBc]==1) + sum(mmMtxLst[["scoreLVf24"]][aIdx,colBx]==1)
+
+            rowVal["sNpBanN.r"] <- mmMtxLst[["score4"]][aIdx,"pBanN.r"] + mmMtxLst[["score6"]][aIdx,"pBanN.r"] + mmMtxLst[["score7"]][aIdx,"pBanN.r"]
+            rowVal["sNpBanN.n"] <- mmMtxLst[["score4"]][aIdx,"pBanN.n"] + mmMtxLst[["score6"]][aIdx,"pBanN.n"] + mmMtxLst[["score7"]][aIdx,"pBanN.n"]
+            rowVal["sNpLCol"]   <- mmMtxLst[["score4"]][aIdx,"pLCol"]   + mmMtxLst[["score6"]][aIdx,"pLCol"]   + mmMtxLst[["score7"]][aIdx,"pLCol"]
+            rowVal["sNpE3"]     <- mmMtxLst[["score4"]][aIdx,"pE3"]     + mmMtxLst[["score6"]][aIdx,"pE3"]     + mmMtxLst[["score7"]][aIdx,"pE3"]
+            rowVal["sNpfNum"]   <- mmMtxLst[["score4"]][aIdx,"pfNum"]   + mmMtxLst[["score6"]][aIdx,"pfNum"]   + mmMtxLst[["score7"]][aIdx,"pfNum"]
+            rowVal["sNiBanN"]   <- mmMtxLst[["score4"]][aIdx,"iBanN"]   + mmMtxLst[["score6"]][aIdx,"iBanN"]   + mmMtxLst[["score7"]][aIdx,"iBanN"]
+            rowVal["sNiLCol"]   <- mmMtxLst[["score4"]][aIdx,"iLCol"]   + mmMtxLst[["score6"]][aIdx,"iLCol"]   + mmMtxLst[["score7"]][aIdx,"iLCol"]
+            rowVal["sNifNum"]   <- mmMtxLst[["score4"]][aIdx,"ifNum"]   + mmMtxLst[["score6"]][aIdx,"ifNum"]   + mmMtxLst[["score7"]][aIdx,"ifNum"]
+            rowVal["sNFVa.m"]   <- mmMtxLst[["score4"]][aIdx,"FVa.m"]   + mmMtxLst[["score6"]][aIdx,"FVa.m"]   + mmMtxLst[["score7"]][aIdx,"FVa.m"]
+
+            rowVal["s9rCnt"]    <- mmMtxLst[["score9"]][aIdx,"rCnt"]
+            rowVal["s9cCnt"]    <- mmMtxLst[["score9"]][aIdx,"cCnt"]
+            rowVal["s9fCnt"]    <- mmMtxLst[["score9"]][aIdx,"fCnt"]
+
+            rowVal["fvdistR"]   <- mmMtxLst[["scoreFV"]][aIdx,"distR"]
+            rowVal["fvdistC"]   <- mmMtxLst[["scoreFV"]][aIdx,"distC"]
+            rowVal["fvdistF"]   <- mmMtxLst[["scoreFV"]][aIdx,"distF"]
+            rowVal["fvrCnt"]    <- mmMtxLst[["scoreFV"]][aIdx,"rCnt"]
+            rowVal["fvcCnt"]    <- mmMtxLst[["scoreFV"]][aIdx,"cCnt"]
+            rowVal["fvfCnt"]    <- mmMtxLst[["scoreFV"]][aIdx,"fCnt"]
+
+            # rowVal["xxx"]  <- mmMtxLst[["scoreFV"]][aIdx,"xxx"]
+
+            return( rowVal )
+        }
+
+        fltObj$getScoreMtx <- function( scoreMtxLst ){
+            # scoreMtx.grp <- getScoreMtx.grp( gEnv$allZoidMtx[allIdxF,,drop=F] ,filter.grp )
+            # scoreMtxLst <- scoreMtx.grp$basic[[pName]]
+
+            mmMtxLst <- lapply( scoreMtxLst[fltObj$fltMNames] ,function(mtxObj){mtxObj$scoreMtx} )
+            mmEMtxLst <- list()
+            for( mName in fltObj$fltMNames ){
+                eMtx <- mmMtxLst[[mName]]
+                eMtx[,] <- NA
+                for( rIdx in seq_len(nrow(eMtx)) ){
+                    eMtx[rIdx,] <- bFCust.getEvt( mmMtxLst[[mName]][rIdx,] ,scoreMtxCfg[[mName]]$fCol )["lev",]
+                }
+                mmEMtxLst[[mName]] <- eMtx
+            }
+
+            rMtx <- matrix( 0 ,nrow=nrow(mmMtxLst[[1]]) ,ncol=length(fltObj$mInfo$cName) )
+            colnames(rMtx) <- fltObj$mInfo$cName
+            if( !fltObj$available ) return( rMtx )
+
+            for( aIdx in seq_len(nrow(rMtx)) ){
+                rMtx[aIdx,] <- fltObj$getScore( mmMtxLst ,mmEMtxLst ,aIdx )
+            }
+            rownames(rMtx) <- rownames(mmMtxLst[[1]])
+
+            return( rMtx )
+
+        }
+
+        return(fltObj)
+
+    }
 
 }
 
 
+mfName <- "mfrcf_89FVLav"
+if( FALSE ){    # config 세팅 요.
+
+    bFMtxMFltLst[[mfName]] <- function( tgt.scMtx=NULL ){
+
+        fltObj <- list( mInfo=list() )
+        fltObj$mInfo$mName <- mfName
+        fltObj$available <- TRUE    # bFCust.getFCustGrp() 에서 확인됨.
+
+        fltObj$fltMNames <- c(  "score8","score9","scoreFV"
+                            ,"scoreLAr13","scoreLAr24","scoreLVr13","scoreLVr24"
+                            ,"scoreLAc13","scoreLAc24","scoreLVc13","scoreLVc24"
+                            ,"scoreLAf13","scoreLAf24","scoreLVf13","scoreLVf24"
+        )
+        fltObj$mInfo$cName <- c( "s8_c21","s8_c22","s8_c23","s8_c24","s8_c25","s8_min3","s8_min2MatCnt"
+                                ,"s9rCnt" ,"s9cCnt" ,"s9fCnt"
+                                ,"fvdistR","fvdistC","fvdistF" ,"fvrCnt","fvcCnt","fvfCnt"
+                                ,"Ax13Hpn1A" ,"Ax13Hpn1B" ,"Ax24Hpn1A" ,"Ax24Hpn1B" 
+                                ,"Vx13Hpn1A" ,"Vx13Hpn1B" ,"Vx24Hpn1A" ,"Vx24Hpn1B" 
+        )
+
+        # tgt.scMtx가 fltObj$fltMNames 를 모두 포함하고 있는 지 체크.
+        if( !is.null(tgt.scMtx) ){
+            #   scoreMtxLst는 체크하지 않는다. 차라리 나중에 에러나는 게 인지하기 쉬우므로.            
+            mFlag <- fltObj$fltMNames %in% tgt.scMtx
+            fltObj$available <- ifelse( all(mFlag) ,fltObj$available ,FALSE )
+        }
+
+        fltObj$getScore <- function( mmMtxLst ,mmEMtxLst ,aIdx ){
+
+            rowVal <- rep( 0 ,length(fltObj$mInfo$cName) )
+            names(rowVal) <- fltObj$mInfo$cName
+
+            colAx <- c( "colA1" ,"colA2" ,"colA3" ,"colA4" ,"colA5" ,"colA6" )
+            colBx <- c( "colB1" ,"colB2" ,"colB3" ,"colB4" ,"colB5" ,"colB6" )
+            colAc <- c( "colA1" ,"colA2" ,"colA3" ,"colA4" ,"colA5" )
+            colBc <- c( "colB1" ,"colB2" ,"colB3" ,"colB4" ,"colB5" )
+
+            rowVal["Ax13Hpn1A"] <- sum(mmMtxLst[["scoreLAr13"]][aIdx,colAx]==1) + sum(mmMtxLst[["scoreLAc13"]][aIdx,colAc]==1) + sum(mmMtxLst[["scoreLAf13"]][aIdx,colAx]==1)
+            rowVal["Ax13Hpn1B"] <- sum(mmMtxLst[["scoreLAr13"]][aIdx,colBx]==1) + sum(mmMtxLst[["scoreLAc13"]][aIdx,colBc]==1) + sum(mmMtxLst[["scoreLAf13"]][aIdx,colBx]==1)
+            rowVal["Ax24Hpn1A"] <- sum(mmMtxLst[["scoreLAr24"]][aIdx,colAx]==1) + sum(mmMtxLst[["scoreLAc24"]][aIdx,colAc]==1) + sum(mmMtxLst[["scoreLAf24"]][aIdx,colAx]==1)
+            rowVal["Ax24Hpn1B"] <- sum(mmMtxLst[["scoreLAr24"]][aIdx,colBx]==1) + sum(mmMtxLst[["scoreLAc24"]][aIdx,colBc]==1) + sum(mmMtxLst[["scoreLAf24"]][aIdx,colBx]==1)
+            rowVal["Vx13Hpn1A"] <- sum(mmMtxLst[["scoreLVr13"]][aIdx,colAx]==1) + sum(mmMtxLst[["scoreLVc13"]][aIdx,colAc]==1) + sum(mmMtxLst[["scoreLVf13"]][aIdx,colAx]==1)
+            rowVal["Vx13Hpn1B"] <- sum(mmMtxLst[["scoreLVr13"]][aIdx,colBx]==1) + sum(mmMtxLst[["scoreLVc13"]][aIdx,colBc]==1) + sum(mmMtxLst[["scoreLVf13"]][aIdx,colBx]==1)
+            rowVal["Vx24Hpn1A"] <- sum(mmMtxLst[["scoreLVr24"]][aIdx,colAx]==1) + sum(mmMtxLst[["scoreLVc24"]][aIdx,colAc]==1) + sum(mmMtxLst[["scoreLVf24"]][aIdx,colAx]==1)
+            rowVal["Vx24Hpn1B"] <- sum(mmMtxLst[["scoreLVr24"]][aIdx,colBx]==1) + sum(mmMtxLst[["scoreLVc24"]][aIdx,colBc]==1) + sum(mmMtxLst[["scoreLVf24"]][aIdx,colBx]==1)
+
+
+            rowVal["s8_c21"]        <- mmMtxLst[["score8"]][aIdx,"c21"]
+            rowVal["s8_c22"]        <- mmMtxLst[["score8"]][aIdx,"c22"]
+            rowVal["s8_c23"]        <- mmMtxLst[["score8"]][aIdx,"c23"]
+            rowVal["s8_c24"]        <- mmMtxLst[["score8"]][aIdx,"c24"]
+            rowVal["s8_c25"]        <- mmMtxLst[["score8"]][aIdx,"c25"]
+            rowVal["s8_min3"]       <- mmMtxLst[["score8"]][aIdx,"min3"]
+            rowVal["s8_min2MatCnt"] <- mmMtxLst[["score8"]][aIdx,"min2MatCnt"]
+
+            rowVal["s9rCnt"]    <- mmMtxLst[["score9"]][aIdx,"rCnt"]
+            rowVal["s9cCnt"]    <- mmMtxLst[["score9"]][aIdx,"cCnt"]
+            rowVal["s9fCnt"]    <- mmMtxLst[["score9"]][aIdx,"fCnt"]
+
+            rowVal["fvdistR"]   <- mmMtxLst[["scoreFV"]][aIdx,"distR"]
+            rowVal["fvdistC"]   <- mmMtxLst[["scoreFV"]][aIdx,"distC"]
+            rowVal["fvdistF"]   <- mmMtxLst[["scoreFV"]][aIdx,"distF"]
+            rowVal["fvrCnt"]    <- mmMtxLst[["scoreFV"]][aIdx,"rCnt"]
+            rowVal["fvcCnt"]    <- mmMtxLst[["scoreFV"]][aIdx,"cCnt"]
+            rowVal["fvfCnt"]    <- mmMtxLst[["scoreFV"]][aIdx,"fCnt"]
 
 
 
+            # rowVal["xxx"]  <- mmMtxLst[["scoreFV"]][aIdx,"xxx"]
 
+            return( rowVal )
+
+        }
+
+        fltObj$getScoreMtx <- function( scoreMtxLst ){
+            # scoreMtx.grp <- getScoreMtx.grp( gEnv$allZoidMtx[allIdxF,,drop=F] ,filter.grp )
+            # scoreMtxLst <- scoreMtx.grp$basic[[pName]]
+
+            mmMtxLst <- lapply( scoreMtxLst[fltObj$fltMNames] ,function(mtxObj){mtxObj$scoreMtx} )
+            mmEMtxLst <- list()
+            for( mName in fltObj$fltMNames ){
+                eMtx <- mmMtxLst[[mName]]
+                eMtx[,] <- NA
+                for( rIdx in seq_len(nrow(eMtx)) ){
+                    eMtx[rIdx,] <- bFCust.getEvt( mmMtxLst[[mName]][rIdx,] ,scoreMtxCfg[[mName]]$fCol )["lev",]
+                }
+                mmEMtxLst[[mName]] <- eMtx
+            }
+
+            rMtx <- matrix( 0 ,nrow=nrow(mmMtxLst[[1]]) ,ncol=length(fltObj$mInfo$cName) )
+            colnames(rMtx) <- fltObj$mInfo$cName
+            if( !fltObj$available ) return( rMtx )
+
+            for( aIdx in seq_len(nrow(rMtx)) ){
+                rMtx[aIdx,] <- fltObj$getScore( mmMtxLst ,mmEMtxLst ,aIdx )
+            }
+            rownames(rMtx) <- rownames(mmMtxLst[[1]])
+
+            return( rMtx )
+
+        }
+
+        return(fltObj)
+
+    }
+
+}
 
 
 

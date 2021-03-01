@@ -152,6 +152,7 @@ for( sfcIdx in 0 ){ # 0:2
         timeCost <- c( timeCost ,"scoreLAe13"=70 ,"scoreLAe24"=70 ,"scoreLVe13"=70 ,"scoreLVe24"=70 )
         timeCost <- c( timeCost ,"scoreLAc13"=70 ,"scoreLAc24"=70 ,"scoreLVc13"=70 ,"scoreLVc24"=70 )
         timeCost <- c( timeCost ,"scoreLAf13"=70 ,"scoreLAf24"=70 ,"scoreLVf13"=70 ,"scoreLVf24"=70 )
+        timeCost <- c( timeCost ,"scoreFV"=80 )
 
         cutRst <- cutH.InitialCut( gEnv ,allIdxF ,blk ,filter.grp ,cut.grp ,timeCost=timeCost ,fHName=fHName ,logger=NULL )
 

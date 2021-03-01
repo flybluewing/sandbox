@@ -3905,7 +3905,7 @@ if( TRUE ){
 
 
 mfName <- "mf9ELecf"    # 재확인 필요.
-if( TRUE ){
+if( FALSE ){
     scoreMtxCfg[[mfName]] <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
