@@ -620,7 +620,9 @@ if( FALSE ){ # done. OK
 
 
 
-
+# ------------------------------------------------------------------------------------------
+#   szMtx for bFMtx reb (r.ph,r.fCol,r.dblHpnFlg)       HCR.MtxTmpl_rebSz()
+# ------------------------------------------------------------------------------------------
 mName <- "HCRreb_szC01R"    # HCRreb_szC는 발생 자체가 희귀하긴 하다.
 if( FALSE ){ # done. OK
     HCRMtxCfg[[mName]] <- list(

@@ -447,6 +447,37 @@ HCR.MtxTmpl_szReb <- function( mName ,wMLst ,szColName ,szRowName ){
     return( rObj )
 }
 
+HCR.MtxTmpl_rawReb <- function( mName ,wMLst ,colName ,rowName="raw" ){
+	rObj <- list( 	mInfo=c("mName"=mName ,"rowName"=rowName ,"colName"=colName  ) ,wMLst=wMLst )
+
+    rObj$cName <- c( wMLst$bf ,wMLst$bS )
+
+    rObj$fMtxObj <- function( crScrA ){
+        # crScr : cutRst List. bFMtx/bSMtx 모두 포함된 리스트
+        #   std.grp ,bS.grp
+
+        datLen <- length(crScrA$std.grp) ;datNam <- names(crScrA$std.grp) # datNam은 NULL일 수도 있다.
+
+        scrMtx <- matrix( 0 ,nrow=datLen ,ncol=length(rObj$cName) ,dimnames=list(datNam,rObj$cName) )
+        for( rIdx in seq_len(datLen) ){
+            std.grp <- crScrA$std.grp[[rIdx]]$sfcLate$basic
+            bS.grp <- crScrA$bS.grp[[rIdx]]$sfcLate$basic
+
+            for( wmName in rObj$wMLst$bf ){
+                summMtx <- std.grp[[wmName]]$summ$summMtx
+                scrMtx[rIdx,wmName] <- summMtx[ rObj$mInfo["rowName"] ,rObj$mInfo["colName"] ]
+            }
+            for( wmName in rObj$wMLst$bS ){
+                summMtx <- bS.grp[[wmName]]$summ$summMtx
+                scrMtx[rIdx,wmName] <- summMtx[ rObj$mInfo["rowName"] ,rObj$mInfo["colName"] ]
+            }
+        }
+
+        return( scrMtx )
+    }
+
+    return( rObj )
+}
 
 HCR.MtxTmpl_rebSz <- function( mName=mName ,wMLst=rObj$wMLst ,crScrH ,szCol ){
     #   szCol : r.ph      r.fCol r.dblHpnFlg        e.ph      e.fCol e.dblHpnFlg
@@ -469,6 +500,11 @@ HCR.MtxTmpl_rebSz <- function( mName=mName ,wMLst=rObj$wMLst ,crScrH ,szCol ){
             crObj$summ$scMtx.sz[rObj$mInfo["szRowName"],szCol]
         })
         rObj$szLst <- append( szLst_bf ,szLst_bS )
+
+        allZeroFlag <- sapply(rObj$szLst,function(pObj){ all(pObj==0) })
+        if( all(allZeroFlag) ){
+            rObj$szLst <- NULL
+        }
     }
 
     rObj$fMtxObj <- function( crScrA ){
@@ -507,6 +543,72 @@ HCR.MtxTmpl_rebSz <- function( mName=mName ,wMLst=rObj$wMLst ,crScrH ,szCol ){
     return( rObj )
 
 }
+
+HCR.MtxTmpl_rebRaw <- function( mName=mName ,wMLst=rObj$wMLst ,crScrH ,compCol ,rowName="raw" ){
+    #   rowName : raw / evt
+    #   compCol : all ph fCol phReb xyCnt.fCol xyCnt.phase
+
+	rObj <- list( 	mInfo=c("mName"=mName ,"rowName"=rowName ) ,wMLst=wMLst ,compCol=compCol
+				)
+    rObj$cName <- c( wMLst$bf ,wMLst$bS )
+
+    rObj$rawLst <- NULL
+    crScrH.len <- length(crScrH$std.grp)
+    if( 0<crScrH.len ){
+        lastHStr <- names(crScrH$std.grp)[crScrH.len]
+        rObj$mInfo["lastH"] <- lastHStr
+
+        rawLst_bf <- lapply( crScrH$std.grp[[lastHStr]]$sfcLate$basic[ rObj$wMLst$bf ] ,function( crObj ){
+            crObj$summ$summMtx[rObj$mInfo["rowName"],compCol]
+        })
+        rawLst_bS <- lapply( crScrH$bS.grp[[lastHStr]]$sfcLate$basic[ rObj$wMLst$bS ] ,function( crObj ){
+            crObj$summ$summMtx[rObj$mInfo["rowName"],compCol]
+        })
+        rObj$rawLst <- append( rawLst_bf ,rawLst_bS )
+        
+        allZeroFlag <- sapply(rObj$rawLst,function(pObj){ all(pObj==0) })
+        if( all(allZeroFlag) ){
+            rObj$rawLst <- NULL
+        }
+    }
+
+    rObj$fMtxObj <- function( crScrA ){
+        datLen <- length(crScrA$std.grp) ;datNam <- names(crScrA$std.grp) # datNam은 NULL일 수도 있다.
+
+        scrMtx <- matrix( 0 ,nrow=datLen ,ncol=length(rObj$cName) ,dimnames=list(datNam,rObj$cName) )
+        if( is.null(rObj$rawLst) ){
+            return( scrMtx )
+        }
+
+        for( rIdx in seq_len(datLen) ){
+            std.grp <- crScrA$std.grp[[rIdx]]$sfcLate$basic
+            bS.grp <- crScrA$bS.grp[[rIdx]]$sfcLate$basic
+
+            for( wmName in rObj$wMLst$bf ){
+                szA <- std.grp[[wmName]]$summ$summMtx[rObj$mInfo["rowName"] ,rObj$compCol]
+                matFlag <- szA == rObj$rawLst[[wmName]]
+                if( all(matFlag) ){
+                    matFlag <- matFlag & (szA>0)
+                    scrMtx[rIdx,wmName] <- sum( szA[matFlag] )
+                }
+            }
+            for( wmName in rObj$wMLst$bS ){
+                szA <- bS.grp[[wmName]]$summ$summMtx[rObj$mInfo["rowName"] ,rObj$compCol]
+                matFlag <- szA == rObj$rawLst[[wmName]]
+                if( all(matFlag) ){
+                    matFlag <- matFlag & (szA>0)
+                    scrMtx[rIdx,wmName] <- sum( szA[matFlag] )
+                }
+            }
+        }
+
+        return( scrMtx )
+    }
+
+    return( rObj )
+
+}
+
 
 HCR.MtxTmpl_phReb_raw <- function( mName ,wMName ,crScrH ,mGrp ){
     # mGrp : std.grp bS.grp
