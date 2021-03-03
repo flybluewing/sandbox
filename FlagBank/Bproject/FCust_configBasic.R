@@ -3904,8 +3904,8 @@ if( TRUE ){
 }
 
 
-mfName <- "mf9ELecf"    # 재확인 필요.
-if( FALSE ){
+mfName <- "mf9ELecf"
+if( TRUE ){
     scoreMtxCfg[[mfName]] <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
@@ -4014,7 +4014,7 @@ if( FALSE ){
         ,evtMax     = NULL
         ,rowReb = c( rawMin=1 ,lowE=1 ,rareE=1 ,dupESum=1 )
         ,rowRebDup = NULL
-        ,summMtx   = matrix( c(  1 ,3 ,3 ,2 ,2 ,2     , 1 ,1 ,1 ,1 ,2 ,2 ) ,byrow=T # all ph fCol phReb xyCnt.fCol xyCnt.phase
+        ,summMtx   = matrix( c(  1 ,3 ,3 ,1 ,2 ,2     , 1 ,1 ,1 ,1 ,2 ,2 ) ,byrow=T # all ph fCol phReb xyCnt.fCol xyCnt.phase
                 ,ncol=length(summMtxName$cName) ,nrow=length(summMtxName$rName)
                 ,dimnames=list(summMtxName$rName,summMtxName$cName)
         )
@@ -4023,7 +4023,7 @@ if( FALSE ){
                 ,dimnames=list(summMtxName$rName,summMtxName$cName)
         )
         ,summMtx.sum = c(raw=4 ,evt=3)
-        ,scMtx.sz = matrix( c(  3 ,5 ,1 ,2 ,3 ,1   ,2 ,2 ,1 ,1 ,1 ,1 ) ,byrow=T
+        ,scMtx.sz = matrix( c(  4 ,4 ,1 ,3 ,3 ,1   ,2 ,2 ,1 ,1 ,1 ,1 ) ,byrow=T
                         ,ncol=length(scMtx.szName$cName) ,nrow=length(scMtx.szName$rName) 
                         ,dimnames=list(scMtx.szName$rName,scMtx.szName$cName)
                         #     $scMtx.sz      r.ph r.fCol r.dblHpnFlg e.ph e.fCol e.dblHpnFlg
@@ -4034,7 +4034,6 @@ if( FALSE ){
         ,isHard=NULL  # use default
     )
 }
-
 
 mfName <- "mfE_59FVLav"  # score5, score9, scoreFV, scoreLAe, scoreLVe
 if( TRUE ){
@@ -4129,6 +4128,119 @@ if( TRUE ){
     )
 
 }
+
+mfName <- "mfrcf_N9FVLav"
+if( TRUE ){
+    scoreMtxCfg[[mfName]] <- list(
+        mName = mName   ,style=c( freqZero=TRUE )
+        ,fCol = list(
+            # score467
+            "sNpBanN.r" =list( rng=matrix( c(0,9 ,0,9) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
+                            ,evt=matrix( c(c(1),c(9)) ,ncol=2)      ,evtMax.fCol=NULL
+                        )
+            ,"sNpBanN.n" =list( rng=matrix( c(0,9 ,0,9) ,ncol=2 )
+                            ,evt=matrix( c(c(1),c(9)) ,ncol=2)      ,evtMax.fCol=NULL
+                        )
+            ,"sNpLCol" =list( rng=matrix( c(0,9 ,0,9) ,ncol=2 )
+                            ,evt=matrix( c(c(1),c(9)) ,ncol=2)      ,evtMax.fCol=NULL
+                        )
+            ,"sNpE3" =list( rng=matrix( c(0,9 ,0,9) ,ncol=2 )
+                            ,evt=matrix( c(c(1),c(9)) ,ncol=2)      ,evtMax.fCol=NULL
+                        )
+            ,"sNpfNum" =list( rng=matrix( c(0,9 ,0,9) ,ncol=2 )
+                            ,evt=matrix( c(c(1),c(9)) ,ncol=2)      ,evtMax.fCol=NULL
+                        )
+            ,"sNiBanN" =list( rng=matrix( c(0,9 ,0,9) ,ncol=2 )
+                            ,evt=matrix( c(c(1),c(9)) ,ncol=2)      ,evtMax.fCol=NULL
+                        )
+            ,"sNiLCol" =list( rng=matrix( c(0,9 ,0,9) ,ncol=2 )
+                            ,evt=matrix( c(c(1),c(9)) ,ncol=2)      ,evtMax.fCol=NULL
+                        )
+            ,"sNifNum" =list( rng=matrix( c(0,9 ,0,9) ,ncol=2 )
+                            ,evt=matrix( c(c(1),c(9)) ,ncol=2)      ,evtMax.fCol=NULL
+                        )
+            ,"sNFVa.m" =list( rng=matrix( c(0,9 ,0,9) ,ncol=2 )
+                            ,evt=matrix( c(c(1),c(9)) ,ncol=2)      ,evtMax.fCol=NULL
+                        )
+            # score9
+            ,"s9rCnt" =list( rng=matrix( c(0,9 ,0,9) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
+                            ,evt=matrix( c(c(3),c(9)) ,ncol=2)     ,evtMax.fCol=NULL
+                        )
+            ,"s9cCnt" =list( rng=matrix( c(0,9 ,0,9) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
+                            ,evt=matrix( c(c(3),c(9)) ,ncol=2)     ,evtMax.fCol=NULL
+                        )
+            ,"s9fCnt" =list( rng=matrix( c(0,9 ,0,9) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
+                            ,evt=matrix( c(c(3),c(9)) ,ncol=2)     ,evtMax.fCol=NULL
+                        )
+            # scoreFV
+            ,"fvdistR"=list( rng=matrix( c(0,5 ,0,5) ,ncol=2 )
+                            ,evt=matrix( c(c(1),c(9)) ,ncol=2)
+                        )
+            ,"fvdistC"=list( rng=matrix( c(0,5 ,0,5) ,ncol=2 )
+                            ,evt=matrix( c(c(1),c(9)) ,ncol=2)
+                        )
+            ,"fvdistF"=list( rng=matrix( c(0,5 ,0,5) ,ncol=2 )
+                            ,evt=matrix( c(c(1),c(9)) ,ncol=2)
+                        )
+            ,"fvrCnt"=list( rng=matrix( c(0,7 ,0,7) ,ncol=2 )
+                            ,evt=matrix( c(c(1),c(9)) ,ncol=2)
+                        )
+            ,"fvcCnt"=list( rng=matrix( c(0,7 ,0,7) ,ncol=2 )
+                            ,evt=matrix( c(c(1),c(9)) ,ncol=2)
+                        )
+            ,"fvfCnt"=list( rng=matrix( c(0,7 ,0,7) ,ncol=2 )
+                            ,evt=matrix( c(c(1),c(9)) ,ncol=2)
+                        )
+            # "scoreLAx13","scoreLAx24","scoreLVx13","scoreLVx24"
+            ,"Ax13Hpn1A" =list( rng=matrix( c(0,3 ,0,3) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
+                            ,evt=matrix( c(c(3),c(9)) ,ncol=2)     ,evtMax.fCol=NULL
+                        )
+            ,"Ax13Hpn1B" =list( rng=matrix( c(0,3 ,0,3) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
+                            ,evt=matrix( c(c(3),c(9)) ,ncol=2)     ,evtMax.fCol=NULL
+                        )
+            ,"Ax24Hpn1A" =list( rng=matrix( c(0,3 ,0,3) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
+                            ,evt=matrix( c(c(3),c(9)) ,ncol=2)     ,evtMax.fCol=NULL
+                        )
+            ,"Ax24Hpn1B" =list( rng=matrix( c(0,3 ,0,3) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
+                            ,evt=matrix( c(c(3),c(9)) ,ncol=2)     ,evtMax.fCol=NULL
+                        )
+            ,"Vx13Hpn1A" =list( rng=matrix( c(0,3 ,0,3) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
+                            ,evt=matrix( c(c(3),c(9)) ,ncol=2)     ,evtMax.fCol=NULL
+                        )
+            ,"Vx13Hpn1B" =list( rng=matrix( c(0,3 ,0,3) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
+                            ,evt=matrix( c(c(3),c(9)) ,ncol=2)     ,evtMax.fCol=NULL
+                        )
+            ,"Vx24Hpn1A" =list( rng=matrix( c(0,3 ,0,3) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
+                            ,evt=matrix( c(c(3),c(9)) ,ncol=2)     ,evtMax.fCol=NULL
+                        )
+            ,"Vx24Hpn1B" =list( rng=matrix( c(0,3 ,0,3) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
+                            ,evt=matrix( c(c(3),c(9)) ,ncol=2)     ,evtMax.fCol=NULL
+                        )
+        )
+        ,evtMaxFColTot=NULL ,evtMax = NULL
+        ,rowReb = c( rawMin=3 ,lowE=1 ,rareE=1 ,dupESum=2 )
+        ,rowRebDup = NULL
+        ,summMtx = matrix( c(  1 ,4 ,4 ,1 ,1 ,1     , 1 ,1 ,1 ,1 ,1 ,1 ) ,byrow=T # all ph fCol phReb xyCnt.fCol xyCnt.phase
+                ,ncol=length(summMtxName$cName) ,nrow=length(summMtxName$rName)
+                ,dimnames=list(summMtxName$rName,summMtxName$cName)
+        )     
+        ,summMtx.reb = matrix( c(  1 ,2 ,2 ,1 ,1 ,1     , 1 ,1 ,1 ,1 ,1 ,1 ) ,byrow=T # all ph fCol phReb xyCnt.fCol xyCnt.phase
+                ,ncol=length(summMtxName$cName) ,nrow=length(summMtxName$rName)
+                ,dimnames=list(summMtxName$rName,summMtxName$cName)
+        )     
+        ,summMtx.sum = c(raw=5 ,evt=2)
+        ,scMtx.sz = matrix( c(  4 ,5 ,1 ,1 ,1 ,1   ,2 ,2 ,1 ,1 ,1 ,1 ) ,byrow=T
+                        ,ncol=length(scMtx.szName$cName) ,nrow=length(scMtx.szName$rName) 
+                        ,dimnames=list(scMtx.szName$rName,scMtx.szName$cName)
+                        #     $scMtx.sz      r.ph r.fCol r.dblHpnFlg e.ph e.fCol e.dblHpnFlg
+                        #             rebCnt    0      0           0    0      0           0
+                        #             rebDup    0      0           0    0      0           0
+        )
+        ,scMtx.sz.sum = c(rebCnt.r=5 ,rebCnt.e=2)
+        ,isHard=NULL  # use default
+    )
+}
+
 
 
 #   추가 요소

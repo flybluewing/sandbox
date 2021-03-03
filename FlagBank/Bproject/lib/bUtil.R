@@ -2352,7 +2352,8 @@ BUtil.makeCrScrHTool <- function(){
 	sMtxHObj <- list( scrFile="./save/System/Obj_crScrH.save" )
 
 	sMtxHObj$initData <- function( ){
-		crScrH <- list( std.grp=list() ,bS.grp=list() ,stdIdx=integer(0) )
+		crScrH <- list( std.grp=list() ,bS.grp=list()  ,bN.grp=list() ,stdIdx=integer(0) )
+		crScrH$mInfo <- list( std.grp=list() ,bS.grp=list() ,bN.grp=list() )
 		save( crScrH ,file=sMtxHObj$scrFile )
 
 		cat(sprintf("    crScrH is initiated(%s) \n",sMtxHObj$scrFile))
@@ -2431,6 +2432,25 @@ BUtil.makeCrScrHTool <- function(){
 		crScrH$std.grp	<- crScrH$std.grp[ order(idx) ]
 		crScrH$bS.grp	<- crScrH$bS.grp[ order(idx) ]
 		crScrH$bN.grp	<- crScrH$bN.grp[ order(idx) ]
+
+		if( 0<length(crScrH$std.grp) ){	# update meta info
+
+			mName <- names(crScrH$std.grp[[1]]$sfcLate$basic)
+			pName <- colnames(crScrH$std.grp[[1]]$sfcLate$basic[[1]]$raw$rebMtx.ph)
+			pName.phReb <- colnames(crScrH$std.grp[[1]]$sfcLate$basic[[1]]$raw$phaseReb)
+			crScrH$mInfo$std.grp <- list( mName=mName ,pName=pName ,pName.phReb=pName.phReb )
+
+			mName <- names(crScrH$bS.grp[[1]]$sfcLate$basic)
+			pName <- colnames(crScrH$bS.grp[[1]]$sfcLate$basic[[1]]$raw$rebMtx.ph)
+			pName.phReb <- colnames(crScrH$bS.grp[[1]]$sfcLate$basic[[1]]$raw$phaseReb)
+			crScrH$mInfo$bS.grp <- list( mName=mName ,pName=pName ,pName.phReb=pName.phReb )
+
+			mName <- names(crScrH$bN.grp[[1]]$sfcLate$basic)
+			pName <- colnames(crScrH$bN.grp[[1]]$sfcLate$basic[[1]]$raw$rebMtx.ph)
+			pName.phReb <- colnames(crScrH$bN.grp[[1]]$sfcLate$basic[[1]]$raw$phaseReb)
+			crScrH$mInfo$bN.grp <- list( mName=mName ,pName=pName ,pName.phReb=pName.phReb )
+
+		}
 
 		save( crScrH ,file=sMtxHObj$scrFile )
 		

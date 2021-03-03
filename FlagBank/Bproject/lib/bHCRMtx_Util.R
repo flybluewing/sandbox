@@ -1,15 +1,17 @@
 
-HCR.getMName <- function( workMName ,crScrH ,warn=T ){
+HCR.getMName <- function( workMName ,warn=T ){
     # bFMtx에 해당하는 mName과 bSMtx에 해당하는 mName 분류
 
-    bfMNames <- intersect( workMName ,names(crScrH$std.grp[[1]]$sfcLate$basic) )
-    bSMNames <- intersect( workMName ,names(crScrH$bS.grp[[1]]$sfcLate$basic) )
+    bfMNames <- grep("score*",workMName,value=T)
+    bSMNames <- grep("sScore*",workMName,value=T)
+    # bfMNames <- intersect( workMName ,names(crScrH$std.grp[[1]]$sfcLate$basic) )
+    # bSMNames <- intersect( workMName ,names(crScrH$bS.grp[[1]]$sfcLate$basic) )
 
     if( warn ){
         haveFlag <- (workMName %in% bfMNames) | (workMName %in% bSMNames)
         if( any(!haveFlag) ){
             missingM <- workMName[!haveFlag]
-            cat(sprintf("    Warning!! missing in crScrH : %s \n",paste(missingM,collapse=",")))
+            cat(sprintf("    Warning!! check mName : %s \n",paste(missingM,collapse=",")))
         }
     }
 
@@ -411,7 +413,7 @@ HCR.get_testData.grp <- function( testSpan ,crScrH ,allIdxLst ,fRstLst ,lastH=NU
 
 # -- Template for bHCRMtx -----------------------------------------------------------------------------------
 HCR.MtxTmpl_szReb <- function( mName ,wMLst ,szColName ,szRowName ){
-    #   HCR.getMName(tgt.scMtx ,crScrH)     # bFMtx, bSMtx에 따라 분리추출된 mName
+    #   HCR.getMName(tgt.scMtx)     # bFMtx, bSMtx에 따라 분리추출된 mName
     #   swColName : r.ph r.fCol r.dblHpnFlg e.ph e.fCol e.dblHpnFlg
     #   swRowName : rebCnt / rebDup
 
@@ -619,36 +621,44 @@ HCR.MtxTmpl_phReb_raw <- function( mName ,wMName ,crScrH ,mGrp ){
 
 	rObj <- list( mInfo=c("mName"=mName ,"mGrp"=mGrp ) ,wMName=wMName )
 
-    crScrL <- crScrH[[mGrp]][[length(crScrH$stdIdx)]]   # crScr Late
-    rObj$cName <- colnames( crScrL$sfcLate$basic[[1]]$raw$rebMtx.ph )
-
     rObj$getRebMtx <- function( crScr ,wMName ,cName ){
         # wMName<-rObj$wMName    ;cName<-rObj$cName
         rMtx <- matrix( 0 ,nrow=length(wMName) ,ncol=length(cName) ,dimnames=list(wMName,cName) )
         for( phIdx in cName ){
-            rMtx[,phIdx] <- sapply( crScrL$sfcLate$basic[wMName] ,function(mObj){ 
-                return( mObj$raw$rebMtx.ph["rebFlag.raw",phIdx] )
+            rMtx[,phIdx] <- sapply( crScr$sfcLate$basic[wMName] ,function(mObj){
+                if( 0==mObj$raw$rebMtx.ph["rebFlag.raw",phIdx] ){
+                    return( 0 )
+                } else {
+                    return( mObj$raw$rebMtx.ph["hpn.raw",phIdx] )
+                }
+                # return( mObj$raw$rebMtx.ph["rebFlag.raw",phIdx] )
             })
         }
         return( rMtx )
     }
 
-    rObj$lastMtx <- rObj$getRebMtx( crScrL ,wMName=rObj$wMName ,cName=rObj$cName )
-    rObj$availPh <- !apply(rObj$lastMtx ,2 ,function(rDat){ all(0==rDat) })   # 모두 0인 ph는 비교작업이 필요 없으니까..
-
+    rObj$cName <- crScrH$mInfo[[mGrp]]$pName
+    rObj$available <- FALSE
+    if( 0<length(crScrH[[mGrp]]) ){
+        rObj$lastMtx <- rObj$getRebMtx( crScrH[[mGrp]][[length(crScrH$stdIdx)]] ,wMName=rObj$wMName ,cName=rObj$cName )
+        rObj$availPh <- !apply(rObj$lastMtx ,2 ,function(rDat){ all(0==rDat) })   # 모두 0인 ph는 비교작업이 필요 없으니까..
+        rObj$available <- any(rObj$availPh)
+    }
 
     rObj$fMtxObj <- function( crScrA ){
         #   debug  crScrA <- crScrH
+        #       crScrA 에서 mInfo를 찾으려하지 말 것.(데이터가 없는 crScrA도 있을 수 있으므로.)
         datLen <- length(crScrA$std.grp) ;datNam <- names(crScrA$std.grp) # datNam은 NULL일 수도 있다.
 
+        scrMtx.colNames <- rObj$cName
         scrMtx <- matrix( 0 ,nrow=datLen ,ncol=length(rObj$cName) ,dimnames=list(datNam,rObj$cName) )
-        if( all(!rObj$availPh) ){
+        if( !rObj$available ){
             return( scrMtx )
         }
 
         for( rIdx in seq_len(datLen) ){
-            std.grp <- crScrA$std.grp[[rIdx]]$sfcLate$basic
-            bS.grp <- crScrA$bS.grp[[rIdx]]$sfcLate$basic
+            # std.grp <- crScrA$std.grp[[rIdx]]$sfcLate$basic
+            # bS.grp <- crScrA$bS.grp[[rIdx]]$sfcLate$basic
 
             crScr <- crScrA[[ rObj$mInfo["mGrp"] ]][[rIdx]]
             mtxA <- rObj$getRebMtx( crScr ,wMName=rObj$wMName ,cName=rObj$cName )
@@ -665,7 +675,6 @@ HCR.MtxTmpl_phReb_raw <- function( mName ,wMName ,crScrH ,mGrp ){
 
         return( scrMtx )
     }
-
 
     return( rObj )
 

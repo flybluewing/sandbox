@@ -693,7 +693,7 @@ if( TRUE ){
 }
 
 mfName <- "mf9ELecf"
-if( FALSE ){ # config 점검 요.
+if( TRUE ){
     bFMtxMFltLst[[mfName]] <- function( tgt.scMtx=NULL ){
         fltObj <- list( mInfo=list() )
         fltObj$mInfo$mName <- mfName
@@ -747,16 +747,6 @@ if( FALSE ){ # config 점검 요.
             rowVal["Ve13Hpn1B"] <- sum( mmMtxLst[["scoreLVe13"]][aIdx,colB]==1 )
             rowVal["Ve24Hpn1A"] <- sum( mmMtxLst[["scoreLVe24"]][aIdx,colA]==1 )
             rowVal["Ve24Hpn1B"] <- sum( mmMtxLst[["scoreLVe24"]][aIdx,colB]==1 )
-
-            rowVal["Ac13Hpn1A"] <- sum( mmMtxLst[["scoreLAc13"]][aIdx,colA]==1 )
-            rowVal["Ac13Hpn1B"] <- sum( mmMtxLst[["scoreLAc13"]][aIdx,colB]==1 )
-            rowVal["Ac24Hpn1A"] <- sum( mmMtxLst[["scoreLAc24"]][aIdx,colA]==1 )
-            rowVal["Ac24Hpn1B"] <- sum( mmMtxLst[["scoreLAc24"]][aIdx,colB]==1 )
-            rowVal["Vc13Hpn1A"] <- sum( mmMtxLst[["scoreLVc13"]][aIdx,colA]==1 )
-            rowVal["Vc13Hpn1B"] <- sum( mmMtxLst[["scoreLVc13"]][aIdx,colB]==1 )
-            rowVal["Vc24Hpn1A"] <- sum( mmMtxLst[["scoreLVc24"]][aIdx,colA]==1 )
-            rowVal["Vc24Hpn1B"] <- sum( mmMtxLst[["scoreLVc24"]][aIdx,colB]==1 )
-
             rowVal["Af13Hpn1A"] <- sum( mmMtxLst[["scoreLAf13"]][aIdx,colA]==1 )
             rowVal["Af13Hpn1B"] <- sum( mmMtxLst[["scoreLAf13"]][aIdx,colB]==1 )
             rowVal["Af24Hpn1A"] <- sum( mmMtxLst[["scoreLAf24"]][aIdx,colA]==1 )
@@ -765,6 +755,18 @@ if( FALSE ){ # config 점검 요.
             rowVal["Vf13Hpn1B"] <- sum( mmMtxLst[["scoreLVf13"]][aIdx,colB]==1 )
             rowVal["Vf24Hpn1A"] <- sum( mmMtxLst[["scoreLVf24"]][aIdx,colA]==1 )
             rowVal["Vf24Hpn1B"] <- sum( mmMtxLst[["scoreLVf24"]][aIdx,colB]==1 )
+
+            colAc <- c( "colA1" ,"colA2" ,"colA3" ,"colA4" ,"colA5" )
+            colBc <- c( "colB1" ,"colB2" ,"colB3" ,"colB4" ,"colB5" )
+            rowVal["Ac13Hpn1A"] <- sum( mmMtxLst[["scoreLAc13"]][aIdx,colAc]==1 )
+            rowVal["Ac13Hpn1B"] <- sum( mmMtxLst[["scoreLAc13"]][aIdx,colBc]==1 )
+            rowVal["Ac24Hpn1A"] <- sum( mmMtxLst[["scoreLAc24"]][aIdx,colAc]==1 )
+            rowVal["Ac24Hpn1B"] <- sum( mmMtxLst[["scoreLAc24"]][aIdx,colBc]==1 )
+            rowVal["Vc13Hpn1A"] <- sum( mmMtxLst[["scoreLVc13"]][aIdx,colAc]==1 )
+            rowVal["Vc13Hpn1B"] <- sum( mmMtxLst[["scoreLVc13"]][aIdx,colBc]==1 )
+            rowVal["Vc24Hpn1A"] <- sum( mmMtxLst[["scoreLVc24"]][aIdx,colAc]==1 )
+            rowVal["Vc24Hpn1B"] <- sum( mmMtxLst[["scoreLVc24"]][aIdx,colBc]==1 )
+
 
             return( rowVal )
 
@@ -894,7 +896,7 @@ if( TRUE ){
 }
 
 mfName <- "mfrcf_N9FVLav"
-if( FALSE ){    # config 세팅 요.
+if( TRUE ){
 
     bFMtxMFltLst[[mfName]] <- function( tgt.scMtx=NULL ){
 
@@ -1003,7 +1005,7 @@ if( FALSE ){    # config 세팅 요.
 
 
 mfName <- "mfrcf_89FVLav"
-if( FALSE ){    # config 세팅 요.
+if( TRUE ){    # config 세팅 요.
 
     bFMtxMFltLst[[mfName]] <- function( tgt.scMtx=NULL ){
 

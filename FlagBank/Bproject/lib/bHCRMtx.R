@@ -18,7 +18,7 @@ if( TRUE ){
 
         workMName <- c("score1","score2","score3","score5","score8","score9")   # score 4,6,7 빠짐.
 
-        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,crScrH,warn=F) )
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
         rObj$getFilter <- function( crScrH=NULL ){
             # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
             fObj <- HCR.MtxTmpl_szReb( mName=mName ,wMLst=rObj$wMLst ,szColName="r.ph" ,szRowName="rebCnt" )
@@ -37,7 +37,7 @@ if( TRUE ){
         workMName <- c("score4","score6","score7","scoreA","scoreB","scoreC","scoreD","scoreE","scoreF")
         workMName <- c( workMName ,"scoreLAe13","scoreLAe24","scoreLVe13","scoreLVe24" )
 
-        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,crScrH,warn=F) )
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
         rObj$getFilter <- function( crScrH=NULL ){
             # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
             fObj <- HCR.MtxTmpl_szReb( mName=mName ,wMLst=rObj$wMLst ,szColName="r.ph" ,szRowName="rebCnt" )
@@ -57,7 +57,7 @@ if( TRUE ){
         workMName <- c( workMName ,"scoreLAc13","scoreLAc24","scoreLVc13","scoreLVc24" )
         workMName <- c( workMName ,"scoreLAf13","scoreLAf24","scoreLVf13","scoreLVf24" )
 
-        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,crScrH,warn=F) )
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
         rObj$getFilter <- function( crScrH=NULL ){
             # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
             fObj <- HCR.MtxTmpl_szReb( mName=mName ,wMLst=rObj$wMLst ,szColName="r.ph" ,szRowName="rebCnt" )
@@ -77,7 +77,7 @@ if( TRUE ){
 
         workMName <- c("score1","score2","score3","score5","score8","score9")   # score 4,6,7 빠짐.
 
-        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,crScrH,warn=F) )
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
         rObj$getFilter <- function( crScrH=NULL ){
             # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
             fObj <- HCR.MtxTmpl_szReb( mName=mName ,wMLst=rObj$wMLst ,szColName="r.fCol" ,szRowName="rebCnt" )
@@ -98,7 +98,7 @@ if( TRUE ){
         workMName <- c("score4","score6","score7","scoreA","scoreB","scoreC","scoreD","scoreE","scoreF")
         workMName <- c( workMName ,"scoreLAe13","scoreLAe24","scoreLVe13","scoreLVe24" )
 
-        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,crScrH,warn=F) )
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
         rObj$getFilter <- function( crScrH=NULL ){
             # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
             fObj <- HCR.MtxTmpl_szReb( mName=mName ,wMLst=rObj$wMLst ,szColName="r.fCol" ,szRowName="rebCnt" )
@@ -120,7 +120,7 @@ if( TRUE ){
         workMName <- c( workMName ,"scoreLAc13","scoreLAc24","scoreLVc13","scoreLVc24" )
         workMName <- c( workMName ,"scoreLAf13","scoreLAf24","scoreLVf13","scoreLVf24" )
 
-        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,crScrH,warn=F) )
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
         rObj$getFilter <- function( crScrH=NULL ){
             # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
             fObj <- HCR.MtxTmpl_szReb( mName=mName ,wMLst=rObj$wMLst ,szColName="r.fCol" ,szRowName="rebCnt" )
@@ -147,7 +147,7 @@ if( TRUE ){
 
         workMName <- c("sScore01","sScore02","sScore03","sScore05","sScore08","sScore09")   # sScore 4,6,7 빠짐.
 
-        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,crScrH,warn=F) )
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
         rObj$getFilter <- function( crScrH=NULL ){
             # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
             fObj <- HCR.MtxTmpl_szReb( mName=mName ,wMLst=rObj$wMLst ,szColName="r.ph" ,szRowName="rebCnt" )
@@ -165,7 +165,7 @@ if( TRUE ){
         workMName <- c("sScore04","sScore06","sScore07")
         workMName <- c( workMName ,"sScore0LAe13","sScore0LAe24","sScore0LVe13","sScore0LVe24" )
 
-        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,crScrH,warn=F) )
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
         rObj$getFilter <- function( crScrH=NULL ){
             # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
             fObj <- HCR.MtxTmpl_szReb( mName=mName ,wMLst=rObj$wMLst ,szColName="r.ph" ,szRowName="rebCnt" )
@@ -185,7 +185,7 @@ if( TRUE ){
         workMName <- c( workMName ,"sScore0LAc13","sScore0LAc24","sScore0LVc13","sScore0LVc24" )
         workMName <- c( workMName ,"sScore0LAf13","sScore0LAf24","sScore0LVf13","sScore0LVf24" )
 
-        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,crScrH,warn=F) )
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
         rObj$getFilter <- function( crScrH=NULL ){
             # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
             fObj <- HCR.MtxTmpl_szReb( mName=mName ,wMLst=rObj$wMLst ,szColName="r.ph" ,szRowName="rebCnt" )
@@ -206,7 +206,7 @@ if( TRUE ){
         workMName <- c( workMName ,"sScore0LAc13","sScore0LAc24","sScore0LVc13","sScore0LVc24" )
         workMName <- c( workMName ,"sScore0LAf13","sScore0LAf24","sScore0LVf13","sScore0LVf24" )
 
-        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,crScrH,warn=F) )
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
         rObj$getFilter <- function( crScrH=NULL ){
             fObj <- HCR.MtxTmpl_szReb( mName=mName ,wMLst=rObj$wMLst ,szColName="r.ph" ,szRowName="rebCnt" )
             return( fObj )
@@ -223,7 +223,7 @@ if( TRUE ){
 
         workMName <- c("sScore01","sScore02","sScore03","sScore05","sScore08","sScore09")   # sScore 4,6,7 빠짐.
 
-        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,crScrH,warn=F) )
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
         rObj$getFilter <- function( crScrH=NULL ){
             # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
             fObj <- HCR.MtxTmpl_szReb( mName=mName ,wMLst=rObj$wMLst ,szColName="r.fCol" ,szRowName="rebCnt" )
@@ -241,7 +241,7 @@ if( TRUE ){
         workMName <- c("sScore04","sScore06","sScore07")
         workMName <- c( workMName ,"sScore0LAe13","sScore0LAe24","sScore0LVe13","sScore0LVe24" )
 
-        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,crScrH,warn=F) )
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
         rObj$getFilter <- function( crScrH=NULL ){
             # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
             fObj <- HCR.MtxTmpl_szReb( mName=mName ,wMLst=rObj$wMLst ,szColName="r.fCol" ,szRowName="rebCnt" )
@@ -261,7 +261,7 @@ if( TRUE ){
         workMName <- c( workMName ,"sScore0LAc13","sScore0LAc24","sScore0LVc13","sScore0LVc24" )
         workMName <- c( workMName ,"sScore0LAf13","sScore0LAf24","sScore0LVf13","sScore0LVf24" )
 
-        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,crScrH,warn=F) )
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
         rObj$getFilter <- function( crScrH=NULL ){
             # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
             fObj <- HCR.MtxTmpl_szReb( mName=mName ,wMLst=rObj$wMLst ,szColName="r.fCol" ,szRowName="rebCnt" )
@@ -287,7 +287,7 @@ if( TRUE ){
         workMName <- c("score1","score2","score3","score5","score8","score9")   # score 4,6,7 빠짐.
         workMName <- c( workMName ,"sScore01","sScore02","sScore03","sScore05","sScore08","sScore09")   # sScore 4,6,7 빠짐.
 
-        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,crScrH,warn=F) )
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
         rObj$getFilter <- function( crScrH=NULL ){
             # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
             fObj <- HCR.MtxTmpl_szReb( mName=mName ,wMLst=rObj$wMLst ,szColName="r.ph" ,szRowName="rebCnt" )
@@ -308,7 +308,7 @@ if( TRUE ){
         workMName <- c( workMName ,"sScore04","sScore06","sScore07")
         workMName <- c( workMName ,"sScore0LAe13","sScore0LAe24","sScore0LVe13","sScore0LVe24" )
 
-        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,crScrH,warn=F) )
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
         rObj$getFilter <- function( crScrH=NULL ){
             # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
             fObj <- HCR.MtxTmpl_szReb( mName=mName ,wMLst=rObj$wMLst ,szColName="r.ph" ,szRowName="rebCnt" )
@@ -331,7 +331,7 @@ if( TRUE ){
         workMName <- c( workMName ,"sScore0LAc13","sScore0LAc24","sScore0LVc13","sScore0LVc24" )
         workMName <- c( workMName ,"sScore0LAf13","sScore0LAf24","sScore0LVf13","sScore0LVf24" )
 
-        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,crScrH,warn=F) )
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
         rObj$getFilter <- function( crScrH=NULL ){
             # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
             fObj <- HCR.MtxTmpl_szReb( mName=mName ,wMLst=rObj$wMLst ,szColName="r.ph" ,szRowName="rebCnt" )
@@ -351,7 +351,7 @@ if( TRUE ){
         workMName <- c("score1","score2","score3","score5","score8","score9")   # score 4,6,7 빠짐.
         workMName <- c( workMName ,"sScore01","sScore02","sScore03","sScore05","sScore08","sScore09")   # sScore 4,6,7 빠짐.
 
-        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,crScrH,warn=F) )
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
         rObj$getFilter <- function( crScrH=NULL ){
             # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
             fObj <- HCR.MtxTmpl_szReb( mName=mName ,wMLst=rObj$wMLst ,szColName="r.fCol" ,szRowName="rebCnt" )
@@ -371,7 +371,7 @@ if( TRUE ){
         workMName <- c( workMName ,"sScore04","sScore06","sScore07")
         workMName <- c( workMName ,"sScore0LAe13","sScore0LAe24","sScore0LVe13","sScore0LVe24" )
 
-        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,crScrH,warn=F) )
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
         rObj$getFilter <- function( crScrH=NULL ){
             # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
             fObj <- HCR.MtxTmpl_szReb( mName=mName ,wMLst=rObj$wMLst ,szColName="r.fCol" ,szRowName="rebCnt" )
@@ -393,7 +393,7 @@ if( TRUE ){
         workMName <- c( workMName ,"sScore0LAc13","sScore0LAc24","sScore0LVc13","sScore0LVc24" )
         workMName <- c( workMName ,"sScore0LAf13","sScore0LAf24","sScore0LVf13","sScore0LVf24" )
 
-        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,crScrH,warn=F) )
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
         rObj$getFilter <- function( crScrH=NULL ){
             # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
             fObj <- HCR.MtxTmpl_szReb( mName=mName ,wMLst=rObj$wMLst ,szColName="r.fCol" ,szRowName="rebCnt" )
@@ -419,7 +419,7 @@ if( TRUE ){
 
     fMaker <- function( mName ,crScrH ){
         workMName <- c("score1","score2","score3","score5")
-        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,crScrH,warn=F) )
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
         rObj$szCol <- c( "r.ph" ,"r.fCol" ,"r.dblHpnFlg" )
 
         rObj$getFilter <- function( crScrH ){
@@ -437,7 +437,7 @@ if( TRUE ){
 
     fMaker <- function( mName ,crScrH ){
         workMName <- c("score4","score6","score7","score8","score9")
-        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,crScrH,warn=F) )
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
         rObj$szCol <- c( "r.ph" ,"r.fCol" ,"r.dblHpnFlg" )
 
         rObj$getFilter <- function( crScrH ){
@@ -456,7 +456,7 @@ if( TRUE ){
     fMaker <- function( mName ,crScrH ){
         workMName <- c("scoreA","scoreB","scoreC","scoreD","scoreE","scoreF")
         workMName <- c( workMName ,c("scoreLAe13","scoreLAe24","scoreLVe13","scoreLVe24") )
-        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,crScrH,warn=F) )
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
         rObj$szCol <- c( "r.ph" ,"r.fCol" ,"r.dblHpnFlg" )
 
         rObj$getFilter <- function( crScrH ){
@@ -476,7 +476,7 @@ if( TRUE ){
         workMName <- c("scoreLAr13","scoreLAr24","scoreLVr13","scoreLVr24")
         workMName <- c( workMName ,"scoreLAc13","scoreLAc24","scoreLVc13","scoreLVc24" )
         workMName <- c( workMName ,"scoreLAf13","scoreLAf24","scoreLVf13","scoreLVf24" )
-        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,crScrH,warn=F) )
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
         rObj$szCol <- c( "r.ph" ,"r.fCol" ,"r.dblHpnFlg" )
 
         rObj$getFilter <- function( crScrH ){
@@ -495,7 +495,7 @@ if( TRUE ){
 
     fMaker <- function( mName ,crScrH ){
         workMName <- c("sScore01","sScore02","sScore03","sScore05","sScore08","sScore09")   # sScore 4,6,7 빠짐.
-        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,crScrH,warn=F) )
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
         rObj$szCol <- c( "r.ph" ,"r.fCol" ,"r.dblHpnFlg" )
 
         rObj$getFilter <- function( crScrH ){
@@ -516,7 +516,7 @@ if( TRUE ){
         workMName <- c( "sScore04","sScore06","sScore07" )
         workMName <- c( workMName ,"sScore0LAe13","sScore0LAe24","sScore0LVe13","sScore0LVe24" )
 
-        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,crScrH,warn=F) )
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
         rObj$szCol <- c( "r.ph" ,"r.fCol" ,"r.dblHpnFlg" )
 
         rObj$getFilter <- function( crScrH ){
@@ -538,7 +538,7 @@ if( TRUE ){
         workMName <- c( workMName ,"sScore0LAc13","sScore0LAc24","sScore0LVc13","sScore0LVc24" )
         workMName <- c( workMName ,"sScore0LAf13","sScore0LAf24","sScore0LVf13","sScore0LVf24" )
 
-        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,crScrH,warn=F) )
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
         rObj$szCol <- c( "r.ph" ,"r.fCol" ,"r.dblHpnFlg" )
 
         rObj$getFilter <- function( crScrH ){
@@ -561,7 +561,7 @@ if( TRUE ){
         workMName <- c( workMName ,"sScore0LAc13","sScore0LAc24","sScore0LVc13","sScore0LVc24" )
         workMName <- c( workMName ,"sScore0LAf13","sScore0LAf24","sScore0LVf13","sScore0LVf24" )
 
-        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,crScrH,warn=F) )
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
         rObj$szCol <- c( "r.ph" ,"r.fCol" ,"r.dblHpnFlg" )
 
         rObj$getFilter <- function( crScrH ){
@@ -580,7 +580,7 @@ if( TRUE ){
 
     fMaker <- function( mName ,crScrH ){
         workMName <- c("score1","score2","score3","score5")
-        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,crScrH,warn=F) )
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
         rObj$compCol <- c( "ph","fCol","phReb" )   # all ph fCol phReb xyCnt.fCol xyCnt.phase
 
         rObj$getFilter <- function( crScrH ){
@@ -598,7 +598,7 @@ if( TRUE ){
 
     fMaker <- function( mName ,crScrH ){
         workMName <- c("score1","score2","score3","score5")
-        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,crScrH,warn=F) )
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
         rObj$compCol <- c( "all","phReb","xyCnt.fCol","xyCnt.phase" )
 
         rObj$getFilter <- function( crScrH ){
@@ -616,7 +616,7 @@ if( TRUE ){
 
     fMaker <- function( mName ,crScrH ){
         workMName <- c("score4","score6","score7","score8","score9")
-        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,crScrH,warn=F) )
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
         rObj$compCol <- c( "ph","fCol","phReb" )   # all ph fCol phReb xyCnt.fCol xyCnt.phase
 
         rObj$getFilter <- function( crScrH ){
@@ -634,7 +634,7 @@ if( TRUE ){
 
     fMaker <- function( mName ,crScrH ){
         workMName <- c("score4","score6","score7","score8","score9")
-        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,crScrH,warn=F) )
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
         rObj$compCol <- c( "all","phReb","xyCnt.fCol","xyCnt.phase" )
 
         rObj$getFilter <- function( crScrH ){
@@ -654,7 +654,7 @@ if( TRUE ){
         workMName <- c("scoreA","scoreB","scoreC","scoreD","scoreE","scoreF")
         workMName <- c( workMName ,c("scoreLAe13","scoreLAe24","scoreLVe13","scoreLVe24") )
 
-        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,crScrH,warn=F) )
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
         rObj$compCol <- c( "ph","fCol","phReb" )   # all ph fCol phReb xyCnt.fCol xyCnt.phase
 
         rObj$getFilter <- function( crScrH ){
@@ -674,7 +674,7 @@ if( TRUE ){
         workMName <- c("scoreA","scoreB","scoreC","scoreD","scoreE","scoreF")
         workMName <- c( workMName ,c("scoreLAe13","scoreLAe24","scoreLVe13","scoreLVe24") )
 
-        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,crScrH,warn=F) )
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
         rObj$compCol <- c( "all","phReb","xyCnt.fCol","xyCnt.phase" )
 
         rObj$getFilter <- function( crScrH ){
@@ -695,7 +695,7 @@ if( TRUE ){
         workMName <- c( workMName ,"scoreLAc13","scoreLAc24","scoreLVc13","scoreLVc24" )
         workMName <- c( workMName ,"scoreLAf13","scoreLAf24","scoreLVf13","scoreLVf24" )
 
-        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,crScrH,warn=F) )
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
         rObj$compCol <- c( "ph","fCol","phReb" )   # all ph fCol phReb xyCnt.fCol xyCnt.phase
 
         rObj$getFilter <- function( crScrH ){
@@ -716,7 +716,7 @@ if( TRUE ){
         workMName <- c( workMName ,"scoreLAc13","scoreLAc24","scoreLVc13","scoreLVc24" )
         workMName <- c( workMName ,"scoreLAf13","scoreLAf24","scoreLVf13","scoreLVf24" )
 
-        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,crScrH,warn=F) )
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
         rObj$compCol <- c( "all","phReb","xyCnt.fCol","xyCnt.phase" )
 
         rObj$getFilter <- function( crScrH ){
@@ -735,7 +735,7 @@ if( TRUE ){
 
     fMaker <- function( mName ,crScrH ){
         workMName <- c("sScore01","sScore02","sScore03","sScore05","sScore08","sScore09")   # sScore 4,6,7 빠짐.
-        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,crScrH,warn=F) )
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
         rObj$compCol <- c( "ph","fCol","phReb" )   # all ph fCol phReb xyCnt.fCol xyCnt.phase
 
         rObj$getFilter <- function( crScrH ){
@@ -753,7 +753,7 @@ if( TRUE ){
 
     fMaker <- function( mName ,crScrH ){
         workMName <- c("sScore01","sScore02","sScore03","sScore05","sScore08","sScore09")   # sScore 4,6,7 빠짐.
-        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,crScrH,warn=F) )
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
         rObj$compCol <- c( "all","phReb","xyCnt.fCol","xyCnt.phase" )
 
         rObj$getFilter <- function( crScrH ){
@@ -773,7 +773,7 @@ if( TRUE ){
         workMName <- c( "sScore04","sScore06","sScore07" )
         workMName <- c( workMName ,"sScore0LAe13","sScore0LAe24","sScore0LVe13","sScore0LVe24" )
 
-        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,crScrH,warn=F) )
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
         rObj$compCol <- c( "ph","fCol","phReb" )   # all ph fCol phReb xyCnt.fCol xyCnt.phase
 
         rObj$getFilter <- function( crScrH ){
@@ -793,7 +793,7 @@ if( TRUE ){
         workMName <- c( "sScore04","sScore06","sScore07" )
         workMName <- c( workMName ,"sScore0LAe13","sScore0LAe24","sScore0LVe13","sScore0LVe24" )
 
-        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,crScrH,warn=F) )
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
         rObj$compCol <- c( "all","phReb","xyCnt.fCol","xyCnt.phase" )
 
         rObj$getFilter <- function( crScrH ){
@@ -814,7 +814,7 @@ if( TRUE ){
         workMName <- c( workMName ,"sScore0LAc13","sScore0LAc24","sScore0LVc13","sScore0LVc24" )
         workMName <- c( workMName ,"sScore0LAf13","sScore0LAf24","sScore0LVf13","sScore0LVf24" )
 
-        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,crScrH,warn=F) )
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
         rObj$compCol <- c( "ph","fCol","phReb" )   # all ph fCol phReb xyCnt.fCol xyCnt.phase
 
         rObj$getFilter <- function( crScrH ){
@@ -835,7 +835,7 @@ if( TRUE ){
         workMName <- c( workMName ,"sScore0LAc13","sScore0LAc24","sScore0LVc13","sScore0LVc24" )
         workMName <- c( workMName ,"sScore0LAf13","sScore0LAf24","sScore0LVf13","sScore0LVf24" )
 
-        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,crScrH,warn=F) )
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
         rObj$compCol <- c( "all","phReb","xyCnt.fCol","xyCnt.phase" )
 
         rObj$getFilter <- function( crScrH ){
@@ -857,7 +857,7 @@ if( TRUE ){
         workMName <- c( workMName ,"sScore0LAc13","sScore0LAc24","sScore0LVc13","sScore0LVc24" )
         workMName <- c( workMName ,"sScore0LAf13","sScore0LAf24","sScore0LVf13","sScore0LVf24" )
 
-        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,crScrH,warn=F) )
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
         rObj$compCol <- c( "ph","fCol","phReb" )   # all ph fCol phReb xyCnt.fCol xyCnt.phase
 
         rObj$getFilter <- function( crScrH ){
@@ -879,7 +879,7 @@ if( TRUE ){
         workMName <- c( workMName ,"sScore0LAc13","sScore0LAc24","sScore0LVc13","sScore0LVc24" )
         workMName <- c( workMName ,"sScore0LAf13","sScore0LAf24","sScore0LVf13","sScore0LVf24" )
 
-        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,crScrH,warn=F) )
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
         rObj$compCol <- c( "all","phReb","xyCnt.fCol","xyCnt.phase" )
 
         rObj$getFilter <- function( crScrH ){
@@ -924,7 +924,7 @@ mName <- "HCRreb_phRawF01"    # WORK
 if( TRUE ){
     fMaker <- function( mName ,crScrH ){
         workMName <- c("score1","score2","score3","score4")
-        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,crScrH,warn=F) )
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
 
         rObj$getFilter <- function( crScrH ){
             fObj <- HCR.MtxTmpl_phReb_raw( mName ,wMName=rObj$wMLst$bf ,crScrH ,mGrp="std.grp" )
@@ -944,7 +944,7 @@ mName <- "HCRreb_phRawS01"    # WORK
 if( TRUE ){
     fMaker <- function( mName ,crScrH ){
         workMName <- c("sScore01","sScore02","sScore03","sScore04")
-        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,crScrH,warn=F) )
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
 
         rObj$getFilter <- function( crScrH ){
             fObj <- HCR.MtxTmpl_phReb_raw( mName ,wMName=rObj$wMLst$bS ,crScrH ,mGrp="bS.grp" )
@@ -978,7 +978,7 @@ if( TRUE ){
 
         workMName <- c("score1","score2","score3","score5","score8","score9")   # score 4,6,7 빠짐.
 
-        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,crScrH,warn=F) )
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
         rObj$getFilter <- function( crScrH=NULL ){
             # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
             fObj <- HCR.MtxTmpl_rawReb( mName=mName ,wMLst=rObj$wMLst ,colName="ph" ,rowName="raw" )

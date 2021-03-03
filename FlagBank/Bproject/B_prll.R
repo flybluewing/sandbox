@@ -5,7 +5,7 @@ load(sprintf("../Aproject/Obj_allIdxLstZ%d.save",lastH) )
 load(sprintf("../Aproject/save/Obj_fRstLstZ%d.save",lastH) )
 names(fRstLst) <- names(allIdxLst$stdFiltedCnt)
 load(sprintf("../Aproject/save/Obj_gEnvZ%d.save",lastH))
-crScrH <- crScrHTool$getData()
+
 
 #-[Parallel init work]-------------------------------------------------------------
 prllNum <- 7     # ½Ç¼ö°¡ Àæ¾Æ¼­ ±×³É ¿À·ù ÄÚµå·Î ³öµÐ´Ù.
