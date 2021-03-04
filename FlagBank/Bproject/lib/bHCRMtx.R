@@ -217,11 +217,12 @@ if( TRUE ){
     bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
 }
 
-mName <- "HCRsz_bS01fCol"    # WORK
+mName <- "HCRsz_bS01AVefCol"
 if( TRUE ){
     fMaker <- function( mName ,crScrH ){
 
         workMName <- c("sScore01","sScore02","sScore03","sScore05","sScore08","sScore09")   # sScore 4,6,7 ºüÁü.
+        workMName <- c( workMName ,"sScore0LAe13","sScore0LAe24","sScore0LVe13","sScore0LVe24" )
 
         rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
         rObj$getFilter <- function( crScrH=NULL ){
@@ -234,11 +235,12 @@ if( TRUE ){
     }
     bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
 }
-mName <- "HCRsz_bS2AfCol"    # WORK
+mName <- "HCRsz_bS2AfCol"
 if( TRUE ){
     fMaker <- function( mName ,crScrH ){
 
-        workMName <- c("sScore04","sScore06","sScore07")
+        workMName <- c( "sScore01","sScore02","sScore03" )
+        workMName <- c( workMName ,"sScore04","sScore06","sScore07" )
         workMName <- c( workMName ,"sScore0LAe13","sScore0LAe24","sScore0LVe13","sScore0LVe24" )
 
         rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
@@ -253,7 +255,7 @@ if( TRUE ){
     bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
 
 }
-mName <- "HCRsz_bSavfCol"    # WORK
+mName <- "HCRsz_bSavfCol"
 if( TRUE ){
     fMaker <- function( mName ,crScrH ){
 

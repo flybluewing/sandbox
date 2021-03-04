@@ -451,13 +451,14 @@ if( FALSE ){ # done. OK
     )
 
 }
-mName <- "HCRsz_bS01fCol"
-if( FALSE ){
+mName <- "HCRsz_bS01AVefCol"
+if( FALSE ){ # done. OK
     HCRMtxCfg[[mName]] <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
             "sScore01"=list( rng=matrix( c(0,0 ,0,4) ,ncol=2 )
                             ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
+                            ,freqVal=c(1)
                         ) 
             ,"sScore02"=list( rng=matrix( c(0,0 ,0,4) ,ncol=2 )
                             ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
@@ -467,26 +468,50 @@ if( FALSE ){
                         )
             ,"sScore05"=list( rng=matrix( c(0,0 ,0,4) ,ncol=2 )
                             ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
+                            ,freqVal=c(1)
                         )
             ,"sScore08"=list( rng=matrix( c(0,0 ,0,4) ,ncol=2 )
                             ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
                         )
             ,"sScore09"=list( rng=matrix( c(0,0 ,0,4) ,ncol=2 )
                             ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
+                            ,freqVal=c(1)
+                        )
+            ,"sScore0LAe13"=list( rng=matrix( c(0,0 ,0,4) ,ncol=2 )
+                            ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"sScore0LAe24"=list( rng=matrix( c(0,0 ,0,4) ,ncol=2 )
+                            ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"sScore0LVe13"=list( rng=matrix( c(0,0 ,0,4) ,ncol=2 )
+                            ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"sScore0LVe24"=list( rng=matrix( c(0,0 ,0,4) ,ncol=2 )
+                            ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
                         )
         )
         ,evtMax = NULL
-        ,rowReb = NULL  # c( rawMin=2 ,lowE=2,rareE=1 ,dupESum=2 )
+        ,rowReb = c( rawMin=1 ,lowE=2,rareE=1 ,dupESum=2 )  # freqVal로 처리하긴 했는데... rawWin=2이 나으려나?
         ,isHard=NULL  # use default
     )
-
 }
 mName <- "HCRsz_bS2AfCol"
-if( FALSE ){
+if( FALSE ){ # done. OK
     HCRMtxCfg[[mName]] <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
-            "sScore04"=list( rng=matrix( c(0,0 ,0,4) ,ncol=2 )
+            "sScore01"=list( rng=matrix( c(0,0 ,0,4) ,ncol=2 )
+                            ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
+                            ,freqVal=c(1)
+                        ) 
+            ,"sScore02"=list( rng=matrix( c(0,0 ,0,4) ,ncol=2 )
+                            ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
+                            ,freqVal=c(1)
+                        )
+            ,"sScore03"=list( rng=matrix( c(0,0 ,0,4) ,ncol=2 )
+                            ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"sScore04"=list( rng=matrix( c(0,0 ,0,4) ,ncol=2 )
                             ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
                         ) 
             ,"sScore06"=list( rng=matrix( c(0,0 ,0,4) ,ncol=2 )
@@ -509,12 +534,12 @@ if( FALSE ){
                         )
         )
         ,evtMax = NULL
-        ,rowReb = NULL  # c( rawMin=1 ,lowE=3 ,rareE=1 ,dupESum=2 )
+        ,rowReb = c( rawMin=1 ,lowE=2,rareE=1 ,dupESum=2 )
         ,isHard=NULL  # use default
     )
 }
 mName <- "HCRsz_bSavfCol"
-if( FALSE ){
+if( FALSE ){ # done. OK
     HCRMtxCfg[[mName]] <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
@@ -556,7 +581,7 @@ if( FALSE ){
                         )
         )
         ,evtMax = NULL
-        ,rowReb = c( rawMin=2 ,lowE=3 ,rareE=1 ,dupESum=2 )
+        ,rowReb = c( rawMin=1 ,lowE=2,rareE=1 ,dupESum=2 )
         ,isHard=NULL  # use default
     )
 
@@ -616,6 +641,11 @@ if( FALSE ){ # done. OK
     )
 
 }
+mName <- "HCRsz_bfS2APh"    # WORK
+mName <- "HCRsz_bfSavPh"    # WORK
+mName <- "HCRsz_bfS01fCol"    # WORK
+mName <- "HCRsz_bfS2AfCol"    # WORK
+mName <- "HCRsz_bfSavfCol"    # WORK
 
 
 
