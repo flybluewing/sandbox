@@ -301,13 +301,33 @@ if( TRUE ){
     bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
 
 }
-mName <- "HCRsz_bfS2APh"    # WORK
+mName <- "HCRsz_bfS2APh"
 if( TRUE ){
     fMaker <- function( mName ,crScrH ){
 
         workMName <- c("score4","score6","score7","scoreA","scoreB","scoreC","scoreD","scoreE","scoreF")
-        workMName <- c( workMName ,"scoreLAe13","scoreLAe24","scoreLVe13","scoreLVe24" )
+        # workMName <- c( workMName ,"scoreLAe13","scoreLAe24","scoreLVe13","scoreLVe24" )
         workMName <- c( workMName ,"sScore04","sScore06","sScore07")
+        # workMName <- c( workMName ,"sScore0LAe13","sScore0LAe24","sScore0LVe13","sScore0LVe24" )
+
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
+        rObj$getFilter <- function( crScrH=NULL ){
+            # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
+            fObj <- HCR.MtxTmpl_szReb( mName=mName ,wMLst=rObj$wMLst ,szColName="r.ph" ,szRowName="rebCnt" )
+            return( fObj )
+        }
+
+        return( rObj )
+    }
+    bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
+
+}
+mName <- "HCRsz_bfSAVePh"
+if( TRUE ){
+    fMaker <- function( mName ,crScrH ){
+
+        workMName <- NULL
+        workMName <- c( workMName ,"scoreLAe13","scoreLAe24","scoreLVe13","scoreLVe24" )
         workMName <- c( workMName ,"sScore0LAe13","sScore0LAe24","sScore0LVe13","sScore0LVe24" )
 
         rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
@@ -322,7 +342,7 @@ if( TRUE ){
     bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
 
 }
-mName <- "HCRsz_bfSavPh"    # WORK
+mName <- "HCRsz_bfSavPh"
 if( TRUE ){
     fMaker <- function( mName ,crScrH ){
 
@@ -346,7 +366,7 @@ if( TRUE ){
 
 }
 
-mName <- "HCRsz_bfS01fCol"    # WORK
+mName <- "HCRsz_bfS01fCol"
 if( TRUE ){
     fMaker <- function( mName ,crScrH ){
 
@@ -364,14 +384,14 @@ if( TRUE ){
     }
     bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
 }
-mName <- "HCRsz_bfS2AfCol"    # WORK
+mName <- "HCRsz_bfS2AfCol"
 if( TRUE ){
     fMaker <- function( mName ,crScrH ){
 
         workMName <- c("score4","score6","score7","scoreA","scoreB","scoreC","scoreD","scoreE","scoreF")
-        workMName <- c( workMName ,"scoreLAe13","scoreLAe24","scoreLVe13","scoreLVe24" )
+        # workMName <- c( workMName ,"scoreLAe13","scoreLAe24","scoreLVe13","scoreLVe24" )
         workMName <- c( workMName ,"sScore04","sScore06","sScore07")
-        workMName <- c( workMName ,"sScore0LAe13","sScore0LAe24","sScore0LVe13","sScore0LVe24" )
+        # workMName <- c( workMName ,"sScore0LAe13","sScore0LAe24","sScore0LVe13","sScore0LVe24" )
 
         rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
         rObj$getFilter <- function( crScrH=NULL ){
@@ -384,7 +404,27 @@ if( TRUE ){
     }
     bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
 }
-mName <- "HCRsz_bfSavfCol"    # WORK
+mName <- "HCRsz_bfSAVefCol"
+if( TRUE ){
+    fMaker <- function( mName ,crScrH ){
+
+        workMName <- NULL
+        workMName <- c( workMName ,"scoreLAe13","scoreLAe24","scoreLVe13","scoreLVe24" )
+        workMName <- c( workMName ,"sScore0LAe13","sScore0LAe24","sScore0LVe13","sScore0LVe24" )
+
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
+        rObj$getFilter <- function( crScrH=NULL ){
+            # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
+            fObj <- HCR.MtxTmpl_szReb( mName=mName ,wMLst=rObj$wMLst ,szColName="r.fCol" ,szRowName="rebCnt" )
+            return( fObj )
+        }
+
+        return( rObj )
+    }
+    bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
+
+}
+mName <- "HCRsz_bfSavfCol"
 if( TRUE ){
     fMaker <- function( mName ,crScrH ){
 
