@@ -5,6 +5,7 @@ load(sprintf("../Aproject/Obj_allIdxLstZ%d.save",lastH) )
 load(sprintf("../Aproject/save/Obj_fRstLstZ%d.save",lastH) )
 names(fRstLst) <- names(allIdxLst$stdFiltedCnt)
 load(sprintf("../Aproject/save/Obj_gEnvZ%d.save",lastH))
+crScrH <- crScrHTool$getData( )     ;crScrH <- crScrHTool$bySpan(crScrH,lastH)
 
 
 #-[Parallel init work]-------------------------------------------------------------
