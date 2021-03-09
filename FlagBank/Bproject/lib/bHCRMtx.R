@@ -580,8 +580,7 @@ if( TRUE ){
     }
     bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
 }
-
-mName <- "HCRreb_rawC02R_a" # work
+mName <- "HCRreb_rawC02R_a"
 if( TRUE ){
     fMaker <- function( mName ,crScrH ){
         workMName <- c( "score4","score6","score7","score8","score9")
@@ -601,7 +600,7 @@ if( TRUE ){
     }
     bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
 }
-mName <- "HCRreb_rawC02R_b" # work
+mName <- "HCRreb_rawC02R_b"
 if( TRUE ){
     fMaker <- function( mName ,crScrH ){
         workMName <- c( "score4","score6","score7","score8","score9")
@@ -621,12 +620,12 @@ if( TRUE ){
     }
     bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
 }
-mName <- "HCRreb_rawCAavR_a" # deprecated
-if( FALSE ){
 
+mName <- "HCRreb_rawS01R_a"
+if( TRUE ){
     fMaker <- function( mName ,crScrH ){
-        workMName <- c("scoreA","scoreB","scoreC","scoreD","scoreE","scoreF")
-        workMName <- c( workMName ,c("scoreLAe13","scoreLAe24","scoreLVe13","scoreLVe24") )
+        workMName <- c("sScore01","sScore02","sScore03","sScore05","sScore08","sScore09")   # sScore 4,6,7 ºüÁü.
+        workMName <- c( workMName ,c("sScore0LAe13","sScore0LAe24","sScore0LVe13","sScore0LVe24") )
 
         rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
         rObj$compCol <- c( "ph","fCol","phReb" )   # all ph fCol phReb xyCnt.fCol xyCnt.phase
@@ -639,133 +638,13 @@ if( FALSE ){
         return( rObj )
     }
     bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
-
 }
-mName <- "HCRreb_rawCAavR_b" # deprecated
-if( FALSE ){
-
-    fMaker <- function( mName ,crScrH ){
-        workMName <- c("scoreA","scoreB","scoreC","scoreD","scoreE","scoreF")
-        workMName <- c( workMName ,c("scoreLAe13","scoreLAe24","scoreLVe13","scoreLVe24") )
-
-        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
-        rObj$compCol <- c( "all","phReb","xyCnt.fCol","xyCnt.phase" )
-
-        rObj$getFilter <- function( crScrH ){
-            fObj <- HCR.MtxTmpl_rebRaw( mName=mName ,wMLst=rObj$wMLst ,crScrH ,compCol=rObj$compCol ,rowName="raw" )
-            return( fObj )
-        }
-
-        return( rObj )
-    }
-    bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
-
-}
-mName <- "HCRreb_rawCavR_a" # deprecated
-if( FALSE ){
-
-    fMaker <- function( mName ,crScrH ){
-        workMName <- c("scoreLAr13","scoreLAr24","scoreLVr13","scoreLVr24")
-        workMName <- c( workMName ,"scoreLAc13","scoreLAc24","scoreLVc13","scoreLVc24" )
-        workMName <- c( workMName ,"scoreLAf13","scoreLAf24","scoreLVf13","scoreLVf24" )
-
-        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
-        rObj$compCol <- c( "ph","fCol","phReb" )   # all ph fCol phReb xyCnt.fCol xyCnt.phase
-
-        rObj$getFilter <- function( crScrH ){
-            fObj <- HCR.MtxTmpl_rebRaw( mName=mName ,wMLst=rObj$wMLst ,crScrH ,compCol=rObj$compCol ,rowName="raw" )
-            return( fObj )
-        }
-
-        return( rObj )
-    }
-    bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
-
-}
-mName <- "HCRreb_rawCavR_b" # deprecated
-if( FALSE ){
-
-    fMaker <- function( mName ,crScrH ){
-        workMName <- c("scoreLAr13","scoreLAr24","scoreLVr13","scoreLVr24")
-        workMName <- c( workMName ,"scoreLAc13","scoreLAc24","scoreLVc13","scoreLVc24" )
-        workMName <- c( workMName ,"scoreLAf13","scoreLAf24","scoreLVf13","scoreLVf24" )
-
-        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
-        rObj$compCol <- c( "all","phReb","xyCnt.fCol","xyCnt.phase" )
-
-        rObj$getFilter <- function( crScrH ){
-            fObj <- HCR.MtxTmpl_rebRaw( mName=mName ,wMLst=rObj$wMLst ,crScrH ,compCol=rObj$compCol ,rowName="raw" )
-            return( fObj )
-        }
-
-        return( rObj )
-    }
-    bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
-
-}
-
-mName <- "HCRreb_rawS01R_a" # work
+mName <- "HCRreb_rawS01R_b"
 if( TRUE ){
 
     fMaker <- function( mName ,crScrH ){
         workMName <- c("sScore01","sScore02","sScore03","sScore05","sScore08","sScore09")   # sScore 4,6,7 ºüÁü.
-        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
-        rObj$compCol <- c( "ph","fCol","phReb" )   # all ph fCol phReb xyCnt.fCol xyCnt.phase
-
-        rObj$getFilter <- function( crScrH ){
-            fObj <- HCR.MtxTmpl_rebRaw( mName=mName ,wMLst=rObj$wMLst ,crScrH ,compCol=rObj$compCol ,rowName="raw" )
-            return( fObj )
-        }
-
-        return( rObj )
-    }
-    bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
-
-}
-mName <- "HCRreb_rawS01R_b" # work
-if( TRUE ){
-
-    fMaker <- function( mName ,crScrH ){
-        workMName <- c("sScore01","sScore02","sScore03","sScore05","sScore08","sScore09")   # sScore 4,6,7 ºüÁü.
-        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
-        rObj$compCol <- c( "all","phReb","xyCnt.fCol","xyCnt.phase" )
-
-        rObj$getFilter <- function( crScrH ){
-            fObj <- HCR.MtxTmpl_rebRaw( mName=mName ,wMLst=rObj$wMLst ,crScrH ,compCol=rObj$compCol ,rowName="raw" )
-            return( fObj )
-        }
-
-        return( rObj )
-    }
-    bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
-
-}
-mName <- "HCRreb_rawS02R_a" # work
-if( TRUE ){
-
-    fMaker <- function( mName ,crScrH ){
-        workMName <- c( "sScore04","sScore06","sScore07" )
-        workMName <- c( workMName ,"sScore0LAe13","sScore0LAe24","sScore0LVe13","sScore0LVe24" )
-
-        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
-        rObj$compCol <- c( "ph","fCol","phReb" )   # all ph fCol phReb xyCnt.fCol xyCnt.phase
-
-        rObj$getFilter <- function( crScrH ){
-            fObj <- HCR.MtxTmpl_rebRaw( mName=mName ,wMLst=rObj$wMLst ,crScrH ,compCol=rObj$compCol ,rowName="raw" )
-            return( fObj )
-        }
-
-        return( rObj )
-    }
-    bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
-
-}
-mName <- "HCRreb_rawS02R_b" # work
-if( TRUE ){
-
-    fMaker <- function( mName ,crScrH ){
-        workMName <- c( "sScore04","sScore06","sScore07" )
-        workMName <- c( workMName ,"sScore0LAe13","sScore0LAe24","sScore0LVe13","sScore0LVe24" )
+        workMName <- c( workMName ,c("sScore0LAe13","sScore0LAe24","sScore0LVe13","sScore0LVe24") )
 
         rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
         rObj$compCol <- c( "all","phReb","xyCnt.fCol","xyCnt.phase" )
@@ -780,9 +659,49 @@ if( TRUE ){
     bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
 
 }
-mName <- "HCRreb_rawSAavR_a" # work
+mName <- "HCRreb_rawS02R_a"
 if( TRUE ){
+    fMaker <- function( mName ,crScrH ){
+        workMName <- c( "sScore04","sScore06","sScore07" )
+        workMName <- c( workMName ,"sScore0LAr13","sScore0LAr24","sScore0LVr13","sScore0LVr24" )
+        workMName <- c( workMName ,"sScore0LAc13","sScore0LAc24","sScore0LVc13","sScore0LVc24" )
+        workMName <- c( workMName ,"sScore0LAf13","sScore0LAf24","sScore0LVf13","sScore0LVf24" )
 
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
+        rObj$compCol <- c( "ph","fCol","phReb" )   # all ph fCol phReb xyCnt.fCol xyCnt.phase
+
+        rObj$getFilter <- function( crScrH ){
+            fObj <- HCR.MtxTmpl_rebRaw( mName=mName ,wMLst=rObj$wMLst ,crScrH ,compCol=rObj$compCol ,rowName="raw" )
+            return( fObj )
+        }
+
+        return( rObj )
+    }
+    bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
+}
+mName <- "HCRreb_rawS02R_b"
+if( TRUE ){
+    fMaker <- function( mName ,crScrH ){
+        workMName <- c( "sScore04","sScore06","sScore07" )
+        workMName <- c( workMName ,"sScore0LAr13","sScore0LAr24","sScore0LVr13","sScore0LVr24" )
+        workMName <- c( workMName ,"sScore0LAc13","sScore0LAc24","sScore0LVc13","sScore0LVc24" )
+        workMName <- c( workMName ,"sScore0LAf13","sScore0LAf24","sScore0LVf13","sScore0LVf24" )
+
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
+        rObj$compCol <- c( "all","phReb","xyCnt.fCol","xyCnt.phase" )
+
+        rObj$getFilter <- function( crScrH ){
+            fObj <- HCR.MtxTmpl_rebRaw( mName=mName ,wMLst=rObj$wMLst ,crScrH ,compCol=rObj$compCol ,rowName="raw" )
+            return( fObj )
+        }
+
+        return( rObj )
+    }
+    bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
+}
+
+mName <- "HCRreb_rawSAavR_a" # deprecated
+if( FALSE ){
     fMaker <- function( mName ,crScrH ){
         workMName <- c("sScore0LAr13","sScore0LAr24","sScore0LVr13","sScore0LVr24")
         workMName <- c( workMName ,"sScore0LAc13","sScore0LAc24","sScore0LVc13","sScore0LVc24" )
@@ -799,11 +718,9 @@ if( TRUE ){
         return( rObj )
     }
     bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
-
 }
-mName <- "HCRreb_rawSAavR_b" # work
-if( TRUE ){
-
+mName <- "HCRreb_rawSAavR_b" # deprecated
+if( FALSE ){
     fMaker <- function( mName ,crScrH ){
         workMName <- c("sScore0LAr13","sScore0LAr24","sScore0LVr13","sScore0LVr24")
         workMName <- c( workMName ,"sScore0LAc13","sScore0LAc24","sScore0LVc13","sScore0LVc24" )
@@ -820,11 +737,9 @@ if( TRUE ){
         return( rObj )
     }
     bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
-
 }
-mName <- "HCRreb_rawSavR_a" # work
-if( TRUE ){
-
+mName <- "HCRreb_rawSavR_a" # deprecated
+if( FALSE ){
     fMaker <- function( mName ,crScrH ){
         workMName <- c( "sScore01","sScore02","sScore03","sScore05","sScore08","sScore09" )   # sScore 4,6,7 ºüÁü.
         workMName <- c( workMName ,"sScore0LAr13","sScore0LAr24","sScore0LVr13","sScore0LVr24" )
@@ -842,10 +757,9 @@ if( TRUE ){
         return( rObj )
     }
     bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
-
 }
-mName <- "HCRreb_rawSavR_b" # work
-if( TRUE ){
+mName <- "HCRreb_rawSavR_b" # deprecated
+if( FALSE ){
 
     fMaker <- function( mName ,crScrH ){
         workMName <- c( "sScore01","sScore02","sScore03","sScore05","sScore08","sScore09" )   # sScore 4,6,7 ºüÁü.
@@ -898,7 +812,14 @@ mName <- "HCRreb_rawSavE" # work
 mName <- "HCRreb_phSzF01"    # WORK
 if( TRUE ){
     fMaker <- function( mName ,crScrH ){
-        workMName <- c("score1","score2","score3","score4")
+
+        workMName <- c( "score1","score2","score3","score4","score5","score6","score7","score8","score9" )
+        workMName <- c( workMName ,"scoreA","scoreB","scoreC","scoreD","scoreE","scoreF","scoreFV")
+        workMName <- c( workMName ,c("scoreLAe13","scoreLAe24","scoreLVe13","scoreLVe24") )
+        workMName <- c( workMName ,"scoreLAr13","scoreLAr24","scoreLVr13","scoreLVr24")
+        workMName <- c( workMName ,"scoreLAc13","scoreLAc24","scoreLVc13","scoreLVc24" )
+        workMName <- c( workMName ,"scoreLAf13","scoreLAf24","scoreLVf13","scoreLVf24" )
+
         rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
 
         rObj$getFilter <- function( crScrH ){
@@ -913,11 +834,18 @@ if( TRUE ){
 mName <- "HCRreb_phSzS01"    # WORK
 if( TRUE ){
     fMaker <- function( mName ,crScrH ){
-        workMName <- c("sScore01","sScore02","sScore03","sScore04")
+
+        workMName <- c("sScore01","sScore02","sScore03","sScore05","sScore08","sScore09")   # sScore 4,6,7 ºüÁü.
+        workMName <- c( workMName ,c("sScore0LAe13","sScore0LAe24","sScore0LVe13","sScore0LVe24") )
+        workMName <- c( workMName ,"sScore04","sScore06","sScore07" )
+        workMName <- c( workMName ,"sScore0LAr13","sScore0LAr24","sScore0LVr13","sScore0LVr24" )
+        workMName <- c( workMName ,"sScore0LAc13","sScore0LAc24","sScore0LVc13","sScore0LVc24" )
+        workMName <- c( workMName ,"sScore0LAf13","sScore0LAf24","sScore0LVf13","sScore0LVf24" )
+
         rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
 
         rObj$getFilter <- function( crScrH ){
-            fObj <- HCR.MtxTmpl_phRebCnt_sz( mName ,wMName=rObj$wMLst$bf ,crScrH ,mGrp="std.grp" )
+            fObj <- HCR.MtxTmpl_phRebCnt_sz( mName ,wMName=rObj$wMLst$bS ,crScrH ,mGrp="bS.grp" )
             return( fObj )
         }
 
