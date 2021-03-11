@@ -450,7 +450,7 @@ HCR.MtxTmpl_szReb <- function( mName ,wMLst ,szColName ,szRowName ){
 }
 
 HCR.MtxTmpl_rawReb <- function( mName ,wMLst ,colName ,rowName="raw" ){
-	rObj <- list( 	mInfo=c("mName"=mName ,"rowName"=rowName ,"colName"=colName  ) ,wMLst=wMLst )
+	rObj <- list( 	mInfo=c("mName"=mName ,"rowName"=rowName ) ,"colName"=colName ,wMLst=wMLst )
 
     rObj$cName <- c( wMLst$bf ,wMLst$bS )
 
@@ -467,11 +467,11 @@ HCR.MtxTmpl_rawReb <- function( mName ,wMLst ,colName ,rowName="raw" ){
 
             for( wmName in rObj$wMLst$bf ){
                 summMtx <- std.grp[[wmName]]$summ$summMtx
-                scrMtx[rIdx,wmName] <- summMtx[ rObj$mInfo["rowName"] ,rObj$mInfo["colName"] ]
+                scrMtx[rIdx,wmName] <- sum( summMtx[ rObj$mInfo["rowName"] ,rObj$colName ] )
             }
             for( wmName in rObj$wMLst$bS ){
                 summMtx <- bS.grp[[wmName]]$summ$summMtx
-                scrMtx[rIdx,wmName] <- summMtx[ rObj$mInfo["rowName"] ,rObj$mInfo["colName"] ]
+                scrMtx[rIdx,wmName] <- sum( summMtx[ rObj$mInfo["rowName"] ,rObj$colName ] )
             }
         }
 

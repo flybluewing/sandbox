@@ -809,7 +809,7 @@ mName <- "HCRreb_rawSavE" # work
 # ------------------------------------------------------------------------------------------
 #   ph reb by mNames for bfMtx/bSMtx sz     HCR.MtxTmpl_phRebCnt_sz()
 # ------------------------------------------------------------------------------------------
-mName <- "HCRreb_phSzF01"    # WORK
+mName <- "HCRreb_phSzF01"
 if( TRUE ){
     fMaker <- function( mName ,crScrH ){
 
@@ -831,7 +831,7 @@ if( TRUE ){
     }
     bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
 }
-mName <- "HCRreb_phSzS01"    # WORK
+mName <- "HCRreb_phSzS01"
 if( TRUE ){
     fMaker <- function( mName ,crScrH ){
 
@@ -858,7 +858,7 @@ if( TRUE ){
 #   ph reb by mNames for bfMtx/bSMtx raw      HCR.MtxTmpl_phRebCnt_raw()
 # ------------------------------------------------------------------------------------------
 #   suspend. sz 쪽이 더 성능 좋을 듯 하다.
-mName <- "HCRreb_phRawF01"    # WORK
+mName <- "HCRreb_phRawF01"    # suspend
 if( FALSE ){
     fMaker <- function( mName ,crScrH ){
         workMName <- c("score1","score2","score3","score4")
@@ -873,7 +873,7 @@ if( FALSE ){
     }
     bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
 }
-mName <- "HCRreb_phRawS01"    # WORK
+mName <- "HCRreb_phRawS01"    # suspend
 if( FALSE ){
     fMaker <- function( mName ,crScrH ){
         workMName <- c("sScore01","sScore02","sScore03","sScore04")
@@ -899,19 +899,41 @@ if( FALSE ){
 #   HCR.MtxTmpl_szReb() 의 raw 버전. 
 #   phReb xyCnt.fCol xyCnt.phase 에 대한 reb 체크를 위해 사용.
 #       고려사항 : colName 을 한 개 컬럼씩만 하면 너무 방대하니, col들의 sum으로 할까?
-mName <- "HCRraw_bf01PhReb"
+mName <- "HCRraw_bf01Sum01"
 if( TRUE ){
     #             all ph fCol phReb xyCnt.fCol xyCnt.phase
     #         raw   0  0    0     0          0           0
     #         evt   0  0    0     0          0           0
     fMaker <- function( mName ,crScrH ){
 
-        workMName <- c("score1","score2","score3","score5","score8","score9")   # score 4,6,7 빠짐.
+        workMName <- c("score1","score2","score3","score5")   # score 4,6,7 빠짐.
+        workMName <- c( workMName ,"scoreA","scoreB","scoreC","scoreD","scoreE","scoreF","scoreFV")
+        workMName <- c( workMName ,c("scoreLAe13","scoreLAe24","scoreLVe13","scoreLVe24") )
 
         rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
         rObj$getFilter <- function( crScrH=NULL ){
             # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
-            fObj <- HCR.MtxTmpl_rawReb( mName=mName ,wMLst=rObj$wMLst ,colName="phReb" ,rowName="raw" )
+            fObj <- HCR.MtxTmpl_rawReb( mName=mName ,wMLst=rObj$wMLst ,colName=c("phReb","xyCnt.fCol","xyCnt.phase") ,rowName="raw" )
+            return( fObj )
+        }
+
+        return( rObj )
+    }
+    bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
+}
+mName <- "HCRraw_bf02Sum01"
+if( TRUE ){
+    fMaker <- function( mName ,crScrH ){
+
+        workMName <- c("score4","score6","score7","score8","score9")
+        workMName <- c( workMName ,"scoreLAr13","scoreLAr24","scoreLVr13","scoreLVr24")
+        workMName <- c( workMName ,"scoreLAc13","scoreLAc24","scoreLVc13","scoreLVc24" )
+        workMName <- c( workMName ,"scoreLAf13","scoreLAf24","scoreLVf13","scoreLVf24" )
+
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
+        rObj$getFilter <- function( crScrH=NULL ){
+            # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
+            fObj <- HCR.MtxTmpl_rawReb( mName=mName ,wMLst=rObj$wMLst ,colName=c("phReb","xyCnt.fCol","xyCnt.phase") ,rowName="raw" )
             return( fObj )
         }
 
@@ -920,8 +942,8 @@ if( TRUE ){
     bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
 }
 
-mName <- "HCRraw_bf01xyCnt.fCol"
-mName <- "HCRraw_bf01xyCnt.Phase"
+mName <- "HCRraw_bS01Sum01"
+mName <- "HCRraw_bS02Sum01"
 
 
 
