@@ -2030,7 +2030,7 @@ if( FALSE ){ # done. OK
 #   HCR.MtxTmpl_szReb() 의 raw 버전. 
 #   phReb xyCnt.fCol xyCnt.phase 에 대한 reb 체크를 위해 사용.
 mName <- "HCRraw_bf01Sum01"
-if( TRUE ){
+if( TRUE ){ # done. OK
     HCRMtxCfg[[mName]] <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
@@ -2103,7 +2103,7 @@ if( TRUE ){
     )
 }
 mName <- "HCRraw_bf02Sum01"
-if( TRUE ){
+if( TRUE ){ # done. OK
     HCRMtxCfg[[mName]] <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
@@ -2184,10 +2184,132 @@ if( TRUE ){
     )
 }
 
-
-mName <- "HCRraw_bf01xyCnt.fCol"
-mName <- "HCRraw_bf01xyCnt.Phase"
-
+mName <- "HCRraw_bS01Sum01"
+if( TRUE ){ # done. OK
+    HCRMtxCfg[[mName]] <- list(
+        mName = mName   ,style=c( freqZero=TRUE )
+        ,fCol = list(
+            "sScore01"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                            ,forbidEvtReb=c(3)
+                        ) 
+            ,"sScore02"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                            ,forbidEvtReb=c(3)
+                        )
+            ,"sScore03"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                            ,forbidEvtReb=c(3)
+                        )
+            ,"sScore05"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                            ,forbidEvtReb=c(3)
+                        )
+            ,"sScore0LAe13"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                            ,forbidEvtReb=c(3)
+                        )
+            ,"sScore0LAe24"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                            ,forbidEvtReb=c(3)
+                        )
+            ,"sScore0LVe13"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                            ,forbidEvtReb=c(3)
+                        )
+            ,"sScore0LVe24"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                            ,forbidEvtReb=c(3)
+                        )
+        )
+        ,evtMax = matrix( c(2,2,3,1 ,2,2,3,2)     ,byrow=T ,ncol=4
+                    ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
+        )
+        ,rowReb = c( rawMin=2 ,lowE=2 ,rareE=2 ,dupESum=2 )
+        ,isHard=NULL  # use default
+    )
+}
+mName <- "HCRraw_bS02Sum01"
+if( TRUE ){ # done. OK
+    HCRMtxCfg[[mName]] <- list(
+        mName = mName   ,style=c( freqZero=TRUE )
+        ,fCol = list(
+            "sScore04"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                            ,forbidEvtReb=c(3)
+                        ) 
+            ,"sScore06"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                            ,forbidEvtReb=c(3)
+                        )
+            ,"sScore07"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                            ,forbidEvtReb=c(3)
+                        )
+            ,"sScore08"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                            ,forbidEvtReb=c(3)
+                        )
+            ,"sScore09"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                            ,forbidEvtReb=c(3)
+                        )
+            ,"sScore0LAr13"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                            ,forbidEvtReb=c(3)
+                        )
+            ,"sScore0LAr24"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                            ,forbidEvtReb=c(3)
+                        )
+            ,"sScore0LVr13"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                            ,forbidEvtReb=c(3)
+                        )
+            ,"sScore0LVr24"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                            ,forbidEvtReb=c(3)
+                        )
+            ,"sScore0LAc13"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                            ,forbidEvtReb=c(3)
+                        )
+            ,"sScore0LAc24"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                            ,forbidEvtReb=c(3)
+                        )
+            ,"sScore0LVc13"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                            ,forbidEvtReb=c(3)
+                        )
+            ,"sScore0LVc24"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                            ,forbidEvtReb=c(3)
+                        )
+            ,"sScore0LAf13"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                            ,forbidEvtReb=c(3)
+                        )
+            ,"sScore0LAf24"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                            ,forbidEvtReb=c(3)
+                        )
+            ,"sScore0LVf13"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                            ,forbidEvtReb=c(3)
+                        )
+            ,"sScore0LVf24"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                            ,forbidEvtReb=c(3)
+                        )
+        )
+        ,evtMax = matrix( c(2,2,3,1 ,2,2,3,2)     ,byrow=T ,ncol=4      # H827
+                    ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
+        )
+        ,rowReb = c( rawMin=2 ,lowE=2 ,rareE=2 ,dupESum=2 )
+        ,isHard=NULL  # use default
+    )
+}
 
 
 for( mName in names( HCRMtxCfg ) ){

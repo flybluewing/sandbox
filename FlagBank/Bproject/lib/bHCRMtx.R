@@ -896,9 +896,8 @@ if( FALSE ){
 # ------------------------------------------------------------------------------------------
 #   summMtx for bFMtx (all ph fCol phReb xyCnt.fCol xyCnt.phase)    HCR.MtxTmpl_rawReb()
 # ------------------------------------------------------------------------------------------
-#   HCR.MtxTmpl_szReb() 의 raw 버전. 
+#   HCR.MtxTmpl_szReb() 의 raw sum버전. 
 #   phReb xyCnt.fCol xyCnt.phase 에 대한 reb 체크를 위해 사용.
-#       고려사항 : colName 을 한 개 컬럼씩만 하면 너무 방대하니, col들의 sum으로 할까?
 mName <- "HCRraw_bf01Sum01"
 if( TRUE ){
     #             all ph fCol phReb xyCnt.fCol xyCnt.phase
@@ -941,28 +940,47 @@ if( TRUE ){
     }
     bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
 }
-
 mName <- "HCRraw_bS01Sum01"
+if( TRUE ){
+    #             all ph fCol phReb xyCnt.fCol xyCnt.phase
+    #         raw   0  0    0     0          0           0
+    #         evt   0  0    0     0          0           0
+    fMaker <- function( mName ,crScrH ){
+
+        workMName <- c("sScore01","sScore02","sScore03","sScore05")   # score 4,6,7 빠짐.
+        workMName <- c( workMName ,c("sScore0LAe13","sScore0LAe24","sScore0LVe13","sScore0LVe24") )
+
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
+        rObj$getFilter <- function( crScrH=NULL ){
+            # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
+            fObj <- HCR.MtxTmpl_rawReb( mName=mName ,wMLst=rObj$wMLst ,colName=c("phReb","xyCnt.fCol","xyCnt.phase") ,rowName="raw" )
+            return( fObj )
+        }
+
+        return( rObj )
+    }
+    bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
+}
 mName <- "HCRraw_bS02Sum01"
+if( TRUE ){
+    fMaker <- function( mName ,crScrH ){
 
+        workMName <- c("sScore04","sScore06","sScore07","sScore08","sScore09")
+        workMName <- c( workMName ,"sScore0LAr13","sScore0LAr24","sScore0LVr13","sScore0LVr24")
+        workMName <- c( workMName ,"sScore0LAc13","sScore0LAc24","sScore0LVc13","sScore0LVc24" )
+        workMName <- c( workMName ,"sScore0LAf13","sScore0LAf24","sScore0LVf13","sScore0LVf24" )
 
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
+        rObj$getFilter <- function( crScrH=NULL ){
+            # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
+            fObj <- HCR.MtxTmpl_rawReb( mName=mName ,wMLst=rObj$wMLst ,colName=c("phReb","xyCnt.fCol","xyCnt.phase") ,rowName="raw" )
+            return( fObj )
+        }
 
-mName <- "HCRraw_bf2APh"
-mName <- "HCRraw_bfavPh"
-mName <- "HCRraw_bf01fCol"
-mName <- "HCRraw_bf2AfCol"
-mName <- "HCRraw_bfavfCol"
-
-# ------------------------------------------------------------------------------------------
-#   summMtx for bSMtx (all ph fCol phReb xyCnt.fCol xyCnt.phase)
-# ------------------------------------------------------------------------------------------
-mName <- "HCRraw_bS01Ph"
-mName <- "HCRraw_bS2APh"
-mName <- "HCRraw_bSavPh"
-mName <- "HCRraw_bS1avPh"    # bS01Ph + bSavPh
-mName <- "HCRraw_bS01fCol"    # WORK
-mName <- "HCRraw_bS2AfCol"    # WORK
-mName <- "HCRraw_bSavfCol"    # WORK
+        return( rObj )
+    }
+    bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
+}
 
 # ------------------------------------------------------------------------------------------
 #   summMtx for bFMtx + bSMtx (all ph fCol phReb xyCnt.fCol xyCnt.phase)
