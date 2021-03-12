@@ -700,87 +700,6 @@ if( TRUE ){
     bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
 }
 
-mName <- "HCRreb_rawSAavR_a" # deprecated
-if( FALSE ){
-    fMaker <- function( mName ,crScrH ){
-        workMName <- c("sScore0LAr13","sScore0LAr24","sScore0LVr13","sScore0LVr24")
-        workMName <- c( workMName ,"sScore0LAc13","sScore0LAc24","sScore0LVc13","sScore0LVc24" )
-        workMName <- c( workMName ,"sScore0LAf13","sScore0LAf24","sScore0LVf13","sScore0LVf24" )
-
-        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
-        rObj$compCol <- c( "ph","fCol","phReb" )   # all ph fCol phReb xyCnt.fCol xyCnt.phase
-
-        rObj$getFilter <- function( crScrH ){
-            fObj <- HCR.MtxTmpl_rebRaw( mName=mName ,wMLst=rObj$wMLst ,crScrH ,compCol=rObj$compCol ,rowName="raw" )
-            return( fObj )
-        }
-
-        return( rObj )
-    }
-    bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
-}
-mName <- "HCRreb_rawSAavR_b" # deprecated
-if( FALSE ){
-    fMaker <- function( mName ,crScrH ){
-        workMName <- c("sScore0LAr13","sScore0LAr24","sScore0LVr13","sScore0LVr24")
-        workMName <- c( workMName ,"sScore0LAc13","sScore0LAc24","sScore0LVc13","sScore0LVc24" )
-        workMName <- c( workMName ,"sScore0LAf13","sScore0LAf24","sScore0LVf13","sScore0LVf24" )
-
-        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
-        rObj$compCol <- c( "all","phReb","xyCnt.fCol","xyCnt.phase" )
-
-        rObj$getFilter <- function( crScrH ){
-            fObj <- HCR.MtxTmpl_rebRaw( mName=mName ,wMLst=rObj$wMLst ,crScrH ,compCol=rObj$compCol ,rowName="raw" )
-            return( fObj )
-        }
-
-        return( rObj )
-    }
-    bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
-}
-mName <- "HCRreb_rawSavR_a" # deprecated
-if( FALSE ){
-    fMaker <- function( mName ,crScrH ){
-        workMName <- c( "sScore01","sScore02","sScore03","sScore05","sScore08","sScore09" )   # sScore 4,6,7 빠짐.
-        workMName <- c( workMName ,"sScore0LAr13","sScore0LAr24","sScore0LVr13","sScore0LVr24" )
-        workMName <- c( workMName ,"sScore0LAc13","sScore0LAc24","sScore0LVc13","sScore0LVc24" )
-        workMName <- c( workMName ,"sScore0LAf13","sScore0LAf24","sScore0LVf13","sScore0LVf24" )
-
-        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
-        rObj$compCol <- c( "ph","fCol","phReb" )   # all ph fCol phReb xyCnt.fCol xyCnt.phase
-
-        rObj$getFilter <- function( crScrH ){
-            fObj <- HCR.MtxTmpl_rebRaw( mName=mName ,wMLst=rObj$wMLst ,crScrH ,compCol=rObj$compCol ,rowName="raw" )
-            return( fObj )
-        }
-
-        return( rObj )
-    }
-    bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
-}
-mName <- "HCRreb_rawSavR_b" # deprecated
-if( FALSE ){
-
-    fMaker <- function( mName ,crScrH ){
-        workMName <- c( "sScore01","sScore02","sScore03","sScore05","sScore08","sScore09" )   # sScore 4,6,7 빠짐.
-        workMName <- c( workMName ,"sScore0LAr13","sScore0LAr24","sScore0LVr13","sScore0LVr24" )
-        workMName <- c( workMName ,"sScore0LAc13","sScore0LAc24","sScore0LVc13","sScore0LVc24" )
-        workMName <- c( workMName ,"sScore0LAf13","sScore0LAf24","sScore0LVf13","sScore0LVf24" )
-
-        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
-        rObj$compCol <- c( "all","phReb","xyCnt.fCol","xyCnt.phase" )
-
-        rObj$getFilter <- function( crScrH ){
-            fObj <- HCR.MtxTmpl_rebRaw( mName=mName ,wMLst=rObj$wMLst ,crScrH ,compCol=rObj$compCol ,rowName="raw" )
-            return( fObj )
-        }
-
-        return( rObj )
-    }
-    bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
-
-}
-
 
 # ------------------------------------------------------------------------------------------
 #   szMtx for bFMtx/bSMtx reb (e.ph,e.fCol,e.dblHpnFlg)
@@ -897,7 +816,8 @@ if( FALSE ){
 #   summMtx for bFMtx (all ph fCol phReb xyCnt.fCol xyCnt.phase)    HCR.MtxTmpl_rawReb()
 # ------------------------------------------------------------------------------------------
 #   HCR.MtxTmpl_szReb() 의 raw sum버전. 
-#   phReb xyCnt.fCol xyCnt.phase 에 대한 reb 체크를 위해 사용.
+#       - phReb xyCnt.fCol xyCnt.phase 에 대한 reb 체크를 위해 사용.
+#       - bFMtx + bSMtx 버전은 필요 없을 듯. bF,bS에 대한 재발금지 기준이 높아서 의미 없을 듯.
 mName <- "HCRraw_bf01Sum01"
 if( TRUE ){
     #             all ph fCol phReb xyCnt.fCol xyCnt.phase
@@ -981,19 +901,6 @@ if( TRUE ){
     }
     bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
 }
-
-# ------------------------------------------------------------------------------------------
-#   summMtx for bFMtx + bSMtx (all ph fCol phReb xyCnt.fCol xyCnt.phase)
-# ------------------------------------------------------------------------------------------
-mName <- "HCRraw_bfS01Ph"
-mName <- "HCRraw_bfS2APh"    # WORK
-mName <- "HCRraw_bfSavPh"    # WORK
-mName <- "HCRraw_bfS01fCol"    # WORK
-mName <- "HCRraw_bfS2AfCol"    # WORK
-mName <- "HCRraw_bfSavfCol"    # WORK
-
-
-
 
 # crScrH <- NULL
 

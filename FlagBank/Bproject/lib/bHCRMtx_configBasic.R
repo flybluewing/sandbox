@@ -4,7 +4,7 @@ HCRMtxCfg <- list()
 #   szMtx for bFMtx (Ph,fCol)
 # ------------------------------------------------------------------------------------------
 mName <- "HCRsz_bf01Ph"
-if( FALSE ){ # done. OK
+if( TRUE ){ # done. OK
     HCRMtxCfg[[mName]] <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
@@ -32,10 +32,9 @@ if( FALSE ){ # done. OK
         ,rowReb = c( rawMin=1 ,lowE=3 ,rareE=1 ,dupESum=2 )
         ,isHard=NULL  # use default
     )
-
 }
 mName <- "HCRsz_bf2APh"
-if( FALSE ){ # done. OK
+if( TRUE ){ # done. OK
     HCRMtxCfg[[mName]] <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
@@ -89,10 +88,9 @@ if( FALSE ){ # done. OK
         ,rowReb = NULL  # c( rawMin=1 ,lowE=2 ,rareE=1 ,dupESum=2 )
         ,isHard=NULL  # use default
     )
-
 }
 mName <- "HCRsz_bfavPh"
-if( FALSE ){ # done. OK
+if( TRUE ){ # done. OK
     HCRMtxCfg[[mName]] <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
@@ -140,7 +138,7 @@ if( FALSE ){ # done. OK
 
 }
 mName <- "HCRsz_bf01fCol"
-if( FALSE ){ # done. OK
+if( TRUE ){ # done. OK
     HCRMtxCfg[[mName]] <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
@@ -170,7 +168,7 @@ if( FALSE ){ # done. OK
 
 }
 mName <- "HCRsz_bf2AfCol"
-if( FALSE ){ # done. OK
+if( TRUE ){ # done. OK
     HCRMtxCfg[[mName]] <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
@@ -218,10 +216,9 @@ if( FALSE ){ # done. OK
         ,rowReb = NULL  # c( rawMin=1 ,lowE=2 ,rareE=1 ,dupESum=2 )
         ,isHard=NULL  # use default
     )
-
 }
 mName <- "HCRsz_bfavfCol"
-if( FALSE ){ # done. OK
+if( TRUE ){ # done. OK
     HCRMtxCfg[[mName]] <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
@@ -266,14 +263,13 @@ if( FALSE ){ # done. OK
         ,rowReb = NULL  # c( rawMin=1 ,lowE=2 ,rareE=1 ,dupESum=2 )
         ,isHard=NULL  # use default
     )
-
 }
 
 # ------------------------------------------------------------------------------------------
 #   szMtx for bSMtx (Ph,fCol)
 # ------------------------------------------------------------------------------------------
 mName <- "HCRsz_bS01Ph"
-if( FALSE ){ # done. OK
+if( TRUE ){ # done. OK
     HCRMtxCfg[[mName]] <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
@@ -300,10 +296,9 @@ if( FALSE ){ # done. OK
         ,rowReb = c( rawMin=2 ,lowE=2,rareE=1 ,dupESum=2 )
         ,isHard=NULL  # use default
     )
-
 }
 mName <- "HCRsz_bS2APh"
-if( FALSE ){ # done. OK
+if( TRUE ){ # done. OK
     HCRMtxCfg[[mName]] <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
@@ -335,7 +330,7 @@ if( FALSE ){ # done. OK
     )
 }
 mName <- "HCRsz_bSavPh"
-if( FALSE ){ # done. OK
+if( TRUE ){ # done. OK
     HCRMtxCfg[[mName]] <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
@@ -383,7 +378,7 @@ if( FALSE ){ # done. OK
 
 }
 mName <- "HCRsz_bS1avPh"    # bS01Ph + bSavPh
-if( FALSE ){ # done. OK
+if( TRUE ){ # done. OK
     HCRMtxCfg[[mName]] <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
@@ -449,10 +444,9 @@ if( FALSE ){ # done. OK
                 # 812 825 838 853 reb(1)
         ,isHard=NULL  # use default
     )
-
 }
 mName <- "HCRsz_bS01AVefCol"
-if( FALSE ){ # done. OK
+if( TRUE ){ # done. OK
     HCRMtxCfg[[mName]] <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
@@ -496,7 +490,7 @@ if( FALSE ){ # done. OK
     )
 }
 mName <- "HCRsz_bS2AfCol"
-if( FALSE ){ # done. OK
+if( TRUE ){ # done. OK
     HCRMtxCfg[[mName]] <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
@@ -539,7 +533,7 @@ if( FALSE ){ # done. OK
     )
 }
 mName <- "HCRsz_bSavfCol"
-if( FALSE ){ # done. OK
+if( TRUE ){ # done. OK
     HCRMtxCfg[[mName]] <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
@@ -593,7 +587,7 @@ if( FALSE ){ # done. OK
 #   szMtx for bfMtx + bSMtx (Ph,fCol)
 # ------------------------------------------------------------------------------------------
 mName <- "HCRsz_bfS01Ph"
-if( FALSE ){ # done. OK
+if( TRUE ){ # done. OK
     HCRMtxCfg[[mName]] <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
@@ -641,7 +635,7 @@ if( FALSE ){ # done. OK
     )
 }
 mName <- "HCRsz_bfS2APh"
-if( FALSE ){ # done. OK
+if( TRUE ){ # done. OK
     HCRMtxCfg[[mName]] <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
@@ -713,7 +707,7 @@ if( FALSE ){ # done. OK
     )
 }
 mName <- "HCRsz_bfSAVePh"
-if( FALSE ){ # done. OK
+if( TRUE ){ # done. OK
     HCRMtxCfg[[mName]] <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
@@ -748,7 +742,7 @@ if( FALSE ){ # done. OK
     )
 }
 mName <- "HCRsz_bfSavPh"
-if( FALSE ){ # done. OK
+if( TRUE ){ # done. OK
     HCRMtxCfg[[mName]] <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
@@ -833,7 +827,7 @@ if( FALSE ){ # done. OK
 }
 
 mName <- "HCRsz_bfS01fCol"
-if( FALSE ){ # done. OK
+if( TRUE ){ # done. OK
     HCRMtxCfg[[mName]] <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
@@ -880,7 +874,7 @@ if( FALSE ){ # done. OK
     )
 }
 mName <- "HCRsz_bfS2AfCol"
-if( FALSE ){ # done. OK
+if( TRUE ){ # done. OK
     HCRMtxCfg[[mName]] <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
@@ -952,7 +946,7 @@ if( FALSE ){ # done. OK
     )
 }
 mName <- "HCRsz_bfSAVefCol"
-if( FALSE ){ # done. OK
+if( TRUE ){ # done. OK
     HCRMtxCfg[[mName]] <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
@@ -987,7 +981,7 @@ if( FALSE ){ # done. OK
     )
 }
 mName <- "HCRsz_bfSavfCol"
-if( FALSE ){ # done. OK
+if( TRUE ){ # done. OK
     HCRMtxCfg[[mName]] <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
@@ -1080,7 +1074,7 @@ if( FALSE ){ # done. OK
 #   발생 자체가 희귀해서, 1 발생을 하나만 허용하고, 1의 반복도 한 번만 허용하도록 세팅함.
 #       - HCRreb_rawX01R_x, HCRreb_rawX02R_x 는 발생자체가 너무 희귀해서, bf와 bS를 합쳐도 될 듯.
 mName <- "HCRreb_szC01R"
-if( FALSE ){ # done. OK
+if( TRUE ){ # done. OK
     HCRMtxCfg[[mName]] <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
@@ -1150,7 +1144,7 @@ if( FALSE ){ # done. OK
     )
 }
 mName <- "HCRreb_szC02R"
-if( FALSE ){ # done. OK
+if( TRUE ){ # done. OK
     HCRMtxCfg[[mName]] <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
@@ -1232,7 +1226,7 @@ if( FALSE ){ # done. OK
     )
 }
 mName <- "HCRreb_szS01R"
-if( FALSE ){ # done. OK
+if( TRUE ){ # done. OK
     HCRMtxCfg[[mName]] <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
@@ -1286,7 +1280,7 @@ if( FALSE ){ # done. OK
     )
 }
 mName <- "HCRreb_szS02R"
-if( FALSE ){ # done. OK
+if( TRUE ){ # done. OK
     HCRMtxCfg[[mName]] <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
@@ -1361,7 +1355,7 @@ if( FALSE ){ # done. OK
 }
 
 mName <- "HCRreb_rawC01R_a"     # c( "ph","fCol","phReb" )
-if( FALSE ){ # done. OK
+if( TRUE ){ # done. OK
     HCRMtxCfg[[mName]] <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
@@ -1431,7 +1425,7 @@ if( FALSE ){ # done. OK
     )
 }
 mName <- "HCRreb_rawC01R_b"     # c( "all","phReb","xyCnt.fCol","xyCnt.phase" )
-if( FALSE ){ # done. OK
+if( TRUE ){ # done. OK
     HCRMtxCfg[[mName]] <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
@@ -1501,7 +1495,7 @@ if( FALSE ){ # done. OK
     )
 }
 mName <- "HCRreb_rawC02R_a"
-if( FALSE ){ # done. OK
+if( TRUE ){ # done. OK
     HCRMtxCfg[[mName]] <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
@@ -1583,7 +1577,7 @@ if( FALSE ){ # done. OK
     )
 }
 mName <- "HCRreb_rawC02R_b"
-if( FALSE ){ # done. OK
+if( TRUE ){ # done. OK
     HCRMtxCfg[[mName]] <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
@@ -1667,7 +1661,7 @@ if( FALSE ){ # done. OK
 
 
 mName <- "HCRreb_rawS01R_a"
-if( FALSE ){ # done. OK
+if( TRUE ){ # done. OK
     HCRMtxCfg[[mName]] <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
@@ -1720,7 +1714,7 @@ if( FALSE ){ # done. OK
     )
 }
 mName <- "HCRreb_rawS01R_b"
-if( FALSE ){ # done. OK
+if( TRUE ){ # done. OK
     HCRMtxCfg[[mName]] <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
@@ -1773,7 +1767,7 @@ if( FALSE ){ # done. OK
     )
 }
 mName <- "HCRreb_rawS02R_a"
-if( FALSE ){ # done. OK
+if( TRUE ){ # done. OK
     HCRMtxCfg[[mName]] <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
@@ -1846,7 +1840,7 @@ if( FALSE ){ # done. OK
     )
 }
 mName <- "HCRreb_rawS02R_b"
-if( FALSE ){ # done. OK
+if( TRUE ){ # done. OK
     HCRMtxCfg[[mName]] <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
@@ -1927,7 +1921,7 @@ if( FALSE ){ # done. OK
 # ------------------------------------------------------------------------------------------
 # HCRraw_bf01XXX 부터 작업한 후 진행.
 mName <- "HCRreb_phSzF01"
-if( FALSE ){ # done. OK
+if( TRUE ){ # done. OK
     HCRMtxCfg[[mName]] <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
@@ -1979,7 +1973,7 @@ if( FALSE ){ # done. OK
     )
 }
 mName <- "HCRreb_phSzS01"
-if( FALSE ){ # done. OK
+if( TRUE ){ # done. OK
     HCRMtxCfg[[mName]] <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
@@ -2183,7 +2177,6 @@ if( TRUE ){ # done. OK
         ,isHard=NULL  # use default
     )
 }
-
 mName <- "HCRraw_bS01Sum01"
 if( TRUE ){ # done. OK
     HCRMtxCfg[[mName]] <- list(
