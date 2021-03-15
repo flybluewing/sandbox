@@ -18,7 +18,7 @@ load(sprintf("../Aproject/save/Obj_gEnvZ%d.save",lastH))
 sapply( allIdxLst ,length )
 
 #-[Parallel init work]-------------------------------------------------------------
-prllLog <- k.getFlogObj( "./log/parallel_log_Cut.txt" )
+prllLog <- k.getFlogObj( sprintf("./log/parallel_log_Cut%d.txt",lastH) )
 prll.initHeader <- function( ){
     k <- sfLapply(1:prllNum,function(prllId){
         curWd <- getwd()
@@ -312,7 +312,8 @@ for( sfcIdx in 0 ){ # 0:2
         prllLog$fLogStr(    sprintf("   - cutH.bS.Cut( )   final survival size :%7d",length(allIdxF))
                             ,pTime=T
         )
-        if( saveMidResult ) save( allIdxF ,file=sprintf("./save/cutResult/Obj_allIdxF%d_bScut_%d.save",sfcIdx,lastH) )
+        # if( saveMidResult ) save( allIdxF ,file=sprintf("./save/cutResult/Obj_allIdxF%d_bScut_%d.save",sfcIdx,lastH) )
+        save( allIdxF ,file=sprintf("./save/cutResult/Obj_allIdxF%d_bScut_%d.save",sfcIdx,lastH) )
     }
 
     # bN.cut() ---<N hours>---------------------------------------------------------------
@@ -328,14 +329,17 @@ for( sfcIdx in 0 ){ # 0:2
     # HCR.cut() ------------------------------------------------------------------
     if( TRUE ){
 
+        prllLog$fLogStr(    sprintf("   - HCR.cut start  ") ,pTime=T )
         aZoidMtx <- gEnv$allZoidMtx[allIdxF,,drop=F]
         scoreMtx.grp <- getScoreMtx.grp( aZoidMtx ,filter.grp ,makeInfoStr=T )
-        std.grp <- bUtil.getCut1Score( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx )
+        std.grp <- bUtil.getCut1Score( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx ,deepInfo=T )
+        prllLog$fLogStr(    sprintf("   - HCR.cut finish std.grp  ") ,pTime=T )
 
         phVP.grp <- bS.getPhVPGrp( gEnv ,aZoidMtx )
         scoreMtx.grp <- bS.getScoreMtx.grp( phVP.grp ,aZoidMtx ,tgt.scMtx=tgt.scMtx )
         cut.grp <- bS.getCutGrp( hMtxLst_bS ,tgt.scMtx )
-        bS.grp <- bS.getCut1Score( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx )
+        bS.grp <- bS.getCut1Score( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx ,deepInfo=T )
+        prllLog$fLogStr(    sprintf("   - HCR.cut finish bS.grp  ") ,pTime=T )
 
         crScrA <- list( stdIdx=allIdxF ,std.grp=std.grp$aLst ,bS.grp=bS.grp$aLst )  # crScr of aZoid
         filterLst <- HCR.getFilter.grp( tgt.scMtx ,crScrH )

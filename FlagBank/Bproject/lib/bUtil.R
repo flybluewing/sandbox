@@ -2337,6 +2337,131 @@ bUtil.mtxEngine_LastHpnPtn <- function( hCodeMtx ){
 }
 
 
+bUtil.uniqueCombi <- function( popLen ){
+
+	uniqueCombi <- function( leftPosFlag ,pairLst=list() ){
+		leftIdx <- which(leftPosFlag)
+		leftIdx.len <- length(leftIdx)
+		if( 2 > leftIdx.len ){
+			#	2개 pair만 다루기로 하자. 1개, 3개 등등 다루면 너무 복잡해짐.
+			return( list(pairLst) )
+		}
+
+		rLst <- list()
+		for( sIdx in 2:leftIdx.len ){
+			pPair <- c(leftIdx[1],leftIdx[sIdx])
+
+			curFlag <- leftPosFlag
+			curFlag[pPair] <- F
+			newLst <- pairLst
+			newLst[[1+length(newLst)]] <- pPair
+
+			child <- uniqueCombi( pairLst=newLst ,leftPosFlag=curFlag )
+
+			rLst <- append( rLst ,child )
+		}
+
+		return( rLst )
+	}
+
+	rLst <- NULL
+	if( 0==(popLen%%2) ){
+		combLst <- uniqueCombi( leftPosFlag=rep(T,popLen) )
+		rLst <- combLst
+	} else {
+		# 홀수인 경우, 짝이 없이 남겨지는 1개의 값에 따른 pair를 맞춰줘야 한다.
+		combLst <- uniqueCombi( leftPosFlag=rep(T,popLen-1) )
+
+		rLst <- list()
+		for( idx in 1:popLen ){
+			plt <- (1:popLen)[-idx]	# pallet
+			# rLst[[1+length(rLst)]] <- lapply( combLst[[idx]] ,function(comb){ plt[comb] } )
+			for( cIdx in 1:length(combLst) ){
+				pairLst <- lapply( combLst[[cIdx]] ,function(comb){ plt[comb] } )
+				# pStr <- sapply( pairLst ,function(pVal){ paste(pVal,collapse=",") })
+				rLst[[1+length(rLst)]] <- pairLst
+			}
+		}
+	}
+
+	return( rLst )
+
+}
+
+bUtil.scoreGS <- function( val ){
+	# val <- c( 8, 1, 6, 7, 2 )
+
+	ucLst <- bUtil.uniqueCombi( length(val) )	# unique combination List
+	cMtx <- combinations( length(ucLst[[1]]) ,2 )
+
+	fndLst <- list()
+	for( idx in 1:length(ucLst) ){
+		uc <- ucLst[[idx]]
+		for( rIdx in 1:nrow(cMtx) ){
+			v1 <- sum(val[ uc[[cMtx[rIdx,1]]] ])
+			v2 <- sum(val[ uc[[cMtx[rIdx,2]]] ])
+
+			if( v1==v2 ){
+				mtx <- rbind( c( uc[[cMtx[rIdx,1]]] ,val[ uc[[cMtx[rIdx,1]]] ] ,sum(val[ uc[[cMtx[rIdx,1]]] ]) )
+							 ,c( uc[[cMtx[rIdx,2]]] ,val[ uc[[cMtx[rIdx,2]]] ] ,sum(val[ uc[[cMtx[rIdx,2]]] ]) )
+				)
+				colnames(mtx) <- c("idx1","idx2","v1","v2","sum")
+				fndLst[[1+length(fndLst)]] <- mtx
+			}
+		}
+	}
+
+	gsObj <- list( fndLst=fndLst )
+	gsObj$check <- function( code ,dbg=F ){
+		# matLst[[1]]	$matInfo		sumMatFlg     valMatCnt  valMatCntIdx fndLst_RowIdx 
+		# 										1             2             2             1 
+		# 				$dbgStr		"fndIdx 1 sum(1,7)==sum(6,2)"
+		# matLst[[2]]
+		# 				$matInfo		sumMatFlg     valMatCnt  valMatCntIdx fndLst_RowIdx 
+		# 										1             2             2             2 
+		# 				$dbgStr		"fndIdx 2 sum(1,7)==sum(6,2)"
+
+		matLst <- list()
+		for( fIdx in seq_len(length(gsObj$fndLst)) ){
+			pairMtx <- gsObj$fndLst[[fIdx]]
+			v1 <- sum(code[ pairMtx[1,c("idx1","idx2")] ])
+			v2 <- sum(code[ pairMtx[2,c("idx1","idx2")] ])
+			if( v1==v2 ){
+				matInfo <- c( sumMatFlg=0 ,valMatCnt=0 ,valMatCntIdx=0 ,fndLst_RowIdx=fIdx )
+
+				# 합까지 일치하는 경우.
+				matInfo["sumMatFlg"] <- pairMtx[1,"sum"]==v1
+
+				cIdx1 <- pairMtx[1,c("idx1","idx2")]
+				cIdx2 <- pairMtx[2,c("idx1","idx2")]
+
+				# 동일한 pair val이 존재하는 경우.
+				matInfo["valMatCnt"] <- matInfo["valMatCnt"] + all(code[ cIdx1 ]==pairMtx[1,c("v1","v2")])
+				matInfo["valMatCnt"] <- matInfo["valMatCnt"] + all(code[ cIdx1 ]==pairMtx[2,c("v1","v2")])
+				matInfo["valMatCnt"] <- matInfo["valMatCnt"] + all(code[ cIdx2 ]==pairMtx[1,c("v1","v2")])
+				matInfo["valMatCnt"] <- matInfo["valMatCnt"] + all(code[ cIdx2 ]==pairMtx[2,c("v1","v2")])
+
+				# 동일한 pair val에다가 idx까지 일치.
+				matInfo["valMatCntIdx"] <- matInfo["valMatCntIdx"] + all(code[ cIdx1 ]==pairMtx[1,c("v1","v2")])
+				matInfo["valMatCntIdx"] <- matInfo["valMatCntIdx"] + all(code[ cIdx2 ]==pairMtx[2,c("v1","v2")])
+
+				matRst <- list( matInfo=matInfo )
+				if( dbg ){
+					dbgStr <- sprintf("fndLst %d sum(%d,%d)==sum(%d,%d)",fIdx,code[cIdx1["idx1"]],code[cIdx1["idx2"]],code[cIdx2["idx1"]],code[cIdx2["idx2"]])
+					matRst$dbgStr <- dbgStr
+				}
+				matLst[[1+length(matLst)]] <- matRst
+			}
+		}
+		return( matLst )
+	}
+
+	return( gsObj )
+}
+
+# bUtil.scoreGSH    # TODO
+
+
 #-----------------------------------------------------------------------------------
 #	crScrHTool	: ./worklet/HBuild_cr.R
 #-----------------------------------------------------------------------------------

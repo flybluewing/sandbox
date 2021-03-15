@@ -4659,6 +4659,128 @@ bFMtx.scoreFV <- function( stdMIObj ){	# dealing Far Value
 
 }
 
+bFMtx.scoreGS <- function( stdMIObj ){	# (pair)group sum
+	# stdMIObj <- stdMI.grp$basic$basic
+
+	stdMI <- stdMIObj$stdMI
+	zMtx <- stdMIObj$zMtx
+	mObj <- list( 	idStr="scoreGS"	,zMtx.size=nrow(zMtx)	,lastZoid=stdMI$lastZoid	)
+	mObj$cName <- c( "rMatCnt","rExtMax","rSumCnt","rValCnt" ,"eMatCnt","eExtMax","eSumCnt","eValCnt" 
+					,"cMatCnt","cExtMax","cSumCnt","cValCnt"
+					,"fMatCnt","fExtMax","fSumCnt","fValCnt"
+	)
+		# xMatCnt : 일치 갯수     xExtMax : 매치 수준(최대4)	xSumCnt : 합계 일치 수	xValCnt : col 값까지 일치 갯수
+	mObj$available <- FALSE
+
+	if( 0<mObj$zMtx.size ){
+		tailLen <- nrow(stdMI$rawTail)
+
+		gsLst <- list()
+
+		# raw ---------------------------------------------------------------
+		gsObj <- bUtil.scoreGS( stdMI$rawTail[tailLen,] )
+		gsLst[["r"]] <- gsObj
+
+		# rem ---------------------------------------------------------------
+		codeMtx <- stdMI$rawTail %% 10
+		gsObj <- bUtil.scoreGS( codeMtx[tailLen,] )
+		if( 1<tailLen ){	# 일단 적용 보류하자. scoreGS에서 hpn이 빈번하다면 적용.
+			gsObjH1 <- bUtil.scoreGS( codeMtx[tailLen-1,] )
+			matLst <- gsObjH1$check( codeMtx[tailLen,] ,dbg=T )
+		}
+		gsLst[["e"]] <- gsObj
+
+		# cStep -------------------------------------------------------------
+		gsObj <- bUtil.scoreGS( stdMI$cStepTail[tailLen,] )
+		gsLst[["c"]] <- gsObj
+
+		# fStep -------------------------------------------------------------
+		if( 1<tailLen ){
+			gsObj <- bUtil.scoreGS( stdMI$fStepTail[tailLen,] )
+			gsLst[["f"]] <- gsObj
+		}
+
+		mObj$gsLst <- gsLst
+		mObj$available <- TRUE
+	}
+
+	mObj$fMtxObj <- function( aZoidMtx ,makeInfoStr=F ){
+
+		aLen <- nrow(aZoidMtx)
+		scoreMtx <- matrix( 0, nrow=aLen, ncol=length(mObj$cName) )	;colnames(scoreMtx) <- mObj$cName
+
+		infoMtx <- NULL
+		if( makeInfoStr ){
+			cName <- c( "zMtx.size" )
+			infoMtx <- matrix( "" ,nrow=aLen ,ncol=length(cName) )	;colnames(infoMtx) <- cName
+			infoMtx[,"zMtx.size"] <- mObj$zMtx.size
+		}
+		if( !mObj$available ){
+			return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
+		}
+
+		for( aIdx in 1:aLen ){
+			aZoid <- aZoidMtx[aIdx,]
+			aRem <- aZoid %% 10
+			aCStep <- aZoid[2:6] - aZoid[1:5]
+			aFStep <- aZoid - mObj$lastZoid
+
+			if( !is.null(mObj$gsLst[["r"]]) ){	# raw
+				matLst <- mObj$gsLst[["r"]]$check( aRem )
+				scoreMtx[aIdx,"rMatCnt"] <- length(matLst)
+				for( idx in seq_len(scoreMtx[aIdx,"rMatCnt"]) ){
+					matInfo <- matLst[[idx]]$matInfo	# sumMatFlg valMatCnt  valMatCntIdx fndLst_RowIdx
+					scoreMtx[aIdx,"rExtMax"] <- max( scoreMtx[aIdx,"rExtMax"] ,sum(matInfo>0) )
+					scoreMtx[aIdx,"rSumCnt"] <- scoreMtx[aIdx,"rSumCnt"] + matInfo["sumMatFlg"]
+					scoreMtx[aIdx,"rValCnt"] <- scoreMtx[aIdx,"rValCnt"] + matInfo["valMatCnt"]
+				}
+			}
+
+			if( !is.null(mObj$gsLst[["e"]]) ){	# rem
+				matLst <- mObj$gsLst[["e"]]$check( aRem )
+				scoreMtx[aIdx,"eMatCnt"] <- length(matLst)
+				for( idx in seq_len(scoreMtx[aIdx,"eMatCnt"]) ){
+					matInfo <- matLst[[idx]]$matInfo	# sumMatFlg valMatCnt  valMatCntIdx fndLst_RowIdx
+					scoreMtx[aIdx,"eExtMax"] <- max( scoreMtx[aIdx,"eExtMax"] ,sum(matInfo>0) )
+					scoreMtx[aIdx,"eSumCnt"] <- scoreMtx[aIdx,"eSumCnt"] + matInfo["sumMatFlg"]
+					scoreMtx[aIdx,"eValCnt"] <- scoreMtx[aIdx,"eValCnt"] + matInfo["valMatCnt"]
+				}
+			}
+
+			if( !is.null(mObj$gsLst[["c"]]) ){	# cStep
+				matLst <- mObj$gsLst[["c"]]$check( aRem )
+				scoreMtx[aIdx,"cMatCnt"] <- length(matLst)
+				for( idx in seq_len(scoreMtx[aIdx,"cMatCnt"]) ){
+					matInfo <- matLst[[idx]]$matInfo	# sumMatFlg valMatCnt  valMatCntIdx fndLst_RowIdx
+					scoreMtx[aIdx,"cExtMax"] <- max( scoreMtx[aIdx,"cExtMax"] ,sum(matInfo>0) )
+					scoreMtx[aIdx,"cSumCnt"] <- scoreMtx[aIdx,"cSumCnt"] + matInfo["sumMatFlg"]
+					scoreMtx[aIdx,"cValCnt"] <- scoreMtx[aIdx,"cValCnt"] + matInfo["valMatCnt"]
+				}
+			}
+
+			if( !is.null(mObj$gsLst[["f"]]) ){	# fStep
+				matLst <- mObj$gsLst[["f"]]$check( aRem )
+				scoreMtx[aIdx,"fMatCnt"] <- length(matLst)
+				for( idx in seq_len(scoreMtx[aIdx,"fMatCnt"]) ){
+					matInfo <- matLst[[idx]]$matInfo	# sumMatFlg valMatCnt  valMatCntIdx fndLst_RowIdx
+					scoreMtx[aIdx,"fExtMax"] <- max( scoreMtx[aIdx,"fExtMax"] ,sum(matInfo>0) )
+					scoreMtx[aIdx,"fSumCnt"] <- scoreMtx[aIdx,"fSumCnt"] + matInfo["sumMatFlg"]
+					scoreMtx[aIdx,"fValCnt"] <- scoreMtx[aIdx,"fValCnt"] + matInfo["valMatCnt"]
+				}
+			}
+
+
+			# scoreMtx[aIdx,"fRebNumMax"]	<- fndScore["rebPtnNumMax"]
+		}
+
+		return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
+
+	}
+
+	return( mObj )
+
+}
+
 
 if( FALSE ){	# 개발 중
 
