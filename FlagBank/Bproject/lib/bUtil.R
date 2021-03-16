@@ -2384,6 +2384,17 @@ bUtil.uniqueCombi <- function( popLen ){
 		}
 	}
 
+
+	for( idx in seq_len(length(rLst)) ){
+		names(rLst[[idx]]) <- sapply( rLst[[idx]] ,function(pair){sprintf("%d%d",pair[1],pair[2])})
+	}
+
+	ucNames <- sapply( rLst ,function( uc ){
+		pairStr <- sapply( uc ,function(pair){sprintf("%d%d",pair[1],pair[2])})
+		return( paste( pairStr ,collapse="" ) )
+	})
+	names(rLst) <- sapply( rLst ,function(uc){ paste(names(uc),collapse="") })
+
 	return( rLst )
 
 }
@@ -2459,7 +2470,132 @@ bUtil.scoreGS <- function( val ){
 	return( gsObj )
 }
 
-# bUtil.scoreGSH    # TODO
+
+bUtil.scorePSh <- function( codeMtx ){
+	# codeMtx <- stdMI$rawTail%%10	
+
+	psObj <- list()
+
+	cbMtx <- combinations( ncol(codeMtx) ,2 )
+	rownames(cbMtx) <- apply( cbMtx ,1 ,function(rVal){ sprintf("%d%d",rVal[1],rVal[2]) })
+	psObj$cbMtx <- cbMtx[sort(rownames(cbMtx)),]	# 혹시나 하는 마음에... -_-;
+
+	psObj$getSumMtx <- function( codeMtx ){
+		sumMtx <- apply( codeMtx ,1 ,function( crVal ){
+			apply( psObj$cbMtx ,1 ,function(rVal){ sum(crVal[rVal]) })
+		})
+		return( t(sumMtx) )
+	}
+
+	psObj$chkLst <- NULL
+	if( TRUE ){	# analyzer
+		codeLen <- nrow(codeMtx)
+		sumMtx <- psObj$getSumMtx( codeMtx )	#	sumMtx 디버그 용도로 필요할지도..
+		
+		chkLst <- list()
+		if( 1<codeLen ){	# seq0 seq1
+			# seq0	x,a,a..a
+			matIdx <- which(sumMtx[codeLen,]==sumMtx[codeLen-1,])
+			if( 0<length(matIdx) ){
+				chkDf <- data.frame( idx=matIdx ,val=sumMtx[codeLen,matIdx] )
+				descStr <- apply( sumMtx[codeLen-1:0 ,chkDf$idx,drop=F] ,2 ,function(cVal){paste(cVal,collapse=",")})
+				chkDf$desc <- sprintf("[\"%s\"]~%s..%d",colnames(sumMtx)[chkDf$idx],descStr,chkDf$val)
+				chkLst[["seq0"]] <- chkDf
+			}
+
+			# seq1	a1,a2..a3
+			diff1 <- sumMtx[codeLen-0,]-sumMtx[codeLen-1,]
+			matIdx <- which( 1==abs(diff1) )
+			if( 1<length(matIdx) ){
+				incVal <- diff1[matIdx]
+				chkDf <- data.frame( idx=matIdx ,val=(sumMtx[codeLen,matIdx]+incVal) )
+				descStr <- apply( sumMtx[codeLen-1:0 ,chkDf$idx,drop=F] ,2 ,function(cVal){paste(cVal,collapse=",")})
+				chkDf$desc <- sprintf("[\"%s\"]~%s..%d",colnames(sumMtx)[chkDf$idx],descStr,chkDf$val)
+				chkLst[["seq1"]] <- chkDf
+			}
+
+		}
+
+		if( 2<codeLen ){	# seqN nSeq syc0
+
+			# seqN	a1,a2,a3..a4
+			diff1 <- sumMtx[codeLen-0,]-sumMtx[codeLen-1,]
+			diff2 <- sumMtx[codeLen-1,]-sumMtx[codeLen-2,]
+			matIdx <- which(diff1==diff2)
+			matIdx <- matIdx[ 1<abs(diff1[matIdx]) ]	# 증감이 abs(1)인 것만
+			if( 1<length(matIdx) ){
+				incVal <- diff1[matIdx]
+				chkDf <- data.frame( idx=matIdx ,val=(sumMtx[codeLen,matIdx]+incVal) )
+				descStr <- apply( sumMtx[codeLen-2:0 ,chkDf$idx,drop=F] ,2 ,function(cVal){paste(cVal,collapse=",")})
+				chkDf$desc <- sprintf("[\"%s\"]~%s..%d",colnames(sumMtx)[chkDf$idx],descStr,chkDf$val)
+				chkLst[["seqN"]] <- chkDf
+			}
+
+
+			# nSeq	a,a,b..b
+			matFlg <- sumMtx[codeLen-1,]==sumMtx[codeLen-2,]
+			difFlg <- sumMtx[codeLen-0,]!=sumMtx[codeLen-1,]
+			matIdx <- which( matFlg & difFlg )
+			if( 1<length(matIdx) ){
+				chkDf <- data.frame( idx=matIdx ,val=sumMtx[codeLen,matIdx] )
+				descStr <- apply( sumMtx[codeLen-2:0 ,chkDf$idx,drop=F] ,2 ,function(cVal){paste(cVal,collapse=",")})
+				chkDf$desc <- sprintf("[\"%s\"]~%s..%d",colnames(sumMtx)[chkDf$idx],descStr,chkDf$val)
+				chkLst[["nSeq"]] <- chkDf
+			}
+
+
+			# syc0	b,a,a..b (a,a,a..a 도 포함시키자.)
+			matIdx <- which( sumMtx[codeLen,]==sumMtx[codeLen-1,] )
+			if( 1<length(matIdx) ){		
+				chkDf <- data.frame( idx=matIdx ,val=sumMtx[codeLen-2,matIdx] )
+				descStr <- apply( sumMtx[codeLen-2:0 ,chkDf$idx,drop=F] ,2 ,function(cVal){paste(cVal,collapse=",")})
+				chkDf$desc <- sprintf("[\"%s\"]~%s..%d",colnames(sumMtx)[chkDf$idx],descStr,chkDf$val)
+				chkLst[["syc0"]] <- chkDf
+			}
+
+		}
+
+		if( 3<codeLen ){	# syc1
+			# syc1	c,a,b,a..c
+			matFlag <- sumMtx[codeLen,]==sumMtx[codeLen-2,]
+			difFlag <- sumMtx[codeLen,]!=sumMtx[codeLen-1,]
+			matIdx <- which( matFlag & difFlag )
+			if( 1<length(matIdx) ){
+				chkDf <- data.frame( idx=matIdx ,val=sumMtx[codeLen-3,matIdx] )
+				descStr <- apply( sumMtx[codeLen-3:0 ,chkDf$idx,drop=F] ,2 ,function(cVal){paste(cVal,collapse=",")})
+				chkDf$desc <- sprintf("[\"%s\"]~%s..%d",colnames(sumMtx)[chkDf$idx],descStr,chkDf$val)
+				chkLst[["syc1"]] <- chkDf
+			}
+		}
+
+		psObj$chkLst <- chkLst
+	}
+
+	psObj$check <- function( sumCode ,dbg=F ){
+		#	sumCode : psObj$getSumMtx(aCodeMtx)[1,]
+
+		# sumCode
+		# 	12 13 14 15 16 23 24 25 26 34 35 36 45 46 56 
+		# 	4  6  9  7  8 10 13 11 12 15 13 14 16 17 15 
+		matLst <- list()
+		dfCol <- if( dbg ) c("idx","val","desc") else c("idx","val")
+		for( nIdx in names(psObj$chkLst) ){
+			chkDf <- psObj$chkLst[[nIdx]]
+				# idx val          desc
+				#   7   5   ~5,14,14..5
+				#   8   4   ~4,15,15..4
+
+			chkFlg <- sumCode[chkDf$idx]==chkDf$val
+			if( any(chkFlg) ){
+				matLst[[nIdx]] <- chkDf[chkFlg,dfCol]
+			}
+		}
+
+		return( matLst )
+	}
+
+	return( psObj )
+}
 
 
 #-----------------------------------------------------------------------------------

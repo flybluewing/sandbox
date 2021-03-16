@@ -4781,59 +4781,107 @@ bFMtx.scoreGS <- function( stdMIObj ){	# (pair)group sum
 
 }
 
+bFMtx.scorePSh <- function( stdMIObj ){	# pair sum(by H)		r,e,c,f 각각 만들 것.
+	# stdMIObj <- stdMI.grp$basic$basic
 
-if( FALSE ){	# 개발 중
+	stdMI <- stdMIObj$stdMI
+	zMtx <- stdMIObj$zMtx
+	mObj <- list( 	idStr="scoreGSh"	,zMtx.size=nrow(zMtx)	,lastZoid=stdMI$lastZoid	)
+	mObj$cName <- c( "rMatCnt","rExtMax","rSumCnt","rValCnt" 
+	)
+		# xMatCnt : 일치 갯수     xExtMax : 매치 수준(최대4)	xSumCnt : 합계 일치 수	xValCnt : col 값까지 일치 갯수
+	mObj$available <- FALSE
 
-	# testData 생성
-	stdMIObj <- stdMI.grp$basic[["nextZW"]]
+	tailLen <- nrow(stdMI$rawTail)
+	if( 2<tailLen ){
+		psLst <- list()
 
-	cIdx <- 1:6
-	leftIdx <- cIdx
-	combMtx <- combinations( length(leftIdx) ,2)
-	combLst <- list()
-	
-
-	bFMtx.scoreG <- function( stdMIObj ){
-		stdMI <- stdMIObj$stdMI
-		zMtx <- stdMIObj$zMtx
-		mObj <- list( 	idStr="scoreG"	,zMtx.size=nrow(zMtx)	,lastZoid=stdMI$lastZoid	)
-		mObj$cName <- c( "xxx","xxx","xxx" )
-
-		mObj$combMtx6 <- matrix( 0 
-							,ncol=6 
-		)	# 차라리 하드코딩이 낫다.
-
-		mObj$fMtxObj <- function( aZoidMtx ,makeInfoStr=F ){
-
-			aLen <- nrow(aZoidMtx)
-			scoreMtx <- matrix( 0, nrow=aLen, ncol=length(mObj$cName) )	;colnames(scoreMtx) <- mObj$cName
-
-			infoMtx <- NULL
-			if( makeInfoStr ){
-				cName <- c( "zMtx.size" )
-				infoMtx <- matrix( "" ,nrow=aLen ,ncol=length(cName) )	;colnames(infoMtx) <- cName
-				infoMtx[,"zMtx.size"] <- mObj$zMtx.size
-			}
-			if( !mObj$available ){
-				return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
-			}
-
-
-			for( aIdx in 1:aLen ){
-				aZoid <- aZoidMtx[aIdx,]
-				aRem <- aZoid %% 10
-				aCStep <- aZoid[2:6] - aZoid[1:5]	
-				aFStep <- aZoid - mObj$lastZoid
-
-			}
-
-			return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
-
+		psObj <- bUtil.scorePSh( stdMI$rawTail )
+		if( 0<length(psObj$chkLst) ){
+			psLst[["r"]] <- psObj
 		}
 
-		return( mObj )
+		psObj <- bUtil.scorePSh( stdMI$rawTail%%10 )
+		if( 0<length(psObj$chkLst) ){
+			psLst[["e"]] <- psObj
+		}
+
+		psObj <- bUtil.scorePSh( stdMI$cStepTail )
+		if( 0<length(psObj$chkLst) ){
+			psLst[["c"]] <- psObj
+		}
+
+		fStepMtx <- stdMI$fStepTail
+		fStepMtx <- fStepMtx[!is.na(fStepMtx[,1]),,drop=F]
+		psObj <- bUtil.scorePSh( fStepMtx )
+		if( 0<length(psObj$chkLst) ){
+			psLst[["f"]] <- psObj
+		}
+
+		if( 0<length(psLst) ){
+			mObj$psLst <- psLst
+			mObj$available <- TRUE
+		}
+	}
+
+	mObj$scoreFromMatLst <- function( matLst ){
+		# seq0 seq1 seqN nSeq syc0 syc1
+	}
+
+	mObj$fMtxObj <- function( aZoidMtx ,makeInfoStr=F ){
+
+		aLen <- nrow(aZoidMtx)
+		scoreMtx <- matrix( 0, nrow=aLen, ncol=length(mObj$cName) )	;colnames(scoreMtx) <- mObj$cName
+
+		infoMtx <- NULL
+		if( makeInfoStr ){
+			cName <- c( "zMtx.size" )
+			infoMtx <- matrix( "" ,nrow=aLen ,ncol=length(cName) )	;colnames(infoMtx) <- cName
+			infoMtx[,"zMtx.size"] <- mObj$zMtx.size
+		}
+		if( !mObj$available ){
+			return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
+		}
+
+		sumMtxLst <- list()
+		if( !is.null(mObj$psLst[["r"]]) ){
+			sumMtxLst[["r"]] <- mObj$psLst[["r"]]$getSumMtx( aZoidMtx )
+		}		
+		if( !is.null(mObj$psLst[["e"]]) ){
+			sumMtxLst[["e"]] <- mObj$psLst[["e"]]$getSumMtx( aZoidMtx%%10 )
+		}
+		if( !is.null(mObj$psLst[["c"]]) ){
+			sumMtxLst[["c"]] <- mObj$psLst[["c"]]$getSumMtx( aZoidMtx[,2:6,drop=F]-aZoidMtx[,1:5,drop=F] )
+		}
+		if( !is.null(mObj$psLst[["f"]]) ){
+			aFStepMtx <- apply( aZoidMtx ,1 ,function(rVal){ rVal-mObj$lastZoid })
+			aFStepMtx <- t( aFStepMtx )
+			sumMtxLst[["f"]] <- mObj$psLst[["f"]]$getSumMtx( aFStepMtx )
+		}
+
+		for( aIdx in 1:aLen ){
+			# aZoid <- aZoidMtx[aIdx,]	;aRem <- aZoid %% 10	;aCStep <- aZoid[2:6] - aZoid[1:5]	;aFStep <- aZoid - mObj$lastZoid
+
+			if( !is.null(mObj$psLst[["r"]]) ){
+			}
+			if( !is.null(mObj$psLst[["e"]]) ){
+				matLst <- mObj$psLst[["e"]]$check( sumMtxLst[["e"]][aIdx,] )
+				matScore <- mObj$scoreFromMatLst( matLst )
+			}
+			if( !is.null(mObj$psLst[["c"]]) ){
+			}
+			if( !is.null(mObj$psLst[["f"]]) ){
+			}
+
+			# scoreMtx[aIdx,"fRebNumMax"]	<- fndScore["rebPtnNumMax"]
+		}
+
+		return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
+
 
 	}
+
+	return( mObj )
 
 }
 
