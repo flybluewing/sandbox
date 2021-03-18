@@ -5,7 +5,7 @@ if( FALSE ){    # document
     # lastH <- 933(for 934_1 stdIdx: 233713 )   26  
 }
 
-lastH <- 952    # for H899_1
+lastH <- 954    # for H899_1
 tgt.scMtx <- NULL
 testMode <- F            #check
 prllNum <- 5
@@ -41,11 +41,9 @@ cat(sprintf("* Parallel ready... see log : %s \n",prllLog$fileName))
 
 
 tStmp <- Sys.time()
-
 # ----------------------------------------------------------------------------------
 #       stdIdx <- k.getIdx_AllZoidMtx( gEnv, stdZoid )
 stdMI.grp <- bUtil.getStdMILst( gEnv ,fRstLst )     ;stdMI.grp$anyWarn( )
-crScrH <- crScrHTool$getData( )     ;crScrH <- crScrHTool$bySpan(crScrH,lastH)
 if( TRUE ){     #   hMtxLst ,hMtxLst_bS
     load( sprintf("./save/finalCut/Obj_cut_hMtxLst_%d.save",lastH)      )   # hMtxLst
     load( sprintf("./save/finalCut/Obj_cut_hMtxLst_bS_%d.save",lastH)   )   # hMtxLst_bS
@@ -65,6 +63,7 @@ if( TRUE ){     #   hMtxLst ,hMtxLst_bS
 cut.grp <- bFCust.getFCustGrp( hMtxLst ,tgt.scMtx )
 filter.grp <- getFilter.grp( stdMI.grp ,tgt.scMtx=tgt.scMtx )
 sfExport("tgt.scMtx")   ;sfExport("hMtxLst")    ;sfExport("cut.grp")    ;sfExport("filter.grp")
+crScrH <- crScrHTool$getData( )     ;crScrH <- crScrHTool$bySpan(crScrH,lastH)
 
 tDiff <- Sys.time() - tStmp
 sprintf("hMtxLs,cut.grp    Time cost : %.1f%s",tDiff,units(tDiff))  # 17 min, 59GB RAM

@@ -222,6 +222,12 @@ getFilter.grp <- function( stdMI.grp ,tgt.scMtx=NULL ){
         if( is.null(tgt.scMtx) || ("scoreFV" %in%tgt.scMtx ) ){
 			mtxObjLst[[1+length(mtxObjLst)]] <- bFMtx.scoreFV( stdMIObj )
 		}
+        if( is.null(tgt.scMtx) || ("scoreGS" %in%tgt.scMtx ) ){
+			mtxObjLst[[1+length(mtxObjLst)]] <- bFMtx.scoreGS( stdMIObj )
+		}
+        if( is.null(tgt.scMtx) || ("scorePSh" %in%tgt.scMtx ) ){
+			mtxObjLst[[1+length(mtxObjLst)]] <- bFMtx.scorePSh( stdMIObj )
+		}
 
 		names(mtxObjLst) <- sapply(mtxObjLst,function(p){p$idStr})
 		return( mtxObjLst )
@@ -4726,7 +4732,7 @@ bFMtx.scoreGS <- function( stdMIObj ){	# (pair)group sum
 			aFStep <- aZoid - mObj$lastZoid
 
 			if( !is.null(mObj$gsLst[["r"]]) ){	# raw
-				matLst <- mObj$gsLst[["r"]]$check( aRem )
+				matLst <- mObj$gsLst[["r"]]$check( aZoid )
 				scoreMtx[aIdx,"rMatCnt"] <- length(matLst)
 				for( idx in seq_len(scoreMtx[aIdx,"rMatCnt"]) ){
 					matInfo <- matLst[[idx]]$matInfo	# sumMatFlg valMatCnt  valMatCntIdx fndLst_RowIdx
@@ -4748,7 +4754,7 @@ bFMtx.scoreGS <- function( stdMIObj ){	# (pair)group sum
 			}
 
 			if( !is.null(mObj$gsLst[["c"]]) ){	# cStep
-				matLst <- mObj$gsLst[["c"]]$check( aRem )
+				matLst <- mObj$gsLst[["c"]]$check( aCStep )
 				scoreMtx[aIdx,"cMatCnt"] <- length(matLst)
 				for( idx in seq_len(scoreMtx[aIdx,"cMatCnt"]) ){
 					matInfo <- matLst[[idx]]$matInfo	# sumMatFlg valMatCnt  valMatCntIdx fndLst_RowIdx
@@ -4759,7 +4765,7 @@ bFMtx.scoreGS <- function( stdMIObj ){	# (pair)group sum
 			}
 
 			if( !is.null(mObj$gsLst[["f"]]) ){	# fStep
-				matLst <- mObj$gsLst[["f"]]$check( aRem )
+				matLst <- mObj$gsLst[["f"]]$check( aFStep )
 				scoreMtx[aIdx,"fMatCnt"] <- length(matLst)
 				for( idx in seq_len(scoreMtx[aIdx,"fMatCnt"]) ){
 					matInfo <- matLst[[idx]]$matInfo	# sumMatFlg valMatCnt  valMatCntIdx fndLst_RowIdx
@@ -4781,19 +4787,22 @@ bFMtx.scoreGS <- function( stdMIObj ){	# (pair)group sum
 
 }
 
-bFMtx.scorePSh <- function( stdMIObj ){	# pair sum(by H)		r,e,c,f 각각 만들 것.
+bFMtx.scorePSh <- function( stdMIObj ){	# pair sum(by H)
 	# stdMIObj <- stdMI.grp$basic$basic
 
 	stdMI <- stdMIObj$stdMI
 	zMtx <- stdMIObj$zMtx
-	mObj <- list( 	idStr="scoreGSh"	,zMtx.size=nrow(zMtx)	,lastZoid=stdMI$lastZoid	)
-	mObj$cName <- c( "rMatCnt","rExtMax","rSumCnt","rValCnt" 
+	mObj <- list( 	idStr="scorePSh"	,zMtx.size=nrow(zMtx)	,lastZoid=stdMI$lastZoid	)
+	mObj$cName <- c( "rSeq0" ,"rSeq1" ,"rSeqN","rNSeq" ,"rSyc0" ,"rSyc1" ,"rColCnt"
+					,"eSeq0" ,"eSeq1" ,"eSeqN","eNSeq" ,"eSyc0" ,"eSyc1" ,"eColCnt"
+					,"cSeq0" ,"cSeq1" ,"cSeqN","cNSeq" ,"cSyc0" ,"cSyc1" ,"cColCnt"
+					,"fSeq0" ,"fSeq1" ,"fSeqN","fNSeq" ,"fSyc0" ,"fSyc1" ,"fColCnt"
 	)
-		# xMatCnt : 일치 갯수     xExtMax : 매치 수준(최대4)	xSumCnt : 합계 일치 수	xValCnt : col 값까지 일치 갯수
+
 	mObj$available <- FALSE
 
 	tailLen <- nrow(stdMI$rawTail)
-	if( 2<tailLen ){
+	if( 1<tailLen ){	# 사실 tailLen은 bUtil.scorePSh() 내에서 체크된다.
 		psLst <- list()
 
 		psObj <- bUtil.scorePSh( stdMI$rawTail )
@@ -4826,6 +4835,16 @@ bFMtx.scorePSh <- function( stdMIObj ){	# pair sum(by H)		r,e,c,f 각각 만들 것.
 
 	mObj$scoreFromMatLst <- function( matLst ){
 		# seq0 seq1 seqN nSeq syc0 syc1
+		score <- c( seq0=0 ,seq1=0 ,seqN=0 ,nSeq=0 ,syc0=0 ,syc1=0 ,colCnt=0 )
+
+		colHpnF <- rep( F ,50 )		# 속도 땜시... 설마 50 이상 쓸 일은 없겠지.
+		for( nIdx in names(matLst) ){
+			score[nIdx] <- nrow(matLst[[nIdx]])
+			colHpnF[ matLst[[nIdx]]$idx ] <- TRUE
+		}
+		score["colCnt"] <- sum(colHpnF)
+
+		return( score )
 	}
 
 	mObj$fMtxObj <- function( aZoidMtx ,makeInfoStr=F ){
@@ -4863,14 +4882,28 @@ bFMtx.scorePSh <- function( stdMIObj ){	# pair sum(by H)		r,e,c,f 각각 만들 것.
 			# aZoid <- aZoidMtx[aIdx,]	;aRem <- aZoid %% 10	;aCStep <- aZoid[2:6] - aZoid[1:5]	;aFStep <- aZoid - mObj$lastZoid
 
 			if( !is.null(mObj$psLst[["r"]]) ){
+				matLst <- mObj$psLst[["r"]]$check( sumMtxLst[["r"]][aIdx,] )
+				score <- mObj$scoreFromMatLst( matLst )
+				scoreMtx[aIdx ,c("rSeq0" ,"rSeq1" ,"rSeqN")] <- score[c("seq0" ,"seq1" ,"seqN")]
+				scoreMtx[aIdx ,c("rNSeq" ,"rSyc0" ,"rSyc1" ,"rColCnt")] <- score[c("nSeq" ,"syc0" ,"syc1" ,"colCnt")]
 			}
 			if( !is.null(mObj$psLst[["e"]]) ){
 				matLst <- mObj$psLst[["e"]]$check( sumMtxLst[["e"]][aIdx,] )
-				matScore <- mObj$scoreFromMatLst( matLst )
+				score <- mObj$scoreFromMatLst( matLst )
+				scoreMtx[aIdx ,c("eSeq0" ,"eSeq1" ,"eSeqN")] <- score[c("seq0" ,"seq1" ,"seqN")]
+				scoreMtx[aIdx ,c("eNSeq" ,"eSyc0" ,"eSyc1" ,"eColCnt")] <- score[c("nSeq" ,"syc0" ,"syc1" ,"colCnt")]
 			}
 			if( !is.null(mObj$psLst[["c"]]) ){
+				matLst <- mObj$psLst[["c"]]$check( sumMtxLst[["c"]][aIdx,] )
+				score <- mObj$scoreFromMatLst( matLst )
+				scoreMtx[aIdx ,c("cSeq0" ,"cSeq1" ,"cSeqN")] <- score[c("seq0" ,"seq1" ,"seqN")]
+				scoreMtx[aIdx ,c("cNSeq" ,"cSyc0" ,"cSyc1" ,"cColCnt")] <- score[c("nSeq" ,"syc0" ,"syc1" ,"colCnt")]
 			}
 			if( !is.null(mObj$psLst[["f"]]) ){
+				matLst <- mObj$psLst[["f"]]$check( sumMtxLst[["f"]][aIdx,] )
+				score <- mObj$scoreFromMatLst( matLst )
+				scoreMtx[aIdx ,c("fSeq0" ,"fSeq1" ,"fSeqN")] <- score[c("seq0" ,"seq1" ,"seqN")]
+				scoreMtx[aIdx ,c("fNSeq" ,"fSyc0" ,"fSyc1" ,"fColCnt")] <- score[c("nSeq" ,"syc0" ,"syc1" ,"colCnt")]
 			}
 
 			# scoreMtx[aIdx,"fRebNumMax"]	<- fndScore["rebPtnNumMax"]
