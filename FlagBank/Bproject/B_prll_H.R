@@ -10,6 +10,7 @@ Bprll.getTgtScMtx <- function( ){
     tgt.scMtx <- c( tgt.scMtx  ,c("scoreLAc13","scoreLAc24","scoreLVc13","scoreLVc24") )
     tgt.scMtx <- c( tgt.scMtx  ,c("scoreLAf13","scoreLAf24","scoreLVf13","scoreLVf24") )
     tgt.scMtx <- c( tgt.scMtx  ,c("scoreFV") )
+    tgt.scMtx <- c( tgt.scMtx  ,c("scoreGS","scoreGS3","scorePSh","scorePSrp","scorePSrpRaw") )
 
     #   tgt.scMtx <- c("score1")    ;tgt.scMtx <- c( tgt.scMtx  ,c("sScoreNew") )
     tgt.scMtx <- c( tgt.scMtx  ,c("sScore01","sScore02","sScore03","sScore04","sScore05","sScore06","sScore07","sScore08","sScore09") )

@@ -2470,6 +2470,70 @@ bUtil.scoreGS <- function( val ){
 	return( gsObj )
 }
 
+bUtil.scoreGS3 <- function( codeMtx ){
+	# codeMtx <- stdMI$rawTail
+
+	codeLen <- nrow(codeMtx)
+	ucLst <- bUtil.uniqueCombi( ncol(codeMtx) )	# unique combination List
+
+	sumHLst <- list()
+	for( nIdx in names(ucLst) ){
+		uc <- ucLst[[nIdx]]
+		cName <- names(uc)
+		sumMtx <- matrix( 0 ,nrow=2, ncol=length(uc) ,dimnames=list(c("h1","h2"),cName))
+
+		if( 1<codeLen ){
+			sumMtx["h1",cName] <- sapply(uc,function(pCol){ sum(codeMtx[codeLen,pCol]) })[cName]
+		}
+		if( 2<codeLen ){
+			sumMtx["h2",cName] <- sapply(uc,function(pCol){ sum(codeMtx[codeLen-1,pCol]) })[cName]
+		}
+
+		sumHLst[[nIdx]] <- sumMtx
+	}
+
+	gsObj <- list( sumHLst=sumHLst ,ucLst=ucLst )
+	if( 1<codeLen ){
+		gsObj$h1 <- codeMtx[codeLen,]
+	}
+	if( 2<codeLen ){
+		gsObj$h2 <- codeMtx[codeLen-1,]
+	}
+
+	gsObj$check <- function( code ,dbg=F ){
+		matHLst <- list()
+		for( hnIdx in c("h1","h2") ){
+			valRebCntLst <- list()	# val reb 까지 발생한 pair의 수.
+			for( unIdx in names(gsObj$ucLst) ){
+				uc <- gsObj$ucLst[[unIdx]]
+				sumVal <- sapply(uc,function(pCol){sum(code[pCol])})
+
+				# 3개 pair sum이 모두 같다면..!!
+				if( all(sumVal==gsObj$sumHLst[[unIdx]][hnIdx,]) ){
+					#	sum 뿐만 아니라 val까지 reb인지 체크(순서는 상관없음.)
+					#		- 순서는 상관없다.
+					#		- 하나만 체크해도 됨.(나머지는 값은 뻔하니.)
+					valRebFlag <- sapply(uc,function(pCol){ code[pCol][1] %in% gsObj[[hnIdx]][pCol]  })
+					
+					valRebCntLst[[unIdx]] <- sum( valRebFlag )
+				}
+			}
+
+			matInfo <- c( matCnt=length(valRebCntLst) ,valRebMax=0 )
+			if( 0<matInfo["matCnt"] ){
+				matInfo["valRebMax"] <- max( sapply(valRebCntLst,function(val){val}) )
+
+				# code 내 val이 모두 reb상태인 경우, matCnt가 너무 커질 수 있다. 관리 편의를 위해 최대값 제한.
+				matInfo["matCnt"] <- ifelse( 4<length(matInfo["matCnt"]) ,4 ,matInfo["matCnt"] )
+			}
+			
+			matHLst[[hnIdx]] <- matInfo
+		}
+		return( matHLst )
+	}
+
+	return( gsObj )
+}
 
 bUtil.scorePSh <- function( codeMtx ){
 	# codeMtx <- stdMI$rawTail%%10	
@@ -2592,6 +2656,169 @@ bUtil.scorePSh <- function( codeMtx ){
 		}
 
 		return( matLst )
+	}
+
+	return( psObj )
+}
+
+bUtil.scorePSrp <- function( codeMtx ){
+
+	psObj <- list()
+
+	cbMtx <- combinations( ncol(codeMtx) ,2 )
+	rownames(cbMtx) <- apply( cbMtx ,1 ,function(rVal){ sprintf("%d%d",rVal[1],rVal[2]) })
+	psObj$cbMtx <- cbMtx[sort(rownames(cbMtx)),]	# 혹시나 하는 마음에... -_-;
+
+	psObj$getSumMtx <- function( codeMtx ){
+		sumMtx <- apply( codeMtx ,1 ,function( crVal ){
+			apply( psObj$cbMtx ,1 ,function(rVal){ sum(crVal[rVal]) })
+		})
+		return( t(sumMtx) )
+	}
+	psObj$getRebPtn <- function( valOld ,valNew ){
+		# valOld<-codeMtx[codeLen-1,]	;valNew<-codeMtx[codeLen,]
+		val <- unique(valOld)
+
+		rpLst <- list()		#rebPtn
+		for( vIdx in val ){
+			rebIdx <- which(valNew==vIdx)
+			if( 0==length(rebIdx) ) next
+
+			oldIdx <- which(valOld==vIdx)
+			if( 1<length(oldIdx) ){	
+				# 다수 발생이라면, valNew에서도 해당 위치의 값들이 모두 동일한지 체크.
+				flag <- valNew[ oldIdx[1] ] == valNew[ oldIdx[2:length(oldIdx)] ]
+				if( !all(flag) )	next		# valNew 의 oldIdx에 놓인 값들이 동일하지 않다!!
+			}
+
+			size <- max(length(rebIdx),length(oldIdx))
+			rpLst[[as.character(vIdx)]] <- list( size=size ,rebIdx=rebIdx ,oldIdx=oldIdx )
+			rpLst[[as.character(vIdx)]]$lastVal <- valNew
+			rpLst[[as.character(vIdx)]]$valRebF <- valNew[ oldIdx[1] ] == valOld[ oldIdx[1] ]
+
+		}
+
+		return( rpLst )
+	}
+
+	psObj$chkLst <- NULL
+	if( TRUE ){		# analyzer
+		codeLen <- nrow(codeMtx)
+		sumMtx <- psObj$getSumMtx( codeMtx )	#	sumMtx 디버그 용도로 필요할지도..
+
+		chkLst <- list()
+		if( 2<codeLen ){	# H2->H1   H1->h0
+			chkLst[["h1"]] <- psObj$getRebPtn( valOld=sumMtx[codeLen-1,] ,valNew=sumMtx[codeLen,] )
+		}
+		if( 4<codeLen ){	# H4->H2   H2->h0
+			chkLst[["h2"]] <- psObj$getRebPtn( valOld=sumMtx[codeLen-3,] ,valNew=sumMtx[codeLen-1,] )
+		}
+
+		psObj$chkLst <- chkLst
+	}
+
+	psObj$check <- function( sumCode ,dbg=F ){
+		# sumCode <- c( 3, 3, 3, 8, 4, 7 )
+
+		cName <- c("totCnt","totSize","valCnt","valSize")
+		chkMtx <- matrix( 0 ,nrow=2,ncol=length(cName),dimnames=list(c("h1","h2"),cName))
+
+		for( cnIdx in names(psObj$chkLst) ){
+			for( nIdx in names(psObj$chkLst[[cnIdx]]) ){
+				ptnObj <- psObj$chkLst[[cnIdx]][[nIdx]]
+
+				matFlag <- sumCode[ptnObj$rebIdx] == ptnObj$lastVal[ ptnObj$oldIdx[1] ]
+				if( all(matFlag) ){
+					chkMtx[cnIdx,"totCnt"] <- chkMtx[cnIdx,"totCnt"] + 1
+					chkMtx[cnIdx,"totSize"] <- chkMtx[cnIdx,"totSize"] + ptnObj$size
+					if( ptnObj$valRebF ){	# 위치 패턴뿐만 아니라 val까지 재발된 상태
+						chkMtx[cnIdx,"valCnt"] <- chkMtx[cnIdx,"valCnt"] + 1
+						chkMtx[cnIdx,"valSize"] <- chkMtx[cnIdx,"valSize"] + ptnObj$size
+					}
+				}
+			}
+		}
+
+
+		return( chkMtx )
+	}
+
+	return( psObj )
+}
+
+bUtil.scorePSrpRaw <- function( codeMtx ){
+
+	psObj <- list()
+
+	cbMtx <- combinations( ncol(codeMtx) ,2 )
+	rownames(cbMtx) <- apply( cbMtx ,1 ,function(rVal){ sprintf("%d%d",rVal[1],rVal[2]) })
+	psObj$cbMtx <- cbMtx[sort(rownames(cbMtx)),]	# 혹시나 하는 마음에... -_-;
+
+	psObj$getRebPtn <- function( valOld ,valNew ){
+		# valOld<-codeMtx[codeLen-1,]	;valNew<-codeMtx[codeLen,]
+		val <- unique(valOld)
+
+		rpLst <- list()		#rebPtn
+		for( vIdx in val ){
+			rebIdx <- which(valNew==vIdx)
+			if( 0==length(rebIdx) ) next
+
+			oldIdx <- which(valOld==vIdx)
+			if( 1<length(oldIdx) ){	
+				# 다수 발생이라면, valNew에서도 해당 위치의 값들이 모두 동일한지 체크.
+				flag <- valNew[ oldIdx[1] ] == valNew[ oldIdx[2:length(oldIdx)] ]
+				if( !all(flag) )	next		# valNew 의 oldIdx에 놓인 값들이 동일하지 않다!!
+			}
+
+			size <- max(length(rebIdx),length(oldIdx))
+			rpLst[[as.character(vIdx)]] <- list( size=size ,rebIdx=rebIdx ,oldIdx=oldIdx )
+			rpLst[[as.character(vIdx)]]$lastVal <- valNew
+			rpLst[[as.character(vIdx)]]$valRebF <- valNew[ oldIdx[1] ] == valOld[ oldIdx[1] ]
+
+		}
+
+		return( rpLst )
+	}
+
+	psObj$chkLst <- NULL
+	if( TRUE ){		# analyzer
+		codeLen <- nrow(codeMtx)
+
+		chkLst <- list()
+		if( 2<codeLen ){	# H2->H1   H1->h0
+			chkLst[["h1"]] <- psObj$getRebPtn( valOld=codeMtx[codeLen-1,] ,valNew=codeMtx[codeLen,] )
+		}
+		if( 4<codeLen ){	# H4->H2   H2->h0
+			chkLst[["h2"]] <- psObj$getRebPtn( valOld=codeMtx[codeLen-3,] ,valNew=codeMtx[codeLen-1,] )
+		}
+
+		psObj$chkLst <- chkLst
+	}
+
+	psObj$check <- function( code ,dbg=F ){
+		# code <- c( 3, 3, 3, 8, 4, 7 )
+
+		cName <- c("totCnt","totSize","valCnt","valSize")
+		chkMtx <- matrix( 0 ,nrow=2,ncol=length(cName),dimnames=list(c("h1","h2"),cName))
+
+		for( cnIdx in names(psObj$chkLst) ){
+			for( nIdx in names(psObj$chkLst[[cnIdx]]) ){
+				ptnObj <- psObj$chkLst[[cnIdx]][[nIdx]]
+
+				matFlag <- code[ptnObj$rebIdx] == ptnObj$lastVal[ ptnObj$oldIdx[1] ]
+				if( all(matFlag) ){
+					chkMtx[cnIdx,"totCnt"] <- chkMtx[cnIdx,"totCnt"] + 1
+					chkMtx[cnIdx,"totSize"] <- chkMtx[cnIdx,"totSize"] + ptnObj$size
+					if( ptnObj$valRebF ){	# 위치 패턴뿐만 아니라 val까지 재발된 상태
+						chkMtx[cnIdx,"valCnt"] <- chkMtx[cnIdx,"valCnt"] + 1
+						chkMtx[cnIdx,"valSize"] <- chkMtx[cnIdx,"valSize"] + ptnObj$size
+					}
+				}
+			}
+		}
+
+
+		return( chkMtx )
 	}
 
 	return( psObj )
@@ -2780,4 +3007,5 @@ BUtill.buildAllScoreMtx <- function( hSpan ,gEnv ,tgt.scMtx=NULL ){
     }
 
 }
+
 

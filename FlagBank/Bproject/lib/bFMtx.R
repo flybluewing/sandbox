@@ -225,8 +225,17 @@ getFilter.grp <- function( stdMI.grp ,tgt.scMtx=NULL ){
         if( is.null(tgt.scMtx) || ("scoreGS" %in%tgt.scMtx ) ){
 			mtxObjLst[[1+length(mtxObjLst)]] <- bFMtx.scoreGS( stdMIObj )
 		}
+        if( is.null(tgt.scMtx) || ("scoreGS3" %in%tgt.scMtx ) ){
+			mtxObjLst[[1+length(mtxObjLst)]] <- bFMtx.scoreGS3( stdMIObj )
+		}
         if( is.null(tgt.scMtx) || ("scorePSh" %in%tgt.scMtx ) ){
 			mtxObjLst[[1+length(mtxObjLst)]] <- bFMtx.scorePSh( stdMIObj )
+		}
+        if( is.null(tgt.scMtx) || ("scorePSrp" %in%tgt.scMtx ) ){
+			mtxObjLst[[1+length(mtxObjLst)]] <- bFMtx.scorePSrp( stdMIObj )
+		}
+        if( is.null(tgt.scMtx) || ("scorePSrpRaw" %in%tgt.scMtx ) ){
+			mtxObjLst[[1+length(mtxObjLst)]] <- bFMtx.scorePSrpRaw( stdMIObj )
 		}
 
 		names(mtxObjLst) <- sapply(mtxObjLst,function(p){p$idStr})
@@ -4787,6 +4796,102 @@ bFMtx.scoreGS <- function( stdMIObj ){	# (pair)group sum
 
 }
 
+bFMtx.scoreGS3 <- function( stdMIObj ){
+
+	stdMI <- stdMIObj$stdMI
+	zMtx <- stdMIObj$zMtx
+	mObj <- list( 	idStr="scoreGS3"	,zMtx.size=nrow(zMtx)	,lastZoid=stdMI$lastZoid	)
+	mObj$cName <- c( "rMatCntH1","rMatCntH2","rRebMaxH1","rRebMaxH2" ,"eMatCntH1","eMatCntH2","eRebMaxH1","eRebMaxH2"
+					,"cMatCntH1","cMatCntH2","cRebMaxH1","cRebMaxH2"
+					,"fMatCntH1","fMatCntH2","fRebMaxH1","fRebMaxH2"
+	)
+	mObj$available <- FALSE
+
+	if( 0<mObj$zMtx.size ){
+		tailLen <- nrow(stdMI$rawTail)
+
+		gsLst <- list()
+
+		# raw ---------------------------------------------------------------
+		gsLst[["r"]] <- bUtil.scoreGS3( stdMI$rawTail )
+		# rem ---------------------------------------------------------------
+		codeMtx <- stdMI$rawTail %% 10
+		gsLst[["e"]] <- bUtil.scoreGS3( codeMtx )
+		# cStep -------------------------------------------------------------
+		gsLst[["c"]] <- bUtil.scoreGS3( stdMI$cStepTail )
+		# fStep -------------------------------------------------------------
+		if( 1<tailLen ){
+			fStepTail <- stdMI$fStepTail
+			if( is.na(fStepTail[1,1]) ){
+				fStepTail <- fStepTail[2:tailLen,,drop=F]
+			}
+			gsLst[["f"]] <- bUtil.scoreGS3( fStepTail )
+		}
+
+		mObj$gsLst <- gsLst
+		mObj$available <- TRUE
+	}
+
+	mObj$fMtxObj <- function( aZoidMtx ,makeInfoStr=F ){
+
+		aLen <- nrow(aZoidMtx)
+		scoreMtx <- matrix( 0, nrow=aLen, ncol=length(mObj$cName) )	;colnames(scoreMtx) <- mObj$cName
+
+		infoMtx <- NULL
+		if( makeInfoStr ){
+			cName <- c( "zMtx.size" )
+			infoMtx <- matrix( "" ,nrow=aLen ,ncol=length(cName) )	;colnames(infoMtx) <- cName
+			infoMtx[,"zMtx.size"] <- mObj$zMtx.size
+		}
+		if( !mObj$available ){
+			return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
+		}
+
+		for( aIdx in 1:aLen ){
+			aZoid <- aZoidMtx[aIdx,]
+			aRem <- aZoid %% 10
+			aCStep <- aZoid[2:6] - aZoid[1:5]
+			aFStep <- aZoid - mObj$lastZoid
+
+			if( !is.null(gsLst[["r"]]) ){
+				chkRst <- gsLst[["r"]]$check( aZoid )
+				scoreMtx[aIdx,"rMatCntH1"]	<- chkRst$h1["matCnt"]
+				scoreMtx[aIdx,"rMatCntH2"]	<- chkRst$h2["matCnt"]
+				scoreMtx[aIdx,"rRebMaxH1"]	<- chkRst$h1["valRebMax"]
+				scoreMtx[aIdx,"rRebMaxH2"]	<- chkRst$h2["valRebMax"]
+			}
+			if( !is.null(gsLst[["e"]]) ){
+				chkRst <- gsLst[["e"]]$check( aRem )
+				scoreMtx[aIdx,"eMatCntH1"]	<- chkRst$h1["matCnt"]
+				scoreMtx[aIdx,"eMatCntH2"]	<- chkRst$h2["matCnt"]
+				scoreMtx[aIdx,"eRebMaxH1"]	<- chkRst$h1["valRebMax"]
+				scoreMtx[aIdx,"eRebMaxH2"]	<- chkRst$h2["valRebMax"]
+			}
+			if( !is.null(gsLst[["c"]]) ){
+				chkRst <- gsLst[["c"]]$check( aCStep )
+				scoreMtx[aIdx,"cMatCntH1"]	<- chkRst$h1["matCnt"]
+				scoreMtx[aIdx,"cMatCntH2"]	<- chkRst$h2["matCnt"]
+				scoreMtx[aIdx,"cRebMaxH1"]	<- chkRst$h1["valRebMax"]
+				scoreMtx[aIdx,"cRebMaxH2"]	<- chkRst$h2["valRebMax"]
+			}
+			if( !is.null(gsLst[["f"]]) ){
+				chkRst <- gsLst[["f"]]$check( aFStep )
+				scoreMtx[aIdx,"fMatCntH1"]	<- chkRst$h1["matCnt"]
+				scoreMtx[aIdx,"fMatCntH2"]	<- chkRst$h2["matCnt"]
+				scoreMtx[aIdx,"fRebMaxH1"]	<- chkRst$h1["valRebMax"]
+				scoreMtx[aIdx,"fRebMaxH2"]	<- chkRst$h2["valRebMax"]
+			}
+
+			# scoreMtx[aIdx,"fRebNumMax"]	<- fndScore["rebPtnNumMax"]
+		}
+
+		return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
+	}
+
+	return( mObj )
+
+}
+
 bFMtx.scorePSh <- function( stdMIObj ){	# pair sum(by H)
 	# stdMIObj <- stdMI.grp$basic$basic
 
@@ -4911,6 +5016,215 @@ bFMtx.scorePSh <- function( stdMIObj ){	# pair sum(by H)
 
 		return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
 
+
+	}
+
+	return( mObj )
+
+}
+
+bFMtx.scorePSrp <- function( stdMIObj ){	# reb ptn(idx only? or even val reb?)	score3참고
+	# stdMIObj <- stdMI.grp$basic$basic
+
+	stdMI <- stdMIObj$stdMI
+	zMtx <- stdMIObj$zMtx
+	mObj <- list( 	idStr="scorePSrp"	,zMtx.size=nrow(zMtx)	,lastZoid=stdMI$lastZoid	)
+	mObj$cName <- c( "r1TotSize" ,"r1ValSize" ,"r2TotSize" ,"r2ValSize" ,"e1TotSize" ,"e1ValSize" ,"e2TotSize" ,"e2ValSize"
+					,"c1TotSize" ,"c1ValSize" ,"c2TotSize" ,"c2ValSize"
+					,"f1TotSize" ,"f1ValSize" ,"f2TotSize" ,"f2ValSize"
+	)
+
+	mObj$available <- FALSE
+
+	mObj$psLst <- list()
+	tailLen <- nrow(stdMI$rawTail)
+	if( 1<tailLen ){	# 사실 tailLen은 bUtil.scorePSh() 내에서 체크된다.
+		psLst <- list()
+
+		psLst[["r"]] <- bUtil.scorePSrp( stdMI$rawTail )
+		psLst[["e"]] <- bUtil.scorePSrp( stdMI$rawTail%%10 )
+		psLst[["c"]] <- bUtil.scorePSrp( stdMI$cStepTail )
+		if( 2<tailLen ){
+			fStepTail <- stdMI$fStepTail
+			if( is.na(fStepTail[1,1]) ){
+				fStepTail <- fStepTail[2:tailLen,,drop=F]
+			}
+			psLst[["f"]] <- bUtil.scorePSrp( fStepTail )
+		}
+		mObj$psLst <- psLst
+		mObj$available <- TRUE
+	}
+
+	mObj$fMtxObj <- function( aZoidMtx ,makeInfoStr=F ){
+
+		aLen <- nrow(aZoidMtx)
+		scoreMtx <- matrix( 0, nrow=aLen, ncol=length(mObj$cName) )	;colnames(scoreMtx) <- mObj$cName
+
+		infoMtx <- NULL
+		if( makeInfoStr ){
+			cName <- c( "zMtx.size" )
+			infoMtx <- matrix( "" ,nrow=aLen ,ncol=length(cName) )	;colnames(infoMtx) <- cName
+			infoMtx[,"zMtx.size"] <- mObj$zMtx.size
+		}
+		if( !mObj$available ){
+			return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
+		}
+
+		sumMtxLst <- list()
+		if( !is.null(mObj$psLst[["r"]]) ){
+			sumMtxLst[["r"]] <- mObj$psLst[["r"]]$getSumMtx( aZoidMtx )
+		}		
+		if( !is.null(mObj$psLst[["e"]]) ){
+			sumMtxLst[["e"]] <- mObj$psLst[["e"]]$getSumMtx( aZoidMtx%%10 )
+		}
+		if( !is.null(mObj$psLst[["c"]]) ){
+			sumMtxLst[["c"]] <- mObj$psLst[["c"]]$getSumMtx( aZoidMtx[,2:6,drop=F]-aZoidMtx[,1:5,drop=F] )
+		}
+		if( !is.null(mObj$psLst[["f"]]) ){
+			aFStepMtx <- apply( aZoidMtx ,1 ,function(rVal){ rVal-mObj$lastZoid })
+			aFStepMtx <- t( aFStepMtx )
+			sumMtxLst[["f"]] <- mObj$psLst[["f"]]$getSumMtx( aFStepMtx )
+		}
+
+		sizeCeil <- 5	# 최대값 제한. 값이 너무 크면 evt 지정하기 힘들어지므로.
+		for( aIdx in 1:aLen ){
+			# aZoid <- aZoidMtx[aIdx,]	;aRem <- aZoid %% 10	;aCStep <- aZoid[2:6] - aZoid[1:5]	;aFStep <- aZoid - mObj$lastZoid
+
+			if( !is.null(mObj$psLst[["r"]]) ){
+				matMtx <- mObj$psLst[["r"]]$check( sumMtxLst[["r"]][aIdx,] )
+					#    totCnt totSize valCnt valSize
+					# h1      0       0      0       0
+					# h2      0       0      0       0
+				matMtx[,c("totSize","valSize")] <- ifelse( matMtx[,c("totSize","valSize")]>sizeCeil ,sizeCeil ,matMtx[,c("totSize","valSize")] )
+
+				scoreMtx[aIdx ,c("r1TotSize" ,"r1ValSize")] <- matMtx["h1",c("totSize","valSize")]
+				scoreMtx[aIdx ,c("r2TotSize" ,"r2ValSize")] <- matMtx["h2",c("totSize","valSize")]
+			}
+			if( !is.null(mObj$psLst[["e"]]) ){
+				matMtx <- mObj$psLst[["e"]]$check( sumMtxLst[["e"]][aIdx,] )
+				matMtx[,c("totSize","valSize")] <- ifelse( matMtx[,c("totSize","valSize")]>sizeCeil ,sizeCeil ,matMtx[,c("totSize","valSize")] )
+
+				scoreMtx[aIdx ,c("e1TotSize" ,"e1ValSize")] <- matMtx["h1",c("totSize","valSize")]
+				scoreMtx[aIdx ,c("e2TotSize" ,"e2ValSize")] <- matMtx["h2",c("totSize","valSize")]
+			}
+			if( !is.null(mObj$psLst[["c"]]) ){
+				matMtx <- mObj$psLst[["c"]]$check( sumMtxLst[["c"]][aIdx,] )
+				matMtx[,c("totSize","valSize")] <- ifelse( matMtx[,c("totSize","valSize")]>sizeCeil ,sizeCeil ,matMtx[,c("totSize","valSize")] )
+
+				scoreMtx[aIdx ,c("c1TotSize" ,"c1ValSize")] <- matMtx["h1",c("totSize","valSize")]
+				scoreMtx[aIdx ,c("c2TotSize" ,"c2ValSize")] <- matMtx["h2",c("totSize","valSize")]
+			}
+			if( !is.null(mObj$psLst[["f"]]) ){
+				matMtx <- mObj$psLst[["f"]]$check( sumMtxLst[["f"]][aIdx,] )
+				matMtx[,c("totSize","valSize")] <- ifelse( matMtx[,c("totSize","valSize")]>sizeCeil ,sizeCeil ,matMtx[,c("totSize","valSize")] )
+
+				scoreMtx[aIdx ,c("f1TotSize" ,"f1ValSize")] <- matMtx["h1",c("totSize","valSize")]
+				scoreMtx[aIdx ,c("f2TotSize" ,"f2ValSize")] <- matMtx["h2",c("totSize","valSize")]
+			}
+
+
+			# scoreMtx[aIdx,"fRebNumMax"]	<- fndScore["rebPtnNumMax"]
+		}
+
+		return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
+
+	}
+
+	return( mObj )
+
+}
+
+bFMtx.scorePSrpRaw <- function( stdMIObj ){	# sumMtx가 아닌 raw자체에 대한 reb ptn. 
+	#	score2와 유사하나, score2는 다수 발생만을 체크한다. score2의 보조.
+	#		score2,3와 중복되는 경향이 있으니, bF 전체 총합을 체크하는 로직들에서 score2,3와 함께 사용하지 말 것.
+
+	# stdMIObj <- stdMI.grp$basic$basic
+
+	stdMI <- stdMIObj$stdMI
+	zMtx <- stdMIObj$zMtx
+	mObj <- list( 	idStr="scorePSrpRaw"	,zMtx.size=nrow(zMtx)	,lastZoid=stdMI$lastZoid	)
+	mObj$cName <- c( "r1TotSize" ,"r1ValSize" ,"r2TotSize" ,"r2ValSize" ,"e1TotSize" ,"e1ValSize" ,"e2TotSize" ,"e2ValSize"
+					,"c1TotSize" ,"c1ValSize" ,"c2TotSize" ,"c2ValSize"
+					,"f1TotSize" ,"f1ValSize" ,"f2TotSize" ,"f2ValSize"
+	)
+
+	mObj$available <- FALSE
+
+	mObj$psLst <- list()
+	tailLen <- nrow(stdMI$rawTail)
+	if( 1<tailLen ){	# 사실 tailLen은 bUtil.scorePSh() 내에서 체크된다.
+		psLst <- list()
+
+		psLst[["r"]] <- bUtil.scorePSrpRaw( stdMI$rawTail )
+		psLst[["e"]] <- bUtil.scorePSrpRaw( stdMI$rawTail%%10 )
+		psLst[["c"]] <- bUtil.scorePSrpRaw( stdMI$cStepTail )
+		if( 2<tailLen ){
+			fStepTail <- stdMI$fStepTail
+			if( is.na(fStepTail[1,1]) ){
+				fStepTail <- fStepTail[2:tailLen,,drop=F]
+			}
+			psLst[["f"]] <- bUtil.scorePSrpRaw( fStepTail )
+		}
+		mObj$psLst <- psLst
+		mObj$available <- TRUE
+	}
+
+	mObj$fMtxObj <- function( aZoidMtx ,makeInfoStr=F ){
+
+		aLen <- nrow(aZoidMtx)
+		scoreMtx <- matrix( 0, nrow=aLen, ncol=length(mObj$cName) )	;colnames(scoreMtx) <- mObj$cName
+
+		infoMtx <- NULL
+		if( makeInfoStr ){
+			cName <- c( "zMtx.size" )
+			infoMtx <- matrix( "" ,nrow=aLen ,ncol=length(cName) )	;colnames(infoMtx) <- cName
+			infoMtx[,"zMtx.size"] <- mObj$zMtx.size
+		}
+		if( !mObj$available ){
+			return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
+		}
+
+		sizeCeil <- 5	# 최대값 제한. 값이 너무 크면 evt 지정하기 힘들어지므로.
+		for( aIdx in 1:aLen ){
+			aZoid <- aZoidMtx[aIdx,]	;aRem <- aZoid %% 10
+			aCStep <- aZoid[2:6] - aZoid[1:5]	;aFStep <- aZoid - mObj$lastZoid
+
+			if( !is.null(mObj$psLst[["r"]]) ){
+				matMtx <- mObj$psLst[["r"]]$check( aZoid )
+					#    totCnt totSize valCnt valSize
+					# h1      0       0      0       0
+					# h2      0       0      0       0
+				matMtx[,c("totSize","valSize")] <- ifelse( matMtx[,c("totSize","valSize")]>sizeCeil ,sizeCeil ,matMtx[,c("totSize","valSize")] )
+
+				scoreMtx[aIdx ,c("r1TotSize" ,"r1ValSize")] <- matMtx["h1",c("totSize","valSize")]
+				scoreMtx[aIdx ,c("r2TotSize" ,"r2ValSize")] <- matMtx["h2",c("totSize","valSize")]
+			}
+			if( !is.null(mObj$psLst[["e"]]) ){
+				matMtx <- mObj$psLst[["e"]]$check( aRem )
+				matMtx[,c("totSize","valSize")] <- ifelse( matMtx[,c("totSize","valSize")]>sizeCeil ,sizeCeil ,matMtx[,c("totSize","valSize")] )
+
+				scoreMtx[aIdx ,c("e1TotSize" ,"e1ValSize")] <- matMtx["h1",c("totSize","valSize")]
+				scoreMtx[aIdx ,c("e2TotSize" ,"e2ValSize")] <- matMtx["h2",c("totSize","valSize")]
+			}
+			if( !is.null(mObj$psLst[["c"]]) ){
+				matMtx <- mObj$psLst[["c"]]$check( aCStep )
+				matMtx[,c("totSize","valSize")] <- ifelse( matMtx[,c("totSize","valSize")]>sizeCeil ,sizeCeil ,matMtx[,c("totSize","valSize")] )
+
+				scoreMtx[aIdx ,c("c1TotSize" ,"c1ValSize")] <- matMtx["h1",c("totSize","valSize")]
+				scoreMtx[aIdx ,c("c2TotSize" ,"c2ValSize")] <- matMtx["h2",c("totSize","valSize")]
+			}
+			if( !is.null(mObj$psLst[["f"]]) ){
+				matMtx <- mObj$psLst[["f"]]$check( aFStep )
+				matMtx[,c("totSize","valSize")] <- ifelse( matMtx[,c("totSize","valSize")]>sizeCeil ,sizeCeil ,matMtx[,c("totSize","valSize")] )
+
+				scoreMtx[aIdx ,c("f1TotSize" ,"f1ValSize")] <- matMtx["h1",c("totSize","valSize")]
+				scoreMtx[aIdx ,c("f2TotSize" ,"f2ValSize")] <- matMtx["h2",c("totSize","valSize")]
+			}
+
+			# scoreMtx[aIdx,"fRebNumMax"]	<- fndScore["rebPtnNumMax"]
+		}
+
+		return( list(scoreMtx=scoreMtx,infoMtx=infoMtx) )
 
 	}
 
