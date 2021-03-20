@@ -3126,7 +3126,7 @@ if( TRUE ){ # sScore0GS3
             aCStep <- aObj$cStepMtx[aIdx,]      ;aFStep <- aObj$fStepMtx[aIdx,]
 
 			if( !is.null(gsLst[["r"]]) ){
-				chkRst <- gsLst[["r"]]$check( aZoid )
+				chkRst <- gsLst[["r"]]$check( aCode )
 				scrMtx[wIdx,"rMatCntH1"]	<- chkRst$h1["matCnt"]
 				scrMtx[wIdx,"rMatCntH2"]	<- chkRst$h2["matCnt"]
 				scrMtx[wIdx,"rRebMaxH1"]	<- chkRst$h1["valRebMax"]
