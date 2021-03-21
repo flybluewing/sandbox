@@ -18,6 +18,7 @@ Bprll.getTgtScMtx <- function( ){
     tgt.scMtx <- c( tgt.scMtx  ,c("sScore0LAe13","sScore0LAe24","sScore0LVe13","sScore0LVe24") )
     tgt.scMtx <- c( tgt.scMtx  ,c("sScore0LAc13","sScore0LAc24","sScore0LVc13","sScore0LVc24") )
     tgt.scMtx <- c( tgt.scMtx  ,c("sScore0LAf13","sScore0LAf24","sScore0LVf13","sScore0LVf24") )
+    tgt.scMtx <- c( tgt.scMtx  ,c("sScore0GS","sScore0GS3","sScore0PSh","sScore0PSrp","sScore0PSrpRaw") )
 
     return( tgt.scMtx )
 }

@@ -57,7 +57,7 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
 
     sfExport("tgt.scMtx")       ;sfExport("testData.grp")   ;sfExport("testData_HCR.grp")
     tStmp1 <- Sys.time()
-    if( TRUE ){
+    if( TRUE ){     # HCR
         prll.initHeader( )
         prllLog$fLogStr("- HCR ----------------------------",pTime=T)
 
