@@ -887,6 +887,7 @@ FCust_stdCut.hIdx <- function( hName ,mName ,mtxLst ){
 
         } else {
             rObj$available <- FALSE
+            cat(sprintf(" ERROR! missing scoreMtxCfg for %s \n",mName))
         }   # cfg
 
     }

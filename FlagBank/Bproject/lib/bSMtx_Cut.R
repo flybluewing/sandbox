@@ -509,6 +509,7 @@ bS_stdCut.hIdx <- function( hName ,mName ,mtxLst ){
 
         } else {
             rObj$available <- FALSE
+            cat(sprintf(" ERROR! missing bsScoreMtxCfg for %s \n",mName))
         }   # cfg
 
     }
