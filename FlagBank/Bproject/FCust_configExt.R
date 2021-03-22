@@ -1767,7 +1767,91 @@ if( TRUE ){
 
 }
 
+mName <- "scoreGS"
+if( TRUE ){
 
+    scrExtMtxCfg[[mName]] <- list()
+
+    scrExtMtxCfg[[mName]]$filter01 <- list(
+        mName = mName   ,style=c( freqZero=TRUE )
+        ,fCol = list(
+            "rMatCnt"=list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3,3),c(1,2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                            ,forbidEvtReb=c(3)
+                        )
+            ,"cMatCnt"=list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3,3,3,3),c(1,2,3,4,5,6,7)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                            ,forbidEvtReb=c(3)
+                        )
+            ,"fMatCnt"=list( rng=matrix( c(0,2 ,0,2) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3,3,3,3),c(1,2,3,4,5,6,7)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                            ,forbidEvtReb=c(3)
+                        )
+        )
+        ,evtMax = matrix( c(2,1,3,1 ,2,1,3,1)   ,byrow=T ,ncol=4        # H790 H832 H867 H892 evtCnt:2(2,2)
+                        ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
+        )
+        ,rowReb = c( rawMin=2 ,lowE=2 ,rareE=2 ,dupESum=2 ) ,rowRebDup=NULL
+        ,summMtx = NULL     ,summMtx.reb = NULL             ,summMtx.sum = NULL
+        ,scMtx.sz = NULL    ,scMtx.sz.sum = NULL
+        ,isHard=NULL  # use default
+    )
+
+    scrExtMtxCfg[[mName]]$filter02 <- list(
+        mName = mName   ,style=c( freqZero=TRUE )
+        ,fCol = list(
+            "rExtMax"=list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3,3),c(1,2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                            ,forbidEvtReb=c(3)
+                        )
+            ,"cExtMax"=list( rng=matrix( c(0,2 ,0,2) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3,3,3,3),c(1,2,3,4,5,6,7)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                            ,forbidEvtReb=c(3)
+                        )
+            ,"fExtMax"=list( rng=matrix( c(0,2 ,0,2) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3,3,3,3),c(1,2,3,4,5,6,7)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                            ,forbidEvtReb=c(3)
+                        )
+        )
+        ,evtMax = matrix( c(2,1,3,1 ,2,1,3,1)   ,byrow=T ,ncol=4        # H790 H832 H867 H892 evtCnt:2(2,2)
+                        ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
+        )
+        ,rowReb = c( rawMin=2 ,lowE=2 ,rareE=2 ,dupESum=2 ) ,rowRebDup=NULL
+        ,summMtx = NULL     ,summMtx.reb = NULL             ,summMtx.sum = NULL
+        ,scMtx.sz = NULL    ,scMtx.sz.sum = NULL
+        ,isHard=NULL  # use default
+    )
+
+    scrExtMtxCfg[[mName]]$filter03 <- list(
+        mName = mName   ,style=c( freqZero=TRUE )
+        ,fCol = list(
+            "rSumCnt"=list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3,3),c(1,2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                        )
+            ,"cSumCnt"=list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3,3,3,3),c(1,2,3,4,5,6,7)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                        )
+            ,"fSumCnt"=list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3,3,3,3),c(1,2,3,4,5,6,7)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                        )
+        )
+        ,evtMax = NULL
+        ,rowReb = NULL ,rowRebDup=NULL
+        ,summMtx = NULL     ,summMtx.reb = NULL             ,summMtx.sum = NULL
+        ,scMtx.sz = NULL    ,scMtx.sz.sum = NULL
+        ,isHard=NULL  # use default
+    )
+
+}
 
 mName <- "codeSample"
 if( FALSE ){    # sample
