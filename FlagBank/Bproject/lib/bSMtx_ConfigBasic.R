@@ -2227,7 +2227,7 @@ bsScoreMtxCfg[[mName]] <- list(
                 ,ncol=length(scMtx.szName$cName) ,nrow=length(scMtx.szName$rName) 
                 ,dimnames=list(scMtx.szName$rName,scMtx.szName$cName)
     )
-    ,scMtx.sz.sum = c(rebCnt.r=4 ,rebCnt.e=2)
+    ,scMtx.sz.sum = c(rebCnt.r=4 ,rebCnt.e=3)
     ,isHard=NULL  # use default
 )
 
