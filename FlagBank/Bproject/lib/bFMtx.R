@@ -226,7 +226,7 @@ getFilter.grp <- function( stdMI.grp ,tgt.scMtx=NULL ){
 			mtxObjLst[[1+length(mtxObjLst)]] <- bFMtx.scoreGS( stdMIObj )
 		}
         if( is.null(tgt.scMtx) || ("scoreGSh2" %in%tgt.scMtx ) ){
-			mtxObjLst[[1+length(mtxObjLst)]] <- bFMtx.scoreGS( stdMIObj )
+			mtxObjLst[[1+length(mtxObjLst)]] <- bFMtx.scoreGSh2( stdMIObj )
 		}
         if( is.null(tgt.scMtx) || ("scoreGS3" %in%tgt.scMtx ) ){
 			mtxObjLst[[1+length(mtxObjLst)]] <- bFMtx.scoreGS3( stdMIObj )
