@@ -1853,6 +1853,404 @@ if( TRUE ){
 
 }
 
+mName <- "scoreGSh2"
+if( TRUE ){
+    scrExtMtxCfg[[mName]] <- list()
+    scrExtMtxCfg[[mName]]$filter01 <- list(
+        mName = mName   ,style=c( freqZero=TRUE )
+        ,fCol = list(
+            "rMatCnt"=list( rng=matrix( c(0,3 ,0,3) ,ncol=2 )
+                            ,evt=matrix( c(c(1,2,2,3,3,3),c(1,2,3,4,5,6)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                        )
+            ,"cMatCnt"=list( rng=matrix( c(0,3 ,0,3) ,ncol=2 )
+                            ,evt=matrix( c(c(1,3,3,3,3,3),c(1,2,3,4,5,6)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                        )
+            ,"fMatCnt"=list( rng=matrix( c(0,3 ,0,3) ,ncol=2 )
+                            ,evt=matrix( c(c(1,3,3,3,3,3),c(1,2,3,4,5,6)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                        )
+        )
+        ,evtMax = matrix( c(2,1,3,1 ,2,1,3,1)   ,byrow=T ,ncol=4        # H790 H832 H867 H892 evtCnt:2(2,2)
+                        ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
+        )
+        ,rowReb = c( rawMin=2 ,lowE=2 ,rareE=2 ,dupESum=2 ) ,rowRebDup=NULL
+        ,summMtx = NULL     ,summMtx.reb = NULL             ,summMtx.sum = NULL
+        ,scMtx.sz = NULL    ,scMtx.sz.sum = NULL
+        ,isHard=NULL  # use default
+    )
+    scrExtMtxCfg[[mName]]$filter02 <- list(
+        mName = mName   ,style=c( freqZero=TRUE )
+        ,fCol = list(
+            "rExtMax"=list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(1,3,3,3,3),c(1,2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                        )
+            ,"cExtMax"=list( rng=matrix( c(0,4 ,0,4) ,ncol=2 )
+                            ,evt=matrix( c(c(1,2,2,2,3),c(1,2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                        )
+            ,"fExtMax"=list( rng=matrix( c(0,2 ,0,2) ,ncol=2 )
+                            ,evt=matrix( c(c(1,2,3,3,3),c(1,2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                        )
+        )
+        ,evtMax = matrix( c(2,1,3,1 ,2,1,3,1)   ,byrow=T ,ncol=4        # H790 H832 H867 H892 evtCnt:2(2,2)
+                        ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
+        )
+        ,rowReb = c( rawMin=2 ,lowE=2 ,rareE=2 ,dupESum=2 ) ,rowRebDup=NULL
+        ,summMtx = NULL     ,summMtx.reb = NULL             ,summMtx.sum = NULL
+        ,scMtx.sz = NULL    ,scMtx.sz.sum = NULL
+        ,isHard=NULL  # use default
+    )
+    scrExtMtxCfg[[mName]]$filter03 <- list(
+        mName = mName   ,style=c( freqZero=TRUE )
+        ,fCol = list(
+            "rSumCnt"=list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(3,3,3,3,3),c(1,2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                        )
+            ,"cSumCnt"=list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(3,3,3,3,3),c(1,2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                        )
+            ,"fSumCnt"=list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(3,3,3,3,3),c(1,2,3,4,5)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                        )
+        )
+        ,evtMax = matrix( c(2,1,3,1 ,2,1,3,1)   ,byrow=T ,ncol=4        # H790 H832 H867 H892 evtCnt:2(2,2)
+                        ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
+        )
+        ,rowReb = c( rawMin=2 ,lowE=2 ,rareE=2 ,dupESum=2 ) ,rowRebDup=NULL
+        ,summMtx = NULL     ,summMtx.reb = NULL             ,summMtx.sum = NULL
+        ,scMtx.sz = NULL    ,scMtx.sz.sum = NULL
+        ,isHard=NULL  # use default
+    )
+}
+
+mName <- "scoreGS3"
+if( TRUE ){
+    scrExtMtxCfg[[mName]] <- list()
+    scrExtMtxCfg[[mName]]$filter01 <- list(
+        mName = mName   ,style=c( freqZero=TRUE )
+        ,fCol = list(
+            "rMatCntHn"=list( rng=matrix( c(0,2 ,0,2) ,ncol=2 )
+                            ,evt=matrix( c(c(1,2,2,3,3,3),c(1,2,3,4,5,6)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                        )
+            ,"cMatCntHn"=list( rng=matrix( c(0,2 ,0,2) ,ncol=2 )
+                            ,evt=matrix( c(c(1,3,3,3,3,3),c(1,2,3,4,5,6)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                        )
+            ,"fMatCntHn"=list( rng=matrix( c(0,2 ,0,2) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3,3,3),c(1,2,3,4,5,6)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                        )
+        )
+        ,evtMax = matrix( c(2,1,3,1 ,2,1,3,1)   ,byrow=T ,ncol=4        # H790 H832 H867 H892 evtCnt:2(2,2)
+                        ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
+        )
+        ,rowReb = c( rawMin=2 ,lowE=2 ,rareE=2 ,dupESum=2 ) ,rowRebDup=NULL
+        ,summMtx = NULL     ,summMtx.reb = NULL             ,summMtx.sum = NULL
+        ,scMtx.sz = NULL    ,scMtx.sz.sum = NULL
+        ,isHard=NULL  # use default
+    )
+    scrExtMtxCfg[[mName]]$filter02 <- list(
+        mName = mName   ,style=c( freqZero=TRUE )
+        ,fCol = list(
+            "rRebMaxHn"=list( rng=matrix( c(0,2 ,0,2) ,ncol=2 )
+                            ,evt=matrix( c(c(1,2,2,3,3,3),c(1,2,3,4,5,6)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                        )
+            ,"cRebMaxHn"=list( rng=matrix( c(0,3 ,0,3) ,ncol=2 )
+                            ,evt=matrix( c(c(1,3,3,3,3,3),c(1,2,3,4,5,6)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                        )
+            ,"fRebMaxHn"=list( rng=matrix( c(0,2 ,0,2) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3,3,3),c(1,2,3,4,5,6)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                        )
+        )
+        ,evtMax = matrix( c(2,1,3,1 ,2,1,3,1)   ,byrow=T ,ncol=4        # H790 H832 H867 H892 evtCnt:2(2,2)
+                        ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
+        )
+        ,rowReb = c( rawMin=2 ,lowE=2 ,rareE=2 ,dupESum=2 ) ,rowRebDup=NULL
+        ,summMtx = NULL     ,summMtx.reb = NULL             ,summMtx.sum = NULL
+        ,scMtx.sz = NULL    ,scMtx.sz.sum = NULL
+        ,isHard=NULL  # use default
+    )
+    scrExtMtxCfg[[mName]]$filter03 <- list(
+        mName = mName   ,style=c( freqZero=TRUE )
+        ,fCol = list(
+            "xMatCntH1"=list( rng=matrix( c(0,2 ,0,2) ,ncol=2 )
+                            ,evt=matrix( c(c(1,2,2,3,3,3),c(1,2,3,4,5,6)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                        )
+            ,"xMatCntH2"=list( rng=matrix( c(0,3 ,0,3) ,ncol=2 )
+                            ,evt=matrix( c(c(1,3,3,3,3,3),c(1,2,3,4,5,6)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                        )
+            ,"xRebMaxH1"=list( rng=matrix( c(0,3 ,0,3) ,ncol=2 )
+                            ,evt=matrix( c(c(1,3,3,3,3,3),c(1,2,3,4,5,6)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                        )
+            ,"xRebMaxH2"=list( rng=matrix( c(0,3 ,0,3) ,ncol=2 )
+                            ,evt=matrix( c(c(1,3,3,3,3,3),c(1,2,3,4,5,6)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                        )
+        )
+        ,evtMax = matrix( c(2,1,3,1 ,2,1,3,1)   ,byrow=T ,ncol=4        # H790 H832 H867 H892 evtCnt:2(2,2)
+                        ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
+        )
+        ,rowReb = c( rawMin=2 ,lowE=2 ,rareE=2 ,dupESum=2 ) ,rowRebDup=NULL
+        ,summMtx = NULL     ,summMtx.reb = NULL             ,summMtx.sum = NULL
+        ,scMtx.sz = NULL    ,scMtx.sz.sum = NULL
+        ,isHard=NULL  # use default
+    )
+}
+
+mName <- "scorePSh"
+if( TRUE ){
+    scrExtMtxCfg[[mName]] <- list()
+    scrExtMtxCfg[[mName]]$filter01 <- list(
+        mName = mName   ,style=c( freqZero=TRUE )
+        ,fCol = list(
+            "rColCnt"=list( rng=matrix( c(0,2 ,0,2) ,ncol=2 )
+                            ,evt=matrix( c(c(1,2,2,3,3,3),c(1,2,3,4,5,6)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                        )
+            ,"cColCnt"=list( rng=matrix( c(0,3 ,0,3) ,ncol=2 )
+                            ,evt=matrix( c(c(1,3,3,3,3,3),c(1,2,3,4,5,6)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                        )
+            ,"fColCnt"=list( rng=matrix( c(0,2 ,0,2) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3,3,3),c(1,2,3,4,5,6)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                        )
+        )
+        ,evtMax = matrix( c(2,1,3,1 ,2,1,3,1)   ,byrow=T ,ncol=4        # H790 H832 H867 H892 evtCnt:2(2,2)
+                        ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
+        )
+        ,rowReb = c( rawMin=2 ,lowE=2 ,rareE=2 ,dupESum=2 ) ,rowRebDup=NULL
+        ,summMtx = NULL     ,summMtx.reb = NULL             ,summMtx.sum = NULL
+        ,scMtx.sz = NULL    ,scMtx.sz.sum = NULL
+        ,isHard=NULL  # use default
+    )
+    scrExtMtxCfg[[mName]]$filter02 <- list(
+        mName = mName   ,style=c( freqZero=TRUE )
+        ,fCol = list(
+            "xSeq0"=list( rng=matrix( c(0,2 ,0,2) ,ncol=2 )
+                            ,evt=matrix( c(c(1,2,2,3,3,3),c(1,2,3,4,5,6)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                        )
+            ,"xSeq1"=list( rng=matrix( c(0,2 ,0,2) ,ncol=2 )
+                            ,evt=matrix( c(c(1,3,3,3,3,3),c(1,2,3,4,5,6)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                        )
+            ,"xSeqN"=list( rng=matrix( c(0,2 ,0,2) ,ncol=2 )
+                            ,evt=matrix( c(c(1,3,3,3,3,3),c(1,2,3,4,5,6)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                        )
+            ,"xNSeq"=list( rng=matrix( c(0,2 ,0,2) ,ncol=2 )
+                            ,evt=matrix( c(c(1,3,3,3,3,3),c(1,2,3,4,5,6)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                        )
+            ,"xSyc0"=list( rng=matrix( c(0,2 ,0,2) ,ncol=2 )
+                            ,evt=matrix( c(c(1,3,3,3,3,3),c(1,2,3,4,5,6)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                        )
+            ,"xSyc1"=list( rng=matrix( c(0,2 ,0,2) ,ncol=2 )
+                            ,evt=matrix( c(c(1,3,3,3,3,3),c(1,2,3,4,5,6)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                        )
+        )
+        ,evtMax = matrix( c(2,1,3,1 ,2,1,3,1)   ,byrow=T ,ncol=4        # H790 H832 H867 H892 evtCnt:2(2,2)
+                        ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
+        )
+        ,rowReb = c( rawMin=2 ,lowE=2 ,rareE=2 ,dupESum=2 ) ,rowRebDup=NULL
+        ,summMtx = NULL     ,summMtx.reb = NULL             ,summMtx.sum = NULL
+        ,scMtx.sz = NULL    ,scMtx.sz.sum = NULL
+        ,isHard=NULL  # use default
+    )
+
+    # filter01(ColCnt) 에서 reb(1) 체크가 안 됄시,
+    # filter03 추가할 것.
+    # rSeq0 rSeq1 rSeqN rNSeq rSyc0 rSyc1 
+    # cSeq0 cSeq1 cSeqN cNSeq cSyc0 cSyc1 
+    # fSeq0 fSeq1 fSeqN fNSeq fSyc0 fSyc1 
+}
+
+mName <- "scorePSrp"
+if( TRUE ){
+    scrExtMtxCfg[[mName]] <- list()
+    scrExtMtxCfg[[mName]]$filter01 <- list(
+        mName = mName   ,style=c( freqZero=TRUE )
+        ,fCol = list(
+            "rnTotSize"=list( rng=matrix( c(0,4 ,0,4) ,ncol=2 )
+                            ,evt=matrix( c(c(1,2,2,3,3,3),c(1,2,3,4,5,6)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                        )
+            ,"cnTotSize"=list( rng=matrix( c(0,5 ,0,5) ,ncol=2 )
+                            ,evt=matrix( c(c(1,3,3,3,3,3),c(1,2,3,4,5,6)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                        )
+            ,"fnTotSize"=list( rng=matrix( c(0,3 ,0,3) ,ncol=2 )
+                            ,evt=matrix( c(c(1,3,3,3,3,3),c(1,2,3,4,5,6)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                        )
+        )
+        ,evtMax = matrix( c(2,1,3,1 ,2,1,3,1)   ,byrow=T ,ncol=4        # H790 H832 H867 H892 evtCnt:2(2,2)
+                        ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
+        )
+        ,rowReb = c( rawMin=2 ,lowE=2 ,rareE=2 ,dupESum=2 ) ,rowRebDup=NULL
+        ,summMtx = NULL     ,summMtx.reb = NULL             ,summMtx.sum = NULL
+        ,scMtx.sz = NULL    ,scMtx.sz.sum = NULL
+        ,isHard=NULL  # use default
+    )
+    scrExtMtxCfg[[mName]]$filter02 <- list(
+        mName = mName   ,style=c( freqZero=TRUE )
+        ,fCol = list(
+            "rnValSize"=list( rng=matrix( c(0,2 ,0,2) ,ncol=2 )
+                            ,evt=matrix( c(c(1,2,2,3,3,3),c(1,2,3,4,5,6)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                        )
+            ,"cnValSize"=list( rng=matrix( c(0,2 ,0,2) ,ncol=2 )
+                            ,evt=matrix( c(c(1,3,3,3,3,3),c(1,2,3,4,5,6)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                        )
+            ,"fnValSize"=list( rng=matrix( c(0,2 ,0,2) ,ncol=2 )
+                            ,evt=matrix( c(c(1,3,3,3,3,3),c(1,2,3,4,5,6)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                        )
+        )
+        ,evtMax = matrix( c(2,1,3,1 ,2,1,3,1)   ,byrow=T ,ncol=4        # H790 H832 H867 H892 evtCnt:2(2,2)
+                        ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
+        )
+        ,rowReb = c( rawMin=2 ,lowE=2 ,rareE=2 ,dupESum=2 ) ,rowRebDup=NULL
+        ,summMtx = NULL     ,summMtx.reb = NULL             ,summMtx.sum = NULL
+        ,scMtx.sz = NULL    ,scMtx.sz.sum = NULL
+        ,isHard=NULL  # use default
+    )
+    scrExtMtxCfg[[mName]]$filter03 <- list(     # H816 evtCnt:2(2,3)
+        mName = mName   ,style=c( freqZero=TRUE )
+        ,fCol = list(
+            "x1TotSize"=list( rng=matrix( c(0,3 ,0,3) ,ncol=2 )
+                            ,evt=matrix( c(c(1,2,2,3,3,3),c(1,2,3,4,5,6)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                        )
+            ,"x1ValSize"=list( rng=matrix( c(0,2 ,0,2) ,ncol=2 )
+                            ,evt=matrix( c(c(1,3,3,3,3,3),c(1,2,3,4,5,6)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                        )
+            ,"x2TotSize"=list( rng=matrix( c(0,5 ,0,5) ,ncol=2 )
+                            ,evt=matrix( c(c(1,2,3,3,3,3),c(1,2,3,4,5,6)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                            ,forbidEvtReb=c(3)
+                        )
+            ,"x2ValSize"=list( rng=matrix( c(0,2 ,0,2) ,ncol=2 )
+                            ,evt=matrix( c(c(1,1,3,3,3,3),c(1,2,3,4,5,6)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                        )
+        )
+        ,evtMax = matrix( c(2,1,3,1 ,2,1,3,1)   ,byrow=T ,ncol=4        # H790 H832 H867 H892 evtCnt:2(2,2)
+                        ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
+        )
+        ,rowReb = c( rawMin=2 ,lowE=2 ,rareE=2 ,dupESum=2 ) ,rowRebDup=NULL
+        ,summMtx = NULL     ,summMtx.reb = NULL             ,summMtx.sum = NULL
+        ,scMtx.sz = NULL    ,scMtx.sz.sum = NULL
+        ,isHard=NULL  # use default
+    )
+}
+
+mName <- "scorePSrpRaw"
+if( FALSE ){
+    scrExtMtxCfg[[mName]] <- list()
+    scrExtMtxCfg[[mName]]$filter01 <- list(
+        mName = mName   ,style=c( freqZero=TRUE )
+        ,fCol = list(
+            "rnTotSize"=list( rng=matrix( c(0,2 ,10,12) ,ncol=2 )
+                            ,evt=matrix( c(c(1,2,2,3,3,3),c(1,2,3,4,5,6)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                        )
+            ,"cnTotSize"=list( rng=matrix( c(0,3 ,0,3) ,ncol=2 )
+                            ,evt=matrix( c(c(1,3,3,3,3,3),c(1,2,3,4,5,6)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                        )
+            ,"fnTotSize"=list( rng=matrix( c(0,2 ,0,2) ,ncol=2 )
+                            ,evt=matrix( c(c(1,3,3,3,3,3),c(1,2,3,4,5,6)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                        )
+        )
+        ,evtMax = matrix( c(2,1,3,1 ,2,1,3,1)   ,byrow=T ,ncol=4        # H790 H832 H867 H892 evtCnt:2(2,2)
+                        ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
+        )
+        ,rowReb = c( rawMin=2 ,lowE=2 ,rareE=2 ,dupESum=2 ) ,rowRebDup=NULL
+        ,summMtx = NULL     ,summMtx.reb = NULL             ,summMtx.sum = NULL
+        ,scMtx.sz = NULL    ,scMtx.sz.sum = NULL
+        ,isHard=NULL  # use default
+    )
+    scrExtMtxCfg[[mName]]$filter02 <- list(
+        mName = mName   ,style=c( freqZero=TRUE )
+        ,fCol = list(
+            "rnValSize"=list( rng=matrix( c(0,2 ,10,12) ,ncol=2 )
+                            ,evt=matrix( c(c(1,2,2,3,3,3),c(1,2,3,4,5,6)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                        )
+            ,"cnValSize"=list( rng=matrix( c(0,2 ,0,2) ,ncol=2 )
+                            ,evt=matrix( c(c(1,3,3,3,3,3),c(1,2,3,4,5,6)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                        )
+            ,"fnValSize"=list( rng=matrix( c(0,2 ,0,2) ,ncol=2 )
+                            ,evt=matrix( c(c(1,3,3,3,3,3),c(1,2,3,4,5,6)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                        )
+        )
+        ,evtMax = matrix( c(2,1,3,1 ,2,1,3,1)   ,byrow=T ,ncol=4        # H790 H832 H867 H892 evtCnt:2(2,2)
+                        ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
+        )
+        ,rowReb = c( rawMin=2 ,lowE=2 ,rareE=2 ,dupESum=2 ) ,rowRebDup=NULL
+        ,summMtx = NULL     ,summMtx.reb = NULL             ,summMtx.sum = NULL
+        ,scMtx.sz = NULL    ,scMtx.sz.sum = NULL
+        ,isHard=NULL  # use default
+    )
+    scrExtMtxCfg[[mName]]$filter03 <- list(
+        mName = mName   ,style=c( freqZero=TRUE )
+        ,fCol = list(
+            "x1TotSize"=list( rng=matrix( c(0,2 ,10,12) ,ncol=2 )
+                            ,evt=matrix( c(c(1,2,2,3,3,3),c(1,2,3,4,5,6)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                        )
+            ,"x1ValSize"=list( rng=matrix( c(0,2 ,0,2) ,ncol=2 )
+                            ,evt=matrix( c(c(1,3,3,3,3,3),c(1,2,3,4,5,6)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                        )
+            ,"x2TotSize"=list( rng=matrix( c(0,3 ,0,3) ,ncol=2 )
+                            ,evt=matrix( c(c(1,3,3,3,3,3),c(1,2,3,4,5,6)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                        )
+            ,"x2ValSize"=list( rng=matrix( c(0,2 ,0,2) ,ncol=2 )
+                            ,evt=matrix( c(c(1,3,3,3,3,3),c(1,2,3,4,5,6)) ,ncol=2)
+                            ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                        )
+        )
+        ,evtMax = matrix( c(2,1,3,1 ,2,1,3,1)   ,byrow=T ,ncol=4        # H790 H832 H867 H892 evtCnt:2(2,2)
+                        ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
+        )
+        ,rowReb = c( rawMin=2 ,lowE=2 ,rareE=2 ,dupESum=2 ) ,rowRebDup=NULL
+        ,summMtx = NULL     ,summMtx.reb = NULL             ,summMtx.sum = NULL
+        ,scMtx.sz = NULL    ,scMtx.sz.sum = NULL
+        ,isHard=NULL  # use default
+    )
+}
+
+
+
+
+
+
+
 mName <- "codeSample"
 if( FALSE ){    # sample
     scrExtMtxCfg[[mName]] <- list()
