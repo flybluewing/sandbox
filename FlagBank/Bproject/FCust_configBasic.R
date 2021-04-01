@@ -3259,7 +3259,7 @@ if( TRUE ){
                             ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
                         )
             ,"cSumCnt"=list( rng=matrix( c(0,1 ,0,1) ,ncol=2 )
-                            ,evt=matrix( c(c(3,3,3,3,3),c(1,2,3,4,5)) ,ncol=2)
+                            ,evt=matrix( c(c(2,3,3,3,3),c(1,2,3,4,5)) ,ncol=2)
                             ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
                         )
             ,"cValCnt"=list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )

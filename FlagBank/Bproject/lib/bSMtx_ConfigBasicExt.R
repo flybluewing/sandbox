@@ -1543,12 +1543,12 @@ if( TRUE ){
 }
 
 mName <- "sScore0GSh2"
-if( FALSE ){
+if( TRUE ){
     bsScrExtMtxCfg[[mName]] <- list()
     bsScrExtMtxCfg[[mName]]$filter01 <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
-            "rMatCnt"=list( rng=matrix( c(0,3 ,10,13) ,ncol=2 )
+            "rMatCnt"=list( rng=matrix( c(0,3 ,0,3) ,ncol=2 )
                             ,evt=matrix( c(c(1,2,2,3,3,3),c(1,2,3,4,5,6)) ,ncol=2)
                             ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
                         )
@@ -1577,11 +1577,11 @@ if( FALSE ){
                             ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
                         )
             ,"cExtMax"=list( rng=matrix( c(0,4 ,0,4) ,ncol=2 )
-                            ,evt=matrix( c(c(1,1,2,2,3),c(1,2,3,4,5)) ,ncol=2)
+                            ,evt=matrix( c(c(1,2,2,2,3),c(1,2,3,4,5)) ,ncol=2)
                             ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
                         )
             ,"fExtMax"=list( rng=matrix( c(0,2 ,0,2) ,ncol=2 )
-                            ,evt=matrix( c(c(1,1,3,3,3),c(1,2,3,4,5)) ,ncol=2)
+                            ,evt=matrix( c(c(1,2,3,3,3),c(1,2,3,4,5)) ,ncol=2)
                             ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
                         )
         )
@@ -1620,21 +1620,21 @@ if( FALSE ){
 }
 
 mName <- "sScore0GS3"
-if( FALSE ){
+if( TRUE ){
     bsScrExtMtxCfg[[mName]] <- list()
     bsScrExtMtxCfg[[mName]]$filter01 <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
-            "rMatCntHn"=list( rng=matrix( c(0,2 ,10,12) ,ncol=2 )
+            "rMatCntHn"=list( rng=matrix( c(0,3 ,0,3) ,ncol=2 )
                             ,evt=matrix( c(c(1,2,2,3,3,3),c(1,2,3,4,5,6)) ,ncol=2)
                             ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
                         )
-            ,"cMatCntHn"=list( rng=matrix( c(0,2 ,0,2) ,ncol=2 )
+            ,"cMatCntHn"=list( rng=matrix( c(0,3 ,0,3) ,ncol=2 )
                             ,evt=matrix( c(c(1,3,3,3,3,3),c(1,2,3,4,5,6)) ,ncol=2)
                             ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
                         )
             ,"fMatCntHn"=list( rng=matrix( c(0,2 ,0,2) ,ncol=2 )
-                            ,evt=matrix( c(c(1,3,3,3,3,3),c(1,2,3,4,5,6)) ,ncol=2)
+                            ,evt=matrix( c(c(2,3,3,3,3,3),c(1,2,3,4,5,6)) ,ncol=2)
                             ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
                         )
         )
@@ -1649,7 +1649,7 @@ if( FALSE ){
     bsScrExtMtxCfg[[mName]]$filter02 <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
-            "rRebMaxHn"=list( rng=matrix( c(0,2 ,10,12) ,ncol=2 )
+            "rRebMaxHn"=list( rng=matrix( c(0,2 ,0,2) ,ncol=2 )
                             ,evt=matrix( c(c(1,2,2,3,3,3),c(1,2,3,4,5,6)) ,ncol=2)
                             ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
                         )
@@ -1658,7 +1658,7 @@ if( FALSE ){
                             ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
                         )
             ,"fRebMaxHn"=list( rng=matrix( c(0,2 ,0,2) ,ncol=2 )
-                            ,evt=matrix( c(c(1,3,3,3,3,3),c(1,2,3,4,5,6)) ,ncol=2)
+                            ,evt=matrix( c(c(2,3,3,3,3,3),c(1,2,3,4,5,6)) ,ncol=2)
                             ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
                         )
         )
@@ -1673,7 +1673,7 @@ if( FALSE ){
     bsScrExtMtxCfg[[mName]]$filter03 <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
-            "xMatCntH1"=list( rng=matrix( c(0,2 ,10,12) ,ncol=2 )
+            "xMatCntH1"=list( rng=matrix( c(0,2 ,0,2) ,ncol=2 )
                             ,evt=matrix( c(c(1,2,2,3,3,3),c(1,2,3,4,5,6)) ,ncol=2)
                             ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
                         )
@@ -1701,12 +1701,12 @@ if( FALSE ){
 }
 
 mName <- "sScore0PSh"
-if( FALSE ){
+if( TRUE ){
     bsScrExtMtxCfg[[mName]] <- list()
     bsScrExtMtxCfg[[mName]]$filter01 <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
-            "rColCnt"=list( rng=matrix( c(0,2 ,10,12) ,ncol=2 )
+            "rColCnt"=list( rng=matrix( c(0,2 ,0,2) ,ncol=2 )
                             ,evt=matrix( c(c(1,2,2,3,3,3),c(1,2,3,4,5,6)) ,ncol=2)
                             ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
                         )
@@ -1715,7 +1715,7 @@ if( FALSE ){
                             ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
                         )
             ,"fColCnt"=list( rng=matrix( c(0,2 ,0,2) ,ncol=2 )
-                            ,evt=matrix( c(c(1,3,3,3,3,3),c(1,2,3,4,5,6)) ,ncol=2)
+                            ,evt=matrix( c(c(2,3,3,3,3,3),c(1,2,3,4,5,6)) ,ncol=2)
                             ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
                         )
         )
@@ -1730,7 +1730,7 @@ if( FALSE ){
     bsScrExtMtxCfg[[mName]]$filter02 <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
-            "xSeq0"=list( rng=matrix( c(0,2 ,10,12) ,ncol=2 )
+            "xSeq0"=list( rng=matrix( c(0,2 ,0,2) ,ncol=2 )
                             ,evt=matrix( c(c(1,2,2,3,3,3),c(1,2,3,4,5,6)) ,ncol=2)
                             ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
                         )
@@ -1772,12 +1772,12 @@ if( FALSE ){
 }
 
 mName <- "sScore0PSrp"
-if( FALSE ){
+if( TRUE ){
     bsScrExtMtxCfg[[mName]] <- list()
     bsScrExtMtxCfg[[mName]]$filter01 <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
-            "rnTotSize"=list( rng=matrix( c(0,3 ,10,13) ,ncol=2 )
+            "rnTotSize"=list( rng=matrix( c(0,4 ,0,4) ,ncol=2 )
                             ,evt=matrix( c(c(1,2,2,3,3,3),c(1,2,3,4,5,6)) ,ncol=2)
                             ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
                         )
@@ -1801,7 +1801,7 @@ if( FALSE ){
     bsScrExtMtxCfg[[mName]]$filter02 <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
-            "rnValSize"=list( rng=matrix( c(0,2 ,10,12) ,ncol=2 )
+            "rnValSize"=list( rng=matrix( c(0,2 ,0,2) ,ncol=2 )
                             ,evt=matrix( c(c(1,2,2,3,3,3),c(1,2,3,4,5,6)) ,ncol=2)
                             ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
                         )
@@ -1825,7 +1825,7 @@ if( FALSE ){
     bsScrExtMtxCfg[[mName]]$filter03 <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
-            "x1TotSize"=list( rng=matrix( c(0,3 ,10,13) ,ncol=2 )
+            "x1TotSize"=list( rng=matrix( c(0,3 ,0,3) ,ncol=2 )
                             ,evt=matrix( c(c(1,2,2,3,3,3),c(1,2,3,4,5,6)) ,ncol=2)
                             ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
                         )
@@ -1834,12 +1834,15 @@ if( FALSE ){
                             ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
                         )
             ,"x2TotSize"=list( rng=matrix( c(0,5 ,0,5) ,ncol=2 )
-                            ,evt=matrix( c(c(1,3,3,3,3,3),c(1,2,3,4,5,6)) ,ncol=2)
+                            ,evt=matrix( c(c(1,2,3,3,3,3),c(1,2,3,4,5,6)) ,ncol=2)
                             ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                            ,forbidEvtReb=c(3)
+                            ,freqVal=c(1)
                         )
             ,"x2ValSize"=list( rng=matrix( c(0,2 ,0,2) ,ncol=2 )
-                            ,evt=matrix( c(c(1,3,3,3,3,3),c(1,2,3,4,5,6)) ,ncol=2)
+                            ,evt=matrix( c(c(1,1,3,3,3,3),c(1,2,3,4,5,6)) ,ncol=2)
                             ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                            ,freqVal=c(1)
                         )
         )
         ,evtMax = matrix( c(2,1,3,1 ,2,1,3,1)   ,byrow=T ,ncol=4        # H790 H832 H867 H892 evtCnt:2(2,2)
@@ -1853,18 +1856,19 @@ if( FALSE ){
 }
 
 mName <- "sScore0PSrpRaw"
-if( FALSE ){
+if( TRUE ){
     bsScrExtMtxCfg[[mName]] <- list()
     bsScrExtMtxCfg[[mName]]$filter01 <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
-            "rnTotSize"=list( rng=matrix( c(0,2 ,10,12) ,ncol=2 )
+            "rnTotSize"=list( rng=matrix( c(0,2 ,0,2) ,ncol=2 )
                             ,evt=matrix( c(c(1,2,2,3,3,3),c(1,2,3,4,5,6)) ,ncol=2)
                             ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
                         )
             ,"cnTotSize"=list( rng=matrix( c(0,3 ,0,3) ,ncol=2 )
-                            ,evt=matrix( c(c(1,3,3,3,3,3),c(1,2,3,4,5,6)) ,ncol=2)
+                            ,evt=matrix( c(c(2,3,3,3,3),c(2,3,4,5,6)) ,ncol=2)
                             ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
+                            ,forbidEvtReb=c(3)
                         )
             ,"fnTotSize"=list( rng=matrix( c(0,2 ,0,2) ,ncol=2 )
                             ,evt=matrix( c(c(1,3,3,3,3,3),c(1,2,3,4,5,6)) ,ncol=2)
@@ -1882,8 +1886,8 @@ if( FALSE ){
     bsScrExtMtxCfg[[mName]]$filter02 <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
-            "rnValSize"=list( rng=matrix( c(0,2 ,10,12) ,ncol=2 )
-                            ,evt=matrix( c(c(1,2,2,3,3,3),c(1,2,3,4,5,6)) ,ncol=2)
+            "rnValSize"=list( rng=matrix( c(0,2 ,0,2) ,ncol=2 )
+                            ,evt=matrix( c(c(1,3,3,3,3,3),c(1,2,3,4,5,6)) ,ncol=2)
                             ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
                         )
             ,"cnValSize"=list( rng=matrix( c(0,2 ,0,2) ,ncol=2 )
@@ -1891,7 +1895,7 @@ if( FALSE ){
                             ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
                         )
             ,"fnValSize"=list( rng=matrix( c(0,2 ,0,2) ,ncol=2 )
-                            ,evt=matrix( c(c(1,3,3,3,3,3),c(1,2,3,4,5,6)) ,ncol=2)
+                            ,evt=matrix( c(c(2,3,3,3,3,3),c(1,2,3,4,5,6)) ,ncol=2)
                             ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
                         )
         )
@@ -1906,8 +1910,8 @@ if( FALSE ){
     bsScrExtMtxCfg[[mName]]$filter03 <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
-            "x1TotSize"=list( rng=matrix( c(0,2 ,10,12) ,ncol=2 )
-                            ,evt=matrix( c(c(1,2,2,3,3,3),c(1,2,3,4,5,6)) ,ncol=2)
+            "x1TotSize"=list( rng=matrix( c(0,2 ,0,2) ,ncol=2 )
+                            ,evt=matrix( c(c(1,1,2,3,3,3),c(1,2,3,4,5,6)) ,ncol=2)
                             ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
                         )
             ,"x1ValSize"=list( rng=matrix( c(0,2 ,0,2) ,ncol=2 )
@@ -1915,11 +1919,11 @@ if( FALSE ){
                             ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
                         )
             ,"x2TotSize"=list( rng=matrix( c(0,3 ,0,3) ,ncol=2 )
-                            ,evt=matrix( c(c(1,3,3,3,3,3),c(1,2,3,4,5,6)) ,ncol=2)
+                            ,evt=matrix( c(c(1,3,3,3,3),c(2,3,4,5,6)) ,ncol=2)
                             ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
                         )
             ,"x2ValSize"=list( rng=matrix( c(0,2 ,0,2) ,ncol=2 )
-                            ,evt=matrix( c(c(1,3,3,3,3,3),c(1,2,3,4,5,6)) ,ncol=2)
+                            ,evt=matrix( c(c(1,2,3,3,3,3),c(1,2,3,4,5,6)) ,ncol=2)
                             ,evtMax.fCol=NULL   # c( lev1Max=4 ,lev2Max=3 ,lev3Max=2 )
                         )
         )
