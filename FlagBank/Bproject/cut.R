@@ -2,7 +2,10 @@ source("header.r")  ;source("B_H.R")    ;source("cut_H.R")
 if( FALSE ){    # document
     # lastH <- 893(for 894_1 stdIdx:7913455 )   16
     # lastH <- 898(for 899_1 stdIdx:5739750 )   30
-    # lastH <- 933(for 934_1 stdIdx: 233713 )   26  
+    # lastH <- 933(for 934_1 stdIdx: 233713 )   26
+
+    # --------------------------------------------------------
+    #   lastH <- 956
 }
 
 lastH <- 954    # for H899_1
@@ -53,12 +56,12 @@ if( TRUE ){     #   hMtxLst ,hMtxLst_bS
     crScrHTool$addData( lastH - 5:0 )
     hMtxLst <- B.makeHMtxLst( gEnv, allIdxLst, fRstLst, lastH=lastH, tgt.scMtx )
     hMtxLst_bS <- bS.makeHMtxLst( gEnv, allIdxLst, fRstLst ,tgt.scMtx )
-    hMtxLst_bN <- bN.makeHMtxLst( gEnv, allIdxLst, fRstLst ,tgt.scMtx )
     hMtxLst_HCR <- HCR.makeHCRMtxLst( crScrH ,allIdxLst ,fRstLst ,lastH=NULL ,tgt.scMtx=tgt.scMtx )
     save( hMtxLst       ,file=sprintf("./save/finalCut/Obj_cut_hMtxLst_%d.save",lastH)      )
     save( hMtxLst_bS    ,file=sprintf("./save/finalCut/Obj_cut_hMtxLst_bS_%d.save",lastH)   )
-    save( hMtxLst_bN    ,file=sprintf("./save/finalCut/Obj_cut_hMtxLst_bN_%d.save",lastH)   )
     save( hMtxLst_HCR   ,file=sprintf("./save/finalCut/Obj_cut_hMtxLst_HCR_%d.save",lastH)  )
+    hMtxLst_bN <- bN.makeHMtxLst( gEnv, allIdxLst, fRstLst ,tgt.scMtx )
+    save( hMtxLst_bN    ,file=sprintf("./save/finalCut/Obj_cut_hMtxLst_bN_%d.save",lastH)   )
 }
 cut.grp <- bFCust.getFCustGrp( hMtxLst ,tgt.scMtx )
 filter.grp <- getFilter.grp( stdMI.grp ,tgt.scMtx=tgt.scMtx )

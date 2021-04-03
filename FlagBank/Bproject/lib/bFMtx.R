@@ -4478,9 +4478,9 @@ bFMtx.scoreLVf24 <- function( stdMIObj ){
 
 }
 
-#	bFMtx.scoreNLrAV bFMtx.scoreNLeAV bFMtx.scoreNLcAV bFMtx.scoreNLfAV 
-bFMtx.scoreLnAV <- function( stdMIObj ){
 
+bFMtx.scoreLnAV <- function( stdMIObj ){	# suspend
+	#	bFMtx.scoreNLrAV bFMtx.scoreNLeAV bFMtx.scoreNLcAV bFMtx.scoreNLfAV 
 	stdMI <- stdMIObj$stdMI
 	zMtx <- stdMIObj$zMtx
 	rObj <- list( 	idStr="scoreLnAV"	,zMtx.size=nrow(zMtx)	,lastZoid=stdMI$lastZoid	)
