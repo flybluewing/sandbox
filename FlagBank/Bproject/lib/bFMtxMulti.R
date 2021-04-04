@@ -1171,7 +1171,7 @@ if( TRUE ){
             rowVal["sGSeExtMax" ]   <- mmMtxLst[["scoreGS"  ]][aIdx,"eExtMax"]
             rowVal["sGSh2eExtMax"]  <- mmMtxLst[["scoreGSh2"]][aIdx,"eExtMax"]
 
-            rowVal["sGS3eRebMaxHn"]  <- sum( mmMtxLst[["scoreGS3"]][aIdx,c("eRebMaxH1","eRebMaxH1")] )
+            rowVal["sGS3eRebMaxHn"]  <- sum( mmMtxLst[["scoreGS3"]][aIdx,c("eRebMaxH1","eRebMaxH2")] )
 
             rowVal["sPSheColCnt"]   <- mmMtxLst[["scorePSh"]][aIdx,"eColCnt"]
             rowVal["sPSrpeNTotSize"]   <- sum( mmMtxLst[["scorePSrp"]][aIdx,c("e1TotSize","e2TotSize")] )
@@ -1275,7 +1275,7 @@ if( TRUE ){
             rowVal["sGSeExtMax" ]   <- mmMtxLst[["scoreGS"  ]][aIdx,"eExtMax"]
             rowVal["sGSh2eExtMax"]  <- mmMtxLst[["scoreGSh2"]][aIdx,"eExtMax"]
 
-            rowVal["sGS3eRebMaxHn"]  <- sum( mmMtxLst[["scoreGS3"]][aIdx,c("eRebMaxH1","eRebMaxH1")] )
+            rowVal["sGS3eRebMaxHn"]  <- sum( mmMtxLst[["scoreGS3"]][aIdx,c("eRebMaxH1","eRebMaxH2")] )
 
             rowVal["sPSheColCnt"]   <- mmMtxLst[["scorePSh"]][aIdx,"eColCnt"]
             rowVal["sPSrpeNTotSize"]   <- sum( mmMtxLst[["scorePSrp"]][aIdx,c("e1TotSize","e2TotSize")] )
@@ -1323,22 +1323,28 @@ if( TRUE ){
     }
 }
 
-mfName <- "mfRF"
+mfName <- "mfRCF"
 if( TRUE ){
     bFMtxMFltLst[[mfName]] <- function( tgt.scMtx=NULL ){
         fltObj <- list( mInfo=list() )
         fltObj$mInfo$mName <- mfName
         fltObj$available <- TRUE    # bFCust.getFCustGrp() 에서 확인됨.
 
-        fltObj$fltMNames <- c(  "score4"  ,"scoreB" ,"scoreLAr13","scoreLAr24","scoreLVr13","scoreLVr24"
-                                ,"score7" ,"scoreD" ,"scoreLAf13","scoreLAf24","scoreLVf13","scoreLVf24"
-                                ,"scoreFV"  ,"scoreGS" ,"scoreGSh2" ,"scoreGS3" ,"scorePSh" ,"scorePSrp" ,"scorePSrpRaw"
-                                ,"score8" ,"score9"
+        fltObj$fltMNames <- c(  #"score4"  ,"scoreB"
+                                #,"score7" ,"scoreD" 
+                                "scoreFV"  ,"scoreGS" ,"scoreGSh2" ,"scoreGS3" ,"scorePSh" ,"scorePSrp" ,"scorePSrpRaw"
+                                #,"score8" 
+                                ,"score9"
+                                ,"scoreLAr13","scoreLAr24","scoreLVr13","scoreLVr24"
+                                ,"scoreLAc13","scoreLAc24","scoreLVc13","scoreLVc24"
+                                ,"scoreLAf13","scoreLAf24","scoreLVf13","scoreLVf24"
         )
-        fltObj$mInfo$cName <- c( "s4HpnCnt" ,"s8_c2nCnt","s8_min3","s8_min2MatCnt" ,"sBHpnCnt"
-                                ,"s9rCnt"   
-                                ,"AVr13Hpn1A" ,"AVr13Hpn1B" ,"AVr24Hpn1A" ,"AVr24Hpn1B" 
-                                ,"sFVrCnt"  ,"sGSrExtMax","sGSh2rExtMax"    ,"sGS3rRebMaxHn"    ,"sPShrColCnt" ,"sPSrprNTotSize" ,"sPSrpRawrNTotSize"
+        fltObj$mInfo$cName <- c( #"s4HpnCnt" ,"s8_c2nCnt","s8_min3","s8_min2MatCnt" ,"sBHpnCnt"
+                                 "sFVxDist"
+                                ,"sFVrCnt","sFVcCnt","sFVfCnt"
+                                ,"sGSxExtMax" ,"sGS3xRebMaxHn" ,"sPShxColCnt"  ,"sPSrpxNTotSize" ,"sPSrpRawxNTotSize"
+                                ,"s9rCnt","s9cCnt","s9fCnt"
+                                ,"AVx13Hpn1A" ,"AVx13Hpn1B" ,"AVx24Hpn1A" ,"AVx24Hpn1B" 
         )
 
         # tgt.scMtx가 fltObj$fltMNames 를 모두 포함하고 있는 지 체크.
@@ -1353,132 +1359,65 @@ if( TRUE ){
             rowVal <- rep( 0 ,length(fltObj$mInfo$cName) )
             names(rowVal) <- fltObj$mInfo$cName
 
-            colS5 <- c( "pBanN.r","pBanN.n","pLCol","pE3","pfNum","iBanN","iLCol","ifNum","FVa.m" )
-            rowVal["s4HpnCnt"]   <- sum( mmMtxLst[["score4"]][aIdx,colS5]>0 )
+            # colS5 <- c( "pBanN.r","pBanN.n","pLCol","pE3","pfNum","iBanN","iLCol","ifNum","FVa.m" )
+            # rowVal["s4HpnCnt"]   <- sum( mmMtxLst[["score4"]][aIdx,colS5]>0 )
 
-            rowVal["sBHpnCnt"]   <- sum( mmMtxLst[["scoreB"]][aIdx,]>0 )
+            # rowVal["sBHpnCnt"]   <- sum( mmMtxLst[["scoreB"]][aIdx,]>0 )
 
-            rowVal["s8_c2nCnt"]     <- sum( mmMtxLst[["score8"]][aIdx,c("c21","c22","c23","c24","c25")] )
-            rowVal["s8_min3"]       <- mmMtxLst[["score8"]][aIdx,"min3"]
-            rowVal["s8_min2MatCnt"] <- mmMtxLst[["score8"]][aIdx,"min2MatCnt"]
+            # rowVal["s8_c2nCnt"]     <- sum( mmMtxLst[["score8"]][aIdx,c("c21","c22","c23","c24","c25")] )
+            # rowVal["s8_min3"]       <- mmMtxLst[["score8"]][aIdx,"min3"]
+            # rowVal["s8_min2MatCnt"] <- mmMtxLst[["score8"]][aIdx,"min2MatCnt"]
+
+
+            sumCol <- c("distR","distC","distF")
+            rowVal["sFVxDist"]<- sum( mmMtxLst[["scoreFV"]][aIdx,sumCol] )
+            rowVal["sFVrCnt"] <- mmMtxLst[["scoreFV"]][aIdx,"rCnt"]
+            rowVal["sFVcCnt"] <- mmMtxLst[["scoreFV"]][aIdx,"cCnt"]
+            rowVal["sFVfCnt"] <- mmMtxLst[["scoreFV"]][aIdx,"fCnt"]
+
+
+            rowVal["sGSxExtMax" ]   <- mmMtxLst[["scoreGS"]][aIdx,"rExtMax"] + mmMtxLst[["scoreGSh2"]][aIdx,"rExtMax"]
+            rowVal["sGSxExtMax" ]   <- rowVal["sGSxExtMax" ] + mmMtxLst[["scoreGS"]][aIdx,"cExtMax"] + mmMtxLst[["scoreGSh2"]][aIdx,"cExtMax"]
+            rowVal["sGSxExtMax" ]   <- rowVal["sGSxExtMax" ] + mmMtxLst[["scoreGS"]][aIdx,"fExtMax"] + mmMtxLst[["scoreGSh2"]][aIdx,"fExtMax"]
+
+            rowVal["sGS3xRebMaxHn"] <- sum( mmMtxLst[["scoreGS3"]][aIdx,c("rRebMaxH1","rRebMaxH2")] )
+            rowVal["sGS3xRebMaxHn"] <- rowVal["sGS3xRebMaxHn"] + sum( mmMtxLst[["scoreGS3"]][aIdx,c("cRebMaxH1","cRebMaxH2")] )
+            rowVal["sGS3xRebMaxHn"] <- rowVal["sGS3xRebMaxHn"] + sum( mmMtxLst[["scoreGS3"]][aIdx,c("fRebMaxH1","fRebMaxH2")] )
+
+            sumCol <- c( "rColCnt","cColCnt","fColCnt" )
+            rowVal["sPShxColCnt"]   <- sum( mmMtxLst[["scorePSh"]][aIdx,sumCol] )
+
+            rowVal["sPSrpxNTotSize"]<- sum( mmMtxLst[["scorePSrp"]][aIdx,c("r1TotSize","r2TotSize")] )
+            rowVal["sPSrpxNTotSize"]<- rowVal["sPSrpxNTotSize"] + sum( mmMtxLst[["scorePSrp"]][aIdx,c("c1TotSize","c2TotSize")] )
+            rowVal["sPSrpxNTotSize"]<- rowVal["sPSrpxNTotSize"] + sum( mmMtxLst[["scorePSrp"]][aIdx,c("f1TotSize","f2TotSize")] )
+
+            rowVal["sPSrpRawxNTotSize"] <- sum( mmMtxLst[["scorePSrpRaw"]][aIdx,c("r1TotSize","r2TotSize")] )
+            rowVal["sPSrpRawxNTotSize"] <- rowVal["sPSrpRawxNTotSize"] + sum( mmMtxLst[["scorePScpRaw"]][aIdx,c("c1TotSize","c2TotSize")] )
+            rowVal["sPSrpRawxNTotSize"] <- rowVal["sPSrpRawxNTotSize"] + sum( mmMtxLst[["scorePSfpRaw"]][aIdx,c("f1TotSize","f2TotSize")] )
 
             rowVal["s9rCnt"]   <- mmMtxLst[["score9"]][aIdx,"rCnt"]
+            rowVal["s9cCnt"]   <- mmMtxLst[["score9"]][aIdx,"cCnt"]
+            rowVal["s9fCnt"]   <- mmMtxLst[["score9"]][aIdx,"fCnt"]
 
             # colA1 colA2 colA3 colA4 colA5 colA6 colB1 colB2 colB3 colB4 colB5 colB6
             colA <- c( "colA1" ,"colA2" ,"colA3" ,"colA4" ,"colA5" ,"colA6" )
             colB <- c( "colB1" ,"colB2" ,"colB3" ,"colB4" ,"colB5" ,"colB6" )
-            rowVal["AVr13Hpn1A"] <- sum( mmMtxLst[["scoreLAr13"]][aIdx,colA]>0 ) + sum( mmMtxLst[["scoreLVr13"]][aIdx,colA]>0 )
-            rowVal["AVr13Hpn1B"] <- sum( mmMtxLst[["scoreLAr13"]][aIdx,colB]>0 ) + sum( mmMtxLst[["scoreLVr13"]][aIdx,colB]>0 )
-            rowVal["AVr24Hpn1A"] <- sum( mmMtxLst[["scoreLAr24"]][aIdx,colA]>0 ) + sum( mmMtxLst[["scoreLVr24"]][aIdx,colA]>0 )
-            rowVal["AVr24Hpn1B"] <- sum( mmMtxLst[["scoreLAr24"]][aIdx,colB]>0 ) + sum( mmMtxLst[["scoreLVr24"]][aIdx,colB]>0 )
+            rowVal["AVx13Hpn1A"] <- sum( mmMtxLst[["scoreLAr13"]][aIdx,colA]>0 ) + sum( mmMtxLst[["scoreLVr13"]][aIdx,colA]>0 )
+            rowVal["AVx13Hpn1B"] <- sum( mmMtxLst[["scoreLAr13"]][aIdx,colB]>0 ) + sum( mmMtxLst[["scoreLVr13"]][aIdx,colB]>0 )
+            rowVal["AVx24Hpn1A"] <- sum( mmMtxLst[["scoreLAr24"]][aIdx,colA]>0 ) + sum( mmMtxLst[["scoreLVr24"]][aIdx,colA]>0 )
+            rowVal["AVx24Hpn1B"] <- sum( mmMtxLst[["scoreLAr24"]][aIdx,colB]>0 ) + sum( mmMtxLst[["scoreLVr24"]][aIdx,colB]>0 )
+            rowVal["AVx13Hpn1A"] <- rowVal["AVx13Hpn1A"] + sum( mmMtxLst[["scoreLAf13"]][aIdx,colA]>0 ) + sum( mmMtxLst[["scoreLVf13"]][aIdx,colA]>0 )
+            rowVal["AVx13Hpn1B"] <- rowVal["AVx13Hpn1B"] + sum( mmMtxLst[["scoreLAf13"]][aIdx,colB]>0 ) + sum( mmMtxLst[["scoreLVf13"]][aIdx,colB]>0 )
+            rowVal["AVx24Hpn1A"] <- rowVal["AVx24Hpn1A"] + sum( mmMtxLst[["scoreLAf24"]][aIdx,colA]>0 ) + sum( mmMtxLst[["scoreLVf24"]][aIdx,colA]>0 )
+            rowVal["AVx24Hpn1B"] <- rowVal["AVx24Hpn1B"] + sum( mmMtxLst[["scoreLAf24"]][aIdx,colB]>0 ) + sum( mmMtxLst[["scoreLVf24"]][aIdx,colB]>0 )
 
-            rowVal["sFVrCnt"]  <- mmMtxLst[["scoreFV"]][aIdx,"rCnt"]
-
-            rowVal["sGSrExtMax" ]   <- mmMtxLst[["scoreGS"  ]][aIdx,"rExtMax"]
-            rowVal["sGSh2rExtMax"]  <- mmMtxLst[["scoreGSh2"]][aIdx,"rExtMax"]
-
-            rowVal["sGS3rRebMaxHn"]  <- sum( mmMtxLst[["scoreGS3"]][aIdx,c("rRebMaxH1","rRebMaxH1")] )
-
-            rowVal["sPShrColCnt"]   <- mmMtxLst[["scorePSh"]][aIdx,"rColCnt"]
-            rowVal["sPSrprNTotSize"]   <- sum( mmMtxLst[["scorePSrp"]][aIdx,c("r1TotSize","r2TotSize")] )
-            rowVal["sPSrpRawrNTotSize"]   <- sum( mmMtxLst[["scorePSrpRaw"]][aIdx,c("r1TotSize","r2TotSize")] )
-
-
-            # rowVal["xxx"] <- mmMtxLst[["score5"]][aIdx,""]
-
-            # rowVal["rCnt"] <- mmMtxLst[["score9"]][aIdx,"rCnt"]
-            # rowVal["cH0MLen"] <- mmMtxLst[["scoreE"]][aIdx,"cH0MLen"]
-
-            return( rowVal )
-
-        }
-        fltObj$getScoreMtx <- function( scoreMtxLst ){
-            # scoreMtx.grp <- getScoreMtx.grp( gEnv$allZoidMtx[allIdxF,,drop=F] ,filter.grp )
-            # scoreMtxLst <- scoreMtx.grp$basic[[pName]]        # for aZoidMtx
-            # scoreMtxLst <- hMtxLst$scoreMtxLst$sfcLate[[1]]   # for hZoidMtx
-
-            mmMtxLst <- lapply( scoreMtxLst[fltObj$fltMNames] ,function(mtxObj){mtxObj$scoreMtx} )
-            mmEMtxLst <- list()
-            for( mName in fltObj$fltMNames ){
-                eMtx <- mmMtxLst[[mName]]
-                eMtx[,] <- NA
-                for( rIdx in seq_len(nrow(eMtx)) ){
-                    eMtx[rIdx,] <- bFCust.getEvt( mmMtxLst[[mName]][rIdx,] ,scoreMtxCfg[[mName]]$fCol )["lev",]
-                }
-                mmEMtxLst[[mName]] <- eMtx
-            }
-
-            rMtx <- matrix( 0 ,nrow=nrow(mmMtxLst[[1]]) ,ncol=length(fltObj$mInfo$cName) )
-            colnames(rMtx) <- fltObj$mInfo$cName
-            if( !fltObj$available ) return( rMtx )
-
-            for( aIdx in seq_len(nrow(rMtx)) ){
-                rMtx[aIdx,] <- fltObj$getScore( mmMtxLst ,mmEMtxLst ,aIdx )
-            }
-            rownames(rMtx) <- rownames(mmMtxLst[[1]])
-
-            return( rMtx )
-
-        }
-
-        return(fltObj)
-    }
-}
-
-mfName <- "mfC"
-if( TRUE ){
-    bFMtxMFltLst[[mfName]] <- function( tgt.scMtx=NULL ){
-        fltObj <- list( mInfo=list() )
-        fltObj$mInfo$mName <- mfName
-        fltObj$available <- TRUE    # bFCust.getFCustGrp() 에서 확인됨.
-
-        fltObj$fltMNames <- c( "score6" ,"score9"   ,"scoreC"
-                            ,"scoreLAc13","scoreLAc24","scoreLVc13","scoreLVc24"
-                            ,"scoreFV"  ,"scoreGS" ,"scoreGSh2" ,"scoreGS3" ,"scorePSh" ,"scorePSrp" ,"scorePSrpRaw"
-        )
-        fltObj$mInfo$cName <- c( "s6HpnCnt" ,"sCHpnCnt"
-                                ,"s9cCnt"   
-                                ,"AVc13Hpn1A" ,"AVc13Hpn1B" ,"AVc24Hpn1A" ,"AVc24Hpn1B" 
-                                ,"sFVcCnt"  ,"sGScExtMax","sGSh2cExtMax"    ,"sGS3cRebMaxHn"    ,"sPShcColCnt" ,"sPSrpcNTotSize" ,"sPSrpRawcNTotSize"
-        )
-
-        # tgt.scMtx가 fltObj$fltMNames 를 모두 포함하고 있는 지 체크.
-        if( !is.null(tgt.scMtx) ){
-            #   scoreMtxLst는 체크하지 않는다. 차라리 나중에 에러나는 게 인지하기 쉬우므로.            
-            mFlag <- fltObj$fltMNames %in% tgt.scMtx
-            fltObj$available <- ifelse( all(mFlag) ,fltObj$available ,FALSE )
-        }
-
-        fltObj$getScore <- function( mmMtxLst ,mmEMtxLst ,aIdx ){
-
-            rowVal <- rep( 0 ,length(fltObj$mInfo$cName) )
-            names(rowVal) <- fltObj$mInfo$cName
-
-            colS5 <- c( "pBanN.r","pBanN.n","pLCol","pE3","pfNum","iBanN","iLCol","ifNum","FVa.m" )
-            rowVal["s6HpnCnt"]   <- sum( mmMtxLst[["score6"]][aIdx,colS5]>0 )
-
-            rowVal["sCHpnCnt"]   <- sum( mmMtxLst[["scoreC"]][aIdx,]>0 )
-
-            rowVal["s9cCnt"]   <- mmMtxLst[["score9"]][aIdx,"cCnt"]
-
-            # colA1 colA2 colA3 colA4 colA5 colA6 colB1 colB2 colB3 colB4 colB5 colB6
             colA <- c( "colA1" ,"colA2" ,"colA3" ,"colA4" ,"colA5" )
             colB <- c( "colB1" ,"colB2" ,"colB3" ,"colB4" ,"colB5" )
-            rowVal["AVc13Hpn1A"] <- sum( mmMtxLst[["scoreLAc13"]][aIdx,colA]>0 ) + sum( mmMtxLst[["scoreLVc13"]][aIdx,colA]>0 )
-            rowVal["AVc13Hpn1B"] <- sum( mmMtxLst[["scoreLAc13"]][aIdx,colB]>0 ) + sum( mmMtxLst[["scoreLVc13"]][aIdx,colB]>0 )
-            rowVal["AVc24Hpn1A"] <- sum( mmMtxLst[["scoreLAc24"]][aIdx,colA]>0 ) + sum( mmMtxLst[["scoreLVc24"]][aIdx,colA]>0 )
-            rowVal["AVc24Hpn1B"] <- sum( mmMtxLst[["scoreLAc24"]][aIdx,colB]>0 ) + sum( mmMtxLst[["scoreLVc24"]][aIdx,colB]>0 )
+            rowVal["AVx13Hpn1A"] <- rowVal["AVx13Hpn1A"] + sum( mmMtxLst[["scoreLAc13"]][aIdx,colA]>0 ) + sum( mmMtxLst[["scoreLVc13"]][aIdx,colA]>0 )
+            rowVal["AVx13Hpn1B"] <- rowVal["AVx13Hpn1B"] + sum( mmMtxLst[["scoreLAc13"]][aIdx,colB]>0 ) + sum( mmMtxLst[["scoreLVc13"]][aIdx,colB]>0 )
+            rowVal["AVx24Hpn1A"] <- rowVal["AVx24Hpn1A"] + sum( mmMtxLst[["scoreLAc24"]][aIdx,colA]>0 ) + sum( mmMtxLst[["scoreLVc24"]][aIdx,colA]>0 )
+            rowVal["AVx24Hpn1B"] <- rowVal["AVx24Hpn1B"] + sum( mmMtxLst[["scoreLAc24"]][aIdx,colB]>0 ) + sum( mmMtxLst[["scoreLVc24"]][aIdx,colB]>0 )
 
-            rowVal["sFVcCnt"]  <- mmMtxLst[["scoreFV"]][aIdx,"cCnt"]
-
-            rowVal["sGScExtMax" ]   <- mmMtxLst[["scoreGS"  ]][aIdx,"cExtMax"]
-            rowVal["sGSh2cExtMax"]  <- mmMtxLst[["scoreGSh2"]][aIdx,"cExtMax"]
-
-            rowVal["sGS3cRebMaxHn"]  <- sum( mmMtxLst[["scoreGS3"]][aIdx,c("cRebMaxH1","cRebMaxH1")] )
-
-            rowVal["sPShcColCnt"]   <- mmMtxLst[["scorePSh"]][aIdx,"cColCnt"]
-            rowVal["sPSrpcNTotSize"]   <- sum( mmMtxLst[["scorePSrp"]][aIdx,c("c1TotSize","c2TotSize")] )
-            rowVal["sPSrpRawcNTotSize"]   <- sum( mmMtxLst[["scorePSrpRaw"]][aIdx,c("c1TotSize","c2TotSize")] )
 
 
             # rowVal["xxx"] <- mmMtxLst[["score5"]][aIdx,""]
@@ -1521,97 +1460,6 @@ if( TRUE ){
         return(fltObj)
     }
 }
-
-mfName <- "mfF" # deprecated. 데이터가 너무 뜸하니 R+F 합치자.
-if( TRUE ){
-    bFMtxMFltLst[[mfName]] <- function( tgt.scMtx=NULL ){
-        fltObj <- list( mInfo=list() )
-        fltObj$mInfo$mName <- mfName
-        fltObj$available <- TRUE    # bFCust.getFCustGrp() 에서 확인됨.
-
-        fltObj$fltMNames <- c( # "score7" ,"score9"   ,"scoreD" ,"scoreLAf13","scoreLAf24","scoreLVf13","scoreLVf24"
-                            "scoreFV"  ,"scoreGS" ,"scoreGSh2" ,"scoreGS3" ,"scorePSh" ,"scorePSrp" ,"scorePSrpRaw"
-        )
-        fltObj$mInfo$cName <- c( # "s7HpnCnt" ,"sBHpnCnt","s9rCnt" ,"AVf13Hpn1A" ,"AVf13Hpn1B" ,"AVf24Hpn1A" ,"AVf24Hpn1B" 
-                                "sFVfCnt"  ,"sGSfExtMax","sGSh2fExtMax"    ,"sGS3fRebMaxHn"    ,"sPShfColCnt" ,"sPSrpfNTotSize" ,"sPSrpRawfNTotSize"
-        )
-
-        # tgt.scMtx가 fltObj$fltMNames 를 모두 포함하고 있는 지 체크.
-        if( !is.null(tgt.scMtx) ){
-            #   scoreMtxLst는 체크하지 않는다. 차라리 나중에 에러나는 게 인지하기 쉬우므로.            
-            mFlag <- fltObj$fltMNames %in% tgt.scMtx
-            fltObj$available <- ifelse( all(mFlag) ,fltObj$available ,FALSE )
-        }
-
-        fltObj$getScore <- function( mmMtxLst ,mmEMtxLst ,aIdx ){
-
-            rowVal <- rep( 0 ,length(fltObj$mInfo$cName) )
-            names(rowVal) <- fltObj$mInfo$cName
-
-            colS5 <- c( "pBanN.r","pBanN.n","pLCol","pE3","pfNum","iBanN","iLCol","ifNum","FVa.m" )
-            # rowVal["s7HpnCnt"]   <- sum( mmMtxLst[["score7"]][aIdx,colS5]>0 )
-            # rowVal["sBHpnCnt"]   <- sum( mmMtxLst[["scoreB"]][aIdx,]>0 )
-            # rowVal["s9rCnt"]   <- mmMtxLst[["score9"]][aIdx,"rCnt"]
-
-            # colA1 colA2 colA3 colA4 colA5 colA6 colB1 colB2 colB3 colB4 colB5 colB6
-            colA <- c( "colA1" ,"colA2" ,"colA3" ,"colA4" ,"colA5" ,"colA6" )
-            colB <- c( "colB1" ,"colB2" ,"colB3" ,"colB4" ,"colB5" ,"colB6" )
-            # rowVal["AVf13Hpn1A"] <- sum( mmMtxLst[["scoreLAf13"]][aIdx,colA]>0 ) + sum( mmMtxLst[["scoreLVf13"]][aIdx,colA]>0 )
-            # rowVal["AVf13Hpn1B"] <- sum( mmMtxLst[["scoreLAf13"]][aIdx,colB]>0 ) + sum( mmMtxLst[["scoreLVf13"]][aIdx,colB]>0 )
-            # rowVal["AVf24Hpn1A"] <- sum( mmMtxLst[["scoreLAf24"]][aIdx,colA]>0 ) + sum( mmMtxLst[["scoreLVf24"]][aIdx,colA]>0 )
-            # rowVal["AVf24Hpn1B"] <- sum( mmMtxLst[["scoreLAf24"]][aIdx,colB]>0 ) + sum( mmMtxLst[["scoreLVf24"]][aIdx,colB]>0 )
-
-            rowVal["sFVfCnt"]  <- mmMtxLst[["scoreFV"]][aIdx,"fCnt"]
-            rowVal["sGSfExtMax" ]   <- mmMtxLst[["scoreGS"  ]][aIdx,"fExtMax"]
-            rowVal["sGSh2fExtMax"]  <- mmMtxLst[["scoreGSh2"]][aIdx,"fExtMax"]
-            rowVal["sGS3fRebMaxHn"] <- sum( mmMtxLst[["scoreGS3"]][aIdx,c("fRebMaxH1","fRebMaxH1")] )
-            rowVal["sPShfColCnt"]   <- mmMtxLst[["scorePSh"]][aIdx,"fColCnt"]
-            rowVal["sPSrpfNTotSize"]<- sum( mmMtxLst[["scorePSrp"]][aIdx,c("f1TotSize","f2TotSize")] )
-            rowVal["sPSrpRawfNTotSize"]   <- sum( mmMtxLst[["scorePSrpRaw"]][aIdx,c("f1TotSize","f2TotSize")] )
-
-
-            # rowVal["xxx"] <- mmMtxLst[["score5"]][aIdx,""]
-
-            # rowVal["rCnt"] <- mmMtxLst[["score9"]][aIdx,"rCnt"]
-            # rowVal["cH0MLen"] <- mmMtxLst[["scoreE"]][aIdx,"cH0MLen"]
-
-            return( rowVal )
-
-        }
-        fltObj$getScoreMtx <- function( scoreMtxLst ){
-            # scoreMtx.grp <- getScoreMtx.grp( gEnv$allZoidMtx[allIdxF,,drop=F] ,filter.grp )
-            # scoreMtxLst <- scoreMtx.grp$basic[[pName]]        # for aZoidMtx
-            # scoreMtxLst <- hMtxLst$scoreMtxLst$sfcLate[[1]]   # for hZoidMtx
-
-            mmMtxLst <- lapply( scoreMtxLst[fltObj$fltMNames] ,function(mtxObj){mtxObj$scoreMtx} )
-            mmEMtxLst <- list()
-            for( mName in fltObj$fltMNames ){
-                eMtx <- mmMtxLst[[mName]]
-                eMtx[,] <- NA
-                for( rIdx in seq_len(nrow(eMtx)) ){
-                    eMtx[rIdx,] <- bFCust.getEvt( mmMtxLst[[mName]][rIdx,] ,scoreMtxCfg[[mName]]$fCol )["lev",]
-                }
-                mmEMtxLst[[mName]] <- eMtx
-            }
-
-            rMtx <- matrix( 0 ,nrow=nrow(mmMtxLst[[1]]) ,ncol=length(fltObj$mInfo$cName) )
-            colnames(rMtx) <- fltObj$mInfo$cName
-            if( !fltObj$available ) return( rMtx )
-
-            for( aIdx in seq_len(nrow(rMtx)) ){
-                rMtx[aIdx,] <- fltObj$getScore( mmMtxLst ,mmEMtxLst ,aIdx )
-            }
-            rownames(rMtx) <- rownames(mmMtxLst[[1]])
-
-            return( rMtx )
-
-        }
-
-        return(fltObj)
-    }
-}
-
-
 
 # =============================================================================================================
 #   참고용 백업 코드
