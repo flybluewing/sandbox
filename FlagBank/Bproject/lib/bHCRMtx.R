@@ -71,6 +71,24 @@ if( TRUE ){
     bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
 
 }
+mName <- "HCRsz_bfAZPh" # QQE:Todo
+if( FALSE ){
+    fMaker <- function( mName ,crScrH ){
+
+        workMName <- c( "scoreA","scoreB","scoreC","scoreD","scoreE","scoreF" )
+        workMName <- c( workMName ,"scoreFV"  ,"scoreGS" ,"scoreGSh2" ,"scoreGS3" ,"scorePSh" ,"scorePSrp" ,"scorePSrpRaw" )
+
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
+        rObj$getFilter <- function( crScrH=NULL ){
+            # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
+            fObj <- HCR.MtxTmpl_szReb( mName=mName ,wMLst=rObj$wMLst ,szColName="r.ph" ,szRowName="rebCnt" )
+            return( fObj )
+        }
+
+        return( rObj )
+    }
+    bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
+}
 mName <- "HCRsz_bf01fCol"
 if( TRUE ){
     #   mName 별 중복 카운트 수만 비교할 뿐, 중복 발생 fCol을 비교하는 것은 아님을 유의.
@@ -134,6 +152,28 @@ if( TRUE ){
     bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
 
 }
+mName <- "HCRsz_bfAZfCol" # QQE:Todo
+if( FALSE ){
+    #   mName 별 중복 카운트 수만 비교할 뿐, 중복 발생 fCol을 비교하는 것은 아님을 유의.
+
+    fMaker <- function( mName ,crScrH ){
+
+        workMName <- c( "scoreA","scoreB","scoreC","scoreD","scoreE","scoreF" )
+        workMName <- c( workMName ,"scoreFV"  ,"scoreGS" ,"scoreGSh2" ,"scoreGS3" ,"scorePSh" ,"scorePSrp" ,"scorePSrpRaw" )
+
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
+        rObj$getFilter <- function( crScrH=NULL ){
+            # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
+            fObj <- HCR.MtxTmpl_szReb( mName=mName ,wMLst=rObj$wMLst ,szColName="r.fCol" ,szRowName="rebCnt" )
+            return( fObj )
+        }
+
+        return( rObj )
+    }
+    bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
+
+}
+
 
 # ------------------------------------------------------------------------------------------
 #   szMtx for bSMtx (Ph,fCol)               HCR.MtxTmpl_szReb()
@@ -160,6 +200,7 @@ if( TRUE ){
     }
     bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
 }
+mName <- "HCRsz_bS01AVefCol"    # QQE:Todo  (왜 ph에는 없었고 fCol에만 있었지?)
 mName <- "HCRsz_bS2APh"
 if( TRUE ){
     fMaker <- function( mName ,crScrH ){
@@ -199,6 +240,24 @@ if( TRUE ){
     bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
 
 }
+mName <- "HCRsz_bSAZPh"     # QQE:Todo  (mName 수가 너무 적음. av도 포함시킬까?)
+if( FALSE ){
+    fMaker <- function( mName ,crScrH ){
+
+        workMName <- c("sScore0GS" ,"sScore0GSh2" ,"sScore0GS3" ,"sScore0PSh" ,"sScore0PSrp" ,"sScore0PSrpRaw")
+
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
+        rObj$getFilter <- function( crScrH=NULL ){
+            # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
+            fObj <- HCR.MtxTmpl_szReb( mName=mName ,wMLst=rObj$wMLst ,szColName="r.ph" ,szRowName="rebCnt" )
+            return( fObj )
+        }
+
+        return( rObj )
+    }
+    bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
+}
+
 mName <- "HCRsz_bS1avPh"    # bS01Ph + bSavPh
 if( TRUE ){
     fMaker <- function( mName ,crScrH ){
@@ -277,8 +336,24 @@ if( TRUE ){
     bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
 
 }
+mName <- "HCRsz_bSAZfCol"     # QQE:Todo    (mName 수가 너무 적음. av도 포함시킬까?)
+if( FALSE ){
+    fMaker <- function( mName ,crScrH ){
 
+        workMName <- c( "sScore0GS" ,"sScore0GSh2" ,"sScore0GS3" ,"sScore0PSh" ,"sScore0PSrp" ,"sScore0PSrpRaw")
 
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
+        rObj$getFilter <- function( crScrH=NULL ){
+            # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
+            fObj <- HCR.MtxTmpl_szReb( mName=mName ,wMLst=rObj$wMLst ,szColName="r.fCol" ,szRowName="rebCnt" )
+            return( fObj )
+        }
+
+        return( rObj )
+    }
+    bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
+}
+mName <- "HCRsz_bS1avPh"    # QQE:Todo  (왜 ph에만 있고 fCol에는 없었지?)
 
 
 # ------------------------------------------------------------------------------------------
@@ -354,6 +429,26 @@ if( TRUE ){
         workMName <- c( workMName ,"sScore0LAr13","sScore0LAr24","sScore0LVr13","sScore0LVr24" )
         workMName <- c( workMName ,"sScore0LAc13","sScore0LAc24","sScore0LVc13","sScore0LVc24" )
         workMName <- c( workMName ,"sScore0LAf13","sScore0LAf24","sScore0LVf13","sScore0LVf24" )
+
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
+        rObj$getFilter <- function( crScrH=NULL ){
+            # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
+            fObj <- HCR.MtxTmpl_szReb( mName=mName ,wMLst=rObj$wMLst ,szColName="r.ph" ,szRowName="rebCnt" )
+            return( fObj )
+        }
+
+        return( rObj )
+    }
+    bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
+
+}
+mName <- "HCRsz_bfSAZPh"     # QQE:Todo
+if( FALSE ){
+    fMaker <- function( mName ,crScrH ){
+
+        workMName <- c( "scoreA","scoreB","scoreC","scoreD","scoreE","scoreF" )
+        workMName <- c( workMName ,"scoreFV"  ,"scoreGS" ,"scoreGSh2" ,"scoreGS3" ,"scorePSh" ,"scorePSrp" ,"scorePSrpRaw" )
+        workMName <- c( workMName ,"sScore0GS" ,"sScore0GSh2" ,"sScore0GS3" ,"sScore0PSh" ,"sScore0PSrp" ,"sScore0PSrpRaw" )
 
         rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
         rObj$getFilter <- function( crScrH=NULL ){
@@ -448,7 +543,25 @@ if( TRUE ){
     }
     bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
 }
+mName <- "HCRsz_bfSAZfCol"     # QQE:Todo
+if( FALSE ){
+    fMaker <- function( mName ,crScrH ){
 
+        workMName <- c( "scoreA","scoreB","scoreC","scoreD","scoreE","scoreF" )
+        workMName <- c( workMName ,"scoreFV"  ,"scoreGS" ,"scoreGSh2" ,"scoreGS3" ,"scorePSh" ,"scorePSrp" ,"scorePSrpRaw" )
+        workMName <- c( workMName ,"sScore0GS" ,"sScore0GSh2" ,"sScore0GS3" ,"sScore0PSh" ,"sScore0PSrp" ,"sScore0PSrpRaw" )
+
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
+        rObj$getFilter <- function( crScrH=NULL ){
+            # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
+            fObj <- HCR.MtxTmpl_szReb( mName=mName ,wMLst=rObj$wMLst ,szColName="r.fCol" ,szRowName="rebCnt" )
+            return( fObj )
+        }
+
+        return( rObj )
+    }
+    bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
+}
 
 
 
@@ -501,6 +614,27 @@ if( TRUE ){
     bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
 
 }
+mName <- "HCRreb_szC03R"     # QQE:Todo
+if( FALSE ){
+
+    fMaker <- function( mName ,crScrH ){
+        workMName <- c( "scoreA","scoreB","scoreC","scoreD","scoreE","scoreF" )
+        workMName <- c( workMName ,"scoreFV"  ,"scoreGS" ,"scoreGSh2" ,"scoreGS3" ,"scorePSh" ,"scorePSrp" ,"scorePSrpRaw" )
+
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
+        rObj$szCol <- c( "r.ph" ,"r.fCol" ,"r.dblHpnFlg" )
+
+        rObj$getFilter <- function( crScrH ){
+            fObj <- HCR.MtxTmpl_rebSz( mName=mName ,wMLst=rObj$wMLst ,crScrH ,szCol=rObj$szCol )
+            return( fObj )
+        }
+
+        return( rObj )
+    }
+    bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
+
+}
+
 
 mName <- "HCRreb_szS01R"
 if( TRUE ){
@@ -541,6 +675,25 @@ if( TRUE ){
     }
     bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
 }
+mName <- "HCRreb_szS03R"    # QQE:Todo    (mName 수가 너무 적음. av도 포함시킬까?)
+if( FALSE ){
+    fMaker <- function( mName ,crScrH ){
+
+        workMName <- c( "sScore0GS" ,"sScore0GSh2" ,"sScore0GS3" ,"sScore0PSh" ,"sScore0PSrp" ,"sScore0PSrpRaw" )
+
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
+        rObj$szCol <- c( "r.ph" ,"r.fCol" ,"r.dblHpnFlg" )
+
+        rObj$getFilter <- function( crScrH ){
+            fObj <- HCR.MtxTmpl_rebSz( mName=mName ,wMLst=rObj$wMLst ,crScrH ,szCol=rObj$szCol )
+            return( fObj )
+        }
+
+        return( rObj )
+    }
+    bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
+}
+
 
 mName <- "HCRreb_rawC01R_a"     # c( "ph","fCol","phReb" )
 if( TRUE ){
@@ -620,6 +773,43 @@ if( TRUE ){
     }
     bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
 }
+mName <- "HCRreb_rawC03R_a"
+if( FALSE ){
+    fMaker <- function( mName ,crScrH ){
+        workMName <- c( "scoreA","scoreB","scoreC","scoreD","scoreE","scoreF" )
+        workMName <- c( workMName ,"scoreFV"  ,"scoreGS" ,"scoreGSh2" ,"scoreGS3" ,"scorePSh" ,"scorePSrp" ,"scorePSrpRaw" )
+
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
+        rObj$compCol <- c( "ph","fCol","phReb" )   # all ph fCol phReb xyCnt.fCol xyCnt.phase
+
+        rObj$getFilter <- function( crScrH ){
+            fObj <- HCR.MtxTmpl_rebRaw( mName=mName ,wMLst=rObj$wMLst ,crScrH ,compCol=rObj$compCol ,rowName="raw" )
+            return( fObj )
+        }
+
+        return( rObj )
+    }
+    bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
+}
+mName <- "HCRreb_rawC03R_b"
+if( FALSE ){
+    fMaker <- function( mName ,crScrH ){
+        workMName <- c( "scoreA","scoreB","scoreC","scoreD","scoreE","scoreF" )
+        workMName <- c( workMName ,"scoreFV"  ,"scoreGS" ,"scoreGSh2" ,"scoreGS3" ,"scorePSh" ,"scorePSrp" ,"scorePSrpRaw" )
+
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
+        rObj$compCol <- c( "all","phReb","xyCnt.fCol","xyCnt.phase" )
+
+        rObj$getFilter <- function( crScrH ){
+            fObj <- HCR.MtxTmpl_rebRaw( mName=mName ,wMLst=rObj$wMLst ,crScrH ,compCol=rObj$compCol ,rowName="raw" )
+            return( fObj )
+        }
+
+        return( rObj )
+    }
+    bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
+}
+
 
 mName <- "HCRreb_rawS01R_a"
 if( TRUE ){
@@ -699,6 +889,42 @@ if( TRUE ){
     }
     bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
 }
+mName <- "HCRreb_rawS03R_a" # QQE:Todo    (mName 수가 너무 적음. av도 포함시킬까?)
+if( FALSE ){
+    fMaker <- function( mName ,crScrH ){
+
+        workMName <- c( "sScore0GS" ,"sScore0GSh2" ,"sScore0GS3" ,"sScore0PSh" ,"sScore0PSrp" ,"sScore0PSrpRaw" )
+
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
+        rObj$compCol <- c( "ph","fCol","phReb" )   # all ph fCol phReb xyCnt.fCol xyCnt.phase
+
+        rObj$getFilter <- function( crScrH ){
+            fObj <- HCR.MtxTmpl_rebRaw( mName=mName ,wMLst=rObj$wMLst ,crScrH ,compCol=rObj$compCol ,rowName="raw" )
+            return( fObj )
+        }
+
+        return( rObj )
+    }
+    bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
+}
+mName <- "HCRreb_rawS03R_b" # QQE:Todo    (mName 수가 너무 적음. av도 포함시킬까?)
+if( FALSE ){
+    fMaker <- function( mName ,crScrH ){
+
+        workMName <- c( "sScore0GS" ,"sScore0GSh2" ,"sScore0GS3" ,"sScore0PSh" ,"sScore0PSrp" ,"sScore0PSrpRaw" )
+
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
+        rObj$compCol <- c( "all","phReb","xyCnt.fCol","xyCnt.phase" )
+
+        rObj$getFilter <- function( crScrH ){
+            fObj <- HCR.MtxTmpl_rebRaw( mName=mName ,wMLst=rObj$wMLst ,crScrH ,compCol=rObj$compCol ,rowName="raw" )
+            return( fObj )
+        }
+
+        return( rObj )
+    }
+    bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
+}
 
 
 # ------------------------------------------------------------------------------------------
@@ -750,6 +976,29 @@ if( TRUE ){
     }
     bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
 }
+mName <- "HCRreb_phSzF02"   # QQE:Todo
+if( FALSE ){
+    fMaker <- function( mName ,crScrH ){
+
+        workMName <- c( "scoreA","scoreB","scoreC","scoreD","scoreE","scoreF" )
+        workMName <- c( workMName ,c("scoreLAe13","scoreLAe24","scoreLVe13","scoreLVe24") )
+        workMName <- c( workMName ,"scoreLAr13","scoreLAr24","scoreLVr13","scoreLVr24")
+        workMName <- c( workMName ,"scoreLAc13","scoreLAc24","scoreLVc13","scoreLVc24" )
+        workMName <- c( workMName ,"scoreLAf13","scoreLAf24","scoreLVf13","scoreLVf24" )
+        workMName <- c( workMName ,"scoreFV"  ,"scoreGS" ,"scoreGSh2" ,"scoreGS3" ,"scorePSh" ,"scorePSrp" ,"scorePSrpRaw" )
+
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
+
+        rObj$getFilter <- function( crScrH ){
+            fObj <- HCR.MtxTmpl_phRebCnt_sz( mName ,wMName=rObj$wMLst$bf ,crScrH ,mGrp="std.grp" )
+            return( fObj )
+        }
+
+        return( rObj )
+    }
+    bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
+}
+
 mName <- "HCRreb_phSzS01"
 if( TRUE ){
     fMaker <- function( mName ,crScrH ){
@@ -772,6 +1021,29 @@ if( TRUE ){
     }
     bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
 }
+mName <- "HCRreb_phSzS02"   # QQE:Todo
+if( FALSE ){
+    fMaker <- function( mName ,crScrH ){
+
+        workMName <- c( "sScore0LAe13","sScore0LAe24","sScore0LVe13","sScore0LVe24" )
+        workMName <- c( workMName ,"sScore04","sScore06","sScore07" )
+        workMName <- c( workMName ,"sScore0LAr13","sScore0LAr24","sScore0LVr13","sScore0LVr24" )
+        workMName <- c( workMName ,"sScore0LAc13","sScore0LAc24","sScore0LVc13","sScore0LVc24" )
+        workMName <- c( workMName ,"sScore0LAf13","sScore0LAf24","sScore0LVf13","sScore0LVf24" )
+        workMName <- c( workMName ,"sScore0GS" ,"sScore0GSh2" ,"sScore0GS3" ,"sScore0PSh" ,"sScore0PSrp" ,"sScore0PSrpRaw" )
+
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
+
+        rObj$getFilter <- function( crScrH ){
+            fObj <- HCR.MtxTmpl_phRebCnt_sz( mName ,wMName=rObj$wMLst$bS ,crScrH ,mGrp="bS.grp" )
+            return( fObj )
+        }
+
+        return( rObj )
+    }
+    bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
+}
+
 
 # ------------------------------------------------------------------------------------------
 #   ph reb by mNames for bfMtx/bSMtx raw      HCR.MtxTmpl_phRebCnt_raw()
@@ -860,6 +1132,25 @@ if( TRUE ){
     }
     bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
 }
+mName <- "HCRraw_bf03Sum01"     # QQE:Todo
+if( FALSE ){
+    fMaker <- function( mName ,crScrH ){
+
+        workMName <- c( "scoreA","scoreB","scoreC","scoreD","scoreE","scoreF" )
+        workMName <- c( workMName ,"scoreFV"  ,"scoreGS" ,"scoreGSh2" ,"scoreGS3" ,"scorePSh" ,"scorePSrp" ,"scorePSrpRaw" )
+
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
+        rObj$getFilter <- function( crScrH=NULL ){
+            # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
+            fObj <- HCR.MtxTmpl_rawReb( mName=mName ,wMLst=rObj$wMLst ,colName=c("phReb","xyCnt.fCol","xyCnt.phase") ,rowName="raw" )
+            return( fObj )
+        }
+
+        return( rObj )
+    }
+    bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
+}
+
 mName <- "HCRraw_bS01Sum01"
 if( TRUE ){
     #             all ph fCol phReb xyCnt.fCol xyCnt.phase
@@ -889,6 +1180,23 @@ if( TRUE ){
         workMName <- c( workMName ,"sScore0LAr13","sScore0LAr24","sScore0LVr13","sScore0LVr24")
         workMName <- c( workMName ,"sScore0LAc13","sScore0LAc24","sScore0LVc13","sScore0LVc24" )
         workMName <- c( workMName ,"sScore0LAf13","sScore0LAf24","sScore0LVf13","sScore0LVf24" )
+
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
+        rObj$getFilter <- function( crScrH=NULL ){
+            # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
+            fObj <- HCR.MtxTmpl_rawReb( mName=mName ,wMLst=rObj$wMLst ,colName=c("phReb","xyCnt.fCol","xyCnt.phase") ,rowName="raw" )
+            return( fObj )
+        }
+
+        return( rObj )
+    }
+    bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
+}
+mName <- "HCRraw_bS03Sum01" # QQE:Todo    (mName 수가 너무 적음. av도 포함시킬까?)
+if( FALSE ){
+    fMaker <- function( mName ,crScrH ){
+
+        workMName <- c( "sScore0GS" ,"sScore0GSh2" ,"sScore0GS3" ,"sScore0PSh" ,"sScore0PSrp" ,"sScore0PSrpRaw" )
 
         rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
         rObj$getFilter <- function( crScrH=NULL ){

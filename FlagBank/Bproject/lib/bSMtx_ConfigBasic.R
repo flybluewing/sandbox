@@ -2908,53 +2908,28 @@ if( TRUE ){
                     ,freqVal=1
             )
 
-            ,"Ac13Hpn1A"=list( rng=matrix( c(0,0 ,0,9) ,ncol=2 )
+            ,"Acf13Hpn1A"=list( rng=matrix( c(0,0 ,0,9) ,ncol=2 )
                     ,evt=matrix( c(c(3),c(9)) ,ncol=2)  ,evtMax.fCol=NULL
             )
-            ,"Ac13Hpn1B"=list( rng=matrix( c(0,0 ,0,9) ,ncol=2 )
+            ,"Acf13Hpn1B"=list( rng=matrix( c(0,0 ,0,9) ,ncol=2 )
                     ,evt=matrix( c(c(3),c(9)) ,ncol=2)  ,evtMax.fCol=NULL
             )
-            ,"Ac24Hpn1A"=list( rng=matrix( c(0,0 ,0,9) ,ncol=2 )
+            ,"Acf24Hpn1A"=list( rng=matrix( c(0,0 ,0,9) ,ncol=2 )
                     ,evt=matrix( c(c(3),c(9)) ,ncol=2)  ,evtMax.fCol=NULL
             )
-            ,"Ac24Hpn1B"=list( rng=matrix( c(0,0 ,0,9) ,ncol=2 )
+            ,"Acf24Hpn1B"=list( rng=matrix( c(0,0 ,0,9) ,ncol=2 )
                     ,evt=matrix( c(c(3),c(9)) ,ncol=2)  ,evtMax.fCol=NULL
             )
-            ,"Vc13Hpn1A"=list( rng=matrix( c(0,0 ,0,9) ,ncol=2 )
+            ,"Vcf13Hpn1A"=list( rng=matrix( c(0,0 ,0,9) ,ncol=2 )
                     ,evt=matrix( c(c(3),c(9)) ,ncol=2)  ,evtMax.fCol=NULL
             )
-            ,"Vc13Hpn1B"=list( rng=matrix( c(0,0 ,0,9) ,ncol=2 )
+            ,"Vcf13Hpn1B"=list( rng=matrix( c(0,0 ,0,9) ,ncol=2 )
                     ,evt=matrix( c(c(3),c(9)) ,ncol=2)  ,evtMax.fCol=NULL
             )
-            ,"Vc24Hpn1A"=list( rng=matrix( c(0,0 ,0,9) ,ncol=2 )
+            ,"Vcf24Hpn1A"=list( rng=matrix( c(0,0 ,0,9) ,ncol=2 )
                     ,evt=matrix( c(c(3),c(9)) ,ncol=2)  ,evtMax.fCol=NULL
             )
-            ,"Vc24Hpn1B"=list( rng=matrix( c(0,0 ,0,9) ,ncol=2 )
-                    ,evt=matrix( c(c(3),c(9)) ,ncol=2)  ,evtMax.fCol=NULL
-            )
-
-            ,"Af13Hpn1A"=list( rng=matrix( c(0,0 ,0,9) ,ncol=2 )
-                    ,evt=matrix( c(c(3),c(9)) ,ncol=2)  ,evtMax.fCol=NULL
-            )
-            ,"Af13Hpn1B"=list( rng=matrix( c(0,0 ,0,9) ,ncol=2 )
-                    ,evt=matrix( c(c(3),c(9)) ,ncol=2)  ,evtMax.fCol=NULL
-            )
-            ,"Af24Hpn1A"=list( rng=matrix( c(0,0 ,0,9) ,ncol=2 )
-                    ,evt=matrix( c(c(3),c(9)) ,ncol=2)  ,evtMax.fCol=NULL
-            )
-            ,"Af24Hpn1B"=list( rng=matrix( c(0,0 ,0,9) ,ncol=2 )
-                    ,evt=matrix( c(c(3),c(9)) ,ncol=2)  ,evtMax.fCol=NULL
-            )
-            ,"Vf13Hpn1A"=list( rng=matrix( c(0,0 ,0,9) ,ncol=2 )
-                    ,evt=matrix( c(c(3),c(9)) ,ncol=2)  ,evtMax.fCol=NULL
-            )
-            ,"Vf13Hpn1B"=list( rng=matrix( c(0,0 ,0,9) ,ncol=2 )
-                    ,evt=matrix( c(c(3),c(9)) ,ncol=2)  ,evtMax.fCol=NULL
-            )
-            ,"Vf24Hpn1A"=list( rng=matrix( c(0,0 ,0,9) ,ncol=2 )
-                    ,evt=matrix( c(c(3),c(9)) ,ncol=2)  ,evtMax.fCol=NULL
-            )
-            ,"Vf24Hpn1B"=list( rng=matrix( c(0,0 ,0,9) ,ncol=2 )
+            ,"Vcf24Hpn1B"=list( rng=matrix( c(0,0 ,0,9) ,ncol=2 )
                     ,evt=matrix( c(c(3),c(9)) ,ncol=2)  ,evtMax.fCol=NULL
             )
         )
@@ -2980,16 +2955,202 @@ if( TRUE ){
 }
 
 
+mName <- "bsMREreb1"
+if( TRUE ){
+    bsScoreMtxCfg[[mName]] <- list(
+        mName = mName   ,style=c( freqZero=TRUE )
+        ,fCol = list(
+            "sGSeExtMax"=list( rng=matrix( c(0,0 ,0,9) ,ncol=2 )
+                    ,evt=matrix( c(c(1),c(9)) ,ncol=2)  ,evtMax.fCol=NULL
+            )
+            ,"sGSh2eExtMax"=list( rng=matrix( c(0,0 ,0,9) ,ncol=2 )
+                    ,evt=matrix( c(c(1),c(9)) ,ncol=2)  ,evtMax.fCol=NULL
+            )
+            ,"sGS3eRebMaxHn"=list( rng=matrix( c(0,0 ,0,9) ,ncol=2 )
+                    ,evt=matrix( c(c(1),c(9)) ,ncol=2)  ,evtMax.fCol=NULL
+            )
+            ,"sPSheColCnt"=list( rng=matrix( c(0,0 ,0,9) ,ncol=2 )
+                    ,evt=matrix( c(c(1),c(9)) ,ncol=2)  ,evtMax.fCol=NULL
+            )
+            ,"sPSrpeNTotSize"=list( rng=matrix( c(0,0 ,0,9) ,ncol=2 )
+                    ,evt=matrix( c(c(1),c(9)) ,ncol=2)  ,evtMax.fCol=NULL
+            )
+            ,"sPSrpRaweNTotSize"=list( rng=matrix( c(0,0 ,0,9) ,ncol=2 )
+                    ,evt=matrix( c(c(1),c(9)) ,ncol=2)  ,evtMax.fCol=NULL
+            )
+        )
+        ,evtMax = NULL  ,evtMaxFColTot = NULL
+        ,rowReb = c( rawMin=2 ,lowE=2 ,rareE=1 ,dupESum=1 )     ,rowRebDup=NULL     # H823
+        ,summMtx = matrix( c(  1 ,3 ,2 ,2 ,2 ,2  ,1 ,2 ,2 ,1 ,2 ,2 ) ,byrow=T # all ph fCol phReb xyCnt.fCol xyCnt.phase
+            ,ncol=length(summMtxName$cName) ,nrow=length(summMtxName$rName)
+            ,dimnames=list(summMtxName$rName,summMtxName$cName)
+        )
+        ,summMtx.sum = c(raw=4 ,evt=5)
+        ,summMtx.reb = matrix( c(  1 ,2 ,1 ,1 ,1 ,1  ,1 ,1 ,1 ,1 ,1 ,1 ) ,byrow=T # all ph fCol phReb xyCnt.fCol xyCnt.phase
+            ,ncol=length(summMtxName$cName) ,nrow=length(summMtxName$rName)
+            ,dimnames=list(summMtxName$rName,summMtxName$cName)
+        )
+        ,scMtx.sz = matrix( c( 3 ,2 ,1 ,3 ,2 ,1  ,3 ,1 ,1 ,1 ,1 ,1 ) ,byrow=T
+                ,ncol=length(scMtx.szName$cName) ,nrow=length(scMtx.szName$rName) 
+                ,dimnames=list(scMtx.szName$rName,scMtx.szName$cName)
+        )
+        ,scMtx.sz.sum = c(rebCnt.r=4 ,rebCnt.e=4)
+        ,isHard=NULL  # use default
+    )
+}
 
+mName <- "bsMREreb0"
+if( TRUE ){
+    bsScoreMtxCfg[[mName]] <- list(
+        mName = mName   ,style=c( freqZero=TRUE )
+        ,fCol = list(
+             "sGSeExtMax"=list( rng=matrix( c(0,0 ,0,9) ,ncol=2 )
+                    ,evt=matrix( c(c(1),c(9)) ,ncol=2)  ,evtMax.fCol=NULL
+            )
+            ,"sGSh2eExtMax"=list( rng=matrix( c(0,0 ,0,9) ,ncol=2 )
+                    ,evt=matrix( c(c(1),c(9)) ,ncol=2)  ,evtMax.fCol=NULL
+            )
+            ,"sGS3eRebMaxHn"=list( rng=matrix( c(0,0 ,0,9) ,ncol=2 )
+                    ,evt=matrix( c(c(1),c(9)) ,ncol=2)  ,evtMax.fCol=NULL
+            )
+            ,"sPSheColCnt"=list( rng=matrix( c(0,0 ,0,9) ,ncol=2 )
+                    ,evt=matrix( c(c(1),c(9)) ,ncol=2)  ,evtMax.fCol=NULL
+            )
+            ,"sPSrpeNTotSize"=list( rng=matrix( c(0,0 ,0,9) ,ncol=2 )
+                    ,evt=matrix( c(c(1),c(9)) ,ncol=2)  ,evtMax.fCol=NULL
+            )
+            ,"sPSrpRaweNTotSize"=list( rng=matrix( c(0,0 ,0,9) ,ncol=2 )
+                    ,evt=matrix( c(c(1),c(9)) ,ncol=2)  ,evtMax.fCol=NULL
+            )
+            ,"s5HpnCnt"=list( rng=matrix( c(0,0 ,0,9) ,ncol=2 )
+                    ,evt=matrix( c(c(1),c(9)) ,ncol=2)  ,evtMax.fCol=NULL
+                    ,freqVal=1:2
+            )
+            ,"s6HpnCnt"=list( rng=matrix( c(0,0 ,0,9) ,ncol=2 )
+                    ,evt=matrix( c(c(1),c(9)) ,ncol=2)  ,evtMax.fCol=NULL
+                    ,freqVal=1:2
+            )
+            # ,"s7HpnCnt"=list( rng=matrix( c(0,0 ,0,9) ,ncol=2 )
+            #         ,evt=matrix( c(c(1),c(9)) ,ncol=2)  ,evtMax.fCol=NULL
+            #         ,freqVal=1:2
+            # )
+            ,"s9eCnt"=list( rng=matrix( c(0,0 ,0,9) ,ncol=2 )
+                    ,evt=matrix( c(c(1),c(9)) ,ncol=2)  ,evtMax.fCol=NULL
+                    ,freqVal=1:2
+            )
+            ,"AVec13Hpn1A"=list( rng=matrix( c(0,0 ,0,9) ,ncol=2 )
+                    ,evt=matrix( c(c(1),c(9)) ,ncol=2)  ,evtMax.fCol=NULL
+                    ,freqVal=1:2
+            )
+            ,"AVec13Hpn1B"=list( rng=matrix( c(0,0 ,0,9) ,ncol=2 )
+                    ,evt=matrix( c(c(1),c(9)) ,ncol=2)  ,evtMax.fCol=NULL
+                    ,freqVal=1:2
+            )
+            ,"AVec24Hpn1A"=list( rng=matrix( c(0,0 ,0,9) ,ncol=2 )
+                    ,evt=matrix( c(c(1),c(9)) ,ncol=2)  ,evtMax.fCol=NULL
+                    ,freqVal=1:2
+            )
+            ,"AVec24Hpn1B"=list( rng=matrix( c(0,0 ,0,9) ,ncol=2 )
+                    ,evt=matrix( c(c(1),c(9)) ,ncol=2)  ,evtMax.fCol=NULL
+                    ,freqVal=1:2
+            )
+        )
+        ,evtMax = NULL  ,evtMaxFColTot = NULL
+        ,rowReb = c( rawMin=1 ,lowE=1 ,rareE=1 ,dupESum=1 )     ,rowRebDup=NULL
+        ,summMtx = matrix( c(  1 ,3 ,3 ,2 ,1 ,1  ,1 ,1 ,1 ,1 ,1 ,1 ) ,byrow=T # all ph fCol phReb xyCnt.fCol xyCnt.phase
+            ,ncol=length(summMtxName$cName) ,nrow=length(summMtxName$rName)
+            ,dimnames=list(summMtxName$rName,summMtxName$cName)
+        )
+        ,summMtx.sum = c(raw=3 ,evt=1)
+        ,summMtx.reb = matrix( c(  1 ,1 ,1 ,1 ,1 ,1  ,1 ,1 ,1 ,1 ,1 ,1 ) ,byrow=T # all ph fCol phReb xyCnt.fCol xyCnt.phase
+            ,ncol=length(summMtxName$cName) ,nrow=length(summMtxName$rName)
+            ,dimnames=list(summMtxName$rName,summMtxName$cName)
+        )
+        ,scMtx.sz = matrix( c( 3 ,3 ,1 ,1 ,1 ,1  ,2 ,1 ,1 ,1 ,1 ,1 ) ,byrow=T
+                ,ncol=length(scMtx.szName$cName) ,nrow=length(scMtx.szName$rName) 
+                ,dimnames=list(scMtx.szName$rName,scMtx.szName$cName)
+        )
+        ,scMtx.sz.sum = c(rebCnt.r=4 ,rebCnt.e=1)
+        ,isHard=NULL  # use default
+    )
+}
 
-
-
-
-
-
-
-
-
+mName <- "bsMRRCF"
+if( TRUE ){
+    bsScoreMtxCfg[[mName]] <- list(
+        mName = mName   ,style=c( freqZero=TRUE )
+        ,fCol = list(
+             "sGSxExtMax"=list( rng=matrix( c(0,0 ,0,9) ,ncol=2 )
+                    ,evt=matrix( c(c(1),c(9)) ,ncol=2)  ,evtMax.fCol=NULL
+            )
+            ,"sGS3xRebMaxHn"=list( rng=matrix( c(0,0 ,0,9) ,ncol=2 )
+                    ,evt=matrix( c(c(1),c(9)) ,ncol=2)  ,evtMax.fCol=NULL
+            )
+            ,"sPShxColCnt"=list( rng=matrix( c(0,0 ,0,9) ,ncol=2 )
+                    ,evt=matrix( c(c(1),c(9)) ,ncol=2)  ,evtMax.fCol=NULL
+            )
+            ,"sPSrpxNTotSize"=list( rng=matrix( c(0,0 ,0,9) ,ncol=2 )
+                    ,evt=matrix( c(c(1),c(9)) ,ncol=2)  ,evtMax.fCol=NULL
+            )
+            ,"sPSrpRawxNTotSize"=list( rng=matrix( c(0,0 ,0,9) ,ncol=2 )
+                    ,evt=matrix( c(c(1),c(9)) ,ncol=2)  ,evtMax.fCol=NULL
+            )
+            ,"s467HpnCnt"=list( rng=matrix( c(0,0 ,0,9) ,ncol=2 )
+                    ,evt=matrix( c(c(1),c(9)) ,ncol=2)  ,evtMax.fCol=NULL
+                    ,freqVal=1:2
+            )
+            # ,"s9xCnt"=list( rng=matrix( c(0,0 ,0,9) ,ncol=2 )
+            #         ,evt=matrix( c(c(1),c(9)) ,ncol=2)  ,evtMax.fCol=NULL
+            #         ,freqVal=1:3
+            # )
+            ,"s9eCnt"=list( rng=matrix( c(0,0 ,0,9) ,ncol=2 )
+                    ,evt=matrix( c(c(1),c(9)) ,ncol=2)  ,evtMax.fCol=NULL
+                    ,freqVal=1:3
+            )
+            ,"s9cCnt"=list( rng=matrix( c(0,0 ,0,9) ,ncol=2 )
+                    ,evt=matrix( c(c(1),c(9)) ,ncol=2)  ,evtMax.fCol=NULL
+                    ,freqVal=1:3
+            )
+            ,"s9fCnt"=list( rng=matrix( c(0,0 ,0,9) ,ncol=2 )
+                    ,evt=matrix( c(c(1),c(9)) ,ncol=2)  ,evtMax.fCol=NULL
+                    ,freqVal=1:3
+            )
+            ,"AVx13Hpn1A"=list( rng=matrix( c(0,0 ,0,9) ,ncol=2 )
+                    ,evt=matrix( c(c(1),c(9)) ,ncol=2)  ,evtMax.fCol=NULL
+                    ,freqVal=1:3
+            )
+            ,"AVx13Hpn1B"=list( rng=matrix( c(0,0 ,0,9) ,ncol=2 )
+                    ,evt=matrix( c(c(1),c(9)) ,ncol=2)  ,evtMax.fCol=NULL
+                    ,freqVal=1:3
+            )
+            ,"AVx24Hpn1A"=list( rng=matrix( c(0,0 ,0,9) ,ncol=2 )
+                    ,evt=matrix( c(c(1),c(9)) ,ncol=2)  ,evtMax.fCol=NULL
+                    ,freqVal=1:3
+            )
+            ,"AVx24Hpn1B"=list( rng=matrix( c(0,0 ,0,9) ,ncol=2 )
+                    ,evt=matrix( c(c(1),c(9)) ,ncol=2)  ,evtMax.fCol=NULL
+                    ,freqVal=1:3
+            )
+        )
+        ,evtMax = NULL  ,evtMaxFColTot = NULL
+        ,rowReb = c( rawMin=2 ,lowE=1 ,rareE=1 ,dupESum=1 )     ,rowRebDup=NULL
+        ,summMtx = matrix( c(  1 ,3 ,3 ,2 ,1 ,1  ,1 ,1 ,1 ,1 ,1 ,1 ) ,byrow=T # all ph fCol phReb xyCnt.fCol xyCnt.phase
+            ,ncol=length(summMtxName$cName) ,nrow=length(summMtxName$rName)
+            ,dimnames=list(summMtxName$rName,summMtxName$cName)
+        )
+        ,summMtx.sum = c(raw=3 ,evt=1)
+        ,summMtx.reb = matrix( c(  1 ,2 ,1 ,1 ,1 ,1  ,1 ,1 ,1 ,1 ,1 ,1 ) ,byrow=T # all ph fCol phReb xyCnt.fCol xyCnt.phase
+            ,ncol=length(summMtxName$cName) ,nrow=length(summMtxName$rName)
+            ,dimnames=list(summMtxName$rName,summMtxName$cName)
+        )
+        ,scMtx.sz = matrix( c( 4 ,4 ,1 ,1 ,1 ,1  ,2 ,1 ,1 ,1 ,1 ,1 ) ,byrow=T
+                ,ncol=length(scMtx.szName$cName) ,nrow=length(scMtx.szName$rName) 
+                ,dimnames=list(scMtx.szName$rName,scMtx.szName$cName)
+        )
+        ,scMtx.sz.sum = c(rebCnt.r=4 ,rebCnt.e=1)
+        ,isHard=NULL  # use default
+    )
+}
 
 
 
