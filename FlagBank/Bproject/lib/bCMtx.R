@@ -1194,16 +1194,10 @@ if( TRUE ){
 
 crMName <- "crScrN05R"
 if( TRUE ){
-
     bCMtxLst[[crMName]] <- function( hCRScr=NULL ){
         # hCRScr : cutRst1Score 히스토리. Rebound 체크 기능은 나중에 구현한다.
-
         mName <- NULL
         mName <- c( mName  ,"scoreA","scoreB","scoreC","scoreD","scoreE","scoreF" )
-        mName <- c( mName  ,c("scoreLAr13","scoreLAr24","scoreLVr13","scoreLVr24") )
-        mName <- c( mName  ,c("scoreLAe13","scoreLAe24","scoreLVe13","scoreLVe24") )
-        mName <- c( mName  ,c("scoreLAc13","scoreLAc24","scoreLVc13","scoreLVc24") )
-        mName <- c( mName  ,c("scoreLAf13","scoreLAf24","scoreLVf13","scoreLVf24") )
         mName <- c( mName  ,"scoreFV"  ,"scoreGS" ,"scoreGSh2" ,"scoreGS3" ,"scorePSh" ,"scorePSrp" ,"scorePSrpRaw" )
 
         rObj <- list( 	idStr=crMName  ,mName=mName
@@ -1273,7 +1267,6 @@ if( TRUE ){
 
         return( rObj )
     }
-
 }
 
 crMName <- "crScrN05E"
@@ -1284,10 +1277,6 @@ if( TRUE ){
 
         mName <- NULL
         mName <- c( mName  ,"scoreA","scoreB","scoreC","scoreD","scoreE","scoreF" )
-        mName <- c( mName  ,c("scoreLAr13","scoreLAr24","scoreLVr13","scoreLVr24") )
-        mName <- c( mName  ,c("scoreLAe13","scoreLAe24","scoreLVe13","scoreLVe24") )
-        mName <- c( mName  ,c("scoreLAc13","scoreLAc24","scoreLVc13","scoreLVc24") )
-        mName <- c( mName  ,c("scoreLAf13","scoreLAf24","scoreLVf13","scoreLVf24") )
         mName <- c( mName  ,"scoreFV"  ,"scoreGS" ,"scoreGSh2" ,"scoreGS3" ,"scorePSh" ,"scorePSrp" ,"scorePSrpRaw" )
 
         rObj <- list( 	idStr=crMName  ,mName=mName
@@ -1374,10 +1363,6 @@ if( TRUE ){
         # hCRScr : cutRst1Score 히스토리. Rebound 체크 기능은 나중에 구현한다.
         mName <- NULL
         mName <- c( mName  ,"scoreA","scoreB","scoreC","scoreD","scoreE","scoreF" )
-        mName <- c( mName  ,c("scoreLAr13","scoreLAr24","scoreLVr13","scoreLVr24") )
-        mName <- c( mName  ,c("scoreLAe13","scoreLAe24","scoreLVe13","scoreLVe24") )
-        mName <- c( mName  ,c("scoreLAc13","scoreLAc24","scoreLVc13","scoreLVc24") )
-        mName <- c( mName  ,c("scoreLAf13","scoreLAf24","scoreLVf13","scoreLVf24") )
         mName <- c( mName  ,"scoreFV"  ,"scoreGS" ,"scoreGSh2" ,"scoreGS3" ,"scorePSh" ,"scorePSrp" ,"scorePSrpRaw" )
 
         rObj <- list( 	idStr=crMName  ,mName=mName
@@ -1464,10 +1449,10 @@ if( TRUE ){
         # hCRScr : cutRst1Score 히스토리. Rebound 체크 기능은 나중에 구현한다.
         mName <- NULL
         mName <- c( mName  ,"scoreA","scoreB","scoreC","scoreD","scoreE","scoreF" )
-        mName <- c( mName  ,c("scoreLAr13","scoreLAr24","scoreLVr13","scoreLVr24") )
-        mName <- c( mName  ,c("scoreLAe13","scoreLAe24","scoreLVe13","scoreLVe24") )
-        mName <- c( mName  ,c("scoreLAc13","scoreLAc24","scoreLVc13","scoreLVc24") )
-        mName <- c( mName  ,c("scoreLAf13","scoreLAf24","scoreLVf13","scoreLVf24") )
+        # mName <- c( mName  ,c("scoreLAr13","scoreLAr24","scoreLVr13","scoreLVr24") )
+        # mName <- c( mName  ,c("scoreLAe13","scoreLAe24","scoreLVe13","scoreLVe24") )
+        # mName <- c( mName  ,c("scoreLAc13","scoreLAc24","scoreLVc13","scoreLVc24") )
+        # mName <- c( mName  ,c("scoreLAf13","scoreLAf24","scoreLVf13","scoreLVf24") )
         mName <- c( mName  ,"scoreFV"  ,"scoreGS" ,"scoreGSh2" ,"scoreGS3" ,"scorePSh" ,"scorePSrp" ,"scorePSrpRaw" )
 
         rObj <- list( 	idStr=crMName  ,mName=mName
@@ -1674,10 +1659,10 @@ if( TRUE ){
 
         mName <- NULL
         mName <- c( mName  ,"scoreA","scoreB","scoreC","scoreD","scoreE","scoreF" )
-        mName <- c( mName  ,c("scoreLAr13","scoreLAr24","scoreLVr13","scoreLVr24") )
-        mName <- c( mName  ,c("scoreLAe13","scoreLAe24","scoreLVe13","scoreLVe24") )
-        mName <- c( mName  ,c("scoreLAc13","scoreLAc24","scoreLVc13","scoreLVc24") )
-        mName <- c( mName  ,c("scoreLAf13","scoreLAf24","scoreLVf13","scoreLVf24") )
+        # mName <- c( mName  ,c("scoreLAr13","scoreLAr24","scoreLVr13","scoreLVr24") )
+        # mName <- c( mName  ,c("scoreLAe13","scoreLAe24","scoreLVe13","scoreLVe24") )
+        # mName <- c( mName  ,c("scoreLAc13","scoreLAc24","scoreLVc13","scoreLVc24") )
+        # mName <- c( mName  ,c("scoreLAf13","scoreLAf24","scoreLVf13","scoreLVf24") )
         mName <- c( mName  ,"scoreFV"  ,"scoreGS" ,"scoreGSh2" ,"scoreGS3" ,"scorePSh" ,"scorePSrp" ,"scorePSrpRaw" )
 
         rObj <- list( 	idStr=crMName  ,mName=mName

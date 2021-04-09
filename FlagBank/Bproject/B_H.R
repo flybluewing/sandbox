@@ -1107,7 +1107,7 @@ B.rpt_bSMtx_crScr <- function( resultLst ,crMName ,rptFile ){
         rptMtx <- rbind( rptMtx ,crScrMtx[aIdx,] )
     }
     rownames(rptMtx) <- B.tgtHIdxStr( as.integer(names(resultLst)) )
-    fLog$fLogMtx( rptMtx )
+    fLog$fLogMtx( t(rptMtx) )
 
 
     fLog$fLogStr( "Finish -----" ,pTime=T)

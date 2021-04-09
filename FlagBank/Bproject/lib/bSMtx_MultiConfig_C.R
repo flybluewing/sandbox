@@ -411,6 +411,110 @@ if( TRUE ){    # need assess
 }
 
 
+crMName <- "bSMScr05R"  # QQE:Todo
+if( TRUE ){
+    bSMtxMCfg[[crMName]] <- list(  mName=crMName ,ver=2.0
+        ,fCol = list(
+              "hpn0"        = list( rng=c(min=0,max=4) ,evt=matrix( c(c(1,1,1),c( 4,15,16)) ,ncol=2)   )
+             ,"ph"          = list( rng=c(min=0,max=3) ,evt=matrix( c(c(3),c(3)) ,ncol=2)  )
+             ,"fCol"        = list( rng=c(min=0,max=2) ,evt=matrix( c(c(3),c(3)) ,ncol=2)  )
+             ,"phReb"       = list( rng=c(min=0,max=1) ,evt=matrix( c(c(3),c(1)) ,ncol=2)  )
+             ,"xyCnt.fCol"  = list( rng=c(min=0,max=2) ,evt=matrix( c(c(1),c(2)) ,ncol=2)  )
+             ,"xyCnt.phase" = list( rng=c(min=0,max=1) ,evt=matrix( c(c(1),c(2)) ,ncol=2)  )
+             ,"ph_Reb"      = list( rng=c(min=0,max=1) ,evt=matrix( c(c(3),c(1)) ,ncol=2)  )
+             ,"fCol_Reb"    = list( rng=c(min=0,max=1) ,evt=matrix( c(c(3),c(1)) ,ncol=2)  )
+             ,"phReb_Reb"   = list( rng=c(min=0,max=1) ,evt=matrix( c(c(3),c(1)) ,ncol=2)  )
+             ,"xyCnt.fCol_Reb"  = list( rng=c(min=0,max=1) ,evt=matrix( c(c(3),c(1)) ,ncol=2)  )
+             ,"xyCnt.phase_Reb" = list( rng=c(min=0,max=1) ,evt=matrix( c(c(3),c(1)) ,ncol=2)  )
+             ,"ph_sz"       = list( rng=c(min=0,max=4) ,evt=matrix( c(c(1),c(5)) ,ncol=2)  )
+             ,"fCol_sz"     = list( rng=c(min=0,max=4) ,evt=matrix( c(c(1),c(4)) ,ncol=2)  )
+             ,"dblHpnFlg_sz"= list( rng=c(min=0,max=1) ,evt=matrix( c(c(3),c(1)) ,ncol=2)  )
+             ,"ph_szDup"    = list( rng=c(min=0,max=2) ,evt=matrix( c(c(1),c(1)) ,ncol=2)  )
+             ,"fCol_szDup"  = list( rng=c(min=0,max=1) ,evt=matrix( c(c(1),c(1)) ,ncol=2)  )
+             ,"dblHpnFlg_szDup" = list( rng=c(min=0,max=1) ,evt=matrix( c(c(1),c(1)) ,ncol=2)   )
+        )
+        ,evtMax = c("lev1"=3,"lev2"=2,"lev3"=1)
+    )
+}
+
+crMName <- "bSMScr05E"  # QQE:Todo
+if( TRUE ){
+    bSMtxMCfg[[crMName]] <- list(  mName = crMName
+        ,fCol = list(
+              "hpn0"        = list( rng=c(min= 2,max= 6) ,evt=matrix(0,ncol=2,nrow=0) )
+             ,"ph"          = list( rng=c(min= 0,max= 1)   ,evt=matrix(c(2,1),ncol=2) )
+             ,"fCol"        = list( rng=c(min= 0,max= 1)   ,evt=matrix(c(2,1),ncol=2) )
+             ,"phReb"       = list( rng=c(min= 0,max= 1)   ,evt=matrix(c(2,1),ncol=2) )
+             ,"xyCnt.fCol"  = list( rng=c(min=0,max=1)     ,evt=matrix(c(2,1),ncol=2) )
+             ,"xyCnt.phase" = list( rng=c(min=0,max=1)     ,evt=matrix(c(2,1),ncol=2) )
+             ,"ph_Reb"      = list( rng=c(min=0,max=1)     ,evt=matrix(c(2,1),ncol=2) )
+             ,"fCol_Reb"    = list( rng=c(min=0,max=1)     ,evt=matrix(c(2,1),ncol=2) )
+             ,"phReb_Reb"   = list( rng=c(min=0,max=1)     ,evt=matrix(c(2,1),ncol=2) )
+             ,"xyCnt.fCol_Reb"  = list( rng=c(min=0,max=1) ,evt=matrix(c(2,1),ncol=2) )
+             ,"xyCnt.phase_Reb" = list( rng=c(min=0,max=1) ,evt=matrix(c(2,1),ncol=2) )
+             ,"ph_sz"       = list( rng=c(min=0,max=1)     ,evt=matrix(c(2,1),ncol=2) )
+             ,"fCol_sz"     = list( rng=c(min=0,max=1)     ,evt=matrix(c(2,1),ncol=2) )
+             ,"dblHpnFlg_sz"= list( rng=c(min=0,max=1)     ,evt=matrix(c(2,1),ncol=2) )
+             ,"ph_szDup"    = list( rng=c(min=0,max=1)     ,evt=matrix(c(2,1),ncol=2) )
+             ,"fCol_szDup"  = list( rng=c(min=0,max=1)     ,evt=matrix(c(2,1),ncol=2) )
+             ,"dblHpnFlg_szDup" = list( rng=c(min=0,max=1) ,evt=matrix(c(2,1),ncol=2) )
+        )
+        ,evtMax = c("lev1"=3,"lev2"=2,"lev3"=1)
+    )
+}
+
+crMName <- "bSMScr05PhEvt"  # QQE:Todo
+if( FALSE ){
+    bSMtxMCfg[[crMName]] <- list(  mName=crMName ,ver=2.0
+        ,fCol = list(
+              "e3Max"   = list( rng=c(min=10,max=11)    ,evt=matrix( c(c(3,4),c(3,4)) ,ncol=2)  )
+             ,"e3MCnt"  = list( rng=c(min=0,max=1)  ,evt=matrix( c(c(3),c(13)) ,ncol=2) )
+             ,"e2Max"   = list( rng=c(min=0,max=1)  ,evt=matrix( c(c(3),c(13)) ,ncol=2) )
+             ,"e2MCnt"  = list( rng=c(min=0,max=1)  ,evt=matrix( c(c(3),c(13)) ,ncol=2) )
+             ,"e1Max"   = list( rng=c(min=0,max=1)  ,evt=matrix( c(c(3),c(13)) ,ncol=2) )
+             ,"e1MCnt"  = list( rng=c(min=0,max=1)  ,evt=matrix( c(c(3),c(13)) ,ncol=2) )
+             ,"rebRawMax"   = list( rng=c(min=0,max=1)  ,evt=matrix( c(c(1),c(2)) ,ncol=2)  )
+             ,"rebRawMCnt"  = list( rng=c(min=0,max=1)  ,evt=matrix( c(c(3),c(13)) ,ncol=2) )
+             ,"rebEvtMax"   = list( rng=c(min=0,max=1)  ,evt=matrix( c(c(3),c(13)) ,ncol=2) )
+             ,"rebEvtMCnt"  = list( rng=c(min=0,max=1)  ,evt=matrix( c(c(3),c(13)) ,ncol=2) )
+        )
+        ,evtMax = c("lev1"=3,"lev2"=2,"lev3"=1)
+    )
+}
+
+crMName <- "bSMScr05Sum"  # QQE:Todo
+if( FALSE ){    # need assess
+    bSMtxMCfg[[crMName]] <- list(  mName=crMName ,ver=2.0
+        ,fCol = list(
+              "summSumRaw"  = list( rng=c(min=10,max=11)  ,evt=matrix( c(c(1),c(4)) ,ncol=2)    )
+             ,"summSumEvt"  = list( rng=c(min=0,max=1)  ,evt=matrix( c(c(3,4),c(3,4)) ,ncol=2)  )
+             ,"summSumOthRaw"   = list( rng=c(min=0,max=1)  ,evt=matrix( c(c(3,4),c(3,4)) ,ncol=2)  )
+             ,"summSumOthEvt"   = list( rng=c(min=0,max=1)  ,evt=matrix( c(c(3,4),c(3,4)) ,ncol=2)  )
+             ,"summSumRebRaw"   = list( rng=c(min=0,max=1)  ,evt=matrix( c(c(3,4),c(3,4)) ,ncol=2)  )
+             ,"summSumRebEvt"   = list( rng=c(min=0,max=1)  ,evt=matrix( c(c(3,4),c(3,4)) ,ncol=2)  )
+             ,"summSumRebOthRaw"= list( rng=c(min=0,max=1)  ,evt=matrix( c(c(3,4),c(3,4)) ,ncol=2)  )
+             ,"summSumRebOthEvt"= list( rng=c(min=0,max=1)  ,evt=matrix( c(c(3,4),c(3,4)) ,ncol=2)  )
+             ,"szSumRebCnt" = list( rng=c(min=0,max=1)  ,evt=matrix( c(c(1,1),c(7,8)) ,ncol=2)  )
+             ,"szSumRebDup" = list( rng=c(min=0,max=1)  ,evt=matrix( c(c(3,4),c(3,4)) ,ncol=2)  )
+        )
+        ,evtMax = c("lev1"=3,"lev2"=2,"lev3"=1)
+    )
+}
+
+crMName <- "bSMScr05SumClM"  # QQE:Todo
+if( FALSE ){    # need assess
+    bSMtxMCfg[[crMName]] <- list(  mName=crMName ,ver=2.0
+        ,fCol = list(
+              "sumTotHpn" = list( rng=c(min=10,max= 11) ,evt=matrix( c(c(1),c(4)) ,ncol=2)  )
+             ,"sumTot1"   = list( rng=c(min=0,max= 1)   ,evt=matrix( c(c(1),c(3)) ,ncol=2)  )
+             ,"sumTot2"   = list( rng=c(min=0,max= 1)   ,evt=matrix( c(c(3,4),c(3,4)) ,ncol=2)  )
+             ,"sumTot3"   = list( rng=c(min=0,max= 1)   ,evt=matrix( c(c(1),c(3)) ,ncol=2)  )
+        )
+        ,evtMax = c("lev1"=3,"lev2"=2,"lev3"=1)
+    )
+}
+
+
 crMName <- "sample"
 if( FALSE ){
     bSMtxMCfg[[crMName]] <- list(  mName = crMName
