@@ -72,7 +72,7 @@ if( TRUE ){
 
 }
 mName <- "HCRsz_bfAZPh" # QQE:Todo
-if( FALSE ){
+if( TRUE ){
     fMaker <- function( mName ,crScrH ){
 
         workMName <- c( "scoreA","scoreB","scoreC","scoreD","scoreE","scoreF" )
