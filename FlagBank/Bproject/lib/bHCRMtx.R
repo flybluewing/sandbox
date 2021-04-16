@@ -71,7 +71,7 @@ if( TRUE ){
     bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
 
 }
-mName <- "HCRsz_bfAZPh" # QQE:Todo
+mName <- "HCRsz_bfAZPh"
 if( TRUE ){
     fMaker <- function( mName ,crScrH ){
 
@@ -152,8 +152,8 @@ if( TRUE ){
     bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
 
 }
-mName <- "HCRsz_bfAZfCol" # QQE:Todo
-if( FALSE ){
+mName <- "HCRsz_bfAZfCol"
+if( TRUE ){
     #   mName 별 중복 카운트 수만 비교할 뿐, 중복 발생 fCol을 비교하는 것은 아님을 유의.
 
     fMaker <- function( mName ,crScrH ){
@@ -240,8 +240,8 @@ if( TRUE ){
     bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
 
 }
-mName <- "HCRsz_bSAZPh"     # QQE:Todo  (mName 수가 너무 적음. av도 포함시킬까?)
-if( FALSE ){
+mName <- "HCRsz_bSAZPh"     # mName 수가 너무 적음. av도 포함시킬까?
+if( TRUE ){
     fMaker <- function( mName ,crScrH ){
 
         workMName <- c("sScore0GS" ,"sScore0GSh2" ,"sScore0GS3" ,"sScore0PSh" ,"sScore0PSrp" ,"sScore0PSrpRaw")
@@ -336,11 +336,11 @@ if( TRUE ){
     bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
 
 }
-mName <- "HCRsz_bSAZfCol"     # QQE:Todo    (mName 수가 너무 적음. av도 포함시킬까?)
-if( FALSE ){
+mName <- "HCRsz_bSAZfCol"     # mName 수가 너무 적음. av도 포함시킬까?
+if( TRUE ){
     fMaker <- function( mName ,crScrH ){
 
-        workMName <- c( "sScore0GS" ,"sScore0GSh2" ,"sScore0GS3" ,"sScore0PSh" ,"sScore0PSrp" ,"sScore0PSrpRaw")
+        workMName <- c( "sScore0GS" ,"sScore0GSh2" ,"sScore0GS3" ,"sScore0PSh" ,"sScore0PSrp" ,"sScore0PSrpRaw" )
 
         rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
         rObj$getFilter <- function( crScrH=NULL ){
@@ -442,8 +442,8 @@ if( TRUE ){
     bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
 
 }
-mName <- "HCRsz_bfSAZPh"     # QQE:Todo
-if( FALSE ){
+mName <- "HCRsz_bfSAZPh"
+if( TRUE ){
     fMaker <- function( mName ,crScrH ){
 
         workMName <- c( "scoreA","scoreB","scoreC","scoreD","scoreE","scoreF" )
@@ -460,7 +460,6 @@ if( FALSE ){
         return( rObj )
     }
     bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
-
 }
 
 mName <- "HCRsz_bfS01fCol"
@@ -543,8 +542,8 @@ if( TRUE ){
     }
     bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
 }
-mName <- "HCRsz_bfSAZfCol"     # QQE:Todo
-if( FALSE ){
+mName <- "HCRsz_bfSAZfCol"
+if( TRUE ){
     fMaker <- function( mName ,crScrH ){
 
         workMName <- c( "scoreA","scoreB","scoreC","scoreD","scoreE","scoreF" )
@@ -615,7 +614,7 @@ if( TRUE ){
 
 }
 mName <- "HCRreb_szC03R"     # QQE:Todo
-if( FALSE ){
+if( TRUE ){
 
     fMaker <- function( mName ,crScrH ){
         workMName <- c( "scoreA","scoreB","scoreC","scoreD","scoreE","scoreF" )
@@ -675,8 +674,8 @@ if( TRUE ){
     }
     bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
 }
-mName <- "HCRreb_szS03R"    # QQE:Todo    (mName 수가 너무 적음. av도 포함시킬까?)
-if( FALSE ){
+mName <- "HCRreb_szS03R"
+if( TRUE ){
     fMaker <- function( mName ,crScrH ){
 
         workMName <- c( "sScore0GS" ,"sScore0GSh2" ,"sScore0GS3" ,"sScore0PSh" ,"sScore0PSrp" ,"sScore0PSrpRaw" )
@@ -773,8 +772,8 @@ if( TRUE ){
     }
     bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
 }
-mName <- "HCRreb_rawC03R_a"
-if( FALSE ){
+mName <- "HCRreb_rawC03R_a"    # QQE:Todo
+if( TRUE ){
     fMaker <- function( mName ,crScrH ){
         workMName <- c( "scoreA","scoreB","scoreC","scoreD","scoreE","scoreF" )
         workMName <- c( workMName ,"scoreFV"  ,"scoreGS" ,"scoreGSh2" ,"scoreGS3" ,"scorePSh" ,"scorePSrp" ,"scorePSrpRaw" )
@@ -791,8 +790,8 @@ if( FALSE ){
     }
     bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
 }
-mName <- "HCRreb_rawC03R_b"
-if( FALSE ){
+mName <- "HCRreb_rawC03R_b"    # QQE:Todo
+if( TRUE ){
     fMaker <- function( mName ,crScrH ){
         workMName <- c( "scoreA","scoreB","scoreC","scoreD","scoreE","scoreF" )
         workMName <- c( workMName ,"scoreFV"  ,"scoreGS" ,"scoreGSh2" ,"scoreGS3" ,"scorePSh" ,"scorePSrp" ,"scorePSrpRaw" )
@@ -890,7 +889,7 @@ if( TRUE ){
     bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
 }
 mName <- "HCRreb_rawS03R_a" # QQE:Todo    (mName 수가 너무 적음. av도 포함시킬까?)
-if( FALSE ){
+if( TRUE ){
     fMaker <- function( mName ,crScrH ){
 
         workMName <- c( "sScore0GS" ,"sScore0GSh2" ,"sScore0GS3" ,"sScore0PSh" ,"sScore0PSrp" ,"sScore0PSrpRaw" )
@@ -908,7 +907,7 @@ if( FALSE ){
     bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
 }
 mName <- "HCRreb_rawS03R_b" # QQE:Todo    (mName 수가 너무 적음. av도 포함시킬까?)
-if( FALSE ){
+if( TRUE ){
     fMaker <- function( mName ,crScrH ){
 
         workMName <- c( "sScore0GS" ,"sScore0GSh2" ,"sScore0GS3" ,"sScore0PSh" ,"sScore0PSrp" ,"sScore0PSrpRaw" )
@@ -1022,7 +1021,7 @@ if( TRUE ){
     bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
 }
 mName <- "HCRreb_phSzS02"   # QQE:Todo
-if( FALSE ){
+if( TRUE ){
     fMaker <- function( mName ,crScrH ){
 
         workMName <- c( "sScore0LAe13","sScore0LAe24","sScore0LVe13","sScore0LVe24" )
@@ -1065,7 +1064,7 @@ if( FALSE ){
     bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
 }
 mName <- "HCRreb_phRawS01"    # suspend
-if( FALSE ){
+if( TRUE ){
     fMaker <- function( mName ,crScrH ){
         workMName <- c("sScore01","sScore02","sScore03","sScore04")
         rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
@@ -1133,7 +1132,7 @@ if( TRUE ){
     bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
 }
 mName <- "HCRraw_bf03Sum01"     # QQE:Todo
-if( FALSE ){
+if( TRUE ){
     fMaker <- function( mName ,crScrH ){
 
         workMName <- c( "scoreA","scoreB","scoreC","scoreD","scoreE","scoreF" )
@@ -1193,7 +1192,7 @@ if( TRUE ){
     bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
 }
 mName <- "HCRraw_bS03Sum01" # QQE:Todo    (mName 수가 너무 적음. av도 포함시킬까?)
-if( FALSE ){
+if( TRUE ){
     fMaker <- function( mName ,crScrH ){
 
         workMName <- c( "sScore0GS" ,"sScore0GSh2" ,"sScore0GS3" ,"sScore0PSh" ,"sScore0PSrp" ,"sScore0PSrpRaw" )

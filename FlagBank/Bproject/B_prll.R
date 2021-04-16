@@ -16,6 +16,7 @@ prll.initHeader <- function( ){
         curWd <- getwd();setwd("..");source("hCommon.R")
         setwd( curWd );source("header.r");source("B_H.R");source("B_prll_H.R")
     })
+    source("header.r")  ;source("B_H.R") ;source("B_prll_H.R")  # for debug work
 }
 sfInit( parallel=T, cpus=prllNum )  ;prll.initHeader( ) ;sfExport("prllLog") 
 
