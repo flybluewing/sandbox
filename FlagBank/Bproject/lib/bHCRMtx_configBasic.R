@@ -1706,32 +1706,32 @@ if( TRUE ){ # done. OK
         ,isHard=NULL  # use default
     )
 }
-mName <- "HCRreb_szS03R"    # Hpn이 너무 적은데 Reb는 발생... 되게 애매하다. 적용 보류
-if( FALSE ){    # suspend.
+mName <- "HCRreb_szS03R"    # Hpn이 너무 적은데 Reb는 발생... 되게 애매하다.
+if( TRUE ){ # done. OK
     HCRMtxCfg[[mName]] <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
-            "sScore0GS"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+            "sScore0GS"=list( rng=matrix( c(0,2 ,0,2) ,ncol=2 )
                             ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
                             ,forbidEvtReb=3
                         )
-            ,"sScore0GSh2"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+            ,"sScore0GSh2"=list( rng=matrix( c(0,2 ,0,2) ,ncol=2 )
                             ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
                             ,forbidEvtReb=3
                         )
-            ,"sScore0GS3"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+            ,"sScore0GS3"=list( rng=matrix( c(0,2 ,0,2) ,ncol=2 )
                             ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
                             ,forbidEvtReb=3
                         )
-            ,"sScore0PSh"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+            ,"sScore0PSh"=list( rng=matrix( c(0,2 ,0,2) ,ncol=2 )
                             ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
                             ,forbidEvtReb=3
                         )
-            ,"sScore0PSrp"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+            ,"sScore0PSrp"=list( rng=matrix( c(0,2 ,0,2) ,ncol=2 )
                             ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
                             ,forbidEvtReb=3
                         )
-            ,"sScore0PSrpRaw"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+            ,"sScore0PSrpRaw"=list( rng=matrix( c(0,2 ,0,2) ,ncol=2 )
                             ,evt=matrix( c(c(2,2,3,3),c(1,2,3,4)) ,ncol=2)
                             ,forbidEvtReb=3
                         )
@@ -2048,62 +2048,79 @@ if( TRUE ){ # done. OK
         ,isHard=NULL  # use default
     )
 }
-mName <- "HCRreb_rawC03R_a" # QQE:Todo --------------------------------------------------------
-if( FALSE ){
+mName <- "HCRreb_rawC03R_a"
+if( TRUE ){ # done. OK
     HCRMtxCfg[[mName]] <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
-            "scoreA"=list( rng=matrix( c(0,0 ,10,11) ,ncol=2 )
+            "scoreA"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
                             ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                            ,forbidEvtReb=3
                         ) 
             ,"scoreB"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
                             ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                            ,forbidEvtReb=3
                         )
             ,"scoreC"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
                             ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                            ,forbidEvtReb=3
                         )
             ,"scoreD"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
                             ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                            ,forbidEvtReb=3
                         )
             ,"scoreE"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
                             ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                            ,forbidEvtReb=3
                         )
             ,"scoreF"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
                             ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                            ,forbidEvtReb=3
                         )
             ,"scoreFV"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
                             ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                            ,forbidEvtReb=3
                         )
             ,"scoreGS"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
                             ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                            ,forbidEvtReb=3
                         )
             ,"scoreGSh2"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
                             ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                            ,forbidEvtReb=3
                         )
             ,"scoreGS3"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
                             ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                            ,forbidEvtReb=3
                         )
             ,"scorePSh"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
                             ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                            ,forbidEvtReb=3
                         )
             ,"scorePSrp"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
                             ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                            ,forbidEvtReb=3
                         )
             ,"scorePSrpRaw"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
                             ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                            ,forbidEvtReb=3
                         )
         )
-        ,evtMax = NULL
-        ,rowReb = NULL
+        # ,evtMax = NULL
+        # ,rowReb = NULL
+        ,evtMax = matrix( c(2,2,3,1 ,2,2,3,1)     ,byrow=T ,ncol=4
+                    ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
+        )
+        ,rowReb = c( rawMin=2 ,lowE=2 ,rareE=2 ,dupESum=1 )
         ,isHard=NULL  # use default
     )
 }
-mName <- "HCRreb_rawC03R_b" # QQE:Todo --------------------------------------------------------
-if( FALSE ){
+mName <- "HCRreb_rawC03R_b"
+if( TRUE ){ # done. OK
     HCRMtxCfg[[mName]] <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
-            "scoreA"=list( rng=matrix( c(0,0 ,10,11) ,ncol=2 )
+            "scoreA"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
                             ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
                         ) 
             ,"scoreB"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
@@ -2143,8 +2160,10 @@ if( FALSE ){
                             ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
                         )
         )
-        ,evtMax = NULL
-        ,rowReb = NULL
+        ,evtMax = matrix( c(2,1,3,1 ,2,1,3,1)     ,byrow=T ,ncol=4
+                    ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
+        )
+        ,rowReb = c( rawMin=1 ,lowE=1 ,rareE=1 ,dupESum=1 )
         ,isHard=NULL  # use default
     )
 }
@@ -2402,12 +2421,12 @@ if( TRUE ){ # done. OK
         ,isHard=NULL  # use default
     )
 }
-mName <- "HCRreb_rawS03R_a" # QQE:Todo (너무 적은 mName)--------------------------------------------------------
-if( FALSE ){
+mName <- "HCRreb_rawS03R_a" # (너무 적은 mName)
+if( TRUE ){ # done. OK
     HCRMtxCfg[[mName]] <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
-            "sScore0GS"=list( rng=matrix( c(0,0 ,10,11) ,ncol=2 )
+            "sScore0GS"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
                             ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
                         ) 
             ,"sScore0GSh2"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
@@ -2426,17 +2445,19 @@ if( FALSE ){
                             ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
                         )
         )
-        ,evtMax = NULL
-        ,rowReb = NULL
+        ,evtMax = matrix( c(2,1,3,1 ,2,1,3,1)     ,byrow=T ,ncol=4
+                    ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
+        )
+        ,rowReb = c( rawMin=1 ,lowE=1 ,rareE=1 ,dupESum=1 )
         ,isHard=NULL  # use default
     )
 }
-mName <- "HCRreb_rawS03R_b" # QQE:Todo --------------------------------------------------------
-if( FALSE ){
+mName <- "HCRreb_rawS03R_b" # (너무 적은 mName)
+if( TRUE ){ # done. OK
     HCRMtxCfg[[mName]] <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
-            "sScore0GS"=list( rng=matrix( c(0,0 ,10,11) ,ncol=2 )
+            "sScore0GS"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
                             ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
                         ) 
             ,"sScore0GSh2"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
@@ -2455,8 +2476,10 @@ if( FALSE ){
                             ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
                         )
         )
-        ,evtMax = NULL
-        ,rowReb = NULL
+        ,evtMax = matrix( c(2,1,3,1 ,2,1,3,1)     ,byrow=T ,ncol=4
+                    ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
+        )
+        ,rowReb = c( rawMin=1 ,lowE=1 ,rareE=1 ,dupESum=1 )
         ,isHard=NULL  # use default
     )
 }
@@ -2555,33 +2578,62 @@ if( TRUE ){ # done. OK
                             ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
                         )
         )
-        ,evtMax = matrix( c(2,2,3,1 ,2,2,3,2)     ,byrow=T ,ncol=4
+        ,evtMax = matrix( c(2,2,3,1 ,2,2,3,1)     ,byrow=T ,ncol=4
                     ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
         )
         ,rowReb = c( rawMin=1 ,lowE=1 ,rareE=1 ,dupESum=2 ) # c( rawMin=2 ,lowE=2 ,rareE=2 ,dupESum=2 )
         ,isHard=NULL  # use default
     )
 }
-mName <- "HCRreb_phSzF02"   # QQE:Todo --------------------------------------------------------
-if( FALSE ){
+mName <- "HCRreb_phSzF02"
+if( TRUE ){
     HCRMtxCfg[[mName]] <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
-            "xxx"=list( rng=matrix( c(0,0 ,10,11) ,ncol=2 )
+            "basic"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
                             ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
                         ) 
-            ,"xxx"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+            ,"nextZW"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
                             ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
                         )
-        # workMName <- c( "scoreA","scoreB","scoreC","scoreD","scoreE","scoreF" )
-        # workMName <- c( workMName ,c("scoreLAe13","scoreLAe24","scoreLVe13","scoreLVe24") )
-        # workMName <- c( workMName ,"scoreLAr13","scoreLAr24","scoreLVr13","scoreLVr24")
-        # workMName <- c( workMName ,"scoreLAc13","scoreLAc24","scoreLVc13","scoreLVc24" )
-        # workMName <- c( workMName ,"scoreLAf13","scoreLAf24","scoreLVf13","scoreLVf24" )
-        # workMName <- c( workMName ,"scoreFV"  ,"scoreGS" ,"scoreGSh2" ,"scoreGS3" ,"scorePSh" ,"scorePSrp" ,"scorePSrpRaw" )
+            ,"nextQuo10"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"nextBin"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"nextRebNum"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"nextCStepBin"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"nextFStepBin"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"nextColVal_1"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"nextColVal_2"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"nextColVal_3"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"nextColVal_4"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"nextColVal_5"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"nextColVal_6"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
         )
-        ,evtMax = NULL
-        ,rowReb = NULL
+        ,evtMax = matrix( c(2,1,3,1 ,2,1,3,1)     ,byrow=T ,ncol=4      # H889
+                    ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
+        )
+        ,rowReb = c( rawMin=1 ,lowE=1 ,rareE=1 ,dupESum=2 ) # c( rawMin=2 ,lowE=2 ,rareE=2 ,dupESum=2 )
         ,isHard=NULL  # use default
     )
 }
@@ -2590,22 +2642,41 @@ if( FALSE ){
     HCRMtxCfg[[mName]] <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
-            "xxx"=list( rng=matrix( c(0,0 ,10,11) ,ncol=2 )
-                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+            "colVal1"=list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                            ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
                         ) 
-            ,"xxx"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
-                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+            ,"colVal3"=list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                            ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
                         )
-        # workMName <- c( "sScore0LAe13","sScore0LAe24","sScore0LVe13","sScore0LVe24" )
-        # workMName <- c( workMName ,"sScore04","sScore06","sScore07" )
-        # workMName <- c( workMName ,"sScore0LAr13","sScore0LAr24","sScore0LVr13","sScore0LVr24" )
-        # workMName <- c( workMName ,"sScore0LAc13","sScore0LAc24","sScore0LVc13","sScore0LVc24" )
-        # workMName <- c( workMName ,"sScore0LAf13","sScore0LAf24","sScore0LVf13","sScore0LVf24" )
-        # workMName <- c( workMName ,"sScore0GS" ,"sScore0GSh2" ,"sScore0GS3" ,"sScore0PSh" ,"sScore0PSrp" ,"sScore0PSrpRaw" )
-
+            ,"colVal6"=list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                            ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"remPair"=list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                            ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"zw"=list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                            ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"cSCVal1"=list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                            ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"cSCVal2"=list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                            ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"cSCVal3"=list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                            ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"cSCVal4"=list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                            ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"cSCVal5"=list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
+                            ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
         )
-        ,evtMax = NULL
-        ,rowReb = NULL
+        ,evtMax = matrix( c(2,1,3,1 ,2,1,3,1)     ,byrow=T ,ncol=4
+                    ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
+        )
+        ,rowReb = c( rawMin=1 ,lowE=1 ,rareE=1 ,dupESum=2 ) # c( rawMin=2 ,lowE=2 ,rareE=2 ,dupESum=2 )
         ,isHard=NULL  # use default
     )
 }
@@ -2775,14 +2846,45 @@ if( FALSE ){
     HCRMtxCfg[[mName]] <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
-            "xxx"=list( rng=matrix( c(0,0 ,10,11) ,ncol=2 )
+            "scoreA"=list( rng=matrix( c(0,0 ,10,11) ,ncol=2 )
                             ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
                         ) 
-            ,"xxx"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+            ,"scoreB"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
                             ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
                         )
-        # workMName <- c( "scoreA","scoreB","scoreC","scoreD","scoreE","scoreF" )
-        # workMName <- c( workMName ,"scoreFV"  ,"scoreGS" ,"scoreGSh2" ,"scoreGS3" ,"scorePSh" ,"scorePSrp" ,"scorePSrpRaw" )
+            ,"scoreC"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"scoreD"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"scoreE"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"scoreF"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"scoreFV"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"scoreGS"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"scoreGSh2"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"scoreGS3"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"scorePSh"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"scorePSrp"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"scorePSrpRaw"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
         )
         ,evtMax = NULL
         ,rowReb = NULL
@@ -2920,13 +3022,24 @@ if( FALSE ){
     HCRMtxCfg[[mName]] <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
-            "xxx"=list( rng=matrix( c(0,0 ,10,11) ,ncol=2 )
+            "sScore0GS"=list( rng=matrix( c(0,0 ,10,11) ,ncol=2 )
                             ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
                         ) 
-            ,"xxx"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+            ,"sScore0GSh2"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
                             ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
                         )
-            # c( "sScore0GS" ,"sScore0GSh2" ,"sScore0GS3" ,"sScore0PSh" ,"sScore0PSrp" ,"sScore0PSrpRaw" )
+            ,"sScore0GS3"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"sScore0PSh"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"sScore0PSrp"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"sScore0PSrpRaw"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
         )
         ,evtMax = NULL
         ,rowReb = NULL
