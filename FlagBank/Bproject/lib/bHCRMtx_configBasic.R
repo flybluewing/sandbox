@@ -2630,50 +2630,50 @@ if( TRUE ){
                             ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
                         )
         )
-        ,evtMax = matrix( c(2,1,3,1 ,2,1,3,1)     ,byrow=T ,ncol=4      # H889
+        ,evtMax = matrix( c(2,2,3,1 ,2,2,3,1)     ,byrow=T ,ncol=4
                     ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
         )
         ,rowReb = c( rawMin=1 ,lowE=1 ,rareE=1 ,dupESum=2 ) # c( rawMin=2 ,lowE=2 ,rareE=2 ,dupESum=2 )
         ,isHard=NULL  # use default
     )
 }
-mName <- "HCRreb_phSzS02"   # QQE:Todo --------------------------------------------------------
-if( FALSE ){
+mName <- "HCRreb_phSzS02" 
+if( TRUE ){
     HCRMtxCfg[[mName]] <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
-            "colVal1"=list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
-                            ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
+            "colVal1"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
                         ) 
-            ,"colVal3"=list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
-                            ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
+            ,"colVal3"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
                         )
-            ,"colVal6"=list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
-                            ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
+            ,"colVal6"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
                         )
-            ,"remPair"=list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
-                            ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
+            ,"remPair"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
                         )
-            ,"zw"=list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
-                            ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
+            ,"zw"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
                         )
-            ,"cSCVal1"=list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
-                            ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
+            ,"cSCVal1"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
                         )
-            ,"cSCVal2"=list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
-                            ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
+            ,"cSCVal2"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
                         )
-            ,"cSCVal3"=list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
-                            ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
+            ,"cSCVal3"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
                         )
-            ,"cSCVal4"=list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
-                            ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
+            ,"cSCVal4"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
                         )
-            ,"cSCVal5"=list( rng=matrix( c(0,0 ,0,0) ,ncol=2 )
-                            ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
+            ,"cSCVal5"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
                         )
         )
-        ,evtMax = matrix( c(2,1,3,1 ,2,1,3,1)     ,byrow=T ,ncol=4
+        ,evtMax = matrix( c(2,2,3,1 ,2,2,3,1)     ,byrow=T ,ncol=4
                     ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
         )
         ,rowReb = c( rawMin=1 ,lowE=1 ,rareE=1 ,dupESum=2 ) # c( rawMin=2 ,lowE=2 ,rareE=2 ,dupESum=2 )
@@ -2841,53 +2841,68 @@ if( TRUE ){ # done. OK
         ,isHard=NULL  # use default
     )
 }
-mName <- "HCRraw_bf03Sum01" # QQE:Todo --------------------------------------------------------
-if( FALSE ){
+mName <- "HCRraw_bf03Sum01"
+if( TRUE ){ # done. OK
     HCRMtxCfg[[mName]] <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
-            "scoreA"=list( rng=matrix( c(0,0 ,10,11) ,ncol=2 )
+            "scoreA"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
                             ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                            ,forbidEvtReb=3
                         ) 
             ,"scoreB"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
                             ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                            ,forbidEvtReb=3
                         )
             ,"scoreC"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
                             ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                            ,forbidEvtReb=3
                         )
             ,"scoreD"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
                             ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                            ,forbidEvtReb=3
                         )
             ,"scoreE"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
                             ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                            ,forbidEvtReb=3
                         )
             ,"scoreF"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
                             ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                            ,forbidEvtReb=3
                         )
             ,"scoreFV"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
                             ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                            ,forbidEvtReb=3
                         )
             ,"scoreGS"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
                             ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                            ,forbidEvtReb=3
                         )
-            ,"scoreGSh2"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+            ,"scoreGSh2"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
                             ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                            ,forbidEvtReb=3
                         )
             ,"scoreGS3"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
                             ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                            ,forbidEvtReb=3
                         )
             ,"scorePSh"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
                             ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                            ,forbidEvtReb=3
                         )
             ,"scorePSrp"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
                             ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                            ,forbidEvtReb=3
                         )
             ,"scorePSrpRaw"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
                             ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                            ,forbidEvtReb=3
                         )
         )
-        ,evtMax = NULL
-        ,rowReb = NULL
+        ,evtMax = matrix( c(2,2,3,1 ,2,2,3,1)     ,byrow=T ,ncol=4
+                    ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
+        )
+        ,rowReb = c( rawMin=2 ,lowE=2 ,rareE=2 ,dupESum=2 ) # c( rawMin=2 ,lowE=2 ,rareE=2 ,dupESum=2 )
         ,isHard=NULL  # use default
     )
 }
@@ -3018,31 +3033,39 @@ if( TRUE ){ # done. OK
     )
 }
 mName <- "HCRraw_bS03Sum01" # QQE:Todo --------------------------------------------------------
-if( FALSE ){
+if( TRUE ){
     HCRMtxCfg[[mName]] <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
-            "sScore0GS"=list( rng=matrix( c(0,0 ,10,11) ,ncol=2 )
+            "sScore0GS"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
                             ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                            ,forbidEvtReb=3
                         ) 
-            ,"sScore0GSh2"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+            ,"sScore0GSh2"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )  # H801
                             ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                            ,forbidEvtReb=3
                         )
             ,"sScore0GS3"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
                             ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                            ,forbidEvtReb=3
                         )
             ,"sScore0PSh"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
                             ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                            ,forbidEvtReb=3
                         )
             ,"sScore0PSrp"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
                             ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                            ,forbidEvtReb=3
                         )
             ,"sScore0PSrpRaw"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
                             ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                            ,forbidEvtReb=3
                         )
         )
-        ,evtMax = NULL
-        ,rowReb = NULL
+        ,evtMax = matrix( c(2,1,3,1 ,2,1,3,1)     ,byrow=T ,ncol=4
+                    ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
+        )
+        ,rowReb = c( rawMin=2 ,lowE=2 ,rareE=2 ,dupESum=2 ) # c( rawMin=2 ,lowE=2 ,rareE=2 ,dupESum=2 )
         ,isHard=NULL  # use default
     )
 }

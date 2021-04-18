@@ -1044,6 +1044,8 @@ if( TRUE ){
     bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
 }
 
+mName <- "HCRreb_phSzFS02"  # QQE:Todo  hpn 갯수를 2~3으로 제한 시도.
+mName <- "HCRreb_phSzFS02"  # QQE:Todo  hpn 갯수를 2~3으로 제한 시도.
 
 # ------------------------------------------------------------------------------------------
 #   ph reb by mNames for bfMtx/bSMtx raw      HCR.MtxTmpl_phRebCnt_raw()
