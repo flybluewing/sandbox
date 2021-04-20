@@ -82,7 +82,7 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
             cutRst <- list( surFlag=T ,cutInfoLst=list() )      # cutRst$surFlag는 의미없다. anaOnly=T 이므로
 
             curHIdxStr <- as.character(curHIdx)
-            crScrA <- list( stdIdx=crScrH$stdIdx[curHIdxStr] ,std.grp=crScrH$std.grp[curHIdxStr] ,bS.grp=crScrH$bS.grp[curHIdxStr] )  # crScr of aZoid            
+            crScrA <- list( stdIdx=crScrH$stdIdx[curHIdxStr] ,std.grp=crScrH$std.grp[curHIdxStr] ,bS.grp=crScrH$bS.grp[curHIdxStr] )  # crScr of aZoid
 
             crScrW <- crScrHTool$bySpan(crScrH,wLastH)
             filterLst <- HCR.getFilter.grp( tgt.scMtx ,crScrW )

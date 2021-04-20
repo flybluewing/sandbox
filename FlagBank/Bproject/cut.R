@@ -1,7 +1,7 @@
 source("header.r")  ;source("B_H.R")    ;source("cut_H.R")
 if( FALSE ){    # document
     # lastH <- 893(for 894_1 stdIdx:7913455 )   16
-    # lastH <- 898(for 899_1 stdIdx:5739750 )   30
+    # lastH <- 898(for 899_1 stdIdx:5739750 )    4.9
     # lastH <- 933(for 934_1 stdIdx: 233713 )   26
 
     # --------------------------------------------------------
@@ -56,8 +56,8 @@ if( TRUE ){     #   hMtxLst ,hMtxLst_bS
     load( sprintf("./save/finalCut/Obj_cut_hMtxLst_bN_%d.save",lastH)   )   # hMtxLst_bN
     load( sprintf("./save/finalCut/Obj_cut_hMtxLst_HCR_%d.save",lastH)  )   # hMtxLst_HCR
 } else {
-    crScrHTool$addData( lastH - 5:0 )    
-    hMtxLst <- B.makeHMtxLst( gEnv, allIdxLst, fRstLst, lastH=lastH, tgt.scMtx )
+    crScrHTool$addData( lastH - 5:0 )    # 42min
+    hMtxLst <- B.makeHMtxLst( gEnv, allIdxLst, fRstLst, lastH=lastH, tgt.scMtx )    # 10min
     hMtxLst_bS <- bS.makeHMtxLst( gEnv, allIdxLst, fRstLst ,tgt.scMtx )
     crScrH <- crScrHTool$getData( )     ;crScrH <- crScrHTool$bySpan(crScrH,lastH)  # hMtxLst_HCR
     hMtxLst_HCR <- HCR.makeHCRMtxLst( crScrH ,allIdxLst ,fRstLst ,lastH=NULL ,tgt.scMtx=tgt.scMtx )
@@ -158,7 +158,7 @@ for( sfcIdx in 0 ){ # 0:2
         timeCost <- c( timeCost ,"scoreLAe13"=70 ,"scoreLAe24"=70 ,"scoreLVe13"=70 ,"scoreLVe24"=70 )
         timeCost <- c( timeCost ,"scoreLAc13"=70 ,"scoreLAc24"=70 ,"scoreLVc13"=70 ,"scoreLVc24"=70 )
         timeCost <- c( timeCost ,"scoreLAf13"=70 ,"scoreLAf24"=70 ,"scoreLVf13"=70 ,"scoreLVf24"=70 )
-        timeCost <- c( timeCost ,"scoreFV"=80 )
+        timeCost <- c( timeCost ,"scoreFV"=80  ,"scoreGS"=80 ,"scoreGSh2"=80 ,"scoreGS3"=80 ,"scorePSh"=80 ,"scorePSrp"=80 ,"scorePSrpRaw"=80 )
 
         cutRst <- cutH.InitialCut( gEnv ,allIdxF ,blk ,filter.grp ,cut.grp ,timeCost=timeCost ,fHName=fHName ,logger=NULL )
 

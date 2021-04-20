@@ -757,3 +757,321 @@ HCR.MtxTmpl_phRebCnt_sz <- function( mName ,wMName ,crScrH ,mGrp ){
 
 
 
+HCR.MtxTmpl_crScrNnx <- function( mName ,wMName ,rawF=T ){ # crScrN01R/crScrN01E
+    #   rawF : raw or evt
+
+	rObj <- list( 	mInfo=c("mName"=mName  ) ,wMLst=wMLst   ,rawF=rawF
+				)
+
+    rObj$cName <- c(	 "hpn0"             # 모든 ph에서 hpn이 없는 mName 수.
+                        ,"ph"   ,"fCol" ,"phReb"    # hpn Cnt, ph/fCol reb from last H, ph reb from left ph
+                        ,"xyCnt.fCol" ,"xyCnt.phase"
+                        ,"ph_Reb"   ,"fCol_Reb" ,"phReb_Reb"    ,"xyCnt.fCol_Reb"   ,"xyCnt.phase_Reb"    # from summMtx.Reb
+                        ,"ph_sz" ,"fCol_sz" ,"dblHpnFlg_sz" ,"ph_szDup" ,"fCol_szDup" ,"dblHpnFlg_szDup"    # from scMtx.sz
+    )
+
+    rObj$getScore <- function( crLst ){
+        score <- rep( 0 ,length(rObj$cName) )   ;names(score)<-rObj$cName
+
+        rName <- ifelse( rObj$rawF ,"hpn.raw" ,"hpn.evt" )
+        hpnCnt <- sapply( crLst ,function(crObj){ sum(crObj$raw$rebMtx.ph[rName,]>0) })
+        score["hpn0"] <- sum(hpnCnt==0)
+
+        # -----------------------------------------------------------------------------------------
+        rName <- ifelse( rObj$rawF ,"raw" ,"evt" )
+        rebCnt <- sapply( crLst ,function(crObj){ sum(crObj$summ$summMtx[rName,"ph"]>0) })
+        score["ph"] <- sum(rebCnt)
+        rebCnt <- sapply( crLst ,function(crObj){ sum(crObj$summ$summMtx[rName,"fCol"]>0) })
+        score["fCol"] <- sum(rebCnt)
+        rebCnt <- sapply( crLst ,function(crObj){ sum(crObj$summ$summMtx[rName,"phReb"]>0) })
+        score["phReb"] <- sum(rebCnt)
+        rebCnt <- sapply( crLst ,function(crObj){ sum(crObj$summ$summMtx[rName,"xyCnt.fCol"]>0) })
+        score["xyCnt.fCol"] <- sum(rebCnt)
+        rebCnt <- sapply( crLst ,function(crObj){ sum(crObj$summ$summMtx[rName,"xyCnt.phase"]>0) })
+        score["xyCnt.phase"] <- sum(rebCnt)
+
+        rebCnt <- sapply( crLst ,function(crObj){ sum(crObj$summ$summMtx.reb[rName,"ph"]>0) })
+        score["ph_Reb"] <- sum(rebCnt)
+        rebCnt <- sapply( crLst ,function(crObj){ sum(crObj$summ$summMtx.reb[rName,"fCol"]>0) })
+        score["fCol_Reb"] <- sum(rebCnt)
+        rebCnt <- sapply( crLst ,function(crObj){ sum(crObj$summ$summMtx.reb[rName,"phReb"]>0) })
+        score["phReb_Reb"] <- sum(rebCnt)
+        rebCnt <- sapply( crLst ,function(crObj){ sum(crObj$summ$summMtx.reb[rName,"xyCnt.fCol"]>0) })
+        score["xyCnt.fCol_Reb"] <- sum(rebCnt)
+        rebCnt <- sapply( crLst ,function(crObj){ sum(crObj$summ$summMtx.reb[rName,"xyCnt.phase"]>0) })
+        score["xyCnt.phase_Reb"] <- sum(rebCnt)
+
+        # -----------------------------------------------------------------------------------------
+        cName <- ifelse( rObj$rawF ,"r.ph" ,"e.ph" )
+        rebCnt <- sapply( crLst ,function(crObj){ sum(crObj$summ$scMtx.sz["rebCnt",cName]>0) })
+        score["ph_sz"] <- sum(rebCnt)
+
+        cName <- ifelse( rObj$rawF ,"r.fCol" ,"e.fCol" )
+        rebCnt <- sapply( crLst ,function(crObj){ sum(crObj$summ$scMtx.sz["rebCnt",cName]>0) })
+        score["fCol_sz"] <- sum(rebCnt)
+
+        cName <- ifelse( rObj$rawF ,"r.dblHpnFlg" ,"e.dblHpnFlg" )
+        rebCnt <- sapply( crLst ,function(crObj){ sum(crObj$summ$scMtx.sz["rebCnt",cName]>0) })
+        score["dblHpnFlg_sz"] <- sum(rebCnt)
+
+        cName <- ifelse( rObj$rawF ,"r.ph" ,"e.ph" )
+        rebCnt <- sapply( crLst ,function(crObj){ sum(crObj$summ$scMtx.sz["rebDup",cName]>0) })
+        score["ph_szDup"] <- sum(rebCnt)
+
+        cName <- ifelse( rObj$rawF ,"r.fCol" ,"e.fCol" )
+        rebCnt <- sapply( crLst ,function(crObj){ sum(crObj$summ$scMtx.sz["rebDup",cName]>0) })
+        score["fCol_szDup"] <- sum(rebCnt)
+
+        cName <- ifelse( rObj$rawF ,"r.dblHpnFlg" ,"e.dblHpnFlg" )
+        rebCnt <- sapply( crLst ,function(crObj){ sum(crObj$summ$scMtx.sz["rebDup",cName]>0) })
+        score["dblHpnFlg_szDup"] <- sum(rebCnt)
+
+        return( score )
+    }
+
+    rObj$fMtxObj <- function( crScr ){
+        # crScr(crScrA) : cutRst List. bFMtx/bSMtx 모두 포함된 리스트
+        #   std.grp ,bS.grp
+
+        datLen <- length(crScr$std.grp) ;datNam <- names(crScr$std.grp) # datNam은 NULL일 수도 있다.
+
+        scrMtx <- matrix( 0 ,nrow=datLen ,ncol=length(rObj$cName) ,dimnames=list(datNam,rObj$cName) )
+        for( rIdx in seq_len(datLen) ){
+            std.grp <- crScr$std.grp[[rIdx]]$sfcLate$basic
+            bS.grp <- crScr$bS.grp[[rIdx]]$sfcLate$basic
+
+            if( 0<length(rObj$wMLst$bf) ){
+                scrMtx[rIdx,] <- scrMtx[rIdx,] + rObj$getScore( crLst=std.grp[rObj$wMLst$bf] )
+            }            
+            if( 0<length(rObj$wMLst$bS) ){
+                scrMtx[rIdx,] <- scrMtx[rIdx,] + rObj$getScore( crLst=bS.grp[rObj$wMLst$bS] )
+            }
+        }
+
+        return( scrMtx )
+    }
+
+    return( rObj )
+}
+
+
+HCR.MtxTmpl_crScrNnPhEvt <- function( mName ,wMName ){
+    # QQE : tempMtx에 대해서... 
+    #   evt lev1, lev2 갯수가 흔한 건 자르고 있는데, reb 체크를 위해서는 자르지 않는 게 효율적일 듯.
+    #   결과 데이터 확인 후 결정.
+
+	rObj <- list( 	mInfo=c("mName"=mName  ) ,wMLst=wMLst
+				)
+
+    rObj$cName <- c(  "e3Max" ,"e3MCnt" ,"e2Max" ,"e2MCnt" ,"e1Max" ,"e1MCnt"   # Cnt는 evt가 2번 이상 발생한 pName 수
+                        ,"rebRawMax" ,"rebRawMCnt" ,"rebEvtMax" ,"rebEvtMCnt"
+    )
+
+    rObj$getScore <- function( crLst ){
+
+        score <- rep( 0 ,length(rObj$cName) )   ;names(score)<-rObj$cName
+
+        phNameAll <- colnames(crLst[[1]]$raw$rebMtx.ph)
+        #   중간 계산 및 디버깅용 데이터 매트릭스
+        tempCName <- c("e1","e2","e3" ,"rebRCnt" ,"rebECnt" )
+        tempMtx <- matrix( 0 ,nrow=length(tempCName) ,ncol=length(phNameAll) ,dimnames=list(tempCName,phNameAll) )
+
+        for( mIdx in names(crLst) ){
+            evtHpnLevMtx <- crLst[[mIdx]]$raw$evtHpnLevMtx
+                #      basic ZW Quo10 Bin RebNum CBin FBin cv1 cv2 cv3 cv4 cv5 cv6
+                # lev1     0  0     1   0      0    0    0   0   0   0   0   0   0
+                # lev2     0  0     1   0      0    0    0   0   0   0   0   0   0
+                # lev3     0  0     0   0      0    0    0   0   0   1   1   0   0
+            
+            # evt lev1은 너무 흔해서, 하나의 phase 내에서 lev1 2개 이하는 자르자.
+            lev1 <- evtHpnLevMtx["lev1",]
+            evtHpnLevMtx["lev1",] <- ifelse(lev1>2,lev1-2,0)
+
+            # evt lev2도 1개 이하는 자르자.
+            lev2 <- evtHpnLevMtx["lev2",]
+            evtHpnLevMtx["lev2",] <- ifelse(lev2>1,lev2-1,0)
+
+            for( pIdx in phNameAll ){  # nIdx == pName
+                tempMtx["e1",pIdx] <- tempMtx["e1",pIdx] + evtHpnLevMtx["lev1",pIdx]
+                tempMtx["e2",pIdx] <- tempMtx["e2",pIdx] + evtHpnLevMtx["lev2",pIdx]
+                tempMtx["e3",pIdx] <- tempMtx["e3",pIdx] + evtHpnLevMtx["lev3",pIdx]
+
+                rebMtx.ph <- crLst[[mIdx]]$raw$rebMtx.ph
+                tempMtx["rebRCnt",pIdx] <- tempMtx["rebRCnt",pIdx] + rebMtx.ph["rebFlag.raw",pIdx]
+                tempMtx["rebECnt",pIdx] <- tempMtx["rebECnt",pIdx] + rebMtx.ph["rebFlag.evt",pIdx]
+            }
+        }
+
+        score["e1Max"]  <- max(tempMtx["e1",])
+        score["e1MCnt"] <- sum(tempMtx["e1",]>1)
+        score["e2Max"]  <- max(tempMtx["e2",])
+        score["e2MCnt"] <- sum(tempMtx["e2",]>1)
+        score["e3Max"]  <- max(tempMtx["e3",])
+        score["e3MCnt"] <- sum(tempMtx["e3",]>1)
+
+        score["rebRawMax"]  <- max(tempMtx["rebRCnt",])
+        score["rebRawMCnt"] <- sum(tempMtx["rebRCnt",]>1)
+        score["rebEvtMax"]  <- max(tempMtx["rebECnt",])
+        score["rebEvtMCnt"] <- sum(tempMtx["rebECnt",]>1)
+
+        # MCnt가 1이면 Max 컬럼값과 중복의미가 되므로 0으로 없앤다.    tempMtx에서의  트리밍과 중복되는 거 같은데..?
+        cName <- c("e1MCnt","e2MCnt","e3MCnt","rebRawMCnt","rebEvtMCnt")
+        score[cName] <- ifelse( 2>score[cName] ,0 ,score[cName] )
+
+        return( score )
+    }
+
+    rObj$fMtxObj <- function( crScr ){
+        # crScr(crScrA) : cutRst List. bFMtx/bSMtx 모두 포함된 리스트
+        #   std.grp ,bS.grp
+
+        datLen <- length(crScr$std.grp) ;datNam <- names(crScr$std.grp) # datNam은 NULL일 수도 있다.
+
+        scrMtx <- matrix( 0 ,nrow=datLen ,ncol=length(rObj$cName) ,dimnames=list(datNam,rObj$cName) )
+        for( rIdx in seq_len(datLen) ){
+            std.grp <- crScr$std.grp[[rIdx]]$sfcLate$basic
+            bS.grp <- crScr$bS.grp[[rIdx]]$sfcLate$basic
+
+            if( 0<length(rObj$wMLst$bf) ){
+                scrMtx[rIdx,] <- scrMtx[rIdx,] + rObj$getScore( crLst=std.grp[rObj$wMLst$bf] )
+            }            
+            if( 0<length(rObj$wMLst$bS) ){
+                scrMtx[rIdx,] <- scrMtx[rIdx,] + rObj$getScore( crLst=bS.grp[rObj$wMLst$bS] )
+            }
+        }
+
+        return( scrMtx )
+    }
+
+    return( rObj )
+}
+
+
+HCR.MtxTmpl_crScrNnSum <- function( mName ,wMName ){
+
+	rObj <- list( 	mInfo=c("mName"=mName  ) ,wMLst=wMLst
+				)
+
+    rObj$cName <- c(	 "summSumRaw"   ,"summSumEvt"       ,"summSumOthRaw"    ,"summSumOthEvt"
+                        ,"summSumRebRaw","summSumRebEvt"    ,"summSumRebOthRaw" ,"summSumRebOthEvt"
+                        ,"szSumRebCnt"  ,"szSumRebDup"
+    )
+
+    rObj$getScore <- function( crLst ){
+
+        score <- rep( 0 ,length(rObj$cName) )   ;names(score)<-rObj$cName
+
+        summMtx <- NULL ;summMtx.reb <- NULL    ;scMtx.sz <- NULL
+        for( mName in names(crLst) ){
+            rawObj <- crLst[[mName]]$raw
+            summObj <- crLst[[mName]]$summ
+
+            if( is.null(summMtx) ){    summMtx <- summObj$summMtx
+            } else {    summMtx <- summMtx + summObj$summMtx                }
+            if( is.null(summMtx.reb) ){    summMtx.reb <- summObj$summMtx.reb
+            } else {    summMtx.reb <- summMtx.reb + summObj$summMtx.reb    }
+
+            if( is.null(scMtx.sz) ){    scMtx.sz <- summObj$scMtx.sz
+            } else {    scMtx.sz <- scMtx.sz + summObj$scMtx.sz    }
+        }
+
+        score["summSumRaw"]     <- sum( summMtx["raw",c("ph","fCol")] )
+        score["summSumEvt"]     <- sum( summMtx["evt",c("ph","fCol")] )
+        score["summSumOthRaw"]  <- sum( summMtx["raw",c("phReb","xyCnt.fCol","xyCnt.phase")] )
+        score["summSumOthEvt"]  <- sum( summMtx["evt",c("phReb","xyCnt.fCol","xyCnt.phase")] )
+
+        score["summSumRebRaw"]      <- sum( summMtx.reb["raw",c("ph","fCol")] )
+        score["summSumRebEvt"]      <- sum( summMtx.reb["evt",c("ph","fCol")] )
+        score["summSumRebOthRaw"]   <- sum( summMtx.reb["raw",c("phReb","xyCnt.fCol","xyCnt.phase")] )
+        score["summSumRebOthEvt"]   <- sum( summMtx.reb["evt",c("phReb","xyCnt.fCol","xyCnt.phase")] )
+
+        score["szSumRebCnt"]    <- sum( scMtx.sz["rebCnt",c("r.ph","r.fCol","e.ph","e.fCol")] )
+        score["szSumRebDup"]    <- sum( scMtx.sz["rebDup",c("r.ph","r.fCol","e.ph","e.fCol")] )
+
+        return( score )
+    }
+
+    rObj$fMtxObj <- function( crScr ){
+        # crScr(crScrA) : cutRst List. bFMtx/bSMtx 모두 포함된 리스트
+        #   std.grp ,bS.grp
+
+        datLen <- length(crScr$std.grp) ;datNam <- names(crScr$std.grp) # datNam은 NULL일 수도 있다.
+
+        scrMtx <- matrix( 0 ,nrow=datLen ,ncol=length(rObj$cName) ,dimnames=list(datNam,rObj$cName) )
+        for( rIdx in seq_len(datLen) ){
+            std.grp <- crScr$std.grp[[rIdx]]$sfcLate$basic
+            bS.grp <- crScr$bS.grp[[rIdx]]$sfcLate$basic
+
+            if( 0<length(rObj$wMLst$bf) ){
+                scrMtx[rIdx,] <- scrMtx[rIdx,] + rObj$getScore( crLst=std.grp[rObj$wMLst$bf] )
+            }            
+            if( 0<length(rObj$wMLst$bS) ){
+                scrMtx[rIdx,] <- scrMtx[rIdx,] + rObj$getScore( crLst=bS.grp[rObj$wMLst$bS] )
+            }
+        }
+
+        return( scrMtx )
+    }
+
+    return( rObj )
+}
+
+HCR.MtxTmpl_crScrNnSum <- function( mName ,wMName ){
+
+	rObj <- list( 	mInfo=c("mName"=mName  ) ,wMLst=wMLst
+				)
+
+    rObj$cName <- c(  "sumTotHpn" ,"sumTot1" ,"sumTot2" ,"sumTot3"
+    )
+
+    rObj$getScore <- function( crLst ){
+
+        score <- rep( 0 ,length(rObj$cName) )   ;names(score)<-rObj$cName
+
+        clM <- bUtil.getClM_cutRst1Score( cutRst1=cutRst1Score$aLst[[aIdx]] ,cfgLst=scoreMtxCfg ,mNameGrp=rObj$mName ,fHName )
+        crScrMtx[aIdx,"sumTotHpn"]  <- sum(clM$sumTot>0)
+        crScrMtx[aIdx,"sumTot1"]  <- sum(clM$sumTot==1)
+        crScrMtx[aIdx,"sumTot2"]  <- sum(clM$sumTot==2)
+        crScrMtx[aIdx,"sumTot3"]  <- sum(clM$sumTot==3)
+
+
+        return( score )
+    }
+
+    rObj$fMtxObj <- function( crScr ){
+        # crScr(crScrA) : cutRst List. bFMtx/bSMtx 모두 포함된 리스트
+        #   std.grp ,bS.grp
+
+        datLen <- length(crScr$std.grp) ;datNam <- names(crScr$std.grp) # datNam은 NULL일 수도 있다.
+        fHName <- names(crScr$std.grp[[1]])
+
+        scrMtx <- matrix( 0 ,nrow=datLen ,ncol=length(rObj$cName) ,dimnames=list(datNam,rObj$cName) )
+        for( rIdx in seq_len(datLen) ){
+            # std.grp <- crScr$std.grp[[rIdx]]$sfcLate$basic
+            # bS.grp <- crScr$bS.grp[[rIdx]]$sfcLate$basic
+
+            if( 0<length(rObj$wMLst$bf) ){
+                # scrMtx[rIdx,] <- scrMtx[rIdx,] + rObj$getScore( crLst=std.grp[rObj$wMLst$bf] )
+                clM <- bUtil.getClM_cutRst1Score( cutRst1=crScr$std.grp[[rIdx]] ,cfgLst=scoreMtxCfg ,mNameGrp=rObj$wMLst$bf ,fHName=fHName )
+                scrMtx[rIdx,"sumTotHpn"]<- scrMtx[rIdx,"sumTotHpn"] + sum(clM$sumTot>0)
+                scrMtx[rIdx,"sumTot1"]  <- scrMtx[rIdx,"sumTot1"]   + sum(clM$sumTot==1)
+                scrMtx[rIdx,"sumTot2"]  <- scrMtx[rIdx,"sumTot2"]   + sum(clM$sumTot==2)
+                scrMtx[rIdx,"sumTot3"]  <- scrMtx[rIdx,"sumTot3"]   + sum(clM$sumTot==3)
+            }            
+            if( 0<length(rObj$wMLst$bS) ){
+                # scrMtx[rIdx,] <- scrMtx[rIdx,] + rObj$getScore( crLst=bS.grp[rObj$wMLst$bS] )
+                clM <- bUtil.getClM_cutRst1Score( cutRst1=crScr$bS.grp[[rIdx]] ,cfgLst=bsScoreMtxCfg ,mNameGrp=rObj$wMLst$bS ,fHName=fHName )
+                scrMtx[rIdx,"sumTotHpn"]<- scrMtx[rIdx,"sumTotHpn"] + sum(clM$sumTot>0)
+                scrMtx[rIdx,"sumTot1"]  <- scrMtx[rIdx,"sumTot1"]   + sum(clM$sumTot==1)
+                scrMtx[rIdx,"sumTot2"]  <- scrMtx[rIdx,"sumTot2"]   + sum(clM$sumTot==2)
+                scrMtx[rIdx,"sumTot3"]  <- scrMtx[rIdx,"sumTot3"]   + sum(clM$sumTot==3)
+            }
+        }
+
+        return( scrMtx )
+    }
+
+    return( rObj )
+}
+
+
