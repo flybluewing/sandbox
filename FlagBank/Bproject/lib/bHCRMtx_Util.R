@@ -757,7 +757,7 @@ HCR.MtxTmpl_phRebCnt_sz <- function( mName ,wMName ,crScrH ,mGrp ){
 
 
 
-HCR.MtxTmpl_crScrNnx <- function( mName ,wMName ,rawF=T ){ # crScrN01R/crScrN01E
+HCR.MtxTmpl_crScrNnx <- function( mName ,wMLst ,rawF=T ){ # crScrN01R/crScrN01E
     #   rawF : raw or evt
 
 	rObj <- list( 	mInfo=c("mName"=mName  ) ,wMLst=wMLst   ,rawF=rawF
@@ -855,7 +855,7 @@ HCR.MtxTmpl_crScrNnx <- function( mName ,wMName ,rawF=T ){ # crScrN01R/crScrN01E
 }
 
 
-HCR.MtxTmpl_crScrNnPhEvt <- function( mName ,wMName ){
+HCR.MtxTmpl_crScrNnPhEvt <- function( mName ,wMLst ){
     # QQE : tempMtx에 대해서... 
     #   evt lev1, lev2 갯수가 흔한 건 자르고 있는데, reb 체크를 위해서는 자르지 않는 게 효율적일 듯.
     #   결과 데이터 확인 후 결정.
@@ -947,7 +947,7 @@ HCR.MtxTmpl_crScrNnPhEvt <- function( mName ,wMName ){
 }
 
 
-HCR.MtxTmpl_crScrNnSum <- function( mName ,wMName ){
+HCR.MtxTmpl_crScrNnSum <- function( mName ,wMLst ){
 
 	rObj <- list( 	mInfo=c("mName"=mName  ) ,wMLst=wMLst
 				)
@@ -1016,7 +1016,7 @@ HCR.MtxTmpl_crScrNnSum <- function( mName ,wMName ){
     return( rObj )
 }
 
-HCR.MtxTmpl_crScrNnSum <- function( mName ,wMName ){
+HCR.MtxTmpl_crScrNnSumClM <- function( mName ,wMLst ){
 
 	rObj <- list( 	mInfo=c("mName"=mName  ) ,wMLst=wMLst
 				)

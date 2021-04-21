@@ -1217,13 +1217,104 @@ if( TRUE ){
 #   Reb for bCMtx.R ,bSMtx_Multi_C.R
 # ------------------------------------------------------------------------------------------
 #       crScrN01PhEvt ,crScrN02Sum ,crScrN02SumClM
-mName <- "HCR_crScrNnR"
-if( FALSE ){
+if( FALSE ){    # sample code
+    mName <- "HCR_crScrNnR"
+    if( FALSE ){
+        fMaker <- function( mName ,crScrH ){
+            # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
+
+            workMName <- c("score1","score3","score8")
+            # workMName <- c( workMName ,"sScore01","sScore03" )
+
+            rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
+            rObj$getFilter <- function( crScrH=NULL ){
+                fObj <- HCR.MtxTmpl_crScrNnx( mName=mName ,wMLst=rObj$wMLst ,rawF=T )   # raw용(rawF=T)
+                return( fObj )
+            }
+
+            return( rObj )
+        }
+        bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
+    }
+    mName <- "HCR_crScrNnE"
+    if( FALSE ){
+        fMaker <- function( mName ,crScrH ){
+            # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
+
+            workMName <- c("score1","score3","score8")
+            # workMName <- c( workMName ,"sScore01","sScore03" )
+
+            rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
+            rObj$getFilter <- function( crScrH=NULL ){
+                fObj <- HCR.MtxTmpl_crScrNnx( mName=mName ,wMLst=rObj$wMLst ,rawF=F ) # evt용(rawF=F)
+                return( fObj )
+            }
+
+            return( rObj )
+        }
+        bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
+    }
+    mName <- "HCR_crScrNnPhEvt"
+    if( FALSE ){
+        fMaker <- function( mName ,crScrH ){
+            # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
+
+            workMName <- c("score1","score3","score8")
+            workMName <- c( workMName ,"sScore01","sScore03" )
+
+            rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
+            rObj$getFilter <- function( crScrH=NULL ){
+                fObj <- HCR.MtxTmpl_crScrNnPhEvt( mName=mName ,wMLst=rObj$wMLst )
+                return( fObj )
+            }
+
+            return( rObj )
+        }
+        bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
+    }
+    mName <- "HCR_crScrNnSum"
+    if( FALSE ){
+        fMaker <- function( mName ,crScrH ){
+            # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
+
+            workMName <- c("score1","score3","score8")
+            workMName <- c( workMName ,"sScore01","sScore03" )
+
+            rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
+            rObj$getFilter <- function( crScrH=NULL ){
+                fObj <- HCR.MtxTmpl_crScrNnSum( mName=mName ,wMLst=rObj$wMLst )
+                return( fObj )
+            }
+
+            return( rObj )
+        }
+        bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
+    }
+    mName <- "HCR_crScrNnSumClM"
+    if( FALSE ){
+        fMaker <- function( mName ,crScrH ){
+            # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
+
+            workMName <- c("score1","score3","score8")
+            workMName <- c( workMName ,"sScore01","sScore03" )
+
+            rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
+            rObj$getFilter <- function( crScrH=NULL ){
+                fObj <- HCR.MtxTmpl_crScrNnSumClM( mName=mName ,wMLst=rObj$wMLst )
+                return( fObj )
+            }
+
+            return( rObj )
+        }
+        bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
+    }
+}
+
+mName <- "HCR_crScrN01R"
+if( TRUE ){
     fMaker <- function( mName ,crScrH ){
         # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
-
         workMName <- c("score1","score3","score8")
-        # workMName <- c( workMName ,"sScore01","sScore03" )
 
         rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
         rObj$getFilter <- function( crScrH=NULL ){
@@ -1235,14 +1326,11 @@ if( FALSE ){
     }
     bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
 }
-mName <- "HCR_crScrNnE"
-if( FALSE ){
-
+mName <- "HCR_crScrN01E"
+if( TRUE ){
     fMaker <- function( mName ,crScrH ){
         # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
-
         workMName <- c("score1","score3","score8")
-        # workMName <- c( workMName ,"sScore01","sScore03" )
 
         rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
         rObj$getFilter <- function( crScrH=NULL ){
@@ -1254,14 +1342,11 @@ if( FALSE ){
     }
     bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
 }
-
-mName <- "HCR_crScrNnPhEvt"
-if( FALSE ){
+mName <- "HCR_crScrN01PhEvt"
+if( TRUE ){
     fMaker <- function( mName ,crScrH ){
         # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
-
         workMName <- c("score1","score3","score8")
-        workMName <- c( workMName ,"sScore01","sScore03" )
 
         rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
         rObj$getFilter <- function( crScrH=NULL ){
@@ -1273,14 +1358,11 @@ if( FALSE ){
     }
     bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
 }
-
-mName <- "HCR_crScrNnSum"
-if( FALSE ){
+mName <- "HCR_crScrN01Sum"
+if( TRUE ){
     fMaker <- function( mName ,crScrH ){
         # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
-
         workMName <- c("score1","score3","score8")
-        workMName <- c( workMName ,"sScore01","sScore03" )
 
         rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
         rObj$getFilter <- function( crScrH=NULL ){
@@ -1292,14 +1374,366 @@ if( FALSE ){
     }
     bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
 }
-
-mName <- "HCR_crScrNnSumClM"
-if( FALSE ){
+mName <- "HCR_crScrN01SumClM"   # bCMtx에는 없지만 Reb체크를 위해..
+if( TRUE ){
     fMaker <- function( mName ,crScrH ){
         # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
-
         workMName <- c("score1","score3","score8")
-        workMName <- c( workMName ,"sScore01","sScore03" )
+
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
+        rObj$getFilter <- function( crScrH=NULL ){
+            fObj <- HCR.MtxTmpl_crScrNnSumClM( mName=mName ,wMLst=rObj$wMLst )
+            return( fObj )
+        }
+
+        return( rObj )
+    }
+    bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
+}
+
+mName <- "HCR_crScrN02R"
+if( TRUE ){
+    fMaker <- function( mName ,crScrH ){
+        # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
+        workMName <- c("score1","score2","score3","score4","score5","score6","score7","score8","score9")
+
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
+        rObj$getFilter <- function( crScrH=NULL ){
+            fObj <- HCR.MtxTmpl_crScrNnx( mName=mName ,wMLst=rObj$wMLst ,rawF=T )   # raw용(rawF=T)
+            return( fObj )
+        }
+
+        return( rObj )
+    }
+    bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
+}
+mName <- "HCR_crScrN02E"
+if( TRUE ){
+    fMaker <- function( mName ,crScrH ){
+        # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
+        workMName <- c("score1","score2","score3","score4","score5","score6","score7","score8","score9")
+
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
+        rObj$getFilter <- function( crScrH=NULL ){
+            fObj <- HCR.MtxTmpl_crScrNnx( mName=mName ,wMLst=rObj$wMLst ,rawF=F ) # evt용(rawF=F)
+            return( fObj )
+        }
+
+        return( rObj )
+    }
+    bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
+}
+mName <- "HCR_crScrN02PhEvt"
+if( TRUE ){
+    fMaker <- function( mName ,crScrH ){
+        # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
+        workMName <- c("score1","score2","score3","score4","score5","score6","score7","score8","score9")
+
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
+        rObj$getFilter <- function( crScrH=NULL ){
+            fObj <- HCR.MtxTmpl_crScrNnPhEvt( mName=mName ,wMLst=rObj$wMLst )
+            return( fObj )
+        }
+
+        return( rObj )
+    }
+    bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
+}
+mName <- "HCR_crScrN02Sum"
+if( TRUE ){
+    fMaker <- function( mName ,crScrH ){
+        # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
+        workMName <- c("score1","score2","score3","score4","score5","score6","score7","score8","score9")
+
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
+        rObj$getFilter <- function( crScrH=NULL ){
+            fObj <- HCR.MtxTmpl_crScrNnSum( mName=mName ,wMLst=rObj$wMLst )
+            return( fObj )
+        }
+
+        return( rObj )
+    }
+    bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
+}
+mName <- "HCR_crScrN02SumClM"
+if( TRUE ){
+    fMaker <- function( mName ,crScrH ){
+        # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
+        workMName <- c("score1","score2","score3","score4","score5","score6","score7","score8","score9")
+
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
+        rObj$getFilter <- function( crScrH=NULL ){
+            fObj <- HCR.MtxTmpl_crScrNnSumClM( mName=mName ,wMLst=rObj$wMLst )
+            return( fObj )
+        }
+
+        return( rObj )
+    }
+    bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
+}
+
+
+mName <- "HCR_crScrN03R"
+if( TRUE ){
+    fMaker <- function( mName ,crScrH ){
+        # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
+        workMName <- c("scoreA","scoreB","scoreC","scoreD","scoreE","scoreF")
+
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
+        rObj$getFilter <- function( crScrH=NULL ){
+            fObj <- HCR.MtxTmpl_crScrNnx( mName=mName ,wMLst=rObj$wMLst ,rawF=T )   # raw용(rawF=T)
+            return( fObj )
+        }
+
+        return( rObj )
+    }
+    bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
+}
+mName <- "HCR_crScrN03E"
+if( TRUE ){
+    fMaker <- function( mName ,crScrH ){
+        # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
+        workMName <- c("scoreA","scoreB","scoreC","scoreD","scoreE","scoreF")
+
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
+        rObj$getFilter <- function( crScrH=NULL ){
+            fObj <- HCR.MtxTmpl_crScrNnx( mName=mName ,wMLst=rObj$wMLst ,rawF=F ) # evt용(rawF=F)
+            return( fObj )
+        }
+
+        return( rObj )
+    }
+    bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
+}
+mName <- "HCR_crScrN03PhEvt"
+if( TRUE ){
+    fMaker <- function( mName ,crScrH ){
+        # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
+        workMName <- c("scoreA","scoreB","scoreC","scoreD","scoreE","scoreF")
+
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
+        rObj$getFilter <- function( crScrH=NULL ){
+            fObj <- HCR.MtxTmpl_crScrNnPhEvt( mName=mName ,wMLst=rObj$wMLst )
+            return( fObj )
+        }
+
+        return( rObj )
+    }
+    bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
+}
+mName <- "HCR_crScrN03Sum"
+if( TRUE ){
+    fMaker <- function( mName ,crScrH ){
+        # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
+        workMName <- c("scoreA","scoreB","scoreC","scoreD","scoreE","scoreF")
+
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
+        rObj$getFilter <- function( crScrH=NULL ){
+            fObj <- HCR.MtxTmpl_crScrNnSum( mName=mName ,wMLst=rObj$wMLst )
+            return( fObj )
+        }
+
+        return( rObj )
+    }
+    bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
+}
+mName <- "HCR_crScrN03SumClM"
+if( TRUE ){
+    fMaker <- function( mName ,crScrH ){
+        # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
+        workMName <- c("scoreA","scoreB","scoreC","scoreD","scoreE","scoreF")
+
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
+        rObj$getFilter <- function( crScrH=NULL ){
+            fObj <- HCR.MtxTmpl_crScrNnSumClM( mName=mName ,wMLst=rObj$wMLst )
+            return( fObj )
+        }
+
+        return( rObj )
+    }
+    bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
+}
+
+mName <- "HCR_crScrN04R"
+if( TRUE ){
+    fMaker <- function( mName ,crScrH ){
+        # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
+        workMName <- NULL
+        workMName <- c( workMName ,c("scoreLAr13","scoreLAr24","scoreLVr13","scoreLVr24") )
+        workMName <- c( workMName ,c("scoreLAe13","scoreLAe24","scoreLVe13","scoreLVe24") )
+        workMName <- c( workMName ,c("scoreLAc13","scoreLAc24","scoreLVc13","scoreLVc24") )
+        workMName <- c( workMName ,c("scoreLAf13","scoreLAf24","scoreLVf13","scoreLVf24") )
+
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
+        rObj$getFilter <- function( crScrH=NULL ){
+            fObj <- HCR.MtxTmpl_crScrNnx( mName=mName ,wMLst=rObj$wMLst ,rawF=T )   # raw용(rawF=T)
+            return( fObj )
+        }
+
+        return( rObj )
+    }
+    bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
+}
+mName <- "HCR_crScrN04E"
+if( TRUE ){
+    fMaker <- function( mName ,crScrH ){
+        # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
+        workMName <- NULL
+        workMName <- c( workMName ,c("scoreLAr13","scoreLAr24","scoreLVr13","scoreLVr24") )
+        workMName <- c( workMName ,c("scoreLAe13","scoreLAe24","scoreLVe13","scoreLVe24") )
+        workMName <- c( workMName ,c("scoreLAc13","scoreLAc24","scoreLVc13","scoreLVc24") )
+        workMName <- c( workMName ,c("scoreLAf13","scoreLAf24","scoreLVf13","scoreLVf24") )
+
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
+        rObj$getFilter <- function( crScrH=NULL ){
+            fObj <- HCR.MtxTmpl_crScrNnx( mName=mName ,wMLst=rObj$wMLst ,rawF=F ) # evt용(rawF=F)
+            return( fObj )
+        }
+
+        return( rObj )
+    }
+    bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
+}
+mName <- "HCR_crScrN04PhEvt"
+if( TRUE ){
+    fMaker <- function( mName ,crScrH ){
+        # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
+        workMName <- NULL
+        workMName <- c( workMName ,c("scoreLAr13","scoreLAr24","scoreLVr13","scoreLVr24") )
+        workMName <- c( workMName ,c("scoreLAe13","scoreLAe24","scoreLVe13","scoreLVe24") )
+        workMName <- c( workMName ,c("scoreLAc13","scoreLAc24","scoreLVc13","scoreLVc24") )
+        workMName <- c( workMName ,c("scoreLAf13","scoreLAf24","scoreLVf13","scoreLVf24") )
+
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
+        rObj$getFilter <- function( crScrH=NULL ){
+            fObj <- HCR.MtxTmpl_crScrNnPhEvt( mName=mName ,wMLst=rObj$wMLst )
+            return( fObj )
+        }
+
+        return( rObj )
+    }
+    bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
+}
+mName <- "HCR_crScrN04Sum"
+if( TRUE ){
+    fMaker <- function( mName ,crScrH ){
+        # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
+        workMName <- NULL
+        workMName <- c( workMName ,c("scoreLAr13","scoreLAr24","scoreLVr13","scoreLVr24") )
+        workMName <- c( workMName ,c("scoreLAe13","scoreLAe24","scoreLVe13","scoreLVe24") )
+        workMName <- c( workMName ,c("scoreLAc13","scoreLAc24","scoreLVc13","scoreLVc24") )
+        workMName <- c( workMName ,c("scoreLAf13","scoreLAf24","scoreLVf13","scoreLVf24") )
+
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
+        rObj$getFilter <- function( crScrH=NULL ){
+            fObj <- HCR.MtxTmpl_crScrNnSum( mName=mName ,wMLst=rObj$wMLst )
+            return( fObj )
+        }
+
+        return( rObj )
+    }
+    bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
+}
+mName <- "HCR_crScrN04SumClM"
+if( TRUE ){
+    fMaker <- function( mName ,crScrH ){
+        # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
+        workMName <- NULL
+        workMName <- c( workMName ,c("scoreLAr13","scoreLAr24","scoreLVr13","scoreLVr24") )
+        workMName <- c( workMName ,c("scoreLAe13","scoreLAe24","scoreLVe13","scoreLVe24") )
+        workMName <- c( workMName ,c("scoreLAc13","scoreLAc24","scoreLVc13","scoreLVc24") )
+        workMName <- c( workMName ,c("scoreLAf13","scoreLAf24","scoreLVf13","scoreLVf24") )
+
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
+        rObj$getFilter <- function( crScrH=NULL ){
+            fObj <- HCR.MtxTmpl_crScrNnSumClM( mName=mName ,wMLst=rObj$wMLst )
+            return( fObj )
+        }
+
+        return( rObj )
+    }
+    bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
+}
+
+mName <- "HCR_crScrN05R"
+if( TRUE ){
+    fMaker <- function( mName ,crScrH ){
+        # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
+        workMName <- NULL
+        workMName <- c( workMName  ,"scoreA","scoreB","scoreC","scoreD","scoreE","scoreF" )
+        workMName <- c( workMName  ,"scoreFV"  ,"scoreGS" ,"scoreGSh2" ,"scoreGS3" ,"scorePSh" ,"scorePSrp" ,"scorePSrpRaw" )
+
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
+        rObj$getFilter <- function( crScrH=NULL ){
+            fObj <- HCR.MtxTmpl_crScrNnx( mName=mName ,wMLst=rObj$wMLst ,rawF=T )   # raw용(rawF=T)
+            return( fObj )
+        }
+
+        return( rObj )
+    }
+    bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
+}
+mName <- "HCR_crScrN05E"
+if( TRUE ){
+    fMaker <- function( mName ,crScrH ){
+        # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
+        workMName <- NULL
+        workMName <- c( workMName  ,"scoreA","scoreB","scoreC","scoreD","scoreE","scoreF" )
+        workMName <- c( workMName  ,"scoreFV"  ,"scoreGS" ,"scoreGSh2" ,"scoreGS3" ,"scorePSh" ,"scorePSrp" ,"scorePSrpRaw" )
+
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
+        rObj$getFilter <- function( crScrH=NULL ){
+            fObj <- HCR.MtxTmpl_crScrNnx( mName=mName ,wMLst=rObj$wMLst ,rawF=F ) # evt용(rawF=F)
+            return( fObj )
+        }
+
+        return( rObj )
+    }
+    bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
+}
+mName <- "HCR_crScrN05PhEvt"
+if( TRUE ){
+    fMaker <- function( mName ,crScrH ){
+        # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
+        workMName <- NULL
+        workMName <- c( workMName  ,"scoreA","scoreB","scoreC","scoreD","scoreE","scoreF" )
+        workMName <- c( workMName  ,"scoreFV"  ,"scoreGS" ,"scoreGSh2" ,"scoreGS3" ,"scorePSh" ,"scorePSrp" ,"scorePSrpRaw" )
+
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
+        rObj$getFilter <- function( crScrH=NULL ){
+            fObj <- HCR.MtxTmpl_crScrNnPhEvt( mName=mName ,wMLst=rObj$wMLst )
+            return( fObj )
+        }
+
+        return( rObj )
+    }
+    bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
+}
+mName <- "HCR_crScrN05Sum"
+if( TRUE ){
+    fMaker <- function( mName ,crScrH ){
+        # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
+        workMName <- NULL
+        workMName <- c( workMName  ,"scoreA","scoreB","scoreC","scoreD","scoreE","scoreF" )
+        workMName <- c( workMName  ,"scoreFV"  ,"scoreGS" ,"scoreGSh2" ,"scoreGS3" ,"scorePSh" ,"scorePSrp" ,"scorePSrpRaw" )
+
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
+        rObj$getFilter <- function( crScrH=NULL ){
+            fObj <- HCR.MtxTmpl_crScrNnSum( mName=mName ,wMLst=rObj$wMLst )
+            return( fObj )
+        }
+
+        return( rObj )
+    }
+    bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
+}
+mName <- "HCR_crScrN05SumClM"
+if( TRUE ){
+    fMaker <- function( mName ,crScrH ){
+        # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
+        workMName <- NULL
+        workMName <- c( workMName  ,"scoreA","scoreB","scoreC","scoreD","scoreE","scoreF" )
+        workMName <- c( workMName  ,"scoreFV"  ,"scoreGS" ,"scoreGSh2" ,"scoreGS3" ,"scorePSh" ,"scorePSrp" ,"scorePSrpRaw" )
 
         rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
         rObj$getFilter <- function( crScrH=NULL ){
@@ -1314,6 +1748,263 @@ if( FALSE ){
 
 
 
+mName <- "HCR_bSMScr02R"
+if( TRUE ){
+    fMaker <- function( mName ,crScrH ){
+        # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
+        workMName <- c("sScore01","sScore02","sScore03","sScore04","sScore05","sScore06","sScore07","sScore08","sScore08")
+
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
+        rObj$getFilter <- function( crScrH=NULL ){
+            fObj <- HCR.MtxTmpl_crScrNnx( mName=mName ,wMLst=rObj$wMLst ,rawF=T )   # raw용(rawF=T)
+            return( fObj )
+        }
+
+        return( rObj )
+    }
+    bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
+}
+mName <- "HCR_bSMScr02E"
+if( TRUE ){
+    fMaker <- function( mName ,crScrH ){
+        # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
+        workMName <- c("sScore01","sScore02","sScore03","sScore04","sScore05","sScore06","sScore07","sScore08","sScore08")
+
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
+        rObj$getFilter <- function( crScrH=NULL ){
+            fObj <- HCR.MtxTmpl_crScrNnx( mName=mName ,wMLst=rObj$wMLst ,rawF=F ) # evt용(rawF=F)
+            return( fObj )
+        }
+
+        return( rObj )
+    }
+    bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
+}
+mName <- "HCR_bSMScr02PhEvt"
+if( TRUE ){
+    fMaker <- function( mName ,crScrH ){
+        # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
+        workMName <- c("sScore01","sScore02","sScore03","sScore04","sScore05","sScore06","sScore07","sScore08","sScore08")
+
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
+        rObj$getFilter <- function( crScrH=NULL ){
+            fObj <- HCR.MtxTmpl_crScrNnPhEvt( mName=mName ,wMLst=rObj$wMLst )
+            return( fObj )
+        }
+
+        return( rObj )
+    }
+    bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
+}
+mName <- "HCR_bSMScr02Sum"
+if( TRUE ){
+    fMaker <- function( mName ,crScrH ){
+        # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
+        workMName <- c("sScore01","sScore02","sScore03","sScore04","sScore05","sScore06","sScore07","sScore08","sScore08")
+
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
+        rObj$getFilter <- function( crScrH=NULL ){
+            fObj <- HCR.MtxTmpl_crScrNnSum( mName=mName ,wMLst=rObj$wMLst )
+            return( fObj )
+        }
+
+        return( rObj )
+    }
+    bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
+}
+mName <- "HCR_bSMScr02SumClM"
+if( TRUE ){
+    fMaker <- function( mName ,crScrH ){
+        # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
+        workMName <- c("sScore01","sScore02","sScore03","sScore04","sScore05","sScore06","sScore07","sScore08","sScore08")
+
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
+        rObj$getFilter <- function( crScrH=NULL ){
+            fObj <- HCR.MtxTmpl_crScrNnSumClM( mName=mName ,wMLst=rObj$wMLst )
+            return( fObj )
+        }
+
+        return( rObj )
+    }
+    bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
+}
+
+mName <- "HCR_bSMScr04R"
+if( TRUE ){
+    fMaker <- function( mName ,crScrH ){
+        # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
+        workMName <- c("sScore0LAr13","sScore0LAr24","sScore0LVr13","sScore0LVr24")
+        workMName <- c( workMName ,c("sScore0LAe13","sScore0LAe24","sScore0LVe13","sScore0LVe24") )
+        workMName <- c( workMName ,c("sScore0LAc13","sScore0LAc24","sScore0LVc13","sScore0LVc24") )
+        workMName <- c( workMName ,c("sScore0LAf13","sScore0LAf24","sScore0LVf13","sScore0LVf24") )
+
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
+        rObj$getFilter <- function( crScrH=NULL ){
+            fObj <- HCR.MtxTmpl_crScrNnx( mName=mName ,wMLst=rObj$wMLst ,rawF=T )   # raw용(rawF=T)
+            return( fObj )
+        }
+
+        return( rObj )
+    }
+    bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
+}
+mName <- "HCR_bSMScr04E"
+if( TRUE ){
+    fMaker <- function( mName ,crScrH ){
+        # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
+        workMName <- c("sScore0LAr13","sScore0LAr24","sScore0LVr13","sScore0LVr24")
+        workMName <- c( workMName ,c("sScore0LAe13","sScore0LAe24","sScore0LVe13","sScore0LVe24") )
+        workMName <- c( workMName ,c("sScore0LAc13","sScore0LAc24","sScore0LVc13","sScore0LVc24") )
+        workMName <- c( workMName ,c("sScore0LAf13","sScore0LAf24","sScore0LVf13","sScore0LVf24") )
+
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
+        rObj$getFilter <- function( crScrH=NULL ){
+            fObj <- HCR.MtxTmpl_crScrNnx( mName=mName ,wMLst=rObj$wMLst ,rawF=F ) # evt용(rawF=F)
+            return( fObj )
+        }
+
+        return( rObj )
+    }
+    bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
+}
+mName <- "HCR_bSMScr04PhEvt"
+if( TRUE ){
+    fMaker <- function( mName ,crScrH ){
+        # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
+        workMName <- c("sScore0LAr13","sScore0LAr24","sScore0LVr13","sScore0LVr24")
+        workMName <- c( workMName ,c("sScore0LAe13","sScore0LAe24","sScore0LVe13","sScore0LVe24") )
+        workMName <- c( workMName ,c("sScore0LAc13","sScore0LAc24","sScore0LVc13","sScore0LVc24") )
+        workMName <- c( workMName ,c("sScore0LAf13","sScore0LAf24","sScore0LVf13","sScore0LVf24") )
+
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
+        rObj$getFilter <- function( crScrH=NULL ){
+            fObj <- HCR.MtxTmpl_crScrNnPhEvt( mName=mName ,wMLst=rObj$wMLst )
+            return( fObj )
+        }
+
+        return( rObj )
+    }
+    bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
+}
+mName <- "HCR_bSMScr04Sum"
+if( TRUE ){
+    fMaker <- function( mName ,crScrH ){
+        # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
+        workMName <- c("sScore0LAr13","sScore0LAr24","sScore0LVr13","sScore0LVr24")
+        workMName <- c( workMName ,c("sScore0LAe13","sScore0LAe24","sScore0LVe13","sScore0LVe24") )
+        workMName <- c( workMName ,c("sScore0LAc13","sScore0LAc24","sScore0LVc13","sScore0LVc24") )
+        workMName <- c( workMName ,c("sScore0LAf13","sScore0LAf24","sScore0LVf13","sScore0LVf24") )
+
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
+        rObj$getFilter <- function( crScrH=NULL ){
+            fObj <- HCR.MtxTmpl_crScrNnSum( mName=mName ,wMLst=rObj$wMLst )
+            return( fObj )
+        }
+
+        return( rObj )
+    }
+    bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
+}
+mName <- "HCR_bSMScr04SumClM"
+if( TRUE ){
+    fMaker <- function( mName ,crScrH ){
+        # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
+        workMName <- c("sScore0LAr13","sScore0LAr24","sScore0LVr13","sScore0LVr24")
+        workMName <- c( workMName ,c("sScore0LAe13","sScore0LAe24","sScore0LVe13","sScore0LVe24") )
+        workMName <- c( workMName ,c("sScore0LAc13","sScore0LAc24","sScore0LVc13","sScore0LVc24") )
+        workMName <- c( workMName ,c("sScore0LAf13","sScore0LAf24","sScore0LVf13","sScore0LVf24") )
+
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
+        rObj$getFilter <- function( crScrH=NULL ){
+            fObj <- HCR.MtxTmpl_crScrNnSumClM( mName=mName ,wMLst=rObj$wMLst )
+            return( fObj )
+        }
+
+        return( rObj )
+    }
+    bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
+}
+
+mName <- "HCR_bSMScr05R"
+if( TRUE ){
+    fMaker <- function( mName ,crScrH ){
+        # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
+        workMName <- c("sScore0GS" ,"sScore0GSh2" ,"sScore0GS3" ,"sScore0PSh" ,"sScore0PSrp" ,"sScore0PSrpRaw")
+
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
+        rObj$getFilter <- function( crScrH=NULL ){
+            fObj <- HCR.MtxTmpl_crScrNnx( mName=mName ,wMLst=rObj$wMLst ,rawF=T )   # raw용(rawF=T)
+            return( fObj )
+        }
+
+        return( rObj )
+    }
+    bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
+}
+mName <- "HCR_bSMScr05E"
+if( TRUE ){
+    fMaker <- function( mName ,crScrH ){
+        # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
+        workMName <- c("sScore0GS" ,"sScore0GSh2" ,"sScore0GS3" ,"sScore0PSh" ,"sScore0PSrp" ,"sScore0PSrpRaw")
+
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
+        rObj$getFilter <- function( crScrH=NULL ){
+            fObj <- HCR.MtxTmpl_crScrNnx( mName=mName ,wMLst=rObj$wMLst ,rawF=F ) # evt용(rawF=F)
+            return( fObj )
+        }
+
+        return( rObj )
+    }
+    bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
+}
+mName <- "HCR_bSMScr05PhEvt"
+if( TRUE ){
+    fMaker <- function( mName ,crScrH ){
+        # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
+        workMName <- c("sScore0GS" ,"sScore0GSh2" ,"sScore0GS3" ,"sScore0PSh" ,"sScore0PSrp" ,"sScore0PSrpRaw")
+
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
+        rObj$getFilter <- function( crScrH=NULL ){
+            fObj <- HCR.MtxTmpl_crScrNnPhEvt( mName=mName ,wMLst=rObj$wMLst )
+            return( fObj )
+        }
+
+        return( rObj )
+    }
+    bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
+}
+mName <- "HCR_bSMScr05Sum"
+if( TRUE ){
+    fMaker <- function( mName ,crScrH ){
+        # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
+        workMName <- c("sScore0GS" ,"sScore0GSh2" ,"sScore0GS3" ,"sScore0PSh" ,"sScore0PSrp" ,"sScore0PSrpRaw")
+
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
+        rObj$getFilter <- function( crScrH=NULL ){
+            fObj <- HCR.MtxTmpl_crScrNnSum( mName=mName ,wMLst=rObj$wMLst )
+            return( fObj )
+        }
+
+        return( rObj )
+    }
+    bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
+}
+mName <- "HCR_bSMScr05SumClM"
+if( TRUE ){
+    fMaker <- function( mName ,crScrH ){
+        # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
+        workMName <- c("sScore0GS" ,"sScore0GSh2" ,"sScore0GS3" ,"sScore0PSh" ,"sScore0PSrp" ,"sScore0PSrpRaw")
+
+        rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
+        rObj$getFilter <- function( crScrH=NULL ){
+            fObj <- HCR.MtxTmpl_crScrNnSumClM( mName=mName ,wMLst=rObj$wMLst )
+            return( fObj )
+        }
+
+        return( rObj )
+    }
+    bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
+}
 
 
 # crScrH <- NULL

@@ -9,7 +9,7 @@ crScrH <- crScrHTool$getData( )     ;crScrH <- crScrHTool$bySpan(crScrH,lastH)
 
 
 #-[Parallel init work]-------------------------------------------------------------
-prllNum <- 7     # ½Ç¼ö°¡ Àæ¾Æ¼­ ±×³É ¿À·ù ÄÚµå·Î ³öµÐ´Ù.
+prllNum <- 8     # ½Ç¼ö°¡ Àæ¾Æ¼­ ±×³É ¿À·ù ÄÚµå·Î ³öµÐ´Ù.
 prllLog <- k.getFlogObj( "./log/parallel_log_Hist.txt" )
 prll.initHeader <- function( ){
     k <- sfLapply(1:prllNum,function(prllId){
