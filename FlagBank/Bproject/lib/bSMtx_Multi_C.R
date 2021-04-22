@@ -13,7 +13,7 @@ if( TRUE ){
     bSMtxCMLst[[crMName]] <- function( hCRScr=NULL ){
         # hCRScr : cutRst1Score 히스토리. Rebound 체크 기능은 나중에 구현한다.
 
-        rObj <- list( 	idStr=crMName  ,mName=c("sScore01","sScore02","sScore03","sScore04","sScore05","sScore06","sScore07","sScore08","sScore08")
+        rObj <- list( 	idStr=crMName  ,mName=c("sScore01","sScore02","sScore03","sScore04","sScore05","sScore06","sScore07","sScore08")
         )
 
         rObj$fMtxObj <- function( scoreMtx.grp ,cut.grp ,fHName="sfcLate" ){
@@ -95,7 +95,7 @@ if( TRUE ){
     bSMtxCMLst[[crMName]] <- function( hCRScr=NULL ){
         # hCRScr : cutRst1Score 히스토리. Rebound 체크 기능은 나중에 구현한다.
 
-        rObj <- list( 	idStr=crMName  ,mName=c("sScore01","sScore02","sScore03","sScore04","sScore05","sScore06","sScore07","sScore08","sScore08")
+        rObj <- list( 	idStr=crMName  ,mName=c("sScore01","sScore02","sScore03","sScore04","sScore05","sScore06","sScore07","sScore08")
         )
 
         rObj$fMtxObj <- function( scoreMtx.grp ,cut.grp ,fHName="sfcLate" ){
@@ -177,7 +177,7 @@ crMName <- "bSMScr02PhEvt"  # phase 별로 evt 갯수 제한.(한 개 phase에서 다수 mNa
 if( TRUE ){
     bSMtxCMLst[[crMName]] <- function( hCRScr=NULL ){
         # hCRScr : cutRst1Score 히스토리. Rebound 체크 기능은 나중에 구현한다.
-        rObj <- list( 	idStr=crMName  ,mName=c("sScore01","sScore02","sScore03","sScore04","sScore05","sScore06","sScore07","sScore08","sScore08")
+        rObj <- list( 	idStr=crMName  ,mName=c("sScore01","sScore02","sScore03","sScore04","sScore05","sScore06","sScore07","sScore08")
         )
 
         rObj$fMtxObj <- function( scoreMtx.grp ,cut.grp ,fHName="sfcLate" ){
@@ -261,7 +261,7 @@ crMName <- "bSMScr02Sum"
 if( TRUE ){
     bSMtxCMLst[[crMName]] <- function( hCRScr=NULL ){
 
-        rObj <- list( 	idStr=crMName  ,mName=c("sScore01","sScore02","sScore03","sScore04","sScore05","sScore06","sScore07","sScore08","sScore08")
+        rObj <- list( 	idStr=crMName  ,mName=c("sScore01","sScore02","sScore03","sScore04","sScore05","sScore06","sScore07","sScore08")
         )
 
         rObj$fMtxObj <- function( scoreMtx.grp ,cut.grp ,fHName="sfcLate" ){
@@ -318,7 +318,7 @@ crMName <- "bSMScr02SumClM"
 if( TRUE ){
     bSMtxCMLst[[crMName]] <- function( hCRScr=NULL ){
 
-        rObj <- list( 	idStr=crMName  ,mName=c("sScore01","sScore02","sScore03","sScore04","sScore05","sScore06","sScore07","sScore08","sScore08")
+        rObj <- list( 	idStr=crMName  ,mName=c("sScore01","sScore02","sScore03","sScore04","sScore05","sScore06","sScore07","sScore08")
         )
 
         rObj$fMtxObj <- function( scoreMtx.grp ,cut.grp ,fHName="sfcLate" ){
@@ -354,7 +354,7 @@ crMName <- "bSMScr02HpnCnt"
 if( FALSE ){    # 이건 뭐였지??
     bSMtxCMLst[[crMName]] <- function( hCRScr=NULL ){
 
-        rObj <- list( 	idStr=crMName  ,mName=c("sScore01","sScore02","sScore03","sScore04","sScore05","sScore06","sScore07","sScore08","sScore08")
+        rObj <- list( 	idStr=crMName  ,mName=c("sScore01","sScore02","sScore03","sScore04","sScore05","sScore06","sScore07","sScore08")
         )
 
         rObj$fMtxObj <- function( scoreMtx.grp ,cut.grp ,fHName="sfcLate" ){

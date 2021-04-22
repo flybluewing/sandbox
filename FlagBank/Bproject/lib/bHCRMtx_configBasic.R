@@ -3032,8 +3032,8 @@ if( TRUE ){ # done. OK
         ,isHard=NULL  # use default
     )
 }
-mName <- "HCRraw_bS03Sum01" # QQE:Todo --------------------------------------------------------
-if( TRUE ){
+mName <- "HCRraw_bS03Sum01"
+if( TRUE ){ # done. OK
     HCRMtxCfg[[mName]] <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
@@ -3041,7 +3041,7 @@ if( TRUE ){
                             ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
                             ,forbidEvtReb=3
                         ) 
-            ,"sScore0GSh2"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )  # H801
+            ,"sScore0GSh2"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )  # H801
                             ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
                             ,forbidEvtReb=3
                         )
@@ -3062,7 +3062,7 @@ if( TRUE ){
                             ,forbidEvtReb=3
                         )
         )
-        ,evtMax = matrix( c(2,1,3,1 ,2,1,3,1)     ,byrow=T ,ncol=4
+        ,evtMax = matrix( c(2,1,3,1 ,2,1,3,1)     ,byrow=T ,ncol=4      # H853
                     ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
         )
         ,rowReb = c( rawMin=2 ,lowE=2 ,rareE=2 ,dupESum=2 ) # c( rawMin=2 ,lowE=2 ,rareE=2 ,dupESum=2 )
@@ -3077,7 +3077,7 @@ if( TRUE ){
 
 
 mName <- "HCR_crScrN01R"        # QQE:Todo --------------------------------------------------------
-if( FALSE ){
+if( TRUE ){
     HCRMtxCfg[[mName]] <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(

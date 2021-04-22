@@ -1752,7 +1752,7 @@ mName <- "HCR_bSMScr02R"
 if( TRUE ){
     fMaker <- function( mName ,crScrH ){
         # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
-        workMName <- c("sScore01","sScore02","sScore03","sScore04","sScore05","sScore06","sScore07","sScore08","sScore08")
+        workMName <- c("sScore01","sScore02","sScore03","sScore04","sScore05","sScore06","sScore07","sScore08")
 
         rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
         rObj$getFilter <- function( crScrH=NULL ){
@@ -1768,7 +1768,7 @@ mName <- "HCR_bSMScr02E"
 if( TRUE ){
     fMaker <- function( mName ,crScrH ){
         # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
-        workMName <- c("sScore01","sScore02","sScore03","sScore04","sScore05","sScore06","sScore07","sScore08","sScore08")
+        workMName <- c("sScore01","sScore02","sScore03","sScore04","sScore05","sScore06","sScore07","sScore08")
 
         rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
         rObj$getFilter <- function( crScrH=NULL ){
@@ -1784,7 +1784,7 @@ mName <- "HCR_bSMScr02PhEvt"
 if( TRUE ){
     fMaker <- function( mName ,crScrH ){
         # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
-        workMName <- c("sScore01","sScore02","sScore03","sScore04","sScore05","sScore06","sScore07","sScore08","sScore08")
+        workMName <- c("sScore01","sScore02","sScore03","sScore04","sScore05","sScore06","sScore07","sScore08")
 
         rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
         rObj$getFilter <- function( crScrH=NULL ){
@@ -1800,7 +1800,7 @@ mName <- "HCR_bSMScr02Sum"
 if( TRUE ){
     fMaker <- function( mName ,crScrH ){
         # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
-        workMName <- c("sScore01","sScore02","sScore03","sScore04","sScore05","sScore06","sScore07","sScore08","sScore08")
+        workMName <- c("sScore01","sScore02","sScore03","sScore04","sScore05","sScore06","sScore07","sScore08")
 
         rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
         rObj$getFilter <- function( crScrH=NULL ){
@@ -1816,7 +1816,7 @@ mName <- "HCR_bSMScr02SumClM"
 if( TRUE ){
     fMaker <- function( mName ,crScrH ){
         # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
-        workMName <- c("sScore01","sScore02","sScore03","sScore04","sScore05","sScore06","sScore07","sScore08","sScore08")
+        workMName <- c("sScore01","sScore02","sScore03","sScore04","sScore05","sScore06","sScore07","sScore08")
 
         rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
         rObj$getFilter <- function( crScrH=NULL ){
