@@ -1295,12 +1295,16 @@ if( FALSE ){    # sample code
         fMaker <- function( mName ,crScrH ){
             # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
 
-            workMName <- c("score1","score3","score8")
-            workMName <- c( workMName ,"sScore01","sScore03" )
+            # workMName <- c("score1","score3","score8")
+            # workMName <- c( workMName ,"sScore01","sScore03" )
 
-            rObj <- list( mName=mName ,wMLst=HCR.getMName(workMName,warn=F) )
+            wMGrp <- list()
+            wMGrp[["A"]] <- c("score1","score3","score8"            )
+            wMGrp[["B"]] <- c("sScore01","sScore02","sScore03","sScore04","sScore05","sScore06","sScore07","sScore08")
+
+            rObj <- list( mName=mName ,wMGrp=wMGrp )       # wMLst=HCR.getMName(workMName,warn=F)
             rObj$getFilter <- function( crScrH=NULL ){
-                fObj <- HCR.MtxTmpl_crScrNnSumClM( mName=mName ,wMLst=rObj$wMLst )
+                fObj <- HCR.MtxTmpl_crScrNnSumClM( mName=mName ,wMGrp=rObj$wMGrp )
                 return( fObj )
             }
 
@@ -1311,7 +1315,7 @@ if( FALSE ){    # sample code
 }
 
 mName <- "HCR_crScrN01R"
-if( TRUE ){
+if( F ){
     fMaker <- function( mName ,crScrH ){
         # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
         workMName <- c("score1","score3","score8")
@@ -1327,7 +1331,7 @@ if( TRUE ){
     bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
 }
 mName <- "HCR_crScrN01E"
-if( TRUE ){
+if( F ){
     fMaker <- function( mName ,crScrH ){
         # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
         workMName <- c("score1","score3","score8")
@@ -1343,7 +1347,7 @@ if( TRUE ){
     bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
 }
 mName <- "HCR_crScrN01PhEvt"
-if( TRUE ){
+if( F ){
     fMaker <- function( mName ,crScrH ){
         # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
         workMName <- c("score1","score3","score8")
@@ -1359,7 +1363,7 @@ if( TRUE ){
     bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
 }
 mName <- "HCR_crScrN01Sum"
-if( TRUE ){
+if( F ){
     fMaker <- function( mName ,crScrH ){
         # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
         workMName <- c("score1","score3","score8")
@@ -1375,7 +1379,7 @@ if( TRUE ){
     bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
 }
 mName <- "HCR_crScrN01SumClM"   # bCMtx에는 없지만 Reb체크를 위해..
-if( TRUE ){
+if( F ){
     fMaker <- function( mName ,crScrH ){
         # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
         workMName <- c("score1","score3","score8")
@@ -1392,7 +1396,7 @@ if( TRUE ){
 }
 
 mName <- "HCR_crScrN02R"
-if( TRUE ){
+if( F ){
     fMaker <- function( mName ,crScrH ){
         # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
         workMName <- c("score1","score2","score3","score4","score5","score6","score7","score8","score9")
@@ -1408,7 +1412,7 @@ if( TRUE ){
     bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
 }
 mName <- "HCR_crScrN02E"
-if( TRUE ){
+if( F ){
     fMaker <- function( mName ,crScrH ){
         # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
         workMName <- c("score1","score2","score3","score4","score5","score6","score7","score8","score9")
@@ -1424,7 +1428,7 @@ if( TRUE ){
     bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
 }
 mName <- "HCR_crScrN02PhEvt"
-if( TRUE ){
+if( F ){
     fMaker <- function( mName ,crScrH ){
         # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
         workMName <- c("score1","score2","score3","score4","score5","score6","score7","score8","score9")
@@ -1440,7 +1444,7 @@ if( TRUE ){
     bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
 }
 mName <- "HCR_crScrN02Sum"
-if( TRUE ){
+if( F ){
     fMaker <- function( mName ,crScrH ){
         # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
         workMName <- c("score1","score2","score3","score4","score5","score6","score7","score8","score9")
@@ -1456,7 +1460,7 @@ if( TRUE ){
     bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
 }
 mName <- "HCR_crScrN02SumClM"
-if( TRUE ){
+if( F ){
     fMaker <- function( mName ,crScrH ){
         # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
         workMName <- c("score1","score2","score3","score4","score5","score6","score7","score8","score9")
@@ -1474,7 +1478,7 @@ if( TRUE ){
 
 
 mName <- "HCR_crScrN03R"
-if( TRUE ){
+if( F ){
     fMaker <- function( mName ,crScrH ){
         # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
         workMName <- c("scoreA","scoreB","scoreC","scoreD","scoreE","scoreF")
@@ -1490,7 +1494,7 @@ if( TRUE ){
     bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
 }
 mName <- "HCR_crScrN03E"
-if( TRUE ){
+if( F ){
     fMaker <- function( mName ,crScrH ){
         # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
         workMName <- c("scoreA","scoreB","scoreC","scoreD","scoreE","scoreF")
@@ -1506,7 +1510,7 @@ if( TRUE ){
     bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
 }
 mName <- "HCR_crScrN03PhEvt"
-if( TRUE ){
+if( F ){
     fMaker <- function( mName ,crScrH ){
         # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
         workMName <- c("scoreA","scoreB","scoreC","scoreD","scoreE","scoreF")
@@ -1522,7 +1526,7 @@ if( TRUE ){
     bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
 }
 mName <- "HCR_crScrN03Sum"
-if( TRUE ){
+if( F ){
     fMaker <- function( mName ,crScrH ){
         # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
         workMName <- c("scoreA","scoreB","scoreC","scoreD","scoreE","scoreF")
@@ -1538,7 +1542,7 @@ if( TRUE ){
     bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
 }
 mName <- "HCR_crScrN03SumClM"
-if( TRUE ){
+if( F ){
     fMaker <- function( mName ,crScrH ){
         # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
         workMName <- c("scoreA","scoreB","scoreC","scoreD","scoreE","scoreF")
@@ -1555,7 +1559,7 @@ if( TRUE ){
 }
 
 mName <- "HCR_crScrN04R"
-if( TRUE ){
+if( F ){
     fMaker <- function( mName ,crScrH ){
         # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
         workMName <- NULL
@@ -1575,7 +1579,7 @@ if( TRUE ){
     bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
 }
 mName <- "HCR_crScrN04E"
-if( TRUE ){
+if( F ){
     fMaker <- function( mName ,crScrH ){
         # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
         workMName <- NULL
@@ -1595,7 +1599,7 @@ if( TRUE ){
     bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
 }
 mName <- "HCR_crScrN04PhEvt"
-if( TRUE ){
+if( F ){
     fMaker <- function( mName ,crScrH ){
         # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
         workMName <- NULL
@@ -1615,7 +1619,7 @@ if( TRUE ){
     bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
 }
 mName <- "HCR_crScrN04Sum"
-if( TRUE ){
+if( F ){
     fMaker <- function( mName ,crScrH ){
         # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
         workMName <- NULL
@@ -1635,7 +1639,7 @@ if( TRUE ){
     bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
 }
 mName <- "HCR_crScrN04SumClM"
-if( TRUE ){
+if( F ){
     fMaker <- function( mName ,crScrH ){
         # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
         workMName <- NULL
@@ -1656,7 +1660,7 @@ if( TRUE ){
 }
 
 mName <- "HCR_crScrN05R"
-if( TRUE ){
+if( F ){
     fMaker <- function( mName ,crScrH ){
         # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
         workMName <- NULL
@@ -1674,7 +1678,7 @@ if( TRUE ){
     bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
 }
 mName <- "HCR_crScrN05E"
-if( TRUE ){
+if( F ){
     fMaker <- function( mName ,crScrH ){
         # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
         workMName <- NULL
@@ -1692,7 +1696,7 @@ if( TRUE ){
     bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
 }
 mName <- "HCR_crScrN05PhEvt"
-if( TRUE ){
+if( F ){
     fMaker <- function( mName ,crScrH ){
         # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
         workMName <- NULL
@@ -1710,7 +1714,7 @@ if( TRUE ){
     bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
 }
 mName <- "HCR_crScrN05Sum"
-if( TRUE ){
+if( F ){
     fMaker <- function( mName ,crScrH ){
         # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
         workMName <- NULL
@@ -1728,7 +1732,7 @@ if( TRUE ){
     bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
 }
 mName <- "HCR_crScrN05SumClM"
-if( TRUE ){
+if( F ){
     fMaker <- function( mName ,crScrH ){
         # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
         workMName <- NULL
@@ -1749,7 +1753,7 @@ if( TRUE ){
 
 
 mName <- "HCR_bSMScr02R"
-if( TRUE ){
+if( F ){
     fMaker <- function( mName ,crScrH ){
         # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
         workMName <- c("sScore01","sScore02","sScore03","sScore04","sScore05","sScore06","sScore07","sScore08")
@@ -1765,7 +1769,7 @@ if( TRUE ){
     bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
 }
 mName <- "HCR_bSMScr02E"
-if( TRUE ){
+if( F ){
     fMaker <- function( mName ,crScrH ){
         # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
         workMName <- c("sScore01","sScore02","sScore03","sScore04","sScore05","sScore06","sScore07","sScore08")
@@ -1781,7 +1785,7 @@ if( TRUE ){
     bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
 }
 mName <- "HCR_bSMScr02PhEvt"
-if( TRUE ){
+if( F ){
     fMaker <- function( mName ,crScrH ){
         # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
         workMName <- c("sScore01","sScore02","sScore03","sScore04","sScore05","sScore06","sScore07","sScore08")
@@ -1797,7 +1801,7 @@ if( TRUE ){
     bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
 }
 mName <- "HCR_bSMScr02Sum"
-if( TRUE ){
+if( F ){
     fMaker <- function( mName ,crScrH ){
         # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
         workMName <- c("sScore01","sScore02","sScore03","sScore04","sScore05","sScore06","sScore07","sScore08")
@@ -1813,7 +1817,7 @@ if( TRUE ){
     bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
 }
 mName <- "HCR_bSMScr02SumClM"
-if( TRUE ){
+if( F ){
     fMaker <- function( mName ,crScrH ){
         # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
         workMName <- c("sScore01","sScore02","sScore03","sScore04","sScore05","sScore06","sScore07","sScore08")
@@ -1830,7 +1834,7 @@ if( TRUE ){
 }
 
 mName <- "HCR_bSMScr04R"
-if( TRUE ){
+if( F ){
     fMaker <- function( mName ,crScrH ){
         # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
         workMName <- c("sScore0LAr13","sScore0LAr24","sScore0LVr13","sScore0LVr24")
@@ -1849,7 +1853,7 @@ if( TRUE ){
     bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
 }
 mName <- "HCR_bSMScr04E"
-if( TRUE ){
+if( F ){
     fMaker <- function( mName ,crScrH ){
         # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
         workMName <- c("sScore0LAr13","sScore0LAr24","sScore0LVr13","sScore0LVr24")
@@ -1868,7 +1872,7 @@ if( TRUE ){
     bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
 }
 mName <- "HCR_bSMScr04PhEvt"
-if( TRUE ){
+if( F ){
     fMaker <- function( mName ,crScrH ){
         # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
         workMName <- c("sScore0LAr13","sScore0LAr24","sScore0LVr13","sScore0LVr24")
@@ -1887,7 +1891,7 @@ if( TRUE ){
     bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
 }
 mName <- "HCR_bSMScr04Sum"
-if( TRUE ){
+if( F ){
     fMaker <- function( mName ,crScrH ){
         # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
         workMName <- c("sScore0LAr13","sScore0LAr24","sScore0LVr13","sScore0LVr24")
@@ -1906,7 +1910,7 @@ if( TRUE ){
     bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
 }
 mName <- "HCR_bSMScr04SumClM"
-if( TRUE ){
+if( F ){
     fMaker <- function( mName ,crScrH ){
         # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
         workMName <- c("sScore0LAr13","sScore0LAr24","sScore0LVr13","sScore0LVr24")
@@ -1926,7 +1930,7 @@ if( TRUE ){
 }
 
 mName <- "HCR_bSMScr05R"
-if( TRUE ){
+if( F ){
     fMaker <- function( mName ,crScrH ){
         # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
         workMName <- c("sScore0GS" ,"sScore0GSh2" ,"sScore0GS3" ,"sScore0PSh" ,"sScore0PSrp" ,"sScore0PSrpRaw")
@@ -1942,7 +1946,7 @@ if( TRUE ){
     bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
 }
 mName <- "HCR_bSMScr05E"
-if( TRUE ){
+if( F ){
     fMaker <- function( mName ,crScrH ){
         # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
         workMName <- c("sScore0GS" ,"sScore0GSh2" ,"sScore0GS3" ,"sScore0PSh" ,"sScore0PSrp" ,"sScore0PSrpRaw")
@@ -1958,7 +1962,7 @@ if( TRUE ){
     bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
 }
 mName <- "HCR_bSMScr05PhEvt"
-if( TRUE ){
+if( F ){
     fMaker <- function( mName ,crScrH ){
         # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
         workMName <- c("sScore0GS" ,"sScore0GSh2" ,"sScore0GS3" ,"sScore0PSh" ,"sScore0PSrp" ,"sScore0PSrpRaw")
@@ -1974,7 +1978,7 @@ if( TRUE ){
     bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
 }
 mName <- "HCR_bSMScr05Sum"
-if( TRUE ){
+if( F ){
     fMaker <- function( mName ,crScrH ){
         # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
         workMName <- c("sScore0GS" ,"sScore0GSh2" ,"sScore0GS3" ,"sScore0PSh" ,"sScore0PSrp" ,"sScore0PSrpRaw")
@@ -1990,7 +1994,7 @@ if( TRUE ){
     bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
 }
 mName <- "HCR_bSMScr05SumClM"
-if( TRUE ){
+if( F ){
     fMaker <- function( mName ,crScrH ){
         # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
         workMName <- c("sScore0GS" ,"sScore0GSh2" ,"sScore0GS3" ,"sScore0PSh" ,"sScore0PSrp" ,"sScore0PSrpRaw")
