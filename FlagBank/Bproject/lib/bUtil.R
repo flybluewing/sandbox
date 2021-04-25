@@ -2148,6 +2148,54 @@ bUtil.getRowRebCutter <- function( rCObj ,cfg ){
 		ctrObj$evtReb <- evtReb
 	}
 
+
+	#-------------------------------------------------------------------------------------------
+	#	hIMtxHpnCnt / hIMtxValSum (rCObj$hIMtx)
+
+	if( !is.null(cfg$hIMtxHpnCnt) ){
+		#        [,1] [,2] [,3] [,4]
+		# hpnCnt    0    1    2    3
+		# thld      0    0    0    0	# 이전 발생 길이 허용치. 즉 0 이면 이전에 존재 불가. reb를 용납하지 않는다는 것.
+		if( is.null(rCObj$hIMtx) )		cat(sprintf("Error!! hIMtx missing for cfg$hIMtxHpnCnt (%s) \n",rCObj$defId["mName"]))
+
+		hILen <- nrow(rCObj$hIMtx)
+		if( 0<hILen ){
+			seqMtx <- bUtil.getHSeqLen( rCObj$hIMtx[,"hpnCnt"] )
+			lastSeq <- seqMtx[nrow(seqMtx),]
+
+			fndIdx <- which(cfg$hIMtxHpnCnt["hpnCnt",]==lastSeq["val"])
+			if( 0<length(fndIdx) ){
+				if( lastSeq["seqLen"] > cfg$hIMtxHpnCnt["thld",fndIdx] ){
+					# 이미 최근에 허용치 이상의 중복발생이 존재하는 상태. 고로 공이치기를 당겨놓는다.
+					hammerMsg <- sprintf("hIMtxHpnCnt(hpn %d seq %d thld %d)",lastSeq["val"],lastSeq["seqLen"],cfg$hIMtxHpnCnt["thld",fndIdx])
+					ctrObj$hIMtxHpnCnt <- list( val=lastSeq["val"] ,hammerMsg=hammerMsg )
+				}
+			}
+		}
+	}
+	if( !is.null(cfg$hIMtxValSum) ){
+		#        [,1] [,2]
+		# valSum    4    5
+		# thld      0    0
+		if( is.null(rCObj$hIMtx) )		cat(sprintf("Error!! hIMtx missing for cfg$hIMtxValSum (%s) \n",rCObj$defId["mName"]))
+
+		hILen <- nrow(rCObj$hIMtx)
+		if( 0<hILen ){
+			seqMtx <- bUtil.getHSeqLen( rCObj$hIMtx[,"valSum"] )
+			lastSeq <- seqMtx[nrow(seqMtx),]
+
+			fndIdx <- which(cfg$hIMtxValSum["valSum",]==lastSeq["val"])
+			if( 0<length(fndIdx) ){
+				if( lastSeq["seqLen"] > cfg$hIMtxHpnCnt["thld",fndIdx] ){
+					# 이미 최근에 허용치 이상의 중복발생이 존재하는 상태. 고로 공이치기를 당겨놓는다.
+					hammerMsg <- sprintf("hIMtxValSum(sum %d seq %d thld %d)",lastSeq["val"],lastSeq["seqLen"],cfg$hIMtxHpnCnt["thld",fndIdx])
+					ctrObj$hIMtxValSum <- list( val=lastSeq["val"] ,hammerMsg=hammerMsg )
+				}
+			}
+		}
+
+	}
+
 	ctrObj$cut <- function( aIdx ,smRow ,evt.sm ){
 		# smRow <- scoreMtx[aIdx ,]
 		# evt.sm <- bFCust.getEvt(smRow,cfg$fCol)
@@ -2211,6 +2259,31 @@ bUtil.getRowRebCutter <- function( rCObj ,cfg ){
 }
 
 
+bUtil.getHSeqLen <- function( hVal ){
+	if( 0==length(hVal) ){
+		return( matrix(0,nrow=0,ncol=2,dimnames=list(NULL,c("val","seqLen"))) )
+	}
+
+	fndLst <- list()
+	curIdx <- 1		;hLen <- length(hVal)	;hIdStr <- names(hVal)
+	while( curIdx <= hLen ){
+		fndIdx <- which( hVal[curIdx:hLen] != hVal[curIdx] )
+
+		curHName <- if( is.null(hIdStr) ) as.character(curIdx) else hIdStr[curIdx]
+		if( 0==length(fndIdx) ){	# 끝까지 모두 같은 값.			
+			fndLst[[curHName]] <- c( hVal[curIdx] ,(hLen-curIdx)+1 )
+			curIdx <- hLen+1	# 종료를 위해.
+		} else {
+			fndLst[[curHName]] <- c( hVal[curIdx] ,(fndIdx[1]-1) )
+			curIdx <- curIdx + (fndIdx[1]-1)
+		}
+	}
+
+	rMtx <- do.call( rbind ,fndLst )
+	colnames(rMtx) <- c("val","seqLen")		;rownames(rMtx) <- names(fndLst)
+
+	return( rMtx )
+}
 
 bUtil.getFarValDist <- function( hCodeMtx ,aCode ,naVal=0 ){
 	rVal <- rep( naVal ,length(aCode) )

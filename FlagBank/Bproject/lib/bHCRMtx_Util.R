@@ -174,6 +174,13 @@ HCR.stdCut_rawRow <- function( hName ,mName ,scoreMtxH ){
 
     hLen <- nrow(scoreMtxH)
     rObj$lastScore <- if(hLen>0) scoreMtxH[hLen,] else NULL
+
+    rObj$hIMtx <- cbind(  apply(scoreMtxH ,1 ,function(rVal){sum(rVal>0)})      # h Info Mtx
+                        ,apply(scoreMtxH ,1 ,function(rVal){sum(rVal)})
+    )
+    colnames(rObj$hIMtx) <- c("hpnCnt","valSum")
+
+
     rObj$available <- TRUE
 
     if( rObj$available && !is.null(rObj$lastScore) ){
@@ -757,7 +764,7 @@ HCR.MtxTmpl_phRebCnt_sz <- function( mName ,wMName ,crScrH ,mGrp ){
 
 
 
-HCR.MtxTmpl_crScrNnx <- function( mName ,wMLst ,rawF=T ,colOpt="all" ){ # crScrN01R/crScrN01E
+HCR.MtxTmpl_crScrNnx <- function( mName ,wMGrp ,rawF=T ,colOpt="all" ){ # crScrN01R/crScrN01E
     # rawF : raw or evt
     # colOpt : commPhFCol  szPhFCol  rares
 
@@ -888,7 +895,7 @@ HCR.MtxTmpl_crScrNnx <- function( mName ,wMLst ,rawF=T ,colOpt="all" ){ # crScrN
 }
 
 
-HCR.MtxTmpl_crScrNnPhEvt <- function( mName ,wMLst ,colOpt="all" ){
+HCR.MtxTmpl_crScrNnPhEvt <- function( mName ,wMGrp ,colOpt="all" ){
     # colOpt : max cnt rebEvtMax rebEvtMCnt
 
 	rObj <- list( 	mInfo=c("mName"=mName ,colOpt=colOpt )  ,wMGrp=wMGrp )
@@ -1008,7 +1015,7 @@ HCR.MtxTmpl_crScrNnPhEvt <- function( mName ,wMLst ,colOpt="all" ){
 }
 
 
-HCR.MtxTmpl_crScrNnSum <- function( mName ,wMLst ,colOpt="all" ){
+HCR.MtxTmpl_crScrNnSum <- function( mName ,wMGrp ,colOpt="all" ){
     # colOpt : sumRaw sumEvt szSumRebCnt szSumRebDup
 
 	rObj <- list( 	mInfo=c("mName"=mName ,colOpt=colOpt ) ,wMGrp=wMGrp )
