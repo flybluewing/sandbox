@@ -2151,7 +2151,6 @@ bUtil.getRowRebCutter <- function( rCObj ,cfg ){
 
 	#-------------------------------------------------------------------------------------------
 	#	hIMtxHpnCnt / hIMtxValSum (rCObj$hIMtx)
-
 	if( !is.null(cfg$hIMtxHpnCnt) ){
 		#        [,1] [,2] [,3] [,4]
 		# hpnCnt    0    1    2    3
@@ -2186,13 +2185,50 @@ bUtil.getRowRebCutter <- function( rCObj ,cfg ){
 
 			fndIdx <- which(cfg$hIMtxValSum["valSum",]==lastSeq["val"])
 			if( 0<length(fndIdx) ){
-				if( lastSeq["seqLen"] > cfg$hIMtxHpnCnt["thld",fndIdx] ){
+				if( lastSeq["seqLen"] > cfg$hIMtxValSum["thld",fndIdx] ){
 					# 이미 최근에 허용치 이상의 중복발생이 존재하는 상태. 고로 공이치기를 당겨놓는다.
-					hammerMsg <- sprintf("hIMtxValSum(sum %d seq %d thld %d)",lastSeq["val"],lastSeq["seqLen"],cfg$hIMtxHpnCnt["thld",fndIdx])
+					hammerMsg <- sprintf("hIMtxValSum(sum %d seq %d thld %d)",lastSeq["val"],lastSeq["seqLen"],cfg$hIMtxValSum["thld",fndIdx])
 					ctrObj$hIMtxValSum <- list( val=lastSeq["val"] ,hammerMsg=hammerMsg )
 				}
 			}
 		}
+
+	}
+
+	#-------------------------------------------------------------------------------------------
+	#	rowRebDupBan
+	if( !is.null(cfg$rowRebDupBan) ){
+
+		#       OnOff freqVal rawMin
+		# AA_A      1       1      1
+		# AAB_B     1       1      1
+
+		if( is.null(rCObj$lastReb) )		cat(sprintf("Error!! lastReb missing for cfg$rowRebDupBan (%s) \n",rCObj$defId["mName"]))
+
+		ctrObj$rowRebDupBan <- rCObj$lastReb
+
+		# 외부에서 AA_A, AAB_B 에 대한 체크가 이미 되어있다. (rCObj$lastReb)
+		# 따라셔 여기에서 할 일은 조건에 따라 체크를 무효화 시켜야 할 지 가늠하는 것.
+		hpnFlag <- rCObj$lastScore>0
+		freqValFlag <- sapply( names(rCObj$lastScore)[hpnFlag] ,function( cName ){ 
+									if( is.null(cfg$fCol[cName]$freqVal) ) return( FALSE )
+
+									return( rCObj$lastScore[cName] %in% cfg$fCol[cName]$freqVal )
+		})
+
+		if( all(freqValFlag) ){
+			if( cfg$rowRebDupBan["AA_A","freqVal"] )	ctrObj$rowRebDupBan["AA_A"] <- FALSE
+
+			if( cfg$rowRebDupBan["AAB_B","freqVal"] )	ctrObj$rowRebDupBan["AAB_B"] <- FALSE
+		}
+
+		hpnCnt <- sum( hpnFlag )
+		if( hpnCnt < cfg$rowRebDupBan["AA_A","rawMin"] )	ctrObj$rowRebDupBan["AA_A"] <- FALSE
+
+		if( hpnCnt < cfg$rowRebDupBan["AAB_B","rawMin"] )	ctrObj$rowRebDupBan["AAB_B"] <- FALSE
+
+		# AA_A, AAB_B 모두 적용제외 상태라면..
+		if( all(!ctrObj$rowRebDupBan) )		ctrObj$rowRebDupBan <- NULL
 
 	}
 
@@ -2206,6 +2242,15 @@ bUtil.getRowRebCutter <- function( rCObj ,cfg ){
 			matFlag <- ctrObj$rebInfo["val",]==smRow
 			if( all(matFlag) ){
 				rebCutLst$infoStr <- c( rebCutLst$infoStr ,ctrObj$rawReb$infoStr )
+				surFlag <- FALSE
+			}
+		}
+		if( !is.null(cfg$rowRebDupBan) ){	# rawReb에 대한  AA_A, AAB_B 체크.
+			matFlag <- ctrObj$rebInfo["val",]==smRow
+			if( all(matFlag) ){
+				infoStr <- paste( names(ctrObj$rowRebDupBan) ,ctrObj$rowRebDupBan ,sep=":" )
+				infoStr <- sprintf("rowRebDupBan(%s)" ,paste(infoStr,collapse=" "))
+				rebCutLst$infoStr <- c( rebCutLst$infoStr ,infoStr )
 				surFlag <- FALSE
 			}
 		}
@@ -2247,6 +2292,22 @@ bUtil.getRowRebCutter <- function( rCObj ,cfg ){
 				}
 
 			}	# if( any(!is.na(evt.sm["lev",])) )
+		}
+
+		if( surFlag && !is.null(ctrObj$hIMtxHpnCnt) ){
+			hpnCnt <- sum(smRow>0)
+			if( hpnCnt==ctrObj$hIMtxHpnCnt$val ){
+				rebCutLst$infoStr <- c( rebCutLst$infoStr ,ctrObj$hIMtxHpnCnt$hammerMsg )
+				surFlag <- FALSE
+			}
+		}
+
+		if( surFlag && !is.null(ctrObj$hIMtxValSum) ){
+			hpnCnt <- sum(smRow,na.rm=T)
+			if( hpnCnt==ctrObj$hIMtxValSum$val ){
+				rebCutLst$infoStr <- c( rebCutLst$infoStr ,ctrObj$hIMtxValSum$hammerMsg )
+				surFlag <- FALSE
+			}
 		}
 
 		if( 0==length(rebCutLst$infoStr) )	rebCutLst<-NULL

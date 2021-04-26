@@ -179,7 +179,16 @@ HCR.stdCut_rawRow <- function( hName ,mName ,scoreMtxH ){
                         ,apply(scoreMtxH ,1 ,function(rVal){sum(rVal)})
     )
     colnames(rObj$hIMtx) <- c("hpnCnt","valSum")
+    rObj$lastReb <- c( AA_A=F ,AAB_B=F)
+    if( 2<=hLen && 0<rObj$hIMtx[hLen,"hpnCnt"] ){
+        # check AA_A
+        rObj$lastReb["AA_A"] <- all(scoreMtxH[hLen,]==scoreMtxH[hLen-1,])
 
+        # check AAB_B
+        if( 3<=hLen && 0<rObj$hIMtx[hLen-1,"hpnCnt"] ){
+            rObj$lastReb["AAB_B"] <- all(scoreMtxH[hLen-1,]==scoreMtxH[hLen-2,])
+        }
+    }
 
     rObj$available <- TRUE
 
