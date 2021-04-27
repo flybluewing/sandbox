@@ -2211,9 +2211,9 @@ bUtil.getRowRebCutter <- function( rCObj ,cfg ){
 		# 따라셔 여기에서 할 일은 조건에 따라 체크를 무효화 시켜야 할 지 가늠하는 것.
 		hpnFlag <- rCObj$lastScore>0
 		freqValFlag <- sapply( names(rCObj$lastScore)[hpnFlag] ,function( cName ){ 
-									if( is.null(cfg$fCol[cName]$freqVal) ) return( FALSE )
+									if( is.null(cfg$fCol[[cName]]$freqVal) ) return( FALSE )
 
-									return( rCObj$lastScore[cName] %in% cfg$fCol[cName]$freqVal )
+									return( rCObj$lastScore[cName] %in% cfg$fCol[[cName]]$freqVal )
 		})
 
 		if( all(freqValFlag) ){
@@ -2245,7 +2245,7 @@ bUtil.getRowRebCutter <- function( rCObj ,cfg ){
 				surFlag <- FALSE
 			}
 		}
-		if( !is.null(cfg$rowRebDupBan) ){	# rawReb에 대한  AA_A, AAB_B 체크.
+		if( !is.null(ctrObj$rowRebDupBan) ){	# rawReb에 대한  AA_A, AAB_B 체크.
 			matFlag <- ctrObj$rebInfo["val",]==smRow
 			if( all(matFlag) ){
 				infoStr <- paste( names(ctrObj$rowRebDupBan) ,ctrObj$rowRebDupBan ,sep=":" )

@@ -3194,18 +3194,13 @@ if( TRUE ){
                             ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
                         )
         )
-        # ,evtMax = matrix( c(2,1,3,1 ,2,1,3,1)     ,byrow=T ,ncol=4
-        #             ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
-        # )
-        # ,rowReb = c( rawMin=1 ,lowE=1 ,rareE=1 ,dupESum=2 ) # c( rawMin=2 ,lowE=2 ,rareE=2 ,dupESum=2 )
         ,evtMax = matrix( c(2,1,3,1 ,2,1,3,1)     ,byrow=T ,ncol=4
                     ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
         )
-        ,rowReb = c( rawMin=10 ,lowE=10 ,rareE=10 ,dupESum=20 ) # c( rawMin=2 ,lowE=2 ,rareE=2 ,dupESum=2 )
+        ,rowReb = c( rawMin=1 ,lowE=1 ,rareE=1 ,dupESum=2 ) # c( rawMin=2 ,lowE=2 ,rareE=2 ,dupESum=2 )
         # ,hIMtxHpnCnt = matrix( c(0,1,2,3  ,0,0,2,0)   ,byrow=T  ,nrow=2  ,dimnames=list(c("hpnCnt","thld"),NULL) )
         # ,hIMtxValSum = matrix( c(2,5  ,2,0)   ,byrow=T  ,nrow=2  ,dimnames=list(c("valSum","thld"),NULL) )
-        ,rowRebDupBan = matrix( c( TRUE, TRUE, 1   ,TRUE ,TRUE ,1 )   ,byrow=T ,nrow=2 ,dimnames=list(c("AA_A","AAB_B"),c("OnOff","freqVal","rawMin")) )
-                # c( BanAA_A=T ,BanAA_Afv=T ,BanAAB_B=T ,BanAAB_Bfv=T )
+        # ,rowRebDupBan = matrix( c( TRUE, F ,2    ,TRUE ,F ,2 )   ,byrow=T ,nrow=2 ,dimnames=list(c("AA_A","AAB_B"),c("OnOff","freqVal","rawMin")) )
         ,isHard=NULL  # use default
     )
 }
@@ -3332,7 +3327,7 @@ for( mName in names( HCRMtxCfg ) ){
     # 추가 옵션 코드 예시 (디폴트값은 NULL)
     # ,hIMtxHpnCnt = matrix( c(0,1,2,3  ,0,0,2,0)   ,byrow=T  ,nrow=2  ,dimnames=list(c("hpnCnt","thld"),NULL) )
     # ,hIMtxValSum = matrix( c(2,5  ,2,0)   ,byrow=T  ,nrow=2  ,dimnames=list(c("valSum","thld"),NULL) )
-    # ,rowRebDupBan = c( BanAA_A=T ,BanAA_Afv=T ,BanAAB_B=T ,BanAAB_Bfv=T )
+    # ,rowRebDupBan = matrix( c( TRUE, F ,2    ,TRUE ,F ,2 )   ,byrow=T ,nrow=2 ,dimnames=list(c("AA_A","AAB_B"),c("OnOff","freqVal","rawMin")) )
     #               BanAA_Afv,BanAAB_Bfv 는 freqVal 옵션을 적용할 것인지의 여부이다.
     #               BanAA_A,BanAAB_B 상태에서 중복이 발생했어도 fv가 TRUE이면 freqVal 옵션 체크가 적용된다.
 
