@@ -2,7 +2,6 @@ scrExtMtxCfg <- list()
 
 mName <- "score1"
 if( TRUE ){
-
     scrExtMtxCfg[[mName]] <- list()
     scrExtMtxCfg[[mName]]$filter01 <- list(
         mName = mName   ,style=c( freqZero=TRUE )
@@ -71,77 +70,6 @@ if( TRUE ){
         ,scMtx.sz = NULL      ,scMtx.sz.sum = NULL
         ,isHard=NULL  # use default
     )
-
-} else if( FALSE ) {    # 기존 코드 백업.
-    
-    scrExtMtxCfg[[mName]]$filter01 <- list(
-        mName = mName   ,style=c( freqZero=TRUE )
-        ,fCol = list(
-            "remN.num"=list( rng=matrix( c(0,2 ,0,2) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
-                            ,evt=matrix( c(c(1,2,3,3,3),c(2,3,4,5,6)) ,ncol=2)
-                        ) 
-            ,"remN.len.tot"=list( rng=matrix( c(0,4 ,0,4) ,ncol=2 )
-                            ,evt=matrix( c(c(1,2,3,3),c(3,4,5,6)) ,ncol=2)
-                        )
-            ,"remN.len.val"=list( rng=matrix( c(0,2 ,0,3) ,ncol=2 )
-                            ,evt=matrix( c(c(1,2,3,3,3),c(2,3,4,5,6)) ,ncol=2)
-                        )
-            ,"cN.num"=list( rng=matrix( c(0,2 ,0,2) ,ncol=2 )
-                            ,evt=matrix( c(c(1,2,3,3,3),c(2,3,4,5,6)) ,ncol=2)
-                        )
-            ,"cN.len.tot"=list( rng=matrix( c(0,4 ,0,5) ,ncol=2 )
-                            ,evt=matrix( c(c(2,3,3,3),c(3,4,5,6)) ,ncol=2)
-                        )
-            ,"cN.len.val"=list( rng=matrix( c(0,4 ,0,4) ,ncol=2 )
-                            ,evt=matrix( c(c(1,2,3,3),c(2,3,4,5)) ,ncol=2)
-                        )
-            ,"fN.num"=list( rng=matrix( c(0,2 ,0,3) ,ncol=2 )
-                            ,evt=matrix( c(c(1,2,3,3,3),c(2,3,4,5,6)) ,ncol=2)
-                        )
-            ,"fN.len.tot"=list( rng=matrix( c(0,4 ,0,4) ,ncol=2 )
-                            ,evt=matrix( c(c(1,2,3,3),c(3,4,5,6)) ,ncol=2)
-                        )
-            ,"fN.len.val"=list( rng=matrix( c(0,4 ,0,4) ,ncol=2 )
-                            ,evt=matrix( c(c(1,2,3,3),c(3,4,5,6)) ,ncol=2)
-                        )
-        )
-        ,evtMax = NULL        
-        ,rowReb = c( rawMin=3 ,lowE=2 ,rareE=1 ,dupESum=2 )
-        ,rowRebDup=NULL
-        ,summMtx = NULL       ,summMtx.reb = NULL   ,summMtx.sum = NULL
-        ,scMtx.sz = NULL      ,scMtx.sz.sum = NULL
-        ,isHard=NULL  # use default
-    )
-    scrExtMtxCfg[[mName]]$filter02 <- list(
-        mName = mName   ,style=c( freqZero=TRUE )
-        ,fCol = list(
-            "evt0.num"=list( rng=matrix( c(0,4 ,0,6) ,ncol=2 ,dimnames=list(c("min","max"),c("lev1","lev2")) )
-                            ,evt=matrix( c(c(1,2,3,3,3,3,3),c(2,3,4,5,6,7,8)) ,ncol=2)
-                        ) 
-            ,"evt0.len.tot"=list( rng=matrix( c(0,4 ,0,6) ,ncol=2 )
-                            ,evt=matrix( c(c(1,2,3,3,3,3,3),c(2,3,4,5,6,7,8)) ,ncol=2)
-                        )
-            ,"evt0.len.val"=list( rng=matrix( c(0,4 ,0,6) ,ncol=2 )
-                            ,evt=matrix( c(c(1,2,3,3,3,3,3),c(2,3,4,5,6,7,8)) ,ncol=2)
-                        )
-            ,"evt1.num"=list( rng=matrix( c(0,4 ,0,6) ,ncol=2 )
-                            ,evt=matrix( c(c(1,2,3,3,3,3,3),c(2,3,4,5,6,7,8)) ,ncol=2)
-                        )
-            ,"evt1.len.tot"=list( rng=matrix( c(0,4 ,0,6) ,ncol=2 )
-                            ,evt=matrix( c(c(1,2,3,3,3,3,3),c(2,3,4,5,6,7,8)) ,ncol=2)
-                        )
-            ,"evt1.len.val"=list( rng=matrix( c(0,4 ,0,6) ,ncol=2 )
-                            ,evt=matrix( c(c(1,2,3,3,3,3,3),c(2,3,4,5,6,7,8)) ,ncol=2)
-                        )
-        )
-        ,evtMax = NULL        
-        ,rowReb = c( rawMin=3 ,lowE=2 ,rareE=1 ,dupESum=2 )
-        ,rowRebDup=NULL
-        ,summMtx = NULL       ,summMtx.reb = NULL   ,summMtx.sum = NULL
-        ,scMtx.sz = NULL      ,scMtx.sz.sum = NULL
-        ,isHard=NULL  # use default
-    )
-
 }
 
 mName <- "score2"

@@ -2245,7 +2245,7 @@ bUtil.getRowRebCutter <- function( rCObj ,cfg ){
 				surFlag <- FALSE
 			}
 		}
-		if( !is.null(ctrObj$rowRebDupBan) ){	# rawReb에 대한  AA_A, AAB_B 체크.
+		if( surFlag && !is.null(ctrObj$rowRebDupBan) ){	# rawReb에 대한  AA_A, AAB_B 체크.
 			matFlag <- ctrObj$rebInfo["val",]==smRow
 			if( all(matFlag) ){
 				infoStr <- paste( names(ctrObj$rowRebDupBan) ,ctrObj$rowRebDupBan ,sep=":" )
@@ -2303,8 +2303,8 @@ bUtil.getRowRebCutter <- function( rCObj ,cfg ){
 		}
 
 		if( surFlag && !is.null(ctrObj$hIMtxValSum) ){
-			hpnCnt <- sum(smRow,na.rm=T)
-			if( hpnCnt==ctrObj$hIMtxValSum$val ){
+			valSum <- sum(smRow,na.rm=T)
+			if( valSum==ctrObj$hIMtxValSum$val ){
 				rebCutLst$infoStr <- c( rebCutLst$infoStr ,ctrObj$hIMtxValSum$hammerMsg )
 				surFlag <- FALSE
 			}

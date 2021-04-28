@@ -2928,7 +2928,8 @@ if( TRUE ){
                 ,dimnames=list(summMtxName$rName,summMtxName$cName)
         )
         ,summMtx.reb = matrix( c(  1 ,2 ,1 ,1 ,1 ,1  ,1 ,1 ,1 ,1 ,2 ,2 ) ,byrow=T
-                    ,ncol=length(cName) ,nrow=length(rName) ,dimnames=list(rName,cName)
+                ,ncol=length(summMtxName$cName) ,nrow=length(summMtxName$rName) 
+                ,dimnames=list(summMtxName$rName,summMtxName$cName)
         )
         ,summMtx.sum = c(raw=3 ,evt=3)
         ,scMtx.sz = matrix( c( 3 ,3 ,1 ,3 ,3 ,1  ,2 ,1 ,1 ,1 ,1 ,1 ) ,byrow=T
@@ -4060,7 +4061,6 @@ if( TRUE ){
         ,isHard=NULL  # use default
     )
 }
-
 
 mfName <- "mfFreqVal89"
 if( TRUE ){
