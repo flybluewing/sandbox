@@ -3075,67 +3075,82 @@ if( TRUE ){ # done. OK
 #   Reb for bCMtx.R ,bSMtx_Multi_C.R
 # ------------------------------------------------------------------------------------------
 
-mName <- "HCR_crScrN01_RszPhFCol"   # QQE:Todo --------------------------------------------------------
-if( FALSE ){
+#- HCR.MtxTmpl_crScrNnx -----------------------------------------------------------------------------------------------
+mName <- "HCR_crScrN01_RszPhFCol"
+if( TRUE ){
     HCRMtxCfg[[mName]] <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
-            "Fhpn0"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
-                            ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
+            "Fhpn0"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                            ,evt=matrix( c(c(3,3,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,freqVal=1
                         ) 
             ,"Fph_sz"=list( rng=matrix( c(0,0 ,0,3) ,ncol=2 )
-                            ,evt=matrix( c(c(1,2,3,3),c(0,2,3,4)) ,ncol=2)  # 0 발생이 드물다.
+                            ,evt=matrix( c(c(1,3,3),c(2,3,4)) ,ncol=2)
+                            ,freqVal=1
                         )
             ,"FfCol_sz"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
                             ,evt=matrix( c(c(3,3,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,freqVal=1
                         )
             ,"Shpn0"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
                             ,evt=matrix( c(c(1,3,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,freqVal=1
                         )
-            ,"Sph_sz"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
-                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+            ,"Sph_sz"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                            ,evt=matrix( c(c(1,3,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,freqVal=1
                         )
-            ,"SfCol_sz"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+            ,"SfCol_sz"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
                             ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                            ,freqVal=1
                         )
         )
         ,evtMax = matrix( c(2,1,3,1 ,2,1,3,1)     ,byrow=T ,ncol=4
                     ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
         )
-        ,rowReb = c( rawMin=1 ,lowE=2 ,rareE=1 ,dupESum=2 ) # c( rawMin=2 ,lowE=2 ,rareE=2 ,dupESum=2 )
-        # ,hIMtxHpnCnt = matrix( c(0,1,2,3  ,0,0,2,0)   ,byrow=T  ,nrow=2  ,dimnames=list(c("hpnCnt","thld"),NULL) )
+        ,rowReb = c( rawMin=1 ,lowE=2 ,rareE=1 ,dupESum=2 ) # H842(3)   
+        ,hIMtxHpnCnt = matrix( c(0,1,3,4,5,6  ,0,1,3,1,1,1)   ,byrow=T  ,nrow=2  ,dimnames=list(c("hpnCnt","thld"),NULL) )
         # ,hIMtxValSum = matrix( c(2,5  ,2,0)   ,byrow=T  ,nrow=2  ,dimnames=list(c("valSum","thld"),NULL) )
+        ,rowRebDupBan = matrix( c( TRUE, F ,1    ,TRUE ,F ,1 )   ,byrow=T ,nrow=2 ,dimnames=list(c("AA_A","AAB_B"),c("OnOff","freqVal","rawMin")) )
         ,isHard=NULL  # use default
     )
 }
-mName <- "HCR_crScrN01_EszPhFCol"   # QQE:Todo --------------------------------------------------------
-if( FALSE ){
+mName <- "HCR_crScrN01_EszPhFCol"
+if( TRUE ){
     HCRMtxCfg[[mName]] <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
-            "Fhpn0"=list( rng=matrix( c(0,0 ,10,11) ,ncol=2 )
-                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+            "Fhpn0"=list( rng=matrix( c(0,0 ,0,3) ,ncol=2 )
+                            ,evt=matrix( c(c(1,3,3),c(2,3,4)) ,ncol=2)
                         ) 
-            ,"Fph_sz"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
-                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+            ,"Fph_sz"=list( rng=matrix( c(0,0 ,0,3) ,ncol=2 )
+                            ,evt=matrix( c(c(1,3,3),c(2,3,4)) ,ncol=2)
+                            ,freqVal=1:2
                         )
-            ,"FfCol_sz"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
-                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+            ,"FfCol_sz"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3),c(2,3,4)) ,ncol=2)
+                            ,freqVal=1
                         )
-            ,"Shpn0"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
-                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+            ,"Shpn0"=list( rng=matrix( c(0,0 ,0,3) ,ncol=2 )
+                            ,evt=matrix( c(c(3,3,3),c(3,4,5)) ,ncol=2)
+                            ,freqVal=1:2
                         )
-            ,"Sph_sz"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
-                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+            ,"Sph_sz"=list( rng=matrix( c(0,0 ,0,3) ,ncol=2 )
+                            ,evt=matrix( c(c(1,2,3),c(2,3,4)) ,ncol=2)  # H896
+                            ,freqVal=1
                         )
-            ,"SfCol_sz"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
-                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+            ,"SfCol_sz"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3),c(2,3,4)) ,ncol=2)
                         )
         )
         ,evtMax = matrix( c(2,1,3,1 ,2,1,3,1)     ,byrow=T ,ncol=4
                     ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
         )
-        ,rowReb = c( rawMin=1 ,lowE=1 ,rareE=1 ,dupESum=2 ) # c( rawMin=2 ,lowE=2 ,rareE=2 ,dupESum=2 )
+        ,rowReb = c( rawMin=3 ,lowE=2 ,rareE=1 ,dupESum=2 )     # H838(3)
+        ,hIMtxHpnCnt = matrix( c(0,1,4,5,6  ,0,1,1,1,0)   ,byrow=T  ,nrow=2  ,dimnames=list(c("hpnCnt","thld"),NULL) )
+        # ,hIMtxValSum = matrix( c(2,5  ,2,0)   ,byrow=T  ,nrow=2  ,dimnames=list(c("valSum","thld"),NULL) )
+        ,rowRebDupBan = matrix( c( TRUE, F ,1    ,TRUE ,F ,1 )   ,byrow=T ,nrow=2 ,dimnames=list(c("AA_A","AAB_B"),c("OnOff","freqVal","rawMin")) )
         ,isHard=NULL  # use default
     )
 }
@@ -3171,7 +3186,7 @@ if( FALSE ){
     )
 }
 mName <- "HCR_crScrN01_EcommPhFCol"   # QQE:Todo --------------------------------------------------------
-if( TRUE ){
+if( FALSE ){
     HCRMtxCfg[[mName]] <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
@@ -3255,6 +3270,1186 @@ if( FALSE ){
 }
 
 
+mName <- "HCR_crScrN02_RszPhFCol"   # QQE:Todo --------------------------------------------------------
+if( FALSE ){
+    HCRMtxCfg[[mName]] <- list(
+        mName = mName   ,style=c( freqZero=TRUE )
+        ,fCol = list(
+            "Fhpn0"=list( rng=matrix( c(0,0 ,10,11) ,ncol=2 )
+                            ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        ) 
+            ,"Fph_sz"=list( rng=matrix( c(0,0 ,0,3) ,ncol=2 )
+                            ,evt=matrix( c(c(1,2,3,3),c(0,2,3,4)) ,ncol=2)  # 0 발생이 드물다.
+                        )
+            ,"FfCol_sz"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                            ,evt=matrix( c(c(3,3,3,3),c(2,3,4,5)) ,ncol=2)
+                        )
+            ,"Shpn0"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                            ,evt=matrix( c(c(1,3,3,3),c(2,3,4,5)) ,ncol=2)
+                        )
+            ,"Sph_sz"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                        )
+            ,"SfCol_sz"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                        )
+        )
+        ,evtMax = matrix( c(2,1,3,1 ,2,1,3,1)     ,byrow=T ,ncol=4
+                    ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
+        )
+        ,rowReb = c( rawMin=1 ,lowE=2 ,rareE=1 ,dupESum=2 ) # c( rawMin=2 ,lowE=2 ,rareE=2 ,dupESum=2 )
+        # ,hIMtxHpnCnt = matrix( c(0,1,2,3  ,0,0,2,0)   ,byrow=T  ,nrow=2  ,dimnames=list(c("hpnCnt","thld"),NULL) )
+        # ,hIMtxValSum = matrix( c(2,5  ,2,0)   ,byrow=T  ,nrow=2  ,dimnames=list(c("valSum","thld"),NULL) )
+        ,isHard=NULL  # use default
+    )
+}
+mName <- "HCR_crScrN02_EszPhFCol"   # QQE:Todo --------------------------------------------------------
+if( FALSE ){
+    HCRMtxCfg[[mName]] <- list(
+        mName = mName   ,style=c( freqZero=TRUE )
+        ,fCol = list(
+            "Fhpn0"=list( rng=matrix( c(0,0 ,10,11) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        ) 
+            ,"Fph_sz"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"FfCol_sz"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"Shpn0"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"Sph_sz"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"SfCol_sz"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+        )
+        ,evtMax = matrix( c(2,1,3,1 ,2,1,3,1)     ,byrow=T ,ncol=4
+                    ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
+        )
+        ,rowReb = c( rawMin=1 ,lowE=1 ,rareE=1 ,dupESum=2 ) # c( rawMin=2 ,lowE=2 ,rareE=2 ,dupESum=2 )
+        ,isHard=NULL  # use default
+    )
+}
+mName <- "HCR_crScrN02_RcommPhFCol"   # QQE:Todo --------------------------------------------------------
+if( FALSE ){
+    HCRMtxCfg[[mName]] <- list(
+        mName = mName   ,style=c( freqZero=TRUE )
+        ,fCol = list(
+            "Fhpn0"=list( rng=matrix( c(0,0 ,10,11) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        ) 
+            ,"Fph"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"FfCol"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"Shpn0"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"Sph"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"SfCol"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+        )
+        ,evtMax = matrix( c(2,1,3,1 ,2,1,3,1)     ,byrow=T ,ncol=4
+                    ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
+        )
+        ,rowReb = c( rawMin=1 ,lowE=1 ,rareE=1 ,dupESum=2 ) # c( rawMin=2 ,lowE=2 ,rareE=2 ,dupESum=2 )
+        ,isHard=NULL  # use default
+    )
+}
+mName <- "HCR_crScrN02_EcommPhFCol"   # QQE:Todo --------------------------------------------------------
+if( FALSE ){
+    HCRMtxCfg[[mName]] <- list(
+        mName = mName   ,style=c( freqZero=TRUE )
+        ,fCol = list(
+            "Fhpn0"=list( rng=matrix( c(0,0 ,10,11) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        ) 
+            ,"Fph"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"FfCol"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"Shpn0"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"Sph"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"SfCol"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+        )
+        ,evtMax = matrix( c(2,1,3,1 ,2,1,3,1)     ,byrow=T ,ncol=4
+                    ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
+        )
+        ,rowReb = c( rawMin=1 ,lowE=1 ,rareE=1 ,dupESum=2 ) # c( rawMin=2 ,lowE=2 ,rareE=2 ,dupESum=2 )
+        # ,hIMtxHpnCnt = matrix( c(0,1,2,3  ,0,0,2,0)   ,byrow=T  ,nrow=2  ,dimnames=list(c("hpnCnt","thld"),NULL) )
+        # ,hIMtxValSum = matrix( c(2,5  ,2,0)   ,byrow=T  ,nrow=2  ,dimnames=list(c("valSum","thld"),NULL) )
+        # ,rowRebDupBan = matrix( c( TRUE, F ,2    ,TRUE ,F ,2 )   ,byrow=T ,nrow=2 ,dimnames=list(c("AA_A","AAB_B"),c("OnOff","freqVal","rawMin")) )
+        ,isHard=NULL  # use default
+    )
+}
+mName <- "HCR_crScrN02_Rrares"   # QQE:Todo --------------------------------------------------------
+if( FALSE ){
+    HCRMtxCfg[[mName]] <- list(
+        mName = mName   ,style=c( freqZero=TRUE )
+        ,fCol = list(
+            "_phReb"=list( rng=matrix( c(0,0 ,10,11) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        ) 
+            ,"_xyCnt.fCol"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"_xyCnt.phase"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"_ph_Reb"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"_fCol_Reb"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"_phReb_Reb"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"_xyCnt.fCol_Reb"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"_xyCnt.phase_Reb"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"_dblHpnFlg_sz"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"_ph_szDup"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"_fCol_szDup"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"_dblHpnFlg_szDup"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+        )
+        ,evtMax = matrix( c(2,1,3,1 ,2,1,3,1)     ,byrow=T ,ncol=4
+                    ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
+        )
+        ,rowReb = c( rawMin=1 ,lowE=1 ,rareE=1 ,dupESum=2 ) # c( rawMin=2 ,lowE=2 ,rareE=2 ,dupESum=2 )
+        ,isHard=NULL  # use default
+    )
+}
+
+
+mName <- "HCR_crScrN03_RszPhFCol"   # QQE:Todo --------------------------------------------------------
+if( FALSE ){
+    HCRMtxCfg[[mName]] <- list(
+        mName = mName   ,style=c( freqZero=TRUE )
+        ,fCol = list(
+            "Fhpn0"=list( rng=matrix( c(0,0 ,10,11) ,ncol=2 )
+                            ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        ) 
+            ,"Fph_sz"=list( rng=matrix( c(0,0 ,0,3) ,ncol=2 )
+                            ,evt=matrix( c(c(1,2,3,3),c(0,2,3,4)) ,ncol=2)  # 0 발생이 드물다.
+                        )
+            ,"FfCol_sz"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                            ,evt=matrix( c(c(3,3,3,3),c(2,3,4,5)) ,ncol=2)
+                        )
+            ,"Shpn0"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                            ,evt=matrix( c(c(1,3,3,3),c(2,3,4,5)) ,ncol=2)
+                        )
+            ,"Sph_sz"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                        )
+            ,"SfCol_sz"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                        )
+        )
+        ,evtMax = matrix( c(2,1,3,1 ,2,1,3,1)     ,byrow=T ,ncol=4
+                    ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
+        )
+        ,rowReb = c( rawMin=1 ,lowE=2 ,rareE=1 ,dupESum=2 ) # c( rawMin=2 ,lowE=2 ,rareE=2 ,dupESum=2 )
+        # ,hIMtxHpnCnt = matrix( c(0,1,2,3  ,0,0,2,0)   ,byrow=T  ,nrow=2  ,dimnames=list(c("hpnCnt","thld"),NULL) )
+        # ,hIMtxValSum = matrix( c(2,5  ,2,0)   ,byrow=T  ,nrow=2  ,dimnames=list(c("valSum","thld"),NULL) )
+        ,isHard=NULL  # use default
+    )
+}
+mName <- "HCR_crScrN03_EszPhFCol"   # QQE:Todo --------------------------------------------------------
+if( FALSE ){
+    HCRMtxCfg[[mName]] <- list(
+        mName = mName   ,style=c( freqZero=TRUE )
+        ,fCol = list(
+            "Fhpn0"=list( rng=matrix( c(0,0 ,10,11) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        ) 
+            ,"Fph_sz"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"FfCol_sz"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"Shpn0"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"Sph_sz"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"SfCol_sz"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+        )
+        ,evtMax = matrix( c(2,1,3,1 ,2,1,3,1)     ,byrow=T ,ncol=4
+                    ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
+        )
+        ,rowReb = c( rawMin=1 ,lowE=1 ,rareE=1 ,dupESum=2 ) # c( rawMin=2 ,lowE=2 ,rareE=2 ,dupESum=2 )
+        ,isHard=NULL  # use default
+    )
+}
+mName <- "HCR_crScrN03_RcommPhFCol"   # QQE:Todo --------------------------------------------------------
+if( FALSE ){
+    HCRMtxCfg[[mName]] <- list(
+        mName = mName   ,style=c( freqZero=TRUE )
+        ,fCol = list(
+            "Fhpn0"=list( rng=matrix( c(0,0 ,10,11) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        ) 
+            ,"Fph"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"FfCol"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"Shpn0"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"Sph"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"SfCol"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+        )
+        ,evtMax = matrix( c(2,1,3,1 ,2,1,3,1)     ,byrow=T ,ncol=4
+                    ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
+        )
+        ,rowReb = c( rawMin=1 ,lowE=1 ,rareE=1 ,dupESum=2 ) # c( rawMin=2 ,lowE=2 ,rareE=2 ,dupESum=2 )
+        ,isHard=NULL  # use default
+    )
+}
+mName <- "HCR_crScrN03_EcommPhFCol"   # QQE:Todo --------------------------------------------------------
+if( FALSE ){
+    HCRMtxCfg[[mName]] <- list(
+        mName = mName   ,style=c( freqZero=TRUE )
+        ,fCol = list(
+            "Fhpn0"=list( rng=matrix( c(0,0 ,10,11) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        ) 
+            ,"Fph"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"FfCol"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"Shpn0"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"Sph"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"SfCol"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+        )
+        ,evtMax = matrix( c(2,1,3,1 ,2,1,3,1)     ,byrow=T ,ncol=4
+                    ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
+        )
+        ,rowReb = c( rawMin=1 ,lowE=1 ,rareE=1 ,dupESum=2 ) # c( rawMin=2 ,lowE=2 ,rareE=2 ,dupESum=2 )
+        # ,hIMtxHpnCnt = matrix( c(0,1,2,3  ,0,0,2,0)   ,byrow=T  ,nrow=2  ,dimnames=list(c("hpnCnt","thld"),NULL) )
+        # ,hIMtxValSum = matrix( c(2,5  ,2,0)   ,byrow=T  ,nrow=2  ,dimnames=list(c("valSum","thld"),NULL) )
+        # ,rowRebDupBan = matrix( c( TRUE, F ,2    ,TRUE ,F ,2 )   ,byrow=T ,nrow=2 ,dimnames=list(c("AA_A","AAB_B"),c("OnOff","freqVal","rawMin")) )
+        ,isHard=NULL  # use default
+    )
+}
+mName <- "HCR_crScrN03_Rrares"   # QQE:Todo --------------------------------------------------------
+if( FALSE ){
+    HCRMtxCfg[[mName]] <- list(
+        mName = mName   ,style=c( freqZero=TRUE )
+        ,fCol = list(
+            "_phReb"=list( rng=matrix( c(0,0 ,10,11) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        ) 
+            ,"_xyCnt.fCol"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"_xyCnt.phase"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"_ph_Reb"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"_fCol_Reb"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"_phReb_Reb"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"_xyCnt.fCol_Reb"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"_xyCnt.phase_Reb"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"_dblHpnFlg_sz"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"_ph_szDup"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"_fCol_szDup"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"_dblHpnFlg_szDup"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+        )
+        ,evtMax = matrix( c(2,1,3,1 ,2,1,3,1)     ,byrow=T ,ncol=4
+                    ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
+        )
+        ,rowReb = c( rawMin=1 ,lowE=1 ,rareE=1 ,dupESum=2 ) # c( rawMin=2 ,lowE=2 ,rareE=2 ,dupESum=2 )
+        ,isHard=NULL  # use default
+    )
+}
+
+
+mName <- "HCR_crScrN04_RszPhFCol"   # QQE:Todo --------------------------------------------------------
+if( FALSE ){
+    HCRMtxCfg[[mName]] <- list(
+        mName = mName   ,style=c( freqZero=TRUE )
+        ,fCol = list(
+            "Fhpn0"=list( rng=matrix( c(0,0 ,10,11) ,ncol=2 )
+                            ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        ) 
+            ,"Fph_sz"=list( rng=matrix( c(0,0 ,0,3) ,ncol=2 )
+                            ,evt=matrix( c(c(1,2,3,3),c(0,2,3,4)) ,ncol=2)  # 0 발생이 드물다.
+                        )
+            ,"FfCol_sz"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                            ,evt=matrix( c(c(3,3,3,3),c(2,3,4,5)) ,ncol=2)
+                        )
+            ,"Shpn0"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                            ,evt=matrix( c(c(1,3,3,3),c(2,3,4,5)) ,ncol=2)
+                        )
+            ,"Sph_sz"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                        )
+            ,"SfCol_sz"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                        )
+        )
+        ,evtMax = matrix( c(2,1,3,1 ,2,1,3,1)     ,byrow=T ,ncol=4
+                    ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
+        )
+        ,rowReb = c( rawMin=1 ,lowE=2 ,rareE=1 ,dupESum=2 ) # c( rawMin=2 ,lowE=2 ,rareE=2 ,dupESum=2 )
+        # ,hIMtxHpnCnt = matrix( c(0,1,2,3  ,0,0,2,0)   ,byrow=T  ,nrow=2  ,dimnames=list(c("hpnCnt","thld"),NULL) )
+        # ,hIMtxValSum = matrix( c(2,5  ,2,0)   ,byrow=T  ,nrow=2  ,dimnames=list(c("valSum","thld"),NULL) )
+        ,isHard=NULL  # use default
+    )
+}
+mName <- "HCR_crScrN04_EszPhFCol"   # QQE:Todo --------------------------------------------------------
+if( FALSE ){
+    HCRMtxCfg[[mName]] <- list(
+        mName = mName   ,style=c( freqZero=TRUE )
+        ,fCol = list(
+            "Fhpn0"=list( rng=matrix( c(0,0 ,10,11) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        ) 
+            ,"Fph_sz"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"FfCol_sz"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"Shpn0"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"Sph_sz"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"SfCol_sz"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+        )
+        ,evtMax = matrix( c(2,1,3,1 ,2,1,3,1)     ,byrow=T ,ncol=4
+                    ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
+        )
+        ,rowReb = c( rawMin=1 ,lowE=1 ,rareE=1 ,dupESum=2 ) # c( rawMin=2 ,lowE=2 ,rareE=2 ,dupESum=2 )
+        ,isHard=NULL  # use default
+    )
+}
+mName <- "HCR_crScrN04_RcommPhFCol"   # QQE:Todo --------------------------------------------------------
+if( FALSE ){
+    HCRMtxCfg[[mName]] <- list(
+        mName = mName   ,style=c( freqZero=TRUE )
+        ,fCol = list(
+            "Fhpn0"=list( rng=matrix( c(0,0 ,10,11) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        ) 
+            ,"Fph"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"FfCol"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"Shpn0"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"Sph"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"SfCol"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+        )
+        ,evtMax = matrix( c(2,1,3,1 ,2,1,3,1)     ,byrow=T ,ncol=4
+                    ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
+        )
+        ,rowReb = c( rawMin=1 ,lowE=1 ,rareE=1 ,dupESum=2 ) # c( rawMin=2 ,lowE=2 ,rareE=2 ,dupESum=2 )
+        ,isHard=NULL  # use default
+    )
+}
+mName <- "HCR_crScrN04_EcommPhFCol"   # QQE:Todo --------------------------------------------------------
+if( FALSE ){
+    HCRMtxCfg[[mName]] <- list(
+        mName = mName   ,style=c( freqZero=TRUE )
+        ,fCol = list(
+            "Fhpn0"=list( rng=matrix( c(0,0 ,10,11) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        ) 
+            ,"Fph"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"FfCol"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"Shpn0"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"Sph"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"SfCol"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+        )
+        ,evtMax = matrix( c(2,1,3,1 ,2,1,3,1)     ,byrow=T ,ncol=4
+                    ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
+        )
+        ,rowReb = c( rawMin=1 ,lowE=1 ,rareE=1 ,dupESum=2 ) # c( rawMin=2 ,lowE=2 ,rareE=2 ,dupESum=2 )
+        # ,hIMtxHpnCnt = matrix( c(0,1,2,3  ,0,0,2,0)   ,byrow=T  ,nrow=2  ,dimnames=list(c("hpnCnt","thld"),NULL) )
+        # ,hIMtxValSum = matrix( c(2,5  ,2,0)   ,byrow=T  ,nrow=2  ,dimnames=list(c("valSum","thld"),NULL) )
+        # ,rowRebDupBan = matrix( c( TRUE, F ,2    ,TRUE ,F ,2 )   ,byrow=T ,nrow=2 ,dimnames=list(c("AA_A","AAB_B"),c("OnOff","freqVal","rawMin")) )
+        ,isHard=NULL  # use default
+    )
+}
+mName <- "HCR_crScrN04_Rrares"   # QQE:Todo --------------------------------------------------------
+if( FALSE ){
+    HCRMtxCfg[[mName]] <- list(
+        mName = mName   ,style=c( freqZero=TRUE )
+        ,fCol = list(
+            "_phReb"=list( rng=matrix( c(0,0 ,10,11) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        ) 
+            ,"_xyCnt.fCol"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"_xyCnt.phase"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"_ph_Reb"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"_fCol_Reb"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"_phReb_Reb"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"_xyCnt.fCol_Reb"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"_xyCnt.phase_Reb"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"_dblHpnFlg_sz"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"_ph_szDup"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"_fCol_szDup"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"_dblHpnFlg_szDup"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+        )
+        ,evtMax = matrix( c(2,1,3,1 ,2,1,3,1)     ,byrow=T ,ncol=4
+                    ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
+        )
+        ,rowReb = c( rawMin=1 ,lowE=1 ,rareE=1 ,dupESum=2 ) # c( rawMin=2 ,lowE=2 ,rareE=2 ,dupESum=2 )
+        ,isHard=NULL  # use default
+    )
+}
+
+
+mName <- "HCR_crScrN05_RszPhFCol"   # QQE:Todo --------------------------------------------------------
+if( FALSE ){
+    HCRMtxCfg[[mName]] <- list(
+        mName = mName   ,style=c( freqZero=TRUE )
+        ,fCol = list(
+            "Fhpn0"=list( rng=matrix( c(0,0 ,10,11) ,ncol=2 )
+                            ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        ) 
+            ,"Fph_sz"=list( rng=matrix( c(0,0 ,0,3) ,ncol=2 )
+                            ,evt=matrix( c(c(1,2,3,3),c(0,2,3,4)) ,ncol=2)  # 0 발생이 드물다.
+                        )
+            ,"FfCol_sz"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                            ,evt=matrix( c(c(3,3,3,3),c(2,3,4,5)) ,ncol=2)
+                        )
+            ,"Shpn0"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                            ,evt=matrix( c(c(1,3,3,3),c(2,3,4,5)) ,ncol=2)
+                        )
+            ,"Sph_sz"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                        )
+            ,"SfCol_sz"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
+                        )
+        )
+        ,evtMax = matrix( c(2,1,3,1 ,2,1,3,1)     ,byrow=T ,ncol=4
+                    ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
+        )
+        ,rowReb = c( rawMin=1 ,lowE=2 ,rareE=1 ,dupESum=2 ) # c( rawMin=2 ,lowE=2 ,rareE=2 ,dupESum=2 )
+        # ,hIMtxHpnCnt = matrix( c(0,1,2,3  ,0,0,2,0)   ,byrow=T  ,nrow=2  ,dimnames=list(c("hpnCnt","thld"),NULL) )
+        # ,hIMtxValSum = matrix( c(2,5  ,2,0)   ,byrow=T  ,nrow=2  ,dimnames=list(c("valSum","thld"),NULL) )
+        ,isHard=NULL  # use default
+    )
+}
+mName <- "HCR_crScrN05_EszPhFCol"   # QQE:Todo --------------------------------------------------------
+if( FALSE ){
+    HCRMtxCfg[[mName]] <- list(
+        mName = mName   ,style=c( freqZero=TRUE )
+        ,fCol = list(
+            "Fhpn0"=list( rng=matrix( c(0,0 ,10,11) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        ) 
+            ,"Fph_sz"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"FfCol_sz"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"Shpn0"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"Sph_sz"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"SfCol_sz"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+        )
+        ,evtMax = matrix( c(2,1,3,1 ,2,1,3,1)     ,byrow=T ,ncol=4
+                    ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
+        )
+        ,rowReb = c( rawMin=1 ,lowE=1 ,rareE=1 ,dupESum=2 ) # c( rawMin=2 ,lowE=2 ,rareE=2 ,dupESum=2 )
+        ,isHard=NULL  # use default
+    )
+}
+mName <- "HCR_crScrN05_RcommPhFCol"   # QQE:Todo --------------------------------------------------------
+if( FALSE ){
+    HCRMtxCfg[[mName]] <- list(
+        mName = mName   ,style=c( freqZero=TRUE )
+        ,fCol = list(
+            "Fhpn0"=list( rng=matrix( c(0,0 ,10,11) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        ) 
+            ,"Fph"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"FfCol"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"Shpn0"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"Sph"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"SfCol"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+        )
+        ,evtMax = matrix( c(2,1,3,1 ,2,1,3,1)     ,byrow=T ,ncol=4
+                    ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
+        )
+        ,rowReb = c( rawMin=1 ,lowE=1 ,rareE=1 ,dupESum=2 ) # c( rawMin=2 ,lowE=2 ,rareE=2 ,dupESum=2 )
+        ,isHard=NULL  # use default
+    )
+}
+mName <- "HCR_crScrN05_EcommPhFCol"   # QQE:Todo --------------------------------------------------------
+if( FALSE ){
+    HCRMtxCfg[[mName]] <- list(
+        mName = mName   ,style=c( freqZero=TRUE )
+        ,fCol = list(
+            "Fhpn0"=list( rng=matrix( c(0,0 ,10,11) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        ) 
+            ,"Fph"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"FfCol"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"Shpn0"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"Sph"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"SfCol"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+        )
+        ,evtMax = matrix( c(2,1,3,1 ,2,1,3,1)     ,byrow=T ,ncol=4
+                    ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
+        )
+        ,rowReb = c( rawMin=1 ,lowE=1 ,rareE=1 ,dupESum=2 ) # c( rawMin=2 ,lowE=2 ,rareE=2 ,dupESum=2 )
+        # ,hIMtxHpnCnt = matrix( c(0,1,2,3  ,0,0,2,0)   ,byrow=T  ,nrow=2  ,dimnames=list(c("hpnCnt","thld"),NULL) )
+        # ,hIMtxValSum = matrix( c(2,5  ,2,0)   ,byrow=T  ,nrow=2  ,dimnames=list(c("valSum","thld"),NULL) )
+        # ,rowRebDupBan = matrix( c( TRUE, F ,2    ,TRUE ,F ,2 )   ,byrow=T ,nrow=2 ,dimnames=list(c("AA_A","AAB_B"),c("OnOff","freqVal","rawMin")) )
+        ,isHard=NULL  # use default
+    )
+}
+mName <- "HCR_crScrN05_Rrares"   # QQE:Todo --------------------------------------------------------
+if( FALSE ){
+    HCRMtxCfg[[mName]] <- list(
+        mName = mName   ,style=c( freqZero=TRUE )
+        ,fCol = list(
+            "_phReb"=list( rng=matrix( c(0,0 ,10,11) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        ) 
+            ,"_xyCnt.fCol"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"_xyCnt.phase"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"_ph_Reb"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"_fCol_Reb"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"_phReb_Reb"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"_xyCnt.fCol_Reb"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"_xyCnt.phase_Reb"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"_dblHpnFlg_sz"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"_ph_szDup"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"_fCol_szDup"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"_dblHpnFlg_szDup"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+        )
+        ,evtMax = matrix( c(2,1,3,1 ,2,1,3,1)     ,byrow=T ,ncol=4
+                    ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
+        )
+        ,rowReb = c( rawMin=1 ,lowE=1 ,rareE=1 ,dupESum=2 ) # c( rawMin=2 ,lowE=2 ,rareE=2 ,dupESum=2 )
+        ,isHard=NULL  # use default
+    )
+}
+
+
+#- HCR.MtxTmpl_crScrNnPhEvt -----------------------------------------------------------------------------------------------
+mName <- "HCR_crScrN01_PhEvtmax"   # QQE:Todo --------------------------------------------------------
+if( FALSE ){
+    HCRMtxCfg[[mName]] <- list(
+        mName = mName   ,style=c( freqZero=TRUE )
+        ,fCol = list(
+            "Fe3Max"=list( rng=matrix( c(0,0 ,10,11) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        ) 
+            ,"Fe2Max"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"Fe1Max"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"FrebRawMax"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"Se3Max"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"Se2Max"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"Se1Max"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"SrebRawMax"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+        )
+        ,evtMax = matrix( c(2,1,3,1 ,2,1,3,1)     ,byrow=T ,ncol=4
+                    ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
+        )
+        ,rowReb = c( rawMin=1 ,lowE=1 ,rareE=1 ,dupESum=2 ) # c( rawMin=2 ,lowE=2 ,rareE=2 ,dupESum=2 )
+        ,isHard=NULL  # use default
+    )
+}
+mName <- "HCR_crScrN01_PhEvtcnt"   # QQE:Todo --------------------------------------------------------
+if( FALSE ){
+    HCRMtxCfg[[mName]] <- list(
+        mName = mName   ,style=c( freqZero=TRUE )
+        ,fCol = list(
+            "Fe3MCnt"=list( rng=matrix( c(0,0 ,10,11) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        ) 
+            ,"Fe2MCnt"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"Fe1MCnt"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"FrebRawMCnt"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"Se3MCnt"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"Se2MCnt"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"Se1MCnt"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"SrebRawMCnt"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+        )
+        ,evtMax = matrix( c(2,1,3,1 ,2,1,3,1)     ,byrow=T ,ncol=4
+                    ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
+        )
+        ,rowReb = c( rawMin=1 ,lowE=1 ,rareE=1 ,dupESum=2 ) # c( rawMin=2 ,lowE=2 ,rareE=2 ,dupESum=2 )
+        ,isHard=NULL  # use default
+    )
+}
+mName <- "HCR_crScrN01_PhEvtrebEvtMax"   # QQE:Todo --------------------------------------------------------
+if( FALSE ){
+    HCRMtxCfg[[mName]] <- list(
+        mName = mName   ,style=c( freqZero=TRUE )
+        ,fCol = list(
+            "FrebEvtMax"=list( rng=matrix( c(0,0 ,10,11) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        ) 
+            ,"SrebEvtMax"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+        )
+        ,evtMax = matrix( c(2,1,3,1 ,2,1,3,1)     ,byrow=T ,ncol=4
+                    ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
+        )
+        ,rowReb = c( rawMin=1 ,lowE=1 ,rareE=1 ,dupESum=2 ) # c( rawMin=2 ,lowE=2 ,rareE=2 ,dupESum=2 )
+        ,isHard=NULL  # use default
+    )
+}
+mName <- "HCR_crScrN01_PhEvtrebEvtMCnt"   # QQE:Todo --------------------------------------------------------
+if( FALSE ){
+    HCRMtxCfg[[mName]] <- list(
+        mName = mName   ,style=c( freqZero=TRUE )
+        ,fCol = list(
+            "FrebEvtMCnt"=list( rng=matrix( c(0,0 ,10,11) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        ) 
+            ,"SrebEvtMCnt"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+        )
+        ,evtMax = matrix( c(2,1,3,1 ,2,1,3,1)     ,byrow=T ,ncol=4
+                    ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
+        )
+        ,rowReb = c( rawMin=1 ,lowE=1 ,rareE=1 ,dupESum=2 ) # c( rawMin=2 ,lowE=2 ,rareE=2 ,dupESum=2 )
+        ,isHard=NULL  # use default
+    )
+}
+
+mName <- "HCR_crScrN2345_PhEvtrebEvtMax"   # QQE:Todo --------------------------------------------------------
+if( FALSE ){
+    HCRMtxCfg[[mName]] <- list(
+        mName = mName   ,style=c( freqZero=TRUE )
+        ,fCol = list(
+            "F2rebEvtMax"=list( rng=matrix( c(0,0 ,10,11) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        ) 
+            ,"S2rebEvtMax"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"F3rebEvtMax"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"S3rebEvtMax"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"F4rebEvtMax"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"S4rebEvtMax"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"F5rebEvtMax"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"S5rebEvtMax"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+        )
+        ,evtMax = matrix( c(2,1,3,1 ,2,1,3,1)     ,byrow=T ,ncol=4
+                    ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
+        )
+        ,rowReb = c( rawMin=1 ,lowE=1 ,rareE=1 ,dupESum=2 ) # c( rawMin=2 ,lowE=2 ,rareE=2 ,dupESum=2 )
+        ,isHard=NULL  # use default
+    )
+}
+
+mName <- "HCR_crScrN2345_PhEvtrebEvtMCnt"   # QQE:Todo --------------------------------------------------------
+if( FALSE ){
+    HCRMtxCfg[[mName]] <- list(
+        mName = mName   ,style=c( freqZero=TRUE )
+        ,fCol = list(
+            "F2rebEvtMCnt"=list( rng=matrix( c(0,0 ,10,11) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        ) 
+            ,"S2rebEvtMCnt"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"F3rebEvtMCnt"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"S3rebEvtMCnt"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"F4rebEvtMCnt"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"S4rebEvtMCnt"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"F5rebEvtMCnt"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"S5rebEvtMCnt"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+        )
+        ,evtMax = matrix( c(2,1,3,1 ,2,1,3,1)     ,byrow=T ,ncol=4
+                    ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
+        )
+        ,rowReb = c( rawMin=1 ,lowE=1 ,rareE=1 ,dupESum=2 ) # c( rawMin=2 ,lowE=2 ,rareE=2 ,dupESum=2 )
+        ,isHard=NULL  # use default
+    )
+}
+
+# ........
+
+
+#- HCR.MtxTmpl_crScrNnSum -----------------------------------------------------------------------------------------------
+mName <- "HCR_crScrN01_sumsumRaw"   # QQE:Todo --------------------------------------------------------
+if( FALSE ){
+    HCRMtxCfg[[mName]] <- list(
+        mName = mName   ,style=c( freqZero=TRUE )
+        ,fCol = list(
+            "FsummSumRaw"=list( rng=matrix( c(0,0 ,10,11) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        ) 
+            ,"FsummSumOthRaw"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"FsummSumRebRaw"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"FsummSumRebOthRaw"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"SsummSumRaw"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"SsummSumOthRaw"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"SsummSumRebRaw"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"SsummSumRebOthRaw"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+        )
+        ,evtMax = matrix( c(2,1,3,1 ,2,1,3,1)     ,byrow=T ,ncol=4
+                    ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
+        )
+        ,rowReb = c( rawMin=1 ,lowE=1 ,rareE=1 ,dupESum=2 ) # c( rawMin=2 ,lowE=2 ,rareE=2 ,dupESum=2 )
+        ,isHard=NULL  # use default
+    )
+}
+mName <- "HCR_crScrN01_sumsumEvt"   # QQE:Todo --------------------------------------------------------
+if( FALSE ){
+    HCRMtxCfg[[mName]] <- list(
+        mName = mName   ,style=c( freqZero=TRUE )
+        ,fCol = list(
+            "FsummSumEvt"=list( rng=matrix( c(0,0 ,10,11) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        ) 
+            ,"FsummSumOthEvt"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"FsummSumRebEvt"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"FsummSumRebOthEvt"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"SsummSumEvt"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"SsummSumOthEvt"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"SsummSumRebEvt"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"SsummSumRebOthEvt"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+        )
+        ,evtMax = matrix( c(2,1,3,1 ,2,1,3,1)     ,byrow=T ,ncol=4
+                    ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
+        )
+        ,rowReb = c( rawMin=1 ,lowE=1 ,rareE=1 ,dupESum=2 ) # c( rawMin=2 ,lowE=2 ,rareE=2 ,dupESum=2 )
+        ,isHard=NULL  # use default
+    )
+}
+mName <- "HCR_crScrN01_sumszSumRebCnt"   # QQE:Todo --------------------------------------------------------
+if( FALSE ){
+    HCRMtxCfg[[mName]] <- list(
+        mName = mName   ,style=c( freqZero=TRUE )
+        ,fCol = list(
+            "FszSumRebCnt"=list( rng=matrix( c(0,0 ,10,11) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        ) 
+            ,"SszSumRebCnt"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+        )
+        ,evtMax = matrix( c(2,1,3,1 ,2,1,3,1)     ,byrow=T ,ncol=4
+                    ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
+        )
+        ,rowReb = c( rawMin=1 ,lowE=1 ,rareE=1 ,dupESum=2 ) # c( rawMin=2 ,lowE=2 ,rareE=2 ,dupESum=2 )
+        ,isHard=NULL  # use default
+    )
+}
+mName <- "HCR_crScrN01_sumszSumRebDup"   # QQE:Todo --------------------------------------------------------
+if( FALSE ){
+    HCRMtxCfg[[mName]] <- list(
+        mName = mName   ,style=c( freqZero=TRUE )
+        ,fCol = list(
+            "FszSumRebDup"=list( rng=matrix( c(0,0 ,10,11) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        ) 
+            ,"SszSumRebDup"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+        )
+        ,evtMax = matrix( c(2,1,3,1 ,2,1,3,1)     ,byrow=T ,ncol=4
+                    ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
+        )
+        ,rowReb = c( rawMin=1 ,lowE=1 ,rareE=1 ,dupESum=2 ) # c( rawMin=2 ,lowE=2 ,rareE=2 ,dupESum=2 )
+        ,isHard=NULL  # use default
+    )
+}
+
+mName <- "HCR_crScrN2345_sumszSumRebCnt"   # QQE:Todo --------------------------------------------------------
+if( FALSE ){
+    HCRMtxCfg[[mName]] <- list(
+        mName = mName   ,style=c( freqZero=TRUE )
+        ,fCol = list(
+            "F2szSumRebCnt"=list( rng=matrix( c(0,0 ,10,11) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        ) 
+            ,"S2szSumRebCnt"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"F3szSumRebCnt"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"S3szSumRebCnt"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"F4szSumRebCnt"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"S4szSumRebCnt"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"F5szSumRebCnt"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"S5szSumRebCnt"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+        )
+        ,evtMax = matrix( c(2,1,3,1 ,2,1,3,1)     ,byrow=T ,ncol=4
+                    ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
+        )
+        ,rowReb = c( rawMin=1 ,lowE=1 ,rareE=1 ,dupESum=2 ) # c( rawMin=2 ,lowE=2 ,rareE=2 ,dupESum=2 )
+        ,isHard=NULL  # use default
+    )
+}
+
+mName <- "HCR_crScrN2345_sumszSumRebDup"   # QQE:Todo --------------------------------------------------------
+if( FALSE ){
+    HCRMtxCfg[[mName]] <- list(
+        mName = mName   ,style=c( freqZero=TRUE )
+        ,fCol = list(
+            "F2szSumRebDup"=list( rng=matrix( c(0,0 ,10,11) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        ) 
+            ,"S2szSumRebDup"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"F3szSumRebDup"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"S3szSumRebDup"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"F4szSumRebDup"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"S4szSumRebDup"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"F5szSumRebDup"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"S5szSumRebDup"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+        )
+        ,evtMax = matrix( c(2,1,3,1 ,2,1,3,1)     ,byrow=T ,ncol=4
+                    ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
+        )
+        ,rowReb = c( rawMin=1 ,lowE=1 ,rareE=1 ,dupESum=2 ) # c( rawMin=2 ,lowE=2 ,rareE=2 ,dupESum=2 )
+        ,isHard=NULL  # use default
+    )
+}
+
+# ........
+
+
+#- HCR.MtxTmpl_crScrNnSumClM -----------------------------------------------------------------------------------------------
+mName <- "HCR_crScrN01_sumClMsumTotX"   # QQE:Todo --------------------------------------------------------
+if( FALSE ){
+    HCRMtxCfg[[mName]] <- list(
+        mName = mName   ,style=c( freqZero=TRUE )
+        ,fCol = list(
+            "FsumTot1"=list( rng=matrix( c(0,0 ,10,11) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        ) 
+            ,"FsumTot2"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"FsumTot3"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"SsumTot1"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"SsumTot2"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"SsumTot3"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+        )
+        ,evtMax = matrix( c(2,1,3,1 ,2,1,3,1)     ,byrow=T ,ncol=4
+                    ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
+        )
+        ,rowReb = c( rawMin=1 ,lowE=1 ,rareE=1 ,dupESum=2 ) # c( rawMin=2 ,lowE=2 ,rareE=2 ,dupESum=2 )
+        ,isHard=NULL  # use default
+    )
+}
+
+mName <- "HCR_crScrN2345_sumClMsumTotHpn"   # QQE:Todo --------------------------------------------------------
+if( FALSE ){
+    HCRMtxCfg[[mName]] <- list(
+        mName = mName   ,style=c( freqZero=TRUE )
+        ,fCol = list(
+            "F2sumTotHpn"=list( rng=matrix( c(0,0 ,10,11) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        ) 
+            ,"S2sumTotHpn"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"F3sumTotHpn"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"S3sumTotHpn"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"F4sumTotHpn"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"S4sumTotHpn"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"F5sumTotHpn"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+            ,"S5sumTotHpn"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                        )
+        )
+        ,evtMax = matrix( c(2,1,3,1 ,2,1,3,1)     ,byrow=T ,ncol=4
+                    ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
+        )
+        ,rowReb = c( rawMin=1 ,lowE=1 ,rareE=1 ,dupESum=2 ) # c( rawMin=2 ,lowE=2 ,rareE=2 ,dupESum=2 )
+        ,isHard=NULL  # use default
+    )
+}
+
+
+
+# ........
 
 mName <- "xxxx"   # QQE:Todo --------------------------------------------------------
 if( FALSE ){
