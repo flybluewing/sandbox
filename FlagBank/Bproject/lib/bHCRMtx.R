@@ -1863,6 +1863,42 @@ if( TRUE ){
     bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
 }
 
+mName <- "HCR_crScrN2345_Rrares"
+if( TRUE ){
+    fMaker <- function( mName ,crScrH ){
+        # crScrH 사실 필요 치 않음. 단지 다른 filter 생성자와 파라미터 맞추기 위함.
+
+        wMGrp <- list()
+        wMGrp[["_"]] <- list()
+        wMGrp[["_"]] <- c( wMGrp[["_"]] ,"score1","score2","score3","score4","score5","score6","score7","score8","score9")
+        wMGrp[["_"]] <- c( wMGrp[["_"]] ,"sScore01","sScore02","sScore03","sScore04","sScore05","sScore06","sScore07","sScore08")
+
+        wMGrp[["_"]] <- c( wMGrp[["_"]] ,"scoreA","scoreB","scoreC","scoreD","scoreE","scoreF" )
+        wMGrp[["_"]] <- c( wMGrp[["_"]] ,"scoreLAe13","scoreLAe24","scoreLVe13","scoreLVe24" )
+        wMGrp[["_"]] <- c( wMGrp[["_"]] ,"sScore0LAe13","sScore0LAe24","sScore0LVe13","sScore0LVe24" )
+
+        wMGrp[["_"]] <- c( wMGrp[["_"]] ,"scoreLAr13","scoreLAr24","scoreLVr13","scoreLVr24" )
+        wMGrp[["_"]] <- c( wMGrp[["_"]] ,"scoreLAc13","scoreLAc24","scoreLVc13","scoreLVc24" )
+        wMGrp[["_"]] <- c( wMGrp[["_"]] ,"scoreLAf13","scoreLAf24","scoreLVf13","scoreLVf24" )
+        wMGrp[["_"]] <- c( wMGrp[["_"]] ,"sScore0LAr13","sScore0LAr24","sScore0LVr13","sScore0LVr24" )
+        wMGrp[["_"]] <- c( wMGrp[["_"]] ,"sScore0LAc13","sScore0LAc24","sScore0LVc13","sScore0LVc24" )
+        wMGrp[["_"]] <- c( wMGrp[["_"]] ,"sScore0LAf13","sScore0LAf24","sScore0LVf13","sScore0LVf24" )
+
+        wMGrp[["_"]] <- c( wMGrp[["_"]] ,"scoreFV"  ,"scoreGS" ,"scoreGSh2" ,"scoreGS3" ,"scorePSh" ,"scorePSrp" ,"scorePSrpRaw" )
+        wMGrp[["_"]] <- c( wMGrp[["_"]] ,"sScore0GS" ,"sScore0GSh2" ,"sScore0GS3" ,"sScore0PSh" ,"sScore0PSrp" ,"sScore0PSrpRaw" )
+
+        rObj <- list( mName=mName ,wMGrp=wMGrp )
+        rObj$getFilter <- function( crScrH=NULL ){
+            fObj <- HCR.MtxTmpl_crScrNnx( mName=mName ,wMGrp=rObj$wMGrp ,rawF=T ,colOpt="rares" )   # raw용(rawF=T)
+            return( fObj )
+        }
+
+        return( rObj )
+    }
+    bHCRMtxLst[[mName]] <- fMaker( mName ,crScrH )
+}
+
+
 #- HCR.MtxTmpl_crScrNnPhEvt -----------------------------------------------------------------------------------------------
 mName <- "HCR_crScrN01_PhEvtmax"
 if( TRUE ){
