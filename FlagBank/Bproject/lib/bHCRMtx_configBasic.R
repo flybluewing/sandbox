@@ -4930,8 +4930,8 @@ if( TRUE ){
 
 
 #- HCR.MtxTmpl_crScrNnSum -----------------------------------------------------------------------------------------------
-mName <- "HCR_crScrN01_sumsumRaw"   # QQE:Todo --------------------------------------------------------
-if( T ){
+mName <- "HCR_crScrN01_sumsumRaw"
+if( TRUE ){
     HCRMtxCfg[[mName]] <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
@@ -4980,15 +4980,15 @@ if( T ){
     )
 }
 mName <- "HCR_crScrN01_sumsumEvt"   # QQE:Todo --------------------------------------------------------
-if( FALSE ){
+if( T ){
     HCRMtxCfg[[mName]] <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
-            "FsummSumEvt"=list( rng=matrix( c(0,0 ,10,11) ,ncol=2 )
-                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+            "FsummSumEvt"=list( rng=matrix( c(0,0 ,0,3) ,ncol=2 )
+                            ,evt=matrix( c(c(1,1,1,3),c(1,2,3,4)) ,ncol=2)
                         ) 
-            ,"FsummSumOthEvt"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
-                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+            ,"FsummSumOthEvt"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                            ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
                         )
             ,"FsummSumRebEvt"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
                             ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
@@ -4996,11 +4996,11 @@ if( FALSE ){
             ,"FsummSumRebOthEvt"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
                             ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
                         )
-            ,"SsummSumEvt"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
-                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+            ,"SsummSumEvt"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                            ,evt=matrix( c(c(1,2,3,3),c(1,2,3,4)) ,ncol=2)
                         )
-            ,"SsummSumOthEvt"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
-                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+            ,"SsummSumOthEvt"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                            ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
                         )
             ,"SsummSumRebEvt"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
                             ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
@@ -5009,13 +5009,13 @@ if( FALSE ){
                             ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
                         )
         )
-        ,evtMax = matrix( c(2,1,3,1 ,2,1,3,1)     ,byrow=T ,ncol=4
+        ,evtMax = matrix( c(2,2,3,1 ,2,2,3,1)     ,byrow=T ,ncol=4
                     ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
         )
-        ,rowReb = c( rawMin=1 ,lowE=1 ,rareE=1 ,dupESum=2 )
-        # ,hIMtxHpnCnt = matrix( c(0,1,3,4,5,6  ,0,0,0,0,0,0)   ,byrow=T  ,nrow=2  ,dimnames=list(c("hpnCnt","thld"),NULL) )
-        # # ,hIMtxValSum = matrix( c(5,6  ,1,1)   ,byrow=T  ,nrow=2  ,dimnames=list(c("valSum","thld"),NULL) )
-        # ,rowRebDupBan = matrix( c( TRUE, F ,1    ,TRUE ,F ,1 )   ,byrow=T ,nrow=2 ,dimnames=list(c("AA_A","AAB_B"),c("OnOff","freqVal","rawMin")) )
+        ,rowReb = c( rawMin=2 ,lowE=2 ,rareE=1 ,dupESum=2 )
+        ,hIMtxHpnCnt = matrix( c(2,3,4,5,6  ,1,0,0,0,0)   ,byrow=T  ,nrow=2  ,dimnames=list(c("hpnCnt","thld"),NULL) )
+        # ,hIMtxValSum = matrix( c(5,6  ,1,1)   ,byrow=T  ,nrow=2  ,dimnames=list(c("valSum","thld"),NULL) )
+        ,rowRebDupBan = matrix( c( TRUE, F ,2    ,TRUE ,F ,1 )   ,byrow=T ,nrow=2 ,dimnames=list(c("AA_A","AAB_B"),c("OnOff","freqVal","rawMin")) )
         ,isHard=NULL  # use default
     )
 }
@@ -5064,8 +5064,8 @@ if( FALSE ){
     )
 }
 
-mName <- "HCR_crScrN02_sumsumRaw"   # QQE:Todo --------------------------------------------------------
-if( T ){
+mName <- "HCR_crScrN02_sumsumRaw"
+if( TRUE ){
     HCRMtxCfg[[mName]] <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
@@ -5108,27 +5108,28 @@ if( T ){
     )
 }
 mName <- "HCR_crScrN02_sumsumEvt"   # QQE:Todo --------------------------------------------------------
-if( FALSE ){
+if( T ){
     HCRMtxCfg[[mName]] <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
-            "FsummSumEvt"=list( rng=matrix( c(0,0 ,10,11) ,ncol=2 )
-                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+            "FsummSumEvt"=list( rng=matrix( c(0,0 ,0,9) ,ncol=2 )
+                            ,evt=matrix( c(c(1,2,3),c(3,4,5)) ,ncol=2)
+                            ,freqVal=1:3
                         ) 
-            ,"FsummSumOthEvt"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
-                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+            ,"FsummSumOthEvt"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                            ,evt=matrix( c(c(1,3,3),c(2,3,4)) ,ncol=2)
                         )
-            ,"FsummSumRebEvt"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
-                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+            ,"FsummSumRebEvt"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                            ,evt=matrix( c(c(1,2,3,3),c(1,2,3,4)) ,ncol=2)
                         )
             ,"FsummSumRebOthEvt"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
                             ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
                         )
-            ,"SsummSumEvt"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
-                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+            ,"SsummSumEvt"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                            ,evt=matrix( c(c(1,1,3,3),c(1,2,3,4)) ,ncol=2)
                         )
-            ,"SsummSumOthEvt"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
-                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+            ,"SsummSumOthEvt"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
+                            ,evt=matrix( c(c(1,2,3,3),c(1,2,3,4)) ,ncol=2)
                         )
             ,"SsummSumRebEvt"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
                             ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
@@ -5140,10 +5141,10 @@ if( FALSE ){
         ,evtMax = matrix( c(2,1,3,1 ,2,1,3,1)     ,byrow=T ,ncol=4
                     ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
         )
-        ,rowReb = c( rawMin=1 ,lowE=1 ,rareE=1 ,dupESum=2 )
-        # ,hIMtxHpnCnt = matrix( c(0,1,3,4,5,6  ,0,0,0,0,0,0)   ,byrow=T  ,nrow=2  ,dimnames=list(c("hpnCnt","thld"),NULL) )
-        # # ,hIMtxValSum = matrix( c(5,6  ,1,1)   ,byrow=T  ,nrow=2  ,dimnames=list(c("valSum","thld"),NULL) )
-        # ,rowRebDupBan = matrix( c( TRUE, F ,1    ,TRUE ,F ,1 )   ,byrow=T ,nrow=2 ,dimnames=list(c("AA_A","AAB_B"),c("OnOff","freqVal","rawMin")) )
+        ,rowReb = c( rawMin=1 ,lowE=2 ,rareE=1 ,dupESum=2 )
+        ,hIMtxHpnCnt = matrix( c(3,4,5,6  ,1,1,0,0)   ,byrow=T  ,nrow=2  ,dimnames=list(c("hpnCnt","thld"),NULL) )
+        # ,hIMtxValSum = matrix( c(5,6  ,1,1)   ,byrow=T  ,nrow=2  ,dimnames=list(c("valSum","thld"),NULL) )
+        ,rowRebDupBan = matrix( c( TRUE, F ,2    ,TRUE ,F ,1 )   ,byrow=T ,nrow=2 ,dimnames=list(c("AA_A","AAB_B"),c("OnOff","freqVal","rawMin")) )
         ,isHard=NULL  # use default
     )
 }
@@ -5192,8 +5193,8 @@ if( FALSE ){
     )
 }
 
-mName <- "HCR_crScrN03_sumsumRaw"   # QQE:Todo --------------------------------------------------------
-if( T ){
+mName <- "HCR_crScrN03_sumsumRaw"
+if( TRUE ){
     HCRMtxCfg[[mName]] <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
@@ -5235,42 +5236,50 @@ if( T ){
     )
 }
 mName <- "HCR_crScrN03_sumsumEvt"   # QQE:Todo --------------------------------------------------------
-if( FALSE ){
+if( T ){
     HCRMtxCfg[[mName]] <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
-            "FsummSumEvt"=list( rng=matrix( c(0,0 ,10,11) ,ncol=2 )
+            "FsummSumEvt"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
                             ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                            ,forbidEvtReb=3
                         ) 
-            ,"FsummSumOthEvt"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+            ,"FsummSumOthEvt"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
                             ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                            ,forbidEvtReb=3
                         )
             ,"FsummSumRebEvt"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
                             ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                            ,forbidEvtReb=3
                         )
             ,"FsummSumRebOthEvt"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
                             ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                            ,forbidEvtReb=3
                         )
-            ,"SsummSumEvt"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+            ,"SsummSumEvt"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
                             ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                            ,forbidEvtReb=3
                         )
-            ,"SsummSumOthEvt"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
+            ,"SsummSumOthEvt"=list( rng=matrix( c(0,0 ,0,2) ,ncol=2 )
                             ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                            ,forbidEvtReb=3
                         )
             ,"SsummSumRebEvt"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
                             ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                            ,forbidEvtReb=3
                         )
             ,"SsummSumRebOthEvt"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
                             ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+                            ,forbidEvtReb=3
                         )
         )
-        ,evtMax = matrix( c(2,1,3,1 ,2,1,3,1)     ,byrow=T ,ncol=4
+        ,evtMax = matrix( c(2,2,3,1 ,2,2,3,1)     ,byrow=T ,ncol=4
                     ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
         )
-        ,rowReb = c( rawMin=1 ,lowE=1 ,rareE=1 ,dupESum=2 )
-        # ,hIMtxHpnCnt = matrix( c(0,1,3,4,5,6  ,0,0,0,0,0,0)   ,byrow=T  ,nrow=2  ,dimnames=list(c("hpnCnt","thld"),NULL) )
-        # # ,hIMtxValSum = matrix( c(5,6  ,1,1)   ,byrow=T  ,nrow=2  ,dimnames=list(c("valSum","thld"),NULL) )
-        # ,rowRebDupBan = matrix( c( TRUE, F ,1    ,TRUE ,F ,1 )   ,byrow=T ,nrow=2 ,dimnames=list(c("AA_A","AAB_B"),c("OnOff","freqVal","rawMin")) )
+        ,rowReb = c( rawMin=1 ,lowE=2 ,rareE=2 ,dupESum=2 )
+        ,hIMtxHpnCnt = matrix( c(1,2,3  ,0,0,0)   ,byrow=T  ,nrow=2  ,dimnames=list(c("hpnCnt","thld"),NULL) )
+        # ,hIMtxValSum = matrix( c(5,6  ,1,1)   ,byrow=T  ,nrow=2  ,dimnames=list(c("valSum","thld"),NULL) )
+        ,rowRebDupBan = matrix( c( TRUE, F ,1    ,TRUE ,F ,1 )   ,byrow=T ,nrow=2 ,dimnames=list(c("AA_A","AAB_B"),c("OnOff","freqVal","rawMin")) )
         ,isHard=NULL  # use default
     )
 }
@@ -5319,8 +5328,8 @@ if( FALSE ){
     )
 }
 
-mName <- "HCR_crScrN04_sumsumRaw"   # QQE:Todo --------------------------------------------------------
-if( T ){
+mName <- "HCR_crScrN04_sumsumRaw"
+if( TRUE ){
     HCRMtxCfg[[mName]] <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
@@ -5361,11 +5370,11 @@ if( T ){
     )
 }
 mName <- "HCR_crScrN04_sumsumEvt"   # QQE:Todo --------------------------------------------------------
-if( FALSE ){
+if( T ){
     HCRMtxCfg[[mName]] <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
-            "FsummSumEvt"=list( rng=matrix( c(0,0 ,10,11) ,ncol=2 )
+            "FsummSumEvt"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
                             ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
                         ) 
             ,"FsummSumOthEvt"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
@@ -5445,8 +5454,8 @@ if( FALSE ){
     )
 }
 
-mName <- "HCR_crScrN05_sumsumRaw"   # QQE:Todo --------------------------------------------------------
-if( T ){
+mName <- "HCR_crScrN05_sumsumRaw"
+if( TRUE ){
     HCRMtxCfg[[mName]] <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
@@ -5488,12 +5497,13 @@ if( T ){
     )
 }
 mName <- "HCR_crScrN05_sumsumEvt"   # QQE:Todo --------------------------------------------------------
-if( FALSE ){
+if( T ){
     HCRMtxCfg[[mName]] <- list(
         mName = mName   ,style=c( freqZero=TRUE )
         ,fCol = list(
-            "FsummSumEvt"=list( rng=matrix( c(0,0 ,10,11) ,ncol=2 )
-                            ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
+            "FsummSumEvt"=list( rng=matrix( c(0,0 ,0,3) ,ncol=2 )
+                            ,evt=matrix( c(c(2,3,3),c(2,3,4)) ,ncol=2)
+                            ,freqVal=1
                         ) 
             ,"FsummSumOthEvt"=list( rng=matrix( c(0,0 ,0,1) ,ncol=2 )
                             ,evt=matrix( c(c(2,3,3,3),c(1,2,3,4)) ,ncol=2)
@@ -5521,9 +5531,9 @@ if( FALSE ){
                     ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
         )
         ,rowReb = c( rawMin=1 ,lowE=1 ,rareE=1 ,dupESum=2 )
-        # ,hIMtxHpnCnt = matrix( c(0,1,3,4,5,6  ,0,0,0,0,0,0)   ,byrow=T  ,nrow=2  ,dimnames=list(c("hpnCnt","thld"),NULL) )
-        # # ,hIMtxValSum = matrix( c(5,6  ,1,1)   ,byrow=T  ,nrow=2  ,dimnames=list(c("valSum","thld"),NULL) )
-        # ,rowRebDupBan = matrix( c( TRUE, F ,1    ,TRUE ,F ,1 )   ,byrow=T ,nrow=2 ,dimnames=list(c("AA_A","AAB_B"),c("OnOff","freqVal","rawMin")) )
+        ,hIMtxHpnCnt = matrix( c(1,2,3  ,1,0,0)   ,byrow=T  ,nrow=2  ,dimnames=list(c("hpnCnt","thld"),NULL) )
+        # ,hIMtxValSum = matrix( c(5,6  ,1,1)   ,byrow=T  ,nrow=2  ,dimnames=list(c("valSum","thld"),NULL) )
+        ,rowRebDupBan = matrix( c( TRUE, F ,1    ,TRUE ,F ,1 )   ,byrow=T ,nrow=2 ,dimnames=list(c("AA_A","AAB_B"),c("OnOff","freqVal","rawMin")) )
         ,isHard=NULL  # use default
     )
 }

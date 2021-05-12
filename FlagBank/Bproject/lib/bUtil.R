@@ -2227,6 +2227,9 @@ bUtil.getRowRebCutter <- function( rCObj ,cfg ){
 
 		if( hpnCnt < cfg$rowRebDupBan["AAB_B","rawMin"] )	ctrObj$rowRebDupBan["AAB_B"] <- FALSE
 
+		# OnOff 옵션 적용이 별 의미 없는 듯 하다. rawMin값을 올리는 게 더 실용적이니.
+		#	if( any(!cfg$rowRebDupBan["AAB_B","OnOff"]) ){	}
+
 		# AA_A, AAB_B 모두 적용제외 상태라면..
 		if( all(!ctrObj$rowRebDupBan) )		ctrObj$rowRebDupBan <- NULL
 
@@ -2381,7 +2384,6 @@ bUtil.getFarValRebMtx <- function( codeMtx ,nearDist=6 ,naVal=0 ){
 	return( rMtx )
 }
 bUtil.engineScoreFDC <- function( ){
-
 }
 
 
