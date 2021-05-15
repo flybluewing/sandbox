@@ -1,7 +1,7 @@
 source("header.r")  ;source("B_H.R")    ;source("cut_H.R")
 if( FALSE ){    # document
     # lastH <- 893(for 894_1 stdIdx:7913455 )   16
-    # lastH <- 898(for 899_1 stdIdx:5739750 )    4.9
+    # lastH <- 898(for 899_1 stdIdx:5739750 )    1.5
     # lastH <- 933(for 934_1 stdIdx: 233713 )   26
 
     # --------------------------------------------------------
