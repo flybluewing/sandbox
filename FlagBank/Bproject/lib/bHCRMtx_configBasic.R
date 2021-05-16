@@ -815,6 +815,8 @@ if( TRUE ){ # done. OK
         )
         ,evtMax = NULL
         ,rowReb = c( rawMin=1 ,lowE=3,rareE=1 ,dupESum=2 )
+        ,hIMtxHpnCnt = matrix( c(0,4,5  ,0,2,0)   ,byrow=T  ,nrow=2  ,dimnames=list(c("hpnCnt","thld"),NULL) )
+        ,rowRebDupBan = matrix( c( TRUE, F ,1    ,TRUE ,F ,1 )   ,byrow=T ,nrow=2 ,dimnames=list(c("AA_A","AAB_B"),c("OnOff","freqVal","rawMin")) )
         ,isHard=NULL  # use default
     )
 }
@@ -860,33 +862,10 @@ if( TRUE ){ # done. OK
             ,"sScore07"=list( rng=matrix( c(0,0 ,0,4) ,ncol=2 )
                             ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
                         )
-            # ,"scoreLAe13"=list( rng=matrix( c(0,0 ,0,4) ,ncol=2 )
-            #                 ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
-            #             )
-            # ,"scoreLAe24"=list( rng=matrix( c(0,0 ,0,4) ,ncol=2 )
-            #                 ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
-            #             )
-            # ,"scoreLVe13"=list( rng=matrix( c(0,0 ,0,4) ,ncol=2 )
-            #                 ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
-            #             )
-            # ,"scoreLVe24"=list( rng=matrix( c(0,0 ,0,4) ,ncol=2 )
-            #                 ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
-            #             )
-            # ,"sScore0LAe13"=list( rng=matrix( c(0,0 ,0,4) ,ncol=2 )
-            #                 ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
-            #             )
-            # ,"sScore0LAe24"=list( rng=matrix( c(0,0 ,0,4) ,ncol=2 )
-            #                 ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
-            #             )
-            # ,"sScore0LVe13"=list( rng=matrix( c(0,0 ,0,4) ,ncol=2 )
-            #                 ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
-            #             )
-            # ,"sScore0LVe24"=list( rng=matrix( c(0,0 ,0,4) ,ncol=2 )
-            #                 ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
-            #             )
         )
-        ,evtMax = NULL
-        ,rowReb = c( rawMin=1 ,lowE=3,rareE=1 ,dupESum=2 )
+        ,evtMax = NULL        ,rowReb = c( rawMin=1 ,lowE=3,rareE=1 ,dupESum=2 )
+        ,hIMtxHpnCnt = matrix( c(2,3,4  ,1,0,0)   ,byrow=T  ,nrow=2  ,dimnames=list(c("hpnCnt","thld"),NULL) )
+        ,rowRebDupBan = matrix( c( TRUE, F ,1    ,TRUE ,F ,1 )   ,byrow=T ,nrow=2 ,dimnames=list(c("AA_A","AAB_B"),c("OnOff","freqVal","rawMin")) )
         ,isHard=NULL  # use default
     )
 }
@@ -920,8 +899,9 @@ if( TRUE ){ # done. OK
                             ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
                         )
         )
-        ,evtMax = NULL
-        ,rowReb = c( rawMin=1 ,lowE=3,rareE=1 ,dupESum=2 )  # H853 H884
+        ,evtMax = NULL        ,rowReb = c( rawMin=1 ,lowE=3,rareE=1 ,dupESum=2 )  # H853 H884
+        ,hIMtxHpnCnt = matrix( c(2,3,4,5  ,3,0,0,0)   ,byrow=T  ,nrow=2  ,dimnames=list(c("hpnCnt","thld"),NULL) )
+        ,rowRebDupBan = matrix( c( TRUE, F ,1    ,TRUE ,F ,1 )   ,byrow=T ,nrow=2 ,dimnames=list(c("AA_A","AAB_B"),c("OnOff","freqVal","rawMin")) )
         ,isHard=NULL  # use default
     )
 }
@@ -1004,8 +984,9 @@ if( TRUE ){ # done. OK
                             ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
                         )
         )
-        ,evtMax = NULL
-        ,rowReb = c( rawMin=1 ,lowE=3,rareE=1 ,dupESum=2 )
+        ,evtMax = NULL        ,rowReb = c( rawMin=1 ,lowE=3,rareE=1 ,dupESum=2 )
+        ,hIMtxHpnCnt = matrix( c(1,3,4,5,6  ,2,2,0,0,0)   ,byrow=T  ,nrow=2  ,dimnames=list(c("hpnCnt","thld"),NULL) )
+        ,rowRebDupBan = matrix( c( TRUE, F ,1    ,TRUE ,F ,1 )   ,byrow=T ,nrow=2 ,dimnames=list(c("AA_A","AAB_B"),c("OnOff","freqVal","rawMin")) )
         ,isHard=NULL  # use default
     )
 }
@@ -1072,8 +1053,9 @@ if( TRUE ){ # done. OK
                             ,evt=matrix( c(c(3,3,3),c(2,3,4)) ,ncol=2)
                         )
         )
-        ,evtMax = NULL
-        ,rowReb = c( rawMin=1 ,lowE=4,rareE=1 ,dupESum=3 )
+        ,evtMax = NULL        ,rowReb = c( rawMin=1 ,lowE=4,rareE=1 ,dupESum=3 )
+        ,hIMtxHpnCnt = matrix( c(0,1,6,7,8  ,0,1,2,2,0)   ,byrow=T  ,nrow=2  ,dimnames=list(c("hpnCnt","thld"),NULL) )
+        ,rowRebDupBan = matrix( c( TRUE, F ,1    ,TRUE ,F ,1 )   ,byrow=T ,nrow=2 ,dimnames=list(c("AA_A","AAB_B"),c("OnOff","freqVal","rawMin")) )
         ,isHard=NULL  # use default
     )
 }
@@ -1123,8 +1105,9 @@ if( TRUE ){ # done. OK
                             ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
                         )
         )
-        ,evtMax = NULL
-        ,rowReb = c( rawMin=1 ,lowE=3,rareE=1 ,dupESum=2 )
+        ,evtMax = NULL        ,rowReb = c( rawMin=1 ,lowE=3,rareE=1 ,dupESum=2 )
+        ,hIMtxHpnCnt = matrix( c(3,4,5,6,7  ,3,0,0,0,0)   ,byrow=T  ,nrow=2  ,dimnames=list(c("hpnCnt","thld"),NULL) )
+        ,rowRebDupBan = matrix( c( TRUE, F ,1    ,TRUE ,F ,1 )   ,byrow=T ,nrow=2 ,dimnames=list(c("AA_A","AAB_B"),c("OnOff","freqVal","rawMin")) )
         ,isHard=NULL  # use default
     )
 }
@@ -1170,33 +1153,10 @@ if( TRUE ){ # done. OK
             ,"sScore07"=list( rng=matrix( c(0,0 ,0,4) ,ncol=2 )
                             ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
                         )
-            # ,"scoreLAe13"=list( rng=matrix( c(0,0 ,0,4) ,ncol=2 )
-            #                 ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
-            #             )
-            # ,"scoreLAe24"=list( rng=matrix( c(0,0 ,0,4) ,ncol=2 )
-            #                 ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
-            #             )
-            # ,"scoreLVe13"=list( rng=matrix( c(0,0 ,0,4) ,ncol=2 )
-            #                 ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
-            #             )
-            # ,"scoreLVe24"=list( rng=matrix( c(0,0 ,0,4) ,ncol=2 )
-            #                 ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
-            #             )
-            # ,"sScore0LAe13"=list( rng=matrix( c(0,0 ,0,4) ,ncol=2 )
-            #                 ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
-            #             )
-            # ,"sScore0LAe24"=list( rng=matrix( c(0,0 ,0,4) ,ncol=2 )
-            #                 ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
-            #             )
-            # ,"sScore0LVe13"=list( rng=matrix( c(0,0 ,0,4) ,ncol=2 )
-            #                 ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
-            #             )
-            # ,"sScore0LVe24"=list( rng=matrix( c(0,0 ,0,4) ,ncol=2 )
-            #                 ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
-            #             )
         )
-        ,evtMax = NULL
-        ,rowReb = c( rawMin=1 ,lowE=3,rareE=1 ,dupESum=2 )
+        ,evtMax = NULL        ,rowReb = c( rawMin=1 ,lowE=3,rareE=1 ,dupESum=2 )
+        ,hIMtxHpnCnt = matrix( c(2,3,4,5  ,2,1,0,0)   ,byrow=T  ,nrow=2  ,dimnames=list(c("hpnCnt","thld"),NULL) )
+        ,rowRebDupBan = matrix( c( TRUE, F ,1    ,TRUE ,F ,1 )   ,byrow=T ,nrow=2 ,dimnames=list(c("AA_A","AAB_B"),c("OnOff","freqVal","rawMin")) )
         ,isHard=NULL  # use default
     )
 }
@@ -1230,8 +1190,9 @@ if( TRUE ){ # done. OK
                             ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
                         )
         )
-        ,evtMax = NULL
-        ,rowReb = c( rawMin=1 ,lowE=3,rareE=1 ,dupESum=2 )
+        ,evtMax = NULL        ,rowReb = c( rawMin=1 ,lowE=3,rareE=1 ,dupESum=2 )
+        ,hIMtxHpnCnt = matrix( c(3,4,5,6  ,1,0,0,0)   ,byrow=T  ,nrow=2  ,dimnames=list(c("hpnCnt","thld"),NULL) )
+        ,rowRebDupBan = matrix( c( TRUE, F ,1    ,TRUE ,F ,1 )   ,byrow=T ,nrow=2 ,dimnames=list(c("AA_A","AAB_B"),c("OnOff","freqVal","rawMin")) )
         ,isHard=NULL  # use default
     )
 }
@@ -1314,8 +1275,9 @@ if( TRUE ){ # done. OK
                             ,evt=matrix( c(c(1,3,3,3),c(1,2,3,4)) ,ncol=2)
                         )
         )
-        ,evtMax = NULL
-        ,rowReb = c( rawMin=1 ,lowE=3,rareE=1 ,dupESum=2 )
+        ,evtMax = NULL        ,rowReb = c( rawMin=1 ,lowE=3,rareE=1 ,dupESum=2 )
+        ,hIMtxHpnCnt = matrix( c(2,3,4,5,6  ,3,0,0,0,0)   ,byrow=T  ,nrow=2  ,dimnames=list(c("hpnCnt","thld"),NULL) )
+        ,rowRebDupBan = matrix( c( TRUE, F ,1    ,TRUE ,F ,1 )   ,byrow=T ,nrow=2 ,dimnames=list(c("AA_A","AAB_B"),c("OnOff","freqVal","rawMin")) )
         ,isHard=NULL  # use default
     )
 }
@@ -1382,8 +1344,9 @@ if( TRUE ){ # done. OK
                             ,evt=matrix( c(c(1,1,3,3),c(1,2,3,4)) ,ncol=2)
                         )
         )
-        ,evtMax = NULL
-        ,rowReb = c( rawMin=1 ,lowE=3,rareE=1 ,dupESum=2 )
+        ,evtMax = NULL        ,rowReb = c( rawMin=1 ,lowE=3,rareE=1 ,dupESum=2 )
+        ,hIMtxHpnCnt = matrix( c(4,5,6,7  ,1,1,0,0)   ,byrow=T  ,nrow=2  ,dimnames=list(c("hpnCnt","thld"),NULL) )
+        ,rowRebDupBan = matrix( c( TRUE, F ,1    ,TRUE ,F ,1 )   ,byrow=T ,nrow=2 ,dimnames=list(c("AA_A","AAB_B"),c("OnOff","freqVal","rawMin")) )
         ,isHard=NULL  # use default
     )
 }
@@ -1463,6 +1426,8 @@ if( TRUE ){ # done. OK
                     ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
         )
         ,rowReb = c( rawMin=2 ,lowE=2 ,rareE=2 ,dupESum=2 )
+        ,hIMtxHpnCnt = matrix( c(2,3  ,1,0)   ,byrow=T  ,nrow=2  ,dimnames=list(c("hpnCnt","thld"),NULL) )
+        ,rowRebDupBan = matrix( c( TRUE, F ,1    ,TRUE ,F ,1 )   ,byrow=T ,nrow=2 ,dimnames=list(c("AA_A","AAB_B"),c("OnOff","freqVal","rawMin")) )
         ,isHard=NULL  # use default
     )
 }
@@ -1545,6 +1510,8 @@ if( TRUE ){ # done. OK
                     ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
         )
         ,rowReb = c( rawMin=2 ,lowE=2 ,rareE=2 ,dupESum=2 )
+        ,hIMtxHpnCnt = matrix( c(1,2  ,3,0)   ,byrow=T  ,nrow=2  ,dimnames=list(c("hpnCnt","thld"),NULL) )
+        ,rowRebDupBan = matrix( c( TRUE, F ,1    ,TRUE ,F ,1 )   ,byrow=T ,nrow=2 ,dimnames=list(c("AA_A","AAB_B"),c("OnOff","freqVal","rawMin")) )
         ,isHard=NULL  # use default
     )
 }
@@ -1597,6 +1564,8 @@ if( TRUE ){ # done. OK
                     ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
         )
         ,rowReb = c( rawMin=2 ,lowE=2 ,rareE=1 ,dupESum=2 )
+        ,hIMtxHpnCnt = matrix( c(2,3,4  ,1,0,0)   ,byrow=T  ,nrow=2  ,dimnames=list(c("hpnCnt","thld"),NULL) )
+        ,rowRebDupBan = matrix( c( TRUE, F ,1    ,TRUE ,F ,1 )   ,byrow=T ,nrow=2 ,dimnames=list(c("AA_A","AAB_B"),c("OnOff","freqVal","rawMin")) )
         ,isHard=NULL  # use default
     )
 }
@@ -1651,6 +1620,8 @@ if( TRUE ){ # done. OK
                     ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
         )
         ,rowReb = c( rawMin=2 ,lowE=2 ,rareE=2 ,dupESum=2 )
+        ,hIMtxHpnCnt = matrix( c(1,2  ,2,0)   ,byrow=T  ,nrow=2  ,dimnames=list(c("hpnCnt","thld"),NULL) )
+        ,rowRebDupBan = matrix( c( TRUE, F ,1    ,TRUE ,F ,1 )   ,byrow=T ,nrow=2 ,dimnames=list(c("AA_A","AAB_B"),c("OnOff","freqVal","rawMin")) )
         ,isHard=NULL  # use default
     )
 }
@@ -1725,6 +1696,8 @@ if( TRUE ){ # done. OK
                     ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
         )
         ,rowReb = c( rawMin=2 ,lowE=2 ,rareE=2 ,dupESum=2 )
+        ,hIMtxHpnCnt = matrix( c(1,2  ,0,0)   ,byrow=T  ,nrow=2  ,dimnames=list(c("hpnCnt","thld"),NULL) )
+        ,rowRebDupBan = matrix( c( TRUE, F ,1    ,TRUE ,F ,1 )   ,byrow=T ,nrow=2 ,dimnames=list(c("AA_A","AAB_B"),c("OnOff","freqVal","rawMin")) )
         ,isHard=NULL  # use default
     )
 }
@@ -1762,6 +1735,8 @@ if( TRUE ){ # done. OK
                     ,dimnames=list(c("lev1","lev2"),c("minLev","maxHpn","minLevH","maxHpnH")) 
         )
         ,rowReb = c( rawMin=2 ,lowE=2 ,rareE=2 ,dupESum=2 )
+        ,hIMtxHpnCnt = matrix( c(2,3  ,0,0)   ,byrow=T  ,nrow=2  ,dimnames=list(c("hpnCnt","thld"),NULL) )
+        ,rowRebDupBan = matrix( c( TRUE, F ,2    ,TRUE ,F ,1 )   ,byrow=T ,nrow=2 ,dimnames=list(c("AA_A","AAB_B"),c("OnOff","freqVal","rawMin")) )
         ,isHard=NULL  # use default
     )
 }
