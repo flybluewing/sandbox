@@ -1,6 +1,6 @@
 source("header.r")  ;source("B_H.R")    ;source("cut_H.R")
 if( FALSE ){    # document
-    # lastH <- 893(for 894_1 stdIdx:7913455 )   16
+    # lastH <- 893(for 894_1 stdIdx:7913455 )   16  -> 0.05
     # lastH <- 898(for 899_1 stdIdx:5739750 )    1.5
     # lastH <- 933(for 934_1 stdIdx: 233713 )   26
 
@@ -8,13 +8,13 @@ if( FALSE ){    # document
     #   lastH <- 954
     #   lastH <- 955
     #   lastH <- 956
-
+    #   lastH <- 963
 }
 
 lastH <- 954    # for H899_1
 tgt.scMtx <- NULL
 testMode <- F            #check
-prllNum <- 5
+prllNum <- 4
 
 QQE:Trouble      # 실수 방지를 위해 의도된 오류코드
 
@@ -53,7 +53,7 @@ stdMI.grp <- bUtil.getStdMILst( gEnv ,fRstLst )     ;stdMI.grp$anyWarn( )
 if( TRUE ){     #   hMtxLst ,hMtxLst_bS
     load( sprintf("./save/finalCut/Obj_cut_hMtxLst_%d.save",lastH)      )   # hMtxLst
     load( sprintf("./save/finalCut/Obj_cut_hMtxLst_bS_%d.save",lastH)   )   # hMtxLst_bS
-    load( sprintf("./save/finalCut/Obj_cut_hMtxLst_bN_%d.save",lastH)   )   # hMtxLst_bN
+    # load( sprintf("./save/finalCut/Obj_cut_hMtxLst_bN_%d.save",lastH)   )   # hMtxLst_bN
     load( sprintf("./save/finalCut/Obj_cut_hMtxLst_HCR_%d.save",lastH)  )   # hMtxLst_HCR
 } else {
     crScrHTool$addData( lastH - 5:0 )    # 42min
@@ -64,8 +64,8 @@ if( TRUE ){     #   hMtxLst ,hMtxLst_bS
     save( hMtxLst       ,file=sprintf("./save/finalCut/Obj_cut_hMtxLst_%d.save",lastH)      )
     save( hMtxLst_bS    ,file=sprintf("./save/finalCut/Obj_cut_hMtxLst_bS_%d.save",lastH)   )
     save( hMtxLst_HCR   ,file=sprintf("./save/finalCut/Obj_cut_hMtxLst_HCR_%d.save",lastH)  )
-    hMtxLst_bN <- bN.makeHMtxLst( gEnv, allIdxLst, fRstLst ,tgt.scMtx )
-    save( hMtxLst_bN    ,file=sprintf("./save/finalCut/Obj_cut_hMtxLst_bN_%d.save",lastH)   )
+    # hMtxLst_bN <- bN.makeHMtxLst( gEnv, allIdxLst, fRstLst ,tgt.scMtx )
+    # save( hMtxLst_bN    ,file=sprintf("./save/finalCut/Obj_cut_hMtxLst_bN_%d.save",lastH)   )
 }
 cut.grp <- bFCust.getFCustGrp( hMtxLst ,tgt.scMtx )
 filter.grp <- getFilter.grp( stdMI.grp ,tgt.scMtx=tgt.scMtx )

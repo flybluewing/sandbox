@@ -2983,7 +2983,7 @@ BUtil.makeCrScrHTool <- function(){
 		cat(sprintf("    crScrH is initiated(%s) \n",sMtxHObj$scrFile))
 	}
 
-	sMtxHObj$addData <- function( hSpan ,tgt.scMtx=NULL ){
+	sMtxHObj$addData <- function( hSpan ,tgt.scMtx=NULL ,logger=NULL ){
 
 		objName <- load(sMtxHObj$scrFile)	# crScrH
 		cat(sprintf("    %s is loaded from \"%s\" \n",objName,sMtxHObj$scrFile))
@@ -2997,9 +2997,10 @@ BUtil.makeCrScrHTool <- function(){
 		cat( sprintf("    Loading %s \n",fileName) )	;load(fileName)
 
 		tStmp <- Sys.time()
-		sfExport("gEnv")	;sfExport("fRstLst")	;sfExport("allIdxLst")	;sfExport("tgt.scMtx")
+		sfExport("gEnv")	;sfExport("fRstLst")	;sfExport("allIdxLst")	;sfExport("tgt.scMtx")	;sfExport("logger")
 		resultLst <- sfLapply( hSpan ,function( curHIdx ){
 
+			tStmp.sf <- Sys.time()
 			idStr <- as.character(curHIdx)
 			stdZoid <- gEnv$zhF[curHIdx,]
 			stdIdx <- k.getIdx_AllZoidMtx( gEnv, stdZoid )
@@ -3038,6 +3039,9 @@ BUtil.makeCrScrHTool <- function(){
 
 			cutRst1 <- bN.cut1( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx ,anaOnly=F ) 
 			bN.grp <- bN.getCut1Score( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx ,deepInfo=T )
+			
+			tDiff <- Sys.time() -tStmp.sf
+			logger$fLogStr( sprintf("   sMtxHObj$addData() curHIdx:%d  %.1f%s",curHIdx,tDiff,units(tDiff)) ,pTime=T )
 
 			return( list(idStr=idStr ,stdIdx=stdIdx,std.grp=std.grp,bS.grp=bS.grp,bN.grp=bN.grp) )
 		})
