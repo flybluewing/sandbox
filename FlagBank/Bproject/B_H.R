@@ -474,7 +474,7 @@ B.rptCutRst <- function( cutRst ,file="cutRst" ){
 } # B.rptCutRst()
 
 
-B.rptCutRstLst <- function( cutRstLst ,file="cutRstLst" ,rptBanTyp=NULL ,rptBanM=NULL ){
+B.rptCutRstLst <- function( cutRstLst ,file="cutRstLst" ,rptBanTyp=NULL ,rptBanM=NULL ,removeDup=F ){
 
     getPortion <- function( fieldName ,cutRstLst ,headLen=NULL ){
         # fieldName <- "typ"
@@ -527,6 +527,9 @@ B.rptCutRstLst <- function( cutRstLst ,file="cutRstLst" ,rptBanTyp=NULL ,rptBanM
 
     log.meta <- k.getFlogObj( sprintf("./report/workRpt/%s.txt",file) )
     log.meta$fLogStr("start", pTime=T ,pAppend=F )
+
+    if( removeDup )     cutRstLst <- B.removeDup_cutRstLst( cutRstLst )
+
 
     log.meta$fLogStr("[Portion]============================================")
     log.meta$fLogStr("  <typ>")
@@ -1328,5 +1331,54 @@ B.tgtHIdxStr <- function( hIdx ){
     }
 
     return( hIdxStr )
+}
+
+
+B.removeDup_cutInfoLst <- function( cutInfoLst ){
+    #   cutInfoLst <- cutRstLst[[2]]$cutInfoLst
+
+    cutInfoLen <- length(cutInfoLst)
+
+    if( 2>cutInfoLen )  return( cutInfoLst )
+
+    dupFlag <- rep( F ,cutInfoLen )     ;names(dupFlag) <- 1:cutInfoLen
+    for( idx1 in 1:(cutInfoLen-1) ){
+        ci1 <- cutInfoLst[[idx1]]
+
+        if( dupFlag[idx1] ) next
+
+        if( "sfcLate"!=ci1["hName"] )  next
+
+        dupTyp <- grepl(c("^rawFCol|^fCol|^rowE"),ci1["typ"])
+        if( !dupTyp ) next
+
+        cName1 <- names(ci1)
+        compCName <- setdiff(cName1,"hName")
+        for( idx2 in (idx1+1):cutInfoLen ){
+            ci2 <- cutInfoLst[[idx2]]
+            cName2 <- names(ci2)
+
+            if( dupFlag[idx2] )                     next
+
+            if( length(cName1)!=length(cName2) )    next
+
+            if( !all(cName1==cName2) )              next
+
+            if( all(ci1[compCName]==ci2[compCName]) ){
+                dupFlag[idx2] <- T
+            }
+        }
+    }
+
+    return( cutInfoLst[!dupFlag] )
+
+}
+
+B.removeDup_cutRstLst <- function( cutRstLst ){
+    for( hnIdx in names(cutRstLst) ){
+        cutInfoLst <- B.removeDup_cutInfoLst(cutRstLst[[hnIdx]]$cutInfoLst)
+        cutRstLst[[hnIdx]]$cutInfoLst <- cutInfoLst
+    }
+    return( cutRstLst )
 }
 

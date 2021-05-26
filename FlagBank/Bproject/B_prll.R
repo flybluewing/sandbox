@@ -51,14 +51,13 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
         save( testData_HCR.grp ,file=sprintf("Obj_testData_HCR.grp.%d.%s.save",lastH,ifelse(is.null(tgt.scMtx),"all",tgt.scMtx) ) )
         tDiff <- Sys.time() - tStmp
     }
-
+    cutRstLst <- NULL
 
     cutRstLst <- Bprll.stdCutTest( testData.grp ,tgt.scMtx ,testSpan ,exportObj=TRUE )
 
-
     sfExport("tgt.scMtx")       ;sfExport("testData.grp")   ;sfExport("testData_HCR.grp")
     tStmp1 <- Sys.time()
-    if( TRUE ){     # HCR
+    if( FALSE ){     # HCR
         prll.initHeader( )
         prllLog$fLogStr("- HCR ----------------------------",pTime=T)
 
@@ -101,11 +100,23 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
 
             return( resultObj )
         })
-
         names( resultLst ) <- sapply( resultLst ,function(p){p$hIdx})
-        cutRstLst <- lapply( resultLst ,function(p){p$cutRst})
-        names(cutRstLst) <- paste("H",testSpan,sep="")
-        names(cutRstLst) <- paste( names(cutRstLst) ,allIdxLst$stdFiltedCnt[as.character(testSpan)] ,sep="_" )
+
+        if( is.null(cutRstLst) ){
+            cutRstLst <- lapply( resultLst ,function(p){p$cutRst})
+            names(cutRstLst) <- paste("H",testSpan,sep="")
+            names(cutRstLst) <- paste( names(cutRstLst) ,allIdxLst$stdFiltedCnt[as.character(testSpan)] ,sep="_" )
+        } else {
+            cutRstLstHCR <- lapply( resultLst ,function(p){p$cutRst})
+            names(cutRstLstHCR) <- paste("H",testSpan,sep="")
+            names(cutRstLstHCR) <- paste( names(cutRstLstHCR) ,allIdxLst$stdFiltedCnt[as.character(testSpan)] ,sep="_" )
+
+            cutRstLst <- lapply( names(cutRstLstHCR) ,function(nIdx){ cutRst <- cutRstLst[[nIdx]] 
+                        cutRst$cutInfoLst <- append( cutRst$cutInfoLst ,cutRstLstHCR[[nIdx]]$cutInfoLst )
+                        return(cutRst)
+            })
+            names(cutRstLst) <- names(cutRstLstHCR)
+        }
 
         if( is.null(resultLst) || 0==length(resultLst) ){
             cat("    Warning!! resultLst is empty. \n")
@@ -129,9 +140,6 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
                       )
         rptBanM <- c("score1")
     }
-    rptBanTyp <- c("aux_sfc","lastRawPair")
-    rptBanM <- c(tgt.scMtx,c("mf4567","bsMR1234","bSMScr02R","bSMScr02E","bSMScr02PhEvt"))
-    rptBanM <- c(rptBanM,c("bSMScr04R","bSMScr04E","bSMScr04PhEvt"))
     B.rptCutRstLst( cutRstLst ,file=rptFile ,rptBanTyp=rptBanTyp ,rptBanM=rptBanM )
     lastH   ;tgt.scMtx
 

@@ -8,7 +8,7 @@ if( FALSE ){    # document
     #   lastH <- 954
     #   lastH <- 955
     #   lastH <- 956
-    #   lastH <- 963
+    #   lastH <- 963    0.047
 }
 
 lastH <- 954    # for H899_1
@@ -339,13 +339,13 @@ for( sfcIdx in 0 ){ # 0:2
         aZoidMtx <- gEnv$allZoidMtx[allIdxF,,drop=F]
         scoreMtx.grp <- getScoreMtx.grp( aZoidMtx ,filter.grp ,makeInfoStr=T )
         std.grp <- bUtil.getCut1Score( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx ,deepInfo=T )
-        prllLog$fLogStr(    sprintf("   - HCR.cut finish std.grp  ") ,pTime=T )
+        prllLog$fLogStr(    sprintf("   - HCR.cut finish to build std.grp  ") ,pTime=T )
 
         phVP.grp <- bS.getPhVPGrp( gEnv ,aZoidMtx )
         scoreMtx.grp <- bS.getScoreMtx.grp( phVP.grp ,aZoidMtx ,tgt.scMtx=tgt.scMtx )
         cut.grp <- bS.getCutGrp( hMtxLst_bS ,tgt.scMtx )
         bS.grp <- bS.getCut1Score( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx ,deepInfo=T )
-        prllLog$fLogStr(    sprintf("   - HCR.cut finish bS.grp  ") ,pTime=T )
+        prllLog$fLogStr(    sprintf("   - HCR.cut finish to build bS.grp  ") ,pTime=T )
 
         crScrA <- list( stdIdx=allIdxF ,std.grp=std.grp$aLst ,bS.grp=bS.grp$aLst )  # crScr of aZoid
         filterLst <- HCR.getFilter.grp( tgt.scMtx ,crScrH )

@@ -4358,7 +4358,7 @@ if( TRUE ){
                             ,freqVal=1
                         )
             ,"Se3Max"=list( rng=matrix( c(0,0 ,0,5) ,ncol=2 )
-                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,4)) ,ncol=2)
+                            ,evt=matrix( c(c(2,3,3,3),c(2,3,4,5)) ,ncol=2)
                             ,forbidEvtReb=3
                         )
             ,"Se2Max"=list( rng=matrix( c(0,0 ,0,4) ,ncol=2 )
