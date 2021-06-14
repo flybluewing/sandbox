@@ -1,3 +1,8 @@
+if( FALSE ){
+    install.packages( "gridExtra" )
+}
+library(gridExtra)      # ggplot2의 화면분할 용.
+
 may.searchCutRst <- function( hIdx ,cutRstGrp ){
 
     for( nIdx in names(cutRstGrp) ){
@@ -13,6 +18,58 @@ may.searchCutRst <- function( hIdx ,cutRstGrp ){
 
     return( NULL )
 }
+
+may.cutInfoLst_rmDup <- function( cutRstGrp ){
+
+    getUniqueFlag <- function( cutInfoLst ){
+        #   cutInfoLst <- cutRstGrp[["H880"]]$cutRstLst[["H880_2"]]$cutInfoLst
+
+        cLen <- length(cutInfoLst)
+        if( 2> cLen ){
+            return( cutInfoLst )
+        }
+
+        rLst <- list()
+        surFlag <- rep( T ,cLen <- length(cutInfoLst) )
+        for( idx1 in 1:(cLen-1) ){
+            if( !surFlag[idx1] )    next
+
+            cName1 <- names(cutInfoLst[[idx1]])
+            for( idx2 in (idx1+1):cLen ){
+                cName2 <- names(cutInfoLst[[idx2]])
+
+                fltNameFlag <- c( "fltName"%in%cName1 ,"fltName"%in%cName2 )
+                if( 1==sum(fltNameFlag) )   next            # fltName이 양쪽 모두 있거나 모두 없거나..
+
+                chkName <- c("typ","mName","pName","info")
+                if( all(fltNameFlag) ){
+                    chkName <- c("typ","mName","pName","fltName","info")
+                }
+
+                matFlag <- cutInfoLst[[idx1]][chkName] == cutInfoLst[[idx2]][chkName]
+                if( all(matFlag) ){
+                    surFlag[idx2] <- FALSE
+                }
+            }
+
+        }
+        # dbgMtx <- sapply( cutInfoLst ,function(p){ p[c("typ","mName","pName","info")] })
+        # dbgMtx <- cbind( surFlag ,t(dbgMtx) )   ;dbgMtx
+
+        rLst <- cutInfoLst[surFlag]
+        return( rLst )
+    }
+
+    for( gIdx in names(cutRstGrp) ){
+        for( hIdx in names(cutRstGrp[[gIdx]]$cutRstLst) ){
+            cutRstGrp[[gIdx]]$cutRstLst[[hIdx]]$cutInfoLst <- getUniqueFlag( cutRstGrp[[gIdx]]$cutRstLst[[hIdx]]$cutInfoLst )
+            cutRstGrp[[gIdx]]$cutRstLstHCR[[hIdx]]$cutInfoLst <- getUniqueFlag( cutRstGrp[[gIdx]]$cutRstLstHCR[[hIdx]]$cutInfoLst )
+        }
+    }
+
+    return(cutRstGrp)
+}
+
 
 may.getTyp_mName <- function( cutInfoLst ){
     # cName <- c( "sN","sNx","sA","sAx","sMlt","sCrScr","sSN","sSNx","sSA","sSAx","sSMlt","sSCrScr","HCR","other" )
@@ -107,33 +164,50 @@ may.getTyp_info <- function( cutInfoLst ){
     # kFlag <- grepl("^l1c1:",infoStr)
     # infoStr[kFlag]
 
-
     return( typ )
 }
 
 may.getTypLst <- function( cutRstGrp ){
 
     typLst <- list()
-    tName <- c("sN","sNx","sA","sAx" ,"sMlt","sCrScr" ,"sSN" ,"sSNx","sSA","sSAx" ,"sSMlt","sSCrScr" ,"HCR" ,"bScr" ,"other")
-
-    # cName <- c( "scoreN","scoreA","scoreMlt","sScoreN","sScoreA","sScoreMlt","HCR","other" )
-    # scrTypMtx <- matrix( 0 ,nrow=0,ncol=length(cName),dimnames=list(NULL,cName) )
-
     #   grpId<-names(cutRstGrp)[1]  ;cutRstLst <- cutRstGrp[[grpId]]$cutRstLst  ;cutRstLstHCR <- cutRstGrp[[grpId]]$cutRstLstHCR
     #   hIdx <- names(cutRstLst)[5] ;cutInfoLst<-cutRstLst[[hIdx]]$cutInfoLst
     for( grpId in names(cutRstGrp) ){
         cutRstLst <- cutRstGrp[[grpId]]$cutRstLst
         cutRstLstHCR <- cutRstGrp[[grpId]]$cutRstLstHCR
 
-        scrTyp <- rep( 0 ,length(cName) )   ;names(scrTyp)<- cName
         for( hIdx in names(cutRstLst) ){
-            typ <- may.getTyp_mName( cutRstLst[[hIdx]]$cutInfoLst )
-            typ <- c( typ ,may.getTyp_mName(cutRstLstHCR[[hIdx]]$cutInfoLst) )
-            typLst[[hIdx]] <- typ
+            mName <- sapply( cutRstLst[[hIdx]]$cutInfoLst ,function(ci){ci["mName"]})
+            typM <- may.getTyp_mName( cutRstLst[[hIdx]]$cutInfoLst )
+            typI <- may.getTyp_info( cutRstLst[[hIdx]]$cutInfoLst )
+            infoStr <- sapply( cutRstLst[[hIdx]]$cutInfoLst ,function(ci){ci["info"]})
+
+            if( 0<length(cutRstLstHCR[[hIdx]]$cutInfoLst) ){
+                mName <- c( mName ,sapply( cutRstLstHCR[[hIdx]]$cutInfoLst ,function(ci){ci["mName"]}) )
+                typM <- c( typM ,may.getTyp_mName(cutRstLstHCR[[hIdx]]$cutInfoLst) )
+                typI <- c( typI ,may.getTyp_info(cutRstLstHCR[[hIdx]]$cutInfoLst) )
+                infoStr <- c( infoStr ,sapply( cutRstLstHCR[[hIdx]]$cutInfoLst ,function(ci){ci["info"]}) )
+            }
+
+            typMtx <- matrix( "" ,nrow=4 ,ncol=0 )   ;rownames(typMtx) <- c("mName","M","I","info")
+            if( 0<length(typM)){
+                typMtx <- matrix( "" ,nrow=4 ,ncol=length(typM) ,dimnames=list(c("mName","M","I","info"),NULL) )
+                typMtx["mName",]<- mName    ;typMtx["M",] <- typM   ;typMtx["I",] <- typI
+                typMtx["info",] <- infoStr
+            }
+
+            typLst[[hIdx]] <- typMtx
         }
     }
 
-    return( list(typLst=typLst,tName=tName) )
+    nameLst <- list(M=NULL ,I=NULL)
+    for( nIdx in names(typLst) ){
+        mtx <- typLst[[nIdx]]
+        nameLst[["M"]]  <- c( nameLst[["M"]] ,mtx["M",] )
+        nameLst[["I"]]  <- c( nameLst[["I"]] ,mtx["I",] )
+    }
+
+    return( list(typLst=typLst ,typName=lapply( nameLst ,function(p){ unique(p) }) ) )
 }
 
 may.loadSaves <- function( lastHSpan=NULL ){
@@ -157,6 +231,9 @@ may.loadSaves <- function( lastHSpan=NULL ){
 
 may.plot <- function( datMtx ,ylim=NULL ,col=NULL ){
     #   datMtx <- cutCntMtx
+    #   col : darksalmon navy darkgoldenrod darkseagreen mediumaquamarine firebrick salmon
+    #           purple navy mediumvioletred indianred   peru mediumblue lightslateblue
+    #           darkred paleturquoise rosybrown slategray
 
     if( is.null(col) ){
         col <- colors()
@@ -175,8 +252,27 @@ may.plot <- function( datMtx ,ylim=NULL ,col=NULL ){
         lines( xlim[1]:xlim[2] ,datMtx[idx ,] ,col=col[idx] )
     }
 
-    yPos <- ylim[2]-4*(1:nrow(datMtx))
-    text( ncol(datMtx)*0.9 ,yPos ,rownames(datMtx) ,col=col )
+    yPos <- ylim[2] - (1:nrow(datMtx)-1)
+    text( ncol(datMtx)*0.9 ,yPos ,sprintf("%s(%s)",rownames(datMtx),col) ,col=col )
+
+    return( col )
+}
+
+may.histPlot <- function( datMtx ,ylim=NULL ,col=NULL ){
+
+    if( is.null(col) ){
+        col <- colors()
+        col <- col[!grepl("[[:digit:]]",col)]
+        col <- col[!(col %in% c("white"))]
+
+        col <- sample( col ,nrow(datMtx) )
+    }
+    if( is.null(ylim) ){
+        ylim <- c(min(datMtx),max(datMtx))
+    }
+    xlim <- c(1 ,ncol(datMtx) )
+
+    # WORKING    
 
 }
 
