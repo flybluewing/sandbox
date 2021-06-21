@@ -2,15 +2,36 @@ setwd("c:/zproject/ISLRgit/FlagBank")   ;source("hCommon.R")    ;setwd("./Bproje
 source("header.r")  ;source("B_H.R") ;source("B_prll_H.R")
 source("testField/may/projMay_Run_H.r") ;source("testField/may/curWorking_H.r")
 
-lastHSpan <- c(800,820,840,860)
+lastHSpan <- c(800,820,840,860,880,900)
 cutRstGrp <- may.loadSaves( lastHSpan )
 cutRstGrp <- may.cutInfoLst_rmDup(cutRstGrp)
 tLstA <- may.getTypLst( cutRstGrp )
 
-lastHSpan <- c(880,900,920,940)     # ,960
+lastHSpan <- c(920,940,960)     # 920,940,960
 cutRstGrp <- may.loadSaves( lastHSpan )
 cutRstGrp <- may.cutInfoLst_rmDup(cutRstGrp)
 tLstB <- may.getTypLst( cutRstGrp )
+
+cntDfA <- mayCw.getCntDf( tLstA )   ;cntDfA$ab <- "A"
+lowHIdx <- may.getLowH( cntDfA ,15 )
+cntDfA <- transform( cntDfA ,lowHpn= hIdx%in%lowHIdx )
+
+cntDfB <- mayCw.getCntDf( tLstB )   ;cntDfB$ab <- "B"
+lowHIdx <- may.getLowH( cntDfB ,10 )
+cntDfB <- transform( cntDfB ,lowHpn= hIdx%in%lowHIdx )
+
+
+# pastHpn
+cntDfA$pastHpn <- 0 ;cntDfB$pastHpn <- 0
+matCol <- c("mName","M","I")
+pastHpnCnt <- apply( cntDfB[,matCol] ,1 ,function( pDfB ){
+    mFlag <- apply( cntDfA[,matCol] ,1 ,function(pDfA){ all(pDfA==pDfB) } )
+    return( sum(mFlag) )
+})
+cntDfB$pastHpn <- pastHpnCnt
+
+cntDf <- rbind( cntDfA ,cntDfB )
+
 
 
 

@@ -3,6 +3,15 @@ if( FALSE ){
 }
 library(gridExtra)      # ggplot2의 화면분할 용.
 
+may.getLowH <- function( cntDf ,thld=10 ){
+    # cntDf <- cntDfA 
+    lDf <- ddply(cntDf,.(hIdx),function(pDf){
+        data.frame(lowCut=nrow(pDf)<thld)
+    })
+    return( lDf$hIdx[lDf$lowCut] )
+}
+
+
 may.searchCutRst <- function( hIdx ,cutRstGrp ){
 
     for( nIdx in names(cutRstGrp) ){
@@ -189,9 +198,10 @@ may.getTypLst <- function( cutRstGrp ){
                 infoStr <- c( infoStr ,sapply( cutRstLstHCR[[hIdx]]$cutInfoLst ,function(ci){ci["info"]}) )
             }
 
-            typMtx <- matrix( "" ,nrow=4 ,ncol=0 )   ;rownames(typMtx) <- c("mName","M","I","info")
+            typMtx <- matrix( "" ,nrow=5 ,ncol=0 )   ;rownames(typMtx) <- c("grpId","mName","M","I","info")
             if( 0<length(typM)){
-                typMtx <- matrix( "" ,nrow=4 ,ncol=length(typM) ,dimnames=list(c("mName","M","I","info"),NULL) )
+                typMtx <- matrix( "" ,nrow=5 ,ncol=length(typM) ,dimnames=list(c("grpId","mName","M","I","info"),NULL) )
+                typMtx["grpId",] <- grpId
                 typMtx["mName",]<- mName    ;typMtx["M",] <- typM   ;typMtx["I",] <- typI
                 typMtx["info",] <- infoStr
             }
@@ -275,4 +285,6 @@ may.histPlot <- function( datMtx ,ylim=NULL ,col=NULL ){
     # WORKING    
 
 }
+
+
 

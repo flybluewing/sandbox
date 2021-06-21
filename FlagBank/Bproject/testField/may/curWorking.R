@@ -1,27 +1,24 @@
-tLst <- tLstB
 
-cntDfA <- mayCw.getCntDf( tLstA )   ;cntDfA$ab <- "A"
-cntDfB <- mayCw.getCntDf( tLstB )   ;cntDfB$ab <- "B"
-cntDf <- rbind( cntDfA ,cntDfB )
+workDfA <- subset( cntDfA ,lowHpn )
+workDfB <- subset( cntDfB ,lowHpn )
 
-hpnCntDf <- ddply( cntDf ,.(hIdx) ,function( pDf ){
-    data.frame( cnt=nrow(pDf) )
-})  ;head(hpnCntDf)
-#   ggplot( hpnCntDf ,aes(x=cnt) ) + geom_histogram()
-
-hIdx.low <- subset( hpnCntDf ,cnt<=9 )$hIdx
-typDf.low <- subset(cntDf,hIdx %in% hIdx.low )
-
-typDf880 <- typDf.low
-typDf960 <- typDf.low
-
-ddply( typDf960 ,.(hIdx) ,nrow )
-
-if( FALSE ){
-    grpDf <- ddply( cntDf ,.(hIdx) ,function( pDf ){
-        data.frame( dd = nrow(pDf) )
-    })
-
-    ggplot( grpDf ,aes(x=dd) ) + geom_histogram( binwidth=5 )
+mCol <- c("mName","M","I")
+hpnFlag <- rep( F ,nrow(workDfB) )
+for( idxB in 1:nrow(workDfB) ){
+    for( idxA in 1:nrow(workDfA) ){
+        if( all(workDfB[idxB,mCol]==workDfA[idxA,mCol]) ){
+            hpnFlag[idxB] <- TRUE
+        }
+    }
 }
+
+workDfB$lowHpn <- hpnFlag
+
+graphDf <- ddply( workDfB ,.(hIdx) ,function( pDf ){
+    hpnCnt <- c( sum(pDf$lowHpn) ,nrow(pDf)-sum(pDf$lowHpn) )
+    data.frame( hpnYn=c("hpnY","hpnN") ,hpnCnt=hpnCnt )
+})
+
+ggplot( graphDf ,aes(x=hIdx,fill=hpnYn,y=hpnCnt) ) + geom_bar( stat="identity" )
+
 
