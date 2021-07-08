@@ -28,6 +28,91 @@ may.searchCutRst <- function( hIdx ,cutRstGrp ){
     return( NULL )
 }
 
+may.searchTLst <- function( tLst ,pGrpId=NULL ,pHIdx=NULL ,pMName=NULL ,pM=NULL ,pI=NULL ){
+
+    typLst <- tLst$typLst
+    flagLst <- lapply( typLst ,function( pMtx ){ rep(T,ncol(pMtx)) } )
+    
+    rDf <- as.data.frame( t(typLst[[1]][,0,drop=F]) )
+    for( tIdx in names(typLst) ){
+        mtx <- typLst[[tIdx]]
+        if( 0==ncol(mtx) ) next
+
+        if( !is.null(pGrpId) ){     # pGrpId=c("H800","H820")
+            if( !(mtx["grpId",1]%in%pGrpId) ){
+                flagLst[[tIdx]][] <- F
+            }
+        }
+
+        if( !is.null(pHIdx) ){      # pHIdx=c("H786_1","H790_2")
+            if( tIdx %in% pHIdx ){
+                flagLst[[tIdx]][] <- F
+            }
+        }
+
+        if( !is.null(pMName) ){     # pMName=c("score3","score9")
+            flagLst[[tIdx]] <- flagLst[[tIdx]] & mtx["mName",]%in%pMName
+        }
+
+        if( !is.null(pM) ){         # pM = c("other")
+            flagLst[[tIdx]] <- flagLst[[tIdx]] & mtx["M",]%in%pM
+        }
+
+        if( !is.null(pI) ){         # pI = c("rReb")
+            flagLst[[tIdx]] <- flagLst[[tIdx]] & mtx["I",]%in%pI
+        }
+
+        selIdx <- which(flagLst[[tIdx]])        # selected(survived) column index
+        if( 0<length(selIdx) ){
+            sDf <- as.data.frame( t(typLst[[tIdx]][ ,selIdx]) )
+            sDf$hIdx <- tIdx
+            sDf$cIdx <- selIdx
+
+            rDf <- rbind( rDf ,sDf )
+        }
+        
+    }
+
+    return( rDf )
+}
+
+may.searchTLst_df <- function( tLst ,pSrchDf ){
+    #   pSrchDf : mName M I     <--- Unique 상태로 정리해놓을 것.
+    mCol <- c("mName","M","I")
+    mCol <- intersect( colnames(pSrchDf) ,mCol )
+
+    pSrchDf <- ddply( pSrchDf ,mCol ,nrow )
+
+    typLst <- tLst$typLst
+    flagLst <- lapply( typLst ,function( pMtx ){ rep(T,ncol(pMtx)) } )
+
+    rDf <- as.data.frame( t(typLst[[1]][,0,drop=F]) )
+    for( tIdx in names(typLst) ){
+        mtx <- typLst[[tIdx]]
+        if( 0==ncol(mtx) ) next
+
+        mFlag <- apply( mtx ,2 ,function( cDat ){
+            for( sIdx in 1:nrow(pSrchDf) ){
+                if( all(cDat[mCol]==pSrchDf[sIdx,mCol]) ){
+                    return( TRUE )
+                }
+            }
+            return( FALSE )
+        })
+
+        if( any(mFlag) ){
+            sDf <- as.data.frame( t(mtx[,mFlag]) )
+            sDf$hIdx <- tIdx    ;sDf$cIdx <- which(mFlag)
+            rDf <- rbind( rDf ,sDf )
+        }
+
+    }
+
+    rDf <- rDf[order(rDf$hIdx,rDf$cIdx) ,]
+
+    return( rDf )
+}
+
 may.cutInfoLst_rmDup <- function( cutRstGrp ){
 
     getUniqueFlag <- function( cutInfoLst ){
@@ -238,6 +323,35 @@ may.loadSaves <- function( lastHSpan=NULL ){
 
 
 
+may.anaReb_inB <- function( cntDfA ,cntDfB ,freqThld=1 ){
+
+    rtLen <- nrow(cntDfB)
+
+    mCol <- c("mName","M","I")
+    cntDfA_HCnt <- ddply(cntDfA ,.(mName,M,I) ,function(pDf){ data.frame(cntH=nrow(pDf)) })
+    cntDfB_HCnt <- ddply(cntDfB ,.(mName,M,I) ,function(pDf){ data.frame(cntH=nrow(pDf)) })
+    hCntDf <- merge(cntDfA_HCnt ,cntDfB_HCnt ,by=mCol  ,suffixes = c(".A",".B"),)
+    #               mName       M                    I cntH.A cntH.B
+    #         1    score2      sN    forbidden Evt Reb      1      1
+    #         2    score2      sN             scMtx.sz      1      1
+    #         3    score3      sN             scMtx.sz      1      1
+
+    hpnDf <- data.frame( hpnYN=rep(F,rtLen) )
+    matDf <- hCntDf[hCntDf$cntH.A>=freqThld ,]  ;ALen <- nrow(matDf)
+    for( rIdx in seq_len(rtLen) ){
+        for( aIdx in seq_len(ALen) ){
+            if( all(cntDfB[rIdx,mCol]==matDf[aIdx,mCol]) ){
+                hpnDf$hpnYN[rIdx] <- TRUE
+                next
+            }
+        }
+    }
+
+    return( list(hpnDf=hpnDf ,hCntDf=hCntDf) )
+}
+
+
+
 
 may.plot <- function( datMtx ,ylim=NULL ,col=NULL ){
     #   datMtx <- cutCntMtx
@@ -287,4 +401,50 @@ may.histPlot <- function( datMtx ,ylim=NULL ,col=NULL ){
 }
 
 
+
+may.cutRstGrp_2Df <- function( cutRstGrp ){
+
+    rDf <- data.frame( gIdx=character(0) ,hIdx=character(0) ,hName=character(0) ,pName=character(0) ,mName=character(0) ,fltName=character(0) ,info=character(0)  )
+    codeDf <- data.frame( M=character(0) ,I=character(0) )
+
+    cName <- c( "hName" ,"mName" ,"pName" ,"fltName" ,"info" )
+    cNameDf <- c( "gIdx" ,"hIdx" ,"hName" ,"pName" ,"mName" ,"fltName" ,"info" )
+    for( gIdx in names(cutRstGrp) ){
+        cutRstLst   <- cutRstGrp[[gIdx]]$cutRstLst
+        cutRstLstHCR<- cutRstGrp[[gIdx]]$cutRstLstHCR
+
+        for( hIdx in names(cutRstLst) ){            
+            # cutRstLst
+            cutInfoLst <- cutRstLst[[hIdx]]$cutInfoLst
+            if( 0<length(cutInfoLst) ){
+                mtx <- sapply( cutInfoLst ,function(p){ p[cName] })
+                rownames( mtx ) <- cName        # row 값이 모두 NA인 경우, 해당 row 이름도 NA가 되어버리는 거 방지
+                df <- as.data.frame( t(mtx) )
+                df$fltName[is.na(df$fltName)] <- "N/A"
+                df <- ddply( df ,.(mName,pName,fltName,info) ,function(pDf){ 
+                    data.frame(gIdx=gIdx ,hIdx=hIdx ,hName=pDf$hName[1]) 
+                })
+
+                rDf <- rbind( rDf ,df[,cNameDf] )
+            }
+            
+            # cutRstLstHCR
+            cutInfoLst <- cutRstLstHCR[[hIdx]]$cutInfoLst
+            if( 0<length(cutInfoLst) ){
+                mtx <- sapply( cutInfoLst ,function(p){ p[cName] })
+                rownames( mtx ) <- cName    # row 값이 모두 NA인 경우, 해당 row 이름도 NA가 되어버리는 거 방지
+                df <- as.data.frame( t(mtx) )
+                df$fltName[is.na(df$fltName)] <- "N/A"
+                df <- ddply( df ,.(mName,pName,fltName,info) ,function(pDf){ 
+                    data.frame(gIdx=gIdx ,hIdx=hIdx ,hName=pDf$hName[1]) 
+                })
+
+                rDf <- rbind( rDf ,df[,cNameDf] )
+            }
+        }
+    }
+
+    return( rDf )
+
+}
 

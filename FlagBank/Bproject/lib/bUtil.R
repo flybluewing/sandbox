@@ -649,7 +649,7 @@ bUtil.filtByCtrlCfg <- function( val ,ctrlCfg ){
 	return( flagMtx )
 } # bUtil.filtByCtrlCfg()
 
-bUtil.getStdMILst <- function( gEnv ,fRstLst=NULL ){
+bUtil.getStdMILst <- function( gEnv ,fRstLst=NULL ){	# bUtil.getStdMILst2() 로 대체예정.
     # stdMI.basic <- fCutU.getStdMI( gEnv )
 	if( FALSE ){	# comment
 		# fRstLst : stdMI.bDup, stdMI.mf 생성을 위해 추가해놓긴 했는데...
@@ -696,6 +696,127 @@ bUtil.getStdMILst <- function( gEnv ,fRstLst=NULL ){
 
 		zMtx <- fCutU.getNextColVal( gEnv ,6 )$zMtx	# rptObj<-anaQuoTbl( zMtx )
 		stdMILst.basic[["nextColVal_6"]] <- list( stdMI=fCutU.getMtxInfo(zMtx) ,zMtx=zMtx )
+	}
+
+    # todo stdFiltedCnt
+	#   stdMILst.basic[["stdFCnt"]]
+
+    # todo
+    stdMI.bDup <- list()        # basic에서 동일 발생한 것들 끼리의 stdMI (예:colval_1값과 ZW값이 동일했던 적)
+
+    # todo
+    stdMI.mf <- list()        # lastZoid가 해당되던 main filter(D0000.A, A0100.A 등)
+
+	rObj <- list( basic=stdMILst.basic ,bDup=stdMI.bDup ,mf=stdMI.mf )
+	rObj$anyWarn <- function(){
+		rptStr <- character(0)
+
+		chkStr <- character(0)
+		for( nIdx in names(rObj$basic) ){
+			rCnt <- nrow(rObj$basic[[nIdx]]$stdMI$rawTail)
+			if( rCnt<6 ) chkStr <- c( chkStr ,sprintf("%s:%d",nIdx,rCnt) )
+		}
+		if( 0<length(chkStr) ){
+			rptStr <- c( rptStr ,"stdMI.basic")
+			rptStr <- c( rptStr ,sprintf("    warn!! %s",paste(chkStr,collapse=" ")) )
+		}
+
+		chkStr <- character(0)
+		for( nIdx in names(rObj$bDup) ){
+			rCnt <- nrow(rObj$bDup[[nIdx]]$stdMI$rawTail)
+			if( rCnt<6 ) chkStr <- c( chkStr ,sprintf("%s:%d",nIdx,rCnt) )
+		}
+		if( 0<length(chkStr) ){
+			rptStr <- c( rptStr ,"stdMI.bDup")
+			rptStr <- c( rptStr ,sprintf("    warn!! %s",paste(chkStr,collapse=" ")) )
+		}
+
+		chkStr <- character(0)
+		for( nIdx in names(rObj$mf) ){
+			rCnt <- nrow(rObj$mf[[nIdx]]$stdMI$rawTail)
+			if( rCnt<6 ) chkStr <- c( chkStr ,sprintf("%s:%d",nIdx,rCnt) )
+		}
+		if( 0<length(chkStr) ){
+			rptStr <- c( rptStr ,"stdMI.mf")
+			rptStr <- c( rptStr ,sprintf("    warn!! %s",paste(chkStr,collapse=" ")) )
+		}
+
+		rptStr <- paste( rptStr ,collapse="\n" )
+		return( sprintf("%s\n",rptStr) )
+	} # rObj$rpt( )
+
+    return( rObj )
+
+}	# bUtil.getStdMILst()
+
+bUtil.getStdMILst2 <- function( gEnv ,fRstLst=NULL ){
+    # stdMI.basic <- fCutU.getStdMI( gEnv )
+	if( FALSE ){	# comment
+		# fRstLst : stdMI.bDup, stdMI.mf 생성을 위해 추가해놓긴 했는데...
+	}
+
+	stdMILst.basic <- list()
+	if( TRUE ){
+		zMtx <- gEnv$zhF
+		stdMILst.basic[["basic"]] <- list( stdMI=fCutU.getMtxInfo(zMtx) ,zMtx=zMtx )
+
+		zMtx <- fCutU.getNextZW( gEnv )$zMtx
+		stdMILst.basic[["nextZW"]] <- list( stdMI=fCutU.getMtxInfo(zMtx) ,zMtx=zMtx )
+
+		zMtx <- fCutU.getNextQuo10( gEnv )$zMtx	# rptObj<-anaQuoTbl( zMtx )
+		stdMILst.basic[["nextQuo10"]] <- list( stdMI=fCutU.getMtxInfo(zMtx) ,zMtx=zMtx )
+
+		zMtx <- fCutU.getNextBin( gEnv )$zMtx	# rptObj<-anaQuoTbl( zMtx )
+		stdMILst.basic[["nextBin"]] <- list( stdMI=fCutU.getMtxInfo(zMtx) ,zMtx=zMtx )
+
+		rebObj <- fCutU.getNextRebNumPtn( gEnv ,numPtn=NULL )
+		zMtx <- rebObj$zMtx	# rptObj<-anaQuoTbl( zMtx )
+		stdMILst.basic[["nextRebNum"]] <- list( stdMI=fCutU.getMtxInfo(zMtx) ,zMtx=zMtx )
+
+		#	폐지. nextBin과 거의 동일한 패턴이 나옴.
+		# zMtx <- fCutU.getNextCStepBin( gEnv )$zMtx	# rptObj<-anaQuoTbl( zMtx )
+		# stdMILst.basic[["nextCStepBin"]] <- list( stdMI=fCutU.getMtxInfo(zMtx) ,zMtx=zMtx )
+
+		zMtx <- fCutU.getNextFStepBin( gEnv )$zMtx
+		stdMILst.basic[["nextFStepBin"]] <- list( stdMI=fCutU.getMtxInfo(zMtx) ,zMtx=zMtx )
+		zMtx <- fCutU.getNextColVal( gEnv ,1 )$zMtx
+		stdMILst.basic[["nextColVal_1"]] <- list( stdMI=fCutU.getMtxInfo(zMtx) ,zMtx=zMtx )
+		zMtx <- fCutU.getNextColVal( gEnv ,2 )$zMtx
+		stdMILst.basic[["nextColVal_2"]] <- list( stdMI=fCutU.getMtxInfo(zMtx) ,zMtx=zMtx )
+		zMtx <- fCutU.getNextColVal( gEnv ,3 )$zMtx
+		stdMILst.basic[["nextColVal_3"]] <- list( stdMI=fCutU.getMtxInfo(zMtx) ,zMtx=zMtx )
+		zMtx <- fCutU.getNextColVal( gEnv ,4 )$zMtx
+		stdMILst.basic[["nextColVal_4"]] <- list( stdMI=fCutU.getMtxInfo(zMtx) ,zMtx=zMtx )
+		zMtx <- fCutU.getNextColVal( gEnv ,5 )$zMtx
+		stdMILst.basic[["nextColVal_5"]] <- list( stdMI=fCutU.getMtxInfo(zMtx) ,zMtx=zMtx )
+		zMtx <- fCutU.getNextColVal( gEnv ,6 )$zMtx
+		stdMILst.basic[["nextColVal_6"]] <- list( stdMI=fCutU.getMtxInfo(zMtx) ,zMtx=zMtx )
+
+		# bN.getStdMILst() 참고
+		zMtx <- bN.phCStepColVal( gEnv ,tgtCol=1 )$zMtx
+		stdMILst.basic[["cStepCV1"]] <- list( stdMI=fCutU.getMtxInfo(zMtx) ,zMtx=zMtx )
+		zMtx <- bN.phCStepColVal( gEnv ,tgtCol=2 )$zMtx
+		stdMILst.basic[["cStepCV2"]] <- list( stdMI=fCutU.getMtxInfo(zMtx) ,zMtx=zMtx )
+		zMtx <- bN.phCStepColVal( gEnv ,tgtCol=3 )$zMtx
+		stdMILst.basic[["cStepCV3"]] <- list( stdMI=fCutU.getMtxInfo(zMtx) ,zMtx=zMtx )
+		zMtx <- bN.phCStepColVal( gEnv ,tgtCol=4 )$zMtx
+		stdMILst.basic[["cStepCV4"]] <- list( stdMI=fCutU.getMtxInfo(zMtx) ,zMtx=zMtx )
+		zMtx <- bN.phCStepColVal( gEnv ,tgtCol=5 )$zMtx
+		stdMILst.basic[["cStepCV5"]] <- list( stdMI=fCutU.getMtxInfo(zMtx) ,zMtx=zMtx )
+
+		zMtx <- bN.phFStepColVal( gEnv ,tgtCol=1 )$zMtx
+		stdMILst.basic[["fStepCV1"]] <- list( stdMI=fCutU.getMtxInfo(zMtx) ,zMtx=zMtx )
+		zMtx <- bN.phFStepColVal( gEnv ,tgtCol=2 )$zMtx
+		stdMILst.basic[["fStepCV2"]] <- list( stdMI=fCutU.getMtxInfo(zMtx) ,zMtx=zMtx )
+		zMtx <- bN.phFStepColVal( gEnv ,tgtCol=3 )$zMtx
+		stdMILst.basic[["fStepCV3"]] <- list( stdMI=fCutU.getMtxInfo(zMtx) ,zMtx=zMtx )
+		zMtx <- bN.phFStepColVal( gEnv ,tgtCol=4 )$zMtx
+		stdMILst.basic[["fStepCV4"]] <- list( stdMI=fCutU.getMtxInfo(zMtx) ,zMtx=zMtx )
+		zMtx <- bN.phFStepColVal( gEnv ,tgtCol=5 )$zMtx
+		stdMILst.basic[["fStepCV5"]] <- list( stdMI=fCutU.getMtxInfo(zMtx) ,zMtx=zMtx )
+		zMtx <- bN.phFStepColVal( gEnv ,tgtCol=6 )$zMtx
+		stdMILst.basic[["fStepCV6"]] <- list( stdMI=fCutU.getMtxInfo(zMtx) ,zMtx=zMtx )
+
 	}
 
     # todo stdFiltedCnt

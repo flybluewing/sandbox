@@ -16,7 +16,7 @@ prll.initHeader <- function( ){
         curWd <- getwd();setwd("..");source("hCommon.R")
         setwd( curWd );source("header.r");source("B_H.R");source("B_prll_H.R")
     })
-    source("header.r")  ;source("B_H.R") ;source("B_prll_H.R")  # for debug work
+    source("header.r")  ;source("B_H.R") ;source("B_prll_H.R")  ;source("B_prll_Hrpt.R")# for debug work
 }
 sfInit( parallel=T, cpus=prllNum )  ;prll.initHeader( ) ;sfExport("prllLog") 
 
@@ -57,7 +57,7 @@ if( FALSE ){    # stdZoid에 대한 cutting 시뮬레이션 예제 코드
 
     sfExport("tgt.scMtx")       ;sfExport("testData.grp")   ;sfExport("testData_HCR.grp")
     tStmp1 <- Sys.time()
-    if( FALSE ){     # HCR
+    if( TRUE ){     # HCR
         prll.initHeader( )
         prllLog$fLogStr("- HCR ----------------------------",pTime=T)
 
