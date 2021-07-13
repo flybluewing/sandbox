@@ -1,6 +1,4 @@
 
-
-
 if( FALSE ){    # freq both A,B
 
     hpnDfA <- ddply( cntDfA ,.(mName,M,I) ,function( pDf ){ data.frame(cnt=sum(pDf$cnt)) })
@@ -70,3 +68,11 @@ if( FALSE ){    # freq both A,B
     lowHpnMtx <- tMtx[tMtx[,"lowHpn"]=="TRUE" ,]    ;table(lowHpnMtx[,"hIdx"])
     lowHpnMtx[ ,c("hIdx","mName","M","I","info","cnt.A")]
 }
+
+
+mtx1 <- mtx ;mtx2 <- mtxLst[[1]]    ;mtx3 <- mtxLst[[3]]    ;mtx4 <- mtxLst[[4]]
+flag <- mtx1==0     ;mtx1[flag] <- mtx4[flag]    ;mtx <- mtx1
+
+
+flag <- mtx==0
+mtx[flag] <- sample(0:3 ,sum(flag) ,replace=T)

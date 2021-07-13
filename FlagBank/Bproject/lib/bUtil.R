@@ -1971,6 +1971,248 @@ bUtil.getMtxSumVal_fromLst <- function( mtxLst ){
 }
 
 
+bUtil.rptRowReb_mtxLst <- function( mtxLst ,pairSizes=c(2,3) ,fLogger ){
+	#	mtxLst <- lapply( hMtxLst_HCR$scoreMtx ,function(p){p$basic$HCRsz_bf01fCol})
+	fRpt <- function( cmbRptLst ,dbgInfo=T ,cutThld ){
+		# fLogger$fLogStr("start",pTime=T,pAppend=F )
+
+		for( idx in seq_len(length(cmbRptLst)) ){
+			cmbRpt <- cmbRptLst[[idx]]
+			if( 0==length(cmbRpt$vpLst) ) next
+
+			fLogger$fLogStr("\n")
+			if( is.null(cmbRpt$fColName) ){
+				fLogger$fLogStr( sprintf("col combination(idx): %s",paste(cmbRpt$colPair,collapse="-")) )
+			} else {
+				colStr <- sprintf("%s(%s)",cmbRpt$fColName,cmbRpt$colPair)
+				fLogger$fLogStr( sprintf("col combination : %s", paste(colStr,collapse="-")) )
+			}
+
+			for( vpIdx in names(cmbRpt$vpLst) ){
+				vp <- cmbRpt$vpLst[[vpIdx]]		# value pair
+				if( cutThld>=vp$hpnCnt && 0==nrow(vp$rebSeqAll) ){
+					next
+				}
+
+				fLogger$fLogStr( sprintf("<%s>     hpnCnt : %d",vpIdx,vp$hpnCnt) )
+				if( 0<nrow(vp$rebSeqAll) ){
+					tbl <- table(vp$rebSeqAll[,"seqNum"])
+					tblStr <- sprintf( "    %s(%d)" ,names(tbl) ,tbl)
+					fLogger$fLogStr( sprintf("        RebSeq All - %s # len(lenHpnCnt)",paste(tblStr,collapse=" ")) )
+					fLogger$fLogStr( sprintf("            %s ",paste(vp$dbgStrLst[["rebSeqAll"]],collapse=" ")) )
+				}
+				if( 0<nrow(vp$rebSeqOnly) ){
+					tbl <- table(vp$rebSeqOnly[,"seqNum"])
+					tblStr <- sprintf( "    %s(%d)" ,names(tbl) ,tbl)
+					fLogger$fLogStr( sprintf("        RebSeq Only - %s # len(lenHpnCnt)",paste(tblStr,collapse=" ")) )
+					fLogger$fLogStr( sprintf("            %s ",paste(vp$dbgStrLst[["rebSeqOnly"]],collapse=" ")) )
+				}
+
+				if( dbgInfo ){
+					fLogger$fLogStr( sprintf("    hpn log all : %s ",paste(vp$dbgStrLst[["all"]],collapse=" ")) )
+				}
+			}
+
+		}
+
+	}
+
+	fCol <- colnames(mtxLst[[1]])
+	mtxNm <- names(mtxLst)
+
+	mtxLen <- sapply( mtxLst ,function(pMtx){nrow(pMtx)})
+	fLogger$fLogStr( sprintf("Total Mtx Len : %d (%s)",sum(mtxLen),paste(mtxLen,collapse=",")) )
+	cutThld <- sum(mtxLen) %% 10		# 발생률 10% 이하이면서 연속 발생도 없으면 보고 생략.
+
+	# pairHpnLst <- list()
+	for( pairSize in pairSizes ){
+		lstByM <- lapply( mtxLst ,function( pMtx ){bUtil.inspecRowReb_mtx( pMtx ,pairSize )} )
+
+		cmbRptLst <- list()
+		for( lmIdx in seq_len(length(lstByM)) ){
+			cmbLst <- lstByM[[lmIdx]]	# combination List
+
+			for( cmbIdx in names(cmbLst) ){
+				cmbInfo <- cmbLst[[cmbIdx]]
+
+				if( is.null(cmbRptLst[[cmbIdx]]) ){		# cmbIdx는 컬럼이지, 값이 아님. 착각 주의
+					rptObj <- cmbInfo["colPair"]		# 리스트로 만들어야 한다는 걸 유의
+					if( !is.null(cmbInfo[["fColName"]]) )	rptObj$fColName <- cmbInfo[["fColName"]]
+
+					rptObj$vpLst <- lapply( cmbInfo$vpLst ,function(p){ 
+						rObj <- p[c("val","rebSeqAll","rebSeqOnly")]
+						rObj$hpnCnt <- length(p$hpnIdx)
+
+						dbgStr <- paste( p$hpnIdx,collapse="," )
+						dbgStr <- sprintf("%s:%s",ifelse(is.null(mtxNm),lmIdx,mtxNm[lmIdx]),dbgStr)
+						rObj$dbgStrLst[["all"]] <- dbgStr
+
+						# rebSeqAll
+						if( 0<nrow(p$rebSeqAll) ){
+							dbgStr <- paste( p$rebSeqAll[ ,"seqNum"],collapse=",")
+							rObj$dbgStrLst[["rebSeqAll"]] <- sprintf("%s:%s",ifelse(is.null(mtxNm),lmIdx,mtxNm[lmIdx]),dbgStr)
+						}
+						# rebSeqOnly
+						if( 0<nrow(p$rebSeqOnly) ){
+							dbgStr <- paste( p$rebSeqOnly[ ,"seqNum"],collapse=",")
+							rObj$dbgStrLst[["rebSeqOnly"]] <- sprintf("%s:%s",ifelse(is.null(mtxNm),lmIdx,mtxNm[lmIdx]),dbgStr)
+						}
+						return( rObj )
+					})
+
+					cmbRptLst[[cmbIdx]] <- rptObj
+				} else {
+					cmbRpt <- cmbRptLst[[cmbIdx]]
+					for( vpIdx in names(cmbInfo$vpLst) ){
+						p <- cmbInfo$vpLst[[vpIdx]]
+						if( is.null(cmbRpt$vpLst[[vpIdx]]) ){
+							cmbRpt$vpLst[[vpIdx]] <- p[c("val","rebSeqAll","rebSeqOnly")]
+							cmbRpt$vpLst[[vpIdx]]$hpnCnt <- length(p$hpnIdx)
+							
+							dbgStr <- paste( p$hpnIdx,collapse="," )
+							dbgStr <- sprintf("%s:%s",ifelse(is.null(mtxNm),lmIdx,mtxNm[lmIdx]),dbgStr)
+							cmbRpt$vpLst[[vpIdx]]$dbgStrLst[["all"]] <- dbgStr
+							if( 0<nrow(p$rebSeqAll) ){
+								dbgStr <- paste( p$rebSeqAll[ ,"seqNum"],collapse=",")
+								dbgStr <- sprintf("%s:%s",ifelse(is.null(mtxNm),lmIdx,mtxNm[lmIdx]),dbgStr)
+								cmbRpt$vpLst[[vpIdx]]$dbgStrLst[["rebSeqAll"]] <- c( cmbRpt$vpLst[[vpIdx]]$dbgStrLst[["rebSeqAll"]] ,dbgStr )
+							}
+							if( 0<nrow(p$rebSeqOnly) ){
+								dbgStr <- paste( p$rebSeqOnly[ ,"seqNum"],collapse=",")
+								dbgStr <- sprintf("%s:%s",ifelse(is.null(mtxNm),lmIdx,mtxNm[lmIdx]),dbgStr)
+								cmbRpt$vpLst[[vpIdx]]$dbgStrLst[["rebSeqOnly"]] <- c( cmbRpt$vpLst[[vpIdx]]$dbgStrLst[["rebSeqOnly"]] ,dbgStr )
+							}
+						} else {
+							cmbRpt$vpLst[[vpIdx]]$hpnCnt <- cmbRpt$vpLst[[vpIdx]]$hpnCnt + length(p$hpnIdx)
+
+							dbgStr <- paste( p$hpnIdx,collapse="," )
+							dbgStr <- sprintf("%s:%s",ifelse(is.null(mtxNm),lmIdx,mtxNm[lmIdx]),dbgStr)
+							cmbRpt$vpLst[[vpIdx]]$dbgStrLst[["all"]] <- c( cmbRpt$vpLst[[vpIdx]]$dbgStrLst[["all"]] ,dbgStr)
+							if( 0<nrow(p$rebSeqAll) ){
+								cmbRpt$vpLst[[vpIdx]]$rebSeqAll <- rbind( cmbRpt$vpLst[[vpIdx]]$rebSeqAll ,p$rebSeqAll )
+								dbgStr <- paste( p$rebSeqAll[ ,"seqNum"],collapse=",")
+								dbgStr <- sprintf("%s:%s",ifelse(is.null(mtxNm),lmIdx,mtxNm[lmIdx]),dbgStr)
+								cmbRpt$vpLst[[vpIdx]]$dbgStrLst[["rebSeqAll"]] <- c( cmbRpt$vpLst[[vpIdx]]$dbgStrLst[["rebSeqAll"]] ,dbgStr )
+							}
+							if( 0<nrow(p$rebSeqOnly) ){
+								cmbRpt$vpLst[[vpIdx]]$rebSeqOnly <- rbind( cmbRpt$vpLst[[vpIdx]]$rebSeqOnly ,p$rebSeqOnly )
+								dbgStr <- paste( p$rebSeqOnly[ ,"seqNum"],collapse=",")
+								dbgStr <- sprintf("%s:%s",ifelse(is.null(mtxNm),lmIdx,mtxNm[lmIdx]),dbgStr)
+								cmbRpt$vpLst[[vpIdx]]$dbgStrLst[["rebSeqOnly"]] <- c( cmbRpt$vpLst[[vpIdx]]$dbgStrLst[["rebSeqOnly"]] ,dbgStr )
+							}
+
+						}
+					}
+					cmbRptLst[[cmbIdx]] <- cmbRpt
+				}
+			}	# cmbIdx
+		}	# lmIdx
+
+		fRpt( cmbRptLst ,dbgInfo=T ,cutThld )
+	}
+
+	if( FALSE ){	# 개발용 데이터 생성
+
+		fLogger$fLogStr("start",pTime=T,pAppend=F )
+		bUtil.rptRowReb_mtxLst( mtxLst ,pairSizes=c(2,3) ,fLogger )
+
+		mtxLst <- list()
+		mtx <- NULL
+		mtx <- rbind( mtx ,c(1,3,0))
+		mtx <- rbind( mtx ,c(1,3,0))
+
+		mtxLst[["A"]] <- mtx
+		mtx <- NULL
+		mtx <- rbind( mtx ,c(1,3,0))
+		mtx <- rbind( mtx ,c(1,3,0))
+		mtx <- rbind( mtx ,c(1,3,1))
+		mtxLst[["B"]] <- mtx
+	}
+
+}
+
+bUtil.inspecRowReb_mtx <- function( mtx ,pairSize ){
+
+	anaSeq <- function( hpnIdx ){
+		hpnLen <- length(hpnIdx)
+
+		seqMtx <- matrix( 0 ,nrow=0 ,ncol=2 ,dimnames=list(NULL,c("rIdx","seqNum")) )
+		if( 2>hpnLen ){
+			return( seqMtx )
+		} 
+
+		# seqLst <- list()
+		seqLen <- 0
+		for( curIdx in 2:hpnLen ){
+			if( 1 == (hpnIdx[curIdx]-hpnIdx[(curIdx-1)]) ) {
+				seqLen <- seqLen+1
+			} else {
+				if( 0<seqLen ){
+					seqMtx <- rbind( seqMtx ,c(hpnIdx[curIdx-1],seqLen) )
+					# seqLst[[1+length(seqLst)]] <- c(hpnIdx[curIdx-1],seqLen)
+					seqLen <- 0
+				}
+			}
+
+			if( (curIdx==hpnLen) && (seqLen>0) ){
+					seqMtx <- rbind( seqMtx ,c(hpnIdx[curIdx],seqLen) )
+					# seqLst[[1+length(seqLst)]] <- c(hpnIdx[curIdx],seqLen)
+					seqLen <- 0
+			}
+		}
+
+		return( seqMtx )
+	}
+
+	fCol <- colnames( mtx )
+	cmbMtx <- combinations( ncol(mtx) ,pairSize )	;rownames(cmbMtx) <- apply( cmbMtx ,1 ,function(rDat){ paste(rDat,collapse="_") })
+
+	cmbLst <- list()
+	for( cmbIdx in 1:nrow(cmbMtx) ){
+		pMtx <- mtx[ ,cmbMtx[cmbIdx,]]
+
+		vpLst <- list()	# value pair List
+		for( rIdx in 1:nrow(mtx) ){
+			if( any(pMtx[rIdx,]==0) )	next
+
+			idStr <- paste( pMtx[rIdx,] ,collapse="/" )
+			if( is.null(vpLst[[idStr]]) ){
+				vpLst[[idStr]] <- list( val=pMtx[rIdx,] ,hpnIdx=rIdx )
+			} else {
+				vpLst[[idStr]]$hpnIdx <- c( vpLst[[idStr]]$hpnIdx ,rIdx )
+			}
+		}
+
+		outF <- apply( mtx[ ,-cmbMtx[cmbIdx,]	,drop=F] ,1 ,function(rDat){ any(rDat>0) })	# 현재 작업 컬럼 이외에서의 hpn 여부.
+		outFIdx <- which( outF )
+		for( vpIdx in seq_len(length(vpLst)) ){	# vpIdx <- 1
+			hpnIdx <- vpLst[[vpIdx]]$hpnIdx
+			vpLst[[vpIdx]]$rebSeqAll <- anaSeq( hpnIdx )
+			vpLst[[vpIdx]]$rebSeqOnly <- anaSeq( setdiff(hpnIdx,outFIdx) )
+		}
+
+		cmbIdStr <- paste(cmbMtx[cmbIdx,],collapse="_")
+		cmbLst[[cmbIdStr]] <- list( colPair=cmbMtx[cmbIdx,] )
+		if( !is.null(fCol) ){
+			cmbLst[[cmbIdStr]]$fColName <- fCol[ cmbMtx[cmbIdx,] ]
+		}
+		cmbLst[[cmbIdStr]]$vpLst <- vpLst
+	}
+
+	if( FALSE ){
+
+		mtx <- mtxLst[["sfc2"]]
+		mtx1 <- mtx ;mtx2 <- mtxLst[[1]]    ;mtx3 <- mtxLst[[3]]    ;mtx4 <- mtxLst[[4]]
+		flag <- mtx1==0     ;mtx1[flag] <- mtx2[flag]    ;flag <- mtx1==0     ;mtx1[flag] <- mtx3[flag]    ;flag <- mtx1==0     ;mtx1[flag] <- mtx4[flag]
+		mtx <- mtx1	;pairSize=2
+
+	}
+
+
+	return( cmbLst )
+}
+
+
 bUtil.zoidMtx_ana <- function( pMtx ,banCfg=NULL ){
 	# Aproject/lib/u0_H.R u0.zoidMtx_ana() ,u0.zoidCMtx_ana() ,u0.zoidFMtx_ana() 기능통합.
 	#	banCfg : {NULL,"raw","rem","cStep","fStep"}
