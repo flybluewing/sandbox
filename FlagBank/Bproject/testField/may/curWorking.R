@@ -70,9 +70,14 @@ if( FALSE ){    # freq both A,B
 }
 
 
-mtx1 <- mtx ;mtx2 <- mtxLst[[1]]    ;mtx3 <- mtxLst[[3]]    ;mtx4 <- mtxLst[[4]]
-flag <- mtx1==0     ;mtx1[flag] <- mtx4[flag]    ;mtx <- mtx1
+fLogger$fLogStr( sprintf("inspecHMtxLst_HCR(mName:%s) %s",mName,auxMsg) ,pTime=T ,pAppend=F )
+bUtil.rptRowReb_mtxLst( mtxLst ,pairSizes=2:ncol(mtxLst[[1]]) ,fLogger ,opt=c(rebSeqAll=F,rebSeqOnly=T) )
 
 
-flag <- mtx==0
-mtx[flag] <- sample(0:3 ,sum(flag) ,replace=T)
+curHIdx <- 881  ;mName <- "HCRsz_bf01fCol"
+hMtxLst_HCR <- testData_HCR.grp$curHMtxLst_HCR.grp[[as.character(curHIdx)]]
+
+
+names(hMtxLst_HCR$scoreMtxLst$sfcLate$basic[[mName]])
+
+

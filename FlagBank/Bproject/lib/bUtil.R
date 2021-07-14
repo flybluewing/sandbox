@@ -1971,14 +1971,18 @@ bUtil.getMtxSumVal_fromLst <- function( mtxLst ){
 }
 
 
-bUtil.rptRowReb_mtxLst <- function( mtxLst ,pairSizes=c(2,3) ,fLogger ){
+bUtil.rptRowReb_mtxLst <- function( mtxLst ,pairSizes=c(2,3) ,fLogger ,dbgInfo=F ,opt=c(rebSeqAll=T,rebSeqOnly=T) ){
 	#	mtxLst <- lapply( hMtxLst_HCR$scoreMtx ,function(p){p$basic$HCRsz_bf01fCol})
 	fRpt <- function( cmbRptLst ,dbgInfo=T ,cutThld ){
 		# fLogger$fLogStr("start",pTime=T,pAppend=F )
 
 		for( idx in seq_len(length(cmbRptLst)) ){
 			cmbRpt <- cmbRptLst[[idx]]
-			if( 0==length(cmbRpt$vpLst) ) next
+			if( 0==length(cmbRpt$vpLst) )	next
+
+			# vpLst 가 cutThld 조건에 걸리는 지 확인.
+			cutThldFlag <- sapply( cmbRpt$vpLst ,function(vp){ cutThld>=vp$hpnCnt && 0==nrow(vp$rebSeqAll) })
+			if( all(cutThldFlag) )			next
 
 			fLogger$fLogStr("\n")
 			if( is.null(cmbRpt$fColName) ){
@@ -1990,18 +1994,17 @@ bUtil.rptRowReb_mtxLst <- function( mtxLst ,pairSizes=c(2,3) ,fLogger ){
 
 			for( vpIdx in names(cmbRpt$vpLst) ){
 				vp <- cmbRpt$vpLst[[vpIdx]]		# value pair
-				if( cutThld>=vp$hpnCnt && 0==nrow(vp$rebSeqAll) ){
-					next
-				}
+				if( cutThldFlag[vpIdx] )	next
+
 
 				fLogger$fLogStr( sprintf("<%s>     hpnCnt : %d",vpIdx,vp$hpnCnt) )
-				if( 0<nrow(vp$rebSeqAll) ){
+				if( 0<nrow(vp$rebSeqAll) && opt["rebSeqAll"] ){
 					tbl <- table(vp$rebSeqAll[,"seqNum"])
 					tblStr <- sprintf( "    %s(%d)" ,names(tbl) ,tbl)
 					fLogger$fLogStr( sprintf("        RebSeq All - %s # len(lenHpnCnt)",paste(tblStr,collapse=" ")) )
 					fLogger$fLogStr( sprintf("            %s ",paste(vp$dbgStrLst[["rebSeqAll"]],collapse=" ")) )
 				}
-				if( 0<nrow(vp$rebSeqOnly) ){
+				if( 0<nrow(vp$rebSeqOnly) && opt["rebSeqOnly"] ){
 					tbl <- table(vp$rebSeqOnly[,"seqNum"])
 					tblStr <- sprintf( "    %s(%d)" ,names(tbl) ,tbl)
 					fLogger$fLogStr( sprintf("        RebSeq Only - %s # len(lenHpnCnt)",paste(tblStr,collapse=" ")) )
@@ -2108,7 +2111,7 @@ bUtil.rptRowReb_mtxLst <- function( mtxLst ,pairSizes=c(2,3) ,fLogger ){
 			}	# cmbIdx
 		}	# lmIdx
 
-		fRpt( cmbRptLst ,dbgInfo=T ,cutThld )
+		fRpt( cmbRptLst ,dbgInfo=dbgInfo ,cutThld )
 	}
 
 	if( FALSE ){	# 개발용 데이터 생성

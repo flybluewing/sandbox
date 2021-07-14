@@ -1,34 +1,36 @@
 setwd("c:/zproject/ISLRgit/FlagBank")   ;source("hCommon.R")    ;setwd("./Bproject")
-source("header.r")  ;source("B_H.R") ;source("B_prll_H.R")  ;source("B_prll_Hrpt.R")
 lastH <- 900
 if( TRUE ){
+    source("header.r")  ;source("B_H.R") ;source("B_prll_H.R")  ;source("B_prll_Hrpt.R")
     load(sprintf("../Aproject/Obj_allIdxLstZ%d.save",lastH) )
     load(sprintf("../Aproject/save/Obj_fRstLstZ%d.save",lastH) )    ;names(fRstLst) <- names(allIdxLst$stdFiltedCnt)
     load(sprintf("../Aproject/save/Obj_gEnvZ%d.save",lastH))
     crScrH <- crScrHTool$getData( )     ;crScrH <- crScrHTool$bySpan(crScrH,lastH)
 
     prllLog <- k.getFlogObj( "./log/parallel_log_Hist.txt" )
-    prll.initHeader <- function( ){
-        k <- sfLapply(1:prllNum,function(prllId){
-            curWd <- getwd();setwd("..");source("hCommon.R")
-            setwd( curWd );source("header.r");source("B_H.R");source("B_prll_H.R")
-        })
-        source("header.r")  ;source("B_H.R") ;source("B_prll_H.R")  ;source("B_prll_Hrpt.R")# for debug work
-    }
-    prllNum <- 8    ;sfInit( parallel=T, cpus=prllNum )        ;prll.initHeader( )
+    # prll.initHeader <- function( ){
+    #     k <- sfLapply(1:prllNum,function(prllId){
+    #         curWd <- getwd();setwd("..");source("hCommon.R")
+    #         setwd( curWd );source("header.r");source("B_H.R");source("B_prll_H.R")
+    #     })
+    #     source("header.r")  ;source("B_H.R") ;source("B_prll_H.R")  ;source("B_prll_Hrpt.R")# for debug work
+    # }
+    # prllNum <- 8    ;sfInit( parallel=T, cpus=prllNum )        ;prll.initHeader( )
 
-    sfExport("prllLog")     ;sfExport("lastH")   ;sfExport("gEnv")    ;sfExport("fRstLst")    ;sfExport("allIdxLst") ;sfExport("crScrH")  ;sfExport("crScrHTool")
-    prllLog$fLogStr("parallel init", pTime=T ,pAppend=F )
+    # sfExport("prllLog")     ;sfExport("lastH")   ;sfExport("gEnv")    ;sfExport("fRstLst")    ;sfExport("allIdxLst") ;sfExport("crScrH")  ;sfExport("crScrHTool")
+    # prllLog$fLogStr("parallel init", pTime=T ,pAppend=F )
 
     tgt.scMtx <- NULL   ;tgt.scMtx <- c( tgt.scMtx  ,Bprll.getTgtScMtx( ) )
     configH <- lastH-20
     testSpan <- (lastH - 19:0)  ;sfc.InTest <- allIdxLst$stdFiltedCnt[as.character(testSpan)]   ;testSpan <- testSpan[sfc.InTest %in% 0:2]
     load( sprintf("Obj_testData.grp.%d.%s.save",lastH,"all") )
     load( sprintf("Obj_testData_HCR.grp.%d.%s.save",lastH,"all") )
+
+    myObj <- load("./save/Obj_hMtxLstBig.save")     # hMtxLstBig    < HBuild_HMtxLstBig.R >
+    logTemp <- k.getFlogObj( "./log/dbg_Temp.txt" )
+    logTemp$fLogStr( sprintf("log start : %s",Sys.time()) ,pAppend=F )
+    fLogger<-logTemp
 }
-myObj <- load("./save/Obj_hMtxLstBig.save")     # hMtxLstBig    < HBuild_HMtxLstBig.R >
-logTemp <- k.getFlogObj( "./log/dbg_Temp.txt" )
-logTemp$fLogStr( sprintf("log start : %s",Sys.time()) ,pAppend=F )  ;fLogger<-logTemp
 
 
 
@@ -82,5 +84,7 @@ Bprll_lastMtxHCR( cutInfo ,scoreMtx.grp ,hMtxLst_HCR ,hNameAll=T ,fLogger=logHCR
 
 logSzInspec <- k.getFlogObj( sprintf("./log/dbg_%dSzInspec.txt",curHIdx) )
 logSzInspec$fLogStr( sprintf("log start : %s",Sys.time()) ,pAppend=F )
-Bprll_inspecSZ_std( lastH ,curHIdxSet=curHIdx ,fLogger=logSzInspec ,gEnv,allIdxLst,fRstLst,crScrH,hMtxLstBig )
+szMtxLst_H <- Bprll_inspecSZ_std( lastH ,curHIdxSet=curHIdx ,fLogger=logSzInspec ,gEnv,allIdxLst,fRstLst,crScrH,hMtxLstBig )
+
+Bprll_inspecHMtxLst_HCR( hMtxLst_HCR ,mName="HCRsz_bf01fCol" ,fLogger ,auxMsg="" ,opt=c(rebSeqAll=T,rebSeqOnly=T) )
 

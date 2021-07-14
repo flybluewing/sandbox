@@ -24,6 +24,7 @@ Bprll_inspecSZ_std <- function( lastH ,curHIdxSet ,fLogger ,gEnv,allIdxLst,fRstL
     }
 
     searchKeyStr <- character(0)
+    szMtxLst_H <- list()
     for( curHIdx in curHIdxSet ){   # curHIdx <- 891
 
         fLogger$fLogStr( sprintf("curHIdx : %d",curHIdx) )
@@ -76,11 +77,14 @@ Bprll_inspecSZ_std <- function( lastH ,curHIdxSet ,fLogger ,gEnv,allIdxLst,fRstL
         # Sz : hMtxLst
         #       Âü°í : FCust_stdCut.hIdx()
         fLogger$fLogStr( sprintf("curHIdx:%d/hMtxLst",curHIdx) )
+        szMtxLst <- list()
         for( hName in hNameSet ){
+            szLst <- list()
             for( mName in mNameSet ){
                 mtxLst  <- hIdxObj[[hName]][[mName]]
                 cfg     <- scoreMtxCfg[[mName]]
                 szObj <- bFCust.getSkipZero_byHIdx( mtxLst ,cfg )
+                szLst[[mName]] <- szObj
                 
                 keyStr <- sprintf("curHIdx:%d/szObj$ph$%s$%s",curHIdx,hName,mName)
                 fLogger$fLogStr( keyStr )   ;searchKeyStr <- c(searchKeyStr ,keyStr)
@@ -96,7 +100,9 @@ Bprll_inspecSZ_std <- function( lastH ,curHIdxSet ,fLogger ,gEnv,allIdxLst,fRstL
 
                 # szObj$dblHpn
             }
+            szMtxLst[[hName]] <- szLst
         }
+        szMtxLst_H[[as.character(curHIdx)]] <- szMtxLst
 
         #   stdMI.grp
         for( pName in names(stdMI.grp$basic) ){
@@ -114,4 +120,60 @@ Bprll_inspecSZ_std <- function( lastH ,curHIdxSet ,fLogger ,gEnv,allIdxLst,fRstL
     fLogger$fLogStr("")
     fLogger$fLogStr( searchKeyStr )
 
+    return( szMtxLst_H )
 }
+
+Bprll_inspecHMtxLst_HCR <- function( hMtxLst_HCR ,mName ,fLogger ,auxMsg="" ,opt=c(rebSeqAll=F,rebSeqOnly=T) ,dbgInfo=F ,pAppend=F ){
+    fLogger$fLogStr( sprintf("inspecHMtxLst_HCR(mName:%s) %s",mName,auxMsg) ,pTime=T ,pAppend=pAppend )
+
+    mtxLst <- list()
+    for( hName in names(hMtxLst_HCR$scoreMtxLst) ){
+        mtxLst[[hName]] <- hMtxLst_HCR$scoreMtxLst[[hName]]$basic[[mName]]
+    }
+
+    bUtil.rptRowReb_mtxLst( mtxLst ,pairSizes=2:ncol(mtxLst[[1]]) ,fLogger ,dbgInfo=dbgInfo ,opt=opt )
+}
+
+Bprll_inspec_lastH <- function( lastH ,mName ,mNameType ,oneLog=T ){
+
+    logFileName <- "./report/tempRpt/rowReb"
+    rptLog <- NULL
+    if( oneLog ){
+        rptLog <- k.getFlogObj( sprintf("%s_%s.txt",logFileName,mName) )
+        rptLog$fLogStr( "OneLog start" ,pTime=T ,pAppend=F )
+        print( sprintf("    writing %s",rptLog$fileName) )
+    }
+
+    load(sprintf("../Aproject/Obj_allIdxLstZ%d.save",lastH) )
+    load(sprintf("../Aproject/save/Obj_fRstLstZ%d.save",lastH) )
+    names(fRstLst) <- names(allIdxLst$stdFiltedCnt)
+    load(sprintf("../Aproject/save/Obj_gEnvZ%d.save",lastH))
+    crScrH <- crScrHTool$getData( )     ;crScrH <- crScrHTool$bySpan(crScrH,lastH)
+
+    tgt.scMtx <- mName
+    configH <- lastH-20     ;testSpan <- (lastH - 19:0)
+    sfc.InTest <- allIdxLst$stdFiltedCnt[as.character(testSpan)]
+    testSpan <- testSpan[sfc.InTest %in% 0:2]
+
+    load( sprintf("Obj_testData.grp.%d.%s.save",lastH,"all") )
+    load( sprintf("Obj_testData_HCR.grp.%d.%s.save",lastH,"all") )
+
+    for( curHIdx in testSpan ){
+
+        curHMtxLst <- testData.grp$curHMtxLst.grp[[as.character(curHIdx)]]
+        hMtxLst_HCR <- testData_HCR.grp$curHMtxLst_HCR.grp[[as.character(curHIdx)]]
+        if( "HCR"==mNameType ){
+            if( !oneLog ){
+                rptLog <- k.getFlogObj( sprintf("%s_%s%d.txt",logFileName,mName,curHIdx) )
+                print( sprintf("    writing %s",rptLog$fileName) )
+            }
+            rptRst <- Bprll_inspecHMtxLst_HCR( hMtxLst_HCR ,mName ,fLogger=rptLog 
+                            ,auxMsg=sprintf("curHIdx %d",curHIdx) ,opt=c(rebSeqAll=T,rebSeqOnly=T) ,dbgInfo=T ,pAppend=oneLog
+            )
+        }
+
+    }   # curHIdx
+
+}
+
+
