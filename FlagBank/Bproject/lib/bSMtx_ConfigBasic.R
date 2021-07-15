@@ -3190,7 +3190,7 @@ for( mName in names( bsScoreMtxCfg ) ){ # naming 추가.
         bsScoreMtxCfg[[mName]]$evtMax     <- evtMax
     }
     if( is.null(bsScoreMtxCfg[[mName]]$rowReb) ){
-        bsScoreMtxCfg[[mName]]$rowReb <- c( rawMin=1 ,lowE=2 ,rareE=1 ,dupESum=1 )
+        bsScoreMtxCfg[[mName]]$rowReb <- c( rawMin=1 ,lowE=2 ,rareE=1 ,dupESum=1 ,freqValRebMax=3 )
     }
     if( is.null(bsScoreMtxCfg[[mName]]$rowRebDup) ){  # 조건 : >=
         bsScoreMtxCfg[[mName]]$rowRebDup <- c( lowE=1 ,rareE=1 )

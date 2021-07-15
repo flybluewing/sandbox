@@ -2444,7 +2444,7 @@ bUtil.getRowRebCutter <- function( rCObj ,cfg ){
 	#	FCust_stdCut.rawRow() 의 rObj.
 
 	#	ctrObj : cutter Obj
-	ctrObj <- list( cfg=cfg ,rebInfo=NULL ,rawReb=NULL ,evtReb=NULL )
+	ctrObj <- list( cfg=cfg ,rebInfo=NULL ,rawReb=NULL ,evtReb=NULL ,auxMsgLst=list() )
 	ctrObj$getEvtHpnCnt <- function( evtLev ){
 		#	evtLev <- ctrObj$rebInfo["evt",]
 		evtHpnCnt <- c( lowE=sum(evtLev>0,na.rm=T) ,rareE=sum(evtLev>1,na.rm=T) )
@@ -2489,7 +2489,16 @@ bUtil.getRowRebCutter <- function( rCObj ,cfg ){
 		} else if( all( ctrObj$rebInfo["freqVal",hpnCol]>0 ) ){
 			# 발생이 일어난 컬럼들이 모두 빈번발생 값들인지? (freqVal)
 			# 	--> rawReb 검사자체를 할 필요가 없는 상태.
-			ctrObj$rawReb <- NULL
+			if( !is.na(cfg$rowReb["freqValRebMax"]) ){	# 빈번발생 컬럼이라고 해도 최대 갯수 제한이 있는지?
+				if( length(hpnCol) < cfg$rowReb["freqValRebMax"] ){
+					ctrObj$rawReb <- NULL
+				} else {
+					auxMsg <- sprintf("freqValRebMax(%d/%d)",length(hpnCol),cfg$rowReb["freqValRebMax"])
+					ctrObj$rawReb$infoStr <- sprintf("%s %s",ctrObj$rawReb$infoStr,auxMsg)
+				}
+			} else {
+				ctrObj$rawReb <- NULL
+			}
 		} else if( any(ctrObj$rebInfo["evtDup",hpnCol]>0) ){
 			# 2번 연속발생 Evt 존재하고
 			# 때문에 rawReb를 체크할 필요자체가 없는 조건이라면..

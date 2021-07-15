@@ -226,8 +226,9 @@ if( TRUE ){ # done. OK
         ,rowRebDupBan = matrix( c( TRUE, F ,1    ,TRUE ,F ,1 )   ,byrow=T ,nrow=2 ,dimnames=list(c("AA_A","AAB_B"),c("OnOff","freqVal","rawMin")) )
         ,isHard=NULL  # use default
     )
-
 }
+
+
 mName <- "HCRsz_bf2AfCol"
 if( TRUE ){ # done. OK
     HCRMtxCfg[[mName]] <- list(
@@ -5995,7 +5996,7 @@ for( mName in names( HCRMtxCfg ) ){
         )
     }
     if( is.null(HCRMtxCfg[[mName]]$rowReb) ){
-        HCRMtxCfg[[mName]]$rowReb = c( rawMin=1 ,lowE=2 ,rareE=1 ,dupESum=2 )
+        HCRMtxCfg[[mName]]$rowReb = c( rawMin=1 ,lowE=2 ,rareE=1 ,dupESum=2 ,freqValRebMax=3 )
     }
 
     # 추가 옵션 코드 예시 (디폴트값은 NULL)

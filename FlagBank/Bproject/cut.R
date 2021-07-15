@@ -27,14 +27,8 @@ sapply( allIdxLst ,length )
 prllLog <- k.getFlogObj( sprintf("./log/parallel_log_Cut%d.txt",lastH) )
 prll.initHeader <- function( ){
     k <- sfLapply(1:prllNum,function(prllId){
-        curWd <- getwd()
-        setwd("..")
-        source("hCommon.R")
-
-        setwd( curWd )
-        source("header.r")
-        source("B_H.R")
-        source("cut_H.R")
+        curWd <- getwd()    ;setwd("..")        ;source("hCommon.R")    ;setwd( curWd )
+        source("header.r")  ;source("B_H.R")    ;source("cut_H.R")
     })
 }
 

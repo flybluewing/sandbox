@@ -2247,7 +2247,7 @@ for( mName in names( scrExtMtxCfg ) ){              # mName <- names( scrExtMtxC
             scrExtMtxCfg[[mName]][[fName]]$evtMax     <- evtMax
         }
         if( is.null(scrExtMtxCfg[[mName]][[fName]]$rowReb) ){
-            scrExtMtxCfg[[mName]][[fName]]$rowReb <- c( rawMin=1 ,lowE=2 ,rareE=1 ,dupESum=2 )
+            scrExtMtxCfg[[mName]][[fName]]$rowReb <- c( rawMin=1 ,lowE=2 ,rareE=1 ,dupESum=2 ,freqValRebMax=3 )
         }
         if( is.null(scrExtMtxCfg[[mName]][[fName]]$rowRebDup) ){  # Á¶°Ç : >=
             scrExtMtxCfg[[mName]][[fName]]$rowRebDup <- c( lowE=1 ,rareE=1 )

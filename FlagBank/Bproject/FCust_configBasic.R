@@ -4940,7 +4940,7 @@ for( mName in names( scoreMtxCfg ) ){ # naming 추가.
         scoreMtxCfg[[mName]]$evtMax     <- evtMax
     }
     if( is.null(scoreMtxCfg[[mName]]$rowReb) ){
-        scoreMtxCfg[[mName]]$rowReb <- c( rawMin=1 ,lowE=2 ,rareE=1 ,dupESum=2 )
+        scoreMtxCfg[[mName]]$rowReb <- c( rawMin=1 ,lowE=2 ,rareE=1 ,dupESum=2 ,freqValRebMax=3 )
     }
     if( is.null(scoreMtxCfg[[mName]]$rowRebDup) ){  # 조건 : >=
         scoreMtxCfg[[mName]]$rowRebDup <- c( lowE=1 ,rareE=1 )

@@ -1888,7 +1888,7 @@ for( mName in names( bsScrExtMtxCfg ) ){              # mName <- names( bsScrExt
             bsScrExtMtxCfg[[mName]][[fName]]$evtMax     <- evtMax
         }
         if( is.null(bsScrExtMtxCfg[[mName]][[fName]]$rowReb) ){
-            bsScrExtMtxCfg[[mName]][[fName]]$rowReb <- c( rawMin=1 ,lowE=2 ,rareE=1 ,dupESum=1 )
+            bsScrExtMtxCfg[[mName]][[fName]]$rowReb <- c( rawMin=1 ,lowE=2 ,rareE=1 ,dupESum=1 ,freqValRebMax=3 )
         }
         if( is.null(bsScrExtMtxCfg[[mName]][[fName]]$rowRebDup) ){  # Á¶°Ç : >=
             bsScrExtMtxCfg[[mName]][[fName]]$rowRebDup <- c( lowE=1 ,rareE=1 )
