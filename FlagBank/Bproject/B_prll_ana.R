@@ -1,5 +1,5 @@
 setwd("c:/zproject/ISLRgit/FlagBank")   ;source("hCommon.R")    ;setwd("./Bproject")
-lastH <- 900
+lastH <- 900    ;curHIdx <- 892
 if( TRUE ){
     source("header.r")  ;source("B_H.R") ;source("B_prll_H.R")  ;source("B_prll_Hrpt.R")
     load(sprintf("../Aproject/Obj_allIdxLstZ%d.save",lastH) )
@@ -36,7 +36,7 @@ if( TRUE ){
 
 #   다음은 이미 로딩되어 있다고 가정.
 #   lastH ,testData.grp ,tgt.scMtx
-curHIdx <- 892  ;cutRst <- list( surFlag=T ,cutInfoLst=list() )
+cutRst <- list( surFlag=T ,cutInfoLst=list() )
 if( TRUE ){
     wLastH <- curHIdx-1 ;wLastSpan <- 1:which(names(fRstLst)==wLastH)
     gEnv.w <- gEnv              ;gEnv.w$zhF <- gEnv$zhF[1:wLastH,]
@@ -77,7 +77,6 @@ if( TRUE ){
 
 
 cutInfo <- cutRst1$cutInfoLst[[1]]
-
 logHCR <- k.getFlogObj( sprintf("./log/dbg_%dHCR.txt",curHIdx) )
 logHCR$fLogStr( sprintf("log start : %s",Sys.time()) ,pAppend=F )
 Bprll_lastMtxHCR( cutInfo ,scoreMtx.grp ,hMtxLst_HCR ,hNameAll=T ,fLogger=logHCR )
@@ -86,5 +85,6 @@ logSzInspec <- k.getFlogObj( sprintf("./log/dbg_%dSzInspec.txt",curHIdx) )
 logSzInspec$fLogStr( sprintf("log start : %s",Sys.time()) ,pAppend=F )
 szMtxLst_H <- Bprll_inspecSZ_std( lastH ,curHIdxSet=curHIdx ,fLogger=logSzInspec ,gEnv,allIdxLst,fRstLst,crScrH,hMtxLstBig )
 
-Bprll_inspecHMtxLst_HCR( hMtxLst_HCR ,mName="HCRsz_bf01fCol" ,fLogger ,auxMsg="" ,opt=c(rebSeqAll=T,rebSeqOnly=T) )
-
+pairHpnLst <- Bprll_inspecHMtxLst_HCR( hMtxLst_HCR ,mName="HCRsz_bf01fCol" ,fLogger ,auxMsg="" ,opt=c(rebSeqAll=T,rebSeqOnly=T) )
+pairHpnLst_byH <- Bprll_inspec_lastH( lastH ,mName="HCRsz_bf01fCol" ,mNameTyp="HCR" ,oneLog=T )
+Bprll_inspec_lastH_smry( pairHpnLst_byH ,fLogger )

@@ -2027,7 +2027,7 @@ bUtil.rptRowReb_mtxLst <- function( mtxLst ,pairSizes=c(2,3) ,fLogger ,dbgInfo=F
 	fLogger$fLogStr( sprintf("Total Mtx Len : %d (%s)",sum(mtxLen),paste(mtxLen,collapse=",")) )
 	cutThld <- sum(mtxLen) %% 10		# 발생률 10% 이하이면서 연속 발생도 없으면 보고 생략.
 
-	# pairHpnLst <- list()
+	pairHpnLst <- list()
 	for( pairSize in pairSizes ){
 		lstByM <- lapply( mtxLst ,function( pMtx ){bUtil.inspecRowReb_mtx( pMtx ,pairSize )} )
 
@@ -2112,7 +2112,10 @@ bUtil.rptRowReb_mtxLst <- function( mtxLst ,pairSizes=c(2,3) ,fLogger ,dbgInfo=F
 		}	# lmIdx
 
 		fRpt( cmbRptLst ,dbgInfo=dbgInfo ,cutThld )
+		pairHpnLst[[as.character(pairSize)]] <- cmbRptLst
 	}
+
+	return( pairHpnLst )
 
 	if( FALSE ){	# 개발용 데이터 생성
 

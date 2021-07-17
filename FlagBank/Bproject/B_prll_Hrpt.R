@@ -131,7 +131,8 @@ Bprll_inspecHMtxLst_HCR <- function( hMtxLst_HCR ,mName ,fLogger ,auxMsg="" ,opt
         mtxLst[[hName]] <- hMtxLst_HCR$scoreMtxLst[[hName]]$basic[[mName]]
     }
 
-    bUtil.rptRowReb_mtxLst( mtxLst ,pairSizes=2:ncol(mtxLst[[1]]) ,fLogger ,dbgInfo=dbgInfo ,opt=opt )
+    pairHpnLst <- bUtil.rptRowReb_mtxLst( mtxLst ,pairSizes=2:ncol(mtxLst[[1]]) ,fLogger ,dbgInfo=dbgInfo ,opt=opt )
+    return( pairHpnLst )
 }
 
 Bprll_inspec_lastH <- function( lastH ,mName ,mNameType ,oneLog=T ){
@@ -158,22 +159,152 @@ Bprll_inspec_lastH <- function( lastH ,mName ,mNameType ,oneLog=T ){
     load( sprintf("Obj_testData.grp.%d.%s.save",lastH,"all") )
     load( sprintf("Obj_testData_HCR.grp.%d.%s.save",lastH,"all") )
 
+    pairHpnLst_byH <- list()
     for( curHIdx in testSpan ){
 
         curHMtxLst <- testData.grp$curHMtxLst.grp[[as.character(curHIdx)]]
         hMtxLst_HCR <- testData_HCR.grp$curHMtxLst_HCR.grp[[as.character(curHIdx)]]
+
         if( "HCR"==mNameType ){
             if( !oneLog ){
                 rptLog <- k.getFlogObj( sprintf("%s_%s%d.txt",logFileName,mName,curHIdx) )
                 print( sprintf("    writing %s",rptLog$fileName) )
             }
-            rptRst <- Bprll_inspecHMtxLst_HCR( hMtxLst_HCR ,mName ,fLogger=rptLog 
+            pairHpnLst <- Bprll_inspecHMtxLst_HCR( hMtxLst_HCR ,mName ,fLogger=rptLog 
                             ,auxMsg=sprintf("curHIdx %d",curHIdx) ,opt=c(rebSeqAll=T,rebSeqOnly=T) ,dbgInfo=T ,pAppend=oneLog
             )
+            pairHpnLst_byH[[as.character(curHIdx)]] <- pairHpnLst
         }
 
     }   # curHIdx
 
+    return( pairHpnLst_byH )
 }
 
+Bprll_inspec_lastH_smry <- function( pairHpnLst_byH ,fLogger ){
+    # pairHpnLst_byH <- Bprll_inspec_lastH( lastH ,mName="HCRsz_bf01fCol" ,mNameTyp="HCR" ,oneLog=T )
 
+    getRebSeqOnly <- function( pairHpnLst_byH ,pColIdx ,pVpIdx ){
+        #   pColIdx="1_2" ;pVpIdx="2/1"
+        #   rptObj <- getRebSeqOnly( pairHpnLst_byH ,pColIdx="1_2" ,pVpIdx="2/1" )
+        #
+        #                     hIdx  sizeIdx colIdx vpIdx dbgStr                          
+        #                 [1,] "894" "2"     "1_2"  "2/1" "sfcLate:1, sfc2:1, NGAP000.E:1"
+        #                     rIdx seqNum
+        #                 [1,]   19      1
+        #                 [2,]   20      1
+        #
+        # curHIdx <- "899"        ;hName<-"sfcLate"
+        # hMtxLst_HCR <- testData_HCR.grp$curHMtxLst_HCR.grp[[curHIdx]]
+        # hMtxLst_HCR$scoreMtxLst[[hName]]$basic[["HCRsz_bf01fCol"]]
+
+        tDf <- data.frame( hIdx=character(0) ,sizeIdx=character(0) )
+
+        cName <- c("hIdx","sizeIdx","colIdx","vpIdx","dbgStr")
+        mtx <- matrix( "", nrow=0 ,ncol=length(cName) ,dimnames=list(NULL,cName) )
+        rebSeqOnlyLst <- list()
+
+        for( hIdx in names(pairHpnLst_byH) ){
+            for( sizeIdx in names(pairHpnLst_byH[[hIdx]]) ){
+                for( colIdx in names(pairHpnLst_byH[[hIdx]][[sizeIdx]]) ){
+                    if( pColIdx!=colIdx ) next
+
+                    for( vpIdx in names(pairHpnLst_byH[[hIdx]][[sizeIdx]][[colIdx]]$vpLst) ){
+                        if( pVpIdx!=vpIdx ) next
+
+                        vpInfo <- pairHpnLst_byH[[hIdx]][[sizeIdx]][[colIdx]]$vpLst[[vpIdx]]
+                        if( 0==nrow(vpInfo$rebSeqOnly) )    next
+
+                        if( !is.null(vpInfo) ){
+                            # print(sprintf("%s %s %s %s",hIdx,sizeIdx,colIdx,vpIdx))
+                            dbgStr <- paste( vpInfo$dbgStrLst$rebSeqOnly ,collapse=", ")
+                            mtx <- rbind( mtx ,c(hIdx,sizeIdx,colIdx,vpIdx,dbgStr) )
+
+                            rebSeqOnlyLst[[1+length(rebSeqOnlyLst)]] <- vpInfo$rebSeqOnly
+                        }
+                    }
+                }
+            }
+        }
+
+        return( list(mtx=mtx,rebSeqOnlyLst=rebSeqOnlyLst) )
+    }
+
+    print( fLogger$fileName )
+    fLogger$fLogStr("start",pTime=T,pAppend=F)
+
+    aPairHpnLst <- NULL
+    for( hIdx in names(pairHpnLst_byH) ){
+        pairHpnLst <- pairHpnLst_byH[[hIdx]]
+        if( is.null(aPairHpnLst) ){
+            aPairHpnLst <- pairHpnLst
+            next
+        }
+
+        for( pairIdx in names(aPairHpnLst) ){
+            for( colIdx in names(aPairHpnLst[[pairIdx]]) ){
+                for( vpIdx in names(pairHpnLst[[pairIdx]][[colIdx]]$vpLst) ){
+
+                    vpInfo <- pairHpnLst[[pairIdx]][[colIdx]]$vpLst[[vpIdx]]
+
+                    if( is.null(aPairHpnLst[[pairIdx]][[colIdx]]$vpLst[[vpIdx]]) ){
+                        aPairHpnLst[[pairIdx]][[colIdx]]$vpLst[[vpIdx]] <- vpInfo
+                    } else {
+                        aVpInfo <- aPairHpnLst[[pairIdx]][[colIdx]]$vpLst[[vpIdx]]
+                        aVpInfo$hpnCnt <- aVpInfo$hpnCnt + vpInfo$hpnCnt
+                        aVpInfo$rebSeqAll <- rbind( aVpInfo$rebSeqAll ,vpInfo$rebSeqAll )
+                        aVpInfo$rebSeqOnly <- rbind( aVpInfo$rebSeqOnly ,vpInfo$rebSeqOnly )
+
+                        aPairHpnLst[[pairIdx]][[colIdx]]$vpLst[[vpIdx]] <- aVpInfo
+                    }
+                }
+            }
+        }
+    }
+
+    # Data reorg
+    for( pairIdx in names(aPairHpnLst) ){
+        for( colIdx in names(aPairHpnLst[[pairIdx]]) ){
+            for( vpIdx in names(aPairHpnLst[[pairIdx]][[colIdx]]$vpLst) ){
+                vpInfo <- aPairHpnLst[[pairIdx]][[colIdx]]$vpLst[[vpIdx]]
+                vpRpt <- vpInfo[c("val","hpnCnt")]
+                vpRpt$rebSeqAll     <- if( 0==nrow(vpInfo$rebSeqAll) ) NULL else table(vpInfo$rebSeqAll[,"seqNum"])
+                vpRpt$rebSeqOnly    <- if( 0==nrow(vpInfo$rebSeqOnly) ) NULL else table(vpInfo$rebSeqOnly[,"seqNum"])
+
+                aPairHpnLst[[pairIdx]][[colIdx]]$vpLst[[vpIdx]] <- vpRpt
+            }
+        }
+
+        if( 0==length(aPairHpnLst[[pairIdx]]) ){
+            aPairHpnLst[[pairIdx]] <- NULL
+        }
+    }
+
+    for( pairIdx in names(aPairHpnLst) ){
+        for( colIdx in names(aPairHpnLst[[pairIdx]]) ){
+            if( 0==length(aPairHpnLst[[pairIdx]][[colIdx]]$vpLst) ) next
+
+            fLogger$fLogStr(sprintf("colIdx : %s",colIdx))
+            for( vpIdx in names(aPairHpnLst[[pairIdx]][[colIdx]]$vpLst) ){
+                vpRpt <- aPairHpnLst[[pairIdx]][[colIdx]]$vpLst[[vpIdx]]
+                fLogger$fLogStr(sprintf( "<%s> %s    hpn:%d" ,vpIdx ,paste( sprintf("%s(%s)",names(vpRpt$val),vpRpt$val) ,collapse="-" ) ,vpRpt$hpnCnt ))
+                if( !is.null(vpRpt$rebSeqAll) ){
+                    tblStr <- paste( sprintf("%s(%d)",names(vpRpt$rebSeqAll),vpRpt$rebSeqAll) ,collapse="  " )
+                    fLogger$fLogStr(sprintf("    seq(all) : %s   #  len(hpn)",tblStr))
+                }
+                if( !is.null(vpRpt$rebSeqOnly) ){
+                    tblStr <- paste( sprintf("%s(%d)",names(vpRpt$rebSeqOnly),vpRpt$rebSeqOnly) ,collapse="  " )
+                    fLogger$fLogStr(sprintf("    seq(only) : %s   #  len(hpn)",tblStr))
+                }
+            }
+            fLogger$fLogStr("\n")
+        }
+    }
+
+    if( FALSE ){    # 개발 테스트 코드
+        pairIdx<-names(aPairHpnLst)[1]  ;colIdx<-names(aPairHpnLst[[pairIdx]])[1]   ;vpIdx<-names(aPairHpnLst[[pairIdx]][[colIdx]]$vpLst)[1]
+        #   fLogger$fLogStr("start",pTime=T,pAppend=F)
+
+    }
+
+}
