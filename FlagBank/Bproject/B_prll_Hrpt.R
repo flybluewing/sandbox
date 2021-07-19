@@ -1,6 +1,45 @@
+Bprll_lastMtxBF <- function( cutInfo ,scoreMtx.grp ,hMtxLst ,hNameAll=F ,fLogger ,pAppend=F ,pRotate=F ,asEvt=F ){
+    # hMtxLst <- curHMtxLst
+    # cutInfo <- cutRst1$cutInfoLst[[1]]
+    # hNameAll=F ;pAppend=F ;pRotate=F ;asEvt=F
+    fLogger$fLogStr("start",pTime=T,pAppend=pAppend)
+    if( asEvt ){
+        fLogger$fLogStr("  *** All is reported as Evt !!")
+    }
 
+    print( fLogger$fileName )
+    cfg <- scoreMtxCfg[[ cutInfo["mName"] ]]
 
-Bprll_lastMtxHCR <- function( cutInfo ,scoreMtx.grp ,hMtxLst_HCR ,hNameAll=F ,fLogger ){
+    fLogger$fLog( cutInfo )
+    mtxGrp <- getScoreMtx.grp_byHIdx( scoreMtx.grp )
+    mtx <- mtxGrp[[cutInfo["mName"]]][[1]]
+    if( asEvt ){
+        mtx <- bFCust.getEvtMtx( mtx ,cfg )$eLevMtx
+    }
+    colnames(mtx) <- bUtil.getShortPhaseName( colnames(mtx) )
+    fLogger$fLogMtx( mtx ,pClearNA=T )
+
+    for( hName in names(hMtxLst$scoreMtxLst) ){
+        if( !hNameAll && (hName!=cutInfo["hName"]) )     next
+
+        ptrHName <- if( hName==cutInfo["hName"] ) sprintf( "<*%s>",hName )  else sprintf( "<%s>",hName )
+        fLogger$fLogStr( ptrHName )
+        mtx <- hMtxLst$scoreMtx[[ hName ]]$basic[[cutInfo["mName"]]]$scoreMtx
+        if( asEvt ){
+            eLevMtx <- bFCust.getEvtMtx( t(mtx) ,cfg )$eLevMtx
+            mtx <- t(eLevMtx)
+        }
+
+        if( pRotate )   mtx <- t(mtx)
+
+        fLogger$fLogMtx( mtx ,pClearNA=T )
+    }
+
+}
+
+Bprll_lastMtxHCR <- function( cutInfo ,scoreMtx.grp ,hMtxLst_HCR ,hNameAll=F ,fLogger ,pAppend=F ){
+
+    fLogger$fLogStr("start",pTime=T,pAppend=pAppend)
 
     fLogger$fLog( cutInfo )
     mtx <- scoreMtx.grp$basic[[ cutInfo["mName"] ]]     ;rownames(mtx) <- "scoreMtx.grp"

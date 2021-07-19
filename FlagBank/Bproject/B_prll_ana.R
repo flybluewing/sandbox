@@ -1,5 +1,5 @@
 setwd("c:/zproject/ISLRgit/FlagBank")   ;source("hCommon.R")    ;setwd("./Bproject")
-lastH <- 900    ;curHIdx <- 892
+lastH <- 900    ;curHIdx <- 896
 if( TRUE ){
     source("header.r")  ;source("B_H.R") ;source("B_prll_H.R")  ;source("B_prll_Hrpt.R")
     load(sprintf("../Aproject/Obj_allIdxLstZ%d.save",lastH) )
@@ -52,6 +52,10 @@ if( TRUE ){
     curHMtxLst <- testData.grp$curHMtxLst.grp[[as.character(curHIdx)]]
     cut.grp <- bFCust.getFCustGrp( curHMtxLst ,tgt.scMtx )
     fHName <- bUtil.getSfcLstName( fRstLst.w[[length(fRstLst.w)]] ,curStdFiltedCnt=length(curStdFilted) ,cut.grp )
+
+    # cutRst1 <- bUtil.cut1( scoreMtx.grp ,cut.grp ,fHName ,tgt.scMtx=tgt.scMtx ,anaOnly=T ) 
+    # cutRst$cutInfoLst <- append( cutRst$cutInfoLst ,cutRst1$cutInfoLst )
+
 }
 
 # std ----------------------------------
@@ -76,15 +80,47 @@ if( TRUE ){
 }
 
 
-cutInfo <- cutRst1$cutInfoLst[[1]]
-logHCR <- k.getFlogObj( sprintf("./log/dbg_%dHCR.txt",curHIdx) )
-logHCR$fLogStr( sprintf("log start : %s",Sys.time()) ,pAppend=F )
-Bprll_lastMtxHCR( cutInfo ,scoreMtx.grp ,hMtxLst_HCR ,hNameAll=T ,fLogger=logHCR )
 
-logSzInspec <- k.getFlogObj( sprintf("./log/dbg_%dSzInspec.txt",curHIdx) )
-logSzInspec$fLogStr( sprintf("log start : %s",Sys.time()) ,pAppend=F )
-szMtxLst_H <- Bprll_inspecSZ_std( lastH ,curHIdxSet=curHIdx ,fLogger=logSzInspec ,gEnv,allIdxLst,fRstLst,crScrH,hMtxLstBig )
 
-pairHpnLst <- Bprll_inspecHMtxLst_HCR( hMtxLst_HCR ,mName="HCRsz_bf01fCol" ,fLogger ,auxMsg="" ,opt=c(rebSeqAll=T,rebSeqOnly=T) )
-pairHpnLst_byH <- Bprll_inspec_lastH( lastH ,mName="HCRsz_bf01fCol" ,mNameTyp="HCR" ,oneLog=T )
-Bprll_inspec_lastH_smry( pairHpnLst_byH ,fLogger )
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+if( FALSE ){    # sample code
+
+    cutInfoMtx <- sapply( cutRst1$cutInfoLst ,function( cutInfo ){
+        if( !("fltName" %in% names(cutInfo)) )     cutInfo["fltName"] <- ""
+        cutInfo[c("hName","mName","pName","info","fltName")]
+    })      ;cutInfoMtx <- t(cutInfoMtx)    ;rownames(cutInfoMtx) <- 1:nrow(cutInfoMtx)
+    cutInfo <- cutRst1$cutInfoLst[[1]]
+
+    # ---------------------
+    Bprll_lastMtxBF( cutInfo ,scoreMtx.grp ,hMtxLst ,hNameAll=T ,fLogger=fLogger ,pRotate=T )
+    logHCR <- k.getFlogObj( sprintf("./log/dbg_%dHCR.txt",curHIdx) )
+    logHCR$fLogStr( sprintf("log start : %s",Sys.time()) ,pAppend=F )
+    Bprll_lastMtxHCR( cutInfo ,scoreMtx.grp ,hMtxLst_HCR ,hNameAll=T ,fLogger=logHCR )
+
+    logSzInspec <- k.getFlogObj( sprintf("./log/dbg_%dSzInspec.txt",curHIdx) )
+    logSzInspec$fLogStr( sprintf("log start : %s",Sys.time()) ,pAppend=F )
+    szMtxLst_H <- Bprll_inspecSZ_std( lastH ,curHIdxSet=curHIdx ,fLogger=logSzInspec ,gEnv,allIdxLst,fRstLst,crScrH,hMtxLstBig )
+
+    pairHpnLst <- Bprll_inspecHMtxLst_HCR( hMtxLst_HCR ,mName="HCRsz_bf01fCol" ,fLogger ,auxMsg="" ,opt=c(rebSeqAll=T,rebSeqOnly=T) )
+    pairHpnLst_byH <- Bprll_inspec_lastH( lastH ,mName="HCRsz_bf01fCol" ,mNameTyp="HCR" ,oneLog=T )
+    Bprll_inspec_lastH_smry( pairHpnLst_byH ,fLogger )
+}
